@@ -19,7 +19,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   context "form with various question types" do
     let!(:form) do
       create(:form,
-        :published,
+        :live,
         :with_version,
         name: "Sample",
         question_types: %w[text long_text integer decimal location select_one
@@ -42,8 +42,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
   context "form with incomplete responses allowed" do
     let(:form) do
-      create(:form, :published, :with_version, name: "Allows Incomplete",
-                                               question_types: %w[integer], allow_incomplete: true)
+      create(:form, :live, :with_version, name: "Allows Incomplete",
+                                          question_types: %w[integer], allow_incomplete: true)
     end
 
     before do
@@ -58,8 +58,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
   context "display conditions, skip rules, constraints" do
     let!(:form) do
-      create(:form, :published, :with_version, name: "Conditional Logic",
-                                               question_types: %w[text long_text integer decimal location
+      create(:form, :live, :with_version, name: "Conditional Logic",
+                                          question_types: %w[text long_text integer decimal location
                                                                   select_one multilevel_select_one
                                                                   select_multiple datetime integer integer])
     end
@@ -112,7 +112,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     let(:option_set) { create(:option_set, option_names: ["Salt & Pepper", "Peanut Butter & Jelly"]) }
     let(:question) { create(:question, option_set: option_set) }
     let(:form) do
-      create(:form, :published, :with_version,
+      create(:form, :live, :with_version,
         name: "Form with & in Option",
         questions: [question])
     end
@@ -127,7 +127,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   describe "grids" do
     context "grid group with condition" do
       let!(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Grid Group with Condition", question_types: ["text", %w[select_one select_one], "text"])
       end
 
@@ -153,7 +153,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       let(:q1) { create(:question, qtype_name: "select_one") }
       let(:q2) { create(:question, qtype_name: "select_one", option_set: q1.option_set) }
       let(:form) do
-        create(:form, :published, :with_version, name: "Multi-screen Gridable", questions: [[q1, q2]])
+        create(:form, :live, :with_version, name: "Multi-screen Gridable", questions: [[q1, q2]])
       end
 
       before do
@@ -169,7 +169,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   describe "groups" do
     context "non-repeat group with condition on group" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Non-repeat Group with Condition",
           question_types: ["text", %w[text text text]])
       end
@@ -186,7 +186,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     context "single-screen repeat group with condition on question" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Single-scrn Rpt Grp with Cond",
           question_types: [{repeating: {name: "Group A", items: %w[text text text]}}])
       end
@@ -203,8 +203,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     context "multi-screen group" do
       let(:form) do
-        create(:form, :published, :with_version, name: "Multi-screen Group",
-                                                 question_types: [%w[text text text]])
+        create(:form, :live, :with_version, name: "Multi-screen Group",
+                                            question_types: [%w[text text text]])
       end
 
       before do
@@ -218,7 +218,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     context "nested repeat group" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Nested Repeat Group",
           version: "abc",
           question_types: [
@@ -260,7 +260,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     context "empty group, hidden group, group with hidden question, group with only hidden question" do
       let!(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Empty and Hidden",
           question_types: ["text",
                            {repeating: {name: "Repeat Group 1", items: []}},
@@ -285,7 +285,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     context "various selects" do
       let(:form) do
         # 1-level, 2-level, 3-level; one at least one level required, one all levels required
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Various Selects",
           question_types: %w[select_one multilevel_select_one super_multilevel_select_one])
       end
@@ -304,7 +304,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     # needs of the multi-level/cascading option set.
     context "non-repeat group with multilevel select" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Non-repeat Group with Multilevel",
           question_types: [%w[text date multilevel_select_one integer]])
       end
@@ -318,7 +318,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     # of the multi-level/cascading option set.
     context "multiscreen group with multilevel select" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Multi-screen Grp with Multilevel",
           question_types: [%w[text date multilevel_select_one integer]])
       end
@@ -336,7 +336,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     # needs of the multi-level/cascading option set, without disturbing the nested structure.
     context "nested group form with multilevel select" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Nested Group with Multilevel",
           version: "abc",
           question_types: [
@@ -367,7 +367,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     context "small and large multilevel selects" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Small and large multilevel",
           question_types: %w[multilevel_select_one super_multilevel_select_one])
       end
@@ -399,7 +399,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   describe "dynamic patterns" do
     context "default response name and answer patterns" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           default_response_name: %("$MSO" --> $TXT's), # We use a > and ' on purpose so we test escaping.
           name: "Default Patterns",
           question_types: [%w[integer text select_one multilevel_select_one], "text"])
@@ -419,7 +419,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     context "repeat group form with dynamic item names" do
       let!(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Repeat Group",
           question_types: [
             {repeating: {name: "Grp1", item_name: %(Hi' "$Name"), items: %w[text text text]}},
@@ -451,7 +451,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   describe "media" do
     context "media questions" do
       let(:form) do
-        create(:form, :published, :with_version,
+        create(:form, :live, :with_version,
           name: "Media Questions",
           question_types: %w[text image annotated_image sketch signature audio video])
       end
@@ -462,7 +462,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     context "media prompts" do
-      let(:form) { create(:form, :published, name: "Media Prompts", question_types: %w[text text text]) }
+      let(:form) { create(:form, :live, name: "Media Prompts", question_types: %w[text text text]) }
 
       before do
         form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
