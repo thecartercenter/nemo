@@ -23,15 +23,11 @@ describe Odk::ResponseParser do
         let(:xml_values) { %w[A B C] }
         let(:expected_values) { xml_values }
 
-        shared_examples "successful submission" do
+        context "valid input" do
           it "should produce a simple tree from a form with three children and ignore meta tag" do
             Odk::ResponseParser.new(response: response, files: files).populate_response
             expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
           end
-        end
-
-        context "valid input" do
-          it_behaves_like "successful submission"
         end
 
         context "draft form" do
@@ -94,13 +90,27 @@ describe Odk::ResponseParser do
       end
 
       context "with other question types" do
-        let(:xml_values) { ["Quick", "The quick brown fox jumps over the lazy dog", 9.6] }
-        let(:expected_values) { xml_values }
-        let(:question_types) { %w[text long_text decimal] }
+        let(:question_types) { %w[text long_text decimal select_one] }
+        let(:option_code) { "on#{form.c[3].option_set.c[0].id}" }
 
-        it "processes values correctly" do
-          Odk::ResponseParser.new(response: response, files: files).populate_response
-          expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
+        context "with normal values" do
+          let(:xml_values) { ["Quick", "The quick brown fox", "9.6", option_code] }
+          let(:expected_values) { ["Quick", "The quick brown fox", 9.6, "Cat"] }
+
+          it "processes values correctly" do
+            Odk::ResponseParser.new(response: response, files: files).populate_response
+            expect_built_children(response.root_node, %w[Answer] * 4, form.c.map(&:id), expected_values)
+          end
+        end
+
+        context "with invalid data types" do
+          let(:xml_values) { ["9.6", "The quick brown fox", "foo", "bar"] }
+          let(:expected_values) { ["9.6", "The quick brown fox", 0.0, nil] }
+
+          it "processes values correctly" do
+            Odk::ResponseParser.new(response: response, files: files).populate_response
+            expect_built_children(response.root_node, %w[Answer] * 4, form.c.map(&:id), expected_values)
+          end
         end
       end
 
