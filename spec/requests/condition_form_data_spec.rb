@@ -13,7 +13,7 @@ describe "condition form data" do
   end
 
   describe "condition_form" do
-    let(:form) { create(:form, :published, question_types: %w[integer text select_one integer text]) }
+    let(:form) { create(:form, :live, question_types: %w[integer text select_one integer text]) }
     let(:qing) { form.c[3] }
     let(:expected_left_qing_options) do
       form.c[0..3].map do |q|

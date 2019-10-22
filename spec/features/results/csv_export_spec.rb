@@ -5,7 +5,7 @@ require "rails_helper"
 feature "responses csv export" do
   include ActiveJob::TestHelper
 
-  let(:form) { create(:form, :published, question_types: %w[integer multilevel_select_one]) }
+  let(:form) { create(:form, :live, question_types: %w[integer multilevel_select_one]) }
   let!(:response1) { create(:response, form: form, answer_values: [2, %w[Animal]]) }
   let!(:response2) { create(:response, form: form, answer_values: [15, %w[Plant]]) }
   let(:user) { create(:user) }

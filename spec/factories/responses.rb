@@ -212,7 +212,7 @@ FactoryGirl.define do
 
     user
     mission { get_mission }
-    form { create(:form, :published, mission: mission) }
+    form { create(:form, :live, mission: mission) }
     source "web"
 
     trait :is_reviewed do

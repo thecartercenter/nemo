@@ -37,7 +37,7 @@ describe "abilities for questionings" do
     end
 
     context "when published" do
-      let(:form) { create(:form, :published, question_types: %w[text]) }
+      let(:form) { create(:form, :live, question_types: %w[text]) }
       let(:qing) { form.questionings.first }
 
       it "should be able show and update only" do

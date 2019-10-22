@@ -7,7 +7,7 @@ feature "response form file upload", js: true do
   include_context "file import"
 
   let(:user) { create(:user) }
-  let!(:form) { create(:form, :published, question_types: %w[image video]) }
+  let!(:form) { create(:form, :live, question_types: %w[image video]) }
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
   before { login(user) }

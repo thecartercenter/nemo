@@ -158,12 +158,6 @@ FactoryGirl.define do
       mission { nil }
     end
 
-    trait :published do
-      after(:create) do |form|
-        form.publish!
-      end
-    end
-
     trait :draft do
       # Draft is the default status.
     end

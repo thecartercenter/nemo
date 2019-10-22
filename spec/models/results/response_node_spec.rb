@@ -43,8 +43,7 @@ describe ResponseNode do
 
   describe "#matching_group_set" do
     let(:form) do
-      create(:form, :published,
-        question_types: ["text", {repeating: ["text", "text", {repeating: %w[text]}]}])
+      create(:form, :live, question_types: ["text", {repeating: ["text", "text", {repeating: %w[text]}]}])
     end
     let(:decoy_form) do
       create(:form, question_types: ["text", {repeating: ["text"]}])

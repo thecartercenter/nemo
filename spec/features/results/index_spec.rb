@@ -4,7 +4,7 @@ require "rails_helper"
 
 feature "responses index", js: true do
   let(:actor) { create(:user) }
-  let(:form) { create(:form, :published, name: "TheForm", question_types: %w[text]) }
+  let(:form) { create(:form, :live, name: "TheForm", question_types: %w[text]) }
   let(:mission) { get_mission }
   let(:responses_path) { "/en/m/#{mission.compact_name}/responses" }
 
