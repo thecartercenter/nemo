@@ -11,7 +11,7 @@ describe Odk::ResponseParser do
   let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values) }
 
   context "responses without media" do
-    let(:form) { create(:form, :published, :with_version, question_types: question_types) }
+    let(:form) { create(:form, :live, :with_version, question_types: question_types) }
     let(:files) { {xml_submission_file: StringIO.new(xml)} }
 
     context "simple form" do
@@ -31,6 +31,26 @@ describe Odk::ResponseParser do
 
         context "valid input" do
           it_behaves_like "successful submission"
+        end
+
+        context "draft form" do
+          let(:form) { create(:form, :draft, :with_version, question_types: question_types) }
+
+          it "should error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to raise_error(FormStatusError, "form is a draft")
+          end
+        end
+
+        context "paused form" do
+          let(:form) { create(:form, :paused, :with_version, question_types: question_types) }
+
+          it "should error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to raise_error(FormStatusError, "form is paused")
+          end
         end
 
         context "outdated form" do
@@ -350,7 +370,7 @@ describe Odk::ResponseParser do
 
   context "responses with media" do
     let(:fixture_name) { "simple_response" }
-    let(:form) { create(:form, :published, :with_version, question_types: question_types) }
+    let(:form) { create(:form, :live, :with_version, question_types: question_types) }
 
     context "single part media" do
       let(:media_file_name) { "the_swing.jpg" }

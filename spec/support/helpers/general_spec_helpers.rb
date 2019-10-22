@@ -59,7 +59,7 @@ module GeneralSpecHelpers
     xml = prepare_fixture("odk/#{type}s/#{name}.xml",
       formname: [form.name],
       form: [form.id],
-      formver: options[:formver].present? ? [options[:formver]] : [form.code],
+      formver: options[:formver].present? ? [options[:formver]] : [form.current_version&.code],
       itemcode: items.map(&:odk_code),
       itemqcode: items.map(&:code),
       optcode: nodes.map(&:odk_code),

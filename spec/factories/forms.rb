@@ -173,6 +173,10 @@ FactoryGirl.define do
       end
     end
 
+    trait :draft do
+      # Draft is the default status.
+    end
+
     trait :live do
       after(:create) do |form|
         form.update_status(:live)
