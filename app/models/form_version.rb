@@ -43,11 +43,8 @@ class FormVersion < ApplicationRecord
   # Inits a new FormVersion with the same form_id
   # and assigns it a new code + number
   def upgrade!
-    upgraded = self.class.new(form_id: form_id, is_current: true)
-    self.is_current = false
-    save!
-    upgraded.save!
-    upgraded
+    update!(is_current: false)
+    self.class.create!(form_id: form_id, is_current: true)
   end
 
   private
