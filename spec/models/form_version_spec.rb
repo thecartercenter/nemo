@@ -32,12 +32,12 @@ describe FormVersion do
 
   it "form version code generated on initialize" do
     fv = FormVersion.new(form: form)
-    assert_match(/[a-z]{#{FormVersion::CODE_LENGTH}}/, fv.code)
+    expect(/[a-z]{#{FormVersion::CODE_LENGTH}}/).to match(fv.code)
   end
 
   it "form version number generated on initialize" do
     fv = FormVersion.new(form: form)
-    assert_match(/[0-9]{10}/, fv.number)
+    expect(/[0-9]{10}/).to match(fv.number)
   end
 
   it "version codes are unique" do
