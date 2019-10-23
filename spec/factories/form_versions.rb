@@ -6,7 +6,7 @@
 #  id         :uuid             not null, primary key
 #  code       :string(255)      not null
 #  is_current :boolean          default(TRUE), not null
-#  number     :string
+#  number     :string(10)       not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  form_id    :uuid             not null

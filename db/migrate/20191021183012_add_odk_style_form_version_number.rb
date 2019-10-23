@@ -2,7 +2,7 @@
 
 class AddOdkStyleFormVersionNumber < ActiveRecord::Migration[5.2]
   def change
-    add_column :form_versions, :number, :string
+    add_column :form_versions, :number, :string, limit: 10
     add_index :form_versions, [:number], unique: true
 
     reversible do |dir|
@@ -10,6 +10,8 @@ class AddOdkStyleFormVersionNumber < ActiveRecord::Migration[5.2]
         FormVersion.all.order(:created_at).each(&method(:update_version_number))
       end
     end
+
+    change_column_null :form_versions, :number, false
   end
 
   def update_version_number(form_version)

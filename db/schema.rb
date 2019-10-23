@@ -196,7 +196,7 @@ ActiveRecord::Schema.define(version: 2019_10_21_183012) do
     t.datetime "created_at", null: false
     t.uuid "form_id", null: false
     t.boolean "is_current", default: true, null: false
-    t.string "number"
+    t.string "number", limit: 10, null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_form_versions_on_code", unique: true
     t.index ["form_id"], name: "index_form_versions_on_form_id"
