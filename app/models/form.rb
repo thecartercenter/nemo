@@ -56,8 +56,8 @@ class Form < ApplicationRecord
   API_ACCESS_LEVELS = %w[private public].freeze
 
   has_many :responses, inverse_of: :form, dependent: :destroy
-  has_many :versions, -> { order(:sequence) }, class_name: "FormVersion", inverse_of: :form,
-                                               dependent: :destroy
+  has_many :versions, -> { order(:number) }, class_name: "FormVersion", inverse_of: :form,
+                                             dependent: :destroy
   has_many :whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy
   has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
@@ -90,6 +90,7 @@ class Form < ApplicationRecord
   delegate :children, :sorted_children, :visible_children, :c, :sc,
     :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
+  delegate :number, to: :current_version
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},

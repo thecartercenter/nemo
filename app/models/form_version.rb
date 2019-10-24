@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -6,7 +8,7 @@
 #  id         :uuid             not null, primary key
 #  code       :string(255)      not null
 #  is_current :boolean          default(TRUE), not null
-#  sequence   :integer          default(1), not null
+#  number     :string(10)       not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  form_id    :uuid             not null
@@ -15,6 +17,7 @@
 #
 #  index_form_versions_on_code     (code) UNIQUE
 #  index_form_versions_on_form_id  (form_id)
+#  index_form_versions_on_number   (number) UNIQUE
 #
 # Foreign Keys
 #
@@ -22,13 +25,14 @@
 #
 # rubocop:enable Metrics/LineLength
 
-# models a version number for a Form object. allows forms to have multiple uniquely identifiable versions.
-# provides 3 letter code for use with sms encoded forms.
+# Models a version number for a Form object. Allows forms to have multiple uniquely identifiable versions.
+# Provides unique 3-letter code for use with sms encoded forms,
+# plus unique 10-character number for use with odk xml forms.
 class FormVersion < ApplicationRecord
   belongs_to :form
 
-  after_initialize :generate_code
-  before_create :ensure_unique_code
+  after_initialize :generate_code, :generate_number
+  before_create :ensure_unique_code, :ensure_unique_number
 
   scope :current, -> { where(is_current: true) }
 
@@ -36,30 +40,42 @@ class FormVersion < ApplicationRecord
 
   CODE_LENGTH = 3
 
-  # inits a new FormVersion with same form_id
-  # increments sequence
-  # sets self.is_current = false
+  # Inits a new FormVersion with the same form_id
+  # and assigns it a new code + number
   def upgrade!
-    upgraded = self.class.new(form_id: form_id, is_current: true)
-    self.is_current = false
-    save
-    upgraded.save!
-    upgraded
+    update!(is_current: false)
+    self.class.create!(form_id: form_id, is_current: true)
   end
 
   private
 
-  # generates the unique random code
+  # Code is a series of random letters
   def generate_code
-    # only need to do this if code not set
     return if code
     ensure_unique_code
   end
 
-  # double checks that code is still unique
+  # Number uses ODK convention: `yyyymmddrr` (last 2 characters are revision number)
+  # https://docs.opendatakit.org/form-update/
+  def generate_number
+    return if number
+    # Today's date with a revision of 00
+    self.number = Time.current.strftime("%Y%m%d00")
+    ensure_unique_number
+  end
+
   def ensure_unique_code
     # keep trying new random codes until no match
-    while self.class.find_by_code(self.code = Random.letters(CODE_LENGTH)); end
-    true
+    while self.class.find_by(code: (self.code = Random.letters(CODE_LENGTH))); end
+  end
+
+  def ensure_unique_number
+    revision = number[-2, 2].to_i
+    # Increment the revision number until no match
+    while self.class.find_by(number: number)
+      revision += 1
+      raise RevisionTooHighError if revision >= 100
+      self.number = number[0, 8] + revision.to_s.rjust(2, "0")
+    end
   end
 end
