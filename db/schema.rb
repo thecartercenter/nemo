@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_25_145302) do
+ActiveRecord::Schema.define(version: 2019_10_25_145418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -213,12 +213,12 @@ ActiveRecord::Schema.define(version: 2019_10_25_145302) do
     t.uuid "mission_id"
     t.string "name", limit: 255, null: false
     t.uuid "original_id"
-    t.datetime "pub_changed_at"
     t.uuid "root_id"
     t.boolean "sms_relay", default: false, null: false
     t.boolean "smsable", default: false, null: false
     t.boolean "standard_copy", default: false, null: false
     t.string "status", default: "draft", null: false
+    t.datetime "status_changed_at"
     t.datetime "updated_at", null: false
     t.boolean "upgrade_needed", default: false, null: false
     t.index ["current_version_id"], name: "index_forms_on_current_version_id"

@@ -12,11 +12,11 @@
 #  default_response_name :string
 #  downloads             :integer
 #  name                  :string(255)      not null
-#  pub_changed_at        :datetime
 #  sms_relay             :boolean          default(FALSE), not null
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
+#  status_changed_at     :datetime
 #  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
@@ -76,35 +76,35 @@ describe Form do
     end
   end
 
-  describe "pub_changed_at" do
+  describe "status_changed_at" do
     it "should be nil on create" do
-      expect(form.pub_changed_at).to be_nil
+      expect(form.status_changed_at).to be_nil
     end
 
     it "should be updated when form goes live" do
       form.update_status(:live)
-      expect(form.pub_changed_at).to be_within(0.1).of(Time.zone.now)
+      expect(form.status_changed_at).to be_within(0.1).of(Time.zone.now)
     end
 
     it "should be updated when form paused" do
-      go_live_and_reset_pub_changed_at(save: true)
+      go_live_and_reset_status_changed_at(save: true)
       form.update_status(:paused)
-      expect(form.pub_changed_at).to be_within(0.1).of(Time.zone.now)
+      expect(form.status_changed_at).to be_within(0.1).of(Time.zone.now)
     end
 
     it "should not be updated when form saved otherwise" do
-      go_live_and_reset_pub_changed_at
+      go_live_and_reset_status_changed_at
       form.name = "Something else"
       form.save!
-      expect(form.pub_changed_at).not_to be_within(5.minutes).of(Time.zone.now)
+      expect(form.status_changed_at).not_to be_within(5.minutes).of(Time.zone.now)
     end
   end
 
   describe "odk_download_cache_key", :odk do
-    before { go_live_and_reset_pub_changed_at }
+    before { go_live_and_reset_status_changed_at }
 
     it "should be correct" do
-      expect(form.odk_download_cache_key).to eq("odk-form/#{form.id}-#{form.pub_changed_at}")
+      expect(form.odk_download_cache_key).to eq("odk-form/#{form.id}-#{form.status_changed_at}")
     end
   end
 
@@ -112,14 +112,14 @@ describe Form do
     let(:form2) { create(:form) }
 
     before do
-      go_live_and_reset_pub_changed_at(save: true)
-      go_live_and_reset_pub_changed_at(form: form2, diff: 30.minutes, save: true)
+      go_live_and_reset_status_changed_at(save: true)
+      go_live_and_reset_status_changed_at(form: form2, diff: 30.minutes, save: true)
     end
 
     context "for mission with forms" do
       it "should be correct" do
         expect(Form.odk_index_cache_key(mission: get_mission)).to eq(
-          "odk-form-list/mission-#{get_mission.id}/#{form2.pub_changed_at.utc.to_s(:cache_datetime)}"
+          "odk-form-list/mission-#{get_mission.id}/#{form2.status_changed_at.utc.to_s(:cache_datetime)}"
         )
       end
     end
@@ -309,10 +309,10 @@ describe Form do
     end
   end
 
-  def go_live_and_reset_pub_changed_at(options = {})
+  def go_live_and_reset_status_changed_at(options = {})
     f = options[:form] || form
     f.update_status(:live)
-    f.pub_changed_at -= (options[:diff] || 1.hour)
+    f.status_changed_at -= (options[:diff] || 1.hour)
     f.save! if options[:save]
   end
 end

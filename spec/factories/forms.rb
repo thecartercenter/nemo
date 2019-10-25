@@ -10,11 +10,11 @@
 #  default_response_name :string
 #  downloads             :integer
 #  name                  :string(255)      not null
-#  pub_changed_at        :datetime
 #  sms_relay             :boolean          default(FALSE), not null
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
+#  status_changed_at     :datetime
 #  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
