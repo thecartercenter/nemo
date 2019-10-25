@@ -301,6 +301,14 @@ describe Form do
           expect(copy.c[0].group_item_name_translations).to eq("en" => "foo")
         end
       end
+
+      context "with live form in mission" do
+        let(:orig) { create(:form, :live, question_types: ["integer"]) }
+
+        it "copy should be draft" do
+          expect(copy).to be_draft
+        end
+      end
     end
 
     context "for multiple clones" do

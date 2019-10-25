@@ -94,7 +94,7 @@ class Form < ApplicationRecord
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-             dont_copy: %i[published pub_changed_at downloads upgrade_needed
+             dont_copy: %i[status pub_changed_at downloads upgrade_needed
                            smsable current_version_id allow_incomplete access_level]
 
   # remove heirarchy of objects
