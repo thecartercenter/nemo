@@ -904,7 +904,7 @@ en:
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
     updated_at: "Updated at"
-    no_published_forms: "No published forms"
+    no_live_forms: "No available forms"
 
   actions:
     clone: "Clone"
