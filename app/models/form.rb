@@ -76,11 +76,9 @@ class Form < ApplicationRecord
   validate :name_unique_per_mission
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
 
-  scope :published, -> { where(published: true) }
   scope :live, -> { where(status: "live") }
   scope :by_name, -> { order(:name) }
   scope :by_status, -> { order("CASE status WHEN 'draft' THEN 2 ELSE 1 END") }
-  scope :by_published, -> { order(published: :desc) }
   scope :default_order, -> { by_name }
   scope :with_responses_counts, lambda {
     forms = Form.arel_table
@@ -189,8 +187,7 @@ class Form < ApplicationRecord
   end
 
   def published?
-    # Standard forms are never published
-    !standard? && self[:published]
+    !standard? && !draft?
   end
 
   def option_sets
@@ -241,10 +238,6 @@ class Form < ApplicationRecord
     upgrade_version!
   end
 
-  def verb
-    published? ? "unpublish" : "publish"
-  end
-
   def live?
     status == "live"
   end
@@ -291,10 +284,8 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
-  # sets the upgrade flag so that the form will be upgraded when next published
   def flag_for_upgrade!
     raise "standard forms should not be versioned" if standard?
-
     self.upgrade_needed = true
     save(validate: false)
   end
