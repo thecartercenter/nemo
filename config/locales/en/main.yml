@@ -68,7 +68,6 @@ en:
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
     none: "None"
-    not_published: "Not Published"
     ok: "OK"
     or: "or"
     OR: "OR"
@@ -76,7 +75,6 @@ en:
     pending: "Pending"
     previous: "Previous"
     print: "Print"
-    published: "Published"
     regenerate: "Regenerate"
     remove: "Remove"
     report: "Report"
@@ -124,7 +122,6 @@ en:
     email: "Email"
     hint: "Hint"
     password: "Password"
-    published: "Published?"
     questions: "Questions"
     std_icon: "" # left blank on purpose to achieve blank table header
     title: "Title"
@@ -448,7 +445,6 @@ en:
         code: "Code"
         answer_count: "Answers"
         form_count: "Forms"
-        published: "Published?"
         key: "Is Key Question?"
         minimum: "Minimum"
         maximum: "Maximum"
@@ -759,8 +755,6 @@ en:
               blank: "There must be at least one condition."
         form:
           cant_delete_if_has_responses: "You can't delete this Form because it has associated responses."
-          cant_delete_published: "A published Form can't be deleted."
-          cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions."
           general: "Form is invalid (see below)."
           attributes:
@@ -773,8 +767,6 @@ en:
           general: "Mission is invalid (see below)."
         option:
           cant_delete_if_has_response: "You can't delete this Option because it is included in at least one Response."
-          cant_change_if_published: "You can't change this Option because it appears in at least one published Form."
-          cant_delete_if_published: "You can't delete this Option because it appears in at least one published Form."
           names_cant_be_all_blank: "At least one name translation must be given for each option."
           names_too_long: "Names must be at most 30 characters in length."
           invalid_coordinates: "The provided coordinates are not valid."
@@ -805,7 +797,6 @@ en:
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
           cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
-          cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
           general: "Question is invalid (see below)."
         questioning:
           attributes:
@@ -909,8 +900,6 @@ en:
   actions:
     clone: "Clone"
     edit: "Edit"
-    publish: "Publish"
-    unpublish: "Unpublish"
     go_live: "Go Live"
     pause: "Pause"
     print: "Print"
@@ -1308,10 +1297,6 @@ en:
     print_format_tips:
       title: "Print Format Tips"
       body: "To ensure form prints correctly, please enable the printing of background colors and images in your system's print options dialog window. That window should appear as soon as you click 'OK' below."
-    publish: "Publish"
-    publish_error: "There was a problem publishing the form (%{msg})."
-    publish_success: "Form published successfully."
-    publish_form: "Publish Form"
     question_remove_error: "There was a problem removing the questions (%{msg})."
     question_remove_answer_error: "One or more of the selected questions has answers and can't be removed."
     questions_add_error: "There was a problem adding the questions (%{msg})."
@@ -1332,10 +1317,6 @@ en:
       draft: "Draft"
       live: "Live"
       paused: "Paused"
-    unpublish_error: "There was a problem unpublishing the form (%{msg})."
-    unpublish_success: "Form unpublished successfully."
-    unpublish: "Unpublish"
-    unpublish_form: "Unpublish Form"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
 
   forms:
@@ -1537,7 +1518,6 @@ en:
       or_eq: "or equal to"
       strictly_lt: "Strictly less than"
       strictly_gt: "Strictly greater than"
-    other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
     opt_set_warning: "Changing the option set will cause one or more conditions to be deleted."
 
   qing_group:
@@ -2336,9 +2316,7 @@ en:
       need_to_create: "There are currently no missions. Please "
       no_missions: "There are currently no missions in the system. Please contact an administrator."
     no_recent: "**0** Recent Responses"
-    published_form_count: "**%{count}** Published Forms"
     select_a_form: "Select a Form To Submit"
     select_a_report: "Select a Report To View"
     total_responses: "**%{count}** Total Responses"
     total_users: "**%{count}** Total Users"
-    unpublished_form_count: "**%{count}** Unpublished Forms"
