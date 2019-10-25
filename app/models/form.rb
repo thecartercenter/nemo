@@ -79,6 +79,7 @@ class Form < ApplicationRecord
   scope :published, -> { where(published: true) }
   scope :live, -> { where(status: "live") }
   scope :by_name, -> { order(:name) }
+  scope :by_status, -> { order("CASE status WHEN 'draft' THEN 2 ELSE 1 END") }
   scope :by_published, -> { order(published: :desc) }
   scope :default_order, -> { by_name }
   scope :with_responses_counts, lambda {

@@ -26,33 +26,23 @@ class FormsController < ApplicationController
   helper_method :questions
 
   def index
-    # handle different formats
     respond_to do |format|
-      # render normally if html
       format.html do
-        # if requesting the dropdown menu
         if params[:dropdown]
           @forms = @forms.live.by_name
           render(partial: "dropdown")
-
-        # otherwise, it's a normal request
         else
-          # add some eager loading stuff, and ordering
-          @forms = @forms.with_responses_counts.by_published.by_name
+          @forms = @forms.with_responses_counts.by_status.by_name
           load_importable_objs
           render(:index)
         end
       end
 
-      # get only published forms and render openrosa if xml requested
+      # OpenRosa format for ODK
       format.xml do
         authorize!(:download, Form)
-        @cache_key = Form.odk_index_cache_key(mission: current_mission)
-        @cache_key = "#{@cache_key}#{CACHE_SUFFIX}"
-        unless fragment_exist?(@cache_key)
-          # This query is not deferred so we have to check if it should be run or not.
-          @forms = @forms.live
-        end
+        @cache_key = "#{Form.odk_index_cache_key(mission: current_mission)}#{CACHE_SUFFIX}"
+        @forms = @forms.live
       end
     end
   end
