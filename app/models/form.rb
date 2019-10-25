@@ -179,7 +179,10 @@ class Form < ApplicationRecord
     self[:responses_count] || responses.count
   end
 
-  # returns the number of responses for all copy forms
+  def copy_count
+    copies.count
+  end
+
   def copy_responses_count
     raise "non-standard forms should not request copy_responses_count" unless standard?
     copies.to_a.sum(&:responses_count)
@@ -188,10 +191,6 @@ class Form < ApplicationRecord
   def published?
     # Standard forms are never published
     !standard? && self[:published]
-  end
-
-  def published_copy_count
-    copies.find_all(&:published?).size
   end
 
   def option_sets
