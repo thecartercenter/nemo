@@ -11,9 +11,9 @@ describe Odk::ItemsetsFormAttachment, :odk do
   describe "path" do
     before { allow(form).to receive(:id).and_return(42) }
 
-    context "for published form" do
+    context "for live form" do
       before do
-        allow(form).to receive(:published?).and_return(true)
+        allow(form).to receive(:draft?).and_return(false)
         allow(form).to receive(:pub_changed_at).and_return(Time.zone.parse("2014-01-01 12:00:00 UTC"))
       end
 
@@ -22,9 +22,9 @@ describe Odk::ItemsetsFormAttachment, :odk do
       end
     end
 
-    context "for unpublished form" do
+    context "for draft form" do
       before do
-        allow(form).to receive(:published?).and_return(false)
+        allow(form).to receive(:draft?).and_return(true)
       end
 
       it "should be based on current time" do
