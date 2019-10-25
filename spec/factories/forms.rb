@@ -11,7 +11,6 @@
 #  downloads             :integer
 #  name                  :string(255)      not null
 #  pub_changed_at        :datetime
-#  published             :boolean          default(FALSE), not null
 #  sms_relay             :boolean          default(FALSE), not null
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_09_175040) do
+ActiveRecord::Schema.define(version: 2019_10_25_145302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -214,7 +214,6 @@ ActiveRecord::Schema.define(version: 2019_10_09_175040) do
     t.string "name", limit: 255, null: false
     t.uuid "original_id"
     t.datetime "pub_changed_at"
-    t.boolean "published", default: false, null: false
     t.uuid "root_id"
     t.boolean "sms_relay", default: false, null: false
     t.boolean "smsable", default: false, null: false
