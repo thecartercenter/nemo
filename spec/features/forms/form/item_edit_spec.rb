@@ -114,6 +114,8 @@ feature "forms", js: true do
       )
     end
 
+    # For some inexplicable reason, a weird span element is required in
+    # app/views/forms/form.html.erb for this spec to pass. See that file for more details.
     scenario "dragging form elements" do
       visit(edit_url)
 
