@@ -157,7 +157,7 @@ You can run this locally via `bin/delayed_job start`.
 1. Configure your rails development server so ODK can find it
     - Run `. bin/server -b 0.0.0.0`
 1. Create a user and password
-1. Publish your form in NEMO
+1. Make your form live in NEMO
 1. Point the ODK app to your development server
     - In ODK, go to `General Settings > Platform Settings > URL`
     - For the URL put: `http://YOURIP:8443/m/yourmission`
