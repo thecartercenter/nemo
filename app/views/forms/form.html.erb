@@ -44,8 +44,6 @@
       </div>
     <% end %>
     <div class="less-settings"><a href="#"><%= t("common.less_settings") %></a></div>
-
-    <%# Submit/publish buttons %>
     <% unless read_only %>
       <% show_sp_btn = !form.new_record? && !form.published? && can?(:change_status, form) %>
       <div class="submit-buttons">
