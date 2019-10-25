@@ -32,7 +32,7 @@ class FormsController < ApplicationController
       format.html do
         # if requesting the dropdown menu
         if params[:dropdown]
-          @forms = @forms.published.by_name
+          @forms = @forms.live.by_name
           render(partial: "dropdown")
 
         # otherwise, it's a normal request
