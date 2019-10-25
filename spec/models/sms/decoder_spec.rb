@@ -57,7 +57,7 @@ describe Sms::Decoder, :sms do
   end
 
   describe "form lookup" do
-    it "submitting to unpublished form should produce appropriate error" do
+    it "submitting to paused form should produce appropriate error" do
       form = create_form(questions: %w[integer], status: :paused)
       expect_decoding_fail(form, data: "1.15", error: "form_not_live")
     end
