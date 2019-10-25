@@ -47,8 +47,8 @@
 
     <%# Submit/publish buttons %>
     <% unless read_only %>
-      <% show_sp_btn = !form.new_record? && !form.published? && can?(:publish, form) %>
-      <div class="submit-buttons <%= "publish" if show_sp_btn %>">
+      <% show_sp_btn = !form.new_record? && !form.published? && can?(:change_status, form) %>
+      <div class="submit-buttons">
         <% if show_sp_btn %>
           <%= f.submit(I18n.t("form.save_and_go_live"),
                 name: "save_and_go_live", class: "btn btn-secondary") %>
