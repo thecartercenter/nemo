@@ -66,7 +66,7 @@ module FormsHelper
   end
 
   def forms_index_row_class(form)
-    "status-#{form.status}"
+    "status-#{form.status}" unless admin_mode?
   end
 
   def allow_incomplete?

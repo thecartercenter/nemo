@@ -57,7 +57,7 @@
           <% end %>
         </tr>
       </thead>
-      <tbody class="<%= "index_table_body" + (admin_mode? ? " hide-unpublished-bg" : "") %>">
+      <tbody class="index_table_body">
         <% objects.each do |object| %>
           <%# include the path for the current object in the tr tag so that we can support clicking anywhere on the row (may be nil) %>
           <%= content_tag(:tr,
