@@ -45,9 +45,8 @@
     <% end %>
     <div class="less-settings"><a href="#"><%= t("common.less_settings") %></a></div>
     <% unless read_only %>
-      <% show_sp_btn = !form.new_record? && !form.published? && can?(:change_status, form) %>
       <div class="submit-buttons">
-        <% if show_sp_btn %>
+        <% if form.persisted? && !form.live? && can?(:change_status, form) %>
           <%= f.submit(I18n.t("form.save_and_go_live"),
                 name: "save_and_go_live", class: "btn btn-secondary") %>
         <% end %>
