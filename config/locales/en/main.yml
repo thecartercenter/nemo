@@ -903,7 +903,7 @@ en:
     go_live: "Go Live"
     pause: "Pause"
     print: "Print"
-    sms: "SMS Guide"
+    sms_guide: "SMS Guide"
 
   # pagination translations
   will_paginate:
