@@ -45,7 +45,7 @@ it('gets filter string (no filters)', () => {
     },
     isReviewed: null,
     selectedSubmittersForType: getEmptySubmitterTypeMap(),
-    advancedSearchText: null,
+    advancedSearchText: '',
   };
 
   const result = getFilterString(emptyFilters);

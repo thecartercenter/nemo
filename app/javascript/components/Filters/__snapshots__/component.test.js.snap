@@ -122,6 +122,9 @@ exports[`renders as expected (responses page) 1`] = `
     <SubmitterFilter
       onSubmit={[Function]}
     />
+    <DateFilter
+      onSubmit={[Function]}
+    />
   </ButtonToolbar>
   <AdvancedSearchFilter
     onClear={[Function]}

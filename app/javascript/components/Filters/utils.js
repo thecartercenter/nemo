@@ -84,6 +84,8 @@ export function getFilterString({
   isReviewed,
   selectedSubmittersForType,
   advancedSearchText,
+  startDate,
+  endDate,
 }) {
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
@@ -96,11 +98,20 @@ export function getFilterString({
     return isEmpty(selectedSubmitterIds) ? null : `${type}-id:(${selectedSubmitterIds.join('|')})`;
   });
 
+  const dateParts = [];
+  if (startDate) {
+    dateParts.push(`submit-date>=${startDate.format('YYYY-MM-DD')}`);
+  }
+  if (endDate) {
+    dateParts.push(`submit-date<=${endDate.format('YYYY-MM-DD')}`);
+  }
+
   const parts = [
     isEmpty(selectedFormIds) ? null : `form-id:(${selectedFormIds.join('|')})`,
     ...questionFilters,
     isReviewed == null ? null : `reviewed:${isReviewed ? '1' : '0'}`,
     ...submitterParts,
+    dateParts.join(' '),
     advancedSearchText,
   ].filter(Boolean);
 

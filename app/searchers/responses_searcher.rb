@@ -3,7 +3,7 @@
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
   # Parsed search values
-  attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups
+  attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups, :start_date, :end_date
 
   def initialize(**opts)
     super(opts)
@@ -12,6 +12,8 @@ class ResponsesSearcher < Searcher
     self.qings = []
     self.submitters = []
     self.groups = []
+    self.start_date = nil
+    self.end_date = nil
     self.is_reviewed = nil
   end
 
@@ -176,28 +178,28 @@ class ResponsesSearcher < Searcher
   # otherwise fall back to raw search text.
   def maybe_filter_by_expression(expression, op_kind, token_values, is_filterable)
     # Find filters that can be created using the filter UI.
-    was_handled = is_filterable &&
-      filter_by_expression(expression, op_kind, token_values)
-
-    advanced_text << " #{advanced_text_string(expression)}" unless was_handled
+    return if is_filterable && filter_by_expression(expression, op_kind, token_values)
+    advanced_text << " #{advanced_text_string(expression)}"
   end
 
   # Save specific data that can be used for search filters,
   # or return false if it can't be handled.
   def filter_by_expression(expression, op_kind, token_values)
-    return false unless equality_op?(op_kind)
-
     case expression.qualifier.name.downcase
     when "form_id"
       filter_by_ids(token_values, Form, current_ids: form_ids)
     when "text_by_code"
       filter_by_questions(expression.qualifier_text, token_values)
     when "reviewed"
+      return false if op_kind == :noteq
       filter_by_is_reviewed(token_values)
     when "submitter_id"
       filter_by_ids(token_values, User, current_ids: submitters, include_name: true)
     when "group_id"
       filter_by_ids(token_values, UserGroup, current_ids: groups, include_name: true)
+    when "submit_date"
+      return false if op_kind == :noteq
+      filter_by_date(op_kind, token_values)
     when "text"
       advanced_text << " #{expression.values}"
       true
@@ -246,6 +248,15 @@ class ResponsesSearcher < Searcher
     true
   end
 
+  def filter_by_date(op_kind, token_values)
+    date = Date.parse(token_values[0])
+    date += 1 if op_kind == :gt
+    date -= 1 if op_kind == :lt
+    self.start_date = [start_date, date].compact.max if %i[gt gteq colon].include?(op_kind)
+    self.end_date = [end_date, date].compact.min if %i[lt lteq colon].include?(op_kind)
+    true
+  end
+
   # Get the qing value from the user input (either a string to match or an Option ID).
   def qing_value(matched_question, token_values)
     value = token_values[0]
@@ -273,10 +284,6 @@ class ResponsesSearcher < Searcher
     possibilities = possibilities.where(form_id: form_ids) if form_ids.present?
     qing[:id] = possibilities.filter_unique.pluck(:id).first
     qing.except(:possibilities)
-  end
-
-  def equality_op?(op_kind)
-    Search::LexToken::EQUALITY_OPS.include?(op_kind)
   end
 
   # Stringify an expression for the advanced text search box.

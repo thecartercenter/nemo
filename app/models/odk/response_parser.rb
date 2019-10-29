@@ -179,7 +179,7 @@ module Odk
 
       # if form version is outdated, error
       if form.current_version.code != params[:version] &&
-          form.current_version.sequence.to_s != params[:version]
+          form.current_version.number != params[:version]
         raise FormVersionError, "Form version is outdated"
       end
     end

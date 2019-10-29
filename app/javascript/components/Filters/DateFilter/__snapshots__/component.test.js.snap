@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`popover handles callbacks 1`] = `1`;
+
+exports[`popover handles callbacks 2`] = `
+Array [
+  Object {
+    "type": "return",
+    "value": undefined,
+  },
+]
+`;
+
+exports[`renders as expected 1`] = `
+<FilterOverlayTrigger
+  buttonClass="btn-margin-left"
+  buttonsContainerClass="inline"
+  hints={Array []}
+  id="date-filter"
+  onSubmit={[MockFunction]}
+  popoverClass="wide display-logic-container"
+  popoverContent={
+    <div>
+      <DateRangePicker
+        displayFormat="YYYY-MM-DD"
+        endDate={null}
+        endDateId="end-date"
+        endDatePlaceholderText="End Date"
+        focusedInput={null}
+        isOutsideRange={[Function]}
+        onDatesChange={[Function]}
+        onFocusChange={[Function]}
+        showClearDates={true}
+        startDate={null}
+        startDateId="start-date"
+        startDatePlaceholderText="Start Date"
+      />
+    </div>
+  }
+  title="Date"
+/>
+`;

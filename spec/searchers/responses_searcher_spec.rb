@@ -15,22 +15,20 @@ describe ResponsesSearcher do
     let!(:r3) { create(:response, form: form) }
     let!(:r4) { create(:response, form: form3) }
 
-    it "should work" do
+    it "matches the correct objects" do
       expect(search(%(form:"foo 1.0"))).to contain_exactly(r1, r3)
       expect(search(%(form:(qu'o`t"es)))).to contain_exactly(r4)
       expect(search(%(form-id:"#{form.id}"))).to contain_exactly(r1, r3)
+    end
 
+    it "has correct filter data" do
       expect(searcher(%(form:"foo 1.0"))).to have_filter_data(
         form_ids: [],
         advanced_text: "form:(\"foo 1.0\")"
       )
-      expect(searcher(%(form-id:"#{form.id}"))).to have_filter_data(
-        form_ids: [form.id],
-        advanced_text: ""
-      )
+      expect(searcher(%(form-id:"#{form.id}"))).to have_filter_data(form_ids: [form.id])
       expect(searcher(%(form-id:("#{form.id}" | #{form2.id})))).to have_filter_data(
-        form_ids: [form2.id, form.id],
-        advanced_text: ""
+        form_ids: [form2.id, form.id]
       )
       expect(searcher(%(form-id:"#{form.id}" source:x))).to have_filter_data(
         form_ids: [form.id],
@@ -43,14 +41,17 @@ describe ResponsesSearcher do
     let!(:r1) { create(:response, form: form, reviewed: true) }
     let!(:r2) { create(:response, form: form) }
 
-    it "should work" do
+    it "matches the correct objects" do
       expect(search(%(reviewed:1))).to contain_exactly(r1)
+    end
 
-      expect(searcher(%(reviewed:1))).to have_filter_data(is_reviewed: true, advanced_text: "")
-      expect(searcher(%(reviewed:yes))).to have_filter_data(is_reviewed: true, advanced_text: "")
-      expect(searcher(%(reviewed:"NO"))).to have_filter_data(is_reviewed: false, advanced_text: "")
-      expect(searcher(%(reviewed:("0")))).to have_filter_data(is_reviewed: false, advanced_text: "")
-      expect(searcher(%(reviewed:(1 0)))).to have_filter_data(is_reviewed: nil, advanced_text: "reviewed:(1 0)")
+    it "has correct filter data" do
+      expect(searcher(%(reviewed:1))).to have_filter_data(is_reviewed: true)
+      expect(searcher(%(reviewed:yes))).to have_filter_data(is_reviewed: true)
+      expect(searcher(%(reviewed:"NO"))).to have_filter_data(is_reviewed: false)
+      expect(searcher(%(reviewed:("0")))).to have_filter_data(is_reviewed: false)
+      expect(searcher(%(reviewed:(1 0)))).to have_filter_data(is_reviewed: nil,
+                                                              advanced_text: "reviewed:(1 0)")
     end
   end
 
@@ -58,7 +59,7 @@ describe ResponsesSearcher do
     context "with tricky timezone" do
       let(:response) { create(:response, form: form, created_at: "2017-01-01 22:00") }
 
-      it "should match dates in local timezone" do
+      it "matches dates in local timezone" do
         in_timezone("Saskatchewan") do
           response # Build response inside correct timezone.
           # Verify time stored in UTC (Jan 2), but search matches Jan 1.
@@ -69,7 +70,7 @@ describe ResponsesSearcher do
       end
     end
 
-    context "with inequality operator" do
+    context "with mulutiple responses" do
       let(:responses) do
         [
           create(:response, form: form, created_at: "2017-01-01 22:00"),
@@ -78,9 +79,28 @@ describe ResponsesSearcher do
         ]
       end
 
-      it "should match correctly" do
+      it "matches the correct objects" do
         expect(search(%(submit-date < 2017-01-04))).to match_array(responses[0..1])
         expect(search(%(submit-date > 2017-01-04))).to contain_exactly(responses[2])
+        expect(search(%(submit-date:2017-01-08))).to contain_exactly(responses[2])
+      end
+
+      it "has correct filter data" do
+        expect(searcher(%(submit-date <= 2017-01-04))).to have_filter_data(
+          start_date: nil, end_date: Date.new(2017, 1, 4)
+        )
+        expect(searcher(%(submit-date:2017-01-08))).to have_filter_data(
+          start_date: Date.new(2017, 1, 8), end_date: Date.new(2017, 1, 8)
+        )
+        complex = %(submit-date > 2017-01-31 submit-date > 2017-01-02
+                    submit-date <= 2017-03-05 submit-date <= 2017-02-28)
+        expect(searcher(complex)).to have_filter_data(
+          start_date: Date.new(2017, 2, 1), end_date: Date.new(2017, 2, 28)
+        )
+      end
+
+      it "handles bad date gracefullly" do
+        expect { search(%(submit-date < 2017-14-04)) }.to raise_error(/is not a valid date/)
       end
     end
   end
@@ -92,17 +112,18 @@ describe ResponsesSearcher do
     let!(:r1) { create(:response, user: u1) }
     let!(:r2) { create(:response, user: u2) }
 
-    it "should work" do
+    it "matches the correct objects" do
       expect(search(%(submitter:#{u1.name}))).to contain_exactly(r1)
       expect(search(%(submitter-id:#{u1.id}))).to contain_exactly(r1)
+    end
 
+    it "has correct filter data" do
       expect(searcher(%(submitter:#{u1.name}))).to have_filter_data(
         submitters: [],
         advanced_text: "submitter:#{u1.name}"
       )
       expect(searcher(%(submitter-id:#{u1.id}))).to have_filter_data(
-        submitters: [{id: u1.id, name: u1.name}],
-        advanced_text: ""
+        submitters: [{id: u1.id, name: u1.name}]
       )
       expect(searcher(%(submitter-id:(#{u1.id} | "#{u2.id}") source:x))).to have_filter_data(
         submitters: [{id: u1.id, name: u1.name}, {id: u2.id, name: u2.name}],
@@ -157,14 +178,13 @@ describe ResponsesSearcher do
       configatron.preferred_locales = preferred_locales
     end
 
-    it("should work") do
+    it "has correct filter data" do
       expect(searcher(%(apple))).to have_filter_data(
         qings: [],
         advanced_text: "apple"
       )
       expect(searcher(%({#{codes[0]}}:apple))).to have_filter_data(
-        qings: [{id: form.c[0].id, value: "apple"}],
-        advanced_text: ""
+        qings: [{id: form.c[0].id, value: "apple"}]
       )
       expect(searcher(%({#{codes[1].upcase}}:apple {#{codes[0].downcase}}:apple apple))).to have_filter_data(
         qings: [{id: form.c[1].id, value: "apple"}, {id: form.c[0].id, value: "apple"}],
@@ -172,26 +192,22 @@ describe ResponsesSearcher do
       )
       expect(searcher(%({#{codes[0]}}:apple form-id:"#{form2.id}"))).to have_filter_data(
         # This question doesn't exist on this form, so it won't be found.
-        qings: [{id: nil, value: "apple"}],
-        advanced_text: ""
+        qings: [{id: nil, value: "apple"}]
       )
       expect(searcher(%({#{codes[0]}}:apple form-id:"#{form.id}"))).to have_filter_data(
         # But it does exist on this form.
-        qings: [{id: form.c[0].id, value: "apple"}],
-        advanced_text: ""
+        qings: [{id: form.c[0].id, value: "apple"}]
       )
       expect(searcher(%({#{codes[2]}}:#{node3.option.canonical_name}))).to have_filter_data(
-        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: node3.option.canonical_name}],
-        advanced_text: ""
+        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: node3.option.canonical_name}]
       )
     end
 
-    it("should handle translations") do
+    it "should handle translations" do
       node3.option.update!(name_fr: "Chat")
 
       expect(searcher(%({#{codes[2]}}:chat))).to have_filter_data(
-        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: "chat"}],
-        advanced_text: ""
+        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: "chat"}]
       )
     end
   end
@@ -225,7 +241,7 @@ describe ResponsesSearcher do
       q6.option_set.c[0].option.update!(name_fr: "marteau")
     end
 
-    it "should work" do
+    it "matches the correct objects" do
       expect(search("text:brown")).to contain_exactly(r1, r3)
       expect(search("text:bravo")).to contain_exactly(r2, r3)
       expect(search("cat")).to contain_exactly(r1, r3)
@@ -284,24 +300,28 @@ describe ResponsesSearcher do
     let!(:r1) { create(:response, form: form, answer_values: [1, "foo bar", "foo"]) }
     let!(:r2) { create(:response, form: form, answer_values: [1, "baz", "qux"]) }
 
-    it "should work" do
+    it "matches the correct objects" do
       expect(search("foo")).to contain_exactly(r1)
       expect(search("bar bar")).to contain_exactly(r1)
       expect(search("foo baz")).to contain_exactly
+    end
 
+    it "has correct filter data" do
       expect(searcher("foo")).to have_filter_data(advanced_text: "foo")
       expect(searcher("text:foo")).to have_filter_data(advanced_text: "foo")
       expect(searcher("text=it's")).to have_filter_data(advanced_text: "it's")
       expect(searcher("bar bar")).to have_filter_data(advanced_text: "bar bar")
       expect(searcher("reviewed:1 foo")).to have_filter_data(advanced_text: "foo")
-      expect(searcher("foo reviewed:1 123.4 source:(x)")).to have_filter_data(advanced_text: "foo 123.4 source:x")
+      expect(searcher("foo reviewed:1 123.4 source:(x)")).to have_filter_data(
+        advanced_text: "foo 123.4 source:x"
+      )
       expect(searcher("source:(\"x y\" z)")).to have_filter_data(advanced_text: "source:(\"x y\" z)")
-      expect(searcher("submit-date >= 2013-10-15 submit-date < 2013-10-20")).to have_filter_data(advanced_text: "submit-date>=2013-10-15 submit-date<2013-10-20")
     end
   end
 
   RSpec::Matchers.define(:have_filter_data) do |expected|
     match do |actual|
+      expected[:advanced_text] ||= ""
       actual.apply
       @actual = expected.keys.map { |k| [k, actual.send(k)] }.to_h
       @actual = @actual.values.map(&method(:safe_sort))

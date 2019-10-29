@@ -19,6 +19,8 @@ function Injector(props) {
     selectedUsers,
     selectedGroups,
     advancedSearchText,
+    startDate,
+    endDate,
   } = props;
 
   const filtersStore = provideFiltersStore(FiltersModel, {
@@ -31,6 +33,8 @@ function Injector(props) {
       [submitterType.GROUP]: selectedGroups,
     },
     advancedSearchText,
+    startDate,
+    endDate,
   });
   const { conditionSetStore } = filtersStore;
 
@@ -52,6 +56,8 @@ Injector.propTypes = {
   selectedUsers: PropTypes.arrayOf(PropTypes.object),
   selectedGroups: PropTypes.arrayOf(PropTypes.object),
   advancedSearchText: PropTypes.string.isRequired,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
 };
 
 export default Injector;

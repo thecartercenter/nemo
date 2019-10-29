@@ -1,0 +1,44 @@
+// THIS CSS SHOULD EVENTUALLY GET IMPORTED TO THE COMPONENT AND BE PACKAGED BY WEBPACKER
+// FOR NOW WE HAVE TO KEEP IT IN ASSETS BECAUSE IT USES SCSS VARIABLES FROM THE ASSETS PIPELINE.
+
+// scss-lint:disable SelectorFormat
+.DateInput_input {
+  font-size: 14px;
+  height: calc(1.3em + 0.75rem + 2px);
+}
+
+.DateInput_input__focused {
+  border-color: $accent-color;
+}
+
+.CalendarDay {
+  vertical-align: middle;
+}
+
+.CalendarDay__selected_span {
+  background: $light-blue;
+  border-color: $accent-color;
+  color: $accent-color;
+}
+
+.CalendarDay__selected {
+  background: $accent-color;
+  border-color: $accent-color;
+}
+
+.CalendarDay__selected:hover {
+  background: $light-blue;
+  color: $accent-color;
+}
+
+.CalendarDay__hovered_span:hover,
+.CalendarDay__hovered_span {
+  background: $light-blue;
+  border-color: $accent-color;
+  color: $accent-color;
+}
+
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+  border-right: 33px solid $accent-color;
+}
+// scss-lint:enable SelectorFormat
