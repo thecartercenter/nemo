@@ -10,7 +10,7 @@ describe "questionings", type: :request do
 
   describe "update" do
     context "when published" do
-      let(:form) { create(:form, :live, question_types: %w(text text)) }
+      let(:form) { create(:form, :live, question_types: %w[text text]) }
       let(:qing) { form.questionings.first }
 
       it "changing name should succeed" do
