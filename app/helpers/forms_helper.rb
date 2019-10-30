@@ -77,16 +77,17 @@ module FormsHelper
 
   # Question types not listed here use PNGs instead of FA icons.
   FORM_ITEM_ICON_CLASSES = {
-    'long_text' => 'fa-align-left',
-    'date' => 'fa-calendar',
-    'time' => 'fa-clock-o',
-    'location' => 'fa-map-marker',
-    'group' => 'fa-folder-open-o',
-    'image' => 'fa-image',
-    'sketch' => 'fa-pencil-square-o',
-    'audio' => 'fa-volume-up',
-    'video' => 'fa-film',
-    'counter' => 'fa-plus'
+    "long_text" => "fa-align-left",
+    "date" => "fa-calendar",
+    "time" => "fa-clock-o",
+    "location" => "fa-map-marker",
+    "group" => "fa-folder-open-o",
+    "image" => "fa-image",
+    "sketch" => "fa-pencil-square-o",
+    "audio" => "fa-volume-up",
+    "video" => "fa-film",
+    "counter" => "fa-plus",
+    "document" => "fa-file"
   }
 
   def form_item_icon(type)

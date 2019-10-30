@@ -6,9 +6,20 @@ module Odk
     extend ActiveSupport::Concern
 
     # video/ogg is needed for audio OGG files for some weird reason.
+    # application/x-ole-storage is needed sometimes due to issue: https://github.com/minad/mimemagic/issues/50
     ODK_MEDIA_MIME_TYPES = %w[audio/mpeg audio/ogg audio/wave audio/wav audio/x-wav audio/x-pn-wav
-                              audio/flac video/ogg application/ogg video/mp4 image/png image/jpeg].freeze
-    ODK_MEDIA_EXTS = {audio: %w[mp3 ogg wav flac], video: %w[mp4], image: %w[png jpg jpeg]}.freeze
+                              audio/flac video/ogg application/ogg video/mp4 image/png image/jpeg
+                              application/msword application/vnd.oasis.opendocument.spreadsheet
+                              application/vnd.ms-excel
+                              application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                              application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                              application/vnd.openxmlformats-officedocument.presentationml.presentation
+                              application/vnd.oasis.opendocument.text application/pdf
+                              application/vnd.ms-powerpoint text/csv application/rtf text/plain
+                              application/vnd.oasis.opendocument.presentation
+                              application/x-ole-storage].freeze
+    ODK_MEDIA_EXTS = {audio: %w[mp3 ogg wav flac], video: %w[mp4], image: %w[png jpg jpeg],
+                      document: %w[pdf xls xlsx ods doc docx odt rtf ppt pptx odp csv txt]}.freeze
 
     class_methods do
       def odk_media_attachment(col_name)

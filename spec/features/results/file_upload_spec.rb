@@ -7,7 +7,7 @@ feature "response form file upload", js: true do
   include_context "file import"
 
   let(:user) { create(:user) }
-  let!(:form) { create(:form, :published, question_types: %w[image video]) }
+  let!(:form) { create(:form, :published, question_types: %w[image video document]) }
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
   before { login(user) }
@@ -16,12 +16,15 @@ feature "response form file upload", js: true do
   let(:image2) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.png") }
   let(:video) { Rails.root.join("spec", "fixtures", "media", "video", "jupiter.mp4") }
   let(:video2) { Rails.root.join("spec", "fixtures", "media", "video", "jupiter.avi") }
+  let(:document) { Rails.root.join("spec", "fixtures", "media", "document", "document.pdf") }
+  let(:document2) { Rails.root.join("spec", "fixtures", "media", "document", "document.doc") }
 
   scenario "uploading files" do
     visit new_response_path(params)
 
     image_node = find("[data-path='0']")
     video_node = find("[data-path='1']")
+    document_node = find("[data-path='2']")
 
     # upload valid file
     drop_in_dropzone(image, 0)
@@ -36,22 +39,35 @@ feature "response form file upload", js: true do
     drop_in_dropzone(video, 1)
     expect_preview(video_node)
 
+    # try uploading invalid document
+    drop_in_dropzone(image, 2)
+    expect_no_preview(document_node)
+    expect(document_node).to(have_content("The uploaded file was not an accepted format."))
+
+    # upload valid document
+    drop_in_dropzone(document, 2)
+    expect_preview(document_node)
+
     # save w/o user
     click_button("Save")
     expect(page).to have_content("Response is invalid")
 
     image_node = find("[data-path='0']")
     video_node = find("[data-path='1']")
+    document_node = find("[data-path='2']")
 
     # thumbnails are still present
     expect(image_node).to have_selector(".media-thumbnail img")
     expect_thumbnail(image_node)
     expect(video_node).to have_selector(".media-thumbnail img")
     expect_thumbnail(video_node, placeholder: true)
+    expect(document_node).to have_selector(".media-thumbnail img")
+    expect_thumbnail(document_node, placeholder: true)
 
     # media can be downloaded
     expect_download(image_node.find(".media-thumbnail .download")["href"])
     expect_download(video_node.find(".media-thumbnail .download")["href"])
+    expect_download(document_node.find(".media-thumbnail .download")["href"])
 
     # upload different image
     delete_file(image_node)
@@ -62,6 +78,10 @@ feature "response form file upload", js: true do
     # delete video
     delete_file(video_node)
     expect_no_preview(video_node)
+
+    # delete document
+    delete_file(document_node)
+    expect_no_preview(document_node)
 
     # save w/ user
     select2(user.name, from: "response_user_id")
@@ -89,10 +109,34 @@ feature "response form file upload", js: true do
 
     image_node = find("[data-path='0']")
     video_node = find("[data-path='1']")
+    document_node = find("[data-path='2']")
 
     # no image thumbnail, video thumbnail present
     expect(image_node).to_not have_selector(".media-thumbnail img")
     expect(video_node).to have_selector(".media-thumbnail img")
+    expect(document_node).to_not(have_selector(".media-thumbnail img"))
+
+    # delete video
+    delete_file(video_node)
+    expect_no_preview(video_node)
+
+    # upload different video
+    drop_in_dropzone(document2, 2)
+    expect_preview(document_node)
+
+    click_button("Save")
+    expect(page).to_not(have_content("Response is invalid"))
+
+    visit edit_response_path(params.merge(id: response.shortcode))
+
+    image_node = find("[data-path='0']")
+    video_node = find("[data-path='1']")
+    document_node = find("[data-path='2']")
+
+    # no image thumbnail, video thumbnail present
+    expect(image_node).to_not(have_selector(".media-thumbnail img"))
+    expect(video_node).to_not(have_selector(".media-thumbnail img"))
+    expect(document_node).to(have_selector(".media-thumbnail img"))
   end
 
   def expect_download(url)

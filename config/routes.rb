@@ -74,7 +74,7 @@ ELMO::Application.routes.draw do
       end
     end
 
-    namespace :media, type: /audios|images|videos/ do
+    namespace :media, type: /audios|images|videos|documents/ do
       resources :objects, path: ":type", only: %i[show create destroy]
     end
 

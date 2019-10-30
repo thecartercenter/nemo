@@ -67,6 +67,7 @@ module Media
       when "audios" then Media::Audio
       when "videos" then Media::Video
       when "images" then Media::Image
+      when "documents" then Media::Document
       else raise "A valid media type must be specified"
       end
     end

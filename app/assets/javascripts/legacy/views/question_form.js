@@ -74,7 +74,8 @@
       selected_type == "signature" ||
       selected_type == "sketch" ||
       selected_type == "audio" ||
-      selected_type == "video"
+      selected_type == "video" ||
+      selected_type == "document"
     );
     $(".question_fields .question_key").css('display', hide_key_q ? 'none' : 'flex');
 

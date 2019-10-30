@@ -12,6 +12,7 @@
           <*itemcode5*/>
           <*itemcode6*/>
           <*itemcode7*/>
+          <*itemcode8*/>
         </data>
       </instance>
       <itext>
@@ -58,6 +59,12 @@
           <text id="*itemcode7*:hint">
             <value>Question Hint 7</value>
           </text>
+          <text id="*itemcode8*:label">
+            <value>Document Question Title 8</value>
+          </text>
+          <text id="*itemcode8*:hint">
+            <value>Question Hint 8</value>
+          </text>
           <text id="BLANK">
             <value/>
           </text>
@@ -70,6 +77,7 @@
       <bind nodeset="/data/*itemcode5*" type="binary"/>
       <bind nodeset="/data/*itemcode6*" type="binary"/>
       <bind nodeset="/data/*itemcode7*" type="binary"/>
+      <bind nodeset="/data/*itemcode8*" type="binary"/>
     </model>
   </h:head>
   <h:body>
@@ -100,6 +108,10 @@
     <upload ref="/data/*itemcode7*" mediatype="video/*">
       <label ref="jr:itext('*itemcode7*:label')"/>
       <hint ref="jr:itext('*itemcode7*:hint')"/>
+    </upload>
+    <upload ref="/data/*itemcode8*" mediatype="document/*">
+      <label ref="jr:itext('*itemcode8*:label')"/>
+      <hint ref="jr:itext('*itemcode8*:hint')"/>
     </upload>
   </h:body>
 </h:html>

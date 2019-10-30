@@ -75,6 +75,10 @@ class QuestionType
     name: "video",
     odk_name: "binary",
     properties: %w[multimedia]
+  }, {
+    name: "document",
+    odk_name: "binary",
+    properties: %w[multimedia]
   }]
 
   # looks up a question type by name
@@ -124,7 +128,7 @@ class QuestionType
   def media_type
     case name
     when "image", "annotated_image", "signature", "sketch" then "image"
-    when "audio", "video" then name
+    when "audio", "video", "document" then name
     end
   end
 end

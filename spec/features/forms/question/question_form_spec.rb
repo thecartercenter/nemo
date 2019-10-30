@@ -27,7 +27,8 @@ describe "question form", js: true do
     "Signature" => %i[],
     "Sketch" => %i[],
     "Audio" => %i[],
-    "Video" => %i[]
+    "Video" => %i[],
+    "Document" => %i[]
   }.freeze
 
   FIELD_NAMES = {

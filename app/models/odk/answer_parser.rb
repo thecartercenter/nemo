@@ -86,6 +86,7 @@ module Odk
       when "image", "annotated_image", "sketch", "signature" then Media::Image
       when "audio" then Media::Audio
       when "video" then Media::Video
+      when "document" then Media::Document
       end
     end
   end

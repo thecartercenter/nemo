@@ -1593,6 +1593,7 @@ en:
     sketch: "Sketch"
     audio: "Audio"
     video: "Video"
+    document: "Document"
 
   recaptcha:
     errors:
@@ -1751,11 +1752,13 @@ en:
       image: "Are you sure you want to delete this image?"
       audio: "Are you sure you want to delete this audio?"
       video: "Are you sure you want to delete this video?"
+      document: "Are you sure you want to delete this document?"
     drop_more_info: "More info"
     drop_hint:
       image: "The image should be at most 5 MB in size. Accepted formats are: jpg, png."
       video: "The video should be at most 25 MB in size. Accepted formats are: 3gp, mp4, webm, mpg, wmv, avi."
       audio: "The audio should be at most 10 MB in size. Accepted formats are: mp3, ogg, webm, wav."
+      document:  "The document should be at most 10 MB in size. Accepted formats are: pdf, doc(x), xls(x), ppt(x), ods, odt, odp, csv, rtf, txt."
     csv_headers:
       response_id: "ResponseID"
       reviewed: "Reviewed"

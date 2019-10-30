@@ -8,6 +8,7 @@
           <*itemcode1*/>
           <*itemcode2*/>
           <*itemcode3*/>
+          <*itemcode4*/>
         </data>
       </instance>
       <itext>
@@ -39,6 +40,15 @@
           <text id="*itemcode3*:hint">
             <value>Question Hint 3</value>
           </text>
+          <text id="*itemcode4*:label">
+            <value>Text Question Title 4</value>
+            <value form="document">
+              jr://document/*questionid4*_media_prompt.pdf
+            </value>
+          </text>
+          <text id="*itemcode4*:hint">
+            <value>Question Hint 4</value>
+          </text>
           <text id="BLANK">
             <value/>
           </text>
@@ -47,6 +57,7 @@
       <bind nodeset="/data/*itemcode1*" type="string"/>
       <bind nodeset="/data/*itemcode2*" type="string"/>
       <bind nodeset="/data/*itemcode3*" type="string"/>
+      <bind nodeset="/data/*itemcode4*" type="string"/>
     </model>
   </h:head>
   <h:body>
@@ -61,6 +72,10 @@
     <input ref="/data/*itemcode3*">
       <label ref="jr:itext('*itemcode3*:label')"/>
       <hint ref="jr:itext('*itemcode3*:hint')"/>
+    </input>
+    <input ref="/data/*itemcode4*">
+      <label ref="jr:itext('*itemcode4*:label')"/>
+      <hint ref="jr:itext('*itemcode4*:hint')"/>
     </input>
   </h:body>
 </h:html>

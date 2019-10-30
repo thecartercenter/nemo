@@ -84,13 +84,14 @@ class Report::StandardFormReport < Report::Report
 
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {
-    'location' => true,
-    'image' => true,
-    'annotated_image' => true,
-    'signature' => true,
-    'sketch' => true,
-    'video' => true,
-    'audio' => true
+    "location" => true,
+    "image" => true,
+    "annotated_image" => true,
+    "signature" => true,
+    "sketch" => true,
+    "video" => true,
+    "audio" => true,
+    "document" => true
   }
 
   # options for the question_order attrib

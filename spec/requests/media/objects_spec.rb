@@ -38,6 +38,17 @@ describe "media object requests" do
       end
     end
 
+    context "with document" do
+      let(:form) { create(:form, mission: mission, question_types: %w[document]) }
+
+      it "uploads document files" do
+        file = fixture_file_upload("spec/fixtures/media/document/document.pdf", "application/pdf")
+        post(media_objects_path(mission_name: mission.compact_name, type: "documents"),
+          params: {upload: file})
+        expect(response).to have_http_status(201)
+      end
+    end
+
     context "with media type mismatch" do
       let(:form) { create(:form, mission: mission, question_types: %w[image]) }
 

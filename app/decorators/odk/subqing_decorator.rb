@@ -127,6 +127,7 @@ module Odk
       when "image", "annotated_image", "sketch", "signature" then "image/*"
       when "audio" then "audio/*"
       when "video" then "video/*"
+      when "document" then "document/*"
       end
     end
 

@@ -4,7 +4,7 @@ module Odk
   class QuestionDecorator < ApplicationDecorator
     delegate_all
 
-    URI_DIRS_BY_TYPE = {video: "video", audio: "audio", image: "images"}.freeze
+    URI_DIRS_BY_TYPE = {video: "video", audio: "audio", image: "images", document: "document"}.freeze
 
     # Make media prompt file name unique to curb collisions and duplications
     def unique_media_prompt_filename

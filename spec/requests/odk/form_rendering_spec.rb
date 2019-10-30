@@ -453,7 +453,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       let(:form) do
         create(:form, :published, :with_version,
           name: "Media Questions",
-          question_types: %w[text image annotated_image sketch signature audio video])
+          question_types: %w[text image annotated_image sketch signature audio video document])
       end
 
       it "should render proper xml" do
@@ -462,12 +462,13 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     context "media prompts" do
-      let(:form) { create(:form, :published, name: "Media Prompts", question_types: %w[text text text]) }
+      let(:form) { create(:form, :published, name: "Media Prompts", question_types: %w[text text text text]) }
 
       before do
         form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
         form.c[1].question.update!(media_prompt: video_fixture("jupiter.mp4"))
         form.c[2].question.update!(media_prompt: image_fixture("the_swing.png"))
+        form.c[3].question.update!(media_prompt: document_fixture("document.pdf"))
       end
 
       it "should render proper xml" do

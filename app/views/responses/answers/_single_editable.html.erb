@@ -33,7 +33,7 @@
           class: "form-control") %>
     <% end %>
 
-  <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
+  <% when "image", "annotated_image", "signature", "sketch", "audio", "video", "document" %>
 
     <%= render("responses/answers/media_editable", answer: answer, context: context) %>
 

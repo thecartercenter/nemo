@@ -106,5 +106,61 @@ FactoryGirl.define do
         item { media_fixture("video/jupiter.ogv") }
       end
     end
+
+    factory :media_document, class: "Media::Document" do
+      pdf
+
+      trait :csv do
+        item { media_fixture("document/document.csv") }
+      end
+
+      trait :doc do
+        item { media_fixture("document/document.doc") }
+      end
+
+      trait :docx do
+        item { media_fixture("document/document.docx") }
+      end
+
+      trait :odp do
+        item { media_fixture("document/document.odp") }
+      end
+
+      trait :ods do
+        item { media_fixture("document/document.ods") }
+      end
+
+      trait :odt do
+        item { media_fixture("document/document.odt") }
+      end
+
+      trait :pdf do
+        item { media_fixture("document/document.pdf") }
+      end
+
+      trait :ppt do
+        item { media_fixture("document/document.ppt") }
+      end
+
+      trait :pptx do
+        item { media_fixture("document/document.pptx") }
+      end
+
+      trait :rtf do
+        item { media_fixture("document/document.rtf") }
+      end
+
+      trait :txt do
+        item { media_fixture("document/document.txt") }
+      end
+
+      trait :xls do
+        item { media_fixture("document/document.xls") }
+      end
+
+      trait :xlsx do
+        item { media_fixture("document/document.xlsx") }
+      end
+    end
   end
 end
