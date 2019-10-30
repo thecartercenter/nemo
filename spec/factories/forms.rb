@@ -169,6 +169,7 @@ FactoryGirl.define do
 
     trait :paused do
       after(:create) do |form|
+        form.update_status(:live)
         form.update_status(:paused)
       end
     end

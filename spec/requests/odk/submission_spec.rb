@@ -70,6 +70,7 @@ describe "odk submissions", :odk, type: :request do
   end
 
   context "with draft form" do
+    let(:formver) { "1234" }
     let(:form) { create(:form, :draft, question_types: %w[integer]) }
 
     it "should fail with 460" do
@@ -88,7 +89,7 @@ describe "odk submissions", :odk, type: :request do
   end
 
   context "with old version of form" do
-    let(:formver) { "junk" }
+    let(:formver) { "1234" }
 
     it "should fail with 426" do
       post(submission_path, params: request_params, headers: auth_headers)

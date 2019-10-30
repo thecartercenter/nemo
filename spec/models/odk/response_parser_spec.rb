@@ -9,7 +9,8 @@ describe Odk::ResponseParser do
   let(:save_fixtures) { true }
   let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
   let(:response2) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-  let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values) }
+  let(:formver) { nil } # Don't override the version by default
+  let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
   let(:files) { {xml_submission_file: StringIO.new(xml)} }
 
   context "responses without media" do
@@ -31,6 +32,7 @@ describe Odk::ResponseParser do
         end
 
         context "draft form" do
+          let(:formver) { "1234" }
           let(:form) { create(:form, :draft, question_types: question_types) }
 
           it "should error" do
