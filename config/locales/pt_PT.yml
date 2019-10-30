@@ -96,7 +96,7 @@ pt:
     protected: "Protegido"
     inherit: "herdar"
   errors:
-    format: "%{atributo}: %{mensagem}"
+    format: "%{attribute}: %{message}"
     messages:
       deleted_successfully: "suprimido com sucesso"
       generic_delete_error: "erro durante a eliminação"
