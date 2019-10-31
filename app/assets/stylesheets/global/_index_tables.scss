@@ -1,7 +1,9 @@
 table.index_table {
   $cell-top-bot-padding: 6px;
 
-  min-width: 600px;
+  @include media-breakpoint-up(md) {
+    min-width: 480px;
+  }
 
   tr:first-child td {
     border-top: none;
