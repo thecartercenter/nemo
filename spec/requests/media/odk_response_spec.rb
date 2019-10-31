@@ -18,7 +18,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
 
       post submission_path, params: {xml_submission_file: submission_file, "the_swing.jpg" => image},
                             headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)}
-      expect(response).to have_http_status(201)
+      expect(response).to have_http_status(:created)
 
       form_response = Response.last
       expect(form_response.form).to eq(form)
@@ -45,7 +45,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         headers: {
           "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
         }
-      expect(response).to have_http_status(201)
+      expect(response).to have_http_status(:created)
       expect(Response.count).to eq(1)
 
       # Submit second part
@@ -58,7 +58,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
           "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
         }
 
-      expect(response).to have_http_status(201)
+      expect(response).to have_http_status(:created)
 
       form_response = Response.first
 

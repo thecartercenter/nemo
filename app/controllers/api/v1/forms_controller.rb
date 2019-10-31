@@ -13,10 +13,10 @@ class API::V1::FormsController < API::V1::BaseController
     @form = Form.find_by(id: params[:id])
 
     if @form.nil?
-      render json: { errors: ["form_not_found"] }, status: 404
+      render json: { errors: ["form_not_found"] }, status: :not_found
 
     elsif !@form.api_user_id_can_see?(@api_user.id)
-      render json: { errors: ["access_denied"] }, status: 403
+      render json: { errors: ["access_denied"] }, status: :forbidden
 
     else
       render json: @form, serializer: API::V1::FormSerializer

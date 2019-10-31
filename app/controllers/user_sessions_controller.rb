@@ -59,7 +59,7 @@ class UserSessionsController < ApplicationController
 
   # Special route, test only, used by feature specs to simulate user login.
   def test_login
-    return render plain: 'TEST MODE ONLY', status: 403 unless Rails.env.test?
+    return render plain: 'TEST MODE ONLY', status: :forbidden unless Rails.env.test?
     @user = User.find(params[:user_id])
     UserSession.create(@user)
     post_login_housekeeping(dont_redirect: true)

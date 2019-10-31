@@ -33,11 +33,11 @@ describe "odk submissions", :odk, type: :request do
   context "get and head requests" do
     it "should return 204 and no content" do
       head(submission_path, params: {format: "xml"}, headers: auth_headers)
-      expect(response).to have_http_status(204)
+      expect(response).to have_http_status(:no_content)
       expect(response.body).to be_empty
 
       get(submission_path, params: {format: "xml"}, headers: auth_headers)
-      expect(response).to have_http_status(204)
+      expect(response).to have_http_status(:no_content)
       expect(response.body).to be_empty
     end
   end
@@ -45,7 +45,7 @@ describe "odk submissions", :odk, type: :request do
   context "normal submission" do
     it "should work and have mission set to current mission" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(201)
+      expect(response).to have_http_status(:created)
       expect(nemo_response.mission).to eq(mission)
     end
   end
@@ -55,7 +55,7 @@ describe "odk submissions", :odk, type: :request do
 
     it "should fail" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(403)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -75,7 +75,7 @@ describe "odk submissions", :odk, type: :request do
 
     it "should fail with 460" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(460)
+      expect(response).to have_http_status(:form_not_live)
     end
   end
 
@@ -84,25 +84,25 @@ describe "odk submissions", :odk, type: :request do
 
     it "should fail with 460" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(460)
+      expect(response).to have_http_status(:form_not_live)
     end
   end
 
   context "with old version of form" do
     let(:formver) { "1234" }
 
-    it "should fail with 426" do
+    it "should fail with upgrade_required" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(426)
+      expect(response).to have_http_status(:upgrade_required)
     end
   end
 
   context "without form version" do
     let(:fixture_name) { "no_version" }
 
-    it "should fail with 426" do
+    it "should fail with upgrade_required" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(426)
+      expect(response).to have_http_status(:upgrade_required)
     end
   end
 
@@ -111,7 +111,7 @@ describe "odk submissions", :odk, type: :request do
 
     it "should fail" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(403)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -120,7 +120,7 @@ describe "odk submissions", :odk, type: :request do
 
     it "should fail" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 
@@ -134,7 +134,7 @@ describe "odk submissions", :odk, type: :request do
 
     it "should still accept response" do
       post(submission_path, params: request_params, headers: auth_headers)
-      expect(response).to have_http_status(201)
+      expect(response).to have_http_status(:created)
       expect(nemo_response.children.size).to eq(1)
     end
   end

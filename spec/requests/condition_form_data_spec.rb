@@ -44,7 +44,7 @@ describe "condition form data" do
             conditionable_id: qing.id,
             conditionable_type: "FormItem"
           }
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:ok)
         expect(response.body).to eq(expected)
       end
     end
@@ -80,7 +80,7 @@ describe "condition form data" do
             conditionable_id: qing.id,
             conditionable_type: "FormItem"
           }
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:ok)
         expect(response.body).to eq(expected)
       end
 
@@ -114,7 +114,7 @@ describe "condition form data" do
               conditionable_id: qing.id,
               conditionable_type: "FormItem"
             }
-          expect(response).to have_http_status(200)
+          expect(response).to have_http_status(:ok)
           expect(response.body).to eq(expected)
         end
       end
@@ -149,7 +149,7 @@ describe "condition form data" do
               conditionable_id: qing.id,
               conditionable_type: "FormItem"
             }
-          expect(response).to have_http_status(200)
+          expect(response).to have_http_status(:ok)
           expect(response.body).to eq(expected)
         end
       end

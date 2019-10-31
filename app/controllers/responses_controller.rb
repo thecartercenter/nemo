@@ -173,6 +173,7 @@ class ResponsesController < ApplicationController
     # Store main XML file for debugging purposes.
     SavedUpload.create!(file: params[:xml_submission_file])
 
+    # See config/initializers/http_status_code.rb for custom status definitions
     begin
       @response.user_id = current_user.id
       @response = odk_response_parser.populate_response
@@ -180,18 +181,16 @@ class ResponsesController < ApplicationController
       @response.save(validate: false)
       render(body: nil, status: :created)
     rescue CanCan::AccessDenied => e
-      render_xml_submission_failure(e, 403)
+      render_xml_submission_failure(e, :forbidden)
     rescue ActiveRecord::RecordNotFound => e
-      render_xml_submission_failure(e, 404)
+      render_xml_submission_failure(e, :not_found)
     rescue FormVersionError => e
-      # 426 - upgrade needed
       # We use this because ODK can't display custom failure messages so this provides a little more info.
-      render_xml_submission_failure(e, 426)
+      render_xml_submission_failure(e, :upgrade_required)
     rescue FormStatusError => e
-      # 460 - Custom code meaning form is not live
-      render_xml_submission_failure(e, 460)
+      render_xml_submission_failure(e, :form_not_live)
     rescue SubmissionError => e
-      render_xml_submission_failure(e, 422)
+      render_xml_submission_failure(e, :unprocessable_entity)
     end
   end
 

@@ -16,7 +16,7 @@ module Concerns::ApplicationController::Crud
 
   # Handles ParamaterMissing errors
   def handle_parameter_missing
-    render body: nil, status: 400
+    render body: nil, status: :bad_request
   end
 
   # sets a success message based on the given object

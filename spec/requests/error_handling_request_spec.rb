@@ -7,6 +7,6 @@ describe "error handling" do
   it "renders 400 when a POST request is sent with no params" do
     post(reports_path(mission_name: mission.compact_name, mode: "m"))
     expect(response).not_to be_successful
-    expect(response).to have_http_status 400
+    expect(response).to have_http_status(:bad_request)
   end
 end
