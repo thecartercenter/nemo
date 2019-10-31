@@ -29,6 +29,7 @@ module ActionLinks
 
     private
 
+    # Takes the action spec provided and returns a three element array of form [action, url, method]
     def unpack_action(action)
       if action.is_a?(Array)
         if action[1].is_a?(Hash)
