@@ -41,7 +41,7 @@ feature "forms", js: true do
       end
 
       # Edit a group
-      form_item([3, 0]).find(".fa-pencil").click
+      click_form_item_action_icon([3, 0], :edit)
       expect(page).to have_css(".modal-title", text: "Edit Group")
       fill_in("Name (English)", with: "Inner Groupe")
       find(".modal-footer .btn-primary").click
@@ -81,13 +81,13 @@ feature "forms", js: true do
 
     scenario "deleting elements" do
       visit(edit_url)
-      form_item([1, 0]).find(".fa-trash-o").click
+      click_form_item_action_icon([1, 0], :delete)
       message = accept_confirm
       expect(message).to match("question '#{q10_name}'")
       wait_for_ajax # Need to wait or we get down into bottom part of the test before ajax completes.
       expect(page).not_to have_content(q10_name)
 
-      form_item([1]).find(".fa-trash-o").click
+      click_form_item_action_icon([1], :delete)
       message = accept_confirm
       expect(message).to match("group '#{g1_name}'")
       wait_for_ajax
@@ -144,7 +144,7 @@ feature "forms", js: true do
     within(".modal") { click_button("Save") }
   end
 
-  def form_item_selector(path)
+  def form_item_selector(path, inner: false)
     selector = [".draggable-list-wrapper"]
 
     path.each do |index|
@@ -153,11 +153,19 @@ feature "forms", js: true do
       selector << "> li.form-item:nth-child(#{index + 1})"
     end
 
-    selector.join(" ")
+    selector.join(" ") << (inner ? "> div.inner" : "")
   end
 
-  def form_item(path)
-    find(form_item_selector(path))
+  def form_item(path, inner: false)
+    find(form_item_selector(path, inner: inner))
+  end
+
+  def click_form_item_action_icon(path, action)
+    icon_class = case action
+                 when :delete then "fa-trash-o"
+                 when :edit then "fa-pencil"
+                 end
+    form_item(path, inner: true).find(".#{icon_class}").click
   end
 
   def release_item
