@@ -6,6 +6,8 @@ import ConditionSetModel from '../ConditionSetFormField/model';
 import { provideConditionSetStore } from '../ConditionSetFormField/utils';
 import DisplayLogicFormField from './component';
 
+let forcedResetNonce = 0;
+
 /**
  * Provides any needed stores to its children.
  */
@@ -30,8 +32,9 @@ function Injector(props) {
     hide: displayIf === 'always',
   });
 
+  // eslint-disable-next-line no-return-assign
   return (
-    <Provider conditionSetStore={conditionSetStore}>
+    <Provider key={forcedResetNonce += 1} conditionSetStore={conditionSetStore}>
       <DisplayLogicFormField {...props} />
     </Provider>
   );
