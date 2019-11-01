@@ -137,6 +137,52 @@ feature "forms", js: true do
     end
   end
 
+  context "with groups and conditions" do
+    let(:question_types) { ["integer", %w[integer], %w[integer]] }
+
+    before do
+      qings[1].update!(
+        display_if: "all_met",
+        display_conditions_attributes: [
+          {left_qing: form.c[0], op: "gt", value: "5"}
+        ]
+      )
+      qings[2].update!(
+        display_if: "all_met",
+        display_conditions_attributes: [
+          {left_qing: form.c[0], op: "gt", value: "6"}
+        ]
+      )
+    end
+
+    scenario "editing several group conditions successively" do
+      visit(edit_url)
+      click_form_item_action_icon([1], :edit)
+      within(".modal") do
+        find(".condition-value input").set("15")
+        find(".btn-primary").click
+      end
+
+      click_form_item_action_icon([1], :edit)
+      within(".modal") do
+        expect(find(".condition-value input").value).to eq("15")
+        find(".btn-primary").click
+      end
+
+      click_form_item_action_icon([2], :edit)
+      within(".modal") do
+        expect(find(".condition-value input").value).to eq("6")
+        find(".condition-value input").set("16")
+        find(".btn-primary").click
+      end
+
+      click_form_item_action_icon([2], :edit)
+      within(".modal") do
+        expect(find(".condition-value input").value).to eq("16")
+      end
+    end
+  end
+
   def create_group(name)
     click_link("Add Group")
     fill_in("Name (English)", with: name)
