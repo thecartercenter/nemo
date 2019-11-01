@@ -8,4 +8,12 @@ environment.loaders.append('ignore', {
 
 environment.loaders.delete('nodeModules');
 
+environment.splitChunks();
+
+// https://github.com/rails/webpacker/issues/2268
+environment.config.set('optimization.splitChunks.cacheGroups.styles', {
+  name: 'styles',
+  test: (module) => (module.type === 'css/mini-extract'),
+});
+
 module.exports = environment;
