@@ -25,14 +25,20 @@ feature "form status display and changes", js: true do
     visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
     click_link("Myform")
     expect(page).to have_css("div#status", text: /Status Draft/)
+    expect(page).to have_css(".top-action-links a", text: /Delete/)
+    expect(page).to have_css(".top-action-links a", text: /Go Live/)
 
     click_link("Go Live")
     click_link("Myform")
     expect(page).to have_css("div#status", text: /Status Live/)
+    expect(page).not_to have_css(".top-action-links a", text: /Delete/)
+    expect(page).to have_css(".top-action-links a", text: /Pause/)
 
     click_link("Pause")
     click_link("Myform")
     expect(page).to have_css("div#status", text: /Status Paused/)
+    expect(page).not_to have_css(".top-action-links a", text: /Delete/)
+    expect(page).to have_css(".top-action-links a", text: /Go Live/)
   end
 
   scenario "changing status via save and go live button" do
