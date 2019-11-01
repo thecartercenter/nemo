@@ -6,6 +6,8 @@ import ConditionSetModel from '../../ConditionSetFormField/model';
 import { provideConditionSetStore } from '../../ConditionSetFormField/utils';
 import ConstraintFormField from './component';
 
+let forcedResetNonce = 0;
+
 /**
  * Provides any needed stores to its children.
  */
@@ -29,8 +31,9 @@ function Injector(props) {
     rejectionMsgTranslations: rejectionMsgTranslations || {},
   });
 
+  // eslint-disable-next-line no-return-assign
   return (
-    <Provider conditionSetStore={conditionSetStore}>
+    <Provider key={forcedResetNonce += 1} conditionSetStore={conditionSetStore}>
       <ConstraintFormField {...props} />
     </Provider>
   );

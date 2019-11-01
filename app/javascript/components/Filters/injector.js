@@ -7,6 +7,8 @@ import { provideFiltersStore } from './utils';
 import { submitterType } from './SubmitterFilter/utils';
 import Filters from './component';
 
+let forcedResetNonce = 0;
+
 /**
  * Provides any needed stores to its children.
  */
@@ -38,8 +40,9 @@ function Injector(props) {
   });
   const { conditionSetStore } = filtersStore;
 
+  // eslint-disable-next-line no-return-assign
   return (
-    <Provider filtersStore={filtersStore} conditionSetStore={conditionSetStore}>
+    <Provider key={forcedResetNonce += 1} filtersStore={filtersStore} conditionSetStore={conditionSetStore}>
       <Filters {...props} />
     </Provider>
   );

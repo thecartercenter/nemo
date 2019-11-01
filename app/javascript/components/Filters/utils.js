@@ -13,25 +13,20 @@ export const CONTROLLER_NAME = {
   RESPONSES: '"responses"',
 };
 
-/** Cache. */
-let filtersStore = null;
-
 /**
  * Returns a new instance of FiltersModel.
  *
  * Generally this should be added to a top-level Provider and only used once.
  */
 export function provideFiltersStore(FiltersModel, initialState) {
-  if (!filtersStore) {
-    filtersStore = new FiltersModel(initialState);
+  const store = new FiltersModel(initialState);
 
-    if (process.env.NODE_ENV === 'development') {
-      // Debug helper.
-      window.store = filtersStore;
-    }
+  if (process.env.NODE_ENV === 'development') {
+    // Debug helper.
+    window.store = store;
   }
 
-  return filtersStore;
+  return store;
 }
 
 /**

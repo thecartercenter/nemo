@@ -1,6 +1,3 @@
-/** Cache. */
-const conditionSetStores = {};
-
 /**
  * Returns a new instance of ConditionSetModel.
  *
@@ -8,17 +5,15 @@ const conditionSetStores = {};
  * once per condition set.
  */
 export function provideConditionSetStore(ConditionSetModel, uniqueId, initialState) {
-  if (!conditionSetStores[uniqueId]) {
-    conditionSetStores[uniqueId] = new ConditionSetModel(initialState);
+  const store = new ConditionSetModel(initialState);
 
-    if (process.env.NODE_ENV === 'development') {
-      // Debug helper.
-      window.store = window.store || {};
-      window.store[uniqueId] = conditionSetStores[uniqueId];
-    }
+  if (process.env.NODE_ENV === 'development') {
+    // Debug helper.
+    window.store = window.store || {};
+    window.store[uniqueId] = store;
   }
 
-  return conditionSetStores[uniqueId];
+  return store;
 }
 
 /**
