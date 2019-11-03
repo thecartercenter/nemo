@@ -6,6 +6,7 @@ module Media
     include Storage
 
     before_action :set_media_object, only: %i[show destroy]
+    before_action :authenticate_token, only: %i[show]
     skip_authorization_check
 
     def show
@@ -69,6 +70,11 @@ module Media
       when "images" then Media::Image
       else raise "A valid media type must be specified"
       end
+    end
+
+    def authenticate_token
+      user = authenticate_with_http_token { |token, _options| User.find_by(api_key: token) }
+      @current_user = user if user
     end
   end
 end
