@@ -9,6 +9,7 @@ class OptionSetsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
   skip_authorization_check only: :child_nodes
+  skip_authorize_resource only: :child_nodes
 
   decorates_assigned :option_sets
 
