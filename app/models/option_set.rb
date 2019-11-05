@@ -198,7 +198,7 @@ class OptionSet < ApplicationRecord
   end
 
   def published?
-    !standard? && questionings.any?(&:not_draft?)
+    !standard? && questionings.any?(&:published?)
   end
 
   # Checks if this option set is used in at least one question
