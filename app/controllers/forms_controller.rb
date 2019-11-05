@@ -150,6 +150,11 @@ class FormsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
+  def return_to_draft_status
+    @form.update_status(:draft)
+    redirect_to(index_url_with_context)
+  end
+
   # shows the form to either choose existing questions or create a new one to add
   def choose_questions
     authorize!(:add_questions, @form)
