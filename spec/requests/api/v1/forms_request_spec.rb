@@ -14,7 +14,7 @@ describe "forms API requests" do
 
     it "should return a list of forms the user can see" do
       get "/api/v1/m/mission1/forms", headers: headers
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(:ok)
       expect(json.size).to eq 2
       expect(json.first.keys.sort).to eq %w(id name responses_count)
       expect(json.map{ |f| f["name"] }).to eq ["Form 1", "Form 4"]
@@ -22,7 +22,7 @@ describe "forms API requests" do
 
     it "should result in 401 if wrong api token" do
       get "/api/v1/m/mission1/forms", headers: bad_headers
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(:unauthorized)
       expect(json["errors"]).to eq %w(invalid_api_token)
     end
   end
@@ -33,7 +33,7 @@ describe "forms API requests" do
 
     it "should return appropriate json" do
       get "/api/v1/m/mission1/forms/#{form.id}", headers: headers
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(:ok)
       expect(json.keys.sort).to eq %w(id name questions responses_count)
       expect(json["questions"].size).to eq 2
       expect(json["questions"].first.keys.sort).to eq %w(code id name)

@@ -113,15 +113,6 @@ class Question < ApplicationRecord
                           SELECT question_id FROM form_items
                             WHERE type = 'Questioning' AND form_id = ?))", form.id)
                       }
-  scope :unpublished_and_unanswered, lambda {
-    where("NOT EXISTS (SELECT * FROM forms INNER JOIN form_items ON form_items.form_id = forms.id
-      AND form_items.question_id = questions.id
-      WHERE published = 't' AND forms.deleted_at IS NULL AND form_items.deleted_at IS NULL)")
-      .where("NOT EXISTS (SELECT * FROM answers INNER JOIN form_items
-        ON answers.questioning_id = form_items.id
-        WHERE answers.deleted_at IS NULL AND form_items.deleted_at IS NULL
-          AND form_items.question_id = questions.id)")
-  }
 
   translates :name, :hint
 
@@ -206,7 +197,7 @@ class Question < ApplicationRecord
 
   # determines if the question appears on any published forms
   def published?
-    !standard? && forms.any?(&:published?)
+    !standard? && forms.any?(&:not_draft?)
   end
 
   # checks if any associated forms are smsable

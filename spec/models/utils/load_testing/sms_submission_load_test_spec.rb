@@ -6,7 +6,7 @@ describe Utils::LoadTesting::SmsSubmissionLoadTest do
   let(:setting) { build(:setting, incoming_sms_token: "token") }
   let(:mission) { create(:mission, name: "SMS Submission Load Test Mission", setting: setting) }
   let(:form) do
-    create(:form, mission: mission, question_types: %w[
+    create(:form, :live, mission: mission, question_types: %w[
       text long_text integer counter decimal
       select_one select_multiple datetime date time
     ])
@@ -15,8 +15,6 @@ describe Utils::LoadTesting::SmsSubmissionLoadTest do
   let(:user) { create(:user, phone: "+1234567890") }
   let(:threads) { 1 }
   let(:duration) { 5 }
-
-  before { form.publish! }
 
   it "generates expected test plan" do
     test = described_class.new(

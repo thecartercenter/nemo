@@ -7,9 +7,9 @@ shared_context "incoming sms" do
   def setup_form(options)
     mission = options[:mission].presence || get_mission
     form = if options[:questions].all? { |q| q.is_a?(Question) }
-             create(:form, :published, smsable: true, questions: options[:questions], mission: mission)
+             create(:form, :live, smsable: true, questions: options[:questions], mission: mission)
            else
-             create(:form, :published, smsable: true, question_types: options[:questions], mission: mission)
+             create(:form, :live, smsable: true, question_types: options[:questions], mission: mission)
            end
     form.questionings.each { |q| q.update_attribute(:required, true) } if options[:required]
     if options[:forward_recipients]
@@ -17,7 +17,7 @@ shared_context "incoming sms" do
       form.recipients = options[:forward_recipients]
     end
     form.authenticate_sms = true if options[:authenticate_sms]
-    form.publish!
+    form.save!
     form.reload
   end
 

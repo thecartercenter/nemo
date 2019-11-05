@@ -70,7 +70,6 @@ en:
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
     none: "None"
-    not_published: "Not Published"
     ok: "OK"
     or: "or"
     OR: "OR"
@@ -78,7 +77,6 @@ en:
     pending: "Pending"
     previous: "Previous"
     print: "Print"
-    published: "Published"
     regenerate: "Regenerate"
     remove: "Remove"
     report: "Report"
@@ -128,7 +126,6 @@ en:
     email: "Email"
     hint: "Hint"
     password: "Password"
-    published: "Published?"
     questions: "Questions"
     std_icon: "" # left blank on purpose to achieve blank table header
     title: "Title"
@@ -452,7 +449,6 @@ en:
         code: "Code"
         answer_count: "Answers"
         form_count: "Forms"
-        published: "Published?"
         key: "Is Key Question?"
         minimum: "Minimum"
         maximum: "Maximum"
@@ -569,66 +565,39 @@ en:
         phone2: "e.g. +2348123456789"
 
     action_links:
-      broadcast:
-        index: "List Broadcasts"
-      form:
-        new: "Create New Form"
-        index: "List Forms"
-        show: "View Form"
-        edit: "Edit Form"
-        destroy: "Delete Form"
-        publish: "Publish Form"
-        unpublish: "Unpublish Form"
-        print: "Print Form"
-      mission:
-        new: "Create New Mission"
-        index: "List Missions"
-        show: "View Mission"
-        edit: "Edit Mission"
-        destroy: "Delete Mission"
-      operation:
-        clear: "Clear All Completed Operations"
-        destroy: "Clear Operation"
-        index: "List Operations"
-      option_set:
-        new: "Create New Option Set"
-        index: "List Option Sets"
-        show: "View Option Set"
-        edit: "Edit Option Set"
-        destroy: "Delete Option Set"
-        export: "Export Option Set"
-      option_sets/import:
-        new: "Import New Option Set"
-      question:
-        new: "Create New Question"
-        index: "List Questions"
-        show: "View Question"
-        edit: "Edit Question"
-        destroy: "Delete Question"
-      report/report:
-        new: "Create New Report"
-        index: "List Reports"
-        show: "View Report"
-        edit: "Edit Report"
-        destroy: "Delete Report"
-      response:
-        index: "List Responses"
-        show: "View Response"
-        edit: "Edit Response"
-        destroy: "Delete Response"
-      user:
-        new: "Create New User"
-        index: "List Users"
-        show: "View User"
-        edit: "Edit User"
-        destroy: "Delete User"
-      user_group:
-        new: "New Group"
-        index: "User Groups"
-        show: "View User Group"
-        edit: "Edit User Group"
-        destroy: "Delete User Group"
-        members: "List Members"
+      show: "View"
+      edit: "Edit"
+      destroy: "Delete"
+      index: "List"
+      clone: "Clone"
+      models:
+        form:
+          new: "Create New Form"
+          sms_guide: "SMS Guide"
+          sms_console: "SMS Test Console"
+          go_live: "Go Live"
+          pause: "Pause"
+          print: "Print"
+        mission:
+          new: "Create Mission"
+        operation:
+          clear: "Clear All Completed"
+          destroy: "Clear"
+        option_set:
+          new: "Create New Option Set"
+          export: "Export to XLSX"
+        option_sets/import:
+          new: "Import New Option Set"
+        question:
+          new: "Create New Question"
+        report/report:
+          new: "Create New Report"
+          export: "Export to CSV"
+        user:
+          new: "Create New User"
+        user_group:
+          new: "New Group"
+          members: "List Members"
 
     hints:
       form:
@@ -790,8 +759,6 @@ en:
               blank: "There must be at least one condition."
         form:
           cant_delete_if_has_responses: "You can't delete this Form because it has associated responses."
-          cant_delete_published: "A published Form can't be deleted."
-          cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions."
           general: "Form is invalid (see below)."
           attributes:
@@ -804,8 +771,6 @@ en:
           general: "Mission is invalid (see below)."
         option:
           cant_delete_if_has_response: "You can't delete this Option because it is included in at least one Response."
-          cant_change_if_published: "You can't change this Option because it appears in at least one published Form."
-          cant_delete_if_published: "You can't delete this Option because it appears in at least one published Form."
           names_cant_be_all_blank: "At least one name translation must be given for each option."
           names_too_long: "Names must be at most 30 characters in length."
           invalid_coordinates: "The provided coordinates are not valid."
@@ -836,7 +801,6 @@ en:
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
           cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
-          cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
           general: "Question is invalid (see below)."
         questioning:
           attributes:
@@ -935,15 +899,15 @@ en:
     time_ago: "%{time} ago"
     time_zone: "Time Zone"
     updated_at: "Updated at"
-    no_published_forms: "No published forms"
+    no_live_forms: "No available forms"
 
   actions:
     clone: "Clone"
     edit: "Edit"
-    publish: "Publish"
-    unpublish: "Unpublish"
+    go_live: "Go Live"
+    pause: "Pause"
     print: "Print"
-    sms: "SMS Guide"
+    sms_guide: "SMS Guide"
 
   # pagination translations
   will_paginate:
@@ -1338,10 +1302,6 @@ en:
     print_format_tips:
       title: "Print Format Tips"
       body: "To ensure form prints correctly, please enable the printing of background colors and images in your system's print options dialog window. That window should appear as soon as you click 'OK' below."
-    publish: "Publish"
-    publish_error: "There was a problem publishing the form (%{msg})."
-    publish_success: "Form published successfully."
-    publish_form: "Publish Form"
     question_remove_error: "There was a problem removing the questions (%{msg})."
     question_remove_answer_error: "One or more of the selected questions has answers and can't be removed."
     questions_add_error: "There was a problem adding the questions (%{msg})."
@@ -1356,14 +1316,13 @@ en:
       many: "Are you sure you want to remove these %{count} questions from the form?"
       other: "Are you sure you want to remove these %{count} questions from the form?"
     reqd_sym_definition: "Required questions are marked with a"
-    save_and_publish: "Save and Publish"
+    save_and_go_live: "Save and Go Live"
     saving_order: "Saving order..."
-    unpublish_error: "There was a problem unpublishing the form (%{msg})."
-    unpublish_success: "Form unpublished successfully."
-    unpublish: "Unpublish"
-    unpublish_form: "Unpublish Form"
+    statuses:
+      draft: "Draft"
+      live: "Live"
+      paused: "Paused"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
-    view_sms_guide: "View SMS Guide"
 
   forms:
     sms_guide:
@@ -1564,7 +1523,6 @@ en:
       or_eq: "or equal to"
       strictly_lt: "Strictly less than"
       strictly_gt: "Strictly greater than"
-    other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
     opt_set_warning: "Changing the option set will cause one or more conditions to be deleted."
 
   qing_group:
@@ -2175,7 +2133,7 @@ en:
       first_answer_invalid: "Sorry, but %{token} is not a valid answer. Be sure to include a period after the question number."
       form_not_found: "Sorry, there is no form with code '%{form_code}'."
       form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."
-      form_not_published: "Sorry, form '%{form_code}' is not currently available for submissions."
+      form_not_live: "Sorry, form '%{form_code}' is not currently available for submissions."
       form_not_smsable: "Sorry, form '%{form_code}' is not currently available for SMS submissions."
       form_version_outdated: "Sorry, the form code '%{form_code}' refers to an old version. Please obtain an updated submission guide."
       invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
@@ -2363,9 +2321,7 @@ en:
       need_to_create: "There are currently no missions. Please "
       no_missions: "There are currently no missions in the system. Please contact an administrator."
     no_recent: "**0** Recent Responses"
-    published_form_count: "**%{count}** Published Forms"
     select_a_form: "Select a Form To Submit"
     select_a_report: "Select a Report To View"
     total_responses: "**%{count}** Total Responses"
     total_users: "**%{count}** Total Users"
-    unpublished_form_count: "**%{count}** Unpublished Forms"

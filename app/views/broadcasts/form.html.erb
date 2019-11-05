@@ -1,7 +1,5 @@
 <%= elmo_form_for(@broadcast) do |f| %>
 
-  <%= top_action_links(@broadcast, only: :index) %>
-
   <%= f.field(:medium, type: :select, required: true,
                        options: translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
   <%= f.field(:recipient_selection, type: :select, required: true,

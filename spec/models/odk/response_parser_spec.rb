@@ -4,15 +4,17 @@ require "rails_helper"
 
 describe Odk::ResponseParser do
   include_context "response tree"
+  include_context "odk submissions"
   include ActionDispatch::TestProcess
   let(:save_fixtures) { true }
   let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
   let(:response2) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-  let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values) }
+  let(:formver) { nil } # Don't override the version by default
+  let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
+  let(:files) { {xml_submission_file: StringIO.new(xml)} }
 
   context "responses without media" do
-    let(:form) { create(:form, :published, :with_version, question_types: question_types) }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
+    let(:form) { create(:form, :live, question_types: question_types) }
 
     context "simple form" do
       let(:fixture_name) { "simple_response" }
@@ -22,15 +24,32 @@ describe Odk::ResponseParser do
         let(:xml_values) { %w[A B C] }
         let(:expected_values) { xml_values }
 
-        shared_examples "successful submission" do
+        context "valid input" do
           it "should produce a simple tree from a form with three children and ignore meta tag" do
             Odk::ResponseParser.new(response: response, files: files).populate_response
             expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
           end
         end
 
-        context "valid input" do
-          it_behaves_like "successful submission"
+        context "draft form" do
+          let(:formver) { "1234" }
+          let(:form) { create(:form, :draft, question_types: question_types) }
+
+          it "should error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to raise_error(FormStatusError, "form is a draft")
+          end
+        end
+
+        context "paused form" do
+          let(:form) { create(:form, :paused, question_types: question_types) }
+
+          it "should error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to raise_error(FormStatusError, "form is paused")
+          end
         end
 
         context "outdated form" do
@@ -73,13 +92,27 @@ describe Odk::ResponseParser do
       end
 
       context "with other question types" do
-        let(:xml_values) { ["Quick", "The quick brown fox jumps over the lazy dog", 9.6] }
-        let(:expected_values) { xml_values }
-        let(:question_types) { %w[text long_text decimal] }
+        let(:question_types) { %w[text long_text decimal select_one] }
+        let(:option_code) { "on#{form.c[3].option_set.c[0].id}" }
 
-        it "processes values correctly" do
-          Odk::ResponseParser.new(response: response, files: files).populate_response
-          expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
+        context "with normal values" do
+          let(:xml_values) { ["Quick", "The quick brown fox", "9.6", option_code] }
+          let(:expected_values) { ["Quick", "The quick brown fox", 9.6, "Cat"] }
+
+          it "processes values correctly" do
+            Odk::ResponseParser.new(response: response, files: files).populate_response
+            expect_built_children(response.root_node, %w[Answer] * 4, form.c.map(&:id), expected_values)
+          end
+        end
+
+        context "with invalid data types" do
+          let(:xml_values) { ["9.6", "The quick brown fox", "foo", "bar"] }
+          let(:expected_values) { ["9.6", "The quick brown fox", 0.0, nil] }
+
+          it "processes values correctly" do
+            Odk::ResponseParser.new(response: response, files: files).populate_response
+            expect_built_children(response.root_node, %w[Answer] * 4, form.c.map(&:id), expected_values)
+          end
         end
       end
 
@@ -350,7 +383,7 @@ describe Odk::ResponseParser do
 
   context "responses with media" do
     let(:fixture_name) { "simple_response" }
-    let(:form) { create(:form, :published, :with_version, question_types: question_types) }
+    let(:form) { create(:form, :live, question_types: question_types) }
 
     context "single part media" do
       let(:media_file_name) { "the_swing.jpg" }
@@ -415,7 +448,15 @@ describe Odk::ResponseParser do
     end
   end
 
-  def prepare_odk_response_fixture(fixture_name, form, options = {})
-    prepare_odk_fixture(name: fixture_name, type: :response, form: form, **options)
+  context "with incomplete response" do
+    let(:fixture_name) { "incomplete" }
+    let(:form) { create(:form, :live, question_types: %w[integer]) }
+    let(:xml_values) { [] }
+    let(:expected_values) { [] }
+
+    it "should mark response as incomplete" do
+      populated = Odk::ResponseParser.new(response: response, files: files).populate_response
+      expect(populated).to be_incomplete
+    end
   end
 end

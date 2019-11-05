@@ -12,7 +12,7 @@ describe "abilities for questionings" do
       expect(ability).to be_able_to(:create, Questioning)
     end
 
-    context "when unpublished" do
+    context "when draft" do
       let(:form) { create(:form, question_types: %w[text]) }
       let(:qing) { form.questionings.first }
 
@@ -36,8 +36,8 @@ describe "abilities for questionings" do
       end
     end
 
-    context "when published" do
-      let(:form) { create(:form, :published, question_types: %w[text]) }
+    context "when live" do
+      let(:form) { create(:form, :live, question_types: %w[text]) }
       let(:qing) { form.questionings.first }
 
       it "should be able show and update only" do

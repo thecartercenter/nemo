@@ -39,14 +39,14 @@ class API::V1::BaseController < ApplicationController
 
   def find_form
     if params[:form_id].blank?
-      render json: { errors: ["form_id_required"] }, status: 422
+      render json: { errors: ["form_id_required"] }, status: :unprocessable_entity
     else
       @form = Form.where(id: params[:form_id]).includes(:whitelistings).first
 
       if @form.nil?
-        return render json: { errors: ["form_not_found"] }, status: 404
+        return render json: { errors: ["form_not_found"] }, status: :not_found
       elsif !@form.api_user_id_can_see?(@api_user.id)
-        return render json: { errors: ["access_denied"] }, status: 403
+        return render json: { errors: ["access_denied"] }, status: :forbidden
       end
     end
   end

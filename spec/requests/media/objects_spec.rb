@@ -14,7 +14,7 @@ describe "media object requests" do
       it "uploads audio files" do
         file = fixture_file_upload("spec/fixtures/media/audio/powerup.mp3", "audio/mpeg")
         post(media_objects_path(mission_name: mission.compact_name, type: "audios"), params: {upload: file})
-        expect(response).to have_http_status(201)
+        expect(response).to have_http_status(:created)
       end
     end
 
@@ -24,7 +24,7 @@ describe "media object requests" do
       it "uploads video files" do
         file = fixture_file_upload("spec/fixtures/media/video/jupiter.avi", "video/x-msvideo")
         post(media_objects_path(mission_name: mission.compact_name, type: "videos"), params: {upload: file})
-        expect(response).to have_http_status(201)
+        expect(response).to have_http_status(:created)
       end
     end
 
@@ -34,7 +34,7 @@ describe "media object requests" do
       it "uploads image files" do
         file = fixture_file_upload("spec/fixtures/media/images/the_swing.jpg", "image/jpeg")
         post(media_objects_path(mission_name: mission.compact_name, type: "images"), params: {upload: file})
-        expect(response).to have_http_status(201)
+        expect(response).to have_http_status(:created)
       end
     end
 
@@ -44,7 +44,7 @@ describe "media object requests" do
       it "returns 422 on failure" do
         file = fixture_file_upload("spec/fixtures/media/audio/powerup.mp3")
         post(media_objects_path(mission_name: mission.compact_name, type: "images"), params: {upload: file})
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
@@ -54,7 +54,7 @@ describe "media object requests" do
 
     it "returns empty 204 on success" do
       delete(media_object_path(media_file, mission_name: mission.compact_name, type: "images"))
-      expect(response).to have_http_status(204)
+      expect(response).to have_http_status(:no_content)
     end
   end
 end

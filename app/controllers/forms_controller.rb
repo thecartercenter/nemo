@@ -22,37 +22,27 @@ class FormsController < ApplicationController
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
 
-  decorates_assigned :forms
+  decorates_assigned :forms, :form
   helper_method :questions
 
   def index
-    # handle different formats
     respond_to do |format|
-      # render normally if html
       format.html do
-        # if requesting the dropdown menu
         if params[:dropdown]
-          @forms = @forms.published.by_name
+          @forms = @forms.live.by_name
           render(partial: "dropdown")
-
-        # otherwise, it's a normal request
         else
-          # add some eager loading stuff, and ordering
-          @forms = @forms.with_responses_counts.by_published.by_name
+          @forms = @forms.with_responses_counts.by_status.by_name
           load_importable_objs
           render(:index)
         end
       end
 
-      # get only published forms and render openrosa if xml requested
+      # OpenRosa format for ODK
       format.xml do
         authorize!(:download, Form)
-        @cache_key = Form.odk_index_cache_key(mission: current_mission)
-        @cache_key = "#{@cache_key}#{CACHE_SUFFIX}"
-        unless fragment_exist?(@cache_key)
-          # This query is not deferred so we have to check if it should be run or not.
-          @forms = @forms.published
-        end
+        @cache_key = "#{Form.odk_index_cache_key(mission: current_mission)}#{CACHE_SUFFIX}"
+        @forms = @forms.live
       end
     end
   end
@@ -70,11 +60,9 @@ class FormsController < ApplicationController
   def show
     setup_condition_computer
     respond_to do |format|
-      # for html, render the printable style if requested, otherwise render the form
       format.html do
         if params[:print] && request.xhr?
-          render(:form, layout: false)
-        # otherwise just normal!
+          render(partial: "printable")
         else
           prepare_and_render_form
         end
@@ -130,30 +118,21 @@ class FormsController < ApplicationController
   end
 
   def update
-    begin
-      Form.transaction do
-        set_api_users
-        # save basic attribs
-        @form.assign_attributes(form_params)
-
-        # check special permissions
-        authorize!(:rename, @form) if @form.name_changed?
-
-        # save everything
-        @form.save!
-
-        # publish if requested
-        if params[:save_and_publish].present?
-          @form.publish!
-          set_success_and_redirect(@form, to: forms_path)
-        else
-          set_success_and_redirect(@form, to: edit_form_path(@form))
-        end
+    Form.transaction do
+      set_api_users
+      @form.assign_attributes(form_params)
+      authorize!(:rename, @form) if @form.name_changed?
+      @form.save!
+      if params[:save_and_go_live].present?
+        @form.update_status(:live)
+        set_success_and_redirect(@form, to: forms_path)
+      else
+        set_success_and_redirect(@form, to: edit_form_path(@form))
       end
-    # handle other validation errors
-    rescue ActiveRecord::RecordInvalid
-      prepare_and_render_form
     end
+  # handle other validation errors
+  rescue ActiveRecord::RecordInvalid
+    prepare_and_render_form
   end
 
   def destroy
@@ -161,18 +140,14 @@ class FormsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
-  # publishes/unpublishes a form
-  def publish
-    verb = @form.published? ? :unpublish : :publish
-    begin
-      @form.send("#{verb}!")
-      flash[:success] = t("form.#{verb}_success")
-    rescue StandardError => e
-      flash[:error] = t("form.#{verb}_error", msg: e.to_s)
-    end
+  def go_live
+    @form.update_status(:live)
+    redirect_to(index_url_with_context)
+  end
 
-    # redirect to index or edit
-    redirect_to(verb == :publish ? index_url_with_context : edit_form_path(@form))
+  def pause
+    @form.update_status(:paused)
+    redirect_to(index_url_with_context)
   end
 
   # shows the form to either choose existing questions or create a new one to add
@@ -207,14 +182,10 @@ class FormsController < ApplicationController
     redirect_to(edit_form_url(@form))
   end
 
-  # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
     begin
       cloned = @form.replicate(mode: :clone)
-
-      # save the cloned obj id so that it will flash
       flash[:modified_obj_id] = cloned.id
-
       flash[:success] = t("form.clone_success", form_name: @form.name)
     rescue StandardError => e
       flash[:error] = t("form.clone_error", msg: e.to_s)

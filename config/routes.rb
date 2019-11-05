@@ -101,7 +101,8 @@ ELMO::Application.routes.draw do
       member do
         post "add-questions", as: "add_questions", action: "add_questions"
         put "clone"
-        put "publish"
+        put "pause"
+        put "go-live", as: "go_live"
         get "choose-questions", as: "choose_questions", action: "choose_questions"
         get "sms-guide", as: "sms_guide", action: "sms_guide"
       end

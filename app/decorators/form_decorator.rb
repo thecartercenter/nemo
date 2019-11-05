@@ -7,4 +7,11 @@ class FormDecorator < ApplicationDecorator
   def default_path
     @default_path ||= h.can?(:update, object) ? h.edit_form_path(object) : h.form_path(object)
   end
+
+  def status_with_icon
+    h.content_tag(:div, class: "form-status status-#{form.status}") do
+      circle = (draft? ? +"" : h.icon_tag("circle", class: "status-circle") << nbsp)
+      circle << t("form.statuses.#{form.status}")
+    end
+  end
 end

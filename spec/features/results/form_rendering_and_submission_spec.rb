@@ -10,7 +10,7 @@ feature "response form rendering and submission", js: true do
   let(:user) { create(:user) }
 
   let!(:form) do
-    create(:form, :published,
+    create(:form, :live,
       question_types: [
         %w[integer],
         "image",

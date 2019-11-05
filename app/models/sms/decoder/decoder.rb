@@ -123,17 +123,14 @@ module Sms
           @msg.save!
         end
 
-        # if version outdated, raise error
-        # here we must specify the form AND form_code since they are different
+        # If form version outdated we must specify the form AND form_code in the error message
+        # since they are different.
         raise_decoding_error("form_version_outdated", form: v.form, form_code: code) unless v.is_current?
 
-        # check that form is published
-        raise_decoding_error("form_not_published", form: v.form) unless v.form.published?
-
-        # check that form is smsable
+        raise_decoding_error("form_not_live", form: v.form) unless v.form.live?
         raise_decoding_error("form_not_smsable", form: v.form) unless v.form.smsable?
 
-        # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
+        # If we get to here we're good.
         @form = v.form
         @ranks_to_qings = @form.smsable_questionings
       end

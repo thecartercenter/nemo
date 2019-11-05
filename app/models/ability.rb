@@ -80,12 +80,11 @@ class Ability
        OptionNode, Option, OptionSets::Import, Setting, Tag, Tagging].each do |k|
         can(:manage, k, mission_id: nil)
       end
+      cannot(:change_status, Form, &:standard?)
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: nil)
-      can(:destroy, Question, Question.unpublished_and_unanswered) do |q|
-        !q.published? && !q.has_answers?
-      end
+      can(:destroy, Question) { |q| !q.published? && !q.has_answers? }
 
       can(:manage, Mission)
       can(:manage, User)
@@ -154,12 +153,11 @@ class Ability
         can(:manage, klass, mission_id: mission.id)
       end
       can(:condition_form, Constraint, mission_id: mission.id)
+      can(:change_status, Form, mission_id: mission.id)
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: mission.id)
-      can(:destroy, Question, Question.unpublished_and_unanswered.for_mission(mission)) do |q|
-        !q.published? && !q.has_answers?
-      end
+      can(:destroy, Question) { |q| q.mission_id == mission.id && !q.published? && !q.has_answers? }
     end
 
     # Can manage these classes for the current mission even if locked
@@ -214,17 +212,17 @@ class Ability
       end
     end
 
-    # only need this ability if not also a coordinator
+    # Only need this ability if not also a coordinator
+    # Duplicating the lines for each of live and paused status to achieve 'OR'.
     return if user_has_this_or_higher_role_in_mission?(:coordinator)
-    can(%i[index read download], Form, mission_id: mission.id, published: true)
+    can(%i[index show download], Form, mission_id: mission.id, status: "live")
   end
 
   # Should be called after other main methods as it restricts some permissions granted earlier.
   def user_independent_permissions
-    cannot(:destroy, Form) { |f| f.published? || f.has_responses? }
-    cannot(:download, Form, published: false)
-    cannot(%i[add_questions remove_questions reorder_questions], Form, &:published?)
-    cannot(:publish, Form, &:standard?)
+    cannot(:destroy, Form) { |f| f.not_draft? || f.has_responses? }
+    cannot(:download, Form, status: "draft")
+    cannot(%i[add_questions remove_questions reorder_questions], Form, &:not_draft?)
 
     cannot(%i[destroy update update_core], Questioning, &:published?)
 

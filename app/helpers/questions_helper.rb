@@ -34,16 +34,13 @@ module QuestionsHelper
   end
 
   def questions_index_fields
-    fields = ["std_icon", "code", {attrib: "name", css_class: "has-tags"}, "type"]
-    fields << "published" unless admin_mode?
-    fields
+    ["std_icon", "code", {attrib: "name", css_class: "has-tags"}, "type"]
   end
 
   def format_questions_field(question, field)
     case field.is_a?(Hash) ? field[:attrib] : field
     when "std_icon" then std_icon(question)
     when "type" then t(question.qtype_name, scope: :question_type)
-    when "published" then tbool(question.published?)
     when "name"
       question_picker = params[:controller] == "forms"
       text = content_tag(:span, class: "text") do

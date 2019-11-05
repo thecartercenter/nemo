@@ -86,7 +86,7 @@ describe "question form", js: true do
     expect(page).to have_content("powerup.mp3")
 
     # Edit view shows file name and allows edit
-    click_on("Edit Question")
+    click_on("Edit")
     expect(page).to have_content("powerup.mp3")
     attach_file("Media Prompt", audio_fixture("powerup.wav").path)
     click_on("Save")

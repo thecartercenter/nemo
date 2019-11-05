@@ -1,15 +1,15 @@
 .forms_index .index_table {
-  td {
-    background-color: $even-lighter-gray;
-  }
-
   td.name_col {
     min-width: 200px;
   }
 
-  tr.published, .hide-unpublished-bg {
+  td.status_col {
+    white-space: nowrap;
+  }
+
+  tr.status-draft {
     td {
-      background-color: $white;
+      background-color: $even-lighter-gray;
     }
   }
 }
@@ -32,6 +32,18 @@ form.form_form {
       display: inline-block;
       margin: 0px 5px 0px 0px;
     }
+  }
+}
+
+.status-live {
+  .status-circle {
+    color: $success-green;
+  }
+}
+
+.status-paused {
+  .status-circle {
+    color: $gold;
   }
 }
 

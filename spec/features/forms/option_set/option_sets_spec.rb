@@ -51,7 +51,7 @@ feature "option set" do
 
     # Test show mode (should have 'Apple' but no visible inputs or edit links).
     click_link("Foo")
-    click_link("View Option Set")
+    click_link("View")
     expect(page).to have_selector("#options-wrapper div", text: "Banana")
     expect(page).to have_selector("#options-wrapper div", text: "Apple")
     expect(page).to have_selector("#options-wrapper div", text: "Pear")
@@ -59,7 +59,7 @@ feature "option set" do
     expect(page).not_to have_selector("form.option_set_form a.action-link-edit")
 
     # Test export page does not error out
-    click_on("Export Option Set")
+    click_on("Export")
   end
 
   scenario "creating, showing, and editing options with values", js: true do
@@ -89,7 +89,7 @@ feature "option set" do
 
     # Show
     click_link("Foo")
-    click_link("View Option Set")
+    click_link("View")
     expect(page).to have_selector("#options-wrapper div", text: "Apple (3)")
     expect(page).to have_selector("#options-wrapper div", text: "Banana (2)")
   end
@@ -122,7 +122,7 @@ feature "option set" do
 
       # Show standard set to verify save worked.
       click_link("Gold")
-      click_link("View Option Set")
+      click_link("View")
       expect(page).to have_selector("#options-wrapper div.inner", text: "Kitty")
     end
   end
@@ -133,7 +133,7 @@ feature "option set" do
     scenario do
       visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
       click_on(set.name)
-      click_on("Delete Option Set")
+      click_on("Delete")
       expect(page).to have_selector(".alert-success", text: "Option Set deleted successfully")
     end
   end

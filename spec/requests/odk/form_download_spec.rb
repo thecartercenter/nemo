@@ -6,14 +6,14 @@ require "rails_helper"
 describe FormsController, :odk, type: :request do
   let(:mission) { create(:mission) }
   let(:user) { create(:user, role_name: :coordinator, mission: mission) }
-  let(:form_simple) { create(:form, :published, mission: mission) }
-  let(:form_select) { create(:form, :published, mission: mission, question_types: %w[integer select_one]) }
+  let(:form_simple) { create(:form, :live, mission: mission) }
+  let(:form_select) { create(:form, :live, mission: mission, question_types: %w[integer select_one]) }
   let(:form_small_multi) do
-    create(:form, :published, mission: mission, question_types: %w[integer multilevel_select_one])
+    create(:form, :live, mission: mission, question_types: %w[integer multilevel_select_one])
   end
   let(:form_both_multi) do
-    create(:form, :published, mission: mission,
-                              question_types: %w[integer multilevel_select_one super_multilevel_select_one])
+    create(:form, :live, mission: mission,
+                         question_types: %w[integer multilevel_select_one super_multilevel_select_one])
   end
   let(:basic_auth) { {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)} }
 
@@ -104,7 +104,7 @@ describe FormsController, :odk, type: :request do
       end
 
       context "for forms with media prompts" do
-        let(:form) { create(:form, :published, mission: mission, question_types: %w[text integer]) }
+        let(:form) { create(:form, :live, mission: mission, question_types: %w[text integer]) }
 
         before do
           form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))

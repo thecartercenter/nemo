@@ -8,7 +8,7 @@ namespace :db do
     mission = Mission.create(name: mission_name)
 
     puts "Creating forms"
-    sample_form = FactoryGirl.create(:form, mission: mission, question_types: [
+    sample_form = create(:form, :live, mission: mission, question_types: [
       "text",
       "long_text",
       "integer",
@@ -32,7 +32,6 @@ namespace :db do
       "audio",
       "video"
     ])
-    sample_form.publish!
 
     smsable_form = FactoryGirl.create(:form,
       name: "SMS Form",

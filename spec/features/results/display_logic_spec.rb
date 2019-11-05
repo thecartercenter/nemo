@@ -13,7 +13,7 @@ feature "response form display logic", js: true do
     let(:year) { Time.zone.now.year - 2 }
 
     let!(:form) do
-      create(:form, :published,
+      create(:form, :live,
         question_types: [
           "long_text",                 # 0
           "text",                      # 1
@@ -234,7 +234,7 @@ feature "response form display logic", js: true do
 
   describe "display_if logic" do
     let!(:form) do
-      create(:form, :published,
+      create(:form, :live,
         question_types: [
           "integer", # 0
           "integer", # 1

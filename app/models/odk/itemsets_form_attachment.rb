@@ -16,7 +16,7 @@ module Odk
     # The relative path, including filename, to the attachment.
     def path
       return @path if @path
-      stamp = (form.published? ? form.pub_changed_at : Time.current).utc.strftime("%Y%m%d_%H%M%S")
+      stamp = (form.draft? ? Time.current : form.status_changed_at).utc.strftime("%Y%m%d_%H%M%S")
       @path = File.join(dir, "itemsets-#{stamp}.csv")
     end
 

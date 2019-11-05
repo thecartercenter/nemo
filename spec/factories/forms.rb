@@ -10,11 +10,11 @@
 #  default_response_name :string
 #  downloads             :integer
 #  name                  :string(255)      not null
-#  pub_changed_at        :datetime
-#  published             :boolean          default(FALSE), not null
 #  sms_relay             :boolean          default(FALSE), not null
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
+#  status                :string           default("draft"), not null
+#  status_changed_at     :datetime
 #  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
@@ -29,6 +29,7 @@
 #  index_forms_on_mission_id          (mission_id)
 #  index_forms_on_original_id         (original_id)
 #  index_forms_on_root_id             (root_id) UNIQUE
+#  index_forms_on_status              (status)
 #
 # Foreign Keys
 #
@@ -156,47 +157,20 @@ FactoryGirl.define do
       mission { nil }
     end
 
-    trait :with_version do
-      transient { version nil }
-
-      after(:create) do |form, evaluator|
-        cv = form.current_version
-        cv.update_attributes(code: evaluator.version) if cv && evaluator.version
-      end
+    trait :draft do
+      # Draft is the default status.
     end
 
-    trait :published do
+    trait :live do
       after(:create) do |form|
-        form.publish!
+        form.update_status(:live)
       end
     end
 
-    # DO NOT USE, USE FORM ABOVE
-    # A form with different question types.
-    # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
-    # Used in the feature specs
-    factory :sample_form do
-      name "Sample Form"
-
-      after(:create) do |form, evaluator|
-        form.questionings do
-          [
-            # Single level select_one question.
-            create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: "Question 1", hint: "Hint 1",
-                qtype_name: "select_one", option_set: create(:option_set, name: "Set 1"))),
-
-            # Multilevel select_one question.
-            create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: "Question 2", hint: "Hint 2",
-                qtype_name: "select_one", option_set: create(:option_set, name: "Set 2", option_names: :multilevel))),
-
-            # Integer question.
-            create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: "Question 3", hint: "Hint 3",
-                qtype_name: "integer"))
-          ]
-        end
+    trait :paused do
+      after(:create) do |form|
+        form.update_status(:live)
+        form.update_status(:paused)
       end
     end
   end

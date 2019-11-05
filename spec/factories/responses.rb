@@ -212,7 +212,7 @@ FactoryGirl.define do
 
     user
     mission { get_mission }
-    form { create(:form, :published, mission: mission) }
+    form { create(:form, :live, mission: mission) }
     source "web"
 
     trait :is_reviewed do
@@ -224,13 +224,14 @@ FactoryGirl.define do
       reviewer { create(:user, name: reviewer_name) }
     end
 
-    # Ensure unpublished form associations have been published at least once
     after(:build) do |response, evaluator|
-      form = response.form
-      unless form.published? && form.current_version.present?
-        form.publish!
-        form.unpublish!
+      # If form is draft, it will need a version for use in the shortcode, so create one
+      # by going live and then reverting.
+      if response.form.draft?
+        response.form.update_status(:live)
+        response.form.update_status(:draft)
       end
+
       # Build answer objects from answer_values array
       ResponseFactoryHelper.build_answers(response, evaluator.answer_values) if evaluator.answer_values
     end

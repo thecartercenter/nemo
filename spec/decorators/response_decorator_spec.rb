@@ -4,7 +4,7 @@ require "rails_helper"
 
 describe ResponseDecorator do
   let(:user) { create(:user) }
-  let(:form) { create(:form, :published, question_types: %w[integer]) }
+  let(:form) { create(:form, :live, question_types: %w[integer]) }
   let(:response) { create(:response, user: user, form: form, answer_values: [1]) }
   let(:context) { {answer_finder: AnswerFinder.new(Response.where(id: response.id))} }
   let(:decorator) { ResponseDecorator.new(response, context: context) }

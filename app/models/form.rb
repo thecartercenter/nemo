@@ -12,11 +12,11 @@
 #  default_response_name :string
 #  downloads             :integer
 #  name                  :string(255)      not null
-#  pub_changed_at        :datetime
-#  published             :boolean          default(FALSE), not null
 #  sms_relay             :boolean          default(FALSE), not null
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
+#  status                :string           default("draft"), not null
+#  status_changed_at     :datetime
 #  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
@@ -31,6 +31,7 @@
 #  index_forms_on_mission_id          (mission_id)
 #  index_forms_on_original_id         (original_id)
 #  index_forms_on_root_id             (root_id) UNIQUE
+#  index_forms_on_status              (status)
 #
 # Foreign Keys
 #
@@ -66,7 +67,6 @@ class Form < ApplicationRecord
 
   before_create :init_downloads
   before_validation :normalize
-  before_save :update_pub_changed_at
   after_create :create_root_group
   before_destroy :destroy_items
   before_destroy :nullify_current_version_foreign_key
@@ -75,9 +75,9 @@ class Form < ApplicationRecord
   validate :name_unique_per_mission
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
 
-  scope :published, -> { where(published: true) }
+  scope :live, -> { where(status: "live") }
   scope :by_name, -> { order(:name) }
-  scope :by_published, -> { order(published: :desc) }
+  scope :by_status, -> { order("CASE status WHEN 'draft' THEN 2 ELSE 1 END") }
   scope :default_order, -> { by_name }
   scope :with_responses_counts, lambda {
     forms = Form.arel_table
@@ -94,7 +94,7 @@ class Form < ApplicationRecord
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-             dont_copy: %i[published pub_changed_at downloads upgrade_needed
+             dont_copy: %i[status status_changed_at downloads upgrade_needed
                            smsable current_version_id allow_incomplete access_level]
 
   # remove heirarchy of objects
@@ -103,16 +103,17 @@ class Form < ApplicationRecord
     FormVersion.where(form_id: form_ids).delete_all
   end
 
-  # Gets a cache key based on the mission and the max (latest) pub_changed_at value.
+  # Gets a cache key based on the mission and the max (latest) status_changed_at value.
   def self.odk_index_cache_key(options)
     # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load,
     # which is fine as long as it's consistent.
-    max_pub_changed_at = if for_mission(options[:mission]).published.any?
-                           for_mission(options[:mission]).maximum(:pub_changed_at).utc.to_s(:cache_datetime)
-                         else
-                           "no-pubd-forms"
-                         end
-    "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
+    max_status_changed_at =
+      if for_mission(options[:mission]).live.any?
+        for_mission(options[:mission]).maximum(:status_changed_at).utc.to_s(:cache_datetime)
+      else
+        "no-pubd-forms"
+      end
+    "odk-form-list/mission-#{options[:mission].id}/#{max_status_changed_at}"
   end
 
   def condition_computer
@@ -138,7 +139,7 @@ class Form < ApplicationRecord
   end
 
   def odk_download_cache_key
-    "odk-form/#{id}-#{pub_changed_at}"
+    "odk-form/#{id}-#{status_changed_at}"
   end
 
   def api_user_id_can_see?(api_user_id)
@@ -177,19 +178,17 @@ class Form < ApplicationRecord
     self[:responses_count] || responses.count
   end
 
-  # returns the number of responses for all copy forms
+  def copy_count
+    copies.count
+  end
+
   def copy_responses_count
     raise "non-standard forms should not request copy_responses_count" unless standard?
     copies.to_a.sum(&:responses_count)
   end
 
   def published?
-    # Standard forms are never published
-    !standard? && self[:published]
-  end
-
-  def published_copy_count
-    copies.find_all(&:published?).size
+    !standard? && !draft?
   end
 
   def option_sets
@@ -230,25 +229,30 @@ class Form < ApplicationRecord
     children.where(type: "Questioning").order(:rank).last
   end
 
-  # Publishes the form, upgrading the version if necessary.
-  def publish!
-    self.published = true
+  def update_status(new_status)
+    return if new_status == status
+    # Don't run validations in case form has become invalid due to a migration or other change.
+    update_columns(status: new_status, status_changed_at: Time.current)
 
-    # upgrade if necessary
-    if upgrade_needed? || current_version.nil?
-      upgrade_version!
-    else
-      save(validate: false)
-    end
+    # TODO: remove when manual form versioning removed
+    return unless live? && (upgrade_needed? || current_version.nil?)
+    upgrade_version!
   end
 
-  def unpublish!
-    self.published = false
-    save(validate: false)
+  def live?
+    status == "live"
   end
 
-  def verb
-    published? ? "unpublish" : "publish"
+  def paused?
+    status == "paused"
+  end
+
+  def draft?
+    status == "draft"
+  end
+
+  def not_draft?
+    status != "draft"
   end
 
   # increments the download counter
@@ -281,10 +285,8 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
-  # sets the upgrade flag so that the form will be upgraded when next published
   def flag_for_upgrade!
     raise "standard forms should not be versioned" if standard?
-
     self.upgrade_needed = true
     save(validate: false)
   end
@@ -339,11 +341,6 @@ class Form < ApplicationRecord
   def normalize
     self.name = name.strip
     self.default_response_name = default_response_name.try(:strip).presence
-    true
-  end
-
-  def update_pub_changed_at
-    self.pub_changed_at = Time.current if published_changed?
     true
   end
 end

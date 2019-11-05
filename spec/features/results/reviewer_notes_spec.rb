@@ -5,7 +5,7 @@ require "rails_helper"
 feature "response form reviewer notes", js: true do
   let(:reviewer) { create(:user) }
   let(:enumerator) { create(:user, role_name: :enumerator) }
-  let(:form) { create(:form, :published, question_types: %w[integer]) }
+  let(:form) { create(:form, :live, question_types: %w[integer]) }
   let(:response) { create(:response, :is_reviewed, form: form, answer_values: [0], user: enumerator) }
   let(:notes) { response.reviewer_notes }
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name} }

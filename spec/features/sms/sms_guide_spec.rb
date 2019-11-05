@@ -4,16 +4,15 @@ require "rails_helper"
 
 feature "SMS Guide", js: true do
   let!(:user) { create(:user) }
-  let!(:mission) { get_mission.setting.update!(preferred_locales_str: "en,fr,rw") }
 
   before do
+    get_mission.setting.update!(preferred_locales_str: "en,fr,rw")
     login(user)
   end
 
   context "with SMSable form" do
     let!(:form) do
-      create(:form, name: "SMS Form", smsable: true,
-                    mission: get_mission, question_types: %w[text]).tap(&:publish!)
+      create(:form, :live, name: "SMS Form", smsable: true, question_types: %w[text])
     end
 
     scenario "happy path" do
@@ -24,8 +23,8 @@ feature "SMS Guide", js: true do
 
   context "with Multilingual fields" do
     let!(:form) do
-      create(:form, name: "SMS Form", smsable: true, mission: get_mission,
-                    question_types: %w[multilingual_text multilingual_text_with_user_locale]).tap(&:publish!)
+      create(:form, :live, name: "SMS Form", smsable: true,
+                           question_types: %w[multilingual_text multilingual_text_with_user_locale])
     end
 
     around do |example|
@@ -62,7 +61,7 @@ feature "SMS Guide", js: true do
         visit user_path(user, mode: "m", mission_name: get_mission.compact_name, locale: I18n.locale)
         expect(page).to have_content("Entregar")
         click_link "Formularios"
-        click_link "SMS Guide"
+        click_link "Sms Guide"
         select("Français", from: "lang")
         expect(page).to have_content("Formulaire")
         expect(page).to have_content("fr: Text Question Title")
@@ -73,7 +72,7 @@ feature "SMS Guide", js: true do
         visit user_path(user, mode: "m", mission_name: get_mission.compact_name, locale: I18n.locale)
         expect(page).to have_content("Entregar")
         click_link "Formularios"
-        click_link "SMS Guide"
+        click_link "Sms Guide"
         select("Kinyarwanda", from: "lang")
         expect(page).to have_content("Paper")
         expect(page).to have_content("rw: Text Question Title")

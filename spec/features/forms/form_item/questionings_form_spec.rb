@@ -127,9 +127,10 @@ describe "questionings form", js: true  do
       end
     end
 
-    context "when published" do
+    context "with live form" do
+      let(:form) { create(:form, :live, question_types: %w[text text]) }
+
       it "should display all fields as not editable" do
-        form.publish!
         visit(edit_qing_path)
         expect_editable("required", false)
         expect_editable("hidden", false)

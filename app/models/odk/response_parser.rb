@@ -167,13 +167,14 @@ module Odk
 
     # Checks if form ID and version were given, if form exists, and if version is correct
     def lookup_and_check_form(params)
-      # if either of these is nil or not an integer, error
       raise SubmissionError, "no form id was given" if params[:id].nil?
       raise FormVersionError, "form version must be specified" if params[:version].nil?
 
-      form = lookup_form(params)
+      form = response.form ||= Form.find(params[:id])
 
-      # if form has no version, error
+      raise FormStatusError, "form is a draft" if form.draft?
+      raise FormStatusError, "form is paused" if form.paused?
+
       raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
       # if form version is outdated, error
@@ -181,14 +182,6 @@ module Odk
           form.current_version.number != params[:version]
         raise FormVersionError, "Form version is outdated"
       end
-    end
-
-    # Tries to load form (will raise ActiveRecord::RecordNotFound if not found).
-    def lookup_form(params)
-      # If the response already has a form, don't fetch it again
-      response.form ||= Form.find_by(id: params[:id])
-      return response.form unless response.form.nil?
-      raise ActiveRecord::RecordNotFound
     end
 
     def existing_response

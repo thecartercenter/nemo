@@ -1,92 +1,120 @@
 # frozen_string_literal: true
 
-# Tests for abilities related to Form object.
 require "rails_helper"
 
 describe "abilities for forms" do
-  context "for admin" do
-    before do
-      @user = create(:user, admin: true)
-      @ability = Ability.new(user: @user, mode: "admin")
-    end
+  include_context "ability"
+
+  let(:object) { form }
+  let(:all) do
+    %i[add_questions change_status clone destroy download remove_questions reorder_questions show update]
+  end
+
+  context "admin mode" do
+    let(:user) { create(:user, admin: true) }
+    let(:ability) { Ability.new(user: user, mode: "admin") }
 
     context "when standard" do
-      before do
-        @form = create(:form, :standard, question_types: %w[text])
-      end
-
-      it "should have limited abilities" do
-        %i[show clone update add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).to be_able_to(op, @form) }
-        %i[publish].each { |op| expect(@ability).not_to be_able_to(op, @form) }
-      end
+      let(:form) { create(:form, :standard, question_types: %w[text]) }
+      let(:permitted) { %i[show clone update add_questions remove_questions reorder_questions destroy] }
+      it_behaves_like "has specified abilities"
     end
   end
 
-  context "for coordinator role" do
-    before do
-      @user = create(:user, role_name: "coordinator")
-      @ability = Ability.new(user: @user, mode: "mission", mission: get_mission)
-    end
+  context "mission mode" do
+    let(:ability) { Ability.new(user: user, mode: "mission", mission: get_mission) }
 
-    it "should be able to create and index" do
-      %i[create index].each { |op| expect(@ability).to be_able_to(op, Form) }
-    end
+    context "for coordinator" do
+      let(:user) { create(:user, role_name: "coordinator") }
 
-    context "when unpublished" do
-      before do
-        @form = create(:form, question_types: %w[text])
+      it "should be able to create and index" do
+        %i[create index].each { |op| expect(ability).to be_able_to(op, Form) }
       end
 
-      it "should be able to do all except download" do
-        %i[show update publish clone add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).to be_able_to(op, @form) }
-        %i[download].each { |op| expect(@ability).not_to be_able_to(op, @form) }
-      end
+      context "when draft" do
+        let(:form) { create(:form, question_types: %w[text]) }
 
-      context "with responses" do
-        before do
-          create(:response, form: @form, answer_values: ["foo"])
-          @form.reload
+        context "without responses" do
+          let(:permitted) do
+            %i[show update change_status clone add_questions remove_questions reorder_questions destroy]
+          end
+          it_behaves_like "has specified abilities"
         end
 
-        it "should be able to do all but destroy" do
-          %i[show update publish clone add_questions remove_questions reorder_questions].each { |op| expect(@ability).to be_able_to(op, @form) }
-          %i[download destroy].each { |op| expect(@ability).not_to be_able_to(op, @form) }
+        context "with responses" do
+          let(:permitted) do
+            %i[show update change_status clone add_questions remove_questions reorder_questions]
+          end
+
+          before do
+            create(:response, form: form, answer_values: ["foo"])
+            form.reload
+          end
+
+          it_behaves_like "has specified abilities"
         end
       end
+
+      context "when live" do
+        let(:form) { create(:form, :live, question_types: %w[text]) }
+        let(:permitted) { %i[show update change_status download clone] }
+        it_behaves_like "has specified abilities"
+      end
+
+      context "when standard" do
+        let(:form) { create(:form, :standard, question_types: %w[text]) }
+        let(:permitted) { [] }
+        it_behaves_like "has specified abilities"
+      end
+
+      context "when unpublished std copy" do
+        let(:std) { create(:form, :standard, question_types: %w[text]) }
+        let(:form) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+        let(:permitted) do
+          %i[show update change_status clone add_questions remove_questions reorder_questions destroy]
+        end
+        it_behaves_like "has specified abilities"
+      end
     end
 
-    context "when published" do
-      before do
-        @form = create(:form, question_types: %w[text])
-        @form.publish!
+    shared_examples_for "enumerator abilities" do
+      it "should be able to index but not create" do
+        expect(ability).to be_able_to(:index, Form)
+        expect(ability).not_to be_able_to(:create, Form)
       end
 
-      it "should have limited abilities" do
-        %i[show update publish download clone].each { |op| expect(@ability).to be_able_to(op, @form) }
-        %i[add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).not_to be_able_to(op, @form) }
+      context "when draft" do
+        let(:form) { create(:form, question_types: %w[text]) }
+        let(:permitted) { [] }
+        it_behaves_like "has specified abilities"
+      end
+
+      context "when paused" do
+        let(:form) { create(:form, :paused, question_types: %w[text]) }
+        let(:permitted) { [] }
+        it_behaves_like "has specified abilities"
+      end
+
+      context "when live" do
+        let(:form) { create(:form, :live, question_types: %w[text]) }
+        let(:permitted) { %i[index show download] }
+        it_behaves_like "has specified abilities"
       end
     end
 
-    context "when standard" do
-      before do
-        @form = create(:form, :standard, question_types: %w[text])
-      end
-
-      it "should be able to do nothing" do
-        %i[show update add_questions remove_questions reorder_questions destroy download publish clone].each { |op| expect(@ability).not_to be_able_to(op, @form) }
-      end
+    context "for staffer" do
+      let(:user) { create(:user, role_name: "staffer") }
+      it_behaves_like "enumerator abilities"
     end
 
-    context "when unpublished std copy" do
-      before do
-        @std = create(:form, :standard, question_types: %w[text])
-        @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-      end
+    context "for reviewer" do
+      let(:user) { create(:user, role_name: "reviewer") }
+      it_behaves_like "enumerator abilities"
+    end
 
-      it "should have same abilities as unlinked unpublished form" do
-        %i[show update publish clone add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).to be_able_to(op, @copy) }
-        %i[download].each { |op| expect(@ability).not_to be_able_to(op, @copy) }
-      end
+    context "for enumerator" do
+      let(:user) { create(:user, role_name: "enumerator") }
+      it_behaves_like "enumerator abilities"
     end
   end
 end

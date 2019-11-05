@@ -8,7 +8,7 @@ module OdkHeaderable
 
   def odk_headers
     authorize! :create, Response
-    render(body: nil, status: 204)
+    render(body: nil, status: :no_content)
   end
 
   private

@@ -1,30 +1,33 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "odk media submissions", :odk, :reset_factory_sequences, type: :request do
   include_context "odk submissions"
 
   let(:user) { create(:user, role_name: "enumerator") }
-  let(:form) { create(:form, :published, :with_version, question_types: %w(text image)) }
+  let(:form) { create(:form, :live, question_types: %w[text image]) }
   let(:mission) { form.mission }
-  let(:tmp_path) { Rails.root.join("tmp/submission.xml") }
+  let(:tmp_path) { Rails.root.join("tmp", "submission.xml") }
+  let(:submission_path) { "/m/#{mission.compact_name}/submission" }
 
   context "with single part" do
     it "should successfully process the submission" do
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
-      post submission_path(mission), params: { xml_submission_file: submission_file, "the_swing.jpg" => image },
-        headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)}
-      expect(response).to have_http_status 201
+      post submission_path, params: {xml_submission_file: submission_file, "the_swing.jpg" => image},
+                            headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)}
+      expect(response).to have_http_status(:created)
 
       form_response = Response.last
-      expect(form_response.form).to eq form
-      expect(form_response.answers.count).to eq 2
+      expect(form_response.form).to eq(form)
+      expect(form_response.answers.count).to eq(2)
     end
   end
 
   context "with multiple parts" do
-    let(:form) { create(:form, :published, :with_version, version: "abc", question_types: %w(text image sketch)) }
+    let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
     it "should successfully process the submission" do
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
@@ -33,7 +36,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
       # Submit first part
-      post submission_path(mission),
+      post submission_path,
         params: {
           xml_submission_file: submission_file,
           "the_swing.jpg" => image,
@@ -42,12 +45,11 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         headers: {
           "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
         }
-      expect(response).to have_http_status 201
-      expect(Response.count).to eq 1
-
+      expect(response).to have_http_status(:created)
+      expect(Response.count).to eq(1)
 
       # Submit second part
-      post submission_path(mission),
+      post submission_path,
         params: {
           xml_submission_file: submission_file2,
           "another_swing.jpg" => image2
@@ -56,12 +58,12 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
           "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
         }
 
-      expect(response).to have_http_status 201
+      expect(response).to have_http_status(:created)
 
       form_response = Response.first
 
-      expect(form_response.form).to eq form
-      expect(form_response.answers.count).to eq 3
+      expect(form_response.form).to eq(form)
+      expect(form_response.answers.count).to eq(3)
     end
   end
 
@@ -76,7 +78,6 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     prepare_fixture("odk/responses/#{filename}",
       form: [form.id],
       formver: [form.code],
-      itemcode: Odk::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code)
-    )
+      itemcode: Odk::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code))
   end
 end

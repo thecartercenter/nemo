@@ -5,7 +5,7 @@ require "rails_helper"
 feature "SMS Console", js: true do
   let!(:user) { create(:user) }
   let!(:mission_name) { get_mission.compact_name }
-  let(:form) { create(:form, question_types: %w[integer], smsable: true).tap(&:publish!) }
+  let(:form) { create(:form, :live, question_types: %w[integer], smsable: true) }
 
   before do
     login(user)

@@ -40,7 +40,7 @@ feature "user form", js: true do
       click_button("Save")
 
       # Go to show page
-      click_link("View User")
+      click_link("View")
       expect(page).to have_content("Staffer")
       expect(page).to have_content("foo@bar.com")
       expect(page).to have_content("Foo Bar")
@@ -65,7 +65,7 @@ feature "user form", js: true do
       expect(page).to have_content("Success: User updated successfully")
 
       # Verify in show mode
-      click_on("View User")
+      click_link("View")
       expect(page).to have_content("Reviewer")
     end
   end
