@@ -22,7 +22,7 @@ module ActionLinks
           next unless url && can?(action, object)
           h.link_to(h.icon_tag(action) << translate_action(action), url,
             method: method, data: {confirm: action == :destroy ? delete_warning : nil},
-            class: "#{action}-link")
+            class: "#{action.to_s.dasherize}-link")
         end.compact.reduce(:<<)
       end
     end

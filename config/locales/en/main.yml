@@ -1317,6 +1317,11 @@ en:
       many: "Are you sure you want to remove these %{count} questions from the form?"
       other: "Are you sure you want to remove these %{count} questions from the form?"
     reqd_sym_definition: "Required questions are marked with a"
+    return_to_draft_status:
+      modal:
+        title: "Warning: Returning to Draft Status"
+        body: "Returning to Draft status will allow you to make significant changes to the form such as deleting questions and modifying option sets which may result in loss of responses. Consider cloning this form instead."
+        confirm: "Accept Risks & Update Status"
     save_and_go_live: "Save and Go Live"
     saving_order: "Saving order..."
     statuses:

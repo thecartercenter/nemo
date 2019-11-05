@@ -31,4 +31,10 @@
       <p class="no-questions-notice"><%= t('form.no_questions_yet') %></p>
     <% end %>
   <% end %>
+
+  <%= render("return_to_draft_status_modal") %>
+
+  <%= javascript_doc_ready do %>
+    new ELMO.Views.ReturnToDraftStatusActionLinkView();
+  <% end %>
 </div>
