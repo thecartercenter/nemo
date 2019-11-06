@@ -33,7 +33,7 @@ feature "response form location picker", js: true do
     find(".location-search input").set("Joe Batt's Arm").send_keys(:return)
 
     # select a result
-    click_link("Joe Batt's Arm")
+    click_link("Joe Batt's Arm", match: :first)
 
     click_button("Accept")
     expect(page).not_to have_content("Choose Location")
