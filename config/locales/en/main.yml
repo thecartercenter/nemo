@@ -1320,8 +1320,8 @@ en:
     return_to_draft:
       modal:
         title: "Warning: Returning to Draft Status"
-        body_html: "Returning to Draft status will allow you to make significant changes to the form such as deleting questions and modifying option sets which may result in loss of responses. Consider <a href='%{clone_url}' data-method='put'>cloning this form</a> instead."
-        confirm: "Accept Risks & Update Status"
+        body_html: "Returning to Draft status will allow you to make significant changes to the form such as deleting questions and modifying option sets. This may result in loss of responses. Consider <a href='%{clone_url}' data-method='put'>cloning this form</a> instead."
+        confirm: "Accept Risks & Change Status"
     save_and_go_live: "Save and Go Live"
     saving_order: "Saving order..."
     statuses:
