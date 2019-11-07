@@ -150,7 +150,7 @@ class FormsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
-  def return_to_draft_status
+  def return_to_draft
     @form.update_status(:draft)
     redirect_to(index_url_with_context)
   end

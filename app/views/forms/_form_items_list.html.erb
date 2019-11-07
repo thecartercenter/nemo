@@ -32,9 +32,9 @@
     <% end %>
   <% end %>
 
-  <%= render("return_to_draft_status_modal") %>
+  <%= render("return_to_draft_modal") %>
 
   <%= javascript_doc_ready do %>
-    new ELMO.Views.ReturnToDraftStatusActionLinkView();
+    new ELMO.Views.ReturnToDraftView();
   <% end %>
 </div>
