@@ -6,19 +6,27 @@ class ELMO.Views.ReturnToDraftView extends ELMO.Views.ApplicationView
   initialize: (params) ->
     @keyword = params.keyword
     @$('#override').val('') # Ensure box is empty in case cached.
+    @accepted = false
 
   events:
-    'click .return-to-draft-link': 'showDraftStatusModal'
-    'shown.bs.modal': 'handleModalShown'
+    'click .return-to-draft-link': 'handleLinkClicked'
+    'shown.bs.modal #return-to-draft-modal': 'handleModalShown'
+    'click #return-to-draft-modal .btn-primary': 'handleAcceptClicked'
     'keyup #override': 'handleKeyup'
 
-  showDraftStatusModal: (event) ->
+  handleLinkClicked: (event) ->
+    return if @accepted
     event.preventDefault()
     event.stopPropagation()
-    @$('#return-to-draft').modal('show')
+    @$('#return-to-draft-modal').modal('show')
 
   handleModalShown: (event) ->
     @$('#override').focus()
 
   handleKeyup: (event) ->
     @$('.btn-primary').toggle(@$(event.target).val() == @keyword)
+
+  handleAcceptClicked: (event) ->
+    @accepted = true
+    # Trigger another click on the link so we can use the data-method machinery to make the PUT request.
+    @$('.return-to-draft-link').trigger('click')
