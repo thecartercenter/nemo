@@ -1,5 +1,4 @@
 <div class="form-items">
-
   <% unless @form.new_record? %>
     <h2><%= I18n.t('activerecord.attributes.form.item_list_heading') %></h2>
   <% end %>
@@ -30,11 +29,5 @@
     <% if @form.children.empty? %>
       <p class="no-questions-notice"><%= t('form.no_questions_yet') %></p>
     <% end %>
-  <% end %>
-
-  <%= render("return_to_draft_modal") %>
-
-  <%= javascript_doc_ready do %>
-    new ELMO.Views.ReturnToDraftView();
   <% end %>
 </div>
