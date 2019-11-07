@@ -15,7 +15,7 @@
 <div class="d-print-none">
   <div id="action-links-and-modal">
     <%= ActionLinks::FormLinkBuilder.new(@form) %>
-    <%= render("return_to_draft_modal") %>
+    <%= render("return_to_draft_modal") if @form.persisted? %>
   </div>
   <%= published_warning(form) if form.published? && form_mode == :edit %>
   <%= elmo_form_for(form) do |f| %>
