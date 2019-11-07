@@ -5,9 +5,11 @@ class ELMO.Views.ReturnToDraftView extends ELMO.Views.ApplicationView
 
   initialize: (params) ->
     @keyword = params.keyword
+    @$('#override').val('') # Ensure box is empty in case cached.
 
   events:
     'click .return-to-draft-link': 'showDraftStatusModal'
+    'shown.bs.modal': 'handleModalShown'
     'keyup #override': 'handleKeyup'
 
   showDraftStatusModal: (event) ->
@@ -15,6 +17,8 @@ class ELMO.Views.ReturnToDraftView extends ELMO.Views.ApplicationView
     event.stopPropagation()
     @$('#return-to-draft').modal('show')
 
+  handleModalShown: (event) ->
+    @$('#override').focus()
+
   handleKeyup: (event) ->
-    console.log(@$(event.target).val(), @keyword)
     @$('.btn-primary').toggle(@$(event.target).val() == @keyword)
