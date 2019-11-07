@@ -577,7 +577,7 @@ en:
           sms_console: "SMS Test Console"
           go_live: "Go Live"
           pause: "Pause"
-          return_to_draft: "Return to draft status"
+          return_to_draft: "Return to Draft Status"
           print: "Print"
         mission:
           new: "Create Mission"
