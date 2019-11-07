@@ -6,10 +6,19 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
-        <%= t("form.return_to_draft.modal.body_html", clone_url: clone_form_path(form)) %>
+        <p>
+          <%= t("form.return_to_draft.modal.body_html", clone_url: clone_form_path(form)) %>
+        </p>
+        <p>
+          <%= t("form.return_to_draft.modal.prompt_html",
+                override: t("form.return_to_draft.modal.override")) %>
+        </p>
+        <%= text_field_tag(:override, "", class: "form-control") %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("common.cancel") %></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <%= t("common.cancel") %>
+        </button>
         <button type="button" class="btn btn-primary" data-dismiss="modal">
           <%= t("form.return_to_draft.modal.confirm") %>
         </button>
