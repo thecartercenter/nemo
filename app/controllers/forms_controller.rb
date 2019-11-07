@@ -142,17 +142,17 @@ class FormsController < ApplicationController
 
   def go_live
     @form.update_status(:live)
-    redirect_to(index_url_with_context)
+    redirect_after_status_change
   end
 
   def pause
     @form.update_status(:paused)
-    redirect_to(index_url_with_context)
+    redirect_after_status_change
   end
 
   def return_to_draft
     @form.update_status(:draft)
-    redirect_to(index_url_with_context)
+    redirect_after_status_change
   end
 
   # shows the form to either choose existing questions or create a new one to add
@@ -237,5 +237,15 @@ class FormsController < ApplicationController
   def form_params
     params.require(:form).permit(:name, :smsable, :allow_incomplete, :default_response_name,
       :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
+  end
+
+  def redirect_after_status_change
+    redirect_to(
+      case params[:source]
+      when "show" then form_path(@form)
+      when "edit" then edit_form_path(@form)
+      else index_url_with_context
+      end
+    )
   end
 end
