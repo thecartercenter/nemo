@@ -6,7 +6,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
-        <%= t('form.return_to_draft.modal.body') %>
+        <%= t("form.return_to_draft.modal.body_html", clone_url: clone_form_path(form)) %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("form.return_to_draft.modal.confirm") %></button>
