@@ -22,30 +22,26 @@ module ActionLinks
           next unless url && can?(action, object)
           h.link_to(h.icon_tag(action) << translate_action(action), url,
             method: method, data: {confirm: action == :destroy ? delete_warning : nil},
-            class: "#{action}-link")
+            class: "#{action.to_s.dasherize}-link")
         end.compact.reduce(:<<)
       end
     end
 
     private
 
-    # Takes the action spec provided and returns a three element array of form [action, url, method]
-    def unpack_action(action)
-      if action.is_a?(Array)
-        if action[1].is_a?(Hash)
-          [action[0],
-           action[1][:url] || url_for_action(action[0]),
-           action[1][:method] || method_for_action(action[0])]
+    # Takes the action params provided and returns a three element array of form [action, url, method]
+    def unpack_action(params)
+      if params.is_a?(Array)
+        if params[1].is_a?(Hash)
+          method = params[1][:method] || method_for_action(params[0])
+          url = params[1][:url] || url_for_action(params[0], method)
+          [params[0], url, method]
         else
-          action << method_for_action(action[0])
+          params << method_for_action(params[0])
         end
       else
-        [action, url_for_action(action), method_for_action(action)]
+        [params, url_for_action(params), method_for_action(params)]
       end
-    end
-
-    def url_for_action(action)
-      h.url_for(controller: controller, action: action)
     end
 
     def method_for_action(action)
@@ -53,6 +49,13 @@ module ActionLinks
       when :destroy then :delete
       when :clone then :put
       end
+    end
+
+    def url_for_action(action, method = :get)
+      # Include the source action if the method is non-GET as the receiving controller may use it
+      # when deciding where to redirect.
+      source = method == :get ? nil : h.controller.action_name
+      h.url_for(controller: controller, action: action, source: source)
     end
 
     def translate_action(action)

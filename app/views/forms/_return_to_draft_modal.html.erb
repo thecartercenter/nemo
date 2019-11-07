@@ -1,0 +1,28 @@
+<div class="modal fade" id="return-to-draft-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><%= icon_tag("warning") %> <%= t('form.return_to_draft.modal.title') %></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <%= t("form.return_to_draft.modal.body_html", clone_url: clone_form_path(form)) %>
+        </p>
+        <p>
+          <%= t("form.return_to_draft.modal.prompt_html",
+                override: t("form.return_to_draft.modal.override")) %>
+        </p>
+        <%= text_field_tag(:override, "", class: "form-control") %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <%= t("common.cancel") %>
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" style="display: none">
+          <%= t("form.return_to_draft.modal.confirm") %>
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -13,7 +13,10 @@
 <% end %>
 
 <div class="d-print-none">
-  <%= ActionLinks::FormLinkBuilder.new(@form) %>
+  <div id="action-links-and-modal">
+    <%= ActionLinks::FormLinkBuilder.new(@form) %>
+    <%= render("return_to_draft_modal") if @form.persisted? %>
+  </div>
   <%= published_warning(form) if form.published? && form_mode == :edit %>
   <%= elmo_form_for(form) do |f| %>
     <%= f.base_errors %>
@@ -66,6 +69,7 @@
       recipient_options_url: possible_recipients_broadcasts_path
     )%>);
   <% end %>
+  new ELMO.Views.ReturnToDraftView(<%= json(keyword: t("form.return_to_draft.modal.override")) %>);
   new ELMO.Views.PrintFormView();
   // Assigning view to variable for testing form items
   ELMO.formItemsView = new ELMO.Views.FormItemsView(<%=json(

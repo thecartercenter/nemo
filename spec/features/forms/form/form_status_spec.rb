@@ -25,14 +25,35 @@ feature "form status display and changes", js: true do
     visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
     click_link("Myform")
     expect(page).to have_css("div#status", text: /Status Draft/)
+    expect(page).to have_css(".top-action-links a", text: /Delete/)
+    expect(page).to have_css(".top-action-links a", text: /Go Live/)
+    expect(page).not_to have_css(".top-action-links a", text: /Pause/)
+    expect(page).not_to have_css(".top-action-links a", text: /Return to Draft Status/)
 
     click_link("Go Live")
-    click_link("Myform")
     expect(page).to have_css("div#status", text: /Status Live/)
+    expect(page).not_to have_css(".top-action-links a", text: /Delete/)
+    expect(page).not_to have_css(".top-action-links a", text: /Go Live/)
+    expect(page).to have_css(".top-action-links a", text: /Pause/)
+    expect(page).to have_css(".top-action-links a", text: /Return to Draft Status/)
 
     click_link("Pause")
-    click_link("Myform")
     expect(page).to have_css("div#status", text: /Status Paused/)
+    expect(page).not_to have_css(".top-action-links a", text: /Delete/)
+    expect(page).to have_css(".top-action-links a", text: /Go Live/)
+    expect(page).not_to have_css(".top-action-links a", text: /Pause/)
+    expect(page).to have_css(".top-action-links a", text: /Return to Draft Status/)
+
+    click_link("Return to Draft Status")
+    fill_in("override", with: "override")
+    click_button("Cancel")
+    expect(page).to have_css("div#status", text: /Status Paused/)
+
+    click_link("Return to Draft Status")
+    expect(page).to have_field("override", text: "")
+    fill_in("override", with: "override")
+    click_button("Accept Risks & Change Status")
+    expect(page).to have_css("div#status", text: /Status Draft/)
   end
 
   scenario "changing status via save and go live button" do
@@ -50,7 +71,6 @@ feature "form status display and changes", js: true do
     expect(page).not_to have_content("Save and Go Live")
 
     click_link("Pause")
-    click_link("Yourform")
     expect(page).to have_css("div#status", text: /Status Paused/)
 
     click_button("Save and Go Live")

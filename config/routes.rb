@@ -103,6 +103,7 @@ ELMO::Application.routes.draw do
         put "clone"
         put "pause"
         put "go-live", as: "go_live"
+        put "return-to-draft", as: "return_to_draft"
         get "choose-questions", as: "choose_questions", action: "choose_questions"
         get "sms-guide", as: "sms_guide", action: "sms_guide"
       end

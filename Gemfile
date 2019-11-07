@@ -123,6 +123,7 @@ group :development, :test do
   gem "capybara-screenshot", "~> 1.0.11"
   gem "launchy", "~> 2.4.3" # For auto-opening capybara html file
   gem "selenium-webdriver", "~> 3.9"
+  gem "webdrivers", "~> 4.0"
 
   # Debugging
   gem "pry", "~> 0.10"

@@ -13,6 +13,9 @@ require "paperclip/matchers"
 require "cancan/matchers"
 require "fileutils"
 
+# Automatically downloads chromedriver, which is used use for JS feature specs
+require "webdrivers/chromedriver"
+
 Capybara.register_driver :selenium_chrome_headless do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     args: %w[disable-gpu no-sandbox] + (ENV["HEADED"] ? [] : ["headless"]),
