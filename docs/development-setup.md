@@ -30,10 +30,6 @@ Note to install the software below we recommend the following package managers:
     - It should be available through any of the package managers listed above. If not it can be built from source.
 1. Chrome (Browser) 76+
     - Used for automated browser testing.
-1. Chromedriver 76+
-    - Handles running Chrome headlessly for feature specs.
-    - It should be available through any of the package managers listed above, or [here](https://sites.google.com/a/chromium.org/chromedriver/downloads). If not it can be built from source.
-    - The Rails Gem that talks to Chromedriver is called `selenium-webdriver`.
 1. GraphViz 2.36+
     - [GraphViz](http://graphviz.org/) is used to visualize the relationships between data in the database.
 
