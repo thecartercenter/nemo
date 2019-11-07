@@ -9,7 +9,10 @@
         <%= t("form.return_to_draft.modal.body_html", clone_url: clone_form_path(form)) %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("form.return_to_draft.modal.confirm") %></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("common.cancel") %></button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+          <%= t("form.return_to_draft.modal.confirm") %>
+        </button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
