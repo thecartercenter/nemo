@@ -15,7 +15,9 @@ class ELMO.Views.ReturnToDraftView extends ELMO.Views.ApplicationView
     'keyup #override': 'handleKeyup'
 
   handleLinkClicked: (event) ->
+    # If accept button was clicked, we just let the link do it's thing.
     return if @accepted
+
     event.preventDefault()
     event.stopPropagation()
     @$('#return-to-draft-modal').modal('show')
