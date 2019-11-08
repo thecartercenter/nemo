@@ -1421,6 +1421,15 @@ en:
       select_all_rows: "Select all %{count} %{class_name}"
       selected_all_rows: "<strong>All</strong> %{count} %{class_name} are selected."
 
+  integrity_warnings:
+    titles:
+      careful_with_changes: "Be Careful with Edits"
+      features_disabled: "Some Features Disabled"
+    reasons:
+      form:
+        published: "This form is published (not a draft)"
+        has_data: "This form has associated responses"
+
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"
