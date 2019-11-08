@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe IntegrityWarnings::FormWarnings do
+describe IntegrityWarnings::FormWarner do
   subject(:warnings) { described_class.new(form) }
 
   context "with fresh form" do
