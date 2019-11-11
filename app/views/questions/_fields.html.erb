@@ -1,12 +1,4 @@
 <div class="question_fields">
-
-  <%# show integrity warnings if applicable %>
-  <% if form_mode == :edit %>
-    <%= has_answers_warning(@question) if @question.has_answers? %>
-    <%= published_warning(@question) if @question.published? %>
-    <%= appears_elsewhere_warning(@question) unless @question.forms.empty? %>
-  <% end %>
-
   <%= f.base_errors %>
 
   <%= f.field(:code, required: true, maxlength: 20, read_only: cannot?(:update_code, @question)) %>

@@ -1,3 +1,5 @@
+<%= IntegrityWarnings::Builder.new(@questioning.question) if form_mode == :edit %>
+
 <%= elmo_form_for(@questioning, html: {multipart: true}) do |f| %>
   <%= f.field(:form_id, type: :hidden) %>
 
@@ -5,8 +7,6 @@
     <%= qf.hidden_field(:id) %>
     <%= render("questions/fields", f: qf) %>
   <% end %>
-
-  <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
   <%= f.field(:display_logic, partial: "questionings/display_logic", locals: {form_item: @questioning}) %>
   <% unless read_only && @questioning.skip_rules.none? %>

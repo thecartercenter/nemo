@@ -1432,6 +1432,12 @@ en:
       qing_group:
         published: "This group's form is published (not a draft)"
         standard_copy: "This group's form is based on a standard"
+      question:
+        in_use: "This question appears on forms: %{forms}"
+        published: "This question appears on published (not-draft) forms"
+        standard_copy: "This question is based on a standard"
+        has_data: "This question has associated responses"
+
 
   location_picker:
     choose_location: "Choose Location"
