@@ -55,3 +55,7 @@ $pill-background-color: $light-blue;
 $pill-background-hover-color: darken($light-blue, 10%);
 $pill-border-color: darken($light-blue, 20%);
 $pill-text-color: $main-text-color;
+
+// A limit on how wide forms can be before they start to look silly.
+// Other components can use this if they want to align with forms.
+$max-form-width: 760px;

@@ -1,4 +1,6 @@
 .integrity-warning {
+  max-width: $max-form-width;
+
   i.fa {
     font-size: 1.1rem;
     margin-#{right}: $alert-padding-x;
