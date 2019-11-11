@@ -84,7 +84,7 @@ class Ability
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: nil)
-      can(:destroy, Question) { |q| !q.published? && !q.has_answers? }
+      can(:destroy, Question) { |q| !q.published? && !q.data? }
 
       can(:manage, Mission)
       can(:manage, User)
@@ -157,7 +157,7 @@ class Ability
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: mission.id)
-      can(:destroy, Question) { |q| q.mission_id == mission.id && !q.published? && !q.has_answers? }
+      can(:destroy, Question) { |q| q.mission_id == mission.id && !q.published? && !q.data? }
     end
 
     # Can manage these classes for the current mission even if locked
@@ -231,15 +231,15 @@ class Ability
     # so a question (though not its core) may be updatable even though it's published
     # and we need to allow access to that question via the questioning index
     can(:update, Questioning) { |q| can?(:update, q.question) }
-    cannot(:destroy, Questioning, &:has_answers?)
+    cannot(:destroy, Questioning, &:data?)
 
     # update_core refers to the core fields: question type, option set, constraints
-    cannot(:update_core, Question) { |q| q.published? || q.has_answers? }
+    cannot(:update_core, Question) { |q| q.published? || q.data? }
     cannot(:update_code, Question, &:standard_copy?) # question code attribute
 
     # we need these specialized permissions because option names/hints are updated via option set
     cannot(%i[add_options remove_options reorder_options], OptionSet, &:published?)
-    cannot(:destroy, OptionSet) { |o| o.has_answers? || o.any_questions? || o.published? }
+    cannot(:destroy, OptionSet) { |o| o.data? || o.any_questions? || o.published? }
 
     # operations can't be destroyed while their underlying job is in progress
     cannot :destroy, Operation do |op|

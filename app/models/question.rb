@@ -191,8 +191,12 @@ class Question < ApplicationRecord
     standard? ? copies.to_a.sum(&:answer_count) : response_nodes.count
   end
 
-  def has_answers?
+  def data?
     answer_count.positive?
+  end
+
+  def in_use?
+    forms.any?
   end
 
   # determines if the question appears on any published forms

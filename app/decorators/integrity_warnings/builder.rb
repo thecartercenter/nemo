@@ -16,7 +16,7 @@ module IntegrityWarnings
     private
 
     def warnings_of_type(type)
-      warnings = warner.send(type)
+      warnings = warner.warnings(type)
       return if warnings.empty?
       h.content_tag(:div, class: "alert alert-warning integrity-warning media") do
         h.icon_tag("warning") << h.content_tag(:div, class: "media-body") do

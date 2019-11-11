@@ -3,14 +3,14 @@
 require "rails_helper"
 
 describe IntegrityWarnings::FormWarner do
-  subject(:warnings) { described_class.new(form) }
+  subject(:warner) { described_class.new(form) }
 
   context "with fresh form" do
     let(:form) { create(:form) }
 
     it "returns no warnings" do
-      expect(warnings.careful_with_changes).to be_empty
-      expect(warnings.features_disabled).to be_empty
+      expect(warner.warnings(:careful_with_changes)).to be_empty
+      expect(warner.warnings(:features_disabled)).to be_empty
     end
   end
 
@@ -19,8 +19,8 @@ describe IntegrityWarnings::FormWarner do
 
     context "with no responses" do
       it "returns warnings" do
-        expect(warnings.careful_with_changes).to contain_exactly(:published)
-        expect(warnings.features_disabled).to contain_exactly(:published)
+        expect(warner.warnings(:careful_with_changes)).to contain_exactly(:published)
+        expect(warner.warnings(:features_disabled)).to contain_exactly(:published)
       end
     end
 
@@ -28,8 +28,8 @@ describe IntegrityWarnings::FormWarner do
       let!(:response) { create(:response, form: form, answer_values: %w[x]) }
 
       it "returns warnings" do
-        expect(warnings.careful_with_changes).to contain_exactly(:published)
-        expect(warnings.features_disabled).to contain_exactly(:published, :has_data)
+        expect(warner.warnings(:careful_with_changes)).to contain_exactly(:published)
+        expect(warner.warnings(:features_disabled)).to contain_exactly(:published, :data)
       end
     end
   end

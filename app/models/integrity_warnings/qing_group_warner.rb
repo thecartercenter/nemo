@@ -2,22 +2,13 @@
 
 module IntegrityWarnings
   # Enumerates integrity warnings for QingGroups
-  class QingGroupWarner
-    attr_accessor :group
+  class QingGroupWarner < Warner
+    protected
 
-    def initialize(group)
-      self.group = group
-    end
-
-    # See IntegrityWarnings::Builder#text for more info on the expected return value here.
     def careful_with_changes
-      warnings = []
-      warnings << :published if group.published?
-      warnings << :standard_copy if group.standardized?
-      warnings
+      %i[published standardized]
     end
 
-    # See IntegrityWarnings::Builder#text for more info on the expected return value here.
     def features_disabled
       []
     end

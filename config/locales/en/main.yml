@@ -1428,15 +1428,15 @@ en:
     reasons:
       form:
         published: "This form is published (not a draft)"
-        has_data: "This form has associated responses"
+        data: "This form has associated responses"
       qing_group:
         published: "This group's form is published (not a draft)"
-        standard_copy: "This group's form is based on a standard"
+        standardized: "This group's form is based on a standard"
       question:
-        in_use: "This question appears on forms: %{forms}"
+        in_use: "This question appears on forms: %{form_list}"
         published: "This question appears on published (not-draft) forms"
-        standard_copy: "This question is based on a standard"
-        has_data: "This question has associated responses"
+        standardized: "This question is based on a standard"
+        data: "This question has associated responses"
 
 
   location_picker:

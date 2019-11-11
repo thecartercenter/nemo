@@ -163,6 +163,10 @@ class Form < ApplicationRecord
     questionings.any?
   end
 
+  def data?
+    responses.any?
+  end
+
   def full_name
     # this used to include the form type, but for now it's just name
     name

@@ -226,8 +226,8 @@ class OptionSet < ApplicationRecord
     standard? ? copies.to_a.sum(&:question_count) : 0
   end
 
-  def has_answers?
-    standard? ? copies.any?(&:has_answers?) : questionings.any?(&:has_answers?)
+  def data?
+    standard? ? copies.any?(&:data?) : questionings.any?(&:data?)
   end
 
   def answers_for_option?(option_id)
@@ -368,7 +368,7 @@ class OptionSet < ApplicationRecord
     raise DeletionError, :cant_delete_if_has_questions if any_questions?
 
     # make sure not associated with any answers
-    raise DeletionError, :cant_delete_if_has_answers if has_answers?
+    raise DeletionError, :cant_delete_if_has_answers if data?
   end
 
   def normalize_fields

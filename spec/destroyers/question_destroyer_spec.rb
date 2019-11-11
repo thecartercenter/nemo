@@ -26,9 +26,9 @@ describe QuestionDestroyer do
 
   describe "answers" do
     before do
-      allow(q1).to receive(:has_answers?) { false }
-      allow(q2).to receive(:has_answers?) { false }
-      allow(q3).to receive(:has_answers?) { true }
+      allow(q1).to receive(:data?) { false }
+      allow(q2).to receive(:data?) { false }
+      allow(q3).to receive(:data?) { true }
     end
 
     it "skips questions that have answers" do
@@ -39,8 +39,8 @@ describe QuestionDestroyer do
 
   describe "no answers and no published forms" do
     before do
-      allow(q1).to receive(:has_answers?) { false }
-      allow(q2).to receive(:has_answers?) { false }
+      allow(q1).to receive(:data?) { false }
+      allow(q2).to receive(:data?) { false }
       allow(q3).to receive(:published?) { false }
     end
 

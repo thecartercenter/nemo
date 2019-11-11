@@ -299,7 +299,7 @@ class OptionNode < ApplicationRecord
   end
 
   def removable?
-    !has_answers?
+    !data?
   end
 
   def to_s
@@ -415,12 +415,12 @@ class OptionNode < ApplicationRecord
     hash
   end
 
-  def has_answers?
+  def data?
     # option_set may not be present when node first getting built
     !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
   end
 
   def ensure_no_answers_or_choices
-    raise DeletionError, :cant_delete_if_has_response if has_answers?
+    raise DeletionError, :cant_delete_if_has_response if data?
   end
 end
