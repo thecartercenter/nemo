@@ -1429,6 +1429,9 @@ en:
       form:
         published: "This form is published (not a draft)"
         has_data: "This form has associated responses"
+      qing_group:
+        published: "This group's form is published (not a draft)"
+        standard_copy: "This group's form is based on a standard"
 
   location_picker:
     choose_location: "Choose Location"

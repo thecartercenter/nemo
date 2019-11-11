@@ -9,6 +9,7 @@
       </div>
 
       <div class="modal-body group-form">
+        <%= IntegrityWarnings::Builder.new(@qing_group) %>
         <%= elmo_form_for(@qing_group) do |f| %>
           <%= f.field(:form_id, type: :hidden) %>
           <%= f.field(:repeatable, type: :check_box) %>

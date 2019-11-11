@@ -44,12 +44,15 @@
 #
 # rubocop:enable Metrics/LineLength
 
+# A group of questions on a form.
 class QingGroup < FormItem
   include Translatable
 
   translates :group_name, :group_hint, :group_item_name
 
-  alias_method :c, :sorted_children
+  delegate :standardized?, :published?, to: :form
+
+  alias c sorted_children
 
   def code
     group_name

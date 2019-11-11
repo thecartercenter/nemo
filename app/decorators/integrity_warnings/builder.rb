@@ -26,7 +26,8 @@ module IntegrityWarnings
     end
 
     def warner
-      "IntegrityWarnings::#{object.class.name}Warner".constantize.new(object)
+      class_name = object.class.name.sub(/Decorator\z/, "")
+      "IntegrityWarnings::#{class_name}Warner".constantize.new(object)
     end
 
     def list_or_single(warnings)
