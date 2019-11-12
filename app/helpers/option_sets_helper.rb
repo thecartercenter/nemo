@@ -34,15 +34,21 @@ module OptionSetsHelper
     end
   end
 
+  # TODO: These two warning should move inside the IntegrityWarning system, which should probably be
+  # renamed.
   def multilevel_forbidden_notice
-    text = tmd("option_set.multilevel_forbidden_notice")
-    icon = content_tag(:i, "", class: "fa fa-exclamation-triangle")
-    content_tag(:div, (icon << content_tag(:div, text)), class: "form-warning alert alert-info")
+    content_tag(:div, class: "alert alert-warning integrity-warning media") do
+      icon_tag("warning") << content_tag(:div, class: "media-body") do
+        t("option_set.multilevel_forbidden_notice")
+      end
+    end
   end
 
   def huge_notice
-    text = tmd("option_set.huge_notice", count: number_with_delimiter(@option_set.total_options))
-    icon = content_tag(:i, "", class: "fa fa-exclamation-triangle")
-    content_tag(:div, (icon << content_tag(:div, text)), class: "form-warning alert alert-info")
+    content_tag(:div, class: "alert alert-warning integrity-warning media") do
+      icon_tag("warning") << content_tag(:div, class: "media-body") do
+        t("option_set.huge_notice", count: number_with_delimiter(@option_set.total_options))
+      end
+    end
   end
 end
