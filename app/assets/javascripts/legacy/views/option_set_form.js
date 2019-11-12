@@ -276,12 +276,12 @@
           // otherwise we got an error,
           // so replace the div with the new partial (this will instantiate a new instance of this class)
         } else {
-          $("div.option_set_form").replaceWith(jqxhr.responseText)
+          $(".elmo-form-wrapper").replaceWith(jqxhr.responseText)
         }
       },
       error: function(jqxhr) {
         // if we get an HTTP error, it's some server thing so just display a generic message
-        $("div.option_set_form").replaceWith("Server Error")
+        $(".elmo-form-wrapper").replaceWith("Server Error")
         // Stop loading
         ELMO.app.loading(false);
       }
