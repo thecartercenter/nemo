@@ -50,7 +50,7 @@ class QingGroup < FormItem
 
   translates :group_name, :group_hint, :group_item_name
 
-  delegate :standardized?, :published?, to: :form
+  delegate :standard_copy?, :published?, to: :form
 
   alias c sorted_children
 

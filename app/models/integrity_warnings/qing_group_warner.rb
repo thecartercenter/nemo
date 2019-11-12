@@ -6,7 +6,7 @@ module IntegrityWarnings
     protected
 
     def careful_with_changes
-      %i[published standardized]
+      %i[published standard_copy]
     end
 
     def features_disabled

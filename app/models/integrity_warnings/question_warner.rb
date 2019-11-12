@@ -7,11 +7,13 @@ module IntegrityWarnings
 
     # See IntegrityWarnings::Warner#warnings for more info on the expected return value here.
     def careful_with_changes
-      [[:in_use, :form_list], :published, :standardized]
+      [{in_use: :form_list}, :published, :standard_copy]
     end
 
     def features_disabled
-      %i[published data]
+      # We include standard_copy here because editing the question code is not allowed
+      # for standard copies.
+      %i[published data standard_copy]
     end
   end
 end

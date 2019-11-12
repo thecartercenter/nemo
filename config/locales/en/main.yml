@@ -1422,6 +1422,7 @@ en:
       selected_all_rows: "<strong>All</strong> %{count} %{class_name} are selected."
 
   integrity_warnings:
+    more_suffix: "%{count} more"
     titles:
       careful_with_changes: "Be Careful with Edits"
       features_disabled: "Some Features Disabled"
