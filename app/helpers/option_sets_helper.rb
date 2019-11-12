@@ -35,7 +35,7 @@ module OptionSetsHelper
   end
 
   # TODO: These two warning should move inside the IntegrityWarning system, which should probably be
-  # renamed.
+  # renamed to just Warning or FormWarning.
   def multilevel_forbidden_notice
     content_tag(:div, class: "alert alert-warning integrity-warning media") do
       icon_tag("warning") << content_tag(:div, class: "media-body") do

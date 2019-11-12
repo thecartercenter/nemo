@@ -8,11 +8,12 @@
     display: block;
     font-size: 0.9rem;
     font-weight: bold;
-    margin-bottom: ($spacer * .25);
+    margin-bottom: ($spacer * 0.25);
     margin-top: -0.2rem;
   }
 
-  p, ul {
+  p,
+  ul {
     margin-bottom: 0;
     line-height: 1.2;
   }

@@ -15,7 +15,8 @@ module Forms
       def warnings(type)
         # Expects the subclass method with name `type` to return an array of
         # symbols or 1-element hashes of form [symbol => symbol].
-        # The first symbol is the boolean method to call on the object to check if the warning should be shown.
+        # The first symbol is the boolean method to call on the object
+        # to check if the warning should be shown.
         # The second symbol (in the array case) is a method to be called locally to provide extra
         # info for I18n.
         send(type).map do |params|
