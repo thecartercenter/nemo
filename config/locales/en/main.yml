@@ -1251,22 +1251,6 @@ en:
     summary: "Summary"
     top_forms: "Top Forms"
 
-  data_integrity:
-    appears_elsewhere_warnings:
-      by_type:
-        question: "This Question appears on the following Forms: *%{related}*. Any changes you make below will be reflected on those Forms."
-        option_set: "This Option Set appears on the following Questions: *%{related}*. Any changes you make below will be reflected on those Questions."
-    has_answers_warnings:
-      by_type:
-        question: "This Question has existing Answers. Some fields are thus not editable."
-    option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
-    option_standard_copy_name_change_warning: "This Option is part of a standard-derived Option Set. When editing, you may want to maintain the original meaning of the Option."
-    published_warnings:
-      form: "This Form is published, meaning it may already be in the hands of enumerators. Some fields are thus not-editable, and questions cannot be added, removed, or re-ordered. Please proceed with caution when making any changes."
-      questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
-      question: "This Question appears on at least one published Form, meaning it may already be in the hands of enumerators. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
-      option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of enumerators. Some fields are thus non-editable, and Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
-
   filter:
     form: "Form"
     choose_form: "Choose a form"
