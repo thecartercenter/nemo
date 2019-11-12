@@ -203,7 +203,7 @@ class OptionSet < ApplicationRecord
 
   # Checks if this option set is used in at least one question
   # or if any copies are used in at least one question.
-  def any_questions?
+  def in_use?
     ttl_question_count.positive?
   end
 
@@ -365,7 +365,7 @@ class OptionSet < ApplicationRecord
 
   def check_associations
     # make sure not associated with any questions
-    raise DeletionError, :cant_delete_if_has_questions if any_questions?
+    raise DeletionError, :cant_delete_if_has_questions if in_use?
 
     # make sure not associated with any answers
     raise DeletionError, :cant_delete_if_has_answers if data?

@@ -1432,12 +1432,19 @@ en:
         data: "This form has associated responses"
       qing_group:
         published: "This group's form is published (not a draft)"
-        standardized: "This group's form is based on a standard"
+        standard_copy: "This group's form is based on a standard"
       question:
         in_use: "This question appears on forms: %{form_list}"
-        published: "This question appears on published (not-draft) forms"
-        standardized: "This question is based on a standard"
+        published: "This question appears on at least one published (not-draft) form"
+        standard_copy: "This question is based on a standard"
         data: "This question has associated responses"
+      option_set:
+        in_use:
+          one: "This option set appears on %{count} question"
+          other: "This option set appears on %{count} questions"
+        published: "This option set appears on at least one published (not-draft) form"
+        standard_copy: "This option set is based on a standard"
+        data: "This option set has associated responses"
 
 
   location_picker:

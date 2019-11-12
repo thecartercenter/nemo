@@ -159,10 +159,6 @@ class Form < ApplicationRecord
     current_version.try(:code) || ""
   end
 
-  def any_questions?
-    questionings.any?
-  end
-
   def data?
     responses.any?
   end
