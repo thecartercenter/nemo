@@ -227,7 +227,7 @@ class OptionSet < ApplicationRecord
   end
 
   def data?
-    standard? ? copies.any?(&:data?) : questionings.any?(&:data?)
+    !standard? && questionings.any?(&:data?)
   end
 
   def answers_for_option?(option_id)
