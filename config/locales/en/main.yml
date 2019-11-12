@@ -1446,7 +1446,6 @@ en:
         standard_copy: "This option set is based on a standard"
         data: "This option set has associated responses"
 
-
   location_picker:
     choose_location: "Choose Location"
     current_location: "Current Location"

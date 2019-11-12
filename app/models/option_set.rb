@@ -139,7 +139,11 @@ class OptionSet < ApplicationRecord
   end
 
   def levels
-    @levels ||= multilevel? ? level_names.map { |n| OptionLevel.new(name_translations: n) } : nil
+    return @levels if defined?(@levels)
+    return @levels = nil unless multilevel?
+    @levels = level_names.map do |n|
+      OptionLevel.new(name_translations: n, option_set: self)
+    end
   end
 
   def levels=(levels)
