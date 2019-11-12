@@ -1,4 +1,4 @@
-<%= IntegrityWarnings::Builder.new(@questioning.question) if form_mode == :edit %>
+<%= Forms::IntegrityWarnings::Builder.new(@questioning.question) if form_mode == :edit %>
 
 <%= elmo_form_for(@questioning, html: {multipart: true}) do |f| %>
   <%= f.field(:form_id, type: :hidden) %>

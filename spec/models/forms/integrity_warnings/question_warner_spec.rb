@@ -4,7 +4,7 @@ require "rails_helper"
 
 # The QuestionWarner is the most complex of the warners, so we just test this one as a way
 # of testing the base class, which is where most of the code is.
-describe IntegrityWarnings::QuestionWarner do
+describe Forms::IntegrityWarnings::QuestionWarner do
   subject(:warner) { described_class.new(question) }
 
   context "with fresh question" do

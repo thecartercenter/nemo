@@ -1,6 +1,6 @@
 <% @title_args = {code: @question.code, standardized: @question.standardized?} %>
 <%= elmo_form_for(@question, html: {multipart: true}) do |f| %>
-  <%= IntegrityWarnings::Builder.new(@question) if form_mode == :edit %>
+  <%= Forms::IntegrityWarnings::Builder.new(@question) if form_mode == :edit %>
   <%= ActionLinks::LinkBuilder.new(@question, %i[show edit destroy]) %>
   <%# Fields are contained in a partial because they are also used in the questioning form. %>
   <%= render("fields", f: f) %>

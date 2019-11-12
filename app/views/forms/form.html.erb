@@ -13,7 +13,7 @@
 <% end %>
 
 <div class="d-print-none">
-  <%= IntegrityWarnings::Builder.new(@form) %>
+  <%= Forms::IntegrityWarnings::Builder.new(@form) %>
   <div id="action-links-and-modal">
     <%= ActionLinks::FormLinkBuilder.new(@form) %>
     <%= render("return_to_draft_modal") if @form.persisted? %>
