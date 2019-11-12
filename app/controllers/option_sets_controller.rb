@@ -52,6 +52,7 @@ class OptionSetsController < ApplicationController
   end
 
   def show
+    prep_form_vars
     render(:form)
   end
 
