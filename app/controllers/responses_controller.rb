@@ -176,6 +176,7 @@ class ResponsesController < ApplicationController
     # See config/initializers/http_status_code.rb for custom status definitions
     begin
       @response.user_id = current_user.id
+      @response.device_id = params[:deviceID]
       @response = odk_response_parser.populate_response
       authorize!(:submit_to, @response.form)
       @response.save(validate: false)

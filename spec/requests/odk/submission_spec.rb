@@ -47,6 +47,13 @@ describe "odk submissions", :odk, type: :request do
       post(submission_path, params: request_params, headers: auth_headers)
       expect(response).to have_http_status(:created)
       expect(nemo_response.mission).to eq(mission)
+      expect(nemo_response.device_id).to eq(nil)
+    end
+
+    it "should save device ID if present" do
+      post("#{submission_path}?deviceID=test", params: request_params, headers: auth_headers)
+      expect(response).to have_http_status(:created)
+      expect(nemo_response.device_id).to eq("test")
     end
   end
 
