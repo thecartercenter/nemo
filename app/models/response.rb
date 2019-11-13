@@ -17,6 +17,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  checked_out_by_id :uuid
+#  device_id         :string
 #  form_id           :uuid             not null
 #  mission_id        :uuid             not null
 #  old_id            :integer
