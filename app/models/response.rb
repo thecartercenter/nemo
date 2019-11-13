@@ -109,7 +109,7 @@ class Response < ApplicationRecord
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
-    raise ArguementError, "A user is required" unless user
+    raise ArgumentError, "A user is required" unless user
 
     Response.where(checked_out_by_id: user).update_all(checked_out_at: nil, checked_out_by_id: nil)
   end
@@ -176,7 +176,7 @@ class Response < ApplicationRecord
   end
 
   def checked_out_by_others?(user = nil)
-    raise ArguementError, "A user is required" unless user
+    raise ArgumentError, "A user is required" unless user
 
     !checked_out_by.nil? && checked_out_by != user && check_out_valid?
   end
