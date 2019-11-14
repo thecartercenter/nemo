@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_13_225222) do
+ActiveRecord::Schema.define(version: 2019_11_13_232540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -422,6 +422,10 @@ ActiveRecord::Schema.define(version: 2019_11_13_225222) do
     t.uuid "mission_id", null: false
     t.string "odk_hash", limit: 255
     t.text "odk_xml"
+    t.string "odk_xml_content_type"
+    t.string "odk_xml_file_name"
+    t.bigint "odk_xml_file_size"
+    t.datetime "odk_xml_updated_at"
     t.integer "old_id"
     t.boolean "reviewed", default: false, null: false
     t.uuid "reviewer_id"
