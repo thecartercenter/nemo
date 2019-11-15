@@ -277,11 +277,11 @@ class Form < ApplicationRecord
 
   def oldest_accepted_version_id
     return @oldest_accepted_version_id if defined?(@oldest_accepted_version_id)
-    versions.oldest_accepted.first.id
+    versions.oldest_accepted.first&.id
   end
 
   def oldest_accepted_version
-    versions.find(oldest_accepted_version_id)
+    versions.find(oldest_accepted_version_id) if oldest_accepted_version_id.present?
   end
 
   def update_oldest_accepted

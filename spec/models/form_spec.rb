@@ -188,6 +188,36 @@ describe Form do
     end
   end
 
+  context "oldest version accepted" do
+    it "should set on first publish" do
+      expect(form.oldest_accepted_version).to be(nil)
+      form.update_status(:live)
+      expect(form.oldest_accepted_version).to eq(form.current_version)
+    end
+
+    context "should bump on upgrade" do
+      it "by default" do
+        form.update_status(:live)
+        id1 = form.oldest_accepted_version_id
+        expect(id1).to match(form.current_version.id)
+        form.upgrade_version!
+        id2 = form.oldest_accepted_version_id
+        expect(id2).to match(form.current_version.id)
+        expect(id2).to_not(match(id1))
+      end
+
+      it "unless user set manually" do
+        form.update_status(:live)
+        id1 = form.oldest_accepted_version_id
+        form.upgrade_version!
+        form.oldest_accepted_version_id = id1
+        form.upgrade_version!
+        id3 = form.oldest_accepted_version_id
+        expect(id3).to match(id1)
+      end
+    end
+  end
+
   describe "destroy" do
     let!(:form) { create(:form, :standard, question_types: %w[text text text]) }
     let!(:form2) { form.replicate(mode: :to_mission, dest_mission: get_mission) }
