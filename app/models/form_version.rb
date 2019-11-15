@@ -48,8 +48,11 @@ class FormVersion < ApplicationRecord
   # Inits a new FormVersion with the same form_id
   # and assigns it a new code + number
   def upgrade!
-    update!(is_current: false)
-    self.class.create!(form_id: form_id, is_current: true)
+    # If the user has changed this manually, don't bump it on version upgrade.
+    bump_oldest_accepted = is_oldest_accepted
+
+    update!(is_current: false, is_oldest_accepted: false)
+    self.class.create!(form_id: form_id, is_current: true, is_oldest_accepted: bump_oldest_accepted)
   end
 
   private

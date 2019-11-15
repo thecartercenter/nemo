@@ -273,7 +273,7 @@ class Form < ApplicationRecord
     if current_version
       current_version.upgrade!
     else
-      FormVersion.create(form_id: id, is_current: true)
+      FormVersion.create(form_id: id, is_current: true, is_oldest_accepted: true)
     end
 
     # since we've upgraded, we can lower the upgrade flag
