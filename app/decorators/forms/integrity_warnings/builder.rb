@@ -41,11 +41,9 @@ module Forms
         end
       end
 
-      # `warning` should consist of either a symbol or a 2-element array of form [key, params],
-      # where key is the i18n key and params is an optional hash of i18n interpolation params.
       def text(warning)
-        warning = Array.wrap(warning)
-        t("integrity_warnings.reasons.#{object.model_name.i18n_key}.#{warning[0]}", warning[1] || {})
+        key = "integrity_warnings.reasons.#{object.model_name.i18n_key}.#{warning[:reason]}"
+        t(key, warning[:i18n_params] || {})
       end
     end
   end

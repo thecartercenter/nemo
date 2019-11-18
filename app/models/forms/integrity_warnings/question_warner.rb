@@ -8,7 +8,11 @@ module Forms
 
       # See Warner#warnings for more info on the expected return value here.
       def careful_with_changes
-        [{in_use: :form_list}, :published, :standard_copy]
+        [
+          [:in_use, i18n_params: -> { {form_list: form_list} }],
+          :published,
+          :standard_copy
+        ]
       end
 
       def features_disabled

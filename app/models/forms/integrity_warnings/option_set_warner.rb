@@ -8,15 +8,15 @@ module Forms
 
       # See Warner#warnings for more info on the expected return value here.
       def careful_with_changes
-        [{in_use: :count}, :published, :standard_copy]
+        [
+          [:in_use, i18n_params: -> { {count: object.questions.count} }],
+          :published,
+          :standard_copy
+        ]
       end
 
       def features_disabled
         %i[published data]
-      end
-
-      def count
-        object.questions.count
       end
     end
   end

@@ -2,6 +2,9 @@
 
 require "rails_helper"
 
+# Doing this on purpose here for parallel structure.
+# rubocop:disable Style/BracesAroundHashParameters
+
 # The QuestionWarner is the most complex of the warners, so we just test this one as a way
 # of testing the base class, which is where most of the code is.
 describe Forms::IntegrityWarnings::QuestionWarner do
@@ -30,10 +33,13 @@ describe Forms::IntegrityWarnings::QuestionWarner do
     context "with no responses" do
       context "with three forms" do
         it "returns warnings" do
-          expect(warner.warnings(:careful_with_changes))
-            .to contain_exactly(:published, [:in_use, {form_list: "Form 1, Form 2, Form 3"}])
-          expect(warner.warnings(:features_disabled))
-            .to contain_exactly(:published)
+          expect(warner.warnings(:careful_with_changes)).to contain_exactly(
+            {reason: :published, i18n_params: nil},
+            {reason: :in_use, i18n_params: {form_list: "Form 1, Form 2, Form 3"}}
+          )
+          expect(warner.warnings(:features_disabled)).to contain_exactly(
+            {reason: :published, i18n_params: nil}
+          )
         end
       end
 
@@ -43,8 +49,10 @@ describe Forms::IntegrityWarnings::QuestionWarner do
         end
 
         it "returns warning with truncated form list" do
-          expect(warner.warnings(:careful_with_changes))
-            .to contain_exactly(:published, [:in_use, {form_list: "Form 1, Form 2, Form 3 (+1 more)"}])
+          expect(warner.warnings(:careful_with_changes)).to contain_exactly(
+            {reason: :published, i18n_params: nil},
+            {reason: :in_use, i18n_params: {form_list: "Form 1, Form 2, Form 3 (+1 more)"}}
+          )
         end
       end
     end
@@ -56,9 +64,12 @@ describe Forms::IntegrityWarnings::QuestionWarner do
     let!(:response) { create(:response, form: form, answer_values: %w[x]) }
 
     it "returns warnings" do
-      expect(warner.warnings(:careful_with_changes))
-        .to contain_exactly([:in_use, {form_list: "Form 1"}])
-      expect(warner.warnings(:features_disabled)).to contain_exactly(:data)
+      expect(warner.warnings(:careful_with_changes)).to contain_exactly(
+        {reason: :in_use, i18n_params: {form_list: "Form 1"}}
+      )
+      expect(warner.warnings(:features_disabled)).to contain_exactly(
+        {reason: :data, i18n_params: nil}
+      )
     end
   end
 
@@ -76,8 +87,14 @@ describe Forms::IntegrityWarnings::QuestionWarner do
     let(:question) { standard.replicate(mode: :to_mission, dest_mission: get_mission) }
 
     it "returns warnings" do
-      expect(warner.warnings(:careful_with_changes)).to contain_exactly(:standard_copy)
-      expect(warner.warnings(:features_disabled)).to contain_exactly(:standard_copy)
+      expect(warner.warnings(:careful_with_changes)).to contain_exactly(
+        {reason: :standard_copy, i18n_params: nil}
+      )
+      expect(warner.warnings(:features_disabled)).to contain_exactly(
+        {reason: :standard_copy, i18n_params: nil}
+      )
     end
   end
 end
+
+# rubocop:enable Style/BracesAroundHashParameters
