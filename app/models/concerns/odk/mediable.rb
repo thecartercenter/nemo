@@ -26,7 +26,7 @@ module Odk
           validates_attachment_content_type :#{col_name}, content_type: ODK_MEDIA_MIME_TYPES,
                                                           message: :invalid_type
           validates_attachment_file_name :#{col_name},
-            matches: /\\.(#{ODK_MEDIA_EXTS.values.flatten.join('|')})\\Z/i, message: :invalid_type
+            matches: /\\.(#{ODK_MEDIA_EXTS.values.flatten.join('|')})\\z/i, message: :invalid_type
 
           def #{col_name}?
             #{col_name}_file_name.present?

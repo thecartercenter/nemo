@@ -39,7 +39,7 @@ module Media
     # provides some security but is less restrictive and less superficial.
     #
     # The list of types here is those we expect to be captured by an Android phone.
-    validates_attachment_content_type :item, content_type: %r{\Aimage/.*\Z}
+    validates_attachment_content_type :item, content_type: %r{\Aimage/.*\z}
 
     def dynamic_thumb?
       true

@@ -36,7 +36,7 @@ module Media
     # provides some security but is less restrictive and less superficial.
     #
     # The list of types here is those we expect to be captured by an Android phone.
-    validates_attachment_content_type :item, content_type: [%r{\Avideo/.*\Z}, "application/vnd.ms-asf"]
+    validates_attachment_content_type :item, content_type: [%r{\Avideo/.*\z}, "application/vnd.ms-asf"]
 
     def static_thumb_path
       "media/video.png"
