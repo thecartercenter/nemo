@@ -170,12 +170,11 @@ class ResponsesController < ApplicationController
   def handle_odk_submission
     return render_xml_submission_failure("No XML file attached.", 422) unless params[:xml_submission_file]
 
-    # Store main XML file for debugging purposes.
-    SavedUpload.create!(file: params[:xml_submission_file])
-
     # See config/initializers/http_status_code.rb for custom status definitions
     begin
       @response.user_id = current_user.id
+      @response.device_id = params[:deviceID]
+      @response.odk_xml = params[:xml_submission_file]
       @response = odk_response_parser.populate_response
       authorize!(:submit_to, @response.form)
       @response.save(validate: false)
