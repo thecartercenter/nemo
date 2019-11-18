@@ -78,7 +78,7 @@ class Response < ApplicationRecord
   has_closure_tree_root :root_node, class_name: "ResponseNode"
 
   has_attached_file :odk_xml
-  validates_attachment_content_type :odk_xml, content_type: %r{\A(text|application)\/xml\Z}
+  validates_attachment_content_type :odk_xml, content_type: %r{\A(text|application)\/xml\z}
 
   friendly_id :shortcode
 
