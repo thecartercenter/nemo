@@ -37,7 +37,7 @@ module Media
     #
     # The list of types here is those we expect to be captured by an Android phone.
     # For some reason, the mime-magic gem returns video/ogg for audio OGG files. Same for WEBM.
-    validates_attachment_content_type :item, content_type: [%r{\Aaudio/.*\Z}, "video/ogg", "video/webm"]
+    validates_attachment_content_type :item, content_type: [%r{\Aaudio/.*\z}, "video/ogg", "video/webm"]
 
     def static_thumb_path
       "media/audio.png"
