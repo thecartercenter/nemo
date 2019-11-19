@@ -40,6 +40,7 @@ class FormVersion < ApplicationRecord
   validates :is_oldest_accepted, uniqueness: {allow_blank: true, scope: :form_id}
 
   scope :current, -> { where(is_current: true) }
+  scope :oldest_accepted, -> { where(is_oldest_accepted: true) }
 
   delegate :mission, to: :form
 
@@ -53,6 +54,11 @@ class FormVersion < ApplicationRecord
 
     update!(is_current: false, is_oldest_accepted: false)
     self.class.create!(form_id: form_id, is_current: true, is_oldest_accepted: bump_oldest_accepted)
+  end
+
+  # Version name for displaying to user
+  def name
+    "#{number}, #{code}"
   end
 
   private

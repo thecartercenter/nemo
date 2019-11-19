@@ -71,6 +71,9 @@ class Form < ApplicationRecord
   before_destroy :destroy_items
   before_destroy :nullify_current_version_foreign_key
 
+  attr_writer :oldest_accepted_version_id
+  after_save :update_oldest_accepted
+
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
@@ -157,6 +160,13 @@ class Form < ApplicationRecord
 
   def version
     current_version.try(:code) || ""
+  end
+
+  # Return all possible versions formatted for a select dropdown.
+  def possible_versions
+    versions.order(:number).reverse.map do |version|
+      [version.name, version.id]
+    end
   end
 
   def data?
@@ -263,6 +273,23 @@ class Form < ApplicationRecord
 
   def current_version
     versions.current.first
+  end
+
+  def oldest_accepted_version_id
+    return @oldest_accepted_version_id if defined?(@oldest_accepted_version_id)
+    versions.oldest_accepted.first.id
+  end
+
+  def oldest_accepted_version
+    versions.find(oldest_accepted_version_id)
+  end
+
+  def update_oldest_accepted
+    if defined?(@oldest_accepted_version_id) &&
+        @oldest_accepted_version_id != versions.oldest_accepted.first.id
+      versions.oldest_accepted.first.update!(is_oldest_accepted: false)
+      versions.find(@oldest_accepted_version_id).update!(is_oldest_accepted: true)
+    end
   end
 
   # upgrades the version of the form and saves it
