@@ -107,3 +107,7 @@ Rails/Output:
 
 Rails/SkipsModelValidations:
   Enabled: false
+
+# This is generally bad advice, defaults are often set in code.
+Rails/NotNullColumn:
+  Enabled: false
