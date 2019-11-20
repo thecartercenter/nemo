@@ -52,8 +52,42 @@ describe Odk::ResponseParser do
           end
         end
 
-        context "outdated form" do
-          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: "wrong") }
+        context "outdated form version" do
+          let(:formver) { form.oldest_accepted_version.number.to_i - 1 }
+          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
+
+          it "should error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to raise_error(FormVersionError, "Form version is outdated")
+          end
+        end
+
+        context "current form version" do
+          let(:formver) { form.oldest_accepted_version.number }
+          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
+
+          it "should not error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to_not(raise_error)
+          end
+        end
+
+        context "future form version" do
+          let(:formver) { form.oldest_accepted_version.number.to_i + 1 }
+          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
+
+          it "should not error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to_not(raise_error)
+          end
+        end
+
+        context "invalid form version" do
+          let(:formver) { "wrong" }
+          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
           it "should error" do
             expect do
