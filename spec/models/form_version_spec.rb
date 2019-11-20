@@ -43,8 +43,8 @@ describe FormVersion do
 
   it "version codes are unique" do
     # create two fv's and check their codes are different
-    fv1 = FormVersion.new(form: form)
-    fv2 = FormVersion.new(form: form)
+    fv1 = FormVersion.new(form: form, is_current: false)
+    fv2 = FormVersion.new(form: form, is_oldest_accepted: false)
     expect(fv2.code).not_to eq(fv1.code)
 
     # set one code = to other (this could happen by a fluke if second is init'd before first is saved)
@@ -58,8 +58,8 @@ describe FormVersion do
   end
 
   it "version numbers are unique" do
-    fv1 = FormVersion.new(form: form)
-    fv2 = FormVersion.new(form: form)
+    fv1 = FormVersion.new(form: form, is_current: false)
+    fv2 = FormVersion.new(form: form, is_oldest_accepted: false)
     # by default they will be the same before saving
     expect(fv2.number).to eq(fv1.number)
 
