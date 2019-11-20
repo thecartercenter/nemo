@@ -90,9 +90,11 @@ describe FormVersion do
     expect(fv1.code).to eq(old_v1_code)
     expect(fv1.number).to eq(old_v1_number)
 
-    # make sure current flags are set properly
+    # make sure flags are set properly
     expect(fv1.is_current).to be(false)
     expect(fv2.is_current).to be(true)
+    expect(fv1.is_oldest_accepted).to be(true)
+    expect(fv2.is_oldest_accepted).to be(false)
   end
 
   it "form should create new version for itself when published" do
