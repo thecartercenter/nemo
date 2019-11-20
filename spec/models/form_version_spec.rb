@@ -69,34 +69,6 @@ describe FormVersion do
     expect(fv2.number).not_to eq(fv1.number)
   end
 
-  it "upgrade" do
-    form.update_status(:live)
-    fv1 = form.current_version
-    expect(fv1).not_to be_nil
-    old_v1_code = fv1.code
-    old_v1_number = fv1.number
-
-    # do the upgrade and save both forms
-    fv2 = fv1.upgrade!
-    fv1.save! & fv1.reload
-    fv2.save! & fv2.reload
-
-    # make sure values are updated properly
-    expect(fv2.form_id).to eq(form.id)
-    expect(fv2.code).not_to eq(fv1.code)
-    expect(fv2.number).not_to eq(fv1.number)
-
-    # make sure old v1 code/number didn't change
-    expect(fv1.code).to eq(old_v1_code)
-    expect(fv1.number).to eq(old_v1_number)
-
-    # make sure flags are set properly
-    expect(fv1.is_current).to be(false)
-    expect(fv2.is_current).to be(true)
-    expect(fv1.is_oldest_accepted).to be(true)
-    expect(fv2.is_oldest_accepted).to be(false)
-  end
-
   it "form should create new version for itself when published" do
     expect(form.current_version).to be_nil
 

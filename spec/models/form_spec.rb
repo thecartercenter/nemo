@@ -188,33 +188,42 @@ describe Form do
     end
   end
 
-  context "oldest version accepted" do
-    it "should set on first publish" do
+  describe "publish and upgrade" do
+    it "should set version flags on first publish" do
+      expect(form.current_version).to be(nil)
       expect(form.oldest_accepted_version).to be(nil)
       form.update_status(:live)
+      expect(form.current_version).not_to be(nil)
       expect(form.oldest_accepted_version).to eq(form.current_version)
     end
 
-    context "should bump on upgrade" do
-      it "by default" do
-        form.update_status(:live)
-        id1 = form.oldest_accepted_version_id
-        expect(id1).to match(form.current_version.id)
-        form.upgrade_version!
-        id2 = form.oldest_accepted_version_id
-        expect(id2).to match(form.current_version.id)
-        expect(id2).to_not(match(id1))
-      end
+    it "should change version flags on upgrade" do
+      form.update_status(:live)
+      oldest1 = form.oldest_accepted_version
+      current1 = form.current_version
+      expect(oldest1).to eq(current1)
 
-      it "unless user set manually" do
-        form.update_status(:live)
-        id1 = form.oldest_accepted_version_id
-        form.upgrade_version!
-        form.oldest_accepted_version_id = id1
-        form.upgrade_version!
-        id3 = form.oldest_accepted_version_id
-        expect(id3).to match(id1)
-      end
+      form.upgrade_version!
+      oldest2 = form.oldest_accepted_version
+      current2 = form.current_version
+      # Oldest accepted shouldn't change, but current should update.
+      expect(oldest2).to eq(oldest1)
+      expect(current2).not_to eq(current1)
+    end
+
+    it "should have new version on upgrade" do
+      form.update_status(:live)
+      code1 = form.current_version.code
+      number1 = form.current_version.number
+      form.upgrade_version!
+      code2 = form.current_version.code
+      number2 = form.current_version.number
+      expect(code1).not_to match(code2)
+      expect(number1).to be < number2
+
+      # make sure old v1 code/number didn't change
+      expect(form.versions.first.code).to match(code1)
+      expect(form.versions.first.number).to match(number1)
     end
   end
 
