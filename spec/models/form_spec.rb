@@ -211,7 +211,7 @@ describe Form do
       expect(current2).not_to eq(current1)
     end
 
-    it "should have new version on upgrade" do
+    it "should have new version values on upgrade" do
       form.update_status(:live)
       code1 = form.current_version.code
       number1 = form.current_version.number
