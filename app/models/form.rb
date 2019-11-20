@@ -159,8 +159,8 @@ class Form < ApplicationRecord
     current_version.try(:code) || ""
   end
 
-  def any_questions?
-    questionings.any?
+  def data?
+    responses.any?
   end
 
   def full_name

@@ -139,7 +139,11 @@ class OptionSet < ApplicationRecord
   end
 
   def levels
-    @levels ||= multilevel? ? level_names.map { |n| OptionLevel.new(name_translations: n) } : nil
+    return @levels if defined?(@levels)
+    return @levels = nil unless multilevel?
+    @levels = level_names.map do |n|
+      OptionLevel.new(name_translations: n, option_set: self)
+    end
   end
 
   def levels=(levels)
@@ -203,7 +207,7 @@ class OptionSet < ApplicationRecord
 
   # Checks if this option set is used in at least one question
   # or if any copies are used in at least one question.
-  def any_questions?
+  def in_use?
     ttl_question_count.positive?
   end
 
@@ -226,8 +230,8 @@ class OptionSet < ApplicationRecord
     standard? ? copies.to_a.sum(&:question_count) : 0
   end
 
-  def has_answers?
-    standard? ? copies.any?(&:has_answers?) : questionings.any?(&:has_answers?)
+  def data?
+    !standard? && questionings.any?(&:data?)
   end
 
   def answers_for_option?(option_id)
@@ -365,10 +369,10 @@ class OptionSet < ApplicationRecord
 
   def check_associations
     # make sure not associated with any questions
-    raise DeletionError, :cant_delete_if_has_questions if any_questions?
+    raise DeletionError, :cant_delete_if_has_questions if in_use?
 
     # make sure not associated with any answers
-    raise DeletionError, :cant_delete_if_has_answers if has_answers?
+    raise DeletionError, :cant_delete_if_has_answers if data?
   end
 
   def normalize_fields

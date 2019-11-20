@@ -71,7 +71,7 @@ class Option < ApplicationRecord
     option_sets.map(&:questions).flatten.uniq
   end
 
-  def has_answers?
+  def data?
     !answers.empty?
   end
 
@@ -90,7 +90,7 @@ class Option < ApplicationRecord
 
   # returns whether this option is in use -- is referenced in any answers/choices AND/OR is published
   def in_use?
-    published? || has_answers? || has_choices?
+    published? || data? || has_choices?
   end
 
   # gets the names of all option sets in which this option appears

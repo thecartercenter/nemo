@@ -1,7 +1,12 @@
 // "elmo forms" are the standard, consistent-looking forms in the app
+.elmo-form-wrapper {
+  // Standard form width so forms don't look super silly wide.
+  max-width: $max-form-width;
+}
+
 .elmo-form {
-  // Standard form width
-  max-width: 760px;
+  // This one can be removed once all forms have elmo-form-wrapper.
+  max-width: $max-form-width;
 
   label {
     font-weight: bold;

@@ -34,6 +34,7 @@ class OptionSetsController < ApplicationController
   end
 
   def new
+    prep_form_vars
     # we only need the partial if it's an ajax request
     if request.xhr?
       @option_set.adding_to_question_type = params[:adding_to_question_type]
@@ -46,10 +47,12 @@ class OptionSetsController < ApplicationController
   end
 
   def edit
+    prep_form_vars
     render(:form)
   end
 
   def show
+    prep_form_vars
     render(:form)
   end
 
@@ -125,6 +128,10 @@ class OptionSetsController < ApplicationController
     hash[key].each do |value|
       arrayify_hash_and_children(value, key) if value[key].is_a?(Hash)
     end
+  end
+
+  def prep_form_vars
+    @blank_option_level = OptionLevel.new(option_set: @option_set)
   end
 
   # creates/updates the option set

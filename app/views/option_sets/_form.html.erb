@@ -1,16 +1,11 @@
-<div class="option_set_form">
-  <%# need to print this here if in ajax mode %>
+<div class="elmo-form-wrapper">
   <%= alerts(flash) if request.xhr? %>
-
-  <%= ActionLinks::LinkBuilder.new(@option_set, %i[show edit clone export destroy]) unless request.xhr? %>
-
   <% if form_mode == :edit %>
-    <%= published_warning(@option_set) if @option_set.published? %>
-    <%= appears_elsewhere_warning(@option_set) if @option_set.any_questions? %>
+    <%= Forms::IntegrityWarnings::Builder.new(@option_set) %>
     <%= multilevel_forbidden_notice if @option_set.select_multiple_questions? %>
     <%= huge_notice if @option_set.huge? %>
   <% end %>
-
+  <%= ActionLinks::LinkBuilder.new(@option_set, %i[show edit clone export destroy]) unless request.xhr? %>
   <%= elmo_form_for(@option_set) do |f| %>
     <%= f.field(:name, required: true, read_only: cannot?(:update_core, @option_set)) %>
     <%= f.field(:sms_guide_formatting,

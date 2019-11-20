@@ -1251,24 +1251,6 @@ en:
     summary: "Summary"
     top_forms: "Top Forms"
 
-  data_integrity:
-    appears_elsewhere_warnings:
-      by_type:
-        question: "This Question appears on the following Forms: *%{related}*. Any changes you make below will be reflected on those Forms."
-        option_set: "This Option Set appears on the following Questions: *%{related}*. Any changes you make below will be reflected on those Questions."
-    has_answers_warnings:
-      by_type:
-        question: "This Question has existing Answers. Some fields are thus not editable."
-    option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
-    option_standard_copy_name_change_warning: "This Option is part of a standard-derived Option Set. When editing, you may want to maintain the original meaning of the Option."
-    published_warnings:
-      form: "This Form is published, meaning it may already be in the hands of enumerators. Some fields are thus not-editable, and questions cannot be added, removed, or re-ordered. Please proceed with caution when making any changes."
-      questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
-      question: "This Question appears on at least one published Form, meaning it may already be in the hands of enumerators. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
-      option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of enumerators. Some fields are thus non-editable, and Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
-      sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
-      odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
-
   filter:
     form: "Form"
     choose_form: "Choose a form"
@@ -1422,6 +1404,31 @@ en:
       selected_rows_page: "All %{count} %{class_name} on this page are selected."
       select_all_rows: "Select all %{count} %{class_name}"
       selected_all_rows: "<strong>All</strong> %{count} %{class_name} are selected."
+
+  integrity_warnings:
+    more_suffix: "%{count} more"
+    titles:
+      careful_with_changes: "Be Careful with Edits"
+      features_disabled: "Some Features Disabled"
+    reasons:
+      form:
+        published: "This form is published (not a draft)"
+        data: "This form has associated responses"
+      qing_group:
+        published: "This group's form is published (not a draft)"
+        standard_copy: "This group's form is based on a standard"
+      question:
+        in_use: "This question appears on forms: %{form_list}"
+        published: "This question appears on at least one published (not-draft) form"
+        standard_copy: "This question is based on a standard"
+        data: "This question has associated responses"
+      option_set:
+        in_use:
+          one: "This option set appears on %{count} question"
+          other: "This option set appears on %{count} questions"
+        published: "This option set appears on at least one published (not-draft) form"
+        standard_copy: "This option set is based on a standard"
+        data: "This option set has associated responses"
 
   location_picker:
     choose_location: "Choose Location"

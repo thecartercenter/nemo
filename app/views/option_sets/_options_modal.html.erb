@@ -8,12 +8,6 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
-          <% if @option_set.standard_copy? %>
-            <%= data_integrity_warning(:option_standard_copy_name_change_warning) %>
-          <% end %>
-          <%# this warning will get hidden/shown by the js %>
-          <%= data_integrity_warning(:option_in_use_name_change_warning) %>
-
           <%= elmo_fields_for("option", Option.new) do |f| %>
             <div class="fields">
               <% configatron.preferred_locales.each do |locale| %>

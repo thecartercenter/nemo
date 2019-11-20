@@ -1,0 +1,30 @@
+.integrity-warning {
+  i.fa {
+    font-size: 1.1rem;
+    margin-#{right}: $alert-padding-x;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: ($spacer * 0.25);
+    margin-top: -0.2rem;
+  }
+
+  p,
+  ul {
+    margin-bottom: 0;
+    line-height: 1.2;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-#{left}: 0;
+    margin-bottom: -0.3rem;
+  }
+}
+
+.modal .integrity-warning {
+  max-width: 100%;
+}

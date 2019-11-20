@@ -1,12 +1,16 @@
 <% @title_args = {code: @question.code, standardized: @question.standardized?} %>
-<%= elmo_form_for(@question, html: {multipart: true}) do |f| %>
+
+<div class="elmo-form-wrapper">
+  <%= Forms::IntegrityWarnings::Builder.new(@question) if form_mode == :edit %>
   <%= ActionLinks::LinkBuilder.new(@question, %i[show edit destroy]) %>
-  <%# Fields are contained in a partial because they are also used in the questioning form. %>
-  <%= render("fields", f: f) %>
-  <div class="submit-buttons">
-    <%= f.submit(class: 'btn btn-primary') %>
-  </div>
-<% end %>
+  <%= elmo_form_for(@question, html: {multipart: true}) do |f| %>
+    <%# Fields are contained in a partial because they are also used in the questioning form. %>
+    <%= render("fields", f: f) %>
+    <div class="submit-buttons">
+      <%= f.submit(class: 'btn btn-primary') %>
+    </div>
+  <% end %>
+</div>
 
 <%= javascript_doc_ready do %>
   // This is the newer view for controlling the Question/Questioning form, prefer this one to QuestionForm.

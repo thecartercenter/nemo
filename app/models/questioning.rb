@@ -77,7 +77,7 @@ class Questioning < FormItem
   # checks if this form has any answers
   # uses the form.qing_answer_count method because these requests tend to come in batches so better
   # to fetch the counts for all qings on the form at once
-  def has_answers?
+  def data?
     form.qing_answer_count(self).positive?
   end
 
