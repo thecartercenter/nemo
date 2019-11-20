@@ -125,7 +125,8 @@ module Sms
 
         # If form version outdated we must specify the form AND form_code in the error message
         # since they are different.
-        raise_decoding_error("form_version_outdated", form: v.form, form_code: code) unless v.is_current?
+        raise_decoding_error("form_version_outdated", form: v.form, form_code: code) unless
+          v.number >= v.form.oldest_accepted_version.number
 
         raise_decoding_error("form_not_live", form: v.form) unless v.form.live?
         raise_decoding_error("form_not_smsable", form: v.form) unless v.form.smsable?
