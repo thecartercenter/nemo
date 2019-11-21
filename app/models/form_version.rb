@@ -46,11 +46,6 @@ class FormVersion < ApplicationRecord
 
   CODE_LENGTH = 3
 
-  # Version name for displaying to user
-  def name
-    "#{number}, #{code}"
-  end
-
   private
 
   # Code is a series of random letters

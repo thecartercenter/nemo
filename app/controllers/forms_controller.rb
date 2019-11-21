@@ -228,7 +228,7 @@ class FormsController < ApplicationController
     # shown in admin mode.
     @users = User.assigned_to(current_mission).by_name unless admin_mode?
     @possible_versions = @form.versions.order(:number).reverse.map do |version|
-      [version.name, version.id]
+      [version.decorate.name, version.id]
     end
     render(:form)
   end
