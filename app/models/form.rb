@@ -162,13 +162,6 @@ class Form < ApplicationRecord
     current_version.try(:code) || ""
   end
 
-  # Return all possible versions formatted for a select dropdown.
-  def possible_versions
-    versions.order(:number).reverse.map do |version|
-      [version.name, version.id]
-    end
-  end
-
   def data?
     responses.any?
   end
