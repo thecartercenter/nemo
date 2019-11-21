@@ -277,6 +277,10 @@ class Form < ApplicationRecord
     versions.find(oldest_accepted_version_id) if oldest_accepted_version_id.present?
   end
 
+  def minimum_version_number
+    oldest_accepted_version&.number&.to_i
+  end
+
   # upgrades the version of the form and saves it
   # also resets the download count
   def upgrade_version!

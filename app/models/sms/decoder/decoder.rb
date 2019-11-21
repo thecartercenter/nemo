@@ -110,30 +110,32 @@ module Sms
         # if version not found, raise error
         raise_decoding_error("form_not_found", form_code: code) unless version
 
+        form = version.form
+
         if @msg.mission
           # if we already know the mission (it may or may not be already stored on the message)
           # and it doesn't match the form's mission, complain
-          raise_decoding_error("form_not_found", form_code: code) if version.form.mission != @msg.mission
+          raise_decoding_error("form_not_found", form_code: code) if form.mission != @msg.mission
         else
           # If the mission is not stored on the message, set it based on form.
           # This is allowed due to situations where multiple missions may want to use the same phone
           # number or same gateway provider that doesn't support different submit URLs
           # based on incoming phone number.
-          @msg.mission = version.form.mission
+          @msg.mission = form.mission
           @msg.save!
         end
 
         # If form version outdated we must specify the form AND form_code in the error message
         # since they are different.
-        if version.number < version.form.oldest_accepted_version.number
-          raise_decoding_error("form_version_outdated", form: version.form, form_code: code)
+        if version.number.to_i < form.minimum_version_number
+          raise_decoding_error("form_version_outdated", form: form, form_code: code)
         end
 
-        raise_decoding_error("form_not_live", form: version.form) unless version.form.live?
-        raise_decoding_error("form_not_smsable", form: version.form) unless version.form.smsable?
+        raise_decoding_error("form_not_live", form: form) unless form.live?
+        raise_decoding_error("form_not_smsable", form: form) unless form.smsable?
 
         # If we get to here we're good.
-        @form = version.form
+        @form = form
         @ranks_to_qings = @form.smsable_questionings
       end
 

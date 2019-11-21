@@ -53,7 +53,7 @@ describe Odk::ResponseParser do
         end
 
         context "outdated form version" do
-          let(:formver) { form.oldest_accepted_version.number.to_i - 1 }
+          let(:formver) { form.minimum_version_number - 1 }
           let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
           it "should error" do
@@ -64,7 +64,7 @@ describe Odk::ResponseParser do
         end
 
         context "current form version" do
-          let(:formver) { form.oldest_accepted_version.number }
+          let(:formver) { form.minimum_version_number }
           let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
           it "should not error" do
@@ -75,7 +75,7 @@ describe Odk::ResponseParser do
         end
 
         context "future form version" do
-          let(:formver) { form.oldest_accepted_version.number.to_i + 1 }
+          let(:formver) { form.minimum_version_number + 1 }
           let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
           it "should not error" do

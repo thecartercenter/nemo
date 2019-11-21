@@ -177,9 +177,9 @@ module Odk
 
       raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
-      # if form version is outdated, error
-      oldest_accepted_num = form.oldest_accepted_version.number.to_i
-      raise FormVersionError, "Form version is outdated" if params[:version].to_i < oldest_accepted_num
+      if params[:version].to_i < form.minimum_version_number
+        raise FormVersionError, "Form version is outdated"
+      end
     end
 
     def existing_response
