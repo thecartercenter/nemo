@@ -82,7 +82,7 @@ describe Sms::Decoder, :sms do
         expect_decoding_fail(form, body: "#{v1.code} 1.15", error: "form_version_outdated")
       end
 
-      it "current accepted version should be accepted" do
+      it "minimum version should be accepted" do
         expect_decoding(form, body: "#{v2.code} 1.15", answers: [15])
       end
 

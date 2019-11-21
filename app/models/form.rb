@@ -277,14 +277,6 @@ class Form < ApplicationRecord
     versions.find(oldest_accepted_version_id) if oldest_accepted_version_id.present?
   end
 
-  def update_oldest_accepted
-    if defined?(@oldest_accepted_version_id) &&
-        @oldest_accepted_version_id != versions.oldest_accepted.first.id
-      versions.oldest_accepted.first.update!(is_oldest_accepted: false)
-      versions.find(@oldest_accepted_version_id).update!(is_oldest_accepted: true)
-    end
-  end
-
   # upgrades the version of the form and saves it
   # also resets the download count
   def upgrade_version!
@@ -337,6 +329,14 @@ class Form < ApplicationRecord
   def create_root_group
     create_root_group!(mission: mission, form: self)
     save!
+  end
+
+  def update_oldest_accepted
+    if defined?(@oldest_accepted_version_id) &&
+        @oldest_accepted_version_id != versions.oldest_accepted.first.id
+      versions.oldest_accepted.first.update!(is_oldest_accepted: false)
+      versions.find(@oldest_accepted_version_id).update!(is_oldest_accepted: true)
+    end
   end
 
   # Nullifies the root_id foreign key and then deletes all items before deleting the form.

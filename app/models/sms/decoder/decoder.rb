@@ -105,34 +105,35 @@ module Sms
         raise_decoding_error("invalid_form_code", form_code: code) unless code =~ /\A[a-z]{#{FormVersion::CODE_LENGTH}}\z/
 
         # attempt to find form version by the given code
-        v = FormVersion.find_by(code: code)
+        version = FormVersion.find_by(code: code)
 
         # if version not found, raise error
-        raise_decoding_error("form_not_found", form_code: code) unless v
+        raise_decoding_error("form_not_found", form_code: code) unless version
 
         if @msg.mission
           # if we already know the mission (it may or may not be already stored on the message)
           # and it doesn't match the form's mission, complain
-          raise_decoding_error("form_not_found", form_code: code) if v.form.mission != @msg.mission
+          raise_decoding_error("form_not_found", form_code: code) if version.form.mission != @msg.mission
         else
           # If the mission is not stored on the message, set it based on form.
           # This is allowed due to situations where multiple missions may want to use the same phone
           # number or same gateway provider that doesn't support different submit URLs
           # based on incoming phone number.
-          @msg.mission = v.form.mission
+          @msg.mission = version.form.mission
           @msg.save!
         end
 
         # If form version outdated we must specify the form AND form_code in the error message
         # since they are different.
-        raise_decoding_error("form_version_outdated", form: v.form, form_code: code) unless
-          v.number >= v.form.oldest_accepted_version.number
+        if version.number < version.form.oldest_accepted_version.number
+          raise_decoding_error("form_version_outdated", form: version.form, form_code: code)
+        end
 
-        raise_decoding_error("form_not_live", form: v.form) unless v.form.live?
-        raise_decoding_error("form_not_smsable", form: v.form) unless v.form.smsable?
+        raise_decoding_error("form_not_live", form: version.form) unless version.form.live?
+        raise_decoding_error("form_not_smsable", form: version.form) unless version.form.smsable?
 
         # If we get to here we're good.
-        @form = v.form
+        @form = version.form
         @ranks_to_qings = @form.smsable_questionings
       end
 
