@@ -54,7 +54,6 @@ describe Odk::ResponseParser do
 
         context "outdated form version" do
           let(:formver) { form.minimum_version_number - 1 }
-          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
           it "should error" do
             expect do
@@ -65,7 +64,6 @@ describe Odk::ResponseParser do
 
         context "current form version" do
           let(:formver) { form.minimum_version_number }
-          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
           it "should not error" do
             expect do
@@ -76,7 +74,6 @@ describe Odk::ResponseParser do
 
         context "future form version" do
           let(:formver) { form.minimum_version_number + 1 }
-          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
           it "should not error" do
             expect do
@@ -88,7 +85,6 @@ describe Odk::ResponseParser do
         context "with three-letter code version" do
           context "current code" do
             let(:formver) { form.oldest_accepted_version.code }
-            let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
             it "should not error" do
               expect do
@@ -99,7 +95,6 @@ describe Odk::ResponseParser do
 
           context "outdated code" do
             let!(:formver) { form.oldest_accepted_version.code }
-            let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
             it "should error" do
               form.upgrade_version!
@@ -114,7 +109,6 @@ describe Odk::ResponseParser do
 
           context "invalid code" do
             let(:formver) { "xxx" }
-            let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
             it "should error" do
               expect do
@@ -125,8 +119,6 @@ describe Odk::ResponseParser do
         end
 
         context "missing form" do
-          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values) }
-
           before do
             xml
             form.destroy
