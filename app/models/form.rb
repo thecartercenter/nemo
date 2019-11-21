@@ -270,7 +270,7 @@ class Form < ApplicationRecord
 
   def oldest_accepted_version_id
     return @oldest_accepted_version_id if defined?(@oldest_accepted_version_id)
-    versions.oldest_accepted.first&.id
+    persisted_oldest_accepted_version&.id
   end
 
   def oldest_accepted_version
@@ -332,11 +332,15 @@ class Form < ApplicationRecord
   end
 
   def update_oldest_accepted
-    if defined?(@oldest_accepted_version_id) &&
-        @oldest_accepted_version_id != versions.oldest_accepted.first.id
-      versions.oldest_accepted.first.update!(is_oldest_accepted: false)
-      versions.find(@oldest_accepted_version_id).update!(is_oldest_accepted: true)
+    if defined?(@oldest_accepted_version_id)
+      persisted_oldest_accepted_version&.update!(is_oldest_accepted: false)
+      oldest_accepted_version.update!(is_oldest_accepted: true)
     end
+  end
+
+  # The persisted version, regardless of ephemeral @oldest_accepted_version_id
+  def persisted_oldest_accepted_version
+    versions.oldest_accepted.first
   end
 
   # Nullifies the root_id foreign key and then deletes all items before deleting the form.
