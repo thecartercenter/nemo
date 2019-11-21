@@ -85,14 +85,42 @@ describe Odk::ResponseParser do
           end
         end
 
-        context "invalid form version" do
-          let(:formver) { "wrong" }
-          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
+        context "with three-letter code version" do
+          context "current code" do
+            let(:formver) { form.oldest_accepted_version.code }
+            let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
 
-          it "should error" do
-            expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(FormVersionError, "Form version is outdated")
+            it "should not error" do
+              expect do
+                Odk::ResponseParser.new(response: response, files: files).populate_response
+              end.to_not(raise_error)
+            end
+          end
+
+          context "outdated code" do
+            let!(:formver) { form.oldest_accepted_version.code }
+            let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
+
+            it "should error" do
+              form.upgrade_version!
+              form.versions[0].update!(is_oldest_accepted: false)
+              form.versions[1].update!(is_oldest_accepted: true)
+
+              expect do
+                Odk::ResponseParser.new(response: response, files: files).populate_response
+              end.to raise_error(FormVersionError, "Form version is outdated")
+            end
+          end
+
+          context "invalid code" do
+            let(:formver) { "xxx" }
+            let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
+
+            it "should error" do
+              expect do
+                Odk::ResponseParser.new(response: response, files: files).populate_response
+              end.to raise_error(FormVersionError, "Form version code not found")
+            end
           end
         end
 
