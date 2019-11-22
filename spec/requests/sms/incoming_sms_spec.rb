@@ -8,7 +8,7 @@ describe "incoming sms", :sms do
   REPLY_VIA_RESPONSE_STYLE_ADAPTER = "FrontlineSms"
 
   let(:form) { setup_form(questions: %w[integer integer], required: true) }
-  let(:form_code) { form.current_version.code }
+  let(:form_code) { form.code }
   let(:wrong_code) { form_code.sub(form.code[0], form.code[0] == "a" ? "b" : "a") }
   let(:bad_incoming_token) { "0" * 32 }
 
@@ -355,8 +355,8 @@ describe "incoming sms", :sms do
       let(:second_mission) { create(:mission, with_user: user) }
       let(:first_form) { setup_form(questions: %w[integer text], mission: first_mission) }
       let(:second_form) { setup_form(questions: %w[integer text], mission: second_mission) }
-      let(:first_form_code) { first_form.current_version.code }
-      let(:second_form_code) { second_form.current_version.code }
+      let(:first_form_code) { first_form.code }
+      let(:second_form_code) { second_form.code }
       let(:submission_url) { "/sms/submit/#{configatron.universal_sms_token}" }
 
       it "should process first mission correctly with valid form code" do

@@ -212,11 +212,11 @@ describe Form do
 
     it "should have new version values on upgrade" do
       form.update_status(:live)
-      code1 = form.current_version.code
-      number1 = form.current_version.number
+      code1 = form.code
+      number1 = form.number
       form.increment_version
-      code2 = form.current_version.code
-      number2 = form.current_version.number
+      code2 = form.code
+      number2 = form.number
       expect(code1).not_to match(code2)
       expect(number1).to be < number2
 

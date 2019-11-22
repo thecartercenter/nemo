@@ -92,7 +92,6 @@ class Form < ApplicationRecord
     :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
   delegate :number, to: :current_version
-  delegate :number, to: :current_version, prefix: true, allow_nil: true
   delegate :number, to: :minimum_version, prefix: true, allow_nil: true
   delegate :override_code, to: :mission
 

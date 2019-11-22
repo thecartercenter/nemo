@@ -4,7 +4,7 @@
       <xform>
         <formID>cceom.org:<%= f.id %></formID>
         <name><%= f.full_name %></name>
-        <majorMinorVersion><%= f.current_version_number %></majorMinorVersion>
+        <majorMinorVersion><%= f.number %></majorMinorVersion>
         <downloadUrl><%= odk_form_url(mission_name: f.mission.compact_name, id: f.id, locale: nil) %></downloadUrl>
         <% if Odk::DecoratorFactory.decorate(f).needs_manifest? %>
           <manifestUrl><%= odk_form_manifest_url(mission_name: f.mission.compact_name, id: f.id, locale: nil) %></manifestUrl>

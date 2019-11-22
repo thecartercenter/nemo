@@ -225,7 +225,7 @@ module Sms
         # add in the form and form_code in case they're needed
         if @form
           options[:form] ||= @form
-          options[:form_code] ||= @form.current_version.code
+          options[:form_code] ||= @form.code
         end
 
         options[:user] ||= @user if @user
