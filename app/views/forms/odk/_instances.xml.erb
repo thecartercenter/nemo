@@ -1,5 +1,5 @@
 <instance>
-  <%= content_tag(:data, id: @form.id, version: @form.current_version.number) do %>
+  <%= content_tag(:data, id: @form.id, version: @form.current_version_number) do %>
     <%= @form.default_response_name_instance_tag %>
     <%= render("forms/odk/instance_node", node: @form.root_group) %>
 

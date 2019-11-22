@@ -34,8 +34,10 @@ describe FormsController, :odk, type: :request do
         # Only form_both_multi should have a manifest.
         assert_select("xform", count: 4) do |elements|
           elements.each do |element|
-            should_have_manifest = element.to_s.include?(":#{form_both_multi.id}</formID>")
-            assert_select(element, "manifestUrl", should_have_manifest ? 1 : 0)
+            form_id = element.to_s.match(%r{:(.+)</formID>})[1]
+            assert_select(element, "manifestUrl", form_both_multi.id == form_id ? 1 : 0)
+            assert_select(element, "majorMinorVersion",
+              count: 1, text: forms.detect { |f| f.id == form_id }.current_version_number.to_s)
           end
         end
       end
