@@ -231,15 +231,6 @@ module ApplicationHelper
     message
   end
 
-  # Renders a Bootstrap badge tag to be used inside a page title h1.
-  def title_badge(text)
-    content_tag(:span, text,
-      class: "badge badge-secondary",
-      # For some inexplicable reason, if the title badge is 9pt (as it is in the stylesheet),
-      # a spec in spec/features/forms/form/item_edit_spec.rb fails.
-      style: Rails.env.test? ? "font-size: 17pt" : nil)
-  end
-
   # makes a set of <li> wrapped links to the index actions of the given classes
   def nav_links(*klasses)
     links = []

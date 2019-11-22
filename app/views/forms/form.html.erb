@@ -1,8 +1,5 @@
 <% @title_args = {name: @form.name, standardized: @form.standardized?} %>
 <% content_for(:title_content) do %>
-  <% if @form.published? %>
-    <%= title_badge("#{t("activerecord.attributes.form.version")}: #{@form.code}") %>
-  <% end %>
   <%# For some inexplicable reason, without this span,
       rspec ./spec/features/forms/form/item_edit_spec.rb:117 fails. Tried to isolate what it is,
       best I could figure out is that it's a combination of the padding and font size.
