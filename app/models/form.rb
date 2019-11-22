@@ -157,10 +157,6 @@ class Form < ApplicationRecord
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899_999_999) + 100_000_000}"
   end
 
-  def version
-    current_version.try(:code) || ""
-  end
-
   def data?
     responses.any?
   end
