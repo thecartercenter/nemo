@@ -53,7 +53,7 @@ describe Odk::ResponseParser do
         end
 
         context "outdated form version" do
-          let(:formver) { form.minimum_version_number - 1 }
+          let(:formver) { "1999010100" }
 
           it "should error" do
             expect do
@@ -73,7 +73,7 @@ describe Odk::ResponseParser do
         end
 
         context "future form version" do
-          let(:formver) { form.minimum_version_number + 1 }
+          let(:formver) { "4999010100" }
 
           it "should not error" do
             expect do

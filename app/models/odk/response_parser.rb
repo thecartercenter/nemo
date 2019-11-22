@@ -186,7 +186,7 @@ module Odk
         version_num = params[:version]
       end
 
-      raise FormVersionError, "Form version is outdated" if version_num.to_i < form.minimum_version_number
+      raise FormVersionError, "Form version is outdated" if version_num < form.minimum_version_number
     end
 
     def existing_response

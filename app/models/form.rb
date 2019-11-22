@@ -93,6 +93,7 @@ class Form < ApplicationRecord
   delegate :code, to: :current_version
   delegate :number, to: :current_version
   delegate :number, to: :current_version, prefix: true, allow_nil: true
+  delegate :number, to: :minimum_version, prefix: true, allow_nil: true
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
@@ -272,10 +273,6 @@ class Form < ApplicationRecord
   # a new value hasn't been persisted yet. Use persisted_minimum_version to get the persisted one.
   def minimum_version
     versions.find(minimum_version_id) if minimum_version_id.present?
-  end
-
-  def minimum_version_number
-    minimum_version&.number&.to_i
   end
 
   # Creates a new version code/number for the form. Also resets the download count to zero.
