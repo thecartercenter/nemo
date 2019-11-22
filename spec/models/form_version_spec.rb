@@ -69,49 +69,12 @@ describe FormVersion do
     expect(fv2.number).not_to eq(fv1.number)
   end
 
-  it "form should create new version for itself when published" do
+  it "form should create new version for itself when first published" do
     expect(form.current_version).to be_nil
-
-    # publish and check again
     form.update_status(:live)
     form.reload
 
-    # ensure form_id is set properly on version object
+    # Ensure version exists and form_id is set properly on version object
     expect(form.current_version.form_id).to eq(form.id)
-
-    # unpublish (shouldn't change)
-    old_code = form.current_version.code
-    old_number = form.current_version.number
-    form.update_status(:draft)
-    form.reload
-    expect(form.current_version.code).to eq(old_code)
-    expect(form.current_version.number).to eq(old_number)
-
-    # publish again (shouldn't change)
-    old_code = form.current_version.code
-    old_number = form.current_version.number
-    form.update_status(:live)
-    form.reload
-    expect(form.current_version.code).to eq(old_code)
-    expect(form.current_version.number).to eq(old_number)
-
-    # unpublish, set upgrade flag, and publish (should change)
-    old_code = form.current_version.code
-    old_number = form.current_version.number
-    form.update_status(:draft)
-    form.flag_for_upgrade!
-    form.update_status(:live)
-    form.reload
-    expect(form.current_version.code).not_to eq(old_code)
-    expect(form.current_version.number).not_to eq(old_number)
-
-    # unpublish and publish (shouldn't change)
-    old_code = form.current_version.code
-    old_number = form.current_version.number
-    form.update_status(:draft)
-    form.update_status(:live)
-    form.reload
-    expect(form.current_version.code).to eq(old_code)
-    expect(form.current_version.number).to eq(old_number)
   end
 end

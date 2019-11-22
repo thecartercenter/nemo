@@ -17,7 +17,6 @@
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
 #  status_changed_at     :datetime
-#  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  current_version_id    :uuid
@@ -203,7 +202,7 @@ describe Form do
       current1 = form.current_version
       expect(oldest1).to eq(current1)
 
-      form.upgrade_version!
+      form.increment_version
       oldest2 = form.minimum_version
       current2 = form.current_version
       # Oldest accepted shouldn't change, but current should update.
@@ -215,7 +214,7 @@ describe Form do
       form.update_status(:live)
       code1 = form.current_version.code
       number1 = form.current_version.number
-      form.upgrade_version!
+      form.increment_version
       code2 = form.current_version.code
       number2 = form.current_version.number
       expect(code1).not_to match(code2)

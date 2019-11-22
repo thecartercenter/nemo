@@ -17,7 +17,6 @@
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
 #  status_changed_at     :datetime
-#  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  current_version_id    :uuid
@@ -46,7 +45,6 @@
 class Form < ApplicationRecord
   include Replication::Replicable
   include Replication::Standardizable
-  include FormVersionable
   include MissionBased
 
   def self.receivable_association
@@ -97,7 +95,7 @@ class Form < ApplicationRecord
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-             dont_copy: %i[status status_changed_at downloads upgrade_needed
+             dont_copy: %i[status status_changed_at downloads
                            smsable current_version_id allow_incomplete access_level]
 
   # remove heirarchy of objects
@@ -237,9 +235,8 @@ class Form < ApplicationRecord
     # Don't run validations in case form has become invalid due to a migration or other change.
     update_columns(status: new_status, status_changed_at: Time.current)
 
-    # TODO: remove when manual form versioning removed
-    return unless live? && (upgrade_needed? || current_version.nil?)
-    upgrade_version!
+    # Ensure the form has a version if it's becoming live.
+    increment_version if live? && current_version.nil?
   end
 
   def live?
@@ -264,11 +261,18 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
+  def current_version
+    versions.find_by(current: true)
+  end
+
+  # This getter serves a form field.
   def minimum_version_id
     return @minimum_version_id if defined?(@minimum_version_id)
     persisted_minimum_version&.id
   end
 
+  # Finds the minimum version by checking the ephemeral attribute instead of the DB in case
+  # a new value hasn't been persisted yet. Use persisted_minimum_version to get the persisted one.
   def minimum_version
     versions.find(minimum_version_id) if minimum_version_id.present?
   end
@@ -277,28 +281,16 @@ class Form < ApplicationRecord
     minimum_version&.number&.to_i
   end
 
-  # upgrades the version of the form and saves it
-  # also resets the download count
-  def upgrade_version!
+  # Creates a new version code/number for the form. Also resets the download count to zero.
+  def increment_version
     raise "standard forms should not be versioned" if standard?
 
-    has_current_version = current_version.present?
-    current_version.update!(current: false) if has_current_version
-    versions.create!(current: true, minimum: !has_current_version)
+    had_current_version = current_version.present?
+    current_version.update!(current: false) if had_current_version
+    versions.create!(current: true, minimum: !had_current_version)
 
-    # since we've upgraded, we can lower the upgrade flag
-    self.upgrade_needed = false
-
-    # reset downloads since we are only interested in downloads of present version
-    self.downloads = 0
-
-    save(validate: false)
-  end
-
-  def flag_for_upgrade!
-    raise "standard forms should not be versioned" if standard?
-    self.upgrade_needed = true
-    save(validate: false)
+    # Reset downloads since we are only interested in downloads of present version
+    update_column(:downloads, 0)
   end
 
   # efficiently gets the number of answers for the given questioning on this form
@@ -336,10 +328,6 @@ class Form < ApplicationRecord
       persisted_minimum_version&.update!(minimum: false)
       minimum_version.update!(minimum: true)
     end
-  end
-
-  def current_version
-    versions.find_by(current: true)
   end
 
   # The persisted version, regardless of ephemeral @minimum_version_id

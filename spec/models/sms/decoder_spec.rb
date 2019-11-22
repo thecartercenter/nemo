@@ -73,7 +73,7 @@ describe Sms::Decoder, :sms do
       let(:v3) { form.versions.third }
 
       before do
-        2.times { form.upgrade_version! }
+        2.times { form.increment_version }
         v1.update!(minimum: false)
         v2.update!(minimum: true)
       end

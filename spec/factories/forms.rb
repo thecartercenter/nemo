@@ -15,7 +15,6 @@
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
 #  status_changed_at     :datetime
-#  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  current_version_id    :uuid

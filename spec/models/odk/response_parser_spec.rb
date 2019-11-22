@@ -97,7 +97,7 @@ describe Odk::ResponseParser do
             let!(:formver) { form.minimum_version.code }
 
             it "should error" do
-              form.upgrade_version!
+              form.increment_version
               form.versions[0].update!(minimum: false)
               form.versions[1].update!(minimum: true)
 

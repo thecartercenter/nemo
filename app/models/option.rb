@@ -31,7 +31,6 @@
 class Option < ApplicationRecord
   include Replication::Replicable
   include Translatable
-  include FormVersionable
   include MissionBased
 
   MAX_NAME_LENGTH = 255
