@@ -70,7 +70,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     options[:read_only] = true
     options[:read_only_content] = @template.content_tag(:div, id: field_id, class: "regenerable-field") do
       current = @object.send(field_name)
-      action = options[:action] || "regenerate_#{field_name}"
+      action = options.delete(:action) || "regenerate_#{field_name}"
+      link_i18n_key = options.delete(:link_i18n_key) || (current ? "common.regenerate" : "common.generate")
 
       # Current value display
       body = @template.content_tag(:span, current || "[#{@template.t('common.none')}]",
@@ -82,12 +83,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           "handler" => options.delete(:handler) ||
             @template.send(:"#{action}_#{@object.model_name.singular_route_key}_path", @object)
         }
-        data["confirm"] = options.delete(:confirm) if options[:confirm]
+        data["confirm-msg"] = options.delete(:confirm) if options[:confirm]
 
-        body << @template.link_to(@template.t("common.#{current ? 'regenerate' : 'generate'}"), "#",
-          class: "regenerate", data: data)
-
-        # Loading indicator
+        body << @template.link_to(@template.t(link_i18n_key), "#", class: "regenerate", data: data)
         body << @template.inline_load_ind(success_failure: true)
 
         # Backbone view

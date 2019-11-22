@@ -8,7 +8,7 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
 
     target = $(event.currentTarget)
     handler = target.data('handler')
-    confirm = target.data('confirm')
+    confirm_msg = target.data('confirm-msg')
 
     container = target.closest('.regenerable-field')
     displayEl = container.find('span[data-value]')
@@ -18,7 +18,7 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
 
     # If confirm text is provided and there is a current value,
     # show a confirmation dialog
-    if (confirm && displayEl.data('value') && !window.confirm(confirm))
+    if (confirm_msg && displayEl.data('value') && !window.confirm(confirm_msg))
       return false
 
     # Disable the button and ensure that only the loading indicator is shown
@@ -34,7 +34,6 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
         if (displayEl.length > 0)
           $(displayEl[0]).data(value: data.value)
           $(displayEl[0]).text(data.value)
-          target.text(I18n.t('common.regenerate'))
         inline_load_ind.hide()
         success_indicator.show()
       error: ->

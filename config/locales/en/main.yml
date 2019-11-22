@@ -399,7 +399,7 @@ en:
         recipient_ids: "SMS Forward Recipients"
         authenticate_sms: "Authenticate SMS?"
         updated_at: "Last Modified"
-        current_version_name: "Version"
+        current_version_name: "Current Version"
         item_list_heading: "Questions"
         default_response_name: "Default Response Name"
         minimum_version_id: "Minimum Accepted Version"
@@ -1278,6 +1278,7 @@ en:
     clone_success: "Form '%{form_name}' cloned successfully."
     no_mission: "No Misison"
     no_questions_yet: "No questions yet."
+    increment_version: "Increment Version"
     increment_version_warning: "Are you sure you want to increment this form's version? Older versions will still be accepted unless you change the Minimum Accepted Version attribute below."
     invalid_drop_location:
       parent_must_be_group: "The parent must be a group."

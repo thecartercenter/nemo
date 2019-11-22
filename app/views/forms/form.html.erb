@@ -21,7 +21,9 @@
 
       <%= f.field(:name, required: true, read_only: cannot?(:rename, form)) %>
       <%= f.field(:status, content: form.status_with_icon) %>
-      <%= f.regenerable_field(:current_version_name, action: :increment_version, confirm: t("form.increment_version_warning")) %>
+      <%= f.regenerable_field(:current_version_name,
+            action: :increment_version, link_i18n_key: "form.increment_version",
+            confirm: t("form.increment_version_warning")) %>
 
       <% if admin_mode? %>
         <ul class="admin-stats">
