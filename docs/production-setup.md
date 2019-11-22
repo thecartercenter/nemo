@@ -1,4 +1,4 @@
-# Basic ELMO Production Setup Guide
+# Basic NEMO Production Setup Guide
 
 This guide assumes:
 
@@ -6,6 +6,8 @@ This guide assumes:
 * You have a domain name (e.g. yoursite.example.com) pointing to the server's IP address.
 * Port 443 on the server is open to the world.
 * You have ssh'ed to the server as the root user or a user with sudo privileges (`root` is assumed as the username below).
+
+Note that directories still use the `elmo` name for consistency, but this guide works for both ELMO and NEMO setups.
 
 ### Create `deploy` User
 
@@ -97,9 +99,9 @@ To switch to the `deploy` user, do:
 
     sudo su - deploy
 
-### Get ELMO source code and change into project directory
+### Get NEMO source code and change into project directory
 
-    git clone -b master https://github.com/thecartercenter/elmo
+    git clone https://github.com/thecartercenter/nemo elmo
     cd elmo
 
 ### Install rbenv, Ruby, and Bundler
@@ -141,7 +143,7 @@ Read the comments in the file and enter sensible values for the settings. Then:
 
 Similarly, read the comments in the file and enter sensible values for the settings.
 
-Entering a functioning email server is important as ELMO relies on email to send broadcasts, and registration info, and password reset requests. Once you have ELMO running, you can test your email setup by creating a new user for yourself and delivering the login instructions via email or by using the password reset feature.
+Entering a functioning email server is important as NEMO relies on email to send broadcasts, and registration info, and password reset requests. Once you have NEMO running, you can test your email setup by creating a new user for yourself and delivering the login instructions via email or by using the password reset feature.
 
 ### Prepare the App
 
@@ -232,9 +234,9 @@ The following command will upgrade and clean up your installed packages. Sometim
 ### Check out the site!
 
 You should now be able to visit https://yourdomain.example.org in your browser (replace with your real domain name).
-The ELMO login screen should appear. Login with username **admin** and the password created above.
+The NEMO login screen should appear. Login with username **admin** and the password created above.
 
-See the [ELMO Documentation](https://elmo-nemo.readthedocs.io) for help on using your new ELMO instance!
+See the [NEMO Documentation](https://elmo-nemo.readthedocs.io) for help on using your new NEMO instance!
 
 ### Custom Theme
 
@@ -268,7 +270,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
 #### Upgrading to v6.11
 
 1. Install PostgreSQL (see above).
-1. As `deploy` user, in elmo directory on server, `cp config/mysql2postgres.yml.example config/mysql2postgres.yml`
+1. As `deploy` user, in `elmo` directory on server, `cp config/mysql2postgres.yml.example config/mysql2postgres.yml`
 1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
 1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
 1. Ensure you can connect to the database (e.g. using `psql elmo_production`) from the user account that runs the app. If you need a password or different host, be sure to update the mysql2postgres.yml file to reflect this.
@@ -276,7 +278,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
 1. Run `bundle exec mysqltopostgres config/mysql2postgres.yml`.
     1. If you get the error `MysqlPR::ClientError::ServerGoneError: The MySQL server has gone away`, check your DB name, username, and password in `config/mysql2postgres.yml`.
 1. Ignore the `no COPY in progress` message.
-1. Update `config/database.yml` to point to Postgres. Use [this file](https://raw.githubusercontent.com/thecartercenter/elmo/v6.11/config/database.yml.example) as a guide. The `test` and `development` blocks are not needed.
+1. Update `config/database.yml` to point to Postgres. Use [this file](https://raw.githubusercontent.com/thecartercenter/nemo/v6.11/config/database.yml.example) as a guide. The `test` and `development` blocks are not needed.
 1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
 1. You should now follow the 'General Upgrade Instructions' below to upgrade to **v6.11**.
 
@@ -362,7 +364,7 @@ Now, pull the latest code:
 
     git pull
 
-If you want to upgrade to a particular version of ELMO, then try:
+If you want to upgrade to a particular version of NEMO, then try:
 
     git checkout vX.Y
 
@@ -381,7 +383,7 @@ Then:
     bundle exec rake assets:precompile
     bundle exec rake db:migrate
 
-Now be sure to check the [commit history of the local config file](https://github.com/thecartercenter/elmo/commits/develop/config/initializers/local_config.rb.example) and/or run:
+Now be sure to check the [commit history of the local config file](https://github.com/thecartercenter/nemo/commits/develop/config/initializers/local_config.rb.example) and/or run:
 
     diff config/initializers/local_config.rb.example config/initializers/local_config.rb
 
