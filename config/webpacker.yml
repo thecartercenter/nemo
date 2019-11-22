@@ -15,7 +15,7 @@ default: &default
   # Reload manifest.json on all requests so we reload latest compiled packs
   cache_manifest: false
 
-  extract_css: true
+  extract_css: false
 
   static_assets_extensions:
    - .jpg
