@@ -313,10 +313,9 @@ class Form < ApplicationRecord
   end
 
   def update_minimum
-    if defined?(@minimum_version_id)
-      persisted_minimum_version&.update!(minimum: false)
-      minimum_version.update!(minimum: true)
-    end
+    return unless defined?(@minimum_version_id)
+    persisted_minimum_version&.update!(minimum: false)
+    minimum_version.update!(minimum: true)
   end
 
   # The persisted version, regardless of ephemeral @minimum_version_id
