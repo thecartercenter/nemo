@@ -71,6 +71,9 @@ class Form < ApplicationRecord
   before_destroy :destroy_items
   before_destroy :nullify_current_version_foreign_key
 
+  attr_writer :oldest_accepted_version_id
+  after_save :update_oldest_accepted
+
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
@@ -265,16 +268,27 @@ class Form < ApplicationRecord
     versions.current.first
   end
 
+  def oldest_accepted_version_id
+    return @oldest_accepted_version_id if defined?(@oldest_accepted_version_id)
+    persisted_oldest_accepted_version&.id
+  end
+
+  def oldest_accepted_version
+    versions.find(oldest_accepted_version_id) if oldest_accepted_version_id.present?
+  end
+
+  def minimum_version_number
+    oldest_accepted_version&.number&.to_i
+  end
+
   # upgrades the version of the form and saves it
   # also resets the download count
   def upgrade_version!
     raise "standard forms should not be versioned" if standard?
 
-    if current_version
-      current_version.upgrade!
-    else
-      FormVersion.create(form_id: id, is_current: true)
-    end
+    has_current_version = current_version.present?
+    current_version.update!(is_current: false) if has_current_version
+    versions.create!(is_current: true, is_oldest_accepted: !has_current_version)
 
     # since we've upgraded, we can lower the upgrade flag
     self.upgrade_needed = false
@@ -319,6 +333,18 @@ class Form < ApplicationRecord
   def create_root_group
     create_root_group!(mission: mission, form: self)
     save!
+  end
+
+  def update_oldest_accepted
+    if defined?(@oldest_accepted_version_id)
+      persisted_oldest_accepted_version&.update!(is_oldest_accepted: false)
+      oldest_accepted_version.update!(is_oldest_accepted: true)
+    end
+  end
+
+  # The persisted version, regardless of ephemeral @oldest_accepted_version_id
+  def persisted_oldest_accepted_version
+    versions.oldest_accepted.first
   end
 
   # Nullifies the root_id foreign key and then deletes all items before deleting the form.

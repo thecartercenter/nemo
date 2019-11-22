@@ -79,7 +79,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
   def prepare_odk_media_upload_fixture(filename, form)
     prepare_fixture("odk/responses/#{filename}",
       form: [form.id],
-      formver: [form.code],
+      formver: [form.number],
       itemcode: Odk::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code))
   end
 end

@@ -66,14 +66,29 @@ describe Sms::Decoder, :sms do
       expect_decoding_fail(nil, body: "abc 1.15", error: "form_not_found")
     end
 
-    it "submitting to outdated form should produce appropriate error" do
-      form = create_form(questions: %w[integer])
+    context "with multiple versions" do
+      let(:form) { create_form(questions: %w[integer]) }
+      let(:v1) { form.versions.first }
+      let(:v2) { form.versions.second }
+      let(:v3) { form.versions.third }
 
-      # upgrade form version before submitting
-      old_version_code = form.current_version.code
-      form.upgrade_version!
+      before do
+        2.times { form.upgrade_version! }
+        v1.update!(is_oldest_accepted: false)
+        v2.update!(is_oldest_accepted: true)
+      end
 
-      expect_decoding_fail(form, body: "#{old_version_code} 1.15", error: "form_version_outdated")
+      it "outdated version should produce appropriate error" do
+        expect_decoding_fail(form, body: "#{v1.code} 1.15", error: "form_version_outdated")
+      end
+
+      it "minimum version should be accepted" do
+        expect_decoding(form, body: "#{v2.code} 1.15", answers: [15])
+      end
+
+      it "newer version should be accepted" do
+        expect_decoding(form, body: "#{v3.code} 1.15", answers: [15])
+      end
     end
 
     it "submitting to non-smsable form should produce appropriate error" do

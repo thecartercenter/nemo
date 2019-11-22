@@ -39,11 +39,12 @@
           <%= f.field(:access_level, partial: "form_access_level") %>
           <%= f.field(:allow_incomplete, type: :check_box, read_only: form.published?) %>
           <%= f.field(:smsable, type: :check_box)  %>
+          <%= f.field(:oldest_accepted_version_id, partial: "oldest_accepted_version") unless form.oldest_accepted_version_id.nil? %>
           <div class="sms-fields">
             <%= f.field(:sms_relay, type: :check_box) %>
             <%= f.field(:recipient_ids, type: :select, multiple: true, prompt: false,
               options: sel_opts_from_objs(form.recipients), read_only_content: form.recipient_names) %>
-              <%= f.field(:authenticate_sms, type: :check_box) %>
+            <%= f.field(:authenticate_sms, type: :check_box) %>
           </div>
         </div>
       <% end %>

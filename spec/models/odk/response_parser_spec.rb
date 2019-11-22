@@ -52,8 +52,8 @@ describe Odk::ResponseParser do
           end
         end
 
-        context "outdated form" do
-          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: "wrong") }
+        context "outdated form version" do
+          let(:formver) { form.minimum_version_number - 1 }
 
           it "should error" do
             expect do
@@ -62,9 +62,63 @@ describe Odk::ResponseParser do
           end
         end
 
-        context "missing form" do
-          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values) }
+        context "current form version" do
+          let(:formver) { form.minimum_version_number }
 
+          it "should not error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to_not(raise_error)
+          end
+        end
+
+        context "future form version" do
+          let(:formver) { form.minimum_version_number + 1 }
+
+          it "should not error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to_not(raise_error)
+          end
+        end
+
+        context "with three-letter code version" do
+          context "current code" do
+            let(:formver) { form.oldest_accepted_version.code }
+
+            it "should not error" do
+              expect do
+                Odk::ResponseParser.new(response: response, files: files).populate_response
+              end.to_not(raise_error)
+            end
+          end
+
+          context "outdated code" do
+            let!(:formver) { form.oldest_accepted_version.code }
+
+            it "should error" do
+              form.upgrade_version!
+              form.versions[0].update!(is_oldest_accepted: false)
+              form.versions[1].update!(is_oldest_accepted: true)
+
+              expect do
+                Odk::ResponseParser.new(response: response, files: files).populate_response
+              end.to raise_error(FormVersionError, "Form version is outdated")
+            end
+          end
+
+          context "invalid code" do
+            let(:formver) { "xxx" }
+
+            it "should error" do
+              expect do
+                Odk::ResponseParser.new(response: response, files: files).populate_response
+              end.to raise_error(FormVersionError, "Form version code not found")
+            end
+          end
+        end
+
+        context "missing form" do
           before do
             xml
             form.destroy

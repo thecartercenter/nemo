@@ -5,13 +5,14 @@
 #
 # Table name: form_versions
 #
-#  id         :uuid             not null, primary key
-#  code       :string(255)      not null
-#  is_current :boolean          default(TRUE), not null
-#  number     :string(10)       not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  form_id    :uuid             not null
+#  id                 :uuid             not null, primary key
+#  code               :string(255)      not null
+#  is_current         :boolean          default(TRUE), not null
+#  is_oldest_accepted :boolean          default(TRUE), not null
+#  number             :string(10)       not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  form_id            :uuid             not null
 #
 # Indexes
 #
@@ -34,18 +35,16 @@ class FormVersion < ApplicationRecord
   after_initialize :generate_code, :generate_number
   before_create :ensure_unique_code, :ensure_unique_number
 
+  # Only one can be true per form.
+  validates :is_current, uniqueness: {allow_blank: true, scope: :form_id}
+  validates :is_oldest_accepted, uniqueness: {allow_blank: true, scope: :form_id}
+
   scope :current, -> { where(is_current: true) }
+  scope :oldest_accepted, -> { where(is_oldest_accepted: true) }
 
   delegate :mission, to: :form
 
   CODE_LENGTH = 3
-
-  # Inits a new FormVersion with the same form_id
-  # and assigns it a new code + number
-  def upgrade!
-    update!(is_current: false)
-    self.class.create!(form_id: form_id, is_current: true)
-  end
 
   private
 
