@@ -35,10 +35,6 @@ class FormVersion < ApplicationRecord
   after_initialize :generate_code, :generate_number
   before_create :ensure_unique_code, :ensure_unique_number
 
-  # Only one can be true per form.
-  validates :current, uniqueness: {allow_blank: true, scope: :form_id}
-  validates :minimum, uniqueness: {allow_blank: true, scope: :form_id}
-
   delegate :mission, to: :form
 
   CODE_LENGTH = 3
