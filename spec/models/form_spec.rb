@@ -19,25 +19,22 @@
 #  status_changed_at     :datetime
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  current_version_id    :uuid
 #  mission_id            :uuid
 #  original_id           :uuid
 #  root_id               :uuid
 #
 # Indexes
 #
-#  index_forms_on_current_version_id  (current_version_id)
-#  index_forms_on_mission_id          (mission_id)
-#  index_forms_on_original_id         (original_id)
-#  index_forms_on_root_id             (root_id) UNIQUE
-#  index_forms_on_status              (status)
+#  index_forms_on_mission_id   (mission_id)
+#  index_forms_on_original_id  (original_id)
+#  index_forms_on_root_id      (root_id) UNIQUE
+#  index_forms_on_status       (status)
 #
 # Foreign Keys
 #
-#  forms_current_version_id_fkey  (current_version_id => form_versions.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_mission_id_fkey          (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  forms_original_id_fkey         (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_root_id_fkey             (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_original_id_fkey  (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
+#  forms_root_id_fkey      (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 

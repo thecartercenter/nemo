@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_22_153119) do
+ActiveRecord::Schema.define(version: 2019_11_22_175425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -209,7 +209,6 @@ ActiveRecord::Schema.define(version: 2019_11_22_153119) do
     t.boolean "allow_incomplete", default: false, null: false
     t.boolean "authenticate_sms", default: true, null: false
     t.datetime "created_at", null: false
-    t.uuid "current_version_id"
     t.string "default_response_name"
     t.integer "downloads"
     t.uuid "mission_id"
@@ -222,7 +221,6 @@ ActiveRecord::Schema.define(version: 2019_11_22_153119) do
     t.string "status", default: "draft", null: false
     t.datetime "status_changed_at"
     t.datetime "updated_at", null: false
-    t.index ["current_version_id"], name: "index_forms_on_current_version_id"
     t.index ["mission_id"], name: "index_forms_on_mission_id"
     t.index ["original_id"], name: "index_forms_on_original_id"
     t.index ["root_id"], name: "index_forms_on_root_id", unique: true
@@ -626,7 +624,6 @@ ActiveRecord::Schema.define(version: 2019_11_22_153119) do
   add_foreign_key "form_items", "questions", name: "form_items_question_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "forms", "form_items", column: "root_id", name: "forms_root_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_original_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "media_objects", "answers", name: "media_objects_answer_id_fkey", on_update: :restrict, on_delete: :restrict

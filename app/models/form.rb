@@ -19,25 +19,22 @@
 #  status_changed_at     :datetime
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  current_version_id    :uuid
 #  mission_id            :uuid
 #  original_id           :uuid
 #  root_id               :uuid
 #
 # Indexes
 #
-#  index_forms_on_current_version_id  (current_version_id)
-#  index_forms_on_mission_id          (mission_id)
-#  index_forms_on_original_id         (original_id)
-#  index_forms_on_root_id             (root_id) UNIQUE
-#  index_forms_on_status              (status)
+#  index_forms_on_mission_id   (mission_id)
+#  index_forms_on_original_id  (original_id)
+#  index_forms_on_root_id      (root_id) UNIQUE
+#  index_forms_on_status       (status)
 #
 # Foreign Keys
 #
-#  forms_current_version_id_fkey  (current_version_id => form_versions.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_mission_id_fkey          (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  forms_original_id_fkey         (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_root_id_fkey             (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_original_id_fkey  (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
+#  forms_root_id_fkey      (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 
@@ -67,7 +64,6 @@ class Form < ApplicationRecord
   before_validation :normalize
   after_create :create_root_group
   before_destroy :destroy_items
-  before_destroy :nullify_current_version_foreign_key
 
   attr_writer :minimum_version_id
   after_save :update_minimum
@@ -97,11 +93,11 @@ class Form < ApplicationRecord
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
              dont_copy: %i[status status_changed_at downloads
-                           smsable current_version_id allow_incomplete access_level]
+                           smsable allow_incomplete access_level]
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
-    Form.where(id: form_ids).update_all(original_id: nil, root_id: nil, current_version_id: nil)
+    Form.where(id: form_ids).update_all(original_id: nil, root_id: nil)
     FormVersion.where(form_id: form_ids).delete_all
   end
 
@@ -335,10 +331,6 @@ class Form < ApplicationRecord
     group_to_destroy = root_group
     update_columns(root_id: nil)
     group_to_destroy.destroy
-  end
-
-  def nullify_current_version_foreign_key
-    update_columns(current_version_id: nil)
   end
 
   def name_unique_per_mission
