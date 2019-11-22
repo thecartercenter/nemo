@@ -22,7 +22,7 @@ describe "sms auth code field", :sms, database_cleaner: :all do
     end
 
     it 'should not have regenerate button' do
-      assert_select('div.user_sms_auth_code button', :text => /Regenerate/, :count => 0)
+      assert_select('div.user_sms_auth_code a', :text => /Regenerate/, :count => 0)
     end
   end
 
@@ -42,12 +42,12 @@ describe "sms auth code field", :sms, database_cleaner: :all do
     end
 
     it 'should have regenerate button' do
-      assert_select('div.user_sms_auth_code button', :text => /Regenerate/, :count => 1)
+      assert_select('div.user_sms_auth_code a', :text => /Regenerate/, :count => 1)
     end
 
     context 'on regenerate' do
       it 'should return the new sms_auth_code value as json' do
-        post(regenerate_sms_auth_code_user_path(@user))
+        patch(regenerate_sms_auth_code_user_path(@user))
         expect(response).to be_successful
 
         @user.reload
@@ -100,12 +100,12 @@ describe "sms auth code field", :sms, database_cleaner: :all do
       end
 
       it 'should have regenerate button' do
-        assert_select('div.user_sms_auth_code button', :text => /Regenerate/, :count => 1)
+        assert_select('div.user_sms_auth_code a', :text => /Regenerate/, :count => 1)
       end
 
       context 'on regenerate' do
         it 'should return the new sms_auth_code value as json' do
-          post(regenerate_sms_auth_code_user_path(@enumerator))
+          patch(regenerate_sms_auth_code_user_path(@enumerator))
           expect(response).to be_successful
 
           @enumerator.reload

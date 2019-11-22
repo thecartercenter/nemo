@@ -28,7 +28,7 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
     inline_load_ind.show()
 
     $.ajax
-      method: 'post'
+      method: 'patch'
       url: handler
       success: (data) ->
         if (displayEl.length > 0)

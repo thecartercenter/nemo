@@ -5,12 +5,14 @@ module ActionLinks
   class FormLinkBuilder < LinkBuilder
     def initialize(form)
       actions = %i[show edit clone]
-      actions << [:go_live, method: :put] unless form.live?
-      actions << [:pause, method: :put] if form.live?
-      actions << [:return_to_draft, method: :put] if form.not_draft?
-      if form.smsable? && !h.admin_mode?
-        actions << :sms_guide
-        actions << [:sms_console, h.new_sms_test_path] if can?(:create, Sms::Test)
+      unless h.admin_mode?
+        actions << [:go_live, method: :patch] unless form.live?
+        actions << [:pause, method: :patch] if form.live?
+        actions << [:return_to_draft, method: :patch] if form.not_draft?
+        if form.smsable?
+          actions << :sms_guide
+          actions << [:sms_console, h.new_sms_test_path] if can?(:create, Sms::Test)
+        end
       end
       actions << :destroy
       super(form, actions)

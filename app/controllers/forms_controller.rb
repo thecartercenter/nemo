@@ -155,6 +155,11 @@ class FormsController < ApplicationController
     redirect_after_status_change
   end
 
+  def increment_version
+    @form.increment_version
+    render(json: {value: @form.current_version.decorate.name})
+  end
+
   # shows the form to either choose existing questions or create a new one to add
   def choose_questions
     authorize!(:add_questions, @form)

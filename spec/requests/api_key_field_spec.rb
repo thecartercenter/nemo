@@ -21,7 +21,7 @@ describe 'api key form field', database_cleaner: :all do
     end
 
     it 'should not have regenerate button' do
-      assert_select('div.user_api_key button', :text => /Regenerate/, :count => 0)
+      assert_select('div.user_api_key a', :text => /Regenerate/, :count => 0)
     end
   end
 
@@ -40,12 +40,12 @@ describe 'api key form field', database_cleaner: :all do
     end
 
     it 'should have regenerate button' do
-      assert_select('div.user_api_key button', :text => /Regenerate/, :count => 1)
+      assert_select('div.user_api_key a', :text => /Regenerate/, :count => 1)
     end
 
     context 'on regenerate' do
       it 'should return the new api_key value as json' do
-        post(regenerate_api_key_user_path(@user))
+        patch(regenerate_api_key_user_path(@user))
         expect(response).to be_successful
 
         @user.reload

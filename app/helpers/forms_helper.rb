@@ -44,9 +44,9 @@ module FormsHelper
       links = []
       if can?(:change_status, form)
         links << if form.live?
-                   action_link(:pause, pause_form_path(form, source: "index"), method: :put)
+                   action_link(:pause, pause_form_path(form, source: "index"), method: :patch)
                  else
-                   action_link(:go_live, go_live_form_path(form, source: "index"), method: :put)
+                   action_link(:go_live, go_live_form_path(form, source: "index"), method: :patch)
                  end
       end
       if can?(:clone, form)

@@ -44,6 +44,17 @@ ELMO::Application.routes.draw do
   #####################################
   # Mission-mode-only routes
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/, defaults: {mode: "m"} do
+
+    # Regular form resources are defined under the admin-or-mission section.
+    resources :forms, only: [] do
+      member do
+        patch "pause"
+        patch "go-live", as: "go_live"
+        patch "return-to-draft", as: "return_to_draft"
+        patch "increment_version"
+      end
+    end
+
     resources :broadcasts, only: %i[index show new create] do
       collection do
         get "possible-recipients", as: "possible_recipients", action: "possible_recipients"
@@ -94,16 +105,14 @@ ELMO::Application.routes.draw do
 
   #####################################
   # Admin mode OR mission mode routes
-  scope ":locale/:mode(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/, mission_name: /[a-z][a-z0-9]*/ do
+  scope ":locale/:mode(/:mission_name)",
+    locale: /[a-z]{2}/, mode: /m|admin/, mission_name: /[a-z][a-z0-9]*/ do
 
     # the rest of these routes can have admin mode or not
-    resources :forms, constraints: -> (req) { req.format == :html } do
+    resources :forms, constraints: ->(req) { req.format == :html } do
       member do
         post "add-questions", as: "add_questions", action: "add_questions"
         put "clone"
-        put "pause"
-        put "go-live", as: "go_live"
-        put "return-to-draft", as: "return_to_draft"
         get "choose-questions", as: "choose_questions", action: "choose_questions"
         get "sms-guide", as: "sms_guide", action: "sms_guide"
       end
@@ -131,8 +140,8 @@ ELMO::Application.routes.draw do
     resources :qing_groups, path: "qing-groups", only: %i[new edit create show update destroy]
     resources :settings, only: %i[index update] do
       member do
-        post "regenerate_override_code"
-        post "regenerate_incoming_sms_token"
+        patch "regenerate_override_code"
+        patch "regenerate_incoming_sms_token"
       end
       collection do
         get "using_incoming_sms_token_message"
@@ -191,8 +200,8 @@ ELMO::Application.routes.draw do
     resources :users do
       member do
         get "login-instructions", as: "login_instructions", action: "login_instructions"
-        post "regenerate_api_key"
-        post "regenerate_sms_auth_code"
+        patch "regenerate_api_key"
+        patch "regenerate_sms_auth_code"
       end
       collection do
         post "export"

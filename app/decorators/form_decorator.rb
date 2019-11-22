@@ -14,4 +14,8 @@ class FormDecorator < ApplicationDecorator
       circle << t("form.statuses.#{form.status}")
     end
   end
+
+  def current_version_name
+    current_version&.decorate&.name
+  end
 end

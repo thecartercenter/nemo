@@ -21,6 +21,7 @@
 
       <%= f.field(:name, required: true, read_only: cannot?(:rename, form)) %>
       <%= f.field(:status, content: form.status_with_icon) %>
+      <%= f.regenerable_field(:current_version_name, action: :increment_version, confirm: t("form.increment_version_warning")) %>
 
       <% if admin_mode? %>
         <ul class="admin-stats">
@@ -32,11 +33,11 @@
       <% unless admin_mode? %>
         <div class="more-settings"><a href="#"><%= t("common.more_settings") %></a></div>
         <div class="setting-fields">
+          <%= f.field(:minimum_version_id, partial: "minimum_version") unless form.minimum_version_id.nil? %>
           <%= f.field(:default_response_name) %>
           <%= f.field(:access_level, partial: "form_access_level") %>
           <%= f.field(:allow_incomplete, type: :check_box, read_only: form.published?) %>
           <%= f.field(:smsable, type: :check_box)  %>
-          <%= f.field(:minimum_version_id, partial: "minimum_version") unless form.minimum_version_id.nil? %>
           <div class="sms-fields">
             <%= f.field(:sms_relay, type: :check_box) %>
             <%= f.field(:recipient_ids, type: :select, multiple: true, prompt: false,
