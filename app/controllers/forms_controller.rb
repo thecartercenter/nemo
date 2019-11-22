@@ -239,7 +239,7 @@ class FormsController < ApplicationController
 
   def form_params
     params.require(:form).permit(:name, :smsable, :allow_incomplete, :default_response_name,
-      :oldest_accepted_version_id, :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
+      :minimum_version_id, :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
   end
 
   def redirect_after_status_change

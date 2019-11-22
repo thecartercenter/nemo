@@ -5,14 +5,14 @@
 #
 # Table name: form_versions
 #
-#  id                 :uuid             not null, primary key
-#  code               :string(255)      not null
-#  is_current         :boolean          default(TRUE), not null
-#  is_oldest_accepted :boolean          default(TRUE), not null
-#  number             :string(10)       not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  form_id            :uuid             not null
+#  id         :uuid             not null, primary key
+#  code       :string(255)      not null
+#  current    :boolean          default(TRUE), not null
+#  minimum    :boolean          default(TRUE), not null
+#  number     :string(10)       not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  form_id    :uuid             not null
 #
 # Indexes
 #
@@ -43,8 +43,8 @@ describe FormVersion do
 
   it "version codes are unique" do
     # create two fv's and check their codes are different
-    fv1 = FormVersion.new(form: form, is_current: false)
-    fv2 = FormVersion.new(form: form, is_oldest_accepted: false)
+    fv1 = FormVersion.new(form: form, current: false)
+    fv2 = FormVersion.new(form: form, minimum: false)
     expect(fv2.code).not_to eq(fv1.code)
 
     # set one code = to other (this could happen by a fluke if second is init'd before first is saved)
@@ -58,8 +58,8 @@ describe FormVersion do
   end
 
   it "version numbers are unique" do
-    fv1 = FormVersion.new(form: form, is_current: false)
-    fv2 = FormVersion.new(form: form, is_oldest_accepted: false)
+    fv1 = FormVersion.new(form: form, current: false)
+    fv2 = FormVersion.new(form: form, minimum: false)
     # by default they will be the same before saving
     expect(fv2.number).to eq(fv1.number)
 

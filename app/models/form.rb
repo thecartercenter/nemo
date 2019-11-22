@@ -71,8 +71,8 @@ class Form < ApplicationRecord
   before_destroy :destroy_items
   before_destroy :nullify_current_version_foreign_key
 
-  attr_writer :oldest_accepted_version_id
-  after_save :update_oldest_accepted
+  attr_writer :minimum_version_id
+  after_save :update_minimum
 
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
@@ -264,21 +264,17 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
-  def current_version
-    versions.current.first
+  def minimum_version_id
+    return @minimum_version_id if defined?(@minimum_version_id)
+    persisted_minimum_version&.id
   end
 
-  def oldest_accepted_version_id
-    return @oldest_accepted_version_id if defined?(@oldest_accepted_version_id)
-    persisted_oldest_accepted_version&.id
-  end
-
-  def oldest_accepted_version
-    versions.find(oldest_accepted_version_id) if oldest_accepted_version_id.present?
+  def minimum_version
+    versions.find(minimum_version_id) if minimum_version_id.present?
   end
 
   def minimum_version_number
-    oldest_accepted_version&.number&.to_i
+    minimum_version&.number&.to_i
   end
 
   # upgrades the version of the form and saves it
@@ -287,8 +283,8 @@ class Form < ApplicationRecord
     raise "standard forms should not be versioned" if standard?
 
     has_current_version = current_version.present?
-    current_version.update!(is_current: false) if has_current_version
-    versions.create!(is_current: true, is_oldest_accepted: !has_current_version)
+    current_version.update!(current: false) if has_current_version
+    versions.create!(current: true, minimum: !has_current_version)
 
     # since we've upgraded, we can lower the upgrade flag
     self.upgrade_needed = false
@@ -335,16 +331,20 @@ class Form < ApplicationRecord
     save!
   end
 
-  def update_oldest_accepted
-    if defined?(@oldest_accepted_version_id)
-      persisted_oldest_accepted_version&.update!(is_oldest_accepted: false)
-      oldest_accepted_version.update!(is_oldest_accepted: true)
+  def update_minimum
+    if defined?(@minimum_version_id)
+      persisted_minimum_version&.update!(minimum: false)
+      minimum_version.update!(minimum: true)
     end
   end
 
-  # The persisted version, regardless of ephemeral @oldest_accepted_version_id
-  def persisted_oldest_accepted_version
-    versions.oldest_accepted.first
+  def current_version
+    versions.find_by(current: true)
+  end
+
+  # The persisted version, regardless of ephemeral @minimum_version_id
+  def persisted_minimum_version
+    versions.find_by(minimum: true)
   end
 
   # Nullifies the root_id foreign key and then deletes all items before deleting the form.

@@ -74,8 +74,8 @@ describe Sms::Decoder, :sms do
 
       before do
         2.times { form.upgrade_version! }
-        v1.update!(is_oldest_accepted: false)
-        v2.update!(is_oldest_accepted: true)
+        v1.update!(minimum: false)
+        v2.update!(minimum: true)
       end
 
       it "outdated version should produce appropriate error" do

@@ -191,20 +191,20 @@ describe Form do
   describe "publish and upgrade" do
     it "should set version flags on first publish" do
       expect(form.current_version).to be(nil)
-      expect(form.oldest_accepted_version).to be(nil)
+      expect(form.minimum_version).to be(nil)
       form.update_status(:live)
       expect(form.current_version).not_to be(nil)
-      expect(form.oldest_accepted_version).to eq(form.current_version)
+      expect(form.minimum_version).to eq(form.current_version)
     end
 
     it "should change version flags on upgrade" do
       form.update_status(:live)
-      oldest1 = form.oldest_accepted_version
+      oldest1 = form.minimum_version
       current1 = form.current_version
       expect(oldest1).to eq(current1)
 
       form.upgrade_version!
-      oldest2 = form.oldest_accepted_version
+      oldest2 = form.minimum_version
       current2 = form.current_version
       # Oldest accepted shouldn't change, but current should update.
       expect(oldest2).to eq(oldest1)

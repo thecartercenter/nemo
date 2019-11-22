@@ -84,7 +84,7 @@ describe Odk::ResponseParser do
 
         context "with three-letter code version" do
           context "current code" do
-            let(:formver) { form.oldest_accepted_version.code }
+            let(:formver) { form.minimum_version.code }
 
             it "should not error" do
               expect do
@@ -94,12 +94,12 @@ describe Odk::ResponseParser do
           end
 
           context "outdated code" do
-            let!(:formver) { form.oldest_accepted_version.code }
+            let!(:formver) { form.minimum_version.code }
 
             it "should error" do
               form.upgrade_version!
-              form.versions[0].update!(is_oldest_accepted: false)
-              form.versions[1].update!(is_oldest_accepted: true)
+              form.versions[0].update!(minimum: false)
+              form.versions[1].update!(minimum: true)
 
               expect do
                 Odk::ResponseParser.new(response: response, files: files).populate_response

@@ -5,14 +5,14 @@
 #
 # Table name: form_versions
 #
-#  id                 :uuid             not null, primary key
-#  code               :string(255)      not null
-#  is_current         :boolean          default(TRUE), not null
-#  is_oldest_accepted :boolean          default(TRUE), not null
-#  number             :string(10)       not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  form_id            :uuid             not null
+#  id         :uuid             not null, primary key
+#  code       :string(255)      not null
+#  current    :boolean          default(TRUE), not null
+#  minimum    :boolean          default(TRUE), not null
+#  number     :string(10)       not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  form_id    :uuid             not null
 #
 # Indexes
 #
@@ -36,11 +36,8 @@ class FormVersion < ApplicationRecord
   before_create :ensure_unique_code, :ensure_unique_number
 
   # Only one can be true per form.
-  validates :is_current, uniqueness: {allow_blank: true, scope: :form_id}
-  validates :is_oldest_accepted, uniqueness: {allow_blank: true, scope: :form_id}
-
-  scope :current, -> { where(is_current: true) }
-  scope :oldest_accepted, -> { where(is_oldest_accepted: true) }
+  validates :current, uniqueness: {allow_blank: true, scope: :form_id}
+  validates :minimum, uniqueness: {allow_blank: true, scope: :form_id}
 
   delegate :mission, to: :form
 

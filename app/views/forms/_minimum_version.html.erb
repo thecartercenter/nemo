@@ -1,0 +1,5 @@
+<% if read_only %>
+  <%= form.object.minimum_version&.decorate&.name %>
+<% else %>
+  <%= form.select(:minimum_version_id, @possible_versions, {}, class: "form-control") %>
+<% end %>
