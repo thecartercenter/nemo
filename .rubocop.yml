@@ -42,6 +42,7 @@ Lint/UnneededCopDisableDirective:
 Metrics/BlockLength:
   Enabled: true
   Exclude:
+    - config/routes.rb
     - spec/**/*
 
 Metrics/ClassLength:
