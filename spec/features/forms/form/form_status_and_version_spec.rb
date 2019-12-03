@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "form status display and changes", js: true do
+feature "form status and version display and changes", js: true do
   let!(:form) { create(:form, :draft, name: "Myform") }
   let(:user) { create(:user, role_name: "coordinator") }
 
@@ -21,21 +21,41 @@ feature "form status display and changes", js: true do
     expect(page).to have_css("tr", text: /Myform Paused/)
   end
 
-  scenario "changing status via edit page" do
+  scenario "changing status and version via edit page" do
     visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
     click_link("Myform")
-    expect(page).to have_css("div#status", text: /Status Draft/)
     expect(page).to have_css(".top-action-links a", text: /Delete/)
     expect(page).to have_css(".top-action-links a", text: /Go Live/)
     expect(page).not_to have_css(".top-action-links a", text: /Pause/)
     expect(page).not_to have_css(".top-action-links a", text: /Return to Draft Status/)
+    click_link("More settings")
+    expect(page).to have_css("div#status", text: /Status Draft/)
+    expect(page).not_to have_content("Current Version")
+    expect(page).not_to have_content("Minimum Accepted Version")
 
     click_link("Go Live")
-    expect(page).to have_css("div#status", text: /Status Live/)
     expect(page).not_to have_css(".top-action-links a", text: /Delete/)
     expect(page).not_to have_css(".top-action-links a", text: /Go Live/)
     expect(page).to have_css(".top-action-links a", text: /Pause/)
     expect(page).to have_css(".top-action-links a", text: /Return to Draft Status/)
+    expect(page).to have_css("div#status", text: /Status Live/)
+    click_link("More settings")
+    version1 = find("div#current_version_name .regenerable-field span").text
+    expect(page).to have_select("Minimum Accepted Version", selected: version1)
+
+    # Increment version should change current version but not min version.
+    accept_confirm { click_link("Increment Version") }
+    expect(page).to have_css("i.success")
+    expect(page).to have_select("Minimum Accepted Version", selected: version1) # Shouldn't change
+    version2 = find("div#current_version_name .regenerable-field span").text
+    expect(version2).not_to eq(version1)
+    select(version2, from: "Minimum Accepted Version")
+    click_button("Save")
+
+    # New min version should be persisted.
+    expect(page).to have_content("Current Version #{version2}")
+    click_link("More settings")
+    expect(page).to have_select("Minimum Accepted Version", selected: version2)
 
     click_link("Pause")
     expect(page).to have_css("div#status", text: /Status Paused/)
@@ -54,6 +74,16 @@ feature "form status display and changes", js: true do
     fill_in("override", with: "override")
     click_button("Accept Risks & Change Status")
     expect(page).to have_css("div#status", text: /Status Draft/)
+    click_link("More settings")
+    expect(page).to have_content("Current Version #{version2}")
+    expect(page).to have_select("Minimum Accepted Version", selected: version2)
+
+    # Going live again shouldn't change versions
+    click_link("Go Live")
+    expect(page).to have_css("div#status", text: /Status Live/)
+    expect(page).to have_content("Current Version #{version2}")
+    click_link("More settings")
+    expect(page).to have_select("Minimum Accepted Version", selected: version2)
   end
 
   scenario "changing status via save and go live button" do
