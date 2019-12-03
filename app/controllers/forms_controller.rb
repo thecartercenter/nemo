@@ -157,7 +157,10 @@ class FormsController < ApplicationController
 
   def increment_version
     @form.increment_version
-    render(json: {value: @form.current_version.decorate.name})
+    render(json: {
+      value: @form.current_version.decorate.name,
+      minimum_version_options: @form.decorate.minimum_version_options
+    })
   end
 
   # shows the form to either choose existing questions or create a new one to add
@@ -232,9 +235,6 @@ class FormsController < ApplicationController
     # We need this array only when in mission mode since it's for the API permissions which are not
     # shown in admin mode.
     @users = User.assigned_to(current_mission).by_name unless admin_mode?
-    @possible_versions = @form.versions.order(:number).reverse.map do |version|
-      [version.decorate.name, version.id]
-    end
     render(:form)
   end
 

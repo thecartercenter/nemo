@@ -18,4 +18,10 @@ class FormDecorator < ApplicationDecorator
   def current_version_name
     current_version&.decorate&.name
   end
+
+  # Option tags for the minimum version dropdown.
+  def minimum_version_options
+    possible_versions = versions.decorate.reverse
+    h.options_from_collection_for_select(possible_versions, :id, :name, minimum_version)
+  end
 end

@@ -30,7 +30,9 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
     $.ajax
       method: 'patch'
       url: handler
-      success: (data) ->
+      success: (data) =>
+        # Trigger an event that other views can subscribe to, with the response data as the first param.
+        @$el.trigger('regenerable-field:updated', [data])
         if (displayEl.length > 0)
           $(displayEl[0]).data(value: data.value)
           $(displayEl[0]).text(data.value)

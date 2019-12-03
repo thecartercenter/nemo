@@ -72,8 +72,9 @@
     new ELMO.Views.FormSettingsView(<%=json(
       recipient_options_url: possible_recipients_broadcasts_path
     )%>);
+    new ELMO.Views.ReturnToDraftView(<%= json(keyword: t("form.return_to_draft.modal.override")) %>);
+    new ELMO.Views.FormMinimumVersionView();
   <% end %>
-  new ELMO.Views.ReturnToDraftView(<%= json(keyword: t("form.return_to_draft.modal.override")) %>);
   new ELMO.Views.PrintFormView();
   // Assigning view to variable for testing form items
   ELMO.formItemsView = new ELMO.Views.FormItemsView(<%=json(
