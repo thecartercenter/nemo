@@ -1,31 +1,31 @@
 class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
 
   events:
-    'click .regenerate': 'regenerate_field'
+    'click .regenerate': 'regenerateField'
 
-  regenerate_field: (event) ->
+  regenerateField: (event) ->
     event.preventDefault()
 
     target = $(event.currentTarget)
     handler = target.data('handler')
-    confirm_msg = target.data('confirm-msg')
+    confirmMsg = target.data('confirm-msg')
 
     container = target.closest('.regenerable-field')
     displayEl = container.find('span[data-value]')
-    inline_load_ind = container.find('div.inline-load-ind img')
-    success_indicator = container.find('.success')
-    error_indicator = container.find('.failure')
+    inlineLoadInd = container.find('div.inline-load-ind img')
+    successIndicator = container.find('.success')
+    errorIndicator = container.find('.failure')
 
     # If confirm text is provided and there is a current value,
     # show a confirmation dialog
-    if (confirm_msg && displayEl.data('value') && !window.confirm(confirm_msg))
+    if (confirmMsg && displayEl.data('value') && !window.confirm(confirmMsg))
       return false
 
     # Disable the button and ensure that only the loading indicator is shown
     target.attr('disabled', 'disabled')
-    success_indicator.hide()
-    error_indicator.hide()
-    inline_load_ind.show()
+    successIndicator.hide()
+    errorIndicator.hide()
+    inlineLoadInd.show()
 
     $.ajax
       method: 'patch'
@@ -36,10 +36,10 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
         if (displayEl.length > 0)
           $(displayEl[0]).data(value: data.value)
           $(displayEl[0]).text(data.value)
-        inline_load_ind.hide()
-        success_indicator.show()
+        inlineLoadInd.hide()
+        successIndicator.show()
       error: ->
-        inline_load_ind.hide()
-        error_indicator.show()
+        inlineLoadInd.hide()
+        errorIndicator.show()
       complete: ->
         target.removeAttr('disabled')
