@@ -7,7 +7,8 @@ describe Odk::ResponseParser do
   include_context "odk submissions"
   include ActionDispatch::TestProcess
   let(:save_fixtures) { true }
-  let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+  let(:user) { create(:user) }
+  let(:response) { Response.new(form: form, mission: form.mission, user: user) }
   let(:response2) { Response.new(form: form, mission: form.mission, user: create(:user)) }
   let(:formver) { nil } # Don't override the version by default
   let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: formver) }
@@ -141,6 +142,17 @@ describe Odk::ResponseParser do
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
             end.to raise_error(SubmissionError, /Submission contains group or question/)
+          end
+        end
+
+        context "response is in wrong mission" do
+          let(:other_mission) { create(:mission) }
+          let(:response) { Response.new(form: form, mission: other_mission, user: user) }
+
+          it "should error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to raise_error(SubmissionError, /unidentifiable group or question/)
           end
         end
       end
