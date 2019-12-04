@@ -64,6 +64,14 @@ module Results
     def update_or_add_node(web_hash_node, tree_parent)
       id = web_hash_node[:id]
       raise SubmissionError, "Form item id invalid." unless item_in_mission?(web_hash_node[:questioning_id])
+
+      # Verify all single- and multi-select options.
+      option_node_ids = [web_hash_node[:option_node_id]]
+      web_hash_node[:choices_attributes]&.each do |attrib|
+        option_node_ids << attrib[1][:option_node_id]
+      end
+      raise SubmissionError, "Option id invalid." unless options_in_mission?(option_node_ids)
+
       # add
       if id.blank?
         tree_parent.children.build(new_tree_node_attrs(web_hash_node, tree_parent))
@@ -98,6 +106,19 @@ module Results
     def form_items_in_mission
       @form_items_in_mission ||=
         FormItem.where(mission_id: @response.mission_id).pluck(:id).index_by(&:itself)
+    end
+
+    def options_in_mission?(option_node_ids)
+      option_node_ids.all? { |id| option_in_mission?(id) }
+    end
+
+    def option_in_mission?(option_node_id)
+      option_node_id.blank? || option_nodes_in_mission[option_node_id].present?
+    end
+
+    def option_nodes_in_mission
+      @option_nodes_in_mission ||=
+        OptionNode.where(mission_id: @response.mission_id).pluck(:id).index_by(&:itself)
     end
   end
 end

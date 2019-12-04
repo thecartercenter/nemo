@@ -64,7 +64,7 @@ describe Results::WebResponseParser do
 
       context "with form item that is not in this mission" do
         let(:other_mission) { create(:mission) }
-        let(:other_form) { create(:form, mission: other_mission, question_types: %w[text]) }
+        let(:other_form) { create(:form, mission: other_mission, question_types: question_types) }
         let(:answers) do
           {
             "0" => web_answer_hash(other_form.c[0].id, value: "A"),
@@ -106,6 +106,33 @@ describe Results::WebResponseParser do
         expect_built_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
         expect_built_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
       end
+
+      context "with option that is not in this mission" do
+        let(:other_mission) { create(:mission) }
+        let(:other_form) { create(:form, mission: other_mission, question_types: question_types) }
+        let(:other_plant) { other_form.c[1].option_set.sorted_children[1].id }
+        let(:other_oak) { other_form.c[1].option_set.sorted_children[1].sorted_children[1].id }
+        let(:answers) do
+          {
+            "0" => web_answer_hash(form.c[0].id, value: "A"),
+            "1" => {
+              id: "",
+              type: "AnswerSet",
+              questioning_id: form.c[1].id,
+              _relevant: "true",
+              children: {
+                "0" => web_answer_hash(form.c[1].id, option_node_id: other_plant),
+                "1" => web_answer_hash(form.c[1].id, option_node_id: other_oak)
+              }
+            },
+            "2" => web_answer_hash(form.c[2].id, value: "D")
+          }
+        end
+
+        it "errors" do
+          expect { described_class.new(response).parse(input) }.to raise_error(SubmissionError)
+        end
+      end
     end
 
     context "response with select multiple answer" do
@@ -128,6 +155,58 @@ describe Results::WebResponseParser do
       it "builds tree with answer set" do
         expect_root(tree, form)
         expect_built_children(tree, %w[Answer Answer Answer], form.c.map(&:id), %w[A Cat;Dog D])
+      end
+
+      context "with option that is not in this mission" do
+        let(:other_mission) { create(:mission) }
+        let(:other_form) { create(:form, mission: other_mission, question_types: question_types) }
+        let(:other_dog) { other_form.c[1].option_set.sorted_children[0].id }
+        let(:answers) do
+          {
+            "0" => web_answer_hash(form.c[0].id, value: "A"),
+            "1" => web_answer_hash(form.c[1].id,
+              choices_attributes: {
+                "0" => {option_node_id: other_dog, checked: "1"},
+                "1" => {option_node_id: cat, checked: "1"}
+              }),
+            "2" => web_answer_hash(form.c[2].id, value: "D")
+          }
+        end
+
+        it "errors" do
+          expect { described_class.new(response).parse(input) }.to raise_error(SubmissionError)
+        end
+      end
+    end
+
+    context "response with select one answer" do
+      let(:question_types) { %w[select_one] }
+      let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
+      let(:cat) { form.c[0].option_set.sorted_children[0].id }
+      let(:answers) do
+        {
+          "0" => web_answer_hash(form.c[0].id, option_node_id: cat)
+        }
+      end
+
+      it "builds tree with answer set" do
+        expect_root(tree, form)
+        expect_built_children(tree, %w[Answer], form.c.map(&:id), ["Cat"])
+      end
+
+      context "with option that is not in this mission" do
+        let(:other_mission) { create(:mission) }
+        let(:other_form) { create(:form, mission: other_mission, question_types: question_types) }
+        let(:other_cat) { other_form.c[0].option_set.sorted_children[0].id }
+        let(:answers) do
+          {
+            "0" => web_answer_hash(form.c[0].id, option_node_id: other_cat)
+          }
+        end
+
+        it "errors" do
+          expect { described_class.new(response).parse(input) }.to raise_error(SubmissionError)
+        end
       end
     end
 
