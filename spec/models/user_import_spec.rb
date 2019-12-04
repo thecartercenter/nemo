@@ -2,6 +2,7 @@
 
 require "rails_helper"
 
+# See also tabular_import_spec
 describe UserImport do
   let(:mission) { get_mission }
   let(:run_errors) { import.run_errors }

@@ -41,6 +41,10 @@ module GeneralSpecHelpers
     fixture("media", "images", name)
   end
 
+  def tabular_import_fixture(name)
+    fixture("tabular_imports", name)
+  end
+
   def option_set_import_fixture(name)
     fixture("option_set_imports", name)
   end

@@ -3,15 +3,14 @@
 module OptionSets
   # Cleans data from spreadsheet for use in building option set.
   class ImportDataCleaner
-    attr_accessor :file, :errors
+    attr_accessor :sheet, :errors
 
-    def initialize(file)
-      self.file = file
+    def initialize(sheet)
+      self.sheet = sheet
       self.errors = []
     end
 
     def clean
-      sheet = open_sheet || return
       headers = extract_headers(sheet)
       check_header_lengths(headers)
       meta_headers = detect_meta_headers(headers)
@@ -27,14 +26,6 @@ module OptionSets
     end
 
     private
-
-    def open_sheet
-      Roo::Spreadsheet.open(file).sheet(0)
-    rescue TypeError, ArgumentError => error
-      raise error unless /not an Excel 2007 file|Can't detect the type/.match?(error.to_s)
-      errors << [:wrong_type]
-      nil
-    end
 
     # Returns a hash of form {0 => :id, 3 => :coordinates, ...}, mapping column indices to
     # the names of meta headers like Coordinates and Shortcode.

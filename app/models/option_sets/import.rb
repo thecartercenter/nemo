@@ -7,25 +7,23 @@ module OptionSets
 
     validates :name, presence: true
 
-    def run
+    protected
+
+    def process_data
       headers, meta_headers, rows = cleaner.clean
       add_run_errors(cleaner.errors)
-      return false if failed?
+      return if failed?
 
       self.level_count = headers.size
       init_state_vars
-
-      transaction do
-        create_option_set_and_copy_any_errors(headers, meta_headers.value?(:coordinates))
-        rows.each_with_index { |row, row_idx| process_row(row, row_idx) }
-        raise ActiveRecord::Rollback if failed?
-      end
+      create_option_set_and_copy_any_errors(headers, meta_headers.value?(:coordinates))
+      rows.each_with_index { |row, row_idx| process_row(row, row_idx) }
     end
 
     private
 
     def cleaner
-      @cleaner ||= ImportDataCleaner.new(file)
+      @cleaner ||= ImportDataCleaner.new(sheet)
     end
 
     def create_option_set_and_copy_any_errors(headers, geographic)

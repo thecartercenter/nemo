@@ -783,9 +783,7 @@ en:
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         option_sets/import:
           general: "Option Set import is invalid (see below)."
-          wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
           blank_interior_cell: "Error on row %{row_num}: blank interior cell."
-          no_rows: "No rows to import."
           option_too_long: "Error on row %{row_num}: options can't be more than %{limit} characters."
           header_too_long: "Error on row %{row_num}: headers can't be more than %{limit} characters."
         question:
@@ -2213,6 +2211,12 @@ en:
       few: "There were %{count} errors."
       many: "There were %{count} errors."
       other: "There were %{count} errors."
+
+  tabular_import:
+    errors:
+      wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
+      no_rows: "No rows to import."
+      bad_csv: "There was an issue with your CSV file: %{msg}"
 
   unauthorized:
     default: "You are not authorized to access that page or operation."
