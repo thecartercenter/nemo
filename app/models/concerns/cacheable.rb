@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # methods that help in generating cache keys
 module Cacheable
   extend ActiveSupport::Concern
@@ -17,13 +19,13 @@ module Cacheable
 
       # add count & last update
       pieces << if rel.empty?
-        "empty"
-      else
-        last_update = rel.order('updated_at DESC').first.updated_at.strftime('%Y%m%d%H%M%S')
-        "#{rel.count}-#{last_update}"
+                  "empty"
+                else
+                  last_update = rel.order("updated_at DESC").first.updated_at.strftime("%Y%m%d%H%M%S")
+                  "#{rel.count}-#{last_update}"
       end
 
-      pieces.join('/')
+      pieces.join("/")
     end
   end
 end

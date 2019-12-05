@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Methods relating to managing User and UserGroup recipients.
 # Expects a receivable_association class method to be defined on the model before this module is included.
 # The method should return a hash with :name and :fk as keys.
@@ -46,8 +48,9 @@ module Receivable
   end
 
   def recipient_ids=(ids)
-    user_ids, group_ids = [], []
-      ids.each do |str|
+    user_ids = []
+    group_ids = []
+    ids.each do |str|
       type, _, id = str.rpartition("_")
       case type
       when "user" then user_ids << id

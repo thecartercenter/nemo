@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Functions that are common to reports that can be rendered as a simple grid of data.
 module Report::Gridable
   extend ActiveSupport::Concern
@@ -14,9 +16,7 @@ module Report::Gridable
 
     # prep the relation and add a filter clause
     build_query = Response.for_mission(mission)
-    if current_ability
-      build_query = build_query.accessible_by(current_ability)
-    end
+    build_query = build_query.accessible_by(current_ability) if current_ability
     @query = prep_query(build_query)
 
     # execute it the relation, returning rows, and create dbresult obj
@@ -64,7 +64,7 @@ module Report::Gridable
 
   # adds the given array of joins to the given relation by using the Join class
   def add_joins_to_relation(rel, joins)
-    return rel.joins(Results::Join.list_to_sql(joins))
+    rel.joins(Results::Join.list_to_sql(joins))
   end
 
   # by default we don't have to worry about blank rows
@@ -90,9 +90,9 @@ module Report::Gridable
   def fix_calculation_ranks
     # Need to reload calculations because otherwise the array may still contained destroyed ones.
     calculations
-      .select { |c| !c.destroyed? }
+      .reject(&:destroyed?)
       .sort_by(&:rank)
-      .each_with_index { |c,i| c.rank = i + 1 }
+      .each_with_index { |c, i| c.rank = i + 1 }
   end
 
   # Whether this kind of report should be clipped at RESPONSES_QUANTITY_LIMIT rows.
