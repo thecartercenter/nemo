@@ -3,61 +3,60 @@
 require "rails_helper"
 
 describe "redirect on mission change" do
-  before do
-    @mission1 = create(:mission, name: "Mission1")
-    @mission2 = create(:mission, name: "Mission2")
-    @user = create(:user, mission: @mission1, role_name: :coordinator)
-  end
+  let(:mission1) { create(:mission, name: "Mission1") }
+  let(:mission2) { create(:mission, name: "Mission2") }
+  let(:user) { create(:user, mission: mission1, role_name: :coordinator) }
 
   it "user should not be redirected if on object listing and has permission" do
     # add this user to the other mission so the form index will be accessible
-    @user.assignments.create!(mission: @mission2, role: "coordinator")
+    user.assignments.create!(mission: mission2, role: "coordinator")
     assert_redirect_after_mission_change_from(from: "/en/m/mission1/forms", no_redirect: true)
   end
 
-  it "user should be redirected to object listing if viewing object that is mission based and not linked to new current mission" do
+  context "viewing object that is mission based and not linked to new current mission" do
     # Add this user to the other mission so the form index will be accessible.
-    @user.assignments.create!(mission: @mission2, role: "coordinator")
+    before { user.assignments.create!(mission: mission2, role: "coordinator") }
 
-    # Try multiple object types.
     %w[form question option_set user].each do |type|
-      @obj = create(type, mission: @mission1)
+      it "user should be redirected to object listing for #{type}" do
+        obj = create(type, mission: mission1)
 
-      path_chunk = type.tr("_", "-") << "s"
-      assert_redirect_after_mission_change_from(
-        from: "/en/m/mission1/#{path_chunk}/#{@obj.id}",
-        to: "/en/m/mission2/#{path_chunk}"
-      )
+        path_chunk = type.tr("_", "-") << "s"
+        assert_redirect_after_mission_change_from(
+          from: "/en/m/mission1/#{path_chunk}/#{obj.id}",
+          to: "/en/m/mission2/#{path_chunk}"
+        )
+      end
     end
   end
 
   it "user should be redirected to home screen if was viewing object but redirect to object listing is not permitted" do
-    @option_set = create(:option_set, mission: @mission1)
+    option_set = create(:option_set, mission: mission1)
 
     # add the user to the other mission as an enumerator so that the option_sets listing won't be allowed
-    @user.assignments.create!(mission: @mission2, role: "enumerator")
+    user.assignments.create!(mission: mission2, role: "enumerator")
 
     assert_redirect_after_mission_change_from(
-      from: "/en/m/mission1/option-sets/#{@option_set.id}",
+      from: "/en/m/mission1/option-sets/#{option_set.id}",
       to: "/en/m/mission2"
     )
   end
 
   it "user should be redirected to home screen if viewing new response but form not available in new mission" do
-    @form = create(:form, mission: @mission1)
+    form = create(:form, mission: mission1)
 
     # add this user to the other mission so the form index will be accessible
-    @user.assignments.create!(mission: @mission2, role: "coordinator")
+    user.assignments.create!(mission: mission2, role: "coordinator")
 
     assert_redirect_after_mission_change_from(
-      from: "/en/m/mission1/responses/new?form_id=#{@form.id}",
+      from: "/en/m/mission1/responses/new?form_id=#{form.id}",
       to: "/en/m/mission2"
     )
   end
 
   it "user should be redirected to home screen if current screen not permitted under new mission" do
     # add the user to the other mission as an enumerator so that the option_sets listing won't be allowed
-    @user.assignments.create!(mission: @mission2, role: "enumerator")
+    user.assignments.create!(mission: mission2, role: "enumerator")
 
     assert_redirect_after_mission_change_from(
       from: "/en/m/mission1/option-sets",
@@ -88,7 +87,7 @@ describe "redirect on mission change" do
   end
 
   def assert_redirect_after_mission_change_from(params)
-    login(@user)
+    login(user)
 
     get_s(params[:from])
 
