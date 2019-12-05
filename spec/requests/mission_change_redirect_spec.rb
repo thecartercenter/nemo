@@ -20,7 +20,7 @@ describe "redirect on mission change" do
     @user.assignments.create!(mission: @mission2, role: "coordinator")
 
     # Try multiple object types.
-    %w[form option_set].each do |type|
+    %w[form question option_set user].each do |type|
       @obj = create(type, mission: @mission1)
 
       path_chunk = type.tr("_", "-") << "s"
