@@ -146,6 +146,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         # get a human readable version of the value
         human_val = case options[:type]
         when :check_box
+          val = false if val.nil?
           @template.tbool(val)
 
         when :radio_buttons, :select
