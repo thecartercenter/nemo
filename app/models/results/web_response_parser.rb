@@ -62,15 +62,9 @@ module Results
     end
 
     def update_or_add_node(web_hash_node, tree_parent)
-      id = web_hash_node[:id]
-      raise SubmissionError, "Form item id invalid." unless item_in_mission?(web_hash_node[:questioning_id])
+      reject_invalid_options(web_hash_node)
 
-      # Verify all single- and multi-select options.
-      option_node_ids = [web_hash_node[:option_node_id]]
-      web_hash_node[:choices_attributes]&.each do |attrib|
-        option_node_ids << attrib[1][:option_node_id]
-      end
-      raise SubmissionError, "Option id invalid." unless options_in_mission?(option_node_ids)
+      id = web_hash_node[:id]
 
       # add
       if id.blank?
@@ -83,6 +77,18 @@ module Results
         existing_node._destroy = true if web_hash_node[:_destroy] == "true"
         existing_node
       end
+    end
+
+    # Raise an error if a Questioning or OptionNode references something invalid.
+    def reject_invalid_options(web_hash_node)
+      raise SubmissionError, "Form item id invalid." unless item_in_mission?(web_hash_node[:questioning_id])
+
+      # Verify all single- and multi-select options.
+      option_node_ids = [web_hash_node[:option_node_id]]
+      web_hash_node[:choices_attributes]&.each do |attrib|
+        option_node_ids << attrib[1][:option_node_id]
+      end
+      raise SubmissionError, "Option id invalid." unless options_in_mission?(option_node_ids)
     end
 
     def new_tree_node_attrs(web_hash_node, tree_parent)
