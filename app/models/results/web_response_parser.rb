@@ -117,8 +117,7 @@ module Results
     end
 
     def option_nodes_in_mission
-      @option_nodes_in_mission ||=
-        OptionNode.where(mission_id: @response.mission_id).pluck(:id).index_by(&:itself)
+      @option_nodes_in_mission ||= OptionNode.where(mission: @response.mission).pluck(:id).index_by(&:itself)
     end
   end
 end
