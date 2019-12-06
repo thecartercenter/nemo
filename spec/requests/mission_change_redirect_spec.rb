@@ -86,14 +86,14 @@ describe "redirect on mission change" do
     end
   end
 
-  def assert_redirect_after_mission_change_from(params)
+  def assert_redirect_after_mission_change_from(from:, to: nil, no_redirect: false)
     login(user)
 
-    get(params[:from])
+    get(from)
 
     # Then do a request for the same path but different mission
     # and make sure the redirect afterward is correct.
-    get(params[:from].gsub("mission1", "mission2"), params: {missionchange: 1})
+    get(from.gsub("mission1", "mission2"), params: {missionchange: 1})
 
     expect(flash[:error]).to be_nil, "Should be no error message for mission change redirects"
 
@@ -102,8 +102,8 @@ describe "redirect on mission change" do
     follow_redirect!
     expect(request.url).not_to match(/missionchange/)
 
-    unless params[:no_redirect]
-      expect(response).to redirect_to(params[:to])
+    unless no_redirect
+      expect(response).to redirect_to(to)
       follow_redirect!
     end
     expect(response).to be_successful
