@@ -30,6 +30,10 @@ describe "redirect on mission change" do
     it "user should be redirected to object listing for broadcast" do
       assert_redirect_for("broadcast", traits: [:with_recipient_users])
     end
+
+    it "user should be redirected to object listing for report" do
+      assert_redirect_for("standard_form_report", path_chunk: "reports")
+    end
   end
 
   it "user should be redirected to home screen if was viewing object but redirect to object listing is not permitted" do
@@ -88,10 +92,10 @@ describe "redirect on mission change" do
     end
   end
 
-  def assert_redirect_for(type, identifier: :id, traits: [])
+  def assert_redirect_for(type, path_chunk: nil, identifier: :id, traits: [])
     obj = create(type, *traits, mission: mission1)
 
-    path_chunk = type.tr("_", "-") << "s"
+    path_chunk ||= type.tr("_", "-") << "s"
     assert_redirect_after_mission_change_from(
       from: "/en/m/mission1/#{path_chunk}/#{obj.send(identifier)}",
       to: "/en/m/mission2/#{path_chunk}"
