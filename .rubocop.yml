@@ -64,6 +64,9 @@ Metrics/AbcSize:
 Metrics/PerceivedComplexity:
   Max: 10
 
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
 Style/AsciiComments:
   Enabled: false
 
