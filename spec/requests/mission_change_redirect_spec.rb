@@ -26,6 +26,10 @@ describe "redirect on mission change" do
     it "user should be redirected to object listing for response" do
       assert_redirect_for("response", identifier: :shortcode)
     end
+
+    it "user should be redirected to object listing for broadcast" do
+      assert_redirect_for("broadcast", traits: [:with_recipient_users])
+    end
   end
 
   it "user should be redirected to home screen if was viewing object but redirect to object listing is not permitted" do
@@ -84,8 +88,8 @@ describe "redirect on mission change" do
     end
   end
 
-  def assert_redirect_for(type, identifier: :id)
-    obj = create(type, mission: mission1)
+  def assert_redirect_for(type, identifier: :id, traits: [])
+    obj = create(type, *traits, mission: mission1)
 
     path_chunk = type.tr("_", "-") << "s"
     assert_redirect_after_mission_change_from(
