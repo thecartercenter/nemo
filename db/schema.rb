@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_22_175425) do
+ActiveRecord::Schema.define(version: 2019_12_06_205852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -200,8 +200,8 @@ ActiveRecord::Schema.define(version: 2019_11_22_175425) do
     t.string "number", limit: 10, null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_form_versions_on_code", unique: true
+    t.index ["form_id", "number"], name: "index_form_versions_on_form_id_and_number", unique: true
     t.index ["form_id"], name: "index_form_versions_on_form_id"
-    t.index ["number"], name: "index_form_versions_on_number", unique: true
   end
 
   create_table "forms", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

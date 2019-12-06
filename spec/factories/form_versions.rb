@@ -14,9 +14,9 @@
 #
 # Indexes
 #
-#  index_form_versions_on_code     (code) UNIQUE
-#  index_form_versions_on_form_id  (form_id)
-#  index_form_versions_on_number   (number) UNIQUE
+#  index_form_versions_on_code                (code) UNIQUE
+#  index_form_versions_on_form_id             (form_id)
+#  index_form_versions_on_form_id_and_number  (form_id,number) UNIQUE
 #
 # Foreign Keys
 #
