@@ -17,10 +17,14 @@ describe "redirect on mission change" do
     # Add this user to the other mission so the form index will be accessible.
     before { user.assignments.create!(mission: mission2, role: "coordinator") }
 
-    %w[form question questioning option_set user].each do |type|
+    %w[form question option_set user].each do |type|
       it "user should be redirected to object listing for #{type}" do
         assert_redirect_for(type)
       end
+    end
+
+    it "user should be redirected to object listing for questioning" do
+      assert_redirect_for("questioning", to_root: true)
     end
 
     it "user should be redirected to object listing for response" do
@@ -92,19 +96,16 @@ describe "redirect on mission change" do
     end
   end
 
-  def assert_redirect_for(type, path_chunk: nil, identifier: :id, traits: [], no_edit: false)
+  def assert_redirect_for(type, path_chunk: nil, to_root: false, identifier: :id, traits: [], no_edit: false)
     obj = create(type, *traits, mission: mission1)
 
     path_chunk ||= type.tr("_", "-") << "s"
-    assert_redirect_after_mission_change_from(
-      from: "/en/m/mission1/#{path_chunk}/#{obj.send(identifier)}",
-      to: "/en/m/mission2/#{path_chunk}"
-    )
+    from = "/en/m/mission1/#{path_chunk}/#{obj.send(identifier)}"
+    to = to_root ? "/en/m/mission2" : "/en/m/mission2/#{path_chunk}"
+
+    assert_redirect_after_mission_change_from(from: from, to: to)
     return if no_edit
-    assert_redirect_after_mission_change_from(
-      from: "/en/m/mission1/#{path_chunk}/#{obj.send(identifier)}/edit",
-      to: "/en/m/mission2/#{path_chunk}"
-    )
+    assert_redirect_after_mission_change_from(from: "#{from}/edit", to: to)
   end
 
   def assert_redirect_after_mission_change_from(from:, to: nil, no_redirect: false)

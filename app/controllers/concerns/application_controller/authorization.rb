@@ -29,8 +29,7 @@ module Concerns::ApplicationController::Authorization
 
     # else if there was just a mission change, we need to handle specially
     elsif flash[:missionchange]
-      # if the request was a CRUD, try redirecting to the index, or root if no permission
-      if Ability::CRUD.include?(exception.action) && current_ability.can?(:index, exception.subject.class)
+      if Ability::CRUD.include?(exception.action) && can_redirect_to_index(exception)
         redirect_to(controller: controller_name, action: :index)
       else
         redirect_to(mission_root_url)
@@ -67,5 +66,16 @@ module Concerns::ApplicationController::Authorization
 
   def offline_mode?
     configatron.offline_mode
+  end
+
+  private
+
+  def can_redirect_to_index(exception)
+    url_exists = (begin
+                    url_for(controller: controller_name, action: :index)
+                  rescue StandardError
+                    false
+                  end)
+    current_ability.can?(:index, exception.subject.class) && url_exists
   end
 end
