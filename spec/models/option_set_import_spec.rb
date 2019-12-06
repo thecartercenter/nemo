@@ -2,6 +2,7 @@
 
 require "rails_helper"
 
+# See also tabular_import_spec
 describe OptionSets::Import do
   let(:mission) { get_mission }
   let(:mission_id) { mission.id }
@@ -77,24 +78,6 @@ describe OptionSets::Import do
       expect(option_set.all_options).to include(
         have_attributes(canonical_name: "Aketi", latitude: 2.739529, longitude: 23.780851)
       )
-    end
-  end
-
-  context "with invalid file type" do
-    let(:filename) { "not_tabular.jpg" }
-
-    it "should correctly report error" do
-      expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["The uploaded file must be a valid XLSX-type Excel file."])
-    end
-  end
-
-  context "with older XLS file" do
-    let(:filename) { "old_format.xls" }
-
-    it "should correctly report error" do
-      expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["The uploaded file must be a valid XLSX-type Excel file."])
     end
   end
 
