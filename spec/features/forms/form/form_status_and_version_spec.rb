@@ -57,6 +57,12 @@ feature "form status and version display and changes", js: true do
     click_link("More settings")
     expect(page).to have_select("Minimum Accepted Version", selected: version2)
 
+    # Switch back to older version.
+    select(version1, from: "Minimum Accepted Version")
+    click_button("Save")
+    click_link("More settings")
+    expect(page).to have_select("Minimum Accepted Version", selected: version1)
+
     click_link("Pause")
     expect(page).to have_css("div#status", text: /Status Paused/)
     expect(page).not_to have_css(".top-action-links a", text: /Delete/)
@@ -76,14 +82,14 @@ feature "form status and version display and changes", js: true do
     expect(page).to have_css("div#status", text: /Status Draft/)
     click_link("More settings")
     expect(page).to have_content("Current Version #{version2}")
-    expect(page).to have_select("Minimum Accepted Version", selected: version2)
+    expect(page).to have_select("Minimum Accepted Version", selected: version1)
 
     # Going live again shouldn't change versions
     click_link("Go Live")
     expect(page).to have_css("div#status", text: /Status Live/)
     expect(page).to have_content("Current Version #{version2}")
     click_link("More settings")
-    expect(page).to have_select("Minimum Accepted Version", selected: version2)
+    expect(page).to have_select("Minimum Accepted Version", selected: version1)
   end
 
   scenario "changing status via save and go live button" do
