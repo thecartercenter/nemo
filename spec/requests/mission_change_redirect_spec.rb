@@ -19,14 +19,12 @@ describe "redirect on mission change" do
 
     %w[form question option_set user].each do |type|
       it "user should be redirected to object listing for #{type}" do
-        obj = create(type, mission: mission1)
-
-        path_chunk = type.tr("_", "-") << "s"
-        assert_redirect_after_mission_change_from(
-          from: "/en/m/mission1/#{path_chunk}/#{obj.id}",
-          to: "/en/m/mission2/#{path_chunk}"
-        )
+        assert_redirect_for(type)
       end
+    end
+
+    it "user should be redirected to object listing for response" do
+      assert_redirect_for("response", identifier: :shortcode)
     end
   end
 
@@ -84,6 +82,16 @@ describe "redirect on mission change" do
       get("/en?foo=bar&missionchange=1&bar=foo")
       expect(response).to redirect_to("/en?foo=bar&bar=foo")
     end
+  end
+
+  def assert_redirect_for(type, identifier: :id)
+    obj = create(type, mission: mission1)
+
+    path_chunk = type.tr("_", "-") << "s"
+    assert_redirect_after_mission_change_from(
+      from: "/en/m/mission1/#{path_chunk}/#{obj.send(identifier)}",
+      to: "/en/m/mission2/#{path_chunk}"
+    )
   end
 
   def assert_redirect_after_mission_change_from(from:, to: nil, no_redirect: false)
