@@ -29,24 +29,6 @@ module RequestSpecHelpers
     get(path, params: params[:params], headers: {"HTTP_AUTHORIZATION" => "Token token=#{params[:user].api_key}"})
   end
 
-  def get_s(path, opts = {})
-    if opts.empty?
-      get(path)
-    else
-      get(path, opts)
-    end
-    assert_response(:success)
-  end
-
-  def post_s(path, opts = {})
-    if opts.empty?
-      post(path)
-    else
-      post(path, opts)
-    end
-    assert_response(:success)
-  end
-
   # Needed for older request specs, maybe related to assert_select.
   # See http://blog.cynthiakiser.com/blog/page/5/
   def document_root_element

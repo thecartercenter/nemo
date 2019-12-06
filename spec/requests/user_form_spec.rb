@@ -15,7 +15,7 @@ describe "user form" do
 
       context "in basic mode" do
         before do
-          get_s(edit_user_path(@self, mode: nil, mission_name: nil))
+          get(edit_user_path(@self, mode: nil, mission_name: nil))
         end
 
         # These two role field tests make sure the change_assignments ability is protecting the role field.
@@ -28,7 +28,7 @@ describe "user form" do
 
       context "in mission mode" do
         before do
-          get_s(edit_user_path(@self, mode: "m", mission_name: get_mission.compact_name))
+          get(edit_user_path(@self, mode: "m", mission_name: get_mission.compact_name))
         end
 
         it "should show role field" do

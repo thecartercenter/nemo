@@ -15,7 +15,7 @@ describe "sms console", :sms do
     let(:qtypes) { %w[integer] }
 
     it "going to the page to create a new sms should succeed" do
-      get_s("/en/m/#{mission_name}/sms-tests/new")
+      get("/en/m/#{mission_name}/sms-tests/new")
     end
 
     it "submitting a test sms should succeed" do

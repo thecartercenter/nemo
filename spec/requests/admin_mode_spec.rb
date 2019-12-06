@@ -41,10 +41,10 @@ describe "AdminMode" do
 
   it "params admin_mode should be correct" do
     login(@admin)
-    get_s(basic_root_url)
+    get(basic_root_url)
     expect(response).to be_successful
     expect(request.params[:mode]).to be_nil
-    get_s("/en/admin")
+    get("/en/admin")
     expect(request.params[:mode]).to eq("admin")
   end
 
@@ -58,7 +58,7 @@ describe "AdminMode" do
   it "mission dropdown should not be visible in admin mode" do
     login(@admin)
     assert_select("select#change-mission")
-    get_s("/en/admin")
+    get("/en/admin")
 
     assert_select("select#change-mission", false)
 

@@ -13,7 +13,7 @@ describe "response checkout" do
 
     # login with user and edit response
     login(user)
-    get_s("/en/m/#{get_mission.compact_name}/responses/#{resp.shortcode}/edit")
+    get("/en/m/#{get_mission.compact_name}/responses/#{resp.shortcode}/edit")
 
     # check for warning that response was checked out by another user
     expect(flash[:notice].gsub(/#{I18n.t("response.checked_out")} /, "")).to eq(user_b.name)
@@ -31,7 +31,7 @@ describe "response checkout" do
 
     # login with user and edit response
     login(user)
-    get_s("/en/m/#{get_mission.compact_name}/responses/#{resp.shortcode}/edit")
+    get("/en/m/#{get_mission.compact_name}/responses/#{resp.shortcode}/edit")
 
     # check that there is no warning
     expect(flash[:notice]).to be_nil

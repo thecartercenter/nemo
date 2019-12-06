@@ -89,7 +89,7 @@ describe "redirect on mission change" do
   def assert_redirect_after_mission_change_from(params)
     login(user)
 
-    get_s(params[:from])
+    get(params[:from])
 
     # Then do a request for the same path but different mission
     # and make sure the redirect afterward is correct.

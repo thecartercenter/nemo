@@ -14,12 +14,12 @@ describe "Logout" do
   end
 
   it "redirect after logout from mission mode should be correct" do
-    get_s("/en/m/#{get_mission.compact_name}")
+    get("/en/m/#{get_mission.compact_name}")
     check_logout_link_and_redirect
   end
 
   it "redirect after logout from admin mode should be correct" do
-    get_s("/en/admin")
+    get("/en/admin")
     check_logout_link_and_redirect
   end
 
