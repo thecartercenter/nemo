@@ -609,7 +609,7 @@ en:
         recipient_ids: "If you enter user or user group names here, any incoming SMS responses will be forwarded to them automatically."
         authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an enumerator to spoof submissions."
         allow_incomplete: "If checked, allows forms with incomplete required questions to be submitted anyway (via web and ODK only). Enumerators using ODK must enter an override code (see the Settings page) to do so."
-        current_version_name: "Each form version has a 10-digit ID and a 3-letter code. The form versioning system is intended to indicate small changes in the form design so that observer's can update their copies of the form."
+        current_version_name: "Each form version has a 10-digit ID and a 3-letter code. The form versioning system is intended to indicate small changes in the form design so that enumerators can update their copies of the form."
         access_level: "Public: Any user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
         default_response_name: "Text entered here will be used as the default name of filled forms in ODK. You can enter $QuestionCode to include the value of a question in the form.\n\nFor example, entering:\n\n&nbsp;&nbsp;&nbsp;Survey for $VillageNum-$Household\n\nmight name the form:\n\n&nbsp;&nbsp;&nbsp;Survey for 7-Smith\n\nassuming you have questions with codes 'VillageNum' and 'Household'\n\nYou can also enter an XPath calculate expression by wrapping it with <code>calc()</code>:\n\n&nbsp;&nbsp;&nbsp;<code>calc($VillageNum + 100 / 2)</code>"
       mission:
