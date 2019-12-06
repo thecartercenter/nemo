@@ -122,5 +122,7 @@
 }
 
 .filters-select2-dropdown {
-  z-index: 9999;
+  // Above popover, below tooltip.
+  // https://getbootstrap.com/docs/4.0/layout/overview/#z-index
+  z-index: 1065 !important;
 }
