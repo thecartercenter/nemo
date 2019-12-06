@@ -17,7 +17,7 @@ describe "redirect on mission change" do
     # Add this user to the other mission so the form index will be accessible.
     before { user.assignments.create!(mission: mission2, role: "coordinator") }
 
-    %w[form question option_set user].each do |type|
+    %w[form question questioning option_set user].each do |type|
       it "user should be redirected to object listing for #{type}" do
         assert_redirect_for(type)
       end
