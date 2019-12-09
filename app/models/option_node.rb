@@ -39,7 +39,6 @@
 
 class OptionNode < ApplicationRecord
   include Replication::Replicable
-  include FormVersionable
   include MissionBased
 
   # Needs to be standardizable (with original_id) so we can find OptionNodes to link conditions to.

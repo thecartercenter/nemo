@@ -15,8 +15,7 @@ feature "settings regenerable fields", js: true do
   describe "override code" do
     scenario "can regenerate" do
       visit("/en/m/#{mission.compact_name}/settings")
-      expect_token_generated(".setting_override_code")
-      expect_token_regenerated(".setting_override_code")
+      expect_token_regenerated(".setting_override_code", existing: false)
     end
   end
 

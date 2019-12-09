@@ -49,7 +49,6 @@
 class FormItem < ApplicationRecord
   include TreeTraverseable
   include Replication::Replicable
-  include FormVersionable
   include MissionBased
 
   DISPLAY_IF_OPTIONS = %i[always all_met any_met].freeze

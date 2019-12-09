@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_19_223120) do
+ActiveRecord::Schema.define(version: 2019_12_06_205852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -194,14 +194,14 @@ ActiveRecord::Schema.define(version: 2019_11_19_223120) do
   create_table "form_versions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "code", limit: 255, null: false
     t.datetime "created_at", null: false
+    t.boolean "current", default: true, null: false
     t.uuid "form_id", null: false
-    t.boolean "is_current", default: true, null: false
-    t.boolean "is_oldest_accepted", default: true, null: false
+    t.boolean "minimum", default: true, null: false
     t.string "number", limit: 10, null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_form_versions_on_code", unique: true
+    t.index ["form_id", "number"], name: "index_form_versions_on_form_id_and_number", unique: true
     t.index ["form_id"], name: "index_form_versions_on_form_id"
-    t.index ["number"], name: "index_form_versions_on_number", unique: true
   end
 
   create_table "forms", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -209,7 +209,6 @@ ActiveRecord::Schema.define(version: 2019_11_19_223120) do
     t.boolean "allow_incomplete", default: false, null: false
     t.boolean "authenticate_sms", default: true, null: false
     t.datetime "created_at", null: false
-    t.uuid "current_version_id"
     t.string "default_response_name"
     t.integer "downloads"
     t.uuid "mission_id"
@@ -222,8 +221,6 @@ ActiveRecord::Schema.define(version: 2019_11_19_223120) do
     t.string "status", default: "draft", null: false
     t.datetime "status_changed_at"
     t.datetime "updated_at", null: false
-    t.boolean "upgrade_needed", default: false, null: false
-    t.index ["current_version_id"], name: "index_forms_on_current_version_id"
     t.index ["mission_id"], name: "index_forms_on_mission_id"
     t.index ["original_id"], name: "index_forms_on_original_id"
     t.index ["root_id"], name: "index_forms_on_root_id", unique: true
@@ -627,7 +624,6 @@ ActiveRecord::Schema.define(version: 2019_11_19_223120) do
   add_foreign_key "form_items", "questions", name: "form_items_question_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "forms", "form_items", column: "root_id", name: "forms_root_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_original_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "media_objects", "answers", name: "media_objects_answer_id_fkey", on_update: :restrict, on_delete: :restrict

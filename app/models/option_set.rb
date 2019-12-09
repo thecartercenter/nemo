@@ -41,7 +41,6 @@ class OptionSet < ApplicationRecord
 
   include Replication::Replicable
   include Replication::Standardizable
-  include FormVersionable
   include MissionBased
 
   SMS_GUIDE_FORMATTING_OPTIONS = %w[auto inline appendix treat_as_text].freeze

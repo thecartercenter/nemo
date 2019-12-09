@@ -127,7 +127,7 @@ module Sms
 
         # If form version outdated we must specify the form AND form_code in the error message
         # since they are different.
-        if version.number.to_i < form.minimum_version_number
+        if version.number < form.minimum_version_number
           raise_decoding_error("form_version_outdated", form: form, form_code: code)
         end
 
@@ -225,7 +225,7 @@ module Sms
         # add in the form and form_code in case they're needed
         if @form
           options[:form] ||= @form
-          options[:form_code] ||= @form.current_version.code
+          options[:form_code] ||= @form.code
         end
 
         options[:user] ||= @user if @user

@@ -51,7 +51,6 @@
 # A question on a form
 class Question < ApplicationRecord
   include Translatable
-  include FormVersionable
   include Replication::Replicable
   include Replication::Standardizable
   include MissionBased

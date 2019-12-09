@@ -5,6 +5,6 @@ class FormVersionDecorator < ApplicationDecorator
 
   # Version name for displaying to user
   def name
-    "#{number}, #{code}"
+    "#{number}-#{code}"
   end
 end

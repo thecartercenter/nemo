@@ -107,7 +107,7 @@ class Sms::Processor
     end
 
     # throw in the form_code if it's not there already and we have the form
-    options[:form_code] ||= options[:form].current_version.code if options[:form]
+    options[:form_code] ||= options[:form].code if options[:form]
 
     # get the reply language (if we have the user, use their pref_lang; if not, use default)
     lang = options[:user] && options[:user].pref_lang ? options[:user].pref_lang.to_sym : I18n.default_locale

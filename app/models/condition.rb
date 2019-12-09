@@ -38,7 +38,6 @@
 # Represents a condition in a question's display logic or skip logic.
 class Condition < ApplicationRecord
   include MissionBased
-  include FormVersionable
   include Replication::Replicable
 
   # Condition ranks are currently not editable, but they provide a source of deterministic ordering
