@@ -1,5 +1,6 @@
-class ElmoFormBuilder < ActionView::Helpers::FormBuilder
+# frozen_string_literal: true
 
+class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:type] - The type of field to display
   #   (:text (default), :check_box, :radio_buttons, :textarea, :password, :select, :timezone, :file, :number)
   # options[:required] - Whether the field input is required.
@@ -30,7 +31,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     return "" if options[:read_only] && options[:type] == :password
 
     # get object errors (also look under association attrib if field_name ends in _id)
-    errors = @object.errors[field_name] + (field_name =~ /^(.+)_id$/ ? @object.errors[$1] : [])
+    errors = @object.errors[field_name] + (field_name =~ /^(.+)_id$/ ? @object.errors[Regexp.last_match(1)] : [])
 
     wrapper_classes = ["form-field"]
     wrapper_classes << options[:wrapper_class]
@@ -50,7 +51,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def submit(label = nil, options = {})
-    # Get form-level read_only value if it's not explicitly given for this field, or if the form_mode is :show.
+    # Get form-level read_only value if it's not explicitly given for this field,
+    # or if the form_mode is :show.
     # We do not respect the field-level override if form_mode is :show.
     options[:read_only] = read_only? if options[:read_only].nil? || form_mode == :show
 
@@ -106,7 +108,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def read_only?
-    options.has_key?(:read_only) ? options[:read_only] : form_mode == :show
+    options.key?(:read_only) ? options[:read_only] : form_mode == :show
   end
 
   def form_mode
@@ -146,15 +148,13 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         # get a human readable version of the value
         human_val = case options[:type]
         when :check_box
+          val = false if val.nil?
           @template.tbool(val)
 
         when :radio_buttons, :select
           # grab selected option value from options set
-          if option = options[:options].find { |o| o[1].to_s == val.to_s }
-            option[0]
-          else
-            ""
-          end
+          option = options[:options].find { |o| o[1].to_s == val.to_s }
+          option ? option[0] : ""
 
         when :file
           val&.original_filename
@@ -164,18 +164,14 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
         # show plain field value by default
         else
-          if val.present? && options[:link]
-            @template.link_to(val, options[:link])
-          else
-            val
-          end
+          val.present? && options[:link] ? @template.link_to(val, options[:link]) : val
         end
 
         # fall back to "[None]" if we have no value to show
         human_val = "[#{@template.t('common.none')}]" if human_val.blank?
 
         # render a div with the human val, and embed the real val in a data attrib if it differs
-        @template.content_tag(:div, human_val, class: "ro-val", :'data-val' => val != human_val ? val : nil)
+        @template.content_tag(:div, human_val, class: "ro-val", 'data-val': val != human_val ? val : nil)
 
       else
         tag_options = options.slice(:id, :data) # Include these attribs with all tags, if given.
@@ -197,7 +193,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           # build set of radio buttons based on options
           safe_join(
             options[:options].map { |o| radio_button(field_name, o, tag_options) + o },
-            "&nbsp;&nbsp;")
+            "&nbsp;&nbsp;"
+          )
 
         when :textarea
           text_area(field_name, tag_options)
@@ -254,7 +251,11 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       # so for a field_name called 'name' in read_only mode,
       # we'd try activerecord.hints.themodel.name.read_only, then just .name
       # if all fail then we return ''
-      keys_to_try = [:"#{field_name}.#{options[:read_only] ? "read_only" : "editable"}", field_name.to_sym, ""]
+      keys_to_try = [
+        :"#{field_name}.#{options[:read_only] ? "read_only" : "editable"}",
+        field_name.to_sym,
+        ""
+      ]
       options[:hint] = I18n.t(keys_to_try.first,
         scope: [:activerecord, :hints, @object.class.model_name.i18n_key],
         default: keys_to_try.drop(1))
@@ -264,10 +265,12 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     if options[:hint].blank?
       ""
     else
-      # run the hint text through simple format, but no need to sanitize since we don't want to lose links
+      # run the hint text through simple format,
+      # but no need to sanitize since we don't want to lose links
       # AND we know this text will not be coming from the user
-      # We also need to be careful not to allow any double quotes as this value will be included in a HTML attrib.
-      @template.simple_format(options[:hint], {}, sanitize: false).gsub('"', "'")
+      # We also need to be careful not to allow any double quotes
+      # as this value will be included in a HTML attrib.
+      @template.simple_format(options[:hint], {}, sanitize: false).tr('"', "'")
     end
   end
 end

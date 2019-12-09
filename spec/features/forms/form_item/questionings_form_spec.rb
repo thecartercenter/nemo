@@ -128,14 +128,35 @@ describe "questionings form", js: true  do
     end
 
     context "with live form" do
-      let(:form) { create(:form, :live, question_types: %w[text text]) }
+      let(:question_types) { %w[text text] }
+      let(:form) { create(:form, :live, question_types: question_types) }
 
       it "should display all fields as not editable" do
         visit(edit_qing_path)
+        expect_visible("required", true)
         expect_editable("required", false)
+        expect_visible("hidden", true)
         expect_editable("hidden", false)
+        expect_visible("display_logic", true)
         expect_editable("display_logic", false, field_type: "select")
+        expect_visible("skip_logic", true)
         expect_editable("skip_logic", false, field_type: "select")
+      end
+
+      context "with media question" do
+        let(:question_types) { %w[text image] }
+
+        it "should display all fields as not editable" do
+          visit(edit_qing_path)
+          expect_visible("required", true)
+          expect_editable("required", false)
+          expect_visible("hidden", true)
+          expect_editable("hidden", false)
+          expect_visible("display_logic", true)
+          expect_editable("display_logic", false, field_type: "select")
+          expect_visible("skip_logic", true)
+          expect_editable("skip_logic", false, field_type: "select")
+        end
       end
     end
   end
