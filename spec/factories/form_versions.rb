@@ -3,20 +3,20 @@
 #
 # Table name: form_versions
 #
-#  id                 :uuid             not null, primary key
-#  code               :string(255)      not null
-#  is_current         :boolean          default(TRUE), not null
-#  is_oldest_accepted :boolean          default(TRUE), not null
-#  number             :string(10)       not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  form_id            :uuid             not null
+#  id         :uuid             not null, primary key
+#  code       :string(255)      not null
+#  current    :boolean          default(TRUE), not null
+#  minimum    :boolean          default(TRUE), not null
+#  number     :string(10)       not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  form_id    :uuid             not null
 #
 # Indexes
 #
-#  index_form_versions_on_code     (code) UNIQUE
-#  index_form_versions_on_form_id  (form_id)
-#  index_form_versions_on_number   (number) UNIQUE
+#  index_form_versions_on_code                (code) UNIQUE
+#  index_form_versions_on_form_id             (form_id)
+#  index_form_versions_on_form_id_and_number  (form_id,number) UNIQUE
 #
 # Foreign Keys
 #

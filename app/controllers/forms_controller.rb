@@ -155,6 +155,14 @@ class FormsController < ApplicationController
     redirect_after_status_change
   end
 
+  def increment_version
+    @form.increment_version
+    render(json: {
+      value: @form.current_version.decorate.name,
+      minimum_version_options: @form.decorate.minimum_version_options
+    })
+  end
+
   # shows the form to either choose existing questions or create a new one to add
   def choose_questions
     authorize!(:add_questions, @form)
@@ -227,9 +235,6 @@ class FormsController < ApplicationController
     # We need this array only when in mission mode since it's for the API permissions which are not
     # shown in admin mode.
     @users = User.assigned_to(current_mission).by_name unless admin_mode?
-    @possible_versions = @form.versions.order(:number).reverse.map do |version|
-      [version.decorate.name, version.id]
-    end
     render(:form)
   end
 
@@ -239,7 +244,7 @@ class FormsController < ApplicationController
 
   def form_params
     params.require(:form).permit(:name, :smsable, :allow_incomplete, :default_response_name,
-      :oldest_accepted_version_id, :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
+      :minimum_version_id, :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
   end
 
   def redirect_after_status_change

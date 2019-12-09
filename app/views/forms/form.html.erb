@@ -1,8 +1,5 @@
 <% @title_args = {name: @form.name, standardized: @form.standardized?} %>
 <% content_for(:title_content) do %>
-  <% if @form.published? %>
-    <%= title_badge("#{t("activerecord.attributes.form.version")}: #{@form.code}") %>
-  <% end %>
   <%# For some inexplicable reason, without this span,
       rspec ./spec/features/forms/form/item_edit_spec.rb:117 fails. Tried to isolate what it is,
       best I could figure out is that it's a combination of the padding and font size.
@@ -24,6 +21,11 @@
 
       <%= f.field(:name, required: true, read_only: cannot?(:rename, form)) %>
       <%= f.field(:status, content: form.status_with_icon) %>
+      <% unless form.current_version.nil? %>
+        <%= f.regenerable_field(:current_version_name,
+              action: :increment_version, link_i18n_key: "form.increment_version",
+              confirm: t("form.increment_version_warning")) %>
+      <% end %>
 
       <% if admin_mode? %>
         <ul class="admin-stats">
@@ -35,11 +37,11 @@
       <% unless admin_mode? %>
         <div class="more-settings"><a href="#"><%= t("common.more_settings") %></a></div>
         <div class="setting-fields">
+          <%= f.field(:minimum_version_id, partial: "minimum_version") unless form.minimum_version_id.nil? %>
           <%= f.field(:default_response_name) %>
           <%= f.field(:access_level, partial: "form_access_level") %>
           <%= f.field(:allow_incomplete, type: :check_box, read_only: form.published?) %>
           <%= f.field(:smsable, type: :check_box)  %>
-          <%= f.field(:oldest_accepted_version_id, partial: "oldest_accepted_version") unless form.oldest_accepted_version_id.nil? %>
           <div class="sms-fields">
             <%= f.field(:sms_relay, type: :check_box) %>
             <%= f.field(:recipient_ids, type: :select, multiple: true, prompt: false,
@@ -70,8 +72,9 @@
     new ELMO.Views.FormSettingsView(<%=json(
       recipient_options_url: possible_recipients_broadcasts_path
     )%>);
+    new ELMO.Views.ReturnToDraftView(<%= json(keyword: t("form.return_to_draft.modal.override")) %>);
+    new ELMO.Views.FormMinimumVersionView();
   <% end %>
-  new ELMO.Views.ReturnToDraftView(<%= json(keyword: t("form.return_to_draft.modal.override")) %>);
   new ELMO.Views.PrintFormView();
   // Assigning view to variable for testing form items
   ELMO.formItemsView = new ELMO.Views.FormItemsView(<%=json(

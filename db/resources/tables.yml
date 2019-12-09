@@ -162,11 +162,6 @@ forms:
       fields: ["deleted_at"]
   foreign_keys:
     actual:
-      current_version_id:
-        foreign_class: FormVersion
-        foreign_table: form_versions
-        on_delete: nullify
-        name: forms_current_version_id_fkey
       mission_id:
         foreign_class: Mission
         foreign_table: missions

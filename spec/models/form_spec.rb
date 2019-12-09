@@ -17,28 +17,24 @@
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
 #  status_changed_at     :datetime
-#  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  current_version_id    :uuid
 #  mission_id            :uuid
 #  original_id           :uuid
 #  root_id               :uuid
 #
 # Indexes
 #
-#  index_forms_on_current_version_id  (current_version_id)
-#  index_forms_on_mission_id          (mission_id)
-#  index_forms_on_original_id         (original_id)
-#  index_forms_on_root_id             (root_id) UNIQUE
-#  index_forms_on_status              (status)
+#  index_forms_on_mission_id   (mission_id)
+#  index_forms_on_original_id  (original_id)
+#  index_forms_on_root_id      (root_id) UNIQUE
+#  index_forms_on_status       (status)
 #
 # Foreign Keys
 #
-#  forms_current_version_id_fkey  (current_version_id => form_versions.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_mission_id_fkey          (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  forms_original_id_fkey         (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_root_id_fkey             (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_original_id_fkey  (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
+#  forms_root_id_fkey      (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 
@@ -191,20 +187,20 @@ describe Form do
   describe "publish and upgrade" do
     it "should set version flags on first publish" do
       expect(form.current_version).to be(nil)
-      expect(form.oldest_accepted_version).to be(nil)
+      expect(form.minimum_version).to be(nil)
       form.update_status(:live)
       expect(form.current_version).not_to be(nil)
-      expect(form.oldest_accepted_version).to eq(form.current_version)
+      expect(form.minimum_version).to eq(form.current_version)
     end
 
     it "should change version flags on upgrade" do
       form.update_status(:live)
-      oldest1 = form.oldest_accepted_version
+      oldest1 = form.minimum_version
       current1 = form.current_version
       expect(oldest1).to eq(current1)
 
-      form.upgrade_version!
-      oldest2 = form.oldest_accepted_version
+      form.increment_version
+      oldest2 = form.minimum_version
       current2 = form.current_version
       # Oldest accepted shouldn't change, but current should update.
       expect(oldest2).to eq(oldest1)
@@ -213,11 +209,11 @@ describe Form do
 
     it "should have new version values on upgrade" do
       form.update_status(:live)
-      code1 = form.current_version.code
-      number1 = form.current_version.number
-      form.upgrade_version!
-      code2 = form.current_version.code
-      number2 = form.current_version.number
+      code1 = form.code
+      number1 = form.number
+      form.increment_version
+      code2 = form.code
+      number2 = form.number
       expect(code1).not_to match(code2)
       expect(number1).to be < number2
 

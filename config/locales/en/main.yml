@@ -399,9 +399,10 @@ en:
         recipient_ids: "SMS Forward Recipients"
         authenticate_sms: "Authenticate SMS?"
         updated_at: "Last Modified"
-        version: "Version"
+        current_version_name: "Current Version"
         item_list_heading: "Questions"
         default_response_name: "Default Response Name"
+        minimum_version_id: "Minimum Accepted Version"
       mission:
         compact_name: "Compact Name"
         locked: "Locked?"
@@ -608,7 +609,7 @@ en:
         recipient_ids: "If you enter user or user group names here, any incoming SMS responses will be forwarded to them automatically."
         authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an enumerator to spoof submissions."
         allow_incomplete: "If checked, allows forms with incomplete required questions to be submitted anyway (via web and ODK only). Enumerators using ODK must enter an override code (see the Settings page) to do so."
-        version: "The current version number and letter code."
+        current_version_name: "Each form version has a 10-digit ID and a 3-letter code. The form versioning system is intended to indicate small changes in the form design so that enumerators can update their copies of the form."
         access_level: "Public: Any user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
         default_response_name: "Text entered here will be used as the default name of filled forms in ODK. You can enter $QuestionCode to include the value of a question in the form.\n\nFor example, entering:\n\n&nbsp;&nbsp;&nbsp;Survey for $VillageNum-$Household\n\nmight name the form:\n\n&nbsp;&nbsp;&nbsp;Survey for 7-Smith\n\nassuming you have questions with codes 'VillageNum' and 'Household'\n\nYou can also enter an XPath calculate expression by wrapping it with <code>calc()</code>:\n\n&nbsp;&nbsp;&nbsp;<code>calc($VillageNum + 100 / 2)</code>"
       mission:
@@ -783,9 +784,7 @@ en:
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         option_sets/import:
           general: "Option Set import is invalid (see below)."
-          wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
           blank_interior_cell: "Error on row %{row_num}: blank interior cell."
-          no_rows: "No rows to import."
           option_too_long: "Error on row %{row_num}: options can't be more than %{limit} characters."
           header_too_long: "Error on row %{row_num}: headers can't be more than %{limit} characters."
         question:
@@ -1277,6 +1276,8 @@ en:
     clone_success: "Form '%{form_name}' cloned successfully."
     no_mission: "No Misison"
     no_questions_yet: "No questions yet."
+    increment_version: "Increment Version"
+    increment_version_warning: "Are you sure you want to increment this form's version? Older versions will still be accepted unless you change the Minimum Accepted Version attribute below."
     invalid_drop_location:
       parent_must_be_group: "The parent must be a group."
       max_depth: "Groups can't be children of other groups."
@@ -2213,6 +2214,12 @@ en:
       few: "There were %{count} errors."
       many: "There were %{count} errors."
       other: "There were %{count} errors."
+
+  tabular_import:
+    errors:
+      wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
+      no_rows: "No rows to import."
+      bad_csv: "There was an issue with your CSV file: %{msg}"
 
   unauthorized:
     default: "You are not authorized to access that page or operation."

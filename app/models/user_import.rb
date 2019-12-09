@@ -10,24 +10,25 @@ class UserImport < TabularImport
   attr_accessor :col_idx_to_attr_map
   attr_reader :users
 
-  def run
-    data = Roo::Spreadsheet.open(file).parse
-    return unless parse_headers(data.shift)
+  protected
 
-    User.transaction do
-      parse_rows(data).each_with_index do |row, index|
-        row[:assignments] = [Assignment.new(mission_id: mission_id, role: User::ROLES.first)]
-        user = User.create(row)
-        copy_validation_errors_for_row(index + 2, user.errors) if user.invalid?
-        add_too_many_errors(index + 2) && break if run_errors.count >= IMPORT_ERROR_CUTOFF
+  def process_data
+    return unless parse_headers(sheet)
+    parse_rows(sheet).each_with_index do |row, index|
+      row[:assignments] = [Assignment.new(mission_id: mission_id, role: User::ROLES.first)]
+      user = User.create(row)
+      copy_validation_errors_for_row(index + 2, user.errors) if user.invalid?
+      if run_errors.count >= IMPORT_ERROR_CUTOFF
+        add_too_many_errors(index + 2)
+        break
       end
-      raise ActiveRecord::Rollback unless succeeded?
     end
   end
 
   private
 
-  def parse_headers(row)
+  def parse_headers(sheet)
+    row = sheet.row(1)
     invalid_headers = []
     self.col_idx_to_attr_map = row.map.with_index do |header, col_idx|
       header = header.to_s.strip.presence # Col values may be numbers
@@ -51,8 +52,9 @@ class UserImport < TabularImport
     @human_to_symbol_map ||= EXPECTED_HEADERS.map { |h| [User.human_attribute_name(h).downcase, h] }.to_h
   end
 
-  def parse_rows(rows)
-    rows.map do |row|
+  def parse_rows(sheet)
+    (2..sheet.last_row).map do |row_num|
+      row = sheet.row(row_num)
       next(nil) if row.all?(&:blank?)
       attributes = row_to_attr_map(row)
       phones_to_string(attributes)

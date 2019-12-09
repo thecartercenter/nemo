@@ -4,7 +4,7 @@
 class TabularImport
   include ActiveModel::Model
 
-  attr_accessor :file, :name, :mission_id, :mission, :run_errors
+  attr_accessor :file, :name, :mission_id, :mission, :run_errors, :sheet
 
   validates :file, presence: true
 
@@ -12,6 +12,16 @@ class TabularImport
     super
     self.mission = Mission.find(mission_id) if mission_id.present?
     self.run_errors = []
+  end
+
+  def run
+    return unless open_sheet
+    ApplicationRecord.transaction do
+      process_data
+      raise ActiveRecord::Rollback unless succeeded?
+    end
+  rescue CSV::MalformedCSVError => e
+    add_run_error(:bad_csv, msg: e.to_s)
   end
 
   def succeeded?
@@ -24,11 +34,20 @@ class TabularImport
 
   protected
 
+  def open_sheet
+    self.sheet = Roo::Spreadsheet.open(file).sheet(0)
+  rescue TypeError, ArgumentError => error
+    raise error unless /not an Excel 2007 file|Can't detect the type/.match?(error.to_s)
+    add_run_error(:wrong_type)
+  end
+
   def add_run_error(message, opts = {})
     if message.is_a?(Symbol)
+      opts = opts.merge(default: :"tabular_import.errors.#{message}")
       message = I18n.t("activerecord.errors.models.#{model_name.i18n_key}.#{message}", opts)
     end
     run_errors << message
+    false
   end
 
   def add_run_errors(errors)

@@ -17,28 +17,24 @@
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
 #  status_changed_at     :datetime
-#  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  current_version_id    :uuid
 #  mission_id            :uuid
 #  original_id           :uuid
 #  root_id               :uuid
 #
 # Indexes
 #
-#  index_forms_on_current_version_id  (current_version_id)
-#  index_forms_on_mission_id          (mission_id)
-#  index_forms_on_original_id         (original_id)
-#  index_forms_on_root_id             (root_id) UNIQUE
-#  index_forms_on_status              (status)
+#  index_forms_on_mission_id   (mission_id)
+#  index_forms_on_original_id  (original_id)
+#  index_forms_on_root_id      (root_id) UNIQUE
+#  index_forms_on_status       (status)
 #
 # Foreign Keys
 #
-#  forms_current_version_id_fkey  (current_version_id => form_versions.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_mission_id_fkey          (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  forms_original_id_fkey         (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_root_id_fkey             (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_original_id_fkey  (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
+#  forms_root_id_fkey      (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 
@@ -46,7 +42,6 @@
 class Form < ApplicationRecord
   include Replication::Replicable
   include Replication::Standardizable
-  include FormVersionable
   include MissionBased
 
   def self.receivable_association
@@ -69,10 +64,9 @@ class Form < ApplicationRecord
   before_validation :normalize
   after_create :create_root_group
   before_destroy :destroy_items
-  before_destroy :nullify_current_version_foreign_key
 
-  attr_writer :oldest_accepted_version_id
-  after_save :update_oldest_accepted
+  attr_writer :minimum_version_id
+  after_save :update_minimum
 
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
@@ -94,15 +88,16 @@ class Form < ApplicationRecord
     :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
   delegate :number, to: :current_version
+  delegate :number, to: :minimum_version, prefix: true, allow_nil: true
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-             dont_copy: %i[status status_changed_at downloads upgrade_needed
-                           smsable current_version_id allow_incomplete access_level]
+             dont_copy: %i[status status_changed_at downloads
+                           smsable allow_incomplete access_level]
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
-    Form.where(id: form_ids).update_all(original_id: nil, root_id: nil, current_version_id: nil)
+    Form.where(id: form_ids).update_all(original_id: nil, root_id: nil)
     FormVersion.where(form_id: form_ids).delete_all
   end
 
@@ -156,10 +151,6 @@ class Form < ApplicationRecord
 
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899_999_999) + 100_000_000}"
-  end
-
-  def version
-    current_version.try(:code) || ""
   end
 
   def data?
@@ -237,9 +228,8 @@ class Form < ApplicationRecord
     # Don't run validations in case form has become invalid due to a migration or other change.
     update_columns(status: new_status, status_changed_at: Time.current)
 
-    # TODO: remove when manual form versioning removed
-    return unless live? && (upgrade_needed? || current_version.nil?)
-    upgrade_version!
+    # Ensure the form has a version if it's becoming live.
+    increment_version if live? && current_version.nil?
   end
 
   def live?
@@ -265,44 +255,31 @@ class Form < ApplicationRecord
   end
 
   def current_version
-    versions.current.first
+    versions.find_by(current: true)
   end
 
-  def oldest_accepted_version_id
-    return @oldest_accepted_version_id if defined?(@oldest_accepted_version_id)
-    persisted_oldest_accepted_version&.id
+  # This getter serves a form field.
+  def minimum_version_id
+    return @minimum_version_id if defined?(@minimum_version_id)
+    persisted_minimum_version&.id
   end
 
-  def oldest_accepted_version
-    versions.find(oldest_accepted_version_id) if oldest_accepted_version_id.present?
+  # Finds the minimum version by checking the ephemeral attribute instead of the DB in case
+  # a new value hasn't been persisted yet. Use persisted_minimum_version to get the persisted one.
+  def minimum_version
+    versions.find(minimum_version_id) if minimum_version_id.present?
   end
 
-  def minimum_version_number
-    oldest_accepted_version&.number&.to_i
-  end
-
-  # upgrades the version of the form and saves it
-  # also resets the download count
-  def upgrade_version!
+  # Creates a new version code/number for the form. Also resets the download count to zero.
+  def increment_version
     raise "standard forms should not be versioned" if standard?
 
-    has_current_version = current_version.present?
-    current_version.update!(is_current: false) if has_current_version
-    versions.create!(is_current: true, is_oldest_accepted: !has_current_version)
+    had_current_version = current_version.present?
+    current_version.update!(current: false) if had_current_version
+    versions.create!(current: true, minimum: !had_current_version)
 
-    # since we've upgraded, we can lower the upgrade flag
-    self.upgrade_needed = false
-
-    # reset downloads since we are only interested in downloads of present version
-    self.downloads = 0
-
-    save(validate: false)
-  end
-
-  def flag_for_upgrade!
-    raise "standard forms should not be versioned" if standard?
-    self.upgrade_needed = true
-    save(validate: false)
+    # Reset downloads since we are only interested in downloads of present version
+    update_column(:downloads, 0)
   end
 
   # efficiently gets the number of answers for the given questioning on this form
@@ -335,16 +312,15 @@ class Form < ApplicationRecord
     save!
   end
 
-  def update_oldest_accepted
-    if defined?(@oldest_accepted_version_id)
-      persisted_oldest_accepted_version&.update!(is_oldest_accepted: false)
-      oldest_accepted_version.update!(is_oldest_accepted: true)
-    end
+  def update_minimum
+    return unless defined?(@minimum_version_id)
+    persisted_minimum_version&.update!(minimum: false)
+    minimum_version.update!(minimum: true)
   end
 
-  # The persisted version, regardless of ephemeral @oldest_accepted_version_id
-  def persisted_oldest_accepted_version
-    versions.oldest_accepted.first
+  # The persisted version, regardless of ephemeral @minimum_version_id
+  def persisted_minimum_version
+    versions.find_by(minimum: true)
   end
 
   # Nullifies the root_id foreign key and then deletes all items before deleting the form.
@@ -354,10 +330,6 @@ class Form < ApplicationRecord
     group_to_destroy = root_group
     update_columns(root_id: nil)
     group_to_destroy.destroy
-  end
-
-  def nullify_current_version_foreign_key
-    update_columns(current_version_id: nil)
   end
 
   def name_unique_per_mission
