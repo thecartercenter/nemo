@@ -85,7 +85,6 @@ es:
     email: "Correo Electrónico"
     hint: "Pista"
     password: "Contraseña"
-    published: "¿Publicado?"
     questions: "Preguntas"
     title: "Título"
     type: "Tipo"
@@ -228,7 +227,6 @@ es:
         responses: "Respuestas "
         smsable: "¿Se puede enviar por SMS?"
         updated_at: "Última Modificación"
-        version: "Versión"
         item_list_heading: "Preguntas"
       mission:
         compact_name: "Nombre Compacto"
@@ -246,7 +244,6 @@ es:
         code: "Código"
         answer_count: "Respuestas"
         form_count: "Formularios"
-        published: "¿Publicado?"
         key: "¿Es una Pregunta Clave?"
         minimum: "Mínimo"
         maximum: "Máximo"
@@ -319,58 +316,10 @@ es:
         incomplete: "¿Incompleto?"
       user:
         admin: "¿Administrador?"
-    action_links:
-      broadcast:
-        index: "Lista de Emisiones"
-      form:
-        new: "Crear Nuevo Formulario"
-        index: "Listado de Formularios"
-        show: "Ver Formulario"
-        edit: "Editar Formulario"
-        destroy: "Eliminar Formulario"
-        publish: "Publicar Formulario"
-        unpublish: "Deshacer Publicación del Formulario"
-        print: "Imprimir Formulario"
-      mission:
-        new: "Crear una Nueva Misión"
-        index: "Enumerar las Misiones"
-        show: "Ver Misiones"
-        edit: "Editar Misiones"
-        destroy: "Eliminar Misión"
-      option_set:
-        new: "Crear un Nuevo Conjunto de Opciones"
-        index: "Enumerar el Conjunto de Opciones"
-        show: "Ver el Conjunto de Opciones"
-        edit: "Editar el Conjunto de Opciones "
-        destroy: "Borrar el Conjunto de Opciones "
-      question:
-        new: "Crear Nueva Pregunta "
-        index: "Enumerar Preguntas"
-        show: "Ver Pregunta "
-        edit: "Editar Pregunta "
-        destroy: "Eliminar Pregunta "
-      report/report:
-        new: "Crear un Nuevo Informe "
-        index: "Enumerar los Informes"
-        show: "Ver Informe"
-        edit: "Editar Informe"
-        destroy: "Eliminar Informe"
-      response:
-        index: "Enumerar Respuestas"
-        show: "Ver Respuesta"
-        edit: "Editar Respuesta"
-        destroy: "Eliminar Respuesta"
-      user:
-        new: "Crear Nuevo Usuario "
-        index: "Enumerar Usuarios"
-        show: "Ver Usuario"
-        edit: "Editar Usuario"
-        destroy: "Eliminar el Usuario "
     hints:
       form:
         name: "Un nombre descriptivo para el formulario"
         smsable: "Si el formulario acepta envíos SMS. Esto puede afectar cuando el número de versión sea incrementado."
-        version: "El número de la versión actual y código de letras."
       mission:
         name: "Un nombre para esta Misión. Un máximo de 32 caracteres. Debe ser único. Recuerde incluir del año, en caso de que sea una misión en el futuro con el mismo nombre."
         locked: "Si una misión está bloqueadas, las Respuestas y los Formularios no se puede crear o editar y los Usuarios no se pueden agregar o eliminar."
@@ -457,8 +406,6 @@ es:
           all_required: "Todos los campos de con condición son obligatorios."
         form:
           cant_delete_if_has_responses: "No se puede eliminar este formulario porque tiene respuestas asociadas."
-          cant_delete_published: "Un Formulario publicado no se puede eliminar."
-          cant_edit_published: "Un Formulario publicado no se puede editar."
           ranks_break_conditions: "Las nuevas clasificaciones invalidan una o más condiciones."
           general: "Formulario no es válido (vea a continuación)."
         mission:
@@ -468,8 +415,6 @@ es:
           general: "Misión es inválida (vea a continuación)."
         option:
           cant_delete_if_has_response: "No se puede eliminar esta Opción, ya que está incluida en al menos una respuesta."
-          cant_change_if_published: "No se puede cambiar esta Opción, ya que aparece en al menos un Formulario publicado."
-          cant_delete_if_published: "No se puede eliminar esta Opción, ya que aparece en al menos un Formulario publicado."
           names_cant_be_all_blank: "Al menos una traducción de nombres se debe dar para cada opción."
           names_too_long: "Los nombres deben tener como máximo de 30 carácteres."
         option_set:
@@ -486,7 +431,6 @@ es:
           cant_change_if_conditions: "No se puede cambiar el Tipo o Conjunto de Opciones porque hay Condiciones que se refieran a esta Pregunta."
           cant_change_if_responses: "No se puede cambiar el Tipo o Conjunto de Opciones porque ya hay Respuestas para esta Pregunta ."
           cant_delete_if_has_answers: "No se puede eliminar esta Pregunta, ya que se hace referencia a ella en al menos una Respuesta ."
-          cant_delete_if_published: "No se puede eliminar esta Pregunta, ya que aparece en al menos un Formulario publicado."
           general: "Pregunta no es válida (vea a continuación)."
         questioning:
           attributes:
@@ -553,7 +497,6 @@ es:
     time_ago: "Hace %{time}"
     time_zone: "Zona Horaria"
     updated_at: "Actualizado a las"
-    no_published_forms: "No hay formularios publicados"
   will_paginate:
     broadcast:
       page_entries_info:
@@ -802,19 +745,6 @@ es:
     response_locations: "Localizaciones de la Respuesta"
     summary: "Resumen"
     top_forms: "Informes Populares"
-  data_integrity:
-    appears_elsewhere_warnings:
-      by_type:
-        question: "Esta Pregunta aparece en los siguientes Formularios:  *%{related}*. Cualquier cambio se reflejará en estos Formularios."
-        option_set: "Este Conjunto de Opciones aparece en las siguientes Preguntas: *%{related}*. Cualquier cambio se reflejará en estas Preguntas. "
-    has_answers_warnings:
-      by_type:
-        question: "Esta pregunta tiene respuestas existentes. Por lo tanto algunos campos no se pueden editar."
-    option_in_use_name_change_warning: "Esta opción se utiliza en otros formularios publicados o se hace referencia en las respuestas existentes. Usted debe tener cuidado de no cambiar el significado de la Opción."
-    published_warnings:
-      questioning: "El Formulario relacionado con los siguientes campos ya ha sido publicado, por lo tanto estos campos no se pueden editar."
-      sms: "Tales cambios harán que los usuarios de los formularios SMS reciban un mensaje de error si ententan entregar la versión actual del Formulario."
-      odk: "Estos cambios no desactivaran las Respuestas de ODK, pero pueden causar alguna pérdida de datos y/o Respuestas que no son válidas (por ejemplo, faltan respuestas necesarias)."
   form:
     select_api_users: "Seleccionar todos los usuarios que pueden obtener acceso a los datos del Formulario a través de la API:"
     add_group: "Añadir Grupo"
@@ -835,10 +765,6 @@ es:
     print_format_tips:
       title: "Imprimir Consejos de Formato"
       body: "Para asegurarse de que el formulario se imprime correctamente, por favor active la impresión de los colores de fondo e imágenes en la ventana de opciones de impresión de su sistema. Esta ventana debe aparecer tras seleccionar 'OK' abajo."
-    publish: "Publicar"
-    publish_error: "Hubo un problema publicando el formulario (%{msg})."
-    publish_success: "Formulario publicado con éxito."
-    publish_form: "Publicar Formulario"
     question_remove_error: "Hubo un problema eliminando las preguntas (%{msg})."
     question_remove_answer_error: "Al menos una de las preguntas seleccionadas tienen respuestas y no se pueden eliminar."
     questions_add_error: "Hubo un problema añadiendo las preguntas (%{msg})."
@@ -846,14 +772,8 @@ es:
     questions_remove_success: "Preguntas eliminadas con éxito."
     remove_selected: "Eliminar elementos Seleccionados"
     reqd_sym_definition: "Preguntas obligatorias están marcadas con un"
-    save_and_publish: "Guardar y Publicar"
     saving_order: "Guardando la comanda..."
-    unpublish_error: "Hubo un problema deshaciendo la publicación del formulario (%{msg})."
-    unpublish_success: "Se ha deshecho con éxito la publicación del Formulario."
-    unpublish: "Deshacer publicación"
-    unpublish_form: "Deshacer publicación del Formulario"
     unsaved_rank_notice: "Usted aún no ha guardado los cambios realizados en el orden de las preguntas. Usted debe hacer click en el botón \"Guardar \" si desea guardar estos cambios."
-    view_sms_guide: "Ver Guía SMS"
   incomplete_response:
     missing_answers:
       label: "¿Le faltan algunas respuestas requeridas a este formulario?"
@@ -919,7 +839,6 @@ es:
       or_eq: "o igual a"
       strictly_lt: "Estrictamente menor que"
       strictly_gt: "Estrictamente mayor que"
-    other_forms_published: "Por lo menos una de esas formas está publicada, de manera que no todos los campos se pueden editar."
   question_type:
     text: "Texto"
     long_text: "Texto Largo"
@@ -1114,7 +1033,6 @@ es:
       duplicate_submission: "Lo sentimos, su respuesta es un duplicado de una respuesta presentada recientemente."
       form_not_found: "Lo sentimos, no hay un formulario con el código '%{form_code}'."
       form_not_permitted: "Lo sentimos, no está autorizado para entregar en el formulario '%{form_code}'."
-      form_not_published: "Lo sentimos, el formulario '%{form_code}' no está disponible actualmente para entregas."
       form_not_smsable: "Lo sentimos, el formulario '% {form_code}' no está actualmente disponible para envíos de SMS."
       form_version_outdated: "Lo sentimos, pero el código del formulario '% {form_code}' se refiere a una versión antigua. Por favor, obtenga una guía de presentación actualizada."
       invalid_form_code: "Lo sentimos, '%{form_code}' no es un código válido para formularios."
@@ -1204,9 +1122,7 @@ es:
       need_to_create: "En la actualidad no hay misiones. Por favor"
       no_missions: "En la actualidad no hay misiones en el sistema. Póngase en contacto con el administrador."
     no_recent: "**0** Respuestas Recientes"
-    published_form_count: "**%{count}** Formularios Publicados"
     select_a_form: "Seleccione un Formulario para presentar"
     select_a_report: "Seleccione el Informe que desee ver"
     total_responses: "**%{count}** Respuestas Totales"
     total_users: "**%{count}** Usuarios Totales"
-    unpublished_form_count: "**%{count}** Forumlarios No Publicados"

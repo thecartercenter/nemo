@@ -85,7 +85,6 @@ pt:
     email: "e-mail"
     hint: "dica"
     password: "senha"
-    published: "publicado"
     questions: "preguntas"
     title: "título"
     type: "tipo"
@@ -211,7 +210,6 @@ pt:
         downloads: "downloads"
         responses: "respostas"
         updated_at: "modificado pela última vez"
-        version: "versão"
       mission:
         compact_name: "nome compacto"
         locked: "bloqueado?"
@@ -224,7 +222,6 @@ pt:
         code: "código"
         answer_count: "respostas"
         form_count: "formulários"
-        published: "publicado?"
         key: "é questão-chave?"
         minimum: "mínimo"
         maximum: "máximo"

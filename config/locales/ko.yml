@@ -57,14 +57,12 @@ ko:
     next: "다음"
     _no: "아니오"
     none: "없음"
-    not_published: "게제되지 않음"
     ok: "확인"
     or: "혹은"
     outgoing: "발신"
     pending: "보류"
     previous: "이전의"
     print: "인쇄"
-    published: "게재된"
     regenerate: "재생성"
     remove: "제거"
     report: "리포트"
@@ -104,7 +102,6 @@ ko:
     email: "이메일"
     hint: "힌트"
     password: "비밀번호"
-    published: "게재되었습니까?"
     questions: "질문"
     title: "제목"
     type: "종류"
@@ -346,7 +343,6 @@ ko:
         recipient_ids: "SMS 전달 수신자"
         authenticate_sms: "SMS 본인 확인"
         updated_at: "최근 수정 시간"
-        version: "버전"
         item_list_heading: "질문"
       mission:
         compact_name: "간결한 이름"
@@ -383,7 +379,6 @@ ko:
         code: "코드"
         answer_count: "응답"
         form_count: "질문지"
-        published: "게재되었습니까?"
         key: "주요 질문입니까?"
         minimum: "최소 값"
         maximum: "최대 값"
@@ -473,72 +468,12 @@ ko:
         incomplete: "미완성입니까?"
       user:
         admin: "관리자입니까?"
-    action_links:
-      broadcast:
-        index: "발송 기록"
-      form:
-        new: "새 질문지 생성"
-        index: "질문지 목록"
-        show: "질문지 보기"
-        edit: "질문지 수정"
-        destroy: "질문지 삭제"
-        publish: "질문지 올리기"
-        unpublish: "질문지 비게재하기"
-        print: "질문지 인쇄"
-      mission:
-        new: "새 미션 생성"
-        index: "미션 목록"
-        show: "미션 보기"
-        edit: "미션 수정"
-        destroy: "미션 삭제"
-      operation:
-        clear: "모든 완료된 활동 삭제"
-        destroy: "활동 삭제"
-        index: "활동 목록"
-      option_set:
-        new: "새 선택지 작성"
-        index: "선택지 목록"
-        show: "선택지 보기"
-        edit: "선택지 수정"
-        destroy: "선택지 삭제"
-        export: "선택지 내보내기"
-      question:
-        new: "새 질문 생성"
-        index: "질문 목록"
-        show: "질문 보기"
-        edit: "질문 편집"
-        destroy: "질문 삭제"
-      report/report:
-        new: "새 보고서 생성"
-        index: "보고서 목록"
-        show: "보고서 보기"
-        edit: "보고서 수정"
-        destroy: "보고서 삭제"
-      response:
-        index: "응답지 목록"
-        show: "응답지 보기"
-        edit: "응답지 수정"
-        destroy: "응답지 삭제"
-      user:
-        new: "새 사용자 생성"
-        index: "사용자 목록"
-        show: "사용자 보기"
-        edit: "사용자 편집"
-        destroy: "사용자 삭제"
-      user_group:
-        new: "새 그룹"
-        index: "사용자 그룹"
-        show: "사용자 그룹 보기"
-        edit: "사용자 그룹 편집"
-        destroy: "사용자 그룹 삭제"
-        members: "멤버 목록"
     hints:
       form:
         name: "질문지 제목을 입력하십시오."
         smsable: "이 질문지에 대한 SMS 응답을 허용합니까? 이는 버전이 높아질 때 영향을 줄 수 있습니다."
         sms_relay: "SMS 응답 문자를 사용자/사용자 그룹에게 전달하시겠습니까?"
         recipient_ids: "이 곳에 입력된 사용자 혹은 사용자 그룹으로 수신된 SMS 응답이 자동적으로 전달됩니다. "
-        version: "현재 버전 숫자와 알파벳 코드"
         access_level: "공개: 모든 ELMO 사용자가 API를 통해 데이터에 접근할 수 있습니다. 보호: 오직 특정 사용자만이 API를 통해 데이터에 접근 할 수 있습니다. 비공개: 어떤 사용자도 API를 통해 데이터에 접근할 수 없습니다."
       mission:
         name: "최대 32글자의 고유한 미션 이름을 입력하십시오. 후에 같은 이름의 미션을 생성할 가능성이 있을 시, 미션 이름에 연도를 포함할 것을 추천합니다. "
@@ -649,8 +584,6 @@ ko:
           all_required: "이 조건 항목들은 모두 필수항목입니다."
         form:
           cant_delete_if_has_responses: "이미 응답된 질문지는 삭제 할 수 없습니다."
-          cant_delete_published: "게재된 질문지는 삭제 할 수 없습니다."
-          cant_edit_published: "게재된 질문지는 편집할 수 없습니다."
           ranks_break_conditions: "새 랭킹이 하나 이상의 조건을 무효화합니다."
           general: "이 질문지는 유효하지 않습니다. (아래의 항목을 체크하십시오)"
         mission:
@@ -660,8 +593,6 @@ ko:
           general: "이 미션은 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
         option:
           cant_delete_if_has_response: "이미 응답된 선택지는 삭제할 수 없습니다."
-          cant_change_if_published: "게재된 질문지에 사용된 선택지는 수정할 수 없습니다."
-          cant_delete_if_published: "게재된 질문지에 사용된 선택지는 삭제할 수 없습니다."
           names_cant_be_all_blank: "각 선택지에 적어도 하나 이상의 번역본이 필요합니다"
           names_too_long: "이름은 최대 30자까지 입력할 수 있습니다."
           invalid_coordinates: "입력된 좌표값이 유효하지 않습니다."
@@ -679,7 +610,6 @@ ko:
           cant_change_if_conditions: "이 질문에 달린 조건질문이 있다면 질문종류나 선택지를 변경할 수 없습니다."
           cant_change_if_responses: "이미 응답된 질문의 질문종류나 선택지를 변경할 수 없습니다."
           cant_delete_if_has_answers: "적어도 하나 이상의 응답에서 이 질문이 참조되었다면 이 질문을 삭제할 수 없습니다."
-          cant_delete_if_published: "적어도 하나이상의 게재된 질문지에 사용된 질문은 삭제할 수 없습니다."
           general: "이 질문은 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
         questioning:
           attributes:
@@ -756,7 +686,6 @@ ko:
     time_ago: "%{time} 전"
     time_zone: "시간대"
     updated_at: "마지막 업데이트 시간:"
-    no_published_forms: "게재된 질문지가 없습니다."
   will_paginate:
     previous_label: "&#171;"
     next_label: "&#187;"
@@ -1029,19 +958,6 @@ ko:
     response_locations_truncated: "%{total} 중 %{shown}개의 최근 응답지를 보여줍니다."
     summary: "요약"
     top_forms: "가장 많이 다운받은 질문지"
-  data_integrity:
-    appears_elsewhere_warnings:
-      by_type:
-        question: "이 질문은 질문지 *%{related}*에 사용되었습니다. 수정된 사항은 질문지에 반영됩니다."
-        option_set: "이 선택지는 질문 *%{related}*에 사용되었습니다. 수정된 사항은 질문에 반영됩니다."
-    has_answers_warnings:
-      by_type:
-        question: "이 질문에 이미 응답한 응답지가 있습니다. 일부 항목은 수정이 불가능합니다."
-    option_in_use_name_change_warning: "이 선택항목은 게재된 질문지에 쓰였거나 제출된 응답지에 참조되었습니다. 수정시 선택항목의 뜻을 바꾸지 않도록 주의하십시오."
-    published_warnings:
-      questioning: "아래의 항목들에 해당되는 질문지는 게재되었으므로 수정할 수 없습니다. "
-      sms: "이러한 변화는 사용자들이 현재 버전의 질문지에 SMS으로 응답할 시 오류를 가져올 수 있습니다. "
-      odk: "이러한 변화는 ODK로 응답지 제출을 막진 않지만, 데이타 손실이나 유효하지 않은 응답지 (필수 질문에 응답하지 않은 응답지 등.)의 손실을 가져올 수 있습니다. "
   form:
     select_api_users: "API를 통해 데이타에 접근 가능한 사용자들을 모두 선택하십시오."
     add_group: "그룹 추가"
@@ -1062,10 +978,6 @@ ko:
     print_format_tips:
       title: "형식 팁 인쇄"
       body: "질문지를 올바르게 인쇄하기 위해서 윈도우 창의 인쇄 설정에서 배경 색과 이미지 인쇄 허용을 선택하십시오. 아래의 'OK'를 선택하자 마자 윈도우 창이 뜰것입니다."
-    publish: "게재하기"
-    publish_error: "질문지 (%{msg})을/를 게재하는데 문제가 발생했습니다."
-    publish_success: "질문지가 성공적으로 게재되었습니다."
-    publish_form: "질문지 게재하기"
     question_remove_error: "질문 (%{msg})을/를 삭제하는데 문제가 발생했습니다."
     question_remove_answer_error: "선택된 질문들 중 응답된 질문들이 있어 삭제 할 수 없습니다."
     questions_add_error: "질문 (%{msg})을/를 추가하는데 문제가 발생했습니다."
@@ -1080,14 +992,8 @@ ko:
       many: "정말로 이 %{count}개의 질문을 질문지에서 삭제하시겠습니까?"
       other: "정말로 %{count}개의 질문을 질문지에서 삭제하시겠습니까?"
     reqd_sym_definition: "필수 질문은 다음의 부호로 표시되었습니다:"
-    save_and_publish: "저장하고 게재하기"
     saving_order: "저장 순서"
-    unpublish_error: "질문지 (%{msg})를 비게재하는데 문제가 발생했습니다."
-    unpublish_success: "질문지가 성공적으로 비게재되었습니다."
-    unpublish: "비게재하기"
-    unpublish_form: "질문지 비게재하기"
     unsaved_rank_notice: "변경한 질문 순서가 아직 저장되지 않았습니다. 변경사항을 저장하고 싶다면 '저장'버튼을 누르십시오. "
-    view_sms_guide: "SMS 가이드 보기"
   forms:
     sms_guide:
       appendix:
@@ -1202,7 +1108,6 @@ ko:
       or_eq: "혹은 다음의 수와 같을 때:"
       strictly_lt: "다음의 수 미만일 때:"
       strictly_gt: "다음의 수 초과일 때:"
-    other_forms_published: "적어도 하나 이상의 질문지가 게재되었으므로 모든 항목이 수정 가능하지 않습니다."
   question_type:
     text: "단답"
     long_text: "서술"
@@ -1437,7 +1342,6 @@ ko:
       first_answer_invalid: "죄송합니다. %{token}는 유효하지 않은 응답입니다. 질문 번호 다음에 마침표를 입력하십시오."
       form_not_found: "죄송합니다. '%{form_code}'라는 질문지가 존재하지 않습니다."
       form_not_permitted: "죄송합니다. 질문지 '%{form_code}'의 응답을 제출할 권한이 없습니다."
-      form_not_published: "죄송합니다. 질문지 '%{form_code}'는 현재 응답지 제출이 불가능합니다."
       form_not_smsable: "죄송합니다. 질문지 '%{form_code}'는 현재 SMS 제출이 불가능합니다."
       form_version_outdated: "죄송합니다. 질문지 코드 '%{form_code}'는 오래된 버젼입니다. 업데이트 된 제출 가이드를 이용하십시오."
       invalid_form_code: "죄송합니다. '%{form_code}'는 유요한 코드가 아닙니다."
@@ -1580,9 +1484,7 @@ ko:
       need_to_create: "현재 활동중인 미션이 없습니다."
       no_missions: "현재 시스템에 미션이 없습니다. 조정자에게 연락하십시오."
     no_recent: "**0**개의 최근 응답수"
-    published_form_count: "**%{count}**개의 게재된 질문지"
     select_a_form: "제출할 질문지를 선택하십시오"
     select_a_report: "게시할 보고서를 선택하십시오"
     total_responses: "**%{count}**개의 총 응답수"
     total_users: "**%{count}**명의 총 사용자"
-    unpublished_form_count: "**%{count}**개의 비게재된 질문지"

@@ -3,6 +3,7 @@ ar:
     clear_confirm: "هل أنت متأكد من أنك تريد حذف جميع العمليات المكتملة؟"
     details:
       user_import: "استيراد المستخدم من %{file}"
+      option_sets_import: "استيراد مجموعة الخيار '%{file}'"
       response_csv_export: "الردود المصدرة الى CSV"
       broadcast: "نشرة '%{message}'"
     operations_panel: "لوحة العمليات"
@@ -45,6 +46,7 @@ ar:
     op_panel_more_info_link_html: "انظر إلى <a href='%{url}'>لوحة العمليات</a> للحصول على مزيد المعلومات."
     queued_msg:
       broadcast: "النشرة في قائمة الانتظار."
+      option_sets_import: "استيراد مجموعة الخيار في قائمة الانتظار"
       response_csv_export: "تصدير الردود الى CSV في قائمة الانتظار."
       user_import: "استيراد المستخدمين في قائمة الانتظار."
     see_error_report: "انظر تقرير الخطأ"
@@ -57,6 +59,7 @@ ar:
     add: "اضافة"
     and: "و"
     AND: "AND"
+    apply: "تطبيق"
     back: "رجوع"
     blank: "فارغ"
     by: "بواسطة"
@@ -71,7 +74,7 @@ ar:
       other: "اختار الملفات..."
     clear: "مسح"
     clipped: "لم يتم عرض بعض النتائج بسبب الوصول إلى الحد الأقصى"
-    clone: "إنسخ"
+    clone: "استنساخ"
     close: "إغلاق"
     contact: "جهة إتصال"
     create: "انتاج"
@@ -82,6 +85,9 @@ ar:
     delete: "حذف"
     design: "تصميم"
     edit: "تعديل"
+    either: 'كلاهما'
+    endDate: "النهاية"
+    endDatePlaceholder: "تاريخ النهاية"
     error:
       zero: "أخطاء"
       one: "خطأ"
@@ -89,6 +95,7 @@ ar:
       few: "أخطاء"
       many: "أخطاء"
       other: "أخطاء"
+    jsError: "آسف ، حدث خطأ ما. يرجى محاولة إعادة تحميل الصفحة."
     example:
       zero: "أمثلة "
       one: "مثال"
@@ -104,6 +111,7 @@ ar:
     inactive: "غير فعال"
     import: "استيراد"
     incoming: "وارد"
+    is: "هو"
     language: "لغة"
     login: "تسجيل الدخول "
     confirm_login: "تأكيد تسجيل الدخول "
@@ -116,7 +124,6 @@ ar:
     next: "التالي"
     _no: "لا"
     none: "لا يوجد"
-    not_published: "غير منشور"
     ok: "موافق"
     or: "أو"
     OR: "OR"
@@ -124,7 +131,6 @@ ar:
     pending: "معلق"
     previous: "السابق"
     print: "طباعة"
-    published: "نٌشر"
     regenerate: "إعادة إنتاج"
     remove: "إزالة"
     report: "تقرير"
@@ -144,6 +150,8 @@ ar:
     search: "بحث"
     send: "إرسال"
     showing: "إظهار"
+    startDate: "بداية"
+    startDatePlaceholder: "تاريخ البداية"
     step: "خطوة"
     suggest: "إقترح"
     submit: "تقديم"
@@ -178,11 +186,11 @@ ar:
     email: "بريد الكتروني"
     hint: "تلميح"
     password: "كلمة المرور"
-    published: "نٌشر؟"
     questions: "الأسئلة"
     title: "عنوان"
     type: "نوع"
     value: "قيمة"
+    media_prompt: "تعليمات الوسائط"
   access_levels:
     public: "عام"
     private: "خاص"
@@ -201,6 +209,8 @@ ar:
     file_upload:
       error: "حصل خطأ أثناء تحميل الملف"
       file_missing: "لم يتم تحديد ملف للاستيراد."
+      invalid_format: "الملف الذي تم تحميله ليس في شكل مقبول."
+      internal: "حدث خطأ داخلي أثناء معالجة التحميل."
     messages:
       deleted_successfully: "تم الحذف بنجاح"
       generic_delete_error: "حصل خطأ اثناء الحذف"
@@ -208,6 +218,10 @@ ar:
     submit:
       create: "حفظ"
       update: "حفظ"
+      option_sets_import:
+        create: "استيراد"
+      user_import:
+        create: "استيراد"
   flash_message_types:
     success: "نجاح"
     error: "خطأ"
@@ -279,8 +293,8 @@ ar:
         many: "خيار"
         other: "خيارات"
       option_set:
-        zero: "مجاميع الخيار "
-        one: "مجموعة الخيار "
+        zero: "مجموعات الخيار"
+        one: "مجموعة الخيار"
         two: "مجموعات الخيار"
         few: "مجموعات الخيار"
         many: "مجموعات الخيار"
@@ -360,8 +374,10 @@ ar:
         one: "رد"
         two: "ردود"
         few: "ردود"
-        many: "رد"
+        many: "ردود"
         other: "ردود"
+      response_decorator:
+        many: "ردود"
       search/search:
         zero: "بحوث"
         one: "بحث"
@@ -410,6 +426,7 @@ ar:
         created_at: "وقت الإرسال"
         errors: "أخطاء؟"
         medium: "متوسط"
+        sent_at: "أرسل / أخطأ في"
         send_errors: "أخطأ في التسليم"
         subject: "موضوع"
         to: "إلى"
@@ -417,6 +434,7 @@ ar:
         recipient_selection: "المستلمين"
         recipient_ids: "المستخدمين/المجموعات"
       condition:
+        left_qing_id: "سؤال"
         op: "مقارنة"
         value: "القيمة"
       form:
@@ -429,7 +447,6 @@ ar:
         recipient_ids: "المستلمون الذي يتم إعادة توجيه الرسائل القصيرة لهم"
         authenticate_sms: "رسالة مصرح بها؟"
         updated_at: "آخر تعديل"
-        version: "نسخة"
         item_list_heading: "أسئلة"
         default_response_name: "اسم الرد الافتراضي"
       mission:
@@ -453,26 +470,30 @@ ar:
         allow_coordinates: "مع الإحداثيات؟"
         answers: "إجابات"
         geographic: "جغرافي؟"
-        multilevel: "متعدد المراحل؟"
+        multilevel: "متعدد المستويات ؟"
         options: "خيارات"
         option_levels: "مراحل"
         sms_guide_formatting: "دليل تنسيق الرسائل القصيرة"
+      option_sets/import:
+        name: "اسم مجموعة الخيار"
+        file: "ملف للاستيراد"
       password_reset:
         identifier: "البريد الإلكتروني أو اسم المستخدم"
       qing_group:
         group_name: "اسم"
         group_hint: "تلميح"
         group_item_name: "اسم العنصر المكرر"
+        new: "إضافة مجموعة"
         edit: "تعديل المجموعة"
         delete: " هل أنت متأكد بأنك تريد حذف مجموعة '%{name}'؟ "
         repeatable: "قابل للتكرار؟"
         one_screen: "عرض على شاشة واحدة؟"
+        show: "مجموعة: %{name}"
         display_logic: "شروط العرض"
       question:
         code: "رمز"
         answer_count: "إجابات"
         form_count: "إستمارات"
-        published: "نٌشر؟"
         key: "سؤال مهم؟"
         minimum: "الأقل"
         maximum: "الأكثر"
@@ -480,7 +501,7 @@ ar:
         casted_minimum: "الأقل"
         casted_maximum: "الأكثر"
         name: "عنوان"
-        option_set_id: "مجموعة الخيار "
+        option_set_id: "مجموعة الخيار"
         qtype_name: "نوع"
         metadata_type: "نوع البيانات الوصفية"
         tag_ids: "إشارات"
@@ -493,6 +514,7 @@ ar:
         hidden: "مخفي؟"
         rank: "مرتبة"
         required: "مطلوب؟"
+        all_levels_required: "المستويات المطلوبة"
         default: "الاجابه الافتراضيه"
         delete: "هل أنت متأكد من حذف السؤال '%{code}' من هذه الاستمارة؟"
         read_only: "يقرأ فقط؟"
@@ -503,6 +525,7 @@ ar:
         id: "هوية الرد"
         created_at: "وقت التقديم"
         form_id: "استمارة"
+        reviewed: "تمت المراجعة"
         reviewer_notes: "ملاحظات"
         reviewer_id: "مراجع"
         shortcode: "معرف الرد"
@@ -569,70 +592,19 @@ ar:
         sms_auth_code: "رمز تصريح الرسالة النصية القصيرة"
         user_group_ids: "المجموعات"
         user_groups: "المجموعات"
+      user_import:
+        file: "ملف للاستيراد"
     table_headers:
       response:
         incomplete: "غير مكتمل"
       user:
         admin: "مسؤول؟"
-    action_links:
-      broadcast:
-        index: "قائمة النشرات"
-      form:
-        new: "أنشئ إستمارة جديدة"
-        index: "قائمة الإستمارات"
-        show: "عرض الإستمارة"
-        edit: "تعديل الإستمارة"
-        destroy: "حذف الإستمارة"
-        publish: "نشر الإستمارة"
-        unpublish: "إستمارة غير منشورة"
-        print: "طبع الإستمارة"
-      mission:
-        new: "أنشئ مهمة جديدة"
-        index: "قائمة المهام"
-        show: "عرض المهمة"
-        edit: "تعديل المهمة"
-        destroy: "حذف المهمة"
-      operation:
-        clear: "إزالة كل العمليات المكتملة"
-        destroy: "أزالة العملية"
-        index: "قائمة العمليات"
-      option_set:
-        new: "إنشاء مجموعة خيار جديدة"
-        index: "قائمة مجموعة الخيار"
-        show: "عرض مجموعة الخيار"
-        edit: "تعديل مجموعة الخيار "
-        destroy: "حذف مجموعة الخيار"
-        export: "تصدير مجموعة الخيار "
+    placeholders:
       question:
-        new: "إنشاء سؤال جديد"
-        index: "قائمة الأسئلة"
-        show: "مراجعة السؤال"
-        edit: "تعديل السؤال"
-        destroy: "حذف السؤال "
-      report/report:
-        new: "إنشاء تقرير جديد"
-        index: "تقرير جدولي"
-        show: "عرض التقرير"
-        edit: "تعديل التقرير"
-        destroy: "حذف التقرير"
-      response:
-        index: "قائمة الردود"
-        show: "عرض الرد"
-        edit: "تعديل الرد"
-        destroy: "حذف الرد"
+        code: "مثال MyQuestion"
       user:
-        new: "إنشاء مستخدم جديد"
-        index: "قائمة المستخدمين"
-        show: "عرض المستخدم"
-        edit: "تعديل المستخدم"
-        destroy: "حذف المستخدم"
-      user_group:
-        new: "مجموعة جديدة"
-        index: "مجاميع مستخدم"
-        show: "عرض مجموعة مستخدم"
-        edit: "تعديل مجموعة مستخدم"
-        destroy: "حذف مجموعة مستخدم"
-        members: "قائمة الاعضاء"
+        phone: "مثال +17123241235"
+        phone2: "مثال +2348123456789"
     hints:
       form:
         name: "اسم وصفي للإستمارة"
@@ -641,7 +613,6 @@ ar:
         recipient_ids: "إذا قمت بإدخال أسماء المستخدمين أو مجموعات المستخدمين هنا ، فستتم إعادة توجيه أي ردود واردة من الرسائل القصيرة إليها تلقائيًا."
         authenticate_sms: "المصادقة على ردود الرسالة النصية القصيرة. إيقاف التفعيل يسمح لأي شخص يعرف رقم هاتف المراقب بتقديم وهمي."
         allow_incomplete: "في حالة تحديده ، يسمح بإرسال الإستمارة التي تحتوي على أسئلة غير كاملة (عبر الويب و ODK فقط). يجب على المراقبين الذين يستخدمون ODK إدخال رمز التجاوز (انظر صفحة الإعدادات) للقيام بذلك."
-        version: "الرقم والرمز الحرفي للنسخة الحالية "
         access_level: "عام: يمكن لأي مستخدم الوصول إلى البيانات عبر API. محمي: يمكن لمستخدمين محددين فقط الوصول إلى البيانات عبر API. خاص: لا يمكن لأي شخص الوصول إلى البيانات عبر API."
         default_response_name: "سيتم استخدام النص الذي تم إدخاله هنا كاسم افتراضي للإستمارة المعبأة في ODK. يمكنك إدخال QuestionCode$ لتضمين قيمة السؤال في الإستمارة.\n\nعلى سبيل المثال ، أدخل:\n\nاستبيان ل VillageNum-$Household$\n\nقد يتم تسمية الإستمارة :\n\nاستبيان ل 7-Smith\n\nعلى افتراض لديك أسئلة مع الرموز 'VillageNum' و 'Household'\n\nيمكنك أيضًا إدخال تعبير حساب XPath من خلال محاذاته مع وظيفة ()calc :\n\n<code></code>\n<code>(calc($VillageNum + 100 / 2</code>"
       mission:
@@ -662,6 +633,7 @@ ar:
       qing_group:
         group_item_name: "يمكنك إدخال QuestionCode$ لتضمين قيمة السؤال في الإستمارة (في ODK فقط). \n\nعلى سبيل المثال ، لنفترض أنك تقوم بإنشاء مجموعة مكررة حيث يكون رمز السؤال الأول هو 'HouseholdID' وتقوم بإدخاله\n\nID: $Household-$!RepeatNum\n\nيمكنك إنشاء مجموعة واحدة والإجابة \"123\" على \"HouseholdID\". ثم تقوم بإنشاء مجموعة ثانية والإجابة \"789\" على \"HouseholdID\". سيكون اسم عنصر المجموعة الأول هو \"Household: 123.\" سيكون اسم عنصر المجموعة الثاني هو \"Household: 789.\""
       question:
+        media_prompt: "قم بإرفاق ملف وسائط يمكن للمراقبين مشاهدته أو الاستماع إليه عند عرض السؤال في ODK. ملفات الفيديو (mp4) ، الصوت (mp3 ، ogg ، wav ، flac) ، وملفات الصور (png ، jpg) كلها مقبولة. يمكن أن يصل حجم الملف إلى %{max_size_mib} ميجابايت."
         code: "والاسم الرمزى قصير (بين 2-20 رمز). يجب أن يحتوي على أحرف وأرقام فقط بدن فراغات، على سبيل المثال، صندوقالاقتراعمقفول، المغادرةالوقت."
         hint: "تعليمات إضافية، على سبيل المثال، \"أدخل عدد تقريبي للناس في طابور الاقتراع\"."
         key: "أجوبة على أسئلة رئيسية تساعد تلخيص الردود وتظهر في قائمة الرد. الأسئلة الرئيسية المشتركة هي عن الموقع والتقييم الشامل."
@@ -681,6 +653,8 @@ ar:
         read_only: "في حالة تحديده ، لن يتمكن المراقب من تغيير القيمة التي تم ملؤها مسبقًا عند استخدام ODK. لا يؤثر على ردود الويب أو الرسائل القصيرة."
         required: "ما إذا كان يجب أن يكتمل هذا السؤال في هذه الإستمارة أو انه اختياري. ينفذ فقط أذا لم يكن السؤال مخفياً وتم تحقيق الشرط المحدد أعلاه."
         skip_logic: "قواعد لمعرفة أي سؤال يجب إظهاره بعد هذا السؤال."
+        constraints: "الشروط التي يجب الوفاء بها من أجل قبول الإجابة. حاليًا لـ ODK فقط."
+        all_levels_required: "بالنسبة لسؤال اختيار متعدد المستويات ، هل يجب على المراقب إدخال قيمة لكل مستوى من السؤال؟"
       report/report:
         name: "عنوان وصفي لهذا التقرير."
         aggregation_id: "العملية التي تريد تنفيذها على البيانات المدمجة."
@@ -789,10 +763,12 @@ ar:
           no_recipients: "لا أحد سيحصل على هذه النشرة."
         condition:
           all_required: "كل حقول الشروط مطلوبة"
+        constraint:
+          attributes:
+            conditions:
+              blank: "يجب أن يكون هناك شرط واحد على الأقل."
         form:
           cant_delete_if_has_responses: "لا يمكنك حذف هذه الاستمارة لأنها تحتوي على ردود."
-          cant_delete_published: "لا يمكن حذف استمارة منشورة."
-          cant_edit_published: "لا يمكن تعديل استمارة منشورة."
           ranks_break_conditions: "التصنيف الجديد جعل شرط واحد أو أكثر غير صالح"
           general: "إستمارة غير صالحة (انظر أدناه)"
           attributes:
@@ -805,8 +781,6 @@ ar:
           general: "مهمة غير صالحة (انظر أدناه)"
         option:
           cant_delete_if_has_response: "لا يمكنك حذف هذا الخيار لأنه من ضمن رد واحد على الأقل."
-          cant_change_if_published: "لا يمكنك تغيير هذا الخيار لأنه يظهر في إستمارة منشورة واحدة على الأقل."
-          cant_delete_if_published: "لا يمكنك حذف هذا الخيار لأنه من ضمن رد واحد على الأقل."
           names_cant_be_all_blank: "يجب أن يعطى اسم مترجم واحد على الاقل لكل خيار"
           names_too_long: "طول الأسماء يجب ان لا يزيد على 30 حرف."
           invalid_coordinates: "الإحداثيات المقدمة غير صالحة."
@@ -816,17 +790,25 @@ ar:
           cant_delete_if_has_answers: "لا يمكنك حذف مجموعة الخيار لانها ضمن محتوى جواب واحد على الأقل."
           general: "كانت هنالك مشكلة غي حفظ مجموعة الخيار"
           wrong_depth: "لديك %{levels} مستويات خيار ولكن عمق شجرة الخيارات الخاصة بك هي %{depth}."
+        option_sets/import:
+          general: "استيراد مجموعة الخيار غير صالح (انظر أدناه)."
+          blank_interior_cell: "خطأ في الصف %{row_num}: خلية داخلية فارغة."
+          option_too_long: "خطأ في الصف %{row_num}: لا يمكن أن تكون الخيارات أكثر من %{limit} حرف."
+          header_too_long: "خطأ في الصف %{row_num}: لا يمكن أن تكون الرؤوس أكثر من %{limit} حرف."
         question:
           at_least_one_name: "يجب إدخال عنوان بلغة واحدة على الأقل."
           attributes:
             code:
               invalid: "يجب أن تبدأ بحرف، استخدم فقط الحروف والأرقام، وتكون بحد أقصى 20 رمز."
+            media_prompt_file_name:
+              invalid_type: "نوع الملف غير صالح."
+            media_prompt_content_type:
+              invalid_type: "نوع الملف غير صالح."
             reference:
               invalid: "يجب أن يبدأ رابط المرجع الخاص بك بـ https أو http."
           cant_change_if_conditions: "لا يمكنك تغيير النوع او مجموعة الخيار بسبب وجود بعض الشروط التي تشير لهذا السؤال"
           cant_change_if_responses: "لا يمكنك تغيير النوع او مجموعة الخيار بسبب وجود ردود لهذا السؤال"
           cant_delete_if_has_answers: "لا يمكن حذف السؤال لانه يشير على اقل تقدير لجواب واحد"
-          cant_delete_if_published: "لا يمكن حذف السؤال لانه يظهر على الاقل في استمارة منشورة واحدة"
           general: "السؤال غير صالح (انظر ادناه)"
         questioning:
           attributes:
@@ -889,6 +871,17 @@ ar:
               invalid: "الرجاء استخدام حروف فقط غير معلمة، وأرقام، فترات، وخط على السطر."
             reset_password_method:
               cant_passwd_email: "غير مسموح بها ما لم يتم تقديم عنوان بريد إلكتروني."
+        user_import:
+          general: "دفعة استيراد المستخدم غير صالحة (انظر أدناه)."
+          internal: "حدث خطأ داخلي أثناء معالجة التحميل."
+          invalid_headers:
+            zero: "لم يتم التعرف على رؤوس الأعمدة التالية: %{headers}"
+            one: "لم يتم التعرف على رؤوس الأعمدة التالية: %{headers}"
+            two: "لم يتم التعرف على رؤوس الأعمدة التالية: %{headers}"
+            few: "لم يتم التعرف على رؤوس الأعمدة التالية: %{headers}"
+            many: "لم يتم التعرف على رؤوس الأعمدة التالية: %{headers}"
+            other: "لم يتم التعرف على رؤوس الأعمدة التالية: %{headers}"
+          too_many_errors: "يحتوي جدول البيانات الذي تم تحميله على الكثير من الأخطاء. توقف المعالجة في الصف %{row}."
         user_group:
           general: "مجموعة المستخدم غير صالحة."
           attributes:
@@ -916,7 +909,10 @@ ar:
     time_ago: "%{time} مضى"
     time_zone: "منطقة زمنية"
     updated_at: "تم التحديث في"
-    no_published_forms: "لا توجد استمارات منشورة "
+  actions:
+    clone: "استنساخ"
+    edit: "تعديل"
+    print: "طباعة"
   will_paginate:
     previous_label: "&#171;"
     next_label: "&#187;"
@@ -993,6 +989,10 @@ ar:
           one: "عرض <b> 1 </b> المستخدم"
           other: "عرض <b>  %{count}</b> مستخدمين"
         multi_page_html: "عرض المستخدمين <b> %{to} - %{from} </b> من <b> %{count} </b> المجموع"
+    operation:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على عمليات"
   authlogic:
     error_messages:
       consecutive_failed_logins_limit_exceeded: "لقد تجاوزت الحد الأقصى لمحاولا ت تسجيل الدخول الفاشلة المتوالية. تم تعطيل حسابك."
@@ -1028,18 +1028,21 @@ ar:
     email: "بريد-إلكتروني"
     form: "إستمارة"
     exact_form: "exact-form"
+    form_id: "form-id"
     login: "تسجيل-دخول"
     name: "اسم"
     option_set: "مجموعة-خيار"
     phone: "هاتف"
     question: "سؤال"
     question_type: "نوع-السؤال"
-    reviewed: "تمت-المراجعة"
+    reviewed: "تمت المراجعة"
     role: "دور"
     shortcode: "رمزقصير"
     source: "مصدر"
     submit_date: "وقت-التقديم"
     submitter: "المرسل"
+    submitter_id: "submitter-id"
+    group_id: "group-id"
     code: "رمز"
     title: "عنوان"
     type: "نوع"
@@ -1109,6 +1112,8 @@ ar:
       index: "سجل الرسائل"
     sms_tests:
       all: "وحدة تحكم اختبار الرسائل النصية القصيرة"
+    user_imports:
+      all: "استيراد المستخدمين"
     user_sessions:
       new: "تسيجل الدخول"
       login_confirmation: "تأكيد تسيجيل الدخول "
@@ -1211,6 +1216,11 @@ ar:
     no_refable_qings: "لا يوجد أي سؤال في هذه الإستمار يمكن أن يستدل به أي شرط"
     op: "مقارنة"
     value: "قيمة"
+    left_qing_prompt: "أختار سؤال..."
+    right_side_type:
+      literal: "قيمة محددة ..."
+      qing: "سؤال آخر ..."
+    this_question: "هذا السؤال"
   dashboard:
     close_dashboard: "إغلاق اللوحة الرئيسية"
     enter_full_screen: "دخول الشاشة الكاملة"
@@ -1225,23 +1235,19 @@ ar:
     response_locations_truncated: "عرض أحدث %{shown} من %{total} الردود"
     summary: "خلاصة"
     top_forms: "أفضل الإستمارات"
-  data_integrity:
-    appears_elsewhere_warnings:
-      by_type:
-        question: "يظهر هذا السؤال في الاستمارت التالية: *%{related}*. سوف تنعكس أية تغييرات تجريها أدناه على تلك الاستمارات."
-        option_set: "تظهر مجموعة الخيار هذه في الأسئلة التالية: *%{related}*. سوف تنعكس أية تغييرات تجريها أدناه على تلك الأسئلة."
-    has_answers_warnings:
-      by_type:
-        question: "لهذا السؤال اجوبة موجودة، لهذا بعض الحقول لا يمكن تعديلها"
-    option_in_use_name_change_warning: "هذا الخيار قيد الاستخدام في أستمارات أخرى منشورة أو تتم الإشارة اليه في الردود الحالية. يجب أن تكون حريصا على عدم تغيير معنى الخيار في تعديلاتك."
-    option_standard_copy_name_change_warning: "هذا الخيار مشتق من مجموعة الخيارات النموذجية. يجب أن تتأكد من الحفاظ على المعنى الأصلي للخيار."
-    published_warnings:
-      form: "تم نشر هذه الاستمارة، وهذا يعني أنه قد يكون بالفعل في أيدي المراقبين. بالتالي بعض الحقول ليست قابلة للتعديل، ولا يمكن أن تضاف أو تحذف أسئلة، أو أن يعاد ترتيبها . يرجى الاستمرار بحذر عند إجراء أي تغيير."
-      questioning: "الاستمارة التي تنطبق عليها الحقول أدناه منشورة، لذا لا يمكن تعديلهم"
-      question: "يظهر هذا السؤال على الأقل في استمارة واحدة منشورة، مما يعني انه قد يكون بين أيدي المراقبين الان، لهذا لا يمكن تعديل بعض الحقول. الرجاء التأكد من عدم تغيير معنى السؤال."
-      option_set: "تظهر مجموعة الخيار هذه على الأقل في استمارة واحدة منشورة، مما يعني انها قد تكون بين أيدي المراقبين الان، لهذا لا يمكن تعديل بعض الحقول والخيارات لا تضاف ولا تحذف ولا يعاد ترتيبها. الرجاء الاستمرار مع الحذر في حالة تعديل الخيارات ."
-      sms: "هذا النوع من التغيير سيسبب تلقي مستخدمي استمارة الرسائل النصية القصيرة خطأ إذا حاولوا تقديم النسخة الحالية من الاستمارة."
-      odk: "هذه التغييرات لا توقف الردود من ODK، ولكن قد تسبب فقدان بعض البيانات و / أو ردود غير صالحة (على سبيل المثال، فقدان اجوبة المطلوبة)."
+  filter:
+    form: "إستمارة"
+    choose_form: "إختار إستمارة"
+    question: "سؤال"
+    date: "التاريخ"
+    showing_questions_from: "عرض الأسئلة من %{form_list} فقط."
+    reviewed: "تمت المراجعة"
+    is_reviewed: "تم وضع علامة \"تمت المراجعة\""
+    submitter: "المرسل"
+    choose_submitter:
+      submitter: "اختار مستخدم"
+      group: "اختار مجموعة"
+    search_box_placeholder: "بحث"
   form:
     select_api_users: "تحديد كافة المستخدمين الذين يمكنهم الوصول لبيانات الاستمارة عبر API:"
     add_group: "إضافة مجموعة"
@@ -1262,10 +1268,6 @@ ar:
     print_format_tips:
       title: "نصائح تنسيق الطباعة"
       body: "لضمان طباعة الاستمارة بشكل صحيح، الرجاء تفعيل طباعة ألوان الخلفية والصور في نافذة خيارات الطباعة للنظام الخاص بك. يجب أن تظهر تلك النافذة بمجرد النقر فوق \"موافق\" أدناه."
-    publish: "نشر"
-    publish_error: "كانت هناك مشكلة في نشر الاستمارة (%{msg})."
-    publish_success: "تم نشر الإستمارة بنجاح"
-    publish_form: "نشر الإستمارة"
     question_remove_error: "كانت هناك مشكلة بحذف الأسئلة (%{msg})."
     question_remove_answer_error: "واحد أو أكثر من الأسئلة المختارة لديها إجابات ولا يمكن حذفها."
     questions_add_error: "كانت هناك مشكلة بإضافة الأسئلة (%{msg})."
@@ -1280,14 +1282,8 @@ ar:
       many: "هل أنت متأكد أنك تريد حذف هذه %{count} أسئلة من الاستمارة؟"
       other: "هل أنت متأكد أنك تريد حذف هذه %{count} أسئلة من الاستمارة؟"
     reqd_sym_definition: "الأسئلة المطلوبة مؤشرة بواسطة"
-    save_and_publish: "حفظ و نشر"
     saving_order: "ترتيب الحفظ..."
-    unpublish_error: "كانت هناك مشكلة في سحب نشر الاستمارة (%{msg})."
-    unpublish_success: "الإستمارة لم تنشر بنجاح"
-    unpublish: "غير منشور"
-    unpublish_form: "إستمارة غير منشورة"
     unsaved_rank_notice: "لم تحفظ التغييرات التي أجريتها على ترتيب الأسئلة. يجب أن تنقر على \"حفظ\" اذا تريد حفظ التغييرات."
-    view_sms_guide: "عرض دليل الرسالة النصية القصيرة"
   forms:
     sms_guide:
       appendix:
@@ -1331,8 +1327,12 @@ ar:
       unique_code: "هذا هو الرمز الفريد للاستمارة"
       unknown_number: "[رقم مجهول]"
   form_item:
+    accept_if_options:
+      all_met: "كل ما سبق يجب أن يكون صحيحا"
+      any_met: "واحد على الأقل من ما سبق يجب أن يكون صحيحا"
     add_condition: "إضافة شرط"
     add_rule: "إضافة قاعدة"
+    delete_rule: "حذف القاعدة"
     display_if_options:
       qing_group:
         always: "عرض هذه المجموعة دائمًا"
@@ -1349,6 +1349,15 @@ ar:
       dont_skip: "بعد هذا السؤال ، انتقل إلى السؤال التالي"
       skip: "بعد هذا السؤال ، انتقل إلى ..."
       end_of_form: "انتقل إلى نهاية النموذج"
+    constrain_options:
+      dont_constrain: "اقبل أي إجابة على هذا السؤال"
+      constrain: "تقبل فقط إجابة إذا ..."
+    rejection_message:
+      add: "إضافة رسالة الرفض"
+      edit: "تحرير رسالة الرفض"
+    all_levels_required_options:
+      'true': "جميع مستويات السؤال مطلوبة"
+      'false': "مطلوب مستوى واحد على الأقل من السؤال"
   incomplete_response:
     missing_answers:
       label: "هل تفتقد هذه الاستمارة لأي إجابة مطلوبة؟"
@@ -1361,6 +1370,9 @@ ar:
   index_table:
     messages:
       searched_rows_selected: "لاحظ أن </strong>جميع<strong> %{count} الصفوف المطابقة للبحث الحالي محددة الآن"
+      selected_rows_page: "كل %{count}%{class_name} في هذه الصفحة محددة"
+      select_all_rows: "تحديد الكل %{count}%{class_name}"
+      selected_all_rows: "<strong>كل</strong> %{count}%{class_name} محددة"
   location_picker:
     choose_location: "أختار الموقع"
     current_location: "الموقع الحالي"
@@ -1371,9 +1383,13 @@ ar:
     if_you_made_it: "أذا أنت من عمل هذا الطلب فانقر على الرابط أدناه:"
     login_name: "اسم الدخول الخاص بك هو %{login}."
     to_choose: "لاختيار كلمة المرور، يرجى الذهاب هنا:"
+    must_choose: "يجب عليك اختيار كلمة مرور قبل أن تتمكن من استخدام أي أنظمة ، بما في ذلك الأنظمة القائمة على الهاتف المحمول."
     password_reset_instructions: "تعليمات إعادة تعيين كلمة المرور "
     request_made: "قد تم تقديم طلب لإعادة تعيين كلمة المرور للويب %{site} . إذا كنت لم تتقدم بهذا الطلب، تجاهل هذا البريد الإلكتروني."
     welcome: "أهلا بك في %{site}!"
+    sms_token_change:
+      subject: "تم تغيير رمز SMS الوارد %{mission_name}"
+      body: "تم تجديد رمز الرسائل القصيرة الواردة %{site_name}-%{mission_name} بواسطتك أو بواسطة منسق آخر ضمن إعدادات مهمتك. هذا يعني أنك ستحتاج إلى تحديث عنوان URL للرسائل النصية القصيرة الواردة مع موفر البوابة قبل قبول الرسائل القصيرة الجديدة."
   option_set:
     add_level: "إضافة مرحلة"
     add_option: "إضافة خيار"
@@ -1401,7 +1417,7 @@ ar:
     value: "قيمة عددية"
   option_set_import:
     instructions_html: |-
-        تحميل جدول بيانات مع مجموعة الخيار الخاص بك. وتقبل جداول من نوع  XLSX البيانات لإكسل وملفات CSV.
+        قم بتحميل جدول بيانات باستخدام مجموعة الخيارات الخاصة بك. يتم قبول جداول البيانات إكسل XLSX وملفات CSV فقط.
   tag:
     none_found: "لا  توجد إشارات مطابقة"
     searching: "جاري البحث..."
@@ -1457,7 +1473,6 @@ ar:
       or_eq: "أو يساوي "
       strictly_lt: "أقل من بدقة"
       strictly_gt: "أكثر من بدقة"
-    other_forms_published: "واحد على الأقل من تلك الاستمارات تم نشرها أيضا، لذلك لا يمكن أن تعدل كل الحقول."
     opt_set_warning: "سيؤدي تغيير مجموعة الخيارات إلى حذف شرط واحد أو أكثر."
   qing_group:
     one_screen_disabled: "غير متوفر لأن المجموعة تحتوي على شرط أو مجموعة أخرى"
@@ -1628,6 +1643,7 @@ ar:
       short_only: "لا تعرض الأسئلة النصية الطويلة"
       none: "لا تعرض أي شيء"
   response:
+    reviewed: "تمت مراجعة هذا الرد"
     edit_this_response: "تعديل هذا الرد"
     export_to_csv: "تصدير بصيغة CSV"
     loading: "تحميل الرد..."
@@ -1977,11 +1993,16 @@ ar:
     search_error: "خطأ في البحث"
     unexpected: "استعلام البحث الخاص بك غير مفهوم بسبب وجود نص غير متوقع في '%{str}'."
     unexpected_end: "استعلام البحث الخاص بك غير مفهوم بسبب وجود نص غير متوقع في النهاية."
+    boolean_error: "يجب تعيين '%{qualifier}' على \"نعم\" أو \"لا\" (يتم قبول \"1\" و \"0\" أيضًا)."
+    invalid_date: "'%{value}' ليس تاريخ صحيح."
   setting:
     change_sms_password: "تغيير كلمة المرور"
     change_twilio_auth_token: "تغيير رمز التصريح"
     change_api_key: "تغيير مفتاح API"
     override_code_warning: "لاحظ أن رمز التجاوز الجديد لن يعمل مع الاستمارات التي تم تحميلها بالفعل. يجب عليك تسجيل الرمز الموجود إذا كان هذا مشكلة. هل أنت متأكد أنك تريد إنشاء رمز جديد؟"
+    sms_token_warning: "لاحظ أن هذا سيؤدي إلى إبطال الرمز المميز لـ SMS السابق لهذه المهمة. سيتم رفض جميع الرسائل القصيرة الواردة حتى يتم تحديث إعدادات بوابة الرسائل القصيرة الخاصة بك وفقًا لذلك. هل أنت متأكد من أنك تريد تجديد الرمز؟"
+    api_key_warning: "لاحظ أن هذا سوف يبطل مفتاح API السابق لهذا المستخدم. هل أنت متأكد من أنك تريد تجديد المفتاح؟"
+    sms_auth_code_warning: "لاحظ أن هذا سيؤدي إلى إبطال رمز مصادقة SMS السابق لهذا المستخدم. هل أنت متأكد أنك تريد تجديد الرمز؟"
     using_incoming_sms_token: "كيف استخدم هذا؟"
     headings:
       general: "الإعدادات العامة"
@@ -2001,6 +2022,12 @@ ar:
       with_conditions: "انتقل إلى %{destination}إذا %{conditions} "
       without_conditions: "انتقل إلى %{destination}"
     end_of_form: "نهاية الإستمارة"
+  constraint:
+    accept_if_options:
+      all_met: "صالح فقط إذا تم استيفاء جميع هذه الشروط"
+      any_met: "صالح فقط إذا تم استيفاء أي من هذه الشروط"
+    instructions: "صالح فقط إذا %{conditions}"
+    odk_message: "صالح فقط إذا: %{conditions}"
   sms:
     extra_recipients_html: "<br/> ... و %{count} آخرين"
     error: "خطأ"
@@ -2035,12 +2062,12 @@ ar:
       first_answer_invalid: "آسف، ولكن %{token} ليست إجابة صحيحة. تأكد من أن تضع نقطة بعد رقم السؤال."
       form_not_found: "عفواً، لا يوجد أي استمارة مع الرمز '%{form_code}'."
       form_not_permitted: "عفواً، غير مصرح لك بتسليم رد على الاستمارة  '%{form_code}'."
-      form_not_published: "عفواً، الاستمارة '%{form_code}' غير متوفرة حاليا لتسليم الردود."
       form_not_smsable: "عفوااً، الاستمارة '%{form_code}' غير متوفرة حاليا لتقديم رسائل نصية قصيرة."
       form_version_outdated: "عفواً، رمز الاستمارة '%{form_code}' تشير إلى نسخة نظام قديمة. يرجى الحصول على دليل التقديم المحدث."
       invalid_form_code: "عفوا، '%{form_code}' ليس رمز استمارة صحيح."
       question_doesnt_exist: "عفواً، السؤال %{rank} غير موجود في الاستمارة '%{form_code}'."
       user_not_found: "عفواً، لم يتم العثور عليك في النظام"
+      no_answers: "آسف ، يجب عليك تقديم إجابة واحدة على الأقل."
     incoming_numbers:
       id: "هوية"
       phone_number: "رقم_هاتف"
@@ -2101,6 +2128,18 @@ ar:
   unauthorized:
     default: "غير مصرح لك للوصول إلى هذه الصفحة أو العملية."
     must_login: "عليك تسجيل الدخول للوصول إلى هذه الصفحة."
+  user_import:
+    instructions_html: |-
+        قم بتحميل جدول بيانات مع المستخدمين. يتم قبول جداول البيانات إكسل XLSX وملفات CSV فقط.
+
+        نموذج جدول بيانات متاح في <a href="%{xlsx_url}"> XLSX </a> و  <a href="%{csv_url}"> CSV</a> صيغ كنقطة بداية.
+
+        * يرجى عدم تغيير الصف العلوي من جدول البيانات بأي شكل من الأشكال.
+        * يجب أن تتضمن أرقام الهواتف رمز البلد (مثل +17095551212).
+        * قد يكون نوع الجنس "رجل" أو "امرأة" أو "رفض الإجابة" ، أو يمكن أن يكون أي قيمة أخرى.
+        * يجب أن تكون الجنسية هي اسم بلد مثل "كندا" أو "بنغلاديش".
+        * يجب فصل أسماء مجموعات المستخدمين المتعددة بفاصلة منقوطة.
+        * في حالة عدم وجود مجموعة مستخدمين مسماة ، سيتم إنشائها.
   user:
     add_assignment: "إضافة واجب "
     api_key:
@@ -2197,9 +2236,7 @@ ar:
       need_to_create: "لا يوجد حالياً أي مهمة، الرجاء"
       no_missions: "لا يوجد حاليا أي مهمة في النظام. يرجى الاتصال بالمسؤول."
     no_recent: "** 0 ** الردود الأخيرة"
-    published_form_count: "**%{count}** استمارة نشرت"
     select_a_form: "حدد الاستمارة للتقديم"
     select_a_report: "اختار تقرير لعرضه"
     total_responses: "**%{count}** مجموع الردود"
     total_users: "**%{count}** مجموع المستخدمين"
-    unpublished_form_count: "**%{count}** استمارات غير منشورة"

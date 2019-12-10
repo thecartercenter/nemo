@@ -106,7 +106,6 @@ pt-BR:
     next: "Próximo"
     _no: "Não"
     none: "Nenhum"
-    not_published: "Não publicado"
     ok: "Ok"
     or: "ou"
     OR: "OU"
@@ -114,7 +113,6 @@ pt-BR:
     pending: "Pendente"
     previous: "Anterior"
     print: "Imprimir"
-    published: "Publicado"
     regenerate: "Regenerar"
     remove: "Remover"
     report: "Relatório"
@@ -160,7 +158,6 @@ pt-BR:
     email: "E-mail"
     hint: "Dica"
     password: "Senha"
-    published: "Publicado?"
     questions: "Questões"
     title: "Título"
     type: "Tipo"
@@ -422,7 +419,6 @@ pt-BR:
         recipient_ids: "Recipientes do encaminhamento de SMS"
         authenticate_sms: "Autenticar o SMS?"
         updated_at: "Última alteração"
-        version: "Versão"
         item_list_heading: "Questões"
         default_response_name: "Nome padrão para a submissão"
       mission:
@@ -470,7 +466,6 @@ pt-BR:
         code: "Código"
         answer_count: "Respostas"
         form_count: "Formulários"
-        published: "Publicado?"
         key: "É uma questão-chave?"
         minimum: "Mínimo"
         maximum: "Ḿáximo"
@@ -582,67 +577,6 @@ pt-BR:
       user:
         phone: "p.ex. +5535987654321"
         phone2: "p.ex. +5535987654321"
-    action_links:
-      broadcast:
-        index: "Listar transmissões"
-      form:
-        new: "Criar novo formulário"
-        index: "Ver a lista de formulários"
-        show: "Ver formulário"
-        edit: "Editar formulário"
-        destroy: "Apagar formulário"
-        publish: "Publicar formulário"
-        unpublish: "Despublicar formulário"
-        print: "Imprimir formulário"
-      mission:
-        new: "Criar nova missão"
-        index: "Ver lista de missões"
-        show: "Ver missão"
-        edit: "Editar missão"
-        destroy: "Apagar missão"
-      operation:
-        clear: "Apagar todas as operações finalizadas"
-        destroy: "Apagar operação"
-        index: "Ver lista de operações"
-      option_set:
-        new: "Criar novo conjunto de opções"
-        index: "Ver lista de conjuntos de opções"
-        show: "Ver conjunto de opções"
-        edit: "Editar conjunto de opções"
-        destroy: "Apagar conjunto de opções"
-        export: "Exportar conjunto de opções"
-      option_sets/import:
-        new: "Importar novo conjunto de opções"
-      question:
-        new: "Criar nova questão"
-        index: "Ver lista de questões"
-        show: "Ver questão"
-        edit: "Editar questão"
-        destroy: "Apagar questão"
-      report/report:
-        new: "Criar novo relatório"
-        index: "Ver lista de relatórios"
-        show: "Ver relatório"
-        edit: "Editar relatório"
-        destroy: "Apagar relatório"
-      response:
-        index: "Mostrar todas as respostas já enviadas"
-        show: "Ver submissão"
-        edit: "Editar submissão"
-        destroy: "Apagar submissão"
-      user:
-        new: "Criar nova/o usuária/o"
-        index: "Ver lista de usuárias/os"
-        show: "Ver usuária/o"
-        edit: "Editar usuária/o"
-        destroy: "Apagar usuária/o"
-      user_group:
-        new: "Novo grupo"
-        index: "Grupos de usuárias/os"
-        show: "Ver grupo de usuárias/os"
-        edit: "Editar grupo de usuárias/os"
-        destroy: "Apagar grupo de usuárias/os"
-        members: "Ver lista de integrantes"
     hints:
       form:
         name: "Nome descritivo para o formulário."
@@ -651,6 +585,57 @@ pt-BR:
         aggregation_id: "A operação que você quer realizar sobre os dados combinados."
         kind: "O tipo de dados com o qual você quer trabalhar."
         display_type: "A forma que você quer que os resultados sejam apresentados."
+    errors:
+      messages:
+        taken: "Por favor, insira um valor único."
+        is_invalid: "Por favor, insira um valor único."
+        blank: "Este campo é obrigatório."
+        empty: "Este campo não pode ficar em branco."
+        not_a_number: "Por favor, insira um número válido."
+        not_an_integer: "Por favor, insira um número inteiro válido."
+        did_not_match: "As senhas não batem."
+        too_long:
+          one: "Por favor, insira no máximo um caractere."
+          other: "Por favor, insira no máximo %{count} caracteres."
+        too_short:
+          one: "Por favor, insira no mínimo um caractere."
+          other: "Por favor, insira no mínimo %{count} caracteres."
+        wrong_length:
+          one: "Por favor, insira exatamente um caractere."
+          other: "Por favor, insira exatamente %{count} caracteres."
+        must_be_group: "O nível superior tem que ser um grupo."
+        invalid_password: "A senha deve incluir pelo menos um número, uma letra minúscula, e uma letra maiúscula."
+        all_required: "Todos os campos são obrigatórios."
+      models:
+        answer:
+          required: "Por favor, insira um valor."
+          invalid_latitude: "A latitude está fora dos limites."
+          invalid_longitude: "A longitude está fora dos limites."
+          invalid_altitude: "A altura está fora dos limites."
+          invalid_accuracy: "A precisão está fora dos limites."
+          invalid_date: "A data é inválida."
+          invalid_datetime: "A data/hora é inválida."
+          accuracy_negative: "A precisão não pode ser negativa."
+        assignment:
+          blank: "é obrigatoria."
+        broadcast:
+          no_recipients: "Ninguém vai receber esta transmissão."
+        condition:
+          all_required: "Todos os campos condicionais são obrigatórios."
+        constraint:
+          attributes:
+            conditions:
+              blank: "Tem que haver pelo menos uma condição."
+        form:
+          cant_delete_if_has_responses: "Você não pode apagar este formulário, pois ele tem pelo menos uma submissão associada."
+          ranks_break_conditions: "As novas pontuações invalidam uma ou mais condições."
+          general: "O formulário está inválido (veja abaixo)."
+          attributes:
+            default_response_name:
+              calc_must_wrap_all: "calc(...) tem que cercar o nome inteiro."
+        mission:
+          let_num_spc_only: "Por favor, use apenas letras, números e espaços."
+          general: "Esta missão é inválida (veja abaixo)."
   page_titles:
     responses:
       new: "Nova submissão de resposta"
