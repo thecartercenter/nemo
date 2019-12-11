@@ -209,11 +209,6 @@ class Question < ApplicationRecord
     forms.any?(&:smsable?)
   end
 
-  # an odk-friendly unique code
-  def odk_code
-    "q#{id}"
-  end
-
   # an odk (xpath) expression of any question contraints
   def odk_constraint
     exps = []
