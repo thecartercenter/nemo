@@ -162,7 +162,7 @@ module Odk
     end
 
     def form_item_id_from_tag(tag)
-      Odk::CodeMapper.instance.item_id_for_code(tag, response.form)
+      Odk::CodeMapper.instance.item_id_for_code(tag)
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct

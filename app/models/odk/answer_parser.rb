@@ -42,7 +42,7 @@ module Odk
     end
 
     def option_id_for_option_node_code(option_node_id)
-      Odk::CodeMapper.instance.item_id_for_code(option_node_id, response.form)
+      Odk::CodeMapper.instance.item_id_for_code(option_node_id)
     rescue SubmissionError
       nil
     end
