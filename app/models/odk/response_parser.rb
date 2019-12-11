@@ -170,7 +170,8 @@ module Odk
       raise SubmissionError, "no form id was given" if id.nil?
       raise FormVersionError, "form version must be specified" if version.nil?
 
-      form = response.form = Form.find(id)
+      form = response.form = Form.where(mission: response.mission).find_by(id: id)
+      raise SubmissionError, "form not found in this mission" if form.nil?
 
       raise FormStatusError, "form is a draft" if form.draft?
       raise FormStatusError, "form is paused" if form.paused?

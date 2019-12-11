@@ -137,7 +137,7 @@ describe Odk::ResponseParser do
           let(:other_form) { create(:form) }
 
           it "should error" do
-            xml # create xml before updating form's second question to have a different form id.
+            xml # create xml before updating form.
             form.c[1].update_attribute(:form_id, other_form.id) # skip validations with update_attribute
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
@@ -145,14 +145,16 @@ describe Odk::ResponseParser do
           end
         end
 
-        context "response is in wrong mission" do
+        context "form is in wrong mission" do
+          let(:mission) { create(:mission) }
           let(:other_mission) { create(:mission) }
-          let(:response) { Response.new(form: form, mission: other_mission, user: user) }
 
           it "should error" do
+            xml # create xml before updating form.
+            form.update!(mission: other_mission)
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(SubmissionError, /unidentifiable group or question/)
+            end.to raise_error(SubmissionError, /form not found/)
           end
         end
       end
