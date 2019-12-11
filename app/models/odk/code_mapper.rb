@@ -8,7 +8,7 @@ module Odk
     include Singleton
 
     # Old style group codes had a - after grp. This can go away once all 5.x servers are gone.
-    ITEM_CODE_REGEX = /\A(grp|qing|q|os|on)-?([a-f0-9\-]+)/
+    ITEM_CODE_REGEX = /\A(grp|qing|q|os|on)-?([a-f0-9\-]+)/.freeze
 
     def initialize
     end
