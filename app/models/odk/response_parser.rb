@@ -34,7 +34,7 @@ module Odk
 
     def process_xml(raw_odk_xml)
       data = Nokogiri::XML(raw_odk_xml).root
-      lookup_and_check_form(id: data["id"], version: data["version"])
+      lookup_and_check_form(data["id"], data["version"])
       if existing_response
         answer_parser.add_media_to_existing_response
       else
@@ -166,11 +166,11 @@ module Odk
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct
-    def lookup_and_check_form(params)
-      raise SubmissionError, "no form id was given" if params[:id].nil?
-      raise FormVersionError, "form version must be specified" if params[:version].nil?
+    def lookup_and_check_form(id, version)
+      raise SubmissionError, "no form id was given" if id.nil?
+      raise FormVersionError, "form version must be specified" if version.nil?
 
-      form = response.form ||= Form.find(params[:id])
+      form = response.form ||= Form.find(id)
 
       raise FormStatusError, "form is a draft" if form.draft?
       raise FormStatusError, "form is paused" if form.paused?
@@ -178,12 +178,12 @@ module Odk
       raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
       # This check for old 3-letter codes can be removed once we stop supporting them.
-      if params[:version].length == FormVersion::CODE_LENGTH
-        code = params[:version]
+      if version.length == FormVersion::CODE_LENGTH
+        code = version
         version_num = form.versions.find_by(code: code)&.number
         raise FormVersionError, "Form version code not found" if version_num.nil?
       else
-        version_num = params[:version]
+        version_num = version
       end
 
       raise FormVersionError, "Form version is outdated" if version_num < form.minimum_version_number
