@@ -144,33 +144,9 @@ module Odk
     end
 
     def add_answer(content, form_item, parent)
-      reject_invalid_options(content, form_item)
       answer = new_node(Answer, form_item, parent)
       answer_parser.populate_answer_value(answer, content, form_item)
       parent.children << answer
-    end
-
-    # Raise an error if an OptionNode references something invalid.
-    def reject_invalid_options(content, form_item)
-      return unless form_item.option_set_id.present? && content.present?
-
-      # Remove the `on` prefix for each ID in the space-separated string.
-      option_node_ids = content.split.map { |id| id[2..-1] }
-      return if options_in_mission?(option_node_ids)
-
-      raise SubmissionError, "Submission contains unidentifiable option node(s) '#{option_node_ids}'."
-    end
-
-    def options_in_mission?(option_node_ids)
-      option_node_ids.all? { |id| option_in_mission?(id) }
-    end
-
-    def option_in_mission?(option_node_id)
-      option_node_id.blank? || option_nodes_in_mission[option_node_id].present?
-    end
-
-    def option_nodes_in_mission
-      @option_nodes_in_mission ||= OptionNode.where(mission: @response.mission).pluck(:id).index_by(&:itself)
     end
 
     def form_item(name)
