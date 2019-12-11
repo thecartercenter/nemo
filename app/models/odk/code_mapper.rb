@@ -30,8 +30,6 @@ module Odk
       end
     end
 
-    # Form passed in because used for fall-back to older qing odk code
-    # format that was q#{questioning.question.id}
     def item_id_for_code(code)
       # look for prefix and id, and remove "_#{rank}" suffix for multilevel subqings.
       md = code.match(ITEM_CODE_REGEX)
