@@ -9,6 +9,7 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
     @params = params || {}
     @init_user_group_select()
     @toggle_custom_gender_visibility()
+    @toggle_password_fields()
 
   init_user_group_select: ->
     option_builder = new ELMO.Utils.Select2OptionBuilder()
