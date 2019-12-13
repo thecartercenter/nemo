@@ -278,8 +278,9 @@ class Form < ApplicationRecord
     current_version.update!(current: false) if had_current_version
     versions.create!(current: true, minimum: !had_current_version)
 
-    # Reset downloads since we are only interested in downloads of present version
-    update_column(:downloads, 0)
+    # Reset downloads since we are only interested in downloads of present version.
+    # Touch last changed so the cache key gets bumped.
+    update_columns(downloads: 0, status_changed_at: Time.current)
   end
 
   # efficiently gets the number of answers for the given questioning on this form
