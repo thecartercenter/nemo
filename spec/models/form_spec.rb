@@ -120,6 +120,15 @@ describe Form do
       end
     end
 
+    context "when updating a form version" do
+      it "should change" do
+        old = Form.odk_index_cache_key(mission: get_mission)
+        form2.increment_version
+        new = Form.odk_index_cache_key(mission: get_mission)
+        expect(new).not_to eq(old)
+      end
+    end
+
     context "for mission with no forms" do
       let(:mission2) { create(:mission) }
 
