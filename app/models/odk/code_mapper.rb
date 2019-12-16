@@ -37,24 +37,13 @@ module Odk
       prefix = md[1]
       id = md[2]
       case prefix
-      when "grp", "qing" then find(:form_item, id)
-      when "on" then find(:option_node, id)
+      when "grp", "qing" then FormItem.where(id: id).pluck(:id).first
+      when "on" then OptionNode.id_to_option_id(id) || OptionNode.old_id_to_option_id(id)
       end
     end
 
     def item_code?(code)
       code.match?(ITEM_CODE_REGEX)
-    end
-
-    private
-
-    def find(type, id)
-      case type
-      when :form_item
-        FormItem.where(id: id).pluck(:id).first
-      when :option_node
-        OptionNode.id_to_option_id(id) || OptionNode.old_id_to_option_id(id)
-      end
     end
   end
 end
