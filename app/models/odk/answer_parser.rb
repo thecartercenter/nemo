@@ -42,7 +42,7 @@ module Odk
     end
 
     def option_id_for_option_node_code(option_node_id)
-      Odk::CodeMapper.instance.item_id_for_code(option_node_id, response.form)
+      Odk::CodeMapper.instance.item_id_for_code(option_node_id)
     rescue SubmissionError
       nil
     end
@@ -74,7 +74,7 @@ module Odk
       begin
         klass.create!(item: files[pending_file_name])
       rescue ActiveRecord::RecordInvalid => e
-        Rails.logger.info("Media object failed validation on ODK upload, skipping (message: '#{e.to_s}', "\
+        Rails.logger.info("Media object failed validation on ODK upload, skipping (message: '#{e}', "\
           "filename: '#{pending_file_name}')")
         nil
       end

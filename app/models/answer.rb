@@ -115,14 +115,14 @@ class Answer < ResponseNode
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
   def self.location_answers_for_mission(mission, user = nil, _options = {})
-    response_conditions = { mission_id: mission.try(:id) }
+    response_conditions = {mission_id: mission.try(:id)}
 
     # if the user is not a staffer or higher privilege, only show their own responses
     response_conditions[:user_id] = user.id if user.present? && !user.role?(:staffer, mission)
 
     # return an AR relation
     joins(:response)
-      .joins(%{LEFT JOIN "choices" ON "choices"."answer_id" = "answers"."id"})
+      .joins(%(LEFT JOIN "choices" ON "choices"."answer_id" = "answers"."id"))
       .where(responses: response_conditions)
       .where(%{
         ("answers"."latitude" IS NOT NULL AND "answers"."longitude" IS NOT NULL)
@@ -131,7 +131,7 @@ class Answer < ResponseNode
       .select(:response_id,
         %{COALESCE("answers"."latitude", "choices"."latitude") AS "latitude",
           COALESCE("answers"."longitude", "choices"."longitude") AS "longitude"})
-      .order(%{"answers"."response_id" DESC})
+      .order(%("answers"."response_id" DESC))
       .paginate(page: 1, per_page: 1000)
   end
 
@@ -144,7 +144,7 @@ class Answer < ResponseNode
       WHERE a.type = 'Answer'
         AND (a.option_id = ? OR c.option_id = ?)
         AND a.questioning_id IN (?)",
-      option_id, option_id, questioning_ids]).first.count > 0
+                 option_id, option_id, questioning_ids]).first.count > 0
   end
 
   # This is a temporary method for fetching option_node based on the related OptionSet and Option.
@@ -194,7 +194,7 @@ class Answer < ResponseNode
     when "decimal" then value.try(:to_f)
     when "select_one" then option_name
     when "select_multiple" then choices.empty? ? nil : choices.map(&:option_name).sort.join(";")
-    else value.blank? ? nil : value
+    else value.presence
     end
   end
 
@@ -212,7 +212,7 @@ class Answer < ResponseNode
     value.blank? && time_value.blank? && date_value.blank? &&
       datetime_value.blank? && option_id.nil? && media_object.nil?
   end
-  alias_method :blank?, :empty?
+  alias blank? empty?
 
   def location_type_with_value?
     qtype.name == "location" && value.present?
@@ -223,11 +223,11 @@ class Answer < ResponseNode
   end
 
   def from_group?
-    questioning && questioning.parent && questioning.parent.type == "QingGroup"
+    questioning&.parent && questioning.parent.type == "QingGroup"
   end
 
   def option_name
-    option.canonical_name if option
+    option&.canonical_name
   end
 
   def option_names
@@ -300,7 +300,7 @@ class Answer < ResponseNode
     choices.each(&:replicate_location_values)
 
     if location_type_with_value?
-      tokens = self.value.split(" ")
+      tokens = value.split(" ")
       LOCATION_ATTRIBS.each_with_index do |a, i|
         self[a] = parse_token(tokens[i])
       end
@@ -320,9 +320,7 @@ class Answer < ResponseNode
     LOCATION_ATTRIBS.each do |a|
       next if self[a].nil?
       column = self.class.column_for_attribute(a)
-      if self[a].abs > 10 ** (column.precision - column.scale)
-        self[a] = 0
-      end
+      self[a] = 0 if self[a].abs > 10**(column.precision - column.scale)
     end
     self.accuracy = 0 if accuracy.present? && accuracy < 0
     true
@@ -330,19 +328,17 @@ class Answer < ResponseNode
 
   def format_location_value
     if coordinates?
-      self.value = sprintf("%.6f %.6f", latitude, longitude)
+      self.value = format("%.6f %.6f", latitude, longitude)
       if altitude.present?
-        self.value << sprintf(" %.3f", altitude)
-        if accuracy.present?
-          self.value << sprintf(" %.3f", accuracy)
-        end
+        value << format(" %.3f", altitude)
+        value << format(" %.3f", accuracy) if accuracy.present?
       end
     end
     true
   end
 
   def round_ints
-    self.value = value.to_i if %w(integer counter).include?(qtype.name) && value.present?
+    self.value = value.to_i if %w[integer counter].include?(qtype.name) && value.present?
     true
   end
 
@@ -365,7 +361,7 @@ class Answer < ResponseNode
   def validate_min_max
     val_f = value.to_f
     if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
-      question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+        question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
       errors.add(:value, question.min_max_error_msg)
     end
   end
@@ -374,15 +370,9 @@ class Answer < ResponseNode
     # Doesn't make sense to validate lat/lng if copied from options because the user
     # can't do anything about that.
     if location_type_with_value?
-      if latitude.nil? || latitude < -90 || latitude > 90
-        errors.add(:value, :invalid_latitude)
-      end
-      if longitude.nil? || longitude < -180 || longitude > 180
-        errors.add(:value, :invalid_longitude)
-      end
-      if altitude.present? && (altitude >= 1e6 || altitude <= -1e6)
-        errors.add(:value, :invalid_altitude)
-      end
+      errors.add(:value, :invalid_latitude) if latitude.nil? || latitude < -90 || latitude > 90
+      errors.add(:value, :invalid_longitude) if longitude.nil? || longitude < -180 || longitude > 180
+      errors.add(:value, :invalid_altitude) if altitude.present? && (altitude >= 1e6 || altitude <= -1e6)
       if accuracy.present?
         if accuracy < 0
           errors.add(:value, :accuracy_negative)

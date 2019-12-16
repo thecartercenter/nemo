@@ -4,7 +4,7 @@ module Odk
   # Abstract parent class for classes that parse $-style patterns for ODK.
   class DynamicPatternParser
     # Basic regex for codes like $Question7
-    CODE_REGEX = /[$][!]?[A-z]\w+/
+    CODE_REGEX = /[$][!]?[A-z]\w+/.freeze
 
     # Same as above but anchored to string start and end for checking individual tokens.
     ANCHORED_CODE_REGEX = Regexp.new("\\A#{CODE_REGEX.source}\\z")

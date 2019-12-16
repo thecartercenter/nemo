@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module ODK
   class UserConfigEncoder
-
     def initialize(username, password, site_url)
       @username = username
       @password = password
