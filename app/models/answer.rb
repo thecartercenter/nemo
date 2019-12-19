@@ -159,8 +159,23 @@ class Answer < ResponseNode
 
   # This is a temporary method for assigning option based on an OptionNode ID.
   # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
+  #
+  # Raises a loud error if the OptionNode is not in the OptionSet (or the mission) for security purposes.
   def option_node_id=(id)
-    self.option_id = id.present? ? OptionNode.id_to_option_id(id) : nil
+    self.option_id = if id.present?
+                       option_id = OptionNode.where(option_set: option_set).id_to_option_id(id)
+                       raise ArgumentError if option_id.nil?
+                       option_id
+                     end
+  end
+
+  # Raises a loud error if the OptionNode is not in the OptionSet (or the mission) for security purposes.
+  def choices_attributes=(attributes)
+    attributes.each do |(index, item)|
+      scope = OptionNode.where(option_set: option_set)
+      raise ArgumentError if scope.find_by(id: item["option_node_id"]).nil?
+    end
+    super(attributes)
   end
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
