@@ -130,7 +130,7 @@ describe Results::WebResponseParser do
         end
 
         it "errors" do
-          expect { described_class.new(response).parse(input) }.to raise_error(SubmissionError)
+          expect { described_class.new(response).parse(input) }.to raise_error(ArgumentError)
         end
       end
     end
@@ -174,7 +174,7 @@ describe Results::WebResponseParser do
         end
 
         it "errors" do
-          expect { described_class.new(response).parse(input) }.to raise_error(SubmissionError)
+          expect { described_class.new(response).parse(input) }.to raise_error(ArgumentError)
         end
       end
     end
@@ -205,7 +205,7 @@ describe Results::WebResponseParser do
         end
 
         it "errors" do
-          expect { described_class.new(response).parse(input) }.to raise_error(SubmissionError)
+          expect { described_class.new(response).parse(input) }.to raise_error(ArgumentError)
         end
       end
     end
