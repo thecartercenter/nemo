@@ -424,25 +424,26 @@ describe Odk::ResponseParser do
 
     context "form with multilevel answer" do
       let(:question_types) { %w[text multilevel_select_one multilevel_select_one multilevel_select_one] }
-      let(:level1_opt) { form.c[1].option_set.sorted_children[1] }
-      let(:level2_opt) { form.c[1].option_set.sorted_children[1].sorted_children[0] }
+      let(:q2_level1_opt) { form.c[1].option_set.sorted_children[1] }
+      let(:q2_level2_opt) { form.c[1].option_set.sorted_children[1].sorted_children[0] }
+      let(:q4_level1_opt) { form.c[3].option_set.sorted_children[1] }
       let(:fixture_name) { "multilevel_response" }
       let(:xml_values) do
         ["A",
-         "on#{level1_opt.id}",
-         "on#{level2_opt.id}",
+         "on#{q2_level1_opt.id}",
+         "on#{q2_level2_opt.id}",
          "",
          "",
-         "on#{level1_opt.id}",
+         "on#{q4_level1_opt.id}",
          ""]
       end
       let(:expected_values) do
         ["A",
-         level1_opt.option.name,
-         level2_opt.option.name,
+         q2_level1_opt.option.name,
+         q2_level2_opt.option.name,
          nil,
          nil,
-         level1_opt.option.name,
+         q4_level1_opt.option.name,
          nil]
       end
 
