@@ -62,8 +62,20 @@ class Choice < ApplicationRecord
 
   # This is a temporary method for assigning option based on an OptionNode ID.
   # Eventually Options will be removed and OptionNodes will be stored on Choices directly.
+  #
+  # Raises a loud error if the OptionNode is not in the OptionSet (or the mission) for security purposes.
   def option_node_id=(id)
-    self.option_id = id.present? ? OptionNode.id_to_option_id(id) : nil
+    self.option_id = if id.present?
+                       # Answer can't always be set in advance, so only scope it if it's set.
+                       scope = if answer.present?
+                                 OptionNode.where(option_set_id: answer.option_set.id)
+                               else
+                                 OptionNode
+                               end
+                       option_id = scope.id_to_option_id(id)
+                       raise ArgumentError if option_id.nil?
+                       option_id
+                     end
   end
 
   # This may get called twice during an answer save but who cares.
