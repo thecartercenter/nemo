@@ -80,6 +80,13 @@ module Results
 
     def new_tree_node_attrs(web_hash_node, tree_parent)
       clean_params = web_hash_node.slice(*TOP_LEVEL_PARAMS).permit(PERMITTED_PARAMS)
+      if clean_params.key?(:choices_attributes)
+        clean_params[:choices_attributes].keys.each do |key|
+          # Include mission_id FIRST so it can immediately be used in models to validate things.
+          value = clean_params[:choices_attributes][key]
+          clean_params[:choices_attributes][key] = {mission_id: @response.mission_id}.merge(value)
+        end
+      end
       clean_params.merge(rank_attributes(tree_parent))
     end
 
