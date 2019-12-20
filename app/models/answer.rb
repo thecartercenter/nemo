@@ -171,8 +171,9 @@ class Answer < ResponseNode
   end
 
   # Raises a loud error if the OptionNode is not in the OptionSet (or the mission) for security purposes.
-  # Note: This would be simpler to put in choice.rb,
-  # but `answer` isn't defined at that point in time, so we can't scope it there.
+  #
+  # Note: It would be simpler to reuse the logic that's in choice.rb to accomplish this,
+  # but `answer` isn't defined at that point for web responses, so we can't scope it there.
   def choices_attributes=(attributes)
     attributes.each do |(_index, item)|
       scope = OptionNode.where(option_set_id: option_set_id)
