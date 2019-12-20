@@ -33,6 +33,8 @@ class Choice < ApplicationRecord
 
   before_save :replicate_location_values
 
+  attr_writer :mission_id
+
   def checked
     # Only explicitly false should return false.
     # This is so that the default value is true.
@@ -66,13 +68,7 @@ class Choice < ApplicationRecord
   # Raises a loud error if the OptionNode is not in the OptionSet (or the mission) for security purposes.
   def option_node_id=(id)
     self.option_id = if id.present?
-                       # Answer can't always be set in advance, so only scope it if it's set.
-                       scope = if answer.nil?
-                                 OptionNode
-                               else
-                                 OptionNode.where(option_set_id: answer.option_set.id)
-                               end
-                       option_id = scope.id_to_option_id(id)
+                       option_id = OptionNode.where(mission_id: @mission_id).id_to_option_id(id)
                        raise ArgumentError if option_id.nil?
                        option_id
                      end
