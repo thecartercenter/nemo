@@ -84,7 +84,8 @@ class Answer < ResponseNode
   accepts_nested_attributes_for(:choices)
 
   delegate :question, :qtype, :qtype_name, :required?, :hidden?, :multimedia?,
-    :option_set, :options, :first_level_option_nodes, :condition, :parent_group_name, to: :questioning
+    :option_set, :option_set_id, :options, :first_level_option_nodes, :condition,
+    :parent_group_name, to: :questioning
   delegate :name, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :name, to: :option, prefix: true, allow_nil: true
@@ -150,11 +151,11 @@ class Answer < ResponseNode
   # This is a temporary method for fetching option_node based on the related OptionSet and Option.
   # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
   def option_node
-    OptionNode.where(option_id: option_id, option_set_id: option_set.id).first
+    OptionNode.where(option_id: option_id, option_set_id: option_set_id).first
   end
 
   def option_node_id
-    option_node.try(:id)
+    option_node&.id
   end
 
   # This is a temporary method for assigning option based on an OptionNode ID.
@@ -163,16 +164,18 @@ class Answer < ResponseNode
   # Raises a loud error if the OptionNode is not in the OptionSet (or the mission) for security purposes.
   def option_node_id=(id)
     self.option_id = if id.present?
-                       option_id = OptionNode.where(option_set: option_set).id_to_option_id(id)
+                       option_id = OptionNode.where(option_set_id: option_set_id).id_to_option_id(id)
                        raise ArgumentError if option_id.nil?
                        option_id
                      end
   end
 
   # Raises a loud error if the OptionNode is not in the OptionSet (or the mission) for security purposes.
+  # Note: This would be simpler to put in choice.rb,
+  # but `answer` isn't defined at that point in time, so we can't scope it there.
   def choices_attributes=(attributes)
-    attributes.each do |(index, item)|
-      scope = OptionNode.where(option_set: option_set)
+    attributes.each do |(_index, item)|
+      scope = OptionNode.where(option_set_id: option_set_id)
       raise ArgumentError if scope.find_by(id: item["option_node_id"]).nil?
     end
     super(attributes)

@@ -9,9 +9,6 @@ module Odk
 
     ITEM_CODE_REGEX = /\A(grp|qing|os|on)([a-f0-9\-]+)/.freeze
 
-    def initialize
-    end
-
     def code_for_item(item, options: {})
       return "/data" if item.is_a?(FormItem) && item.is_root?
       case item
@@ -31,15 +28,10 @@ module Odk
     end
 
     def item_id_for_code(code)
-      # look for prefix and id, and remove "_#{rank}" suffix for multilevel subqings.
+      # `md` will equal [_, prefix, id]; remove "_#{rank}" suffix for multilevel subqings.
       md = code.match(ITEM_CODE_REGEX)
       raise SubmissionError, "Code format unknown: #{code}." if md.blank? || md.length != 3
-      prefix = md[1]
-      id = md[2]
-      case prefix
-      when "grp", "qing" then FormItem.where(id: id).pluck(:id).first
-      when "on" then OptionNode.id_to_option_id(id) || OptionNode.old_id_to_option_id(id)
-      end
+      md[2] # id
     end
 
     def item_code?(code)
