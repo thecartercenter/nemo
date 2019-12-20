@@ -67,10 +67,10 @@ class Choice < ApplicationRecord
   def option_node_id=(id)
     self.option_id = if id.present?
                        # Answer can't always be set in advance, so only scope it if it's set.
-                       scope = if answer.present?
-                                 OptionNode.where(option_set_id: answer.option_set.id)
-                               else
+                       scope = if answer.nil?
                                  OptionNode
+                               else
+                                 OptionNode.where(option_set_id: answer.option_set.id)
                                end
                        option_id = scope.id_to_option_id(id)
                        raise ArgumentError if option_id.nil?
