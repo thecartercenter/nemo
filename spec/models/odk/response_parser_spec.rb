@@ -129,7 +129,7 @@ describe Odk::ResponseParser do
           it "should error" do
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(ActiveRecord::RecordNotFound)
+            end.to raise_error(SubmissionError, /form not found/)
           end
         end
 
@@ -154,7 +154,7 @@ describe Odk::ResponseParser do
             form.update!(mission: other_mission)
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(SubmissionError, /form not found/)
+            end.to raise_error(SubmissionError, /unidentifiable group or question/)
           end
         end
       end
@@ -192,7 +192,7 @@ describe Odk::ResponseParser do
           it "should error" do
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(SubmissionError, /unidentifiable option node/)
+            end.to raise_error(ArgumentError)
           end
         end
       end
@@ -219,7 +219,7 @@ describe Odk::ResponseParser do
           it "should error" do
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(SubmissionError, /unidentifiable option node/)
+            end.to raise_error(ArgumentError)
           end
         end
       end
@@ -487,7 +487,7 @@ describe Odk::ResponseParser do
         it "should error" do
           expect do
             Odk::ResponseParser.new(response: response, files: files).populate_response
-          end.to raise_error(SubmissionError, /unidentifiable option node/)
+          end.to raise_error(ArgumentError)
         end
       end
     end
