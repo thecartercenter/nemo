@@ -17,11 +17,11 @@ module Odk
       case qtype.name
       when "select_one"
         # assume content has option node code ("on#{option_node.id}")
-        answer.option_node_id = CodeMapper.instance.item_id_for_code(content)
+        answer.option_node_id = safe_item_id_for_code(content)
       when "select_multiple"
         unless content == "none"
           content.split(" ").each do |code|
-            answer.choices.build(option_node_id: CodeMapper.instance.item_id_for_code(code))
+            answer.choices.build(option_node_id: safe_item_id_for_code(code))
           end
         end
       when "date", "datetime", "time"
@@ -39,6 +39,11 @@ module Odk
         answer.value = content
       end
       answer
+    end
+
+    # Get the item ID, unless it's nil (normally that would raise an error).
+    def safe_item_id_for_code(code)
+      code.present? ? CodeMapper.instance.item_id_for_code(code) : nil
     end
 
     def add_media_to_existing_response
