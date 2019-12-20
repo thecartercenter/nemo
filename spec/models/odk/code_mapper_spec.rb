@@ -30,7 +30,7 @@ describe Odk::CodeMapper do
     it "returns option id for node" do
       option_node = form.c[2].option_set.c[0]
       code = "on#{option_node.id}"
-      expect(mapper.item_id_for_code(code)).to eq(option_node.option.id)
+      expect(mapper.item_id_for_code(code)).to eq(option_node.id)
     end
 
     it "errors when code has unknown format" do
