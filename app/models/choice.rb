@@ -53,11 +53,11 @@ class Choice < ApplicationRecord
   # This is a temporary method for fetching option_node based on the related OptionSet and Option.
   # Eventually Options will be removed and OptionNodes will be stored on Choices directly.
   def option_node
-    OptionNode.where(option_id: option_id, option_set_id: answer.option_set.id).first
+    OptionNode.find_by(option_id: option_id, option_set_id: answer.option_set.id)
   end
 
   def option_node_id
-    option_node.try(:id)
+    option_node&.id
   end
 
   # This is a temporary method for assigning option based on an OptionNode ID.

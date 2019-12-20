@@ -151,7 +151,7 @@ class Answer < ResponseNode
   # This is a temporary method for fetching option_node based on the related OptionSet and Option.
   # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
   def option_node
-    OptionNode.where(option_id: option_id, option_set_id: option_set_id).first
+    OptionNode.find_by(option_id: option_id, option_set_id: option_set_id)
   end
 
   def option_node_id
@@ -188,7 +188,7 @@ class Answer < ResponseNode
   end
 
   def choices_by_option
-    @choice_hash ||= choices.select(&:checked?).index_by(&:option)
+    @choices_by_option ||= choices.select(&:checked?).index_by(&:option)
   end
 
   def all_choices
