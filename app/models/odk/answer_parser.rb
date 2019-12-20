@@ -21,7 +21,7 @@ module Odk
       when "select_multiple"
         unless content == "none"
           content.split(" ").each do |code|
-            answer.choices.build(answer: answer, option_node_id: safe_item_id_for_code(code))
+            answer.choices.build(mission_id: response.mission_id, option_node_id: safe_item_id_for_code(code))
           end
         end
       when "date", "datetime", "time"
