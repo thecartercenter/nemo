@@ -71,6 +71,7 @@ module Results
       else # update
         existing_node = tree_parent.children.select { |c| c.id == id }.first
         updatable_params = web_hash_node.permit(PERMITTED_PARAMS)
+        merge_mission_id_for_choices(updatable_params)
         existing_node.update(updatable_params)
         existing_node.relevant = false if web_hash_node[:_relevant] == "false"
         existing_node._destroy = true if web_hash_node[:_destroy] == "true"
@@ -80,14 +81,20 @@ module Results
 
     def new_tree_node_attrs(web_hash_node, tree_parent)
       clean_params = web_hash_node.slice(*TOP_LEVEL_PARAMS).permit(PERMITTED_PARAMS)
-      if clean_params.key?(:choices_attributes)
-        clean_params[:choices_attributes].keys.each do |key|
-          # Include mission_id FIRST so it can immediately be used in models to validate things.
-          value = clean_params[:choices_attributes][key]
-          clean_params[:choices_attributes][key] = {mission_id: @response.mission_id}.merge(value)
-        end
-      end
+      merge_mission_id_for_choices(clean_params)
       clean_params.merge(rank_attributes(tree_parent))
+    end
+
+    # Merge in the mission_id for all choices_attributes of the params
+    # so the mission can be used later to scope things.
+    def merge_mission_id_for_choices(clean_params)
+      return unless clean_params.key?(:choices_attributes)
+
+      clean_params[:choices_attributes].keys.each do |key|
+        # Include mission_id FIRST so it can immediately be used in models to validate things.
+        value = clean_params[:choices_attributes][key]
+        clean_params[:choices_attributes][key] = {mission_id: @response.mission_id}.merge(value)
+      end
     end
 
     def ignore_node?(web_hash_node)
