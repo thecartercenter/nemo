@@ -47,7 +47,7 @@ module SmsHelper
   # Constructs html to show a user with a phone number for use in the SMS log.
   # Phone may only be nil if the user is the dummy ELMO user for incoming messages.
   def user_with_phone(user, phone)
-    output = "".html_safe
+    output = +"".html_safe
 
     if user == Sms::SiteUser.instance
       output << user.name
@@ -74,7 +74,7 @@ module SmsHelper
 
     minutes = seconds_diff / 60
 
-    str = ""
+    str = +""
     str << "#{hours}h" if hours > 0
     str << "#{minutes}m"
     str
