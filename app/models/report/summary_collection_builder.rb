@@ -23,7 +23,8 @@ class Report::SummaryCollectionBuilder
 
   # builds a summary collection with the given questionings and disaggregation qing
   # if disagg_qing is nil, no disaggregation will be done
-  # options[:restrict_to_user] - (optional) If specified, only Responses for the given user will be included in the results.
+  # options[:restrict_to_user] - (optional) If specified, only Responses for the given user
+  # will be included in the results.
   def initialize(questionings, disagg_qing, options = {})
     @disagg_qing = disagg_qing
     @options = options
@@ -42,7 +43,9 @@ class Report::SummaryCollectionBuilder
     end
 
     # generate summary collections for each group
-    collections = grouped.keys.map { |g| grouped[g].empty? ? nil : send("collection_for_#{g}_questionings", grouped[g]) }.compact.flatten
+    collections = grouped.keys.map do |g|
+      grouped[g].empty? ? nil : send("collection_for_#{g}_questionings", grouped[g])
+    end.compact.flatten
 
     # merge to make a single summary collection
     collection = Report::SummaryCollection.merge_all(collections, questionings)
@@ -67,10 +70,11 @@ class Report::SummaryCollectionBuilder
 
     # some supporting arrays
     stats = %w[mean min max]
-    qings_by_id = stat_qs.index_by(&:id)
 
     # build headers
-    headers = stats.map { |s| {name: I18n.t("report/report.standard_form_report.stat_headers.#{s}"), stat: s.to_sym} }
+    headers = stats.map do |s|
+      {name: I18n.t("report/report.standard_form_report.stat_headers.#{s}"), stat: s.to_sym}
+    end
 
     # loop over each possible disagg value
     subsets = disagg_values.map do |disagg_value|
@@ -99,11 +103,15 @@ class Report::SummaryCollectionBuilder
             # Datetime values are in UTC so we convert them to string and then parse them into our zone.
             # Sometimes the zone shown in to_s is something other than UTC but it really is UTC so we
             # strip it out before parsing.
-            stats.each { |s| stat_values[s] = I18n.l(Time.zone.parse(stat_values[s].strftime("%Y-%m-%d %H:%M:%S UTC"))) }
+            stats.each do |s|
+              stat_values[s] = I18n.l(Time.zone.parse(stat_values[s].strftime("%Y-%m-%d %H:%M:%S UTC")))
+            end
           end
 
           # build items
-          items = stats.map { |stat| Report::SummaryItem.new(qtype_name: qing.qtype_name, stat: stat_values[stat]) }
+          items = stats.map do |stat|
+            Report::SummaryItem.new(qtype_name: qing.qtype_name, stat: stat_values[stat])
+          end
           null_count = stat_values["null_count"]
         end
 
@@ -115,7 +123,8 @@ class Report::SummaryCollectionBuilder
       # build blank summaries for missing qings
       already_summarized = summaries.map(&:questioning)
       summaries += (stat_qs - already_summarized).map do |qing|
-        Report::QuestionSummary.new(questioning: qing, display_type: :structured, headers: headers, items: [], null_count: 0)
+        Report::QuestionSummary.new(questioning: qing, display_type: :structured,
+                                    headers: headers, items: [], null_count: 0)
       end
 
       # make a subset for the current disagg_value for this set of summaries
@@ -235,9 +244,13 @@ class Report::SummaryCollectionBuilder
           Report::SummaryItem.new(count: count)
         end
 
-        # if this is a sel mult question, the non_null_count we summed reflects the total number of non_null choices, not answers
-        # but to compute percentages, we are interested in the non-null answer value, so get it from the hash we built above
-        non_null_count = sel_mult_non_null_tallies[[disagg_value, qing.id]] || 0 if qing.qtype_name == "select_multiple"
+        # if this is a sel mult question, the non_null_count we summed reflects
+        # the total number of non_null choices, not answers
+        # but to compute percentages, we are interested in the non-null answer value,
+        # so get it from the hash we built above
+        if qing.qtype_name == "select_multiple"
+          non_null_count = sel_mult_non_null_tallies[[disagg_value, qing.id]] || 0
+        end
 
         # compute percentages
         items.each do |item|
@@ -248,7 +261,8 @@ class Report::SummaryCollectionBuilder
         null_count = qing.qtype_name == "select_one" ? tallies[[disagg_value, qing.id, nil]] : 0
 
         # build summary
-        Report::QuestionSummary.new(questioning: qing, display_type: :structured, overall_header: qing.option_set.name,
+        Report::QuestionSummary.new(questioning: qing, display_type: :structured,
+                                    overall_header: qing.option_set.name,
                                     headers: headers, items: items, null_count: null_count)
       end
 
@@ -364,7 +378,9 @@ class Report::SummaryCollectionBuilder
         cur_tallies = tallies[[disagg_value, qing.id]]
 
         # build headers from tally keys (already sorted)
-        headers = (cur_tallies ? cur_tallies.keys.reject(&:nil?) : []).map { |date| {name: I18n.l(date), date: date} }
+        headers = (cur_tallies ? cur_tallies.keys.reject(&:nil?) : []).map do |date|
+          {name: I18n.l(date), date: date}
+        end
 
         # build tallies, keeping a running sum
         non_null_count = 0
@@ -482,7 +498,8 @@ class Report::SummaryCollectionBuilder
         # null count from hash also
         null_count = null_counts_hash[[disagg_value, qing.id]] || 0
 
-        # build summary (headers are blank b/c there is only one column so header is always the same ('responses'))
+        # build summary (headers are blank b/c there is only one column
+        # so header is always the same ('responses'))
         Report::QuestionSummary.new(questioning: qing, display_type: display_type,
                                     overall_header: I18n.t("report/report.standard_form_report.overall_headers.responses"),
                                     headers: [], items: items, null_count: null_count)
@@ -552,7 +569,8 @@ class Report::SummaryCollectionBuilder
     end
   end
 
-  # returns a hash of disagg_value as returned from the db (e.g. 123) to the objects we want to use (e.g. Option)
+  # returns a hash of disagg_value as returned from the db (e.g. 123)
+  # to the objects we want to use (e.g. Option)
   def disagg_value_db_to_obj
     if disagg_qing.nil?
       {"all" => :all}
@@ -585,7 +603,8 @@ class Report::SummaryCollectionBuilder
     SQL
   end
 
-  # restrict query to responses enumerator has access to. admins and coordinators have access to all responses.
+  # restrict query to responses enumerator has access to.
+  # admins and coordinators have access to all responses.
   def current_user_join_clause
     return "" unless @options && @options[:restrict_to_user]
     <<-SQL
