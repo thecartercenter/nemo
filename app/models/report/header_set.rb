@@ -18,7 +18,9 @@ class Report::HeaderSet
   # raises an error if no match is found (this shouldn't happen)
   def find_indices(keys)
     %i[row col].collect do |which|
-      @headers[which].find_key_idx(keys[which]) || raise Report::ReportError, "no matching #{which} header key for '#{keys[which]}'"
+      index = @headers[which].find_key_idx(keys[which])
+      raise Report::ReportError, "no matching #{which} header key for '#{keys[which]}'" unless index
+      index
     end
   end
 end

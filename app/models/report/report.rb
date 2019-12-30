@@ -84,7 +84,7 @@ class Report::Report < ApplicationRecord
   # HACK: TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self
     def new_with_cast(*a, &b)
-      if (h = a.first).is_a?(Hash)) && (type = h[:type] || h["type"]) && ((klass = type.constantize) != self)
+      if (h = a.first).is_a?(Hash) && (type = h[:type] || h["type"]) && ((klass = type.constantize) != self)
         raise "wtF hax!!" unless klass < self # klass should be a descendant of us
         return klass.new(*a, &b)
       end
