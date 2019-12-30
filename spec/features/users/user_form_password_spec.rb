@@ -76,7 +76,7 @@ feature "user form password field" do
         visit(url)
         expect(page).to have_content("Send password reset instructions via email")
         select("Send password reset instructions via email", from: "user_reset_password_method")
-        expect { click_button("Save") }.to change { ActionMailer::Base.deliveries.count }.by 1
+        expect { click_button("Save") }.to change { ActionMailer::Base.deliveries.count }.by(1)
         expect(page).to have_content("updated successfully")
       end
     end
@@ -92,7 +92,7 @@ feature "user form password field" do
 
       scenario do
         visit(url)
-        expect(page).to_not have_content("Send password reset instructions via email")
+        expect(page).to_not(have_content("Send password reset instructions via email"))
       end
     end
   end
@@ -141,7 +141,7 @@ feature "user form password field" do
           expect(page).to have_content("Generate a new password and show printable login instructions")
           fill_out_form
           select("Send password reset instructions via email", from: "user_reset_password_method")
-          expect { click_button("Save") }.to change { ActionMailer::Base.deliveries.count }.by 1
+          expect { click_button("Save") }.to change { ActionMailer::Base.deliveries.count }.by(1)
           expect(page).to have_content("User created successfully")
         end
 
@@ -222,7 +222,7 @@ feature "user form password field" do
   def fill_out_form(role: "Enumerator", email: true, admin: false)
     fill_in("* Full Name", with: "Foo")
     fill_in("* Username", with: "foo")
-    select role, from: "user_assignments_attributes_0_role" unless role.nil?
+    select(role, from: "user_assignments_attributes_0_role") unless role.nil?
     fill_in("Email", with: "foo@bar.com") if email
     check("Is Admin?") if admin
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -56,7 +58,7 @@ class Sms::Reply < Sms::Message
     [to]
   end
 
-  def recipient_hashes(options = {})
+  def recipient_hashes(_options = {})
     [user: user, phone: to]
   end
 end

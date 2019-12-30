@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ELMO::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -18,7 +20,7 @@ ELMO::Application.configure do
   config.action_controller.perform_caching = false
 
   # This is here only in case the above value is overridden as described.
-  config.cache_store = :dalli_store, nil, { value_max_bytes: 2.megabytes }
+  config.cache_store = :dalli_store, nil, {value_max_bytes: 2.megabytes}
 
   # care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true

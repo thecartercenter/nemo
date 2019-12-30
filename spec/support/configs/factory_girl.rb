@@ -3,7 +3,7 @@
 require "support/helpers/general_spec_helpers"
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include(FactoryGirl::Syntax::Methods)
 
   # Resets the sequence numbers that are used in some factories
   # It is only needed in cases where your spec expectations depend on those sequences

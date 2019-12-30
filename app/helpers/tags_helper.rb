@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # DEPRECATED: Should move to a decorator.
 module TagsHelper
   # options[:clickable] (bool) - make tags clickable to filter by clicked tag

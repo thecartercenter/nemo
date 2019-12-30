@@ -4,7 +4,7 @@ shared_context "trumbowyg" do
   def fill_in_trumbowyg(selector, opts)
     wait_for_trumbowyg(selector)
     content = opts.fetch(:with).to_json
-    page.execute_script <<-SCRIPT
+    page.execute_script(<<-SCRIPT)
       $('#{selector}').trumbowyg('html', #{content});
     SCRIPT
   end

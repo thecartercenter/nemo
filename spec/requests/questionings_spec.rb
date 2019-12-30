@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
@@ -22,8 +24,7 @@ describe "questionings", type: :request do
                 "name_en" => "Foo"
               }
             }
-          }
-        )
+          })
         expect(response).to be_redirect
         expect(qing.reload.name_en).to eq("Foo")
       end
@@ -50,8 +51,7 @@ describe "questionings", type: :request do
                 "value" => "foo"
               }]
             }
-          }
-        )
+          })
         expect(response).to redirect_to(unauthorized_path)
       end
     end

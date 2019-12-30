@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Keeps track of all the objects created during a replication operation.
 class Replication::History
   attr_accessor :table

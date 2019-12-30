@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # Wraps a parent or child association in the replication.
 class Replication::AssocProxy
   attr_accessor :name, :klass, :foreign_key, :foreign_type, :target_class, :belongs_to, :type,
     :skip_obj_if_missing, :second_pass, :polymorphic, :temp_id
-  alias_method :polymorphic?, :polymorphic
-  alias_method :second_pass?, :second_pass
+  alias polymorphic? polymorphic
+  alias second_pass? second_pass
 
   def self.get(klass, attribs)
     attribs = {name: attribs} if attribs.is_a?(Symbol)
@@ -11,11 +13,7 @@ class Replication::AssocProxy
     attribs[:target_class] = attribs[:target_class_name].constantize if attribs[:target_class_name]
 
     @@assocs ||= {}
-    if valid?(attribs)
-      @@assocs[[attribs[:klass], attribs[:name]]] ||= new(attribs)
-    else
-      nil
-    end
+    @@assocs[[attribs[:klass], attribs[:name]]] ||= new(attribs) if valid?(attribs)
   end
 
   def self.valid?(attribs)
@@ -24,17 +22,15 @@ class Replication::AssocProxy
   end
 
   def initialize(attribs)
-    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
 
     if name == :children
       self.target_class = klass
-      self.foreign_key = 'ancestry'
+      self.foreign_key = "ancestry"
       self.belongs_to = false
     else
       reflection = klass.reflect_on_association(name)
-      if reflection.nil?
-        raise ArgumentError.new("Association #{name} on #{klass.name} doesn't exist.")
-      end
+      raise ArgumentError, "Association #{name} on #{klass.name} doesn't exist." if reflection.nil?
       self.polymorphic = reflection.polymorphic?
       if polymorphic?
         self.foreign_type = reflection.foreign_type
@@ -56,6 +52,6 @@ class Replication::AssocProxy
   end
 
   def ancestry?
-    foreign_key == 'ancestry'
+    foreign_key == "ancestry"
   end
 end

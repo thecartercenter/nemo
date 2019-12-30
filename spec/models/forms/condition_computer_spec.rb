@@ -48,7 +48,7 @@ describe Forms::ConditionComputer do
       it do
         top_group = computer.condition_group_for(form.c[2])
         skip_rule_group = top_group.members[0]
-        expect(skip_rule_group.members.map(&:conditionable)).to eq [form.c[2], form.c[2]]
+        expect(skip_rule_group.members.map(&:conditionable)).to eq([form.c[2], form.c[2]])
       end
     end
 
@@ -186,8 +186,8 @@ describe Forms::ConditionComputer do
   end
 
   def expect_group_with_members(group, members)
-    expect(group.true_if).to eq "all_met"
-    expect(group.negate?).to be false
+    expect(group.true_if).to eq("all_met")
+    expect(group.negate?).to be(false)
     expect(group.members).to match_array(members)
   end
 

@@ -71,13 +71,13 @@ describe Response do
       it "removes irrelevant nodes and nodes marked destroy before save" do
         node_to_destroy = nested_response.root_node.c[1].c[0]
         node_to_destroy._destroy = true
-        expect(node_to_destroy.type).to eq "AnswerGroup"
-        expect(node_to_destroy._destroy).to be true
+        expect(node_to_destroy.type).to eq("AnswerGroup")
+        expect(node_to_destroy._destroy).to be(true)
 
         irrelevant_node = nested_response.root_node.c[1].c[1].c[0]
         irrelevant_node.relevant = false
-        expect(irrelevant_node.value).to eq "E"
-        expect(irrelevant_node.relevant).to be false
+        expect(irrelevant_node.value).to eq("E")
+        expect(irrelevant_node.relevant).to be(false)
 
         nested_response.save!
         saved_response = Response.find(nested_response.id)

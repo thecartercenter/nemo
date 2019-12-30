@@ -1,7 +1,8 @@
-class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
+# frozen_string_literal: true
 
+class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
   def self.recognize_receive_request?(request)
-    %w(from text frontline) - request.params.keys == []
+    %w[from text frontline] - request.params.keys == []
   end
 
   def self.can_deliver?
@@ -12,18 +13,19 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
     :via_response
   end
 
-  def deliver(message)
+  def deliver(_message)
     raise NotImplementedError
   end
 
   def receive(request)
     params = request.params
     Sms::Incoming.new(
-      from: params['from'],
+      from: params["from"],
       to: nil, # Frontline doesn't provide this.
-      body: params['text'],
+      body: params["text"],
       sent_at: Time.zone.now, # Frontline doesn't supply this
-      adapter_name: service_name)
+      adapter_name: service_name
+    )
   end
 
   def validate(request)

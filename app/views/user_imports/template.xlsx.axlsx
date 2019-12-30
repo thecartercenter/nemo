@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 xlsx_package.workbook.tap do |wb|
   wb.use_shared_strings = true
 

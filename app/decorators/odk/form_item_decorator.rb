@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Odk
   class FormItemDecorator < BaseDecorator
     delegate_all
@@ -19,7 +21,7 @@ module Odk
       ancestor_to_self = object.path_from_ancestor(common_ancestor, include_ancestor: true)
       ancestor_to_dest = decorate_collection(dest.path_from_ancestor(common_ancestor))
 
-      if ancestor_to_dest.size > 0
+      if !ancestor_to_dest.empty?
         args = [dest.absolute_xpath]
         unless common_ancestor.root?
           root_to_ancestor = common_ancestor.path_from_ancestor(ancestors.first, include_self: true)

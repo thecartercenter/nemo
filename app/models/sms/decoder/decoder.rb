@@ -6,7 +6,7 @@ module Sms
     class Decoder
       # window in which identical message is considered duplicate and discarded
       DUPLICATE_WINDOW = 12.hours
-      AUTH_CODE_FORMAT = /[a-z0-9]{4}/i
+      AUTH_CODE_FORMAT = /[a-z0-9]{4}/i.freeze
 
       attr_accessor :response, :decoding_succeeded
       alias decoding_succeeded? decoding_succeeded
@@ -79,7 +79,6 @@ module Sms
         raise_decoding_error("no_answers") unless tree_builder.answers?
 
         self.decoding_succeeded = true
-
       rescue Sms::Decoder::ParseError => err
         raise_decoding_error(err.type, err.params)
       end
@@ -207,7 +206,7 @@ module Sms
       # the form mission matches the msg mission, raises an error if not
       def check_permission
         raise_decoding_error("form_not_permitted") unless current_ability.can?(:submit_to, @form) &&
-            @form.mission == @msg.mission
+          @form.mission == @msg.mission
       end
 
       # finds the Questioning object specified by the given rank

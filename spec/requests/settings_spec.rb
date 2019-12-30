@@ -1,11 +1,12 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 # Rests maintenance of settings across key actions.
 # Rimezone is used as a key test vector.
-describe 'settings' do
-
+describe "settings" do
   it "settings should be default on first load" do
-    get('/en')
+    get("/en")
     follow_redirect!
     expect(response).to be_successful
 
@@ -13,8 +14,7 @@ describe 'settings' do
     expect(Time.zone.name).to eq(Setting::DEFAULT_TIMEZONE)
   end
 
-  context 'with logged in user' do
-
+  context "with logged in user" do
     let(:admin) { create(:user, admin: true) }
 
     before do
@@ -39,7 +39,7 @@ describe 'settings' do
       post(missions_path, params: {mission: {name: "Foo"}})
       follow_redirect!
       expect(response).to be_successful
-      expect(Mission.find_by_name("Foo").setting.timezone).to eq(Setting::DEFAULT_TIMEZONE)
+      expect(Mission.find_by(name: "Foo").setting.timezone).to eq(Setting::DEFAULT_TIMEZONE)
 
       # change to that mission and see that timezone changed
       get("/en/m/foo")
@@ -57,9 +57,9 @@ describe 'settings' do
     end
 
     it "locales should get copied properly" do
-      get_mission.setting.update_attributes!(preferred_locales_str: "fr,ar")
+      get_mission.setting.update!(preferred_locales_str: "fr,ar")
       get(mission_root_path(mission_name: get_mission.compact_name))
-      expect(configatron.preferred_locales).to eq([:fr, :ar])
+      expect(configatron.preferred_locales).to eq(%i[fr ar])
     end
   end
 

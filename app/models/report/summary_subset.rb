@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # a subset of QuestionSummaries tied to a particular disaggregation value
 # e.g., if the report is disaggregated by the answer to the 'urban/rural' question,
 # there would be two SummarySubsets:
@@ -8,7 +10,7 @@ class Report::SummarySubset
 
   def initialize(attribs)
     # save attribs
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
 
     @summaries ||= []
 
@@ -29,14 +31,14 @@ class Report::SummarySubset
     @group_by_tag = options[:group_by_tag]
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     # assumes disagg_value is nil or an Option
     # don't need to include summaries as they're in the groups
     {
-      :tag_groups => tag_groups,
-      :group_by_tag => group_by_tag,
-      :disagg_value => disagg_value.nil? ? nil : disagg_value.as_json(:only => [:id], :methods => :name),
-      :no_data => no_data?
+      tag_groups: tag_groups,
+      group_by_tag: group_by_tag,
+      disagg_value: disagg_value.nil? ? nil : disagg_value.as_json(only: [:id], methods: :name),
+      no_data: no_data?
     }
   end
 end
