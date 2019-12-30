@@ -17,6 +17,6 @@ class OperationStatus
 
   # define a prop? method for each value checking if it's > 0
   %i[total started failed completed in_progress].each do |sym|
-    define_method("#{sym}?", -> { send(sym) > 0 })
+    define_method("#{sym}?", -> { send(sym).positive? })
   end
 end

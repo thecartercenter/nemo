@@ -9,7 +9,7 @@ class Report::SummaryItem
   end
 
   def zero?
-    count == 0
+    !count.nil? && count.zero?
   end
 
   def as_json(_options = {})

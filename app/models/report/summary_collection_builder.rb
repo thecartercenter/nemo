@@ -254,7 +254,7 @@ class Report::SummaryCollectionBuilder
 
         # compute percentages
         items.each do |item|
-          item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
+          item.pct = non_null_count.zero? ? 0 : item.count.to_f / non_null_count * 100
         end
 
         # null count should be zero for sel multiple b/c no selection can be a valid answer
@@ -392,7 +392,7 @@ class Report::SummaryCollectionBuilder
 
         # compute percentages
         items.each do |item|
-          item.pct = non_null_count == 0 ? 0 : item.count.to_f / non_null_count * 100
+          item.pct = non_null_count .zero? ? 0 : item.count.to_f / non_null_count * 100
         end
 
         # get null count from tallies

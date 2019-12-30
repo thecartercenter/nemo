@@ -34,7 +34,7 @@ module Utils
           csv << ["message_body"]
 
           test_rows.times do |i|
-            puts "Generating batch #{(i / 1000).to_i + 1} of #{(test_rows / 1000).ceil}" if i % 1000 == 0
+            puts "Generating batch #{(i / 1000).to_i + 1} of #{(test_rows / 1000).ceil}" if (i % 1000).zero?
             csv << [sms_submission]
           end
         end
