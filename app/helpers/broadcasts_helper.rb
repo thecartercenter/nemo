@@ -18,8 +18,12 @@ module BroadcastsHelper
     case field
     when "recipients"
       if broadcast.recipient_selection == "specific"
-        users = (c = broadcast.recipient_user_count) > 0 ? I18n.t("broadcast.user_count", count: c) : nil
-        groups = (c = broadcast.recipient_group_count) > 0 ? I18n.t("broadcast.group_count", count: c) : nil
+        users = if (c = broadcast.recipient_user_count).positive?
+                  I18n.t("broadcast.user_count", count: c)
+                end
+        groups = if (c = broadcast.recipient_group_count).positive?
+                   I18n.t("broadcast.group_count", count: c)
+                 end
         [users, groups].compact.join(", ")
       else
         t("broadcast.recipient_selection_options.#{broadcast.recipient_selection}")

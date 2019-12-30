@@ -126,7 +126,7 @@ class Response < ApplicationRecord
   # nil means no recent responses
   def self.recent_count(rel)
     %w[hour day week month year].each do |p|
-      if (count = rel.where("created_at > ?", 1.send(p).ago).count) > 0
+      if (count = rel.where("created_at > ?", 1.send(p).ago).count).positive?
         return [count, p]
       end
     end

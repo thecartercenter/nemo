@@ -24,7 +24,7 @@ module SmsHelper
         "<br/>".html_safe
       )
       extra_recipients = sms.recipient_count - MAX_RECIPS_TO_SHOW
-      recips << (extra_recipients > 0 ? t("sms.extra_recipients_html", count: extra_recipients) : "")
+      recips << (extra_recipients.positive? ? t("sms.extra_recipients_html", count: extra_recipients) : "")
       recips
     when "from" then
       user_with_phone(sms.sender, sms.from)
@@ -75,7 +75,7 @@ module SmsHelper
     minutes = seconds_diff / 60
 
     str = +""
-    str << "#{hours}h" if hours > 0
+    str << "#{hours}h" if hours.positive?
     str << "#{minutes}m"
     str
   end

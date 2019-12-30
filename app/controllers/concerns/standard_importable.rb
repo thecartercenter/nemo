@@ -29,7 +29,7 @@ module StandardImportable
 
     # set the flash message
     flash[flash_key] = I18n.t("standard.import_success.#{controller_name}", count: import_count)
-    flash[flash_key] += " (#{I18n.t('standard.there_were_errors', count: error_count)})" if error_count > 0
+    flash[flash_key] += " (#{I18n.t('standard.there_were_errors', count: error_count)})" if error_count.positive?
 
     redirect_to(action: :index)
   end
