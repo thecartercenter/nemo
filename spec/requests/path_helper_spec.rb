@@ -1,18 +1,20 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-describe 'path helpers' do
+require "rails_helper"
+
+describe "path helpers" do
   before do
-    @user = FactoryGirl.create(:user, :admin => true)
-    @mission = FactoryGirl.create(:mission, :name => 'Foo')
+    @user = FactoryGirl.create(:user, admin: true)
+    @mission = FactoryGirl.create(:mission, name: "Foo")
     login(@user)
   end
 
-  context 'in basic mode' do
+  context "in basic mode" do
     before do
-      get('/en/route-tests')
+      get("/en/route-tests")
     end
 
-    it 'should be correct' do
+    it "should be correct" do
       expect_urls "
         /en/users/#{@user.id}
         /en/users/#{@user.id}/edit
@@ -28,12 +30,12 @@ describe 'path helpers' do
     end
   end
 
-  context 'in mission mode' do
+  context "in mission mode" do
     before do
       get("/en/m/foo/route-tests")
     end
 
-    it 'should be correct' do
+    it "should be correct" do
       expect_urls "
         /en/m/foo/users/#{@user.id}
         /en/m/foo/users/#{@user.id}/edit
@@ -49,12 +51,12 @@ describe 'path helpers' do
     end
   end
 
-  context 'in admin mode' do
+  context "in admin mode" do
     before do
       get("/en/admin/route-tests")
     end
 
-    it 'should be correct' do
+    it "should be correct" do
       expect_urls "
         /en/admin/users/#{@user.id}
         /en/admin/users/#{@user.id}/edit
@@ -70,8 +72,7 @@ describe 'path helpers' do
     end
   end
 
-
   def expect_urls(urls)
-    expect(response.body).to eq urls.gsub(/( )+/, '').strip + "\n"
+    expect(response.body).to eq(urls.gsub(/( )+/, "").strip + "\n")
   end
 end

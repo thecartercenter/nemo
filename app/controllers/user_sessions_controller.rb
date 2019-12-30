@@ -1,11 +1,12 @@
-class UserSessionsController < ApplicationController
+# frozen_string_literal: true
 
+class UserSessionsController < ApplicationController
   helper_method :captcha_required?
 
   # don't need to authorize here (except for destroy action) because anyone can see log in page
   skip_authorization_check
 
-  before_action(:ensure_logged_out, :only => [:new, :destroy, :logged_out])
+  before_action(:ensure_logged_out, only: %i[new destroy logged_out])
 
   def new
     @user_session = UserSession.new
@@ -22,7 +23,7 @@ class UserSessionsController < ApplicationController
       post_login_housekeeping
     else
       flash[:error] = @user_session.errors.full_messages.join(",")
-      redirect_to(:action => :new)
+      redirect_to(action: :new)
     end
   end
 
@@ -59,31 +60,31 @@ class UserSessionsController < ApplicationController
 
   # Special route, test only, used by feature specs to simulate user login.
   def test_login
-    return render plain: 'TEST MODE ONLY', status: :forbidden unless Rails.env.test?
+    return render(plain: "TEST MODE ONLY", status: :forbidden) unless Rails.env.test?
     @user = User.find(params[:user_id])
     UserSession.create(@user)
     post_login_housekeeping(dont_redirect: true)
 
     # We redirect to user profile instead of dashboard because dashboard is slower to load and is not needed.
-    redirect_to user_path(@user, locale: 'en', mode: 'm', mission_name: @user.best_mission.compact_name)
+    redirect_to(user_path(@user, locale: "en", mode: "m", mission_name: @user.best_mission.compact_name))
   end
 
   private
 
-    def user_session_params
-      params.require(:user_session).permit(:login, :password)
-    end
+  def user_session_params
+    params.require(:user_session).permit(:login, :password)
+  end
 
-    def allow_login
-      if captcha_required?
-        Rails.logger.info "Verifying reCAPTCHA submission for #{request.remote_ip}"
-        verify_recaptcha(model: @user_session)
-      else
-        true
-      end
+  def allow_login
+    if captcha_required?
+      Rails.logger.info("Verifying reCAPTCHA submission for #{request.remote_ip}")
+      verify_recaptcha(model: @user_session)
+    else
+      true
     end
+  end
 
-    def captcha_required?
-      !!request.env['elmo.captcha_required']
-    end
+  def captcha_required?
+    !!request.env["elmo.captcha_required"]
+  end
 end

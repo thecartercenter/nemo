@@ -1,5 +1,7 @@
-ARGS = [:start_time, :end_time, :mission_id, :timezone]
-task :recover_odk_xml, ARGS => :environment do |t, args|
+# frozen_string_literal: true
+
+ARGS = %i[start_time end_time mission_id timezone].freeze
+task :recover_odk_xml, ARGS => :environment do |_t, args|
   unless ARGS.all? { |k| args.send(k).present? }
     argstr = ARGS.map { |a| "<#{a}>" }.join(",")
     abort("Usage: rake recover_odk_xml[#{argstr}]")
@@ -10,8 +12,8 @@ task :recover_odk_xml, ARGS => :environment do |t, args|
   Time.zone = args.timezone
   puts "Finding responses from #{start_time} to #{end_time} from mission #{mission.name}."
 
-  responses = Response.where(mission: mission).
-    where("created_at >= ?", start_time).where("created_at <= ?", end_time)
+  responses = Response.where(mission: mission)
+    .where("created_at >= ?", start_time).where("created_at <= ?", end_time)
   puts "Found #{responses.count} responses."
 
   xml_path = Rails.root.join("tmp", "uploads")
@@ -35,7 +37,7 @@ task :recover_odk_xml, ARGS => :environment do |t, args|
     stq_ans_fmt = stq_ans.datetime_value.strftime("%Y-%m-%dT%H:%M:%S")
     puts "  Looking for time #{stq_ans_fmt} in #{xml_path}"
     matches = `grep -l "#{stq_ans_fmt}" #{xml_path}/*`.split("\n")
-    if matches.size == 0
+    if matches.empty?
       puts "  ERROR! No matches found for #{stq_ans_fmt}, response #{response.id}"
     elsif matches.size > 1
       puts "  ERROR! Multiple matches found for #{stq_ans_fmt}, response #{response.id}"

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe PhoneNormalizer do
-  describe '#is_shortcode?' do
+  describe "#is_shortcode?" do
     it "is false for blank inputs" do
       [nil, "", " ", "\t"].each do |phone|
         expect(PhoneNormalizer.is_shortcode?(phone)).to be_falsey
@@ -9,7 +11,7 @@ describe PhoneNormalizer do
     end
 
     it "is true for inputs containing a letter" do
-      ["ELMO", "TCC4U"].each do |phone|
+      %w[ELMO TCC4U].each do |phone|
         expect(PhoneNormalizer.is_shortcode?(phone)).to be_truthy
       end
     end
@@ -33,7 +35,7 @@ describe PhoneNormalizer do
     end
   end
 
-  describe '#normalize' do
+  describe "#normalize" do
     it "returns nil for blank inputs" do
       [nil, "", " ", "\t", "+ "].each do |phone|
         expect(PhoneNormalizer.normalize(phone)).to be_nil

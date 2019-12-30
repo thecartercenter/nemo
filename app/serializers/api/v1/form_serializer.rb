@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V1::FormSerializer < ActiveModel::Serializer
   attributes :id, :name, :responses_count, :questions
   format_keys :underscore
@@ -8,6 +10,6 @@ class API::V1::FormSerializer < ActiveModel::Serializer
   end
 
   def questions
-    object.api_visible_questions.as_json(only: [:id, :code], methods: :name)
+    object.api_visible_questions.as_json(only: %i[id code], methods: :name)
   end
 end

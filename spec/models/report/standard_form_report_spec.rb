@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -103,7 +105,7 @@ describe Report::StandardFormReport do
       build_form_and_responses
 
       # make one question invisible
-      @form.questionings[1].update_attributes!(hidden: true)
+      @form.questionings[1].update!(hidden: true)
 
       build_and_run_report
 
@@ -120,7 +122,7 @@ describe Report::StandardFormReport do
     end
 
     it "should return non-submitting enumerators" do
-      enumerators = %w(bob jojo cass sal toz).map do |n|
+      enumerators = %w[bob jojo cass sal toz].map do |n|
         create(:user, login: n, role_name: :enumerator, name: n.capitalize)
       end
 
@@ -136,7 +138,7 @@ describe Report::StandardFormReport do
 
       # Check missing enumerators
       missing_enumerators = @report.users_without_responses(role: :enumerator, limit: 10)
-      expect(missing_enumerators.map(&:login).sort).to eq(%w(cass sal toz))
+      expect(missing_enumerators.map(&:login).sort).to eq(%w[cass sal toz])
       expect(@report.enumerators_without_responses).to eq("Cass, Sal, Toz")
 
       # Change constant size to check mission enumerators summarization
@@ -172,7 +174,7 @@ describe Report::StandardFormReport do
 
   context "on destroy" do
     before do
-      @form = create(:form, question_types: %w(select_one integer))
+      @form = create(:form, question_types: %w[select_one integer])
       @report = create(:standard_form_report, form: @form, disagg_qing: @form.questionings[1])
     end
 
@@ -183,7 +185,7 @@ describe Report::StandardFormReport do
 
     it "should be destroyed when form destroyed" do
       @form.destroy
-      expect(Report::Report.exists?(@report.id)).to be false
+      expect(Report::Report.exists?(@report.id)).to be(false)
     end
   end
 
@@ -192,12 +194,13 @@ describe Report::StandardFormReport do
 
     it "should be correct" do
       expect(report.cache_key).to match(
-        %r{\Areport/standard_form_reports/.+//calcs-0-/none\z})
+        %r{\Areport/standard_form_reports/.+//calcs-0-/none\z}
+      )
     end
   end
 
   def build_form_and_responses(options = {})
-    @form = create(:form, question_types: %w(integer integer decimal select_one location))
+    @form = create(:form, question_types: %w[integer integer decimal select_one location])
     (options[:response_count] || 5).times do
       create(:response, form: @form, answer_values: [1, 2, 1.5, "Cat", nil])
     end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 feature "sms settings form", :sms do
-  let(:mission){ create(:mission, setting: setting) }
-  let(:user){ create(:user, admin: true) }
+  let(:mission) { create(:mission, setting: setting) }
+  let(:user) { create(:user, admin: true) }
 
   before do
     login(user)
@@ -41,8 +43,8 @@ feature "sms settings form", :sms do
         fill_in("setting_twilio_auth_token1", with: "jfjfjfjf")
         click_button("Save")
         expect(page).to have_content("Settings updated successfully")
-        expect(find('#setting_twilio_account_sid').value).to eq "abc"
-        expect(find('#setting_twilio_auth_token1').value).to eq nil
+        expect(find("#setting_twilio_account_sid").value).to eq("abc")
+        expect(find("#setting_twilio_auth_token1").value).to eq(nil)
       end
     end
   end

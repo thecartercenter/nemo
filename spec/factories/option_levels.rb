@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
@@ -7,6 +9,6 @@ FactoryGirl.define do
     mission { get_mission }
 
     # pass the mission along to the association
-    option_set { build(:option_set, :mission => mission) }
+    option_set { build(:option_set, mission: mission) }
   end
 end

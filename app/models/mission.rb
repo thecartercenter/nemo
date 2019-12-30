@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -47,8 +49,8 @@ class Mission < ApplicationRecord
   before_create :generate_shortcode
 
   validates :name, presence: true
-  validates :name, format: { with: /\A[a-z][a-z0-9 ]*\z/i, message: :let_num_spc_only },
-    length: { minimum: 3, maximum: 32 }, if: Proc.new { |m| !m.name.blank? }
+  validates :name, format: {with: /\A[a-z][a-z0-9 ]*\z/i, message: :let_num_spc_only},
+                   length: {minimum: 3, maximum: 32}, if: proc { |m| m.name.present? }
   validate :compact_name_unique
 
   scope :sorted_by_name, -> { order(Arel.sql("LOWER(name)")) }
@@ -58,13 +60,13 @@ class Mission < ApplicationRecord
 
   # Raises ActiveRecord::RecordNotFound if not found.
   def self.with_compact_name(name)
-    where(compact_name: name).first || (raise ActiveRecord::RecordNotFound.new("Mission not found"))
+    where(compact_name: name).first || (raise ActiveRecord::RecordNotFound, "Mission not found")
   end
 
   # checks to make sure there are no associated objects.
   def check_associations
-    to_check = [:assignments, :responses, :forms, :report_reports, :questions, :broadcasts]
-    to_check.each { |a| raise DeletionError.new(:cant_delete_if_assoc) unless self.send(a).empty? }
+    to_check = %i[assignments responses forms report_reports questions broadcasts]
+    to_check.each { |a| raise DeletionError, :cant_delete_if_assoc unless send(a).empty? }
   end
 
   # DEPRECATED: This should go away and be replaced with use of destroy and a background job.
@@ -85,7 +87,7 @@ class Mission < ApplicationRecord
   def generate_shortcode
     begin
       self.shortcode = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
-    end while Mission.exists?(shortcode: self.shortcode)
+    end while Mission.exists?(shortcode: shortcode)
   end
 
   # returns a string representation used for debugging
@@ -96,12 +98,12 @@ class Mission < ApplicationRecord
   private
 
   def create_compact_name
-    self.compact_name = name.gsub(" ", "").downcase
+    self.compact_name = name.delete(" ").downcase
     true
   end
 
   def compact_name_unique
-    if !name.blank? && matching = (self.class.where(compact_name: compact_name).to_a - [self]).first
+    if name.present? && matching = (self.class.where(compact_name: compact_name).to_a - [self]).first
       errors.add(:name, :not_unique, existing: matching.name)
     end
   end

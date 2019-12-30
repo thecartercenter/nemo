@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 class Report::SummaryCollection
   attr_reader :subsets, :questionings
 
   # merges collections by concatenating summary arrays for each set of subsets with matching disagg_values
   def self.merge_all(collections, questionings)
     # start with an empty collection
-    merged = new(:questionings => questionings)
+    merged = new(questionings: questionings)
 
     # merge each of the given collections
-    collections.each{|c| merged.merge(c)}
+    collections.each { |c| merged.merge(c) }
 
     # return
     merged
@@ -15,12 +17,12 @@ class Report::SummaryCollection
 
   def initialize(attribs)
     # save attribs
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
 
     @subsets ||= []
 
     # if all subsets are no_data, the whole collection is no_data!
-    @no_data = subsets.empty? || subsets.all?{|s| s.no_data?}
+    @no_data = subsets.empty? || subsets.all?(&:no_data?)
   end
 
   def no_data?
@@ -29,7 +31,7 @@ class Report::SummaryCollection
 
   # does as it says
   def remove_null_subset_if_empty!
-    null_subset = subsets.detect{|s| s.disagg_value.nil?}
+    null_subset = subsets.detect { |s| s.disagg_value.nil? }
     subsets.delete(null_subset) if null_subset.try(:no_data?)
   end
 

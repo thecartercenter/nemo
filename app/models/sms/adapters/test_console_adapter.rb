@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A dummy adapter used only for the SMS test console.
 class Sms::Adapters::TestConsoleAdapter < Sms::Adapters::Adapter
   def self.can_deliver?
@@ -11,7 +13,7 @@ class Sms::Adapters::TestConsoleAdapter < Sms::Adapters::Adapter
   end
 
   # Not implemented because the SMS console creates messages directly. Could refactor this later.
-  def receive(request)
+  def receive(_request)
     raise NotImplementedError
   end
 

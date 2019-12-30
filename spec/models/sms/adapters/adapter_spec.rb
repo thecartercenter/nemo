@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 # Tests methods common to all adapters.
 describe Sms::Adapters::Adapter, :sms do
@@ -8,7 +10,7 @@ describe Sms::Adapters::Adapter, :sms do
 
   it "delivering a message with one recipient should work" do
     each_adapter(can_deliver?: true) do |adapter|
-      expect(adapter.deliver(Sms::Reply.new(to: "+15556667777", body: "foo"))).to be true
+      expect(adapter.deliver(Sms::Reply.new(to: "+15556667777", body: "foo"))).to be(true)
     end
   end
 

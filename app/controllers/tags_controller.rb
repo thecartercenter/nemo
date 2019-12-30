@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TagsController < ApplicationController
   skip_authorization_check only: [:suggest]
 
@@ -7,5 +9,4 @@ class TagsController < ApplicationController
       format.json { render json: @tags, root: "tags" }
     end
   end
-
 end

@@ -2,7 +2,7 @@
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= "test"
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path("../config/environment", __dir__)
 require "rspec/rails"
 require "rspec/collection_matchers"
 require "capybara/rspec"
@@ -16,7 +16,7 @@ require "fileutils"
 # Automatically downloads chromedriver, which is used use for JS feature specs
 require "webdrivers/chromedriver"
 
-Capybara.register_driver :selenium_chrome_headless do |app|
+Capybara.register_driver(:selenium_chrome_headless) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     args: %w[disable-gpu no-sandbox] + (ENV["HEADED"] ? [] : ["headless"]),
     loggingPrefs: {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
@@ -71,12 +71,12 @@ RSpec.configure do |config|
   end
   config.infer_spec_type_from_file_location!
 
-  config.include AssertDifference
-  config.include FeatureSpecHelpers, type: :feature
-  config.include GeneralSpecHelpers
-  config.include ModelSpecHelpers, type: :model
-  config.include Paperclip::Shoulda::Matchers
-  config.include RequestSpecHelpers, type: :request
+  config.include(AssertDifference)
+  config.include(FeatureSpecHelpers, type: :feature)
+  config.include(GeneralSpecHelpers)
+  config.include(ModelSpecHelpers, type: :model)
+  config.include(Paperclip::Shoulda::Matchers)
+  config.include(RequestSpecHelpers, type: :request)
 
   config.before(:suite) do
     # In CI environments, the SCSS preprocessor won't have been run because the developer won't have

@@ -11,7 +11,7 @@ class FormsController < ApplicationController
   include ERB::Util
 
   # special find method before load_resource
-  before_action :load_form, :only => [:show, :edit, :update]
+  before_action :load_form, only: %i[show edit update]
 
   # authorization via cancan
   load_and_authorize_resource

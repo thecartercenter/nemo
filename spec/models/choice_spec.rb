@@ -46,8 +46,8 @@ describe Choice do
 
         expect(choice_location.latitude).to be_within(0.00001).of(12.34)
         expect(choice_location.longitude).to be_within(0.00001).of(56.78)
-        expect(choice_other_type.latitude).to eq nil
-        expect(choice_other_type.longitude).to eq nil
+        expect(choice_other_type.latitude).to eq(nil)
+        expect(choice_other_type.longitude).to eq(nil)
       end
     end
   end

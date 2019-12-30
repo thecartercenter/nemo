@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # tests the singleton case of summary collections, where there is only one subset in the collection
 # tests for the multiple case, where there are multiple subsets in the collection, are currently in SummaryCollectionMultipleTest
 
@@ -14,7 +16,7 @@ describe "summary collection with single subset" do
       prepare_form("integer", [10, 7, 6, 1, 1])
       @responses.last.destroy
       prepare_collection
-      expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.0, :max => 10, :min => 1})
+      expect(headers_and_items(:stat, :stat)).to eq(mean: 6.0, max: 10, min: 1)
     end
 
     it "should handle large integer values" do
@@ -27,17 +29,17 @@ describe "summary collection with single subset" do
     it "should be correct for enumerator" do
       prepare_form("integer", [10, 7, 6, 1, 1])
 
-      enumerator = create(:user, :role_name => :enumerator)
-      [10, 7, 6, 1, 1].each{|a| create(:response, :form => @form, :answer_values => [a], :user => enumerator)}
+      enumerator = create(:user, role_name: :enumerator)
+      [10, 7, 6, 1, 1].each { |a| create(:response, form: @form, answer_values: [a], user: enumerator) }
 
-      @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => enumerator).build
+      @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, restrict_to_user: enumerator).build
 
-      expect(headers_and_items(:stat, :stat)).to eq({:mean => 5.0, :max => 10, :min => 1})
+      expect(headers_and_items(:stat, :stat)).to eq(mean: 5.0, max: 10, min: 1)
     end
 
     it "should not include nil or blank values" do
       prepare_form_and_collection("integer", [5, nil, "", 2])
-      expect(headers_and_items(:stat, :stat)).to eq({:mean => 3.5, :max => 5, :min => 2})
+      expect(headers_and_items(:stat, :stat)).to eq(mean: 3.5, max: 5, min: 2)
     end
 
     it "values should be correct type" do
@@ -69,7 +71,7 @@ describe "summary collection with single subset" do
       prepare_form("counter", [10, 7, 6, 1, 1])
       @responses.last.destroy
       prepare_collection
-      expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.0, :max => 10, :min => 1})
+      expect(headers_and_items(:stat, :stat)).to eq(mean: 6.0, max: 10, min: 1)
     end
   end
 
@@ -78,7 +80,7 @@ describe "summary collection with single subset" do
       prepare_form("decimal", [10.0, 7.2, 6.7, 1.1, 11.5])
       @responses.last.destroy
       prepare_collection
-      expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.25, :max => 10, :min => 1.1})
+      expect(headers_and_items(:stat, :stat)).to eq(mean: 6.25, max: 10, min: 1.1)
     end
 
     it "should be correct with no non-blank values" do
@@ -104,19 +106,19 @@ describe "summary collection with single subset" do
 
   describe "select_one summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form("select_one", %w(Yes No No No Yes))
+      prepare_form("select_one", %w[Yes No No No Yes])
       @responses.last.destroy
       prepare_collection
       options = @form.questions[0].option_set.options
-      expect(headers_and_items(:option, :count)).to eq({options[0] => 1, options[1] => 3})
-      expect(headers_and_items(:option, :pct)).to eq({options[0] => 25.0, options[1] => 75.0})
+      expect(headers_and_items(:option, :count)).to eq(options[0] => 1, options[1] => 3)
+      expect(headers_and_items(:option, :pct)).to eq(options[0] => 25.0, options[1] => 75.0)
     end
 
     it "should be correct with multilevel option set" do
-      prepare_form_and_collection("multilevel_select_one", [%w(Animal Dog), %w(Animal), %w(Animal Cat), %w(Plant Tulip)])
+      prepare_form_and_collection("multilevel_select_one", [%w[Animal Dog], %w[Animal], %w[Animal Cat], %w[Plant Tulip]])
       animal, plant = @form.questions[0].option_set.options # Top level options
-      expect(headers_and_items(:option, :count)).to eq({animal => 3, plant => 1})
-      expect(headers_and_items(:option, :pct)).to eq({animal => 75.0, plant => 25.0})
+      expect(headers_and_items(:option, :count)).to eq(animal => 3, plant => 1)
+      expect(headers_and_items(:option, :pct)).to eq(animal => 75.0, plant => 25.0)
     end
 
     it "null_count should be correct" do
@@ -127,25 +129,27 @@ describe "summary collection with single subset" do
     it "should still have items if no values" do
       prepare_form_and_collection("select_one", [nil, nil])
       options = @form.questions[0].option_set.options
-      expect(headers_and_items(:option, :count)).to eq({options[0] => 0, options[1] => 0})
-      expect(headers_and_items(:option, :pct)).to eq({options[0] => 0, options[1] => 0})
+      expect(headers_and_items(:option, :count)).to eq(options[0] => 0, options[1] => 0)
+      expect(headers_and_items(:option, :pct)).to eq(options[0] => 0, options[1] => 0)
     end
   end
 
   describe "select_multiple summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form("select_multiple", [%w(A), %w(B C), %w(A C), %w(C), %w(A)], option_names: %w(A B C))
+      prepare_form("select_multiple", [%w[A], %w[B C], %w[A C], %w[C], %w[A]], option_names: %w[A B C])
       @responses.last.destroy
       prepare_collection
       options = @form.questions[0].option_set.options
       expect(headers_and_items(:option, :count)).to eq(
-        {options[0] => 2, options[1] => 1, options[2] => 3})
+        options[0] => 2, options[1] => 1, options[2] => 3
+      )
       expect(headers_and_items(:option, :pct)).to eq(
-        {options[0] => 50.0, options[1] => 25.0, options[2] => 75.0})
+        options[0] => 50.0, options[1] => 25.0, options[2] => 75.0
+      )
     end
 
     it "null_count should always be zero" do
-      prepare_form_and_collection("select_multiple", [%w(A)], :option_names => %w(A B C))
+      prepare_form_and_collection("select_multiple", [%w[A]], option_names: %w[A B C])
       expect(first_summary.null_count).to eq(0)
     end
   end
@@ -294,6 +298,6 @@ describe "summary collection with single subset" do
 
   # generates a hash of headers to items for testing purposes
   def headers_and_items(header_attrib, item_attrib)
-    Hash[*first_summary.headers.each_with_index.map{|h, i| [h[header_attrib], first_summary.items[i].send(item_attrib)]}.flatten(1)]
+    Hash[*first_summary.headers.each_with_index.flat_map { |h, i| [h[header_attrib], first_summary.items[i].send(item_attrib)] }]
   end
 end

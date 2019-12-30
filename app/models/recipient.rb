@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Lightweight wrapper around a user or group, modeling useful properties
 # in the context of broadcasts and other models.
 class Recipient

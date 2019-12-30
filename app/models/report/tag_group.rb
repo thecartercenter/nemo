@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A group of TypeGroups containing summaries associated with a particular question tag
 class Report::TagGroup
   # if not grouped by tag, should return one big group with tag: nil
@@ -5,7 +7,7 @@ class Report::TagGroup
 
   def self.generate(summaries, options)
     if options[:group_by_tag]
-      tag_groups = Hash.new { |h,k| h[k] = [] } # Accessing uninitialized key creates empty array
+      tag_groups = Hash.new { |h, k| h[k] = [] } # Accessing uninitialized key creates empty array
       untagged = []
       summaries.each do |summary, q = summary.questioning|
         if q.tags.empty?
@@ -33,10 +35,10 @@ class Report::TagGroup
 
   def initialize(attribs)
     # save attribs
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     {
       tag: tag,
       type_groups: type_groups

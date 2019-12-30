@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # models a group of summary clusters for a standard form report.
 # each group contains a set of types, e.g. categorical questions or numerical questions
 class Report::TypeGroup
@@ -6,12 +8,12 @@ class Report::TypeGroup
 
   # each TypeGroup contains a set of types. this is them, in the order they'll be displayed.
   TYPE_SETS = ActiveSupport::OrderedHash[
-    'categorical' => %w(select_one select_multiple),
-    'numbers' => %w(integer counter decimal),
-    'dates' => %w(date),
-    'times' => %w(time datetime),
-    'short_text' => %w(text),
-    'long_text' => %w(long_text)
+    "categorical" => %w[select_one select_multiple],
+    "numbers" => %w[integer counter decimal],
+    "dates" => %w[date],
+    "times" => %w[time datetime],
+    "short_text" => %w[text],
+    "long_text" => %w[long_text]
   ]
 
   # generates a set of groups for the given summaries and options
@@ -20,22 +22,22 @@ class Report::TypeGroup
   def self.generate(summaries, options)
     # if order is by number, then just go for it
     case options[:question_order]
-    when 'number'
+    when "number"
       # return one big group
-      [new(:type_set => 'all', :summaries => summaries)]
+      [new(type_set: "all", summaries: summaries)]
 
     # else if by type
-    when 'type'
+    when "type"
       # first, separate summaries by type set
-      summaries_by_type_set = ActiveSupport::OrderedHash[*TYPE_SETS.each_key.map{|type_set| [type_set, []]}.flatten(1)]
+      summaries_by_type_set = ActiveSupport::OrderedHash[*TYPE_SETS.each_key.flat_map { |type_set| [type_set, []] }]
       summaries.each do |s|
         summaries_by_type_set[types_to_type_sets[s.qtype.name]] << s
       end
 
       # generate each group
-      summaries_by_type_set.map{|type_set, summaries| summaries.empty? ? nil : new(:type_set => type_set, :summaries => summaries)}.compact
+      summaries_by_type_set.map { |type_set, summaries| summaries.empty? ? nil : new(type_set: type_set, summaries: summaries) }.compact
     else
-      raise 'no question order specified'
+      raise "no question order specified"
     end
   end
 
@@ -53,7 +55,7 @@ class Report::TypeGroup
 
   def initialize(attribs)
     # save attribs
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
 
     # sort appropriately
     sort_summaries
@@ -66,12 +68,12 @@ class Report::TypeGroup
 
   # sorts summaries in this group depending on the group's type set
   def sort_summaries
-    if type_set == 'categorical'
+    if type_set == "categorical"
       # The categorical group should be sorted by option set name, then rank.
       # This is so the option columns headers can be shared.
-      @summaries.sort_by!{|s| [s.questioning.option_set.name, s.questioning.full_rank]}
+      @summaries.sort_by! { |s| [s.questioning.option_set.name, s.questioning.full_rank] }
     else
-      @summaries.sort_by!{|s| s.questioning.full_rank}
+      @summaries.sort_by! { |s| s.questioning.full_rank }
     end
   end
 
@@ -79,10 +81,10 @@ class Report::TypeGroup
   # this is useful in computing how many columns to put in a table
   # min should be one
   def find_max_header_count
-    @max_header_count = (@summaries.map{|s| s.headers.try(:size) || 0} + [1]).max
+    @max_header_count = (@summaries.map { |s| s.headers.try(:size) || 0 } + [1]).max
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     {
       type_set: type_set,
       clusters: clusters,

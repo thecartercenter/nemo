@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GeneralSpecHelpers
   # Encodes credentials for basic auth
   def encode_credentials(username, password)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -26,6 +28,6 @@
 FactoryGirl.define do
   factory :assignment do
     mission
-    role 'enumerator'
+    role "enumerator"
   end
 end

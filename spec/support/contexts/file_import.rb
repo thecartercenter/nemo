@@ -20,7 +20,6 @@ shared_context "file import" do
     click_button("Import")
   end
 
-
   def run_scenario(node, correct_file, correct_file_name)
     # try hitting submit with no file, expect error
     click_button("Import")

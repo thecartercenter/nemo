@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ELMO::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -18,7 +20,7 @@ ELMO::Application.configure do
   config.action_dispatch.show_exceptions = false
 
   # Disable request forgery protection in test environment
-  config.action_controller.allow_forgery_protection    = false
+  config.action_controller.allow_forgery_protection = false
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
@@ -35,7 +37,7 @@ ELMO::Application.configure do
 
   # Configure static asset server for tests with Cache-Control for performance
   config.public_file_server.enabled = true
-  config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=3600' }
+  config.public_file_server.headers = {"Cache-Control" => "public, max-age=3600"}
 
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = false
@@ -48,6 +50,6 @@ ELMO::Application.configure do
 
   # Enable rack-attack middleware for protecting against brute-force login attempts,
   # but disable it until needed.
-  config.middleware.use Rack::Attack
+  config.middleware.use(Rack::Attack)
   Rack::Attack.disable!
 end

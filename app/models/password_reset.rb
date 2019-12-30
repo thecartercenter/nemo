@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Serves as a model for the password reset form. Not persisted.
 class PasswordReset
   include ActiveModel::Validations

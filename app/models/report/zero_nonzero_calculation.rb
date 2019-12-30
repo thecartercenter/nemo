@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -54,17 +56,17 @@ class Report::ZeroNonzeroCalculation < Report::Calculation
   end
 
   def where_expr
-    @where_expr ||= raise Report::ReportError.new("A zero/non-zero calculation must specify question1.") if question1.nil?
-    Report::Expression.new(:sql_tplt => "__TBL_PFX__questions.id = '#{question1.id}'",
-      :name => "where", :clause => :where, :chunks => {:tbl_pfx => table_prefix})
+    @where_expr ||= raise Report::ReportError, "A zero/non-zero calculation must specify question1." if question1.nil?
+    Report::Expression.new(sql_tplt: "__TBL_PFX__questions.id = '#{question1.id}'",
+                           name: "where", clause: :where, chunks: {tbl_pfx: table_prefix})
   end
 
   def joins
-    [:options, :choices, :option_sets]
+    %i[options choices option_sets]
   end
 
   def data_type_expr
-    Report::Expression.new(:sql_tplt => "'text'", :name => "type", :clause => :select)
+    Report::Expression.new(sql_tplt: "'text'", name: "type", clause: :select)
   end
 
   def output_data_type

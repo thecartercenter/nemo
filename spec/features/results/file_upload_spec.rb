@@ -66,7 +66,7 @@ feature "response form file upload", js: true do
     # save w/ user
     select2(user.name, from: "response_user_id")
     click_button("Save")
-    expect(page).to_not have_content("Response is invalid")
+    expect(page).to_not(have_content("Response is invalid"))
 
     response = Response.last
     visit edit_response_path(params.merge(id: response.shortcode))
@@ -83,7 +83,7 @@ feature "response form file upload", js: true do
     expect_preview(video_node)
 
     click_button("Save")
-    expect(page).to_not have_content("Response is invalid")
+    expect(page).to_not(have_content("Response is invalid"))
 
     visit edit_response_path(params.merge(id: response.shortcode))
 
@@ -91,7 +91,7 @@ feature "response form file upload", js: true do
     video_node = find("[data-path='1']")
 
     # no image thumbnail, video thumbnail present
-    expect(image_node).to_not have_selector(".media-thumbnail img")
+    expect(image_node).to_not(have_selector(".media-thumbnail img"))
     expect(video_node).to have_selector(".media-thumbnail img")
   end
 

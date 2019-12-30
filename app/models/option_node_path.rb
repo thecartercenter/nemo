@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Models the path of OptionNodes from the top level of an OptionSet to a given OptionNode.
 # e.g. U.S.A -> Georgia -> Atlanta.
 # Accepts an explicit OptionSet attribute for cases where target_node is nil.
@@ -8,9 +10,9 @@ class OptionNodePath
   delegate :multilevel?, :level_name_for_depth, :level_count, to: :option_set
 
   def initialize(attribs = {})
-    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
     if !target_node.nil? && option_set != target_node.option_set
-      raise ArgumentError.new("target_node's OptionSet doesn't match given OptionSet")
+      raise ArgumentError, "target_node's OptionSet doesn't match given OptionSet"
     end
     ensure_nodes_for_all_levels
   end
@@ -22,8 +24,8 @@ class OptionNodePath
   # Returns the available child nodes at the given depth in the path.
   # Depth 0 makes no sense as it's the root.
   def nodes_for_depth(depth)
-    raise ArgumentError.new("depth must be > 1") if depth < 1
-    raise ArgumentError.new("depth is too large") if depth >= nodes.size
+    raise ArgumentError, "depth must be > 1" if depth < 1
+    raise ArgumentError, "depth is too large" if depth >= nodes.size
     nodes[depth - 1].try(:sorted_children) || []
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -37,13 +39,13 @@ describe Setting do
 
   it "serialized locales are always symbols" do
     expect(setting.preferred_locales.first.class).to eq(Symbol)
-    setting.update_attributes!(preferred_locales_str: "fr,ar")
+    setting.update!(preferred_locales_str: "fr,ar")
     expect(setting.preferred_locales.first.class).to eq(Symbol)
   end
 
   it "locales with spaces should still be accepted" do
-    setting.update_attributes!(preferred_locales_str: "fr , ar1")
-    expect(setting.preferred_locales).to eq([:fr, :ar])
+    setting.update!(preferred_locales_str: "fr , ar1")
+    expect(setting.preferred_locales).to eq(%i[fr ar])
   end
 
   it "generate override code will generate a new six character code" do
@@ -63,17 +65,17 @@ describe Setting do
         it "should create one with default values" do
           setting = Setting.load_for_mission(mission)
           expect(setting.new_record?).to be_falsey
-          expect(setting.mission).to eq mission
-          expect(setting.timezone).to eq Setting::DEFAULT_TIMEZONE
+          expect(setting.mission).to eq(mission)
+          expect(setting.timezone).to eq(Setting::DEFAULT_TIMEZONE)
         end
       end
 
       context "when a setting exists" do
-        before { Setting.load_for_mission(mission).update_attributes!(:preferred_locales => [:fr]) }
+        before { Setting.load_for_mission(mission).update!(preferred_locales: [:fr]) }
 
         it "should load it" do
           setting = Setting.load_for_mission(mission)
-          expect(setting.preferred_locales).to eq [:fr]
+          expect(setting.preferred_locales).to eq([:fr])
         end
       end
     end
@@ -132,13 +134,13 @@ describe Setting do
         let!(:admin_setting) { Setting.load_for_mission(nil).update_attribute(:theme, "elmo") }
 
         it "copies theme setting from admin mode setting" do
-          expect(Setting.build_default(mission).theme).to eq "elmo"
+          expect(Setting.build_default(mission).theme).to eq("elmo")
         end
       end
 
       context "without existing admin mode setting" do
         it "defaults to nemo" do
-          expect(Setting.build_default(mission).theme).to eq "nemo"
+          expect(Setting.build_default(mission).theme).to eq("nemo")
         end
       end
     end

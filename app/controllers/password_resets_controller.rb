@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordResetsController < ApplicationController
   include PasswordResettable
 
@@ -5,7 +7,7 @@ class PasswordResetsController < ApplicationController
   skip_authorization_check
 
   before_action(:ensure_logged_out)
-  before_action(:load_user_using_perishable_token, only: [:edit, :update])
+  before_action(:load_user_using_perishable_token, only: %i[edit update])
 
   # When the user requests a password reset
   def new
@@ -22,10 +24,10 @@ class PasswordResetsController < ApplicationController
     if (users = @password_reset.matches).any?
       if users.count > 1
         flash.now[:error] = t("password_reset.multiple_accounts")
-        render :new
+        render(:new)
       elsif (user = users.first).email.blank?
         flash.now[:error] = t("password_reset.no_associated_email")
-        render :new
+        render(:new)
       else
         send_reset_password_instructions(user)
         flash[:success] = t("password_reset.check_email")
@@ -33,7 +35,7 @@ class PasswordResetsController < ApplicationController
       end
     else
       flash.now[:error] = t("password_reset.user_not_found")
-      render :new
+      render(:new)
     end
   end
 

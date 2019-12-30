@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -274,10 +276,10 @@ describe Report::ListReport, :reports do
     # Perhaps add it later once we decide what to do with reports.
     it "should convert fetched dates to current timezone" do
       # Timestamps and datetime_values are stored in UTC (note that the created_at day has jumped to Jan 2)
-      expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq 2
+      expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq(2)
 
       # date_submitted should be converted to right timezone
-      expect(report.data.rows[0][0]).to eq "2017-01-01"
+      expect(report.data.rows[0][0]).to eq("2017-01-01")
     end
   end
 end

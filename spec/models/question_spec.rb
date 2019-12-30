@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -46,11 +48,11 @@
 #
 # rubocop:enable Metrics/LineLength
 
-require 'rails_helper'
+require "rails_helper"
 
 describe Question do
   describe ".not_in_form" do
-    let!(:form) { create(:form, question_types: %w(integer integer)) }
+    let!(:form) { create(:form, question_types: %w[integer integer]) }
     let!(:other_question) { create(:question) }
 
     it "should work" do
@@ -59,8 +61,10 @@ describe Question do
   end
 
   describe "#min_max_error_msg" do
-    let(:question) { build(:question, qtype_name: 'integer',
-      minimum: 10, maximum: 20, minstrictly: false, maxstrictly: true) }
+    let(:question) do
+      build(:question, qtype_name: "integer",
+                       minimum: 10, maximum: 20, minstrictly: false, maxstrictly: true)
+    end
 
     it "is correct" do
       expect(question.min_max_error_msg).to eq("Must be greater than or equal to 10 and less than 20")

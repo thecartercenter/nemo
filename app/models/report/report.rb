@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -47,10 +49,10 @@ class Report::Report < ApplicationRecord
   include MissionBased
 
   has_many :option_set_choices, class_name: "Report::OptionSetChoice", foreign_key: "report_report_id", inverse_of: :report,
-    dependent: :destroy, autosave: true
+                                dependent: :destroy, autosave: true
   has_many :option_sets, through: :option_set_choices
   has_many :calculations, -> { order("rank") }, class_name: "Report::Calculation", foreign_key: "report_report_id", inverse_of: :report,
-     dependent: :destroy, autosave: true
+                                                dependent: :destroy, autosave: true
   belongs_to :creator, class_name: "User"
 
   accepts_nested_attributes_for :calculations, allow_destroy: true
@@ -65,7 +67,7 @@ class Report::Report < ApplicationRecord
   before_save :normalize_attribs
 
   attr_accessor :just_created, :populated
-  alias_method :populated?, :populated
+  alias populated? populated
 
   # this is overridden by StandardFormReport, and ignored elsewhere
   attr_accessor :disagg_question_id
@@ -74,16 +76,16 @@ class Report::Report < ApplicationRecord
 
   @@per_page = 20
 
-  PERCENT_TYPES = %w(none overall by_row by_col)
+  PERCENT_TYPES = %w[none overall by_row by_col].freeze
 
   # list of all immediate subclasses in the order they should be shown to the user
-  SUBCLASSES = %w(Report::TallyReport Report::ListReport Report::StandardFormReport)
+  SUBCLASSES = %w[Report::TallyReport Report::ListReport Report::StandardFormReport].freeze
 
-  # HACK TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
+  # HACK: TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self
     def new_with_cast(*a, &b)
-      if (h = a.first).is_a? Hash and (type = h[:type] || h['type']) and (klass = type.constantize) != self
-        raise "wtF hax!!"  unless klass < self  # klass should be a descendant of us
+      if (h = a.first).is_a?(Hash)) && (type = h[:type] || h["type"]) && ((klass = type.constantize) != self)
+        raise "wtF hax!!" unless klass < self # klass should be a descendant of us
         return klass.new(*a, &b)
       end
 
@@ -112,8 +114,8 @@ class Report::Report < ApplicationRecord
     # get next number
     nums = self.class.for_mission(mission).where("name LIKE '#{prefix}%'").collect do |r|
       # get suffix
-      if r.name.match(/^#{prefix}(\s+\d+$|$)/)
-        [$1.to_i, 1].max # must be at least one if found
+      if r.name =~ /^#{prefix}(\s+\d+$|$)/
+        [Regexp.last_match(1).to_i, 1].max # must be at least one if found
       else
         1
       end
@@ -126,7 +128,7 @@ class Report::Report < ApplicationRecord
   end
 
   # Should be overridden by children.
-  def run(current_ability = nil, _options = {})
+  def run(_current_ability = nil, _options = {})
     raise NotImplementedError
   end
 

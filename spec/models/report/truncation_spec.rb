@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 describe "report truncation" do
   include_context "reports"
@@ -13,8 +15,8 @@ describe "report truncation" do
       let(:response_count) { 4 }
 
       it "should limit returned rows to 3 and set truncated flag" do
-        expect(report.data.rows.size).to eq 3
-        expect(report.data.truncated).to be true
+        expect(report.data.rows.size).to eq(3)
+        expect(report.data.truncated).to be(true)
       end
     end
 
@@ -22,14 +24,14 @@ describe "report truncation" do
       let(:response_count) { 2 }
 
       it "should limit returned rows to 2 and not set truncated flag" do
-        expect(report.data.rows.size).to eq 2
-        expect(report.data.truncated).to be false
+        expect(report.data.rows.size).to eq(2)
+        expect(report.data.truncated).to be(false)
       end
     end
   end
 
   describe Report::ListReport, :reports do
-    let(:form) { create(:form, question_types: %w(integer integer)) }
+    let(:form) { create(:form, question_types: %w[integer integer]) }
     let(:report) do
       create(:list_report, calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
@@ -37,13 +39,13 @@ describe "report truncation" do
         {rank: 3, type: "Report::IdentityCalculation", question1_id: form.questions[1].id}
       ])
     end
-    let!(:responses) { create_list(:response, response_count, form: form, answer_values: %w(123 456)) }
+    let!(:responses) { create_list(:response, response_count, form: form, answer_values: %w[123 456]) }
 
     it_behaves_like "a truncatable report"
   end
 
   describe Report::ResponseTallyReport, :reports do
-    let(:form) { create(:form, question_types: %w(integer)) }
+    let(:form) { create(:form, question_types: %w[integer]) }
     let(:report) do
       create(:response_tally_report, calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", question1_id: form.questions[0].id}

@@ -1,12 +1,13 @@
-class Report::Grouping
+# frozen_string_literal: true
 
+class Report::Grouping
   def initialize(calculation, rank)
     @calculation = calculation
     @rank = rank
   end
 
   def apply(rel)
-    prefix = @rank.to_s[0,3]
+    prefix = @rank.to_s[0, 3]
 
     # get fragments
     @calculation.table_prefix = prefix
@@ -33,7 +34,7 @@ class Report::Grouping
     # Filter for top-level answers only if applicable.
     rel = filter_non_top_level_answers(rel, prefix) if @calculation.question1
 
-    return rel
+    rel
   end
 
   def filter_non_top_level_answers(rel, prefix)

@@ -86,6 +86,6 @@ feature "report generation", js: true do
   end
 
   def expect_cols(num)
-    expect(all(".report_body tr:first-child th").size).to eq num
+    expect(all(".report_body tr:first-child th").size).to eq(num)
   end
 end

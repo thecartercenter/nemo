@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WelcomeController < ApplicationController
   include ReportEmbeddable
   include ResponseIndexable
@@ -21,13 +23,13 @@ class WelcomeController < ApplicationController
       @dont_print_title = true
       dashboard_index
     elsif admin_mode?
-      render :admin
+      render(:admin)
     else
-      render :no_mission
+      render(:no_mission)
     end
   end
 
-   # map info window
+  # map info window
   def info_window
     @response = Response.with_basic_assoc.find(params[:response_id])
     authorize!(:read, @response)
@@ -100,7 +102,7 @@ class WelcomeController < ApplicationController
         },
         report_stats: render_to_string(partial: "report_stats")
       }
-      render json: data
+      render(json: data)
     else
       render(:dashboard)
     end
@@ -108,11 +110,11 @@ class WelcomeController < ApplicationController
 
   def prepare_report
     # if report id given, load that else use most popular
-    if !params[:report_id].blank?
-      @report = Report::Report.find(params[:report_id])
-    else
-      @report = Report::Report.accessible_by(current_ability).by_popularity.first
-    end
+    @report = if params[:report_id].present?
+                Report::Report.find(params[:report_id])
+              else
+                Report::Report.accessible_by(current_ability).by_popularity.first
+              end
 
     if @report
       # Make sure no funny business!

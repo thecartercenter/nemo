@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -60,7 +62,7 @@ class Sms::Incoming < Sms::Message
   end
 
   # Returns a set of hashes of form {user: x, phone: y} for recipients.
-  def recipient_hashes(options = {})
+  def recipient_hashes(_options = {})
     [user: Sms::SiteUser.instance, phone: to]
   end
 

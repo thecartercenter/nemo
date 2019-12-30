@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Report::Formatter
   extend ActionView::Helpers::TextHelper
 
@@ -10,9 +12,9 @@ class Report::Formatter
     when "date"
       I18n.l(value.is_a?(Date) ? value : Date.parse(value.to_s))
     when "time"
-      I18n.l(value.is_a?(Time) ? value : Time.parse(value.to_s), :format => :time_only)
+      I18n.l(value.is_a?(Time) ? value : Time.parse(value.to_s), format: :time_only)
     when "decimal"
-      "%.2f" % value
+      format("%.2f", value)
     when "long_text"
       sanitize(context == :header ? truncate(value, length: 96) : value)
     else

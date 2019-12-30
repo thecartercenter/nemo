@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
-  factory :report, :class => 'Report::Report' do
+  factory :report, class: "Report::Report" do
     transient do
       run false
     end
@@ -19,7 +21,7 @@ FactoryGirl.define do
       end
 
       calculations_attributes do
-        _calculations.each_with_index.map do |c,i|
+        _calculations.each_with_index.map do |c, i|
           {rank: i + 1, type: "Report::IdentityCalculation"}.tap do |attribs|
             attribs[:attrib1_name] = c if c.is_a?(String)
             attribs[:question1] = c if c.is_a?(Question)

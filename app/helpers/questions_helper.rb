@@ -44,12 +44,12 @@ module QuestionsHelper
     when "name"
       question_picker = params[:controller] == "forms"
       text = content_tag(:span, class: "text") do
-              if question_picker
-                html_escape(question.name_or_none)
-              else
-                link_to(question.name_or_none, question.default_path)
-              end
-            end
+        if question_picker
+          html_escape(question.name_or_none)
+        else
+          link_to(question.name_or_none, question.default_path)
+        end
+      end
       text << render_tags(question.sorted_tags, clickable: !question_picker)
     else question.send(field)
     end

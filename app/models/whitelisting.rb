@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -22,6 +24,6 @@
 # rubocop:enable Metrics/LineLength
 
 class Whitelisting < ApplicationRecord
-  belongs_to :whitelistable, :polymorphic => true
+  belongs_to :whitelistable, polymorphic: true
   belongs_to :user
 end

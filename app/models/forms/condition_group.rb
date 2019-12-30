@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Models a group of 1. conditions or 2. other groups of conditions
 # The nesting enables modeling something like this:
 # (Q2 > 5 || Q3 == 7) && !(Q2 > 9 || Q3 == 1) && !(Q2 > 0 && Q3 == 2) && !(Q2 < 12 || Q3 > 5)
@@ -7,7 +9,7 @@ module Forms
     extend ActiveModel::Naming
 
     attr_accessor :members, :true_if, :negate, :name
-    alias_method :negate?, :negate
+    alias negate? negate
 
     delegate :empty?, to: :members
 

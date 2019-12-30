@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # models a summary of the answers for a question on a form
 class Report::QuestionSummary
   # the questioning we're summarizing
@@ -19,12 +21,10 @@ class Report::QuestionSummary
 
   def initialize(attribs)
     # save attribs
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
   end
 
-  def qtype
-    questioning.qtype
-  end
+  delegate :qtype, to: :questioning
 
   # A summary is empty if it has no items, or if all items are zero.
   def empty?
@@ -39,8 +39,8 @@ class Report::QuestionSummary
   def as_json(options = {})
     h = super(options)
     h[:questioning] = questioning.as_json(
-      :only => [:id, :rank],
-      :methods => [:code, :name]
+      only: %i[id rank],
+      methods: %i[code name]
     )
     h[:items] = items
     h[:null_count] = null_count
