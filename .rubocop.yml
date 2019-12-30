@@ -1,6 +1,5 @@
 # Disable defaults
 AllCops:
-  TargetRailsVersion: 4.2
   Exclude:
     - "bin/**/*"
     - "db/schema.rb"

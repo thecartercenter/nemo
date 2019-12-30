@@ -28,7 +28,7 @@
 # rubocop:enable Metrics/LineLength
 
 # Models a rule directing the user to a given question if some conditions are true.
-class SkipRule < ActiveRecord::Base
+class SkipRule < ApplicationRecord
   include FormLogical
 
   belongs_to :dest_item, class_name: "FormItem", inverse_of: :incoming_skip_rules
