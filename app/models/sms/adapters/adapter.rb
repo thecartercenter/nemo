@@ -106,7 +106,7 @@ class Sms::Adapters::Adapter
     rescue Timeout::Error
       raise Sms::Error, "error contacting #{service_name} (timeout)"
     rescue StandardError
-      raise Sms::Error, "error contacting #{service_name} (#{$!.class.name}: #{$!})"
+      raise Sms::Error, "error contacting #{service_name} (#{$ERROR_INFO.class.name}: #{$ERROR_INFO})"
     end
 
     # return body if it's a clean success, else error
