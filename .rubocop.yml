@@ -55,6 +55,9 @@ Metrics/CyclomaticComplexity:
 Metrics/LineLength:
   Enabled: true
   Max: 110
+  IgnoredPatterns:
+    # Test descriptors
+    - ^\s*(describe|it|context|scenario) ".+" do$
 
 Metrics/MethodLength:
   Max: 12
