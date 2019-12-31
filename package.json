@@ -4,6 +4,7 @@
     "test": "jest",
     "lint:js": "eslint --ext .js,.jsx",
     "lint:react": "yarn run lint:js app/javascript/",
+    "lint:backbone": "yarn run lint:js app/assets/javascripts/",
     "lint:scss": "stylelint app/assets/stylesheets/"
   },
   "jest": {
