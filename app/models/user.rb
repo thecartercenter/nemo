@@ -283,7 +283,7 @@ class User < ApplicationRecord
   # gets the user's role for the given mission
   # returns nil if the user is not assigned to the mission
   def role(mission)
-    nn(assignments_by_mission[mission]).role
+    assignments_by_mission[mission]&.role
   end
 
   # checks if the user can perform the given role for the given mission
