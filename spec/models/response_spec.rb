@@ -61,7 +61,7 @@ describe Response do
     form = create(:form, :live, question_types: %w[integer])
 
     # ensure key changes on edits, creates, and deletes
-    r1 = create(:response, user: user, form: form, answer_values: [1])
+    _r1 = create(:response, user: user, form: form, answer_values: [1])
     key1 = Response.per_mission_cache_key(get_mission)
 
     # create

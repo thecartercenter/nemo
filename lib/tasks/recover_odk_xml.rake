@@ -33,7 +33,6 @@ task :recover_odk_xml, ARGS => :environment do |_t, args|
       next
     end
 
-    stq_odk_code = Odk::DecoratorFactory.decorate(stq).odk_code
     stq_ans_fmt = stq_ans.datetime_value.strftime("%Y-%m-%dT%H:%M:%S")
     puts "  Looking for time #{stq_ans_fmt} in #{xml_path}"
     matches = `grep -l "#{stq_ans_fmt}" #{xml_path}/*`.split("\n")

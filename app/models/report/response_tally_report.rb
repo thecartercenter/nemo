@@ -55,8 +55,6 @@ class Report::ResponseTallyReport < Report::TallyReport
   protected
 
   def prep_query(rel)
-    joins = []
-
     # add tally to select
     rel = rel.select("COUNT(responses.id) AS tally")
 
@@ -66,7 +64,7 @@ class Report::ResponseTallyReport < Report::TallyReport
     # add groupings
     rel = apply_groupings(rel)
 
-    rel = rel.limit(response_limit)
+    rel.limit(response_limit)
   end
 
   # applys both groupings

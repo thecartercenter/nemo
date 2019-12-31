@@ -93,7 +93,7 @@ class Sms::Adapters::Adapter
     when :get
       request = Net::HTTP::Get.new(uri.request_uri)
     when :post # only used for FrontlineCloud
-      request = Net::HTTP::Post.new(uri.request_uri, initheader = {"Content-Type" => "application/json"})
+      request = Net::HTTP::Post.new(uri.request_uri, "Content-Type" => "application/json")
       request.body = payload.to_json
     end
 

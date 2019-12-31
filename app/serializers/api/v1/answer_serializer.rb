@@ -5,7 +5,7 @@ class API::V1::AnswerSerializer < ActiveModel::Serializer
   format_keys :underscore
 
   def filter(keys)
-    keys -= (scope.params[:controller] == "api/v1/answers" ? %i[code question] : [])
+    keys - (scope.params[:controller] == "api/v1/answers" ? %i[code question] : [])
   end
 
   def code
