@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # tests the singleton case of summary collections, where there is only one subset in the collection
-# tests for the multiple case, where there are multiple subsets in the collection, are currently in SummaryCollectionMultipleTest
+# tests for the multiple case, where there are multiple subsets in the collection, are currently in
+# SummaryCollectionMultipleTest
 
 require "rails_helper"
 
@@ -32,7 +33,8 @@ describe "summary collection with single subset" do
       enumerator = create(:user, role_name: :enumerator)
       [10, 7, 6, 1, 1].each { |a| create(:response, form: @form, answer_values: [a], user: enumerator) }
 
-      @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, restrict_to_user: enumerator).build
+      @collection = Report::SummaryCollectionBuilder
+        .new(@form.questionings, nil, restrict_to_user: enumerator).build
 
       expect(headers_and_items(:stat, :stat)).to eq(mean: 5.0, max: 10, min: 1)
     end
@@ -115,7 +117,8 @@ describe "summary collection with single subset" do
     end
 
     it "should be correct with multilevel option set" do
-      prepare_form_and_collection("multilevel_select_one", [%w[Animal Dog], %w[Animal], %w[Animal Cat], %w[Plant Tulip]])
+      prepare_form_and_collection("multilevel_select_one",
+        [%w[Animal Dog], %w[Animal], %w[Animal Cat], %w[Plant Tulip]])
       animal, plant = @form.questions[0].option_set.options # Top level options
       expect(headers_and_items(:option, :count)).to eq(animal => 3, plant => 1)
       expect(headers_and_items(:option, :pct)).to eq(animal => 75.0, plant => 25.0)
@@ -298,6 +301,8 @@ describe "summary collection with single subset" do
 
   # generates a hash of headers to items for testing purposes
   def headers_and_items(header_attrib, item_attrib)
-    Hash[*first_summary.headers.each_with_index.flat_map { |h, i| [h[header_attrib], first_summary.items[i].send(item_attrib)] }]
+    Hash[*first_summary.headers.each_with_index.flat_map do |h, i|
+      [h[header_attrib], first_summary.items[i].send(item_attrib)]
+    end]
   end
 end

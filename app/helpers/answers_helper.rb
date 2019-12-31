@@ -27,8 +27,10 @@ module AnswersHelper
             media_path(object, dl: "1"), class: "download"))
 
           if show_delete
-            concat(link_to(content_tag(:i, "", class: "fa fa-trash-o"), "#", class: "delete",
-                                                                             data: {"confirm-msg" => t("response.remove_media_object_confirm.#{object.kind}")}))
+            concat(link_to(content_tag(:i, "", class: "fa fa-trash-o"),
+              "#",
+              class: "delete",
+              data: {"confirm-msg" => t("response.remove_media_object_confirm.#{object.kind}")}))
           end
         end)
       end

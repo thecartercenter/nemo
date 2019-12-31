@@ -59,7 +59,8 @@ module Concerns::ApplicationController::LoginLogistics
     # if the request is a GET, then store as normal
     session[:return_to] = if request.get?
                             request.fullpath
-                          # otherwise, store the referrer (if defined), since it doesn't make sense to store a URL for a different method
+                          # otherwise, store the referrer (if defined),
+                          # since it doesn't make sense to store a URL for a different method
                           elsif request.referer
                             request.referer
                             # otherwise store nothing

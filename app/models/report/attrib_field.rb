@@ -11,7 +11,9 @@ class Report::AttribField < Report::Field
 
   # builds a new object from the templates at the bottom of the file
   def initialize(attrib_name)
-    raise "attrib_name #{attrib_name} not found when creating AttribField object" unless @@ATTRIBS[attrib_name.to_sym]
+    unless @@ATTRIBS[attrib_name.to_sym]
+      raise "attrib_name #{attrib_name} not found when creating AttribField object"
+    end
     @@ATTRIBS[attrib_name.to_sym].each { |k, v| send("#{k}=", v) }
   end
 
@@ -98,12 +100,14 @@ class Report::AttribField < Report::Field
     date_submitted: {
       name: :date_submitted,
       name_expr_params: {
-        sql_tplt: "CAST((responses.created_at AT TIME ZONE 'UTC') AT TIME ZONE '__CURRENT_TIMEZONE__' AS DATE)",
+        sql_tplt:
+          "CAST((responses.created_at AT TIME ZONE 'UTC') AT TIME ZONE '__CURRENT_TIMEZONE__' AS DATE)",
         name: "name",
         clause: :select
       },
       value_expr_params: {
-        sql_tplt: "CAST((responses.created_at AT TIME ZONE 'UTC') AT TIME ZONE '__CURRENT_TIMEZONE__' AS DATE)",
+        sql_tplt:
+          "CAST((responses.created_at AT TIME ZONE 'UTC') AT TIME ZONE '__CURRENT_TIMEZONE__' AS DATE)",
         name: "value",
         clause: :select
       },

@@ -23,7 +23,8 @@ module Sms
             end
           end
 
-          if question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+          if question.minimum &&
+              (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
             if question.minstrictly && val_f <= question.minimum
               raise_parse_error("answer_too_small_strict", minumum: question.minimum)
             elsif val_f < question.minimum
@@ -160,7 +161,8 @@ module Sms
 
           # try to parse time
           begin
-            # add a colon before the last two digits (if needed) and add UTC so timezone doesn't mess things up
+            # add a colon before the last two digits (if needed)
+            # and add UTC so timezone doesn't mess things up
             with_colon = value.gsub(/(\d{1,2})[\.,]?(\d{2})/) do
               "#{Regexp.last_match(1)}:#{Regexp.last_match(2)}"
             end

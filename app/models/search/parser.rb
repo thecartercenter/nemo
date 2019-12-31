@@ -37,7 +37,8 @@ class Search::Parser
   # parses a token of the specified kind out of the lexical tokens
   # returns an array of Tokens and/or LexTokens corresponding to the matching grammar rule
   def take(parent, kind)
-    # puts "PARENT #{parent.try(:kind)} TAKING #{kind} FROM #{@lexer.tokens[0].fragment} NEXT IS #{@lexer.tokens[1..2].map(&:kind).join(',')}"
+    # puts "PARENT #{parent.try(:kind)} TAKING #{kind} FROM #{@lexer.tokens[0].fragment} " \
+    #   "NEXT IS #{@lexer.tokens[1..2].map(&:kind).join(',')}"
     token = Search::Token.new(@search, kind, parent)
 
     token.children = case kind
@@ -46,7 +47,11 @@ class Search::Parser
 
     when :expression
       raise Search::ParseError, I18n.t("search.or_not_allowed_between") if next_is?(:or)
-      [next_is?(:chunk) && next2_is?(*COMP_OP) ? take(token, :qualified_expression) : take(token, :unqualified_expression)]
+      if next_is?(:chunk) && next2_is?(*COMP_OP)
+        [take(token, :qualified_expression)]
+      else
+        [take(token, :unqualified_expression)]
+       end
 
     when :unqualified_expression
       [take(token, :values)]

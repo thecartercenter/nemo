@@ -399,9 +399,10 @@ class Report::SummaryCollectionBuilder
         null_count = (cur_tallies || {})[nil] || 0
 
         # build summary
-        Report::QuestionSummary.new(questioning: qing, display_type: :structured,
-                                    overall_header: I18n.t("report/report.standard_form_report.overall_headers.dates"),
-                                    headers: headers, items: items, null_count: null_count)
+        klass = Report::QuestionSummary
+        klass.new(questioning: qing, display_type: :structured,
+                  overall_header: I18n.t("report/report.standard_form_report.overall_headers.dates"),
+                  headers: headers, items: items, null_count: null_count)
       end
 
       # make a subset for the current disagg_value for this set of summaries
@@ -500,9 +501,10 @@ class Report::SummaryCollectionBuilder
 
         # build summary (headers are blank b/c there is only one column
         # so header is always the same ('responses'))
-        Report::QuestionSummary.new(questioning: qing, display_type: display_type,
-                                    overall_header: I18n.t("report/report.standard_form_report.overall_headers.responses"),
-                                    headers: [], items: items, null_count: null_count)
+        klass = Report::QuestionSummary
+        klass.new(questioning: qing, display_type: display_type,
+                  overall_header: I18n.t("report/report.standard_form_report.overall_headers.responses"),
+                  headers: [], items: items, null_count: null_count)
       end
 
       # make a subset for the current disagg_value for this set of summaries

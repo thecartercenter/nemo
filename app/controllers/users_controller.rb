@@ -96,12 +96,13 @@ class UsersController < ApplicationController
   def bulk_destroy
     @users = restrict_by_search_and_ability_and_selection(@users)
     result = UserDestroyer.new(scope: @users, user: current_user, ability: current_ability).destroy!
+    destroyed, deactivated, skipped = result.values_at(:destroyed, :deactivated, :skipped)
     success = []
-    success << t("user.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
-    success << t("user.bulk_destroy_deactivated", count: result[:deactivated]) if result[:deactivated].positive?
-    success << t("user.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?
+    success << t("user.bulk_destroy_deleted", count: destroyed) if destroyed.positive?
+    success << t("user.bulk_destroy_deactivated", count: deactivated) if deactivated.positive?
+    success << t("user.bulk_destroy_skipped", count: skipped) if skipped.positive?
     flash[:success] = success.join(" ") unless success.empty?
-    flash[:alert] = t("user.bulk_destroy_skipped_current") if result[:skipped] == 1
+    flash[:alert] = t("user.bulk_destroy_skipped_current") if skipped == 1
     redirect_to(index_url_with_context)
   end
 
@@ -219,8 +220,9 @@ class UsersController < ApplicationController
   def user_params
     admin_only = [:admin] if can?(:adminify, @user)
 
-    params.require(:user).permit(*admin_only, :name, :login, :birth_year, :gender, :gender_custom, :nationality,
-      :email, :phone, :active, :phone2, :pref_lang, :notes, :password, :password_confirmation,
-      :reset_password_method, user_group_ids: [], assignments_attributes: %i[role mission_id _destroy id])
+    params.require(:user).permit(*admin_only, :name, :login, :birth_year,
+      :gender, :gender_custom, :nationality, :email, :phone, :active, :phone2,
+      :pref_lang, :notes, :password, :password_confirmation, :reset_password_method,
+      user_group_ids: [], assignments_attributes: %i[role mission_id _destroy id])
   end
 end

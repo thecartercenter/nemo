@@ -21,7 +21,8 @@ describe "response API requests" do
     it "should restrict by date/time" do
       t1 = (Time.now - 7.days).iso8601
       t2 = (Time.now - 3.days).iso8601
-      get "/api/v1/m/mission1/responses?form_id=#{@form.id}&created_before=#{t2}&created_after=#{t1}", headers: headers
+      get "/api/v1/m/mission1/responses?form_id=#{@form.id}&created_before=#{t2}&created_after=#{t1}",
+        headers: headers
       expect(response).to have_http_status(:ok)
       expect(json.size).to eq(1)
       # answers should be sorted by rank, expect integer question first

@@ -12,7 +12,8 @@ module ApplicationHelper
     builder.build(configatron.url.to_h.merge(path: path))
   end
 
-  # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
+  # hackish way of getting the route key identical to what would be returned
+  # by model_name.route_key on a model
   # Should consider merging with ApplicationController's model_class at some point.
   def route_key
     controller.class.name.underscore.tr("/", "_").gsub(/_controller$/, "")
@@ -123,7 +124,8 @@ module ApplicationHelper
     obj.respond_to?(:total_pages)
   end
 
-  # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
+  # if the given array is not paginated, apply an infinite pagination
+  # so the will_paginate methods will still work
   def prepare_for_index(objs)
     if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
       objs.paginate(page: 1, per_page: 1_000_000)
@@ -168,7 +170,8 @@ module ApplicationHelper
       ttl << if options[:name_only]
                @title_args[:name]
              else
-               t(action, {scope: "page_titles.#{controller_name}", default: [:all, ""]}.merge(@title_args || {}))
+               t(action, {scope: "page_titles.#{controller_name}", default: [:all, ""]}
+                           .merge(@title_args || {}))
              end
     end
   end

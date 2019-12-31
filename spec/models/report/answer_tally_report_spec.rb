@@ -128,7 +128,9 @@ describe Report::AnswerTallyReport do
   describe "results" do
     it "counts of yes and no for all yes no questions" do
       yes_no = create(:option_set, option_names: %w[Yes No])
-      questions = (1..3).to_a.map { |i| create(:question, qtype_name: "select_one", option_set: yes_no, name: "Q#{i}", code: "q#{i}") }
+      questions = (1..3).to_a.map do |i|
+        create(:question, qtype_name: "select_one", option_set: yes_no, name: "Q#{i}", code: "q#{i}")
+      end
       forms = create_list(:form, 2, questions: questions, option_set: yes_no)
 
       create_list(:response, 1, form: forms[0], answer_values: %w[Yes Yes Yes])
@@ -166,8 +168,12 @@ describe Report::AnswerTallyReport do
       yes_no = create(:option_set, option_names: %w[Yes No])
       high_low = create(:option_set, option_names: %w[High Low])
       questions = []
-      2.times { |i| questions << create(:question, code: "yn#{i}", qtype_name: "select_one", option_set: yes_no) }
-      2.times { |i| questions << create(:question, code: "hl#{i}", qtype_name: "select_one", option_set: high_low) }
+      2.times do |i|
+        questions << create(:question, code: "yn#{i}", qtype_name: "select_one", option_set: yes_no)
+      end
+      2.times do |i|
+        questions << create(:question, code: "hl#{i}", qtype_name: "select_one", option_set: high_low)
+      end
       form = create(:form, questions: questions)
       1.times { create(:response, form: form, answer_values: %w[Yes Yes High High]) }
       2.times { create(:response, form: form, answer_values: %w[Yes Yes Low Low]) }
@@ -218,7 +224,8 @@ describe Report::AnswerTallyReport do
         Report::IdentityCalculation.new(question1: questions[1])
       ])
 
-      # Make sure we account for the null (no answer given) values that will come up for the rgb question (we use a _)
+      # Make sure we account for the null (no answer given) values
+      # that will come up for the rgb question (we use a _)
       expect(report).to have_data_grid(%w[Yes No Red Blue Green _ TTL],
         %w[yn 6 4 _ _ _ _ 10],
         %w[rgb _ _ 5 5 7 2 19],

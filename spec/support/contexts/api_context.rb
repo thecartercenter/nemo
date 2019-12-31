@@ -13,7 +13,8 @@ shared_context "api_form_with_responses" do
     decoy = create(:form, mission: mission, access_level: "public", question_types: %w[integer])
     create(:response, form: decoy, answer_values: [1])
 
-    @form = create(:form, mission: mission, access_level: "public", question_types: %w[integer select_one text])
+    @form = create(:form, mission: mission, access_level: "public",
+                          question_types: %w[integer select_one text])
     @form.questions[2].update_attribute(:access_level, "private")
 
     Timecop.freeze(Time.now - 10.days) do

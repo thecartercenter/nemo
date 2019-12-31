@@ -9,7 +9,8 @@ class Report::SummaryCluster
   def self.generate(summaries)
     [].tap do |clusters|
       summaries.each do |s|
-        # if this summary doesn't fit with the current cluster, or if there is no current cluster, create a new one
+        # if this summary doesn't fit with the current cluster,
+        # or if there is no current cluster, create a new one
         if clusters.last&.accepts(s)
           clusters.last.add(s)
         else

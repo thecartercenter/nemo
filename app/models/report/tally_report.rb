@@ -72,7 +72,8 @@ class Report::TallyReport < Report::Report
   def get_header(type)
     prefix = type == :row ? "pri" : "sec"
     if has_grouping(type)
-      hashes = @db_result.extract_unique_tuples("#{prefix}_name", "#{prefix}_value", "#{prefix}_type").collect do |tuple|
+      unique = @db_result.extract_unique_tuples("#{prefix}_name", "#{prefix}_value", "#{prefix}_type")
+      hashes = unique.collect do |tuple|
         {name: Report::Formatter.format(tuple[0], tuple[2], :header), key: tuple[0], sort_value: tuple[1]}
       end
     else

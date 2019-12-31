@@ -109,7 +109,8 @@ describe Report::StandardFormReport do
 
       build_and_run_report
 
-      expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1])).to be_falsey, "summaries should not contain hidden question"
+      expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1]))
+        .to be_falsey, "summaries should not contain hidden question"
     end
 
     it "should return summaries matching questions" do

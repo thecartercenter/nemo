@@ -29,13 +29,17 @@ class Report::TypeGroup
     # else if by type
     when "type"
       # first, separate summaries by type set
-      summaries_by_type_set = ActiveSupport::OrderedHash[*TYPE_SETS.each_key.flat_map { |type_set| [type_set, []] }]
+      summaries_by_type_set = ActiveSupport::OrderedHash[*TYPE_SETS.each_key.flat_map do |type_set|
+        [type_set, []]
+      end]
       summaries.each do |s|
         summaries_by_type_set[types_to_type_sets[s.qtype.name]] << s
       end
 
       # generate each group
-      summaries_by_type_set.map { |type_set, summaries| summaries.empty? ? nil : new(type_set: type_set, summaries: summaries) }.compact
+      summaries_by_type_set.map do |type_set, summaries|
+        summaries.empty? ? nil : new(type_set: type_set, summaries: summaries)
+      end.compact
     else
       raise "no question order specified"
     end

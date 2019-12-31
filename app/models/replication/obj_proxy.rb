@@ -39,7 +39,8 @@ class Replication::ObjProxy
                 fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
               elsif assoc.ancestry?
                 child_ancestry = [ancestry, id].compact.join("/")
-                build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class, order: "ORDER BY rank")
+                build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class,
+                                                                 order: "ORDER BY rank")
               else # has_one or has_many
                 build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
     end
@@ -193,7 +194,8 @@ class Replication::ObjProxy
       begin
         [assoc.foreign_key, quote_or_null(backward_assoc_id(replicator, context, assoc))]
       rescue Replication::BackwardAssocError
-        # If we have explicit instructions to delete the object if an association is missing, make a note of it.
+        # If we have explicit instructions to delete the object if an association is missing,
+        # make a note of it.
         $ERROR_INFO.ok_to_skip = assoc.skip_obj_if_missing
         raise $ERROR_INFO # Then we send on up the chain.
       end

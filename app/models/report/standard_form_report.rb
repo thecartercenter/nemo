@@ -127,10 +127,14 @@ class Report::StandardFormReport < Report::Report
   # current_ability - the ability under which the report should be run
   def run(current_ability, _options = {})
     # make sure the disagg_qing is still on this form (unlikely to be an error)
-    raise Report::ReportError, "disaggregation question is not on this form" unless disagg_qing.nil? || disagg_qing.form_id == form_id
+    unless disagg_qing.nil? || disagg_qing.form_id == form_id
+      raise Report::ReportError, "disaggregation question is not on this form"
+    end
 
     # make sure disagg_qing is disaggable
-    raise Report::ReportError, "disaggregation question is incorrect type" unless can_disaggregate_with?(disagg_qing)
+    unless can_disaggregate_with?(disagg_qing)
+      raise Report::ReportError, "disaggregation question is incorrect type"
+    end
 
     # pre-calculate response count, accounting for user ability
     @response_count = form.responses.accessible_by(current_ability).count

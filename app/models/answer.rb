@@ -185,8 +185,8 @@ class Answer < ResponseNode
     options.map { |o| choices_by_option[o] || choices.new(option: o, checked: false) }
   end
 
-  # if this answer is for a location question and the value is not blank, returns a two element array representing the
-  # lat long. else returns nil
+  # if this answer is for a location question and the value is not blank,
+  # returns a two element array representing the lat long. else returns nil
   def location
     value.split(" ") if location_type_with_value?
   end

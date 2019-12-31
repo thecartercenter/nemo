@@ -56,7 +56,8 @@ describe "authorization" do
   it "enumerator cant update own role" do
     user = create(:user, role_name: :enumerator)
     login(user)
-    assignments_attributes = user.assignments.first.attributes.slice("id", "mission_id").merge("role" => "staffer")
+    assignments_attributes = user.assignments.first.attributes
+      .slice("id", "mission_id").merge("role" => "staffer")
     put(user_path(user), params: {user: {assignments_attributes: [assignments_attributes]}})
     expect(assigns(:access_denied)).to eq(true)
     expect(user.reload.assignments.first.role).to eq("enumerator")
@@ -68,7 +69,8 @@ describe "authorization" do
     login(coord)
 
     # Get attributes for request to change enumerator role to staffer.
-    assignments_attributes = obs.assignments.first.attributes.slice("id", "mission_id").merge("role" => "staffer")
+    assignments_attributes = obs.assignments.first.attributes
+      .slice("id", "mission_id").merge("role" => "staffer")
 
     put(user_path(obs), params: {user: {assignments_attributes: [assignments_attributes]}})
     expect(assigns(:access_denied)).to be_nil
@@ -93,11 +95,14 @@ describe "authorization" do
       end
 
       let(:assignment_without_role) { build(:assignment, user: admin, role: "") }
-      let(:empty_assignment_attributes) { assignment_without_role.attributes.slice("id", "mission_id", "role") }
+      let(:empty_assignment_attributes) do
+        assignment_without_role.attributes.slice("id", "mission_id", "role")
+      end
       let(:admin_new_name) { "New name" }
 
       it "still can update self" do
-        put(user_path(admin), params: {user: {name: admin_new_name, assignments_attributes: [empty_assignment_attributes]}})
+        put(user_path(admin), params: {user: {name: admin_new_name,
+                                              assignments_attributes: [empty_assignment_attributes]}})
 
         assert_response(302) # redirected
         expect(admin.reload.name).to eq(admin_new_name)

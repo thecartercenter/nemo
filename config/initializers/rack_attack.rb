@@ -16,13 +16,16 @@ class Rack::Attack::Request
 end
 
 # Limit ODK Collect requests by IP address to N requests per minute
-Rack::Attack.throttle("direct-auth-req/ip", limit: proc { configatron.direct_auth_request_limit }, period: 1.minute) do |req|
+Rack::Attack.throttle("direct-auth-req/ip", limit: proc { configatron.direct_auth_request_limit },
+                                            period: 1.minute) do |req|
   req.ip if req.direct_auth?
 end
 
 # Track rate of attempted logins by IP address per minute to allow reCAPTCHA display
-# We use double the amount specified by login_captcha_threshold to account for the GET/POST cycle of a failed login attempt
-Rack::Attack.track("login-attempts/ip", limit: proc { 2 * configatron.login_captcha_threshold }, period: 1.minute) do |req|
+# We use double the amount specified by login_captcha_threshold to account for
+# the GET/POST cycle of a failed login attempt
+Rack::Attack.track("login-attempts/ip", limit: proc { 2 * configatron.login_captcha_threshold },
+                                        period: 1.minute) do |req|
   req.ip if req.login_related?
 end
 

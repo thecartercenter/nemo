@@ -66,7 +66,8 @@ class User < ApplicationRecord
                                                     validate: true, inverse_of: :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
-  has_many :reports, inverse_of: :creator, foreign_key: :creator_id, dependent: :nullify, class_name: "Report::Report"
+  has_many :reports, inverse_of: :creator, foreign_key: :creator_id,
+                     dependent: :nullify, class_name: "Report::Report"
   has_many :user_group_assignments, dependent: :destroy
   has_many :user_groups, through: :user_group_assignments
   belongs_to :last_mission, class_name: "Mission"
@@ -392,7 +393,9 @@ class User < ApplicationRecord
   end
 
   def no_duplicate_assignments
-    errors.add(:assignments, :duplicate_assignments) if Assignment.duplicates?(assignments.reject(&:marked_for_destruction?))
+    if Assignment.duplicates?(assignments.reject(&:marked_for_destruction?))
+      errors.add(:assignments, :duplicate_assignments)
+    end
   end
 
   def must_have_assignments_if_not_admin
