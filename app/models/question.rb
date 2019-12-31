@@ -230,13 +230,13 @@ class Question < ApplicationRecord
     maximum.blank? ? nil : (qtype_name == "decimal" ? maximum : maximum.to_i)
   end
 
-  def casted_minimum=(m)
-    self.minimum = m
+  def casted_minimum=(n)
+    self.minimum = n
     self.minimum = casted_minimum
   end
 
-  def casted_maximum=(m)
-    self.maximum = m
+  def casted_maximum=(n)
+    self.maximum = n
     self.maximum = casted_maximum
   end
 

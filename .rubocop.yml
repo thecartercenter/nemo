@@ -71,6 +71,22 @@ Metrics/PerceivedComplexity:
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
+Naming/UncommunicativeMethodParamName:
+  AllowedNames:
+    - _
+    - a
+    - b
+    - i
+    - n
+    - k
+    - v
+    - x
+    - y
+    - id
+    - op
+    - to
+    - tz
+
 Style/AsciiComments:
   Enabled: false
 
