@@ -10,15 +10,18 @@ ELMO.Utils.Select2OptionBuilder = class Select2OptionBuilder {
       data(params) {
         return {
           search: params.term,
-          page: params.page
+          page: params.page,
         };
       },
       processResults(data) {
         const results = data[resultsKey];
-        if (textKey !== 'text') { results.forEach(r => r['text'] = r[textKey]); }
-        return {results, pagination: {more: data.more}};
+        if (textKey !== 'text') {
+          // eslint-disable-next-line no-param-reassign
+          results.forEach((r) => { r.text = r[textKey]; });
+        }
+        return { results, pagination: { more: data.more } };
       },
-      cache: true
+      cache: true,
     };
   }
 };
