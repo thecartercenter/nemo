@@ -118,7 +118,8 @@ describe OptionNode do
   describe "option_level" do
     before do
       @node = create(:option_node_with_grandchildren)
-      allow_message_expectations_on_nil # Since we want to set expectations on subnode.option_set, which is nil.
+      # We want to set expectations on subnode.option_set, which is nil.
+      allow_message_expectations_on_nil
     end
 
     it "should be nil for root" do
@@ -183,7 +184,8 @@ describe OptionNode do
           "option_attribs" => {"name_translations" => {"en" => "Plant"}},
           "children_attribs" => [
             {"option_attribs" => {"name_translations" => {"en" => "Tulip"}}},
-            {"option_attribs" => {"id" => @oak.id, "name_translations" => {"en" => "White Oak"}}} # change option name
+            # change option name
+            {"option_attribs" => {"id" => @oak.id, "name_translations" => {"en" => "White Oak"}}}
           ]
         }]
       )

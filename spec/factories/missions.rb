@@ -37,7 +37,9 @@ FactoryGirl.define do
     setting { build(:setting) }
 
     after(:create) do |mission, evaluator|
-      mission.assignments.create(user: evaluator.with_user, role: evaluator.role_name.to_s) if evaluator.with_user
+      if evaluator.with_user
+        mission.assignments.create(user: evaluator.with_user, role: evaluator.role_name.to_s)
+      end
     end
   end
 end

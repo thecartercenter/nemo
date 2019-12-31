@@ -13,7 +13,9 @@ describe "user" do
     end
 
     it "should be redirected to assignment mission" do
-      expect(response).to redirect_to(mission_root_path(mission_name: @user.assignments.first.mission.compact_name))
+      expect(response).to redirect_to(mission_root_path(
+        mission_name: @user.assignments.first.mission.compact_name
+      ))
     end
   end
 

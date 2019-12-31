@@ -9,7 +9,8 @@ describe "answers API requests" do
     include_context "api_form_with_responses"
 
     it "should return appropriate json sorted newest first" do
-      get "/api/v1/m/mission1/answers?form_id=#{@form.id}&question_id=#{@form.questions[0].id}", headers: headers
+      get "/api/v1/m/mission1/answers?form_id=#{@form.id}&question_id=#{@form.questions[0].id}",
+        headers: headers
       expect(response).to have_http_status(:ok)
       expect(json.size).to eq(3)
       expect(json.first.keys.sort).to eq(%w[id value])
@@ -17,7 +18,8 @@ describe "answers API requests" do
     end
 
     it "should not return answers to private question" do
-      get "/api/v1/m/mission1/answers?form_id=#{@form.id}&question_id=#{@form.questions[2].id}", headers: headers
+      get "/api/v1/m/mission1/answers?form_id=#{@form.id}&question_id=#{@form.questions[2].id}",
+        headers: headers
       expect(response).to have_http_status(:forbidden)
     end
 

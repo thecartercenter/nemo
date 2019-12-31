@@ -48,10 +48,11 @@
 class Report::Report < ApplicationRecord
   include MissionBased
 
-  has_many :option_set_choices, class_name: "Report::OptionSetChoice", foreign_key: "report_report_id", inverse_of: :report,
-                                dependent: :destroy, autosave: true
+  has_many :option_set_choices, class_name: "Report::OptionSetChoice", foreign_key: "report_report_id",
+                                inverse_of: :report, dependent: :destroy, autosave: true
   has_many :option_sets, through: :option_set_choices
-  has_many :calculations, -> { order("rank") }, class_name: "Report::Calculation", foreign_key: "report_report_id", inverse_of: :report,
+  has_many :calculations, -> { order("rank") }, class_name: "Report::Calculation",
+                                                foreign_key: "report_report_id", inverse_of: :report,
                                                 dependent: :destroy, autosave: true
   belongs_to :creator, class_name: "User"
 
@@ -165,7 +166,8 @@ class Report::Report < ApplicationRecord
 
   def normalize_attribs
     # we now do default values here as well as changing blanks to nils.
-    # the AR default stuff doesn't work b/c the blank from the client side overwrites the default and there's no easy way to get it back
+    # the AR default stuff doesn't work b/c the blank from the client side
+    # overwrites the default and there's no easy way to get it back
     self.bar_style = "side_by_side" if bar_style.blank?
     self.display_type = "table" if display_type.blank?
     self.percent_type = "none" if percent_type.blank?

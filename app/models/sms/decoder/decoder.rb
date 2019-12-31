@@ -101,7 +101,9 @@ module Sms
         code = @tokens[0] ? @tokens[0].downcase : ""
 
         # check that the form code looks right
-        raise_decoding_error("invalid_form_code", form_code: code) unless code =~ /\A[a-z]{#{FormVersion::CODE_LENGTH}}\z/
+        unless /\A[a-z]{#{FormVersion::CODE_LENGTH}}\z/.match?(code)
+          raise_decoding_error("invalid_form_code", form_code: code)
+        end
 
         # attempt to find form version by the given code
         version = FormVersion.find_by(code: code)

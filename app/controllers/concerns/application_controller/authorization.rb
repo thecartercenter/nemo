@@ -16,11 +16,13 @@ module Concerns::ApplicationController::Authorization
     @access_denied = true
 
     # log to debug log
-    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message} " \
+    Rails.logger.debug(
+      "ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message} " \
       "(Mission: #{current_mission.try(:name)}; " \
       "User: #{current_user.try(:login)}; " \
       "Role: #{current_user.try(:role, current_mission)}; " \
-      "Admin?: #{current_user.try(:admin?) ? 'Yes' : 'No'}")
+      "Admin?: #{current_user.try(:admin?) ? 'Yes' : 'No'}"
+    )
 
     # if not logged in, offer a login page
     if !current_user

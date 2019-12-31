@@ -89,8 +89,12 @@ def create_questioning(qtype_name_or_question, form, attribs = {})
                end
 
                question = build(:question, q_attribs)
-               question.option_set.sms_guide_formatting = "treat_as_text" if pseudo_qtype_name.match?(/as_text_for_sms/)
-               question.option_set.sms_guide_formatting = "appendix" if pseudo_qtype_name.match?(/with_appendix_for_sms/)
+               if pseudo_qtype_name.match?(/as_text_for_sms/)
+                 question.option_set.sms_guide_formatting = "treat_as_text"
+               end
+               if pseudo_qtype_name.match?(/with_appendix_for_sms/)
+                 question.option_set.sms_guide_formatting = "appendix"
+               end
                question
   end
 

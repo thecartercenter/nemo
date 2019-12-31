@@ -26,7 +26,8 @@ module RequestSpecHelpers
     path_args.unshift(params[:obj]) if params[:obj]
     path = send("api_v1_#{endpoint}_path", *path_args)
 
-    get(path, params: params[:params], headers: {"HTTP_AUTHORIZATION" => "Token token=#{params[:user].api_key}"})
+    get(path, params: params[:params],
+              headers: {"HTTP_AUTHORIZATION" => "Token token=#{params[:user].api_key}"})
   end
 
   # Needed for older request specs, maybe related to assert_select.

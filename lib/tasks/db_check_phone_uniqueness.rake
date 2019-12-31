@@ -42,7 +42,8 @@ namespace :db do
       puts "WARNING: The following phone numbers are assigned to multiple users."
       puts "These users will not be able to be edited until their phone numbers are made unique."
       puts faults.join("\n")
-      puts "You can re-run this script as rake db:check_phone_uniqueness fix=true to remove any duplicate numbers from all but the first user"
+      puts "You can re-run this script as rake db:check_phone_uniqueness " \
+        "fix=true to remove any duplicate numbers from all but the first user"
     end
   end
 end

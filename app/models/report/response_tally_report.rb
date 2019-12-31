@@ -71,7 +71,9 @@ class Report::ResponseTallyReport < Report::TallyReport
 
   # applys both groupings
   def apply_groupings(rel, options = {})
-    raise Report::ReportError, "primary groupings not allowed for this report type" if pri_grouping && options[:secondary_only]
+    if pri_grouping && options[:secondary_only]
+      raise Report::ReportError, "primary groupings not allowed for this report type"
+    end
     rel = pri_grouping.apply(rel) if pri_grouping
     rel = sec_grouping.apply(rel) if sec_grouping
     rel

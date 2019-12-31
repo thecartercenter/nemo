@@ -69,7 +69,8 @@ module SmsGuideHelper
     end
 
     if content
-      t("common.example_abbr", locale: @locale).html_safe << " " << content_tag(:span, content, class: "sms-example")
+      t("common.example_abbr", locale: @locale).html_safe <<
+        " " << content_tag(:span, content, class: "sms-example")
     else
       ""
     end

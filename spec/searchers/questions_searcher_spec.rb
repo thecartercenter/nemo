@@ -7,7 +7,8 @@ describe QuestionsSearcher do
   before do
     @questions = [
       create(:question, name_en: "How many cheeses?", name_fr: "Combien de fromages?", code: "Cheese"),
-      create(:question, name_en: "Your job?", name_fr: "Votre metier?", qtype_name: "text", tags: [create(:tag, name: "employment")]),
+      create(:question, name_en: "Your job?", name_fr: "Votre metier?", qtype_name: "text",
+                        tags: [create(:tag, name: "employment")]),
       create(:question, name_en: "Yea or nay?", qtype_name: "select_one")
     ]
   end

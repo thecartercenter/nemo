@@ -64,7 +64,8 @@ class Report::AnswerTallyReport < Report::TallyReport
   def prep_query(rel)
     # Reports must have calculations or option set choices.
     if calculations.empty? && option_sets.empty?
-      raise Report::ReportError, I18n.t("activerecord.errors.models.report/report.no_calc_or_opt_set", name: name)
+      raise Report::ReportError,
+        I18n.t("activerecord.errors.models.report/report.no_calc_or_opt_set", name: name)
     end
 
     joins = []
@@ -82,7 +83,8 @@ class Report::AnswerTallyReport < Report::TallyReport
     # if we have an option set, we don't use calculation objects
     if option_sets.empty?
       # get expression fragments
-      # this could be optimized by grouping name/value/sort for each calculation type, but i don't think it will impact performance much
+      # this could be optimized by grouping name/value/sort for each calculation type,
+      # but i don't think it will impact performance much
       name_exprs = calculations.collect(&:name_expr)
       value_exprs = calculations.collect(&:value_expr)
       sort_exprs = calculations.collect(&:sort_expr)
@@ -94,7 +96,8 @@ class Report::AnswerTallyReport < Report::TallyReport
       sort_expr_sql = build_nested_if(sort_exprs, where_exprs)
 
       # add the selects and groups
-      rel = rel.select("#{name_expr_sql} AS sec_name, #{value_expr_sql} AS sec_value, #{sort_expr_sql} AS sec_sort_value, 'text' AS sec_type")
+      rel = rel.select("#{name_expr_sql} AS sec_name, #{value_expr_sql} AS sec_value, " \
+        "#{sort_expr_sql} AS sec_sort_value, 'text' AS sec_type")
       rel = rel.group("option_sets.name").group(name_expr_sql).group(value_expr_sql).group(sort_expr_sql)
 
       # add the unified wheres

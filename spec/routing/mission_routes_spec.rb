@@ -57,7 +57,8 @@ describe "router" do
 
   it "routes ODK form list", :odk do
     expect(get: "/m/mission123/formList").to route_to(
-      controller: "forms", action: "index", mode: "m", mission_name: "mission123", format: "xml", direct_auth: "basic"
+      controller: "forms", action: "index", mode: "m",
+      mission_name: "mission123", format: "xml", direct_auth: "basic"
     )
   end
 

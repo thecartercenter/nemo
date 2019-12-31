@@ -45,7 +45,9 @@ class Search::Qualifier
 
   def self.translation_key(set, locale = nil)
     names = set.map(&:name)
-    I18n.t("search_qualifiers", locale: locale || I18n.locale, default: {}).select { |k, _v| names.include?(k.to_s) }.invert
+    I18n.t("search_qualifiers", locale: locale || I18n.locale, default: {}).select do |k, _v|
+      names.include?(k.to_s)
+    end.invert
   end
 
   # name  - the name of the qualifier (required, underscored)
@@ -53,7 +55,8 @@ class Search::Qualifier
   # pattern - a regexp that will match the qualifier text
   # col - the database column being compared against (required unless :validator defined)
   # default - whether this qualifier should be assumed for terms with no qualifier (defaults to false)
-  # validator - a lambda that accepts a MatchData object and returns whether the given string should be accepted as a valid qualifier
+  # validator - a lambda that accepts a MatchData object and returns whether the given string
+  #   should be accepted as a valid qualifier
   def initialize(attribs)
     attribs.each { |k, v| instance_variable_set("@#{k}", v) }
 

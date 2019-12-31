@@ -5,7 +5,9 @@ module Concerns::ApplicationController::Routing
   extend ActiveSupport::Concern
 
   def check_route
-    raise "params[:mission_name] not allowed in #{current_mode} mode" if !mission_mode? && params[:mission_name].present?
+    if !mission_mode? && params[:mission_name].present?
+      raise "params[:mission_name] not allowed in #{current_mode} mode"
+    end
   end
 
   def default_url_options(_options = {})

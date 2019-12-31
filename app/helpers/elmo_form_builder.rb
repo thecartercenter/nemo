@@ -4,10 +4,12 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:type] - The type of field to display
   #   (:text (default), :check_box, :radio_buttons, :textarea, :password, :select, :timezone, :file, :number)
   # options[:required] - Whether the field input is required.
-  # options[:content] - The content of the field's main area. If nil, the default content for the field type is used.
+  # options[:content] - The content of the field's main area.
+  #   If nil, the default content for the field type is used.
   # options[:partial] - A partial to be used as the field's main area. Overrides options[:content].
   # options[:locals] - Local variables to be used in partial. Should only be used when partial present.
-  # options[:hint] - The hint to be shown for the field. Overrides the default value retrieved from translation file.
+  # options[:hint] - The hint to be shown for the field.
+  #   Overrides the default value retrieved from translation file.
   # options[:read_only] - If true, forces field to be displayed as read only.
   #   If non-true, this is determined by current action.
   # options[:options] - The set of option tags to be used for a select control.
@@ -23,7 +25,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   def field(field_name, options = {})
     return hidden_field(field_name, options) if options[:type] == :hidden
 
-    # Get form-level read_only value if it's not explicitly given for this field, or if the form_mode is :show.
+    # Get form-level read_only value if it's not explicitly given for this field,
+    # or if the form_mode is :show.
     # We do not respect the field-level override if form_mode is :show.
     options[:read_only] = read_only? if options[:read_only].nil? || form_mode == :show
 
@@ -31,7 +34,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     return "" if options[:read_only] && options[:type] == :password
 
     # get object errors (also look under association attrib if field_name ends in _id)
-    errors = @object.errors[field_name] + (field_name =~ /^(.+)_id$/ ? @object.errors[Regexp.last_match(1)] : [])
+    id_errors = field_name =~ /^(.+)_id$/ ? @object.errors[Regexp.last_match(1)] : []
+    errors = @object.errors[field_name] + id_errors
 
     wrapper_classes = ["form-field"]
     wrapper_classes << options[:wrapper_class]

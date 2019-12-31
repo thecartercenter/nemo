@@ -103,7 +103,8 @@ describe Report::ResponseTallyReport do
       create_list(:response, 8, form: forms[1], source: "odk")
       create_list(:response, 3, form: forms[1], source: "web")
 
-      report = create_report("ResponseTally", calculations: [Report::IdentityCalculation.new(rank: 1, attrib1_name: :form)])
+      report = create_report("ResponseTally",
+        calculations: [Report::IdentityCalculation.new(rank: 1, attrib1_name: :form)])
       expect(report).to have_data_grid(%w[Tally TTL],
         %w[f0 7 7],
         %w[f1 11 11],

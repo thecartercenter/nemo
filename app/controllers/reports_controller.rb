@@ -41,7 +41,9 @@ class ReportsController < ApplicationController
       format.html do
         # If ajax, we run report now, since no point in doing another ajax request
         run_or_fetch_and_handle_errors if request.xhr?
-        build_report_data(edit_mode: !!flash[:edit_mode], read_only: !!request.xhr?, embedded_mode: !!request.xhr?)
+        build_report_data(edit_mode: !!flash[:edit_mode],
+                          read_only: !!request.xhr?,
+                          embedded_mode: !!request.xhr?)
 
         if request.xhr?
           render(partial: "reports/main")

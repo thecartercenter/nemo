@@ -38,7 +38,9 @@ describe Search::Search do
     Search::Qualifier.new(name: "name", col: "t1.f2"),
     Search::Qualifier.new(name: "foo2", pattern: /^\{([a-z]+)\}$/, col: "t1.f3"),
     Search::Qualifier.new(name: "foo3", pattern: /^~([a-z]+)~$/, col: "t1.f3"),
-    Search::Qualifier.new(name: "foo4", pattern: /^z([0-9]+)$/, col: "t9.f7", validator: ->(md) { md[1].size < 4 })
+    Search::Qualifier.new(name: "foo4", pattern: /^z([0-9]+)$/, col: "t9.f7", validator: ->(md) do
+      md[1].size < 4
+    end)
   ].freeze
 
   INDEXED = [
@@ -83,7 +85,9 @@ describe Search::Search do
   end
 
   it "ors should work with second qualified expression" do
-    assert_search(str: "v1 | v2 OR v3 source: bar", sql: "((t1.f1 = 'v1') OR (t1.f1 = 'v2') OR (t1.f1 = 'v3')) AND ((t.source = 'bar'))")
+    assert_search(
+      str: "v1 | v2 OR v3 source: bar",
+      sql: "((t1.f1 = 'v1') OR (t1.f1 = 'v2') OR (t1.f1 = 'v3')) AND ((t.source = 'bar'))")
   end
 
   it "unqualified quoted string should match exact phrase" do
@@ -119,7 +123,9 @@ describe Search::Search do
   end
 
   it "ORs should work with qualified expression" do
-    assert_search(str: "source: (v1 | v2 OR v3)", sql: "((t.source = 'v1') OR (t.source = 'v2') OR (t.source = 'v3'))")
+    assert_search(
+      str: "source: (v1 | v2 OR v3)",
+      sql: "((t.source = 'v1') OR (t.source = 'v2') OR (t.source = 'v3'))")
   end
 
   it "OR should not be allowed between expressions" do
@@ -156,7 +162,9 @@ describe Search::Search do
   end
 
   it "second number should not get taken into gt operator expression" do
-    assert_search(str: "submit-date > 2020-1-5 6", sql: "((t.subdate > '2020-01-05 00:00:00')) AND ((t1.f1 = '6'))")
+    assert_search(
+      str: "submit-date > 2020-1-5 6",
+      sql: "((t.subdate > '2020-01-05 00:00:00')) AND ((t1.f1 = '6'))")
   end
 
   it "AND should be allowed for scale qualifiers" do
@@ -170,21 +178,30 @@ describe Search::Search do
   end
 
   it "text qualifier should work" do
-    assert_search(str: "submitter: (v1 v2) source: bar", sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2%')) AND ((t.source = 'bar'))")
+    assert_search(
+      str: "submitter: (v1 v2) source: bar",
+      sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with quoted string should work" do
-    assert_search(str: "submitter: (v1 \"v2 v3\") source: bar", sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2 v3%')) AND ((t.source = 'bar'))")
-    assert_search(str: 'submitter: "v1 v2" source: bar', sql: "((t3.f3 ILIKE '%v1 v2%')) AND ((t.source = 'bar'))")
+    assert_search(
+      str: "submitter: (v1 \"v2 v3\") source: bar",
+      sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2 v3%')) AND ((t.source = 'bar'))")
+    assert_search(
+      str: 'submitter: "v1 v2" source: bar',
+      sql: "((t3.f3 ILIKE '%v1 v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with OR should work" do
-    assert_search(str: "submitter: (v1 | v2) source: bar", sql: "((t3.f3 ILIKE '%v1%') OR (t3.f3 ILIKE '%v2%')) AND ((t.source = 'bar'))")
+    assert_search(
+      str: "submitter: (v1 | v2) source: bar",
+      sql: "((t3.f3 ILIKE '%v1%') OR (t3.f3 ILIKE '%v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with AND and OR should work" do
-    assert_search(str: "submitter: (v1 v2 | v3) source: bar",
-                  sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2%') OR (t3.f3 ILIKE '%v3%')) AND ((t.source = 'bar'))")
+    assert_search(
+      str: "submitter: (v1 v2 | v3) source: bar",
+      sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2%') OR (t3.f3 ILIKE '%v3%')) AND ((t.source = 'bar'))")
   end
 
   it "gt operator shouldnt be allowed for text qualifier" do
@@ -234,11 +251,17 @@ describe Search::Search do
   end
 
   it "indexed qualifiers should work" do
-    assert_search(str: "text:alpha source:bar", sql: "((tbl.id IN (###0###))) AND ((t.source = 'bar'))", qualifiers: INDEXED)
+    assert_search(
+      str: "text:alpha source:bar",
+      sql: "((tbl.id IN (###0###))) AND ((t.source = 'bar'))",
+      qualifiers: INDEXED)
   end
 
   it "indexed qualifiers should work with multiple terms" do
-    assert_search(str: "source:bar text:(alpha bravo)", sql: "((t.source = 'bar')) AND ((tbl.id IN (###1###)))", qualifiers: INDEXED)
+    assert_search(
+      str: "source:bar text:(alpha bravo)",
+      sql: "((t.source = 'bar')) AND ((tbl.id IN (###1###)))",
+      qualifiers: INDEXED)
     expect(@search.expressions.detect { |e| e.qualifier.name == "text" }.values).to eq("alpha bravo")
   end
 
@@ -258,7 +281,10 @@ describe Search::Search do
   end
 
   it "indexed qualifiers should not allow not equals operator" do
-    assert_search(str: "text != alpha", error: /The operator '!=' is not valid for the qualifier 'text'/, qualifiers: INDEXED)
+    assert_search(
+      str: "text != alpha",
+      error: /The operator '!=' is not valid for the qualifier 'text'/,
+      qualifiers: INDEXED)
   end
 
   it "odd characters in terms should still work" do
@@ -294,9 +320,14 @@ describe Search::Search do
   end
 
   it "supports multiple columns to generate a sql" do
-    assert_search(str: "number:987", sql: "((msg.to ILIKE '%987%') OR (msg.from ILIKE '%987%'))", qualifiers: INDEXED)
-    assert_search(str: "date:2020-1-1", qualifiers: INDEXED,
-                  sql: "((msg.created_at = '2020-01-01 00:00:00') OR (msg.updated_at = '2020-01-01 00:00:00'))")
+    assert_search(
+      str: "number:987",
+      sql: "((msg.to ILIKE '%987%') OR (msg.from ILIKE '%987%'))",
+      qualifiers: INDEXED)
+    assert_search(
+      str: "date:2020-1-1",
+      qualifiers: INDEXED,
+      sql: "((msg.created_at = '2020-01-01 00:00:00') OR (msg.updated_at = '2020-01-01 00:00:00'))")
   end
 
   it "raises error on invalid date" do

@@ -276,10 +276,12 @@ module OptionNodeSupport
     "option_attribs" => {"name_translations" => {"en" => "Canada"}},
     "children_attribs" => [
       {
-        "option_attribs" => {"name_translations" => {"en" => "Calgary"}, latitude: 51.045, longitude: -114.057222},
+        "option_attribs" => {"name_translations" => {"en" => "Calgary"},
+                             latitude: 51.045, longitude: -114.057222},
         "children_attribs" => "NONE"
       }, {
-        "option_attribs" => {"name_translations" => {"en" => "Ottawa"}, latitude: 45.429299, longitude: -75.629883},
+        "option_attribs" => {"name_translations" => {"en" => "Ottawa"},
+                             latitude: 45.429299, longitude: -75.629883},
         "children_attribs" => "NONE"
       }
     ]

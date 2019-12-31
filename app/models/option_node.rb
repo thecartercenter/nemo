@@ -222,7 +222,8 @@ class OptionNode < ApplicationRecord
     opt_hash = options_by_id(nodes, options)
     nodes.each { |n| n.option = opt_hash[n.option_id] }
 
-    # arrange_nodes is an Ancestry gem function that takes a set of nodes and arranges them in the hash structure.
+    # arrange_nodes is an Ancestry gem function that takes a set of nodes
+    # and arranges them in the hash structure.
     self.class.arrange_nodes(nodes)
   end
 

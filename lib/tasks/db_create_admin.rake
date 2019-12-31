@@ -8,7 +8,8 @@ namespace :db do
         rescue StandardError
           []
         end).empty?
-      raise "Webmaster email must be configured in config/initializers/local_settings.rb before admin can be generated."
+      raise "Webmaster email must be configured in config/initializers/local_settings.rb " \
+        "before admin can be generated."
     end
 
     u = User.new(login: "admin", name: "Admin", email: configatron.webmaster_emails.first, admin: true)

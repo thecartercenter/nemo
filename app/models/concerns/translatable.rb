@@ -165,7 +165,8 @@ module Translatable
         if is_setter
           locale = I18n.locale
 
-        # otherwise (it's a getter), we can assume that the locale is in the 1st argument (e.g. name(:en), name(:en, fallbacks: true))
+        # otherwise (it's a getter), we can assume that the locale is in the 1st argument
+        # (e.g. name(:en), name(:en, fallbacks: true))
         # (unless that first arg was a hash (e.g. name(fallbacks: true)))
         else
           locale = arg1 unless arg1.is_a?(Hash)

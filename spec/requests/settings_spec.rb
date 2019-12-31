@@ -66,7 +66,10 @@ describe "settings" do
   private
 
   def update_timezone_for_setting(setting, timezone)
-    put(setting_path(setting, mode: "m", mission_name: setting.mission.compact_name), params: {setting: {timezone: timezone}})
+    put(
+      setting_path(setting, mode: "m", mission_name: setting.mission.compact_name),
+      params: {setting: {timezone: timezone}}
+    )
     follow_redirect!
     expect(response).to be_successful
   end

@@ -103,7 +103,9 @@ class Report::AnswerField < Report::Field
   end
 
   def self.expressions_for_clause(clause, joins, chunks = {})
-    expression_params_by_clause[clause].collect { |ep| Report::Expression.new(ep.merge(chunks: chunks)) if joins.include?(ep[:join]) }.compact
+    expression_params_by_clause[clause].collect do |ep|
+      Report::Expression.new(ep.merge(chunks: chunks)) if joins.include?(ep[:join])
+    end.compact
   end
 
   def initialize(question)
