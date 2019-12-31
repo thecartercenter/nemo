@@ -28,7 +28,7 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
     }
     uri = URI("https://cloud.frontlinesms.com/api/1/webhook")
 
-    response = send_request(uri, :post, payload)
+    send_request(uri, :post, payload)
 
     # if we get to this point, it worked
     true

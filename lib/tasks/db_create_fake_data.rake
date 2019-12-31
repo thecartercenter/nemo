@@ -35,7 +35,7 @@ namespace :db do
       "video"
     ])
 
-    smsable_form = FactoryGirl.create(:form,
+    FactoryGirl.create(:form,
       name: "SMS Form",
       smsable: true,
       mission: mission,

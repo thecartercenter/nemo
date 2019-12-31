@@ -121,7 +121,7 @@ class Sms::Processor
   def strip_auth_code(message, form)
     split_message = message.split(" ")
     split_message.shift if form.authenticate_sms?
-    joined_message = split_message.join(" ")
+    split_message.join(" ")
   end
 
   def decoder

@@ -66,7 +66,6 @@ class Tag < ApplicationRecord
     return where(mission_id: nil).order(:name) if mission.nil?
 
     # In mission, show all tags for mission
-    question_ids = Question.for_mission(mission).pluck(:id)
     mission_id = mission.try(:id) || "null"
     includes(:taggings).where(mission_id: mission_id).order(:name)
   end

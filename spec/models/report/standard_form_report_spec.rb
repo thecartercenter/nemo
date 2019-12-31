@@ -128,8 +128,8 @@ describe Report::StandardFormReport do
       end
 
       # Make decoy coord and admin users
-      coord = create(:user, role_name: :coordinator)
-      admin = create(:user, role_name: :enumerator, admin: true)
+      create(:user, role_name: :coordinator)
+      create(:user, role_name: :enumerator, admin: true)
 
       # Make simple form and add responses from first two users
       @form = create(:form)

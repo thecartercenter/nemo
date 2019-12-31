@@ -34,15 +34,15 @@ class Replication::ObjProxy
   # Returns an array of Objs matching the association.
   def children(assoc)
     # Retrieve the id (and ancestry, if applicable) of the orig children objects.
-    attribs = if assoc.belongs_to?
-                fk_id = klass.where(id: id).pluck(assoc.foreign_key).first
-                fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
-              elsif assoc.ancestry?
-                child_ancestry = [ancestry, id].compact.join("/")
-                build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class,
-                                                                 order: "ORDER BY rank")
-              else # has_one or has_many
-                build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
+    if assoc.belongs_to?
+      fk_id = klass.where(id: id).pluck(assoc.foreign_key).first
+      fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
+    elsif assoc.ancestry?
+      child_ancestry = [ancestry, id].compact.join("/")
+      build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class,
+                                                       order: "ORDER BY rank")
+    else # has_one or has_many
+      build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
     end
   end
 
