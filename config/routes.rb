@@ -4,10 +4,10 @@ ELMO::Application.routes.draw do
   mount(JasmineRails::Engine => "/specs") if defined?(JasmineRails)
 
   # Special shortcut for simulating login in feature specs.
-  get("test-login" => "user_sessions#test_login") if Rails.env.test?
+  get("test-login", to: "user_sessions#test_login") if Rails.env.test?
 
   # For uptime checking
-  get "ping" => "ping#show"
+  get "ping", to: "ping#show"
 
   #####################################
   # Basic routes (neither mission nor admin mode)
@@ -15,18 +15,18 @@ ELMO::Application.routes.draw do
     # Routes requiring no user.
     resources :password_resets, path: "password-resets", only: %i[new edit create update]
     resource :user_session, path: "user-session", only: %i[new create destroy]
-    get "/logged-out" => "user_sessions#logged_out", as: :logged_out
-    get "/login" => "user_sessions#new", as: :login
+    get "/logged-out", to: "user_sessions#logged_out", as: :logged_out
+    get "/login", to: "user_sessions#new", as: :login
 
     # Routes requiring user.
-    match "/logout" => "user_sessions#destroy", as: :logout, via: [:delete]
-    get("/route-tests" => "route_tests#basic_mode") if Rails.env.development? || Rails.env.test?
-    get "/unauthorized" => "welcome#unauthorized", as: :unauthorized
+    match "/logout", to: "user_sessions#destroy", as: :logout, via: [:delete]
+    get("/route-tests", to: "route_tests#basic_mode") if Rails.env.development? || Rails.env.test?
+    get "/unauthorized", to: "welcome#unauthorized", as: :unauthorized
 
-    get "/confirm-login" => "user_sessions#login_confirmation",
-        defaults: {confirm: true}, as: :new_login_confirmation
-    post "/confirm-login" => "user_sessions#process_login_confirmation",
-         defaults: {confirm: true}, as: :login_confirmation
+    get "/confirm-login", to: "user_sessions#login_confirmation",
+                          defaults: {confirm: true}, as: :new_login_confirmation
+    post "/confirm-login", to: "user_sessions#process_login_confirmation",
+                           defaults: {confirm: true}, as: :login_confirmation
 
     # Routes with user or no user.
     root to: "welcome#index", as: :basic_root
@@ -37,7 +37,7 @@ ELMO::Application.routes.draw do
   scope ":locale/admin", locale: /[a-z]{2}/, defaults: {mode: "admin", mission_name: nil} do
     resources :missions
 
-    get("/route-tests" => "route_tests#admin_mode") if Rails.env.development? || Rails.env.test?
+    get("/route-tests", to: "route_tests#admin_mode") if Rails.env.development? || Rails.env.test?
 
     # for /en/admin
     root to: "welcome#index", as: :admin_root
@@ -98,8 +98,8 @@ ELMO::Application.routes.draw do
     resources :standard_form_reports, controller: "reports"
 
     # special dashboard routes
-    get "/info-window" => "welcome#info_window", as: :dashboard_info_window
-    get("/route-tests" => "route_tests#mission_mode") if Rails.env.development? || Rails.env.test?
+    get "/info-window", to: "welcome#info_window", as: :dashboard_info_window
+    get("/route-tests", to: "route_tests#mission_mode") if Rails.env.development? || Rails.env.test?
 
     # for /en/m/mission123
     root to: "welcome#index", as: :mission_root
@@ -188,16 +188,16 @@ ELMO::Application.routes.draw do
 
     # import routes for standardizeable objects
     %w[forms questions option_sets].each do |k|
-      post "/#{k.tr('_', '-')}/import-standard" => "#{k}#import_standard", as: "import_standard_#{k}"
+      post "/#{k.tr('_', '-')}/import-standard", to: "#{k}#import_standard", as: "import_standard_#{k}"
     end
 
     # Non-RESTful, JSON only controllers for React
-    get "/condition-form-data/base" => "condition_form_data#base"
-    get "/condition-form-data/option-path" => "condition_form_data#option_path"
-    get "/filter-data/qings" => "filter_data#qings"
+    get "/condition-form-data/base", to: "condition_form_data#base"
+    get "/condition-form-data/option-path", to: "condition_form_data#option_path"
+    get "/filter-data/qings", to: "filter_data#qings"
 
     # special routes for tokeninput suggestions
-    get "/tags/suggest" => "tags#suggest", as: :suggest_tags
+    get "/tags/suggest", to: "tags#suggest", as: :suggest_tags
   end
 
   #####################################
@@ -219,7 +219,7 @@ ELMO::Application.routes.draw do
 
   # Special SMS routes. No locale.
   def sms_submission_route(as:) # rubocop:disable Naming/UncommunicativeMethodParamName
-    match("/sms/submit/:token" => "sms#create", token: /[0-9a-f]{32}/, via: %i[get post], as: as)
+    match("/sms/submit/:token", to: "sms#create", token: /[0-9a-f]{32}/, via: %i[get post], as: as)
   end
   scope "/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: {mode: "m"} do
     sms_submission_route(as: :mission_sms_submission)
@@ -230,18 +230,18 @@ ELMO::Application.routes.draw do
   #
   # NOTE: Brute-force login protection happens in the rack-attack middleware,
   # which executes before routing. Be sure that all paths marked with
-  # :direct_auth => true are also matched by the direct_auth? method in
+  # `direct_auth: true` are also matched by the direct_auth? method in
   # config/initializers/rack-attack.rb
   scope "(/:locale)/m/:mission_name", mission_name: /[a-z][a-z0-9]*/,
                                       defaults: {mode: "m", direct_auth: "basic"},
                                       constraints: ->(r) { %w[xml csv].include?(r.format) } do
-    get "/formList" => "forms#index", as: :odk_form_list, defaults: {format: "xml"}
-    get "/forms/:id" => "forms#show", as: :odk_form, defaults: {format: "xml"}
-    get "/forms/:id/manifest" => "forms#odk_manifest", as: :odk_form_manifest, defaults: {format: "xml"}
-    get "/forms/:id/itemsets" => "forms#odk_itemsets", as: :odk_form_itemsets, defaults: {format: "csv"}
+    get "/formList", to: "forms#index", as: :odk_form_list, defaults: {format: "xml"}
+    get "/forms/:id", to: "forms#show", as: :odk_form, defaults: {format: "xml"}
+    get "/forms/:id/manifest", to: "forms#odk_manifest", as: :odk_form_manifest, defaults: {format: "xml"}
+    get "/forms/:id/itemsets", to: "forms#odk_itemsets", as: :odk_form_itemsets, defaults: {format: "csv"}
 
-    match "/submission" => "responses#odk_headers", via: %i[head get], defaults: {format: "xml"}
-    post "/submission" => "responses#create", defaults: {format: "xml"}
+    match "/submission", to: "responses#odk_headers", via: %i[head get], defaults: {format: "xml"}
+    post "/submission", to: "responses#create", defaults: {format: "xml"}
   end
 
   # API routes.
