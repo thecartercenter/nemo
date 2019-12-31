@@ -114,6 +114,9 @@ Style/MethodCallWithArgsParentheses:
     - Gemfile
     - db/migrate/*
 
+Style/NestedTernaryOperator:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
