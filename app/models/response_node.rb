@@ -112,8 +112,8 @@ class ResponseNode < ApplicationRecord
 
   # A flag indicating whether this node should be destroyed before save.
   # convert string 'true'/'false' to boolean
-  def _destroy=(d)
-    @destroy = d.is_a?(String) ? d == "true" : d
+  def _destroy=(val)
+    @destroy = val.is_a?(String) ? val == "true" : val
   end
 
   def propogate_response_id
