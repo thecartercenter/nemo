@@ -4,19 +4,20 @@ module SmsGuideHelper
   # Returns an answer space for the given question type
   def answer_space_for_questioning(qing)
     # determine the number of spaces
-    width = case qing.question.qtype.name
-    when "integer", "counter" then 3
-    when "select_one"
-      if qing.sms_formatting_as_text? then 8
-      elsif qing.sms_formatting_as_appendix? then 4
-      else 1
+    width =
+      case qing.question.qtype.name
+      when "integer", "counter" then 3
+      when "select_one"
+        if qing.sms_formatting_as_text? then 8
+        elsif qing.sms_formatting_as_appendix? then 4
+        else 1
+        end
+      when "decimal" then 3
+      when "time", "select_multiple" then 4
+      when "date" then 6
+      when "datetime", "text", "long_text" then 8
+      else 4
       end
-    when "decimal" then 3
-    when "time", "select_multiple" then 4
-    when "date" then 6
-    when "datetime", "text", "long_text" then 8
-    else 4
-    end
 
     answer_space(width: width)
   end
@@ -51,22 +52,23 @@ module SmsGuideHelper
 
   # Returns an example answer based on the question type, to be used in the sms guide
   def sms_example_for_questioning(qing, locale:)
-    content = case qing.qtype_name
-    when "integer", "counter" then "3"
-    when "decimal" then "12.5"
-    when "select_one"
-      if qing.sms_formatting_as_text?
-        qing.first_leaf_option.name(locale, fallbacks: true)
-      elsif qing.sms_formatting_as_appendix?
-        qing.first_leaf_option_node.shortcode
-      else
-        "b"
+    content =
+      case qing.qtype_name
+      when "integer", "counter" then "3"
+      when "decimal" then "12.5"
+      when "select_one"
+        if qing.sms_formatting_as_text?
+          qing.first_leaf_option.name(locale, fallbacks: true)
+        elsif qing.sms_formatting_as_appendix?
+          qing.first_leaf_option_node.shortcode
+        else
+          "b"
+        end
+      when "select_multiple" then "a,c"
+      when "datetime" then "20120228 1430"
+      when "date" then "20121118"
+      when "time" then "0930"
       end
-    when "select_multiple" then "a,c"
-    when "datetime" then "20120228 1430"
-    when "date" then "20121118"
-    when "time" then "0930"
-    end
 
     if content
       t("common.example_abbr", locale: @locale).html_safe <<
@@ -108,7 +110,7 @@ module SmsGuideHelper
                 "[" + t("sms_form.guide.unknown_number") + "]"
               else
                 configatron.incoming_sms_numbers.join(", ")
-    end
+              end
     content_tag("strong", numbers)
   end
 
@@ -138,7 +140,7 @@ module SmsGuideHelper
                        t(".appendix", count: 2).html_safe << content_tag(:ol) do
                          appendix_links.map { |l| content_tag(:li, l) }.reduce(:<<)
                        end
-        end)
+                     end)
     end
   end
 end

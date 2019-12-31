@@ -96,7 +96,7 @@ def create_questioning(qtype_name_or_question, form, attribs = {})
                  question.option_set.sms_guide_formatting = "appendix"
                end
                question
-  end
+             end
 
   attribs[:mission] = form.mission
   attribs[:form] = form

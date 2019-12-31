@@ -15,11 +15,12 @@ module Concerns::ApplicationController::Routing
   end
 
   def current_mode
-    @current_mode ||= case params[:mode]
-    when "admin" then "admin"
-    when "m" then "mission"
-    else "basic"
-    end
+    @current_mode ||=
+      case params[:mode]
+      when "admin" then "admin"
+      when "m" then "mission"
+      else "basic"
+      end
   end
 
   def admin_mode?

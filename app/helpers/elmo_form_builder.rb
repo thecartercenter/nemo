@@ -150,26 +150,27 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       if options[:read_only]
 
         # get a human readable version of the value
-        human_val = case options[:type]
-        when :check_box
-          val = false if val.nil?
-          @template.tbool(val)
+        human_val =
+          case options[:type]
+          when :check_box
+            val = false if val.nil?
+            @template.tbool(val)
 
-        when :radio_buttons, :select
-          # grab selected option value from options set
-          option = options[:options].find { |o| o[1].to_s == val.to_s }
-          option ? option[0] : ""
+          when :radio_buttons, :select
+            # grab selected option value from options set
+            option = options[:options].find { |o| o[1].to_s == val.to_s }
+            option ? option[0] : ""
 
-        when :file
-          val&.original_filename
+          when :file
+            val&.original_filename
 
-        when :password
-          "*******"
+          when :password
+            "*******"
 
-        # show plain field value by default
-        else
-          val.present? && options[:link] ? @template.link_to(val, options[:link]) : val
-        end
+          # show plain field value by default
+          else
+            val.present? && options[:link] ? @template.link_to(val, options[:link]) : val
+          end
 
         # fall back to "[None]" if we have no value to show
         human_val = "[#{@template.t('common.none')}]" if human_val.blank?

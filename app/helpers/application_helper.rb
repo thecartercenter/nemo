@@ -149,11 +149,12 @@ module ApplicationHelper
     @title_args ||= {}
 
     # if action specified outright, use that
-    action = @title_action || case action_name
-               when "update" then "edit"
-               when "create" then "new"
-               else action_name
-               end
+    action = @title_action ||
+      case action_name
+      when "update" then "edit"
+      when "create" then "new"
+      else action_name
+      end
 
     "".html_safe.tap do |ttl|
       model_name = controller_name.classify.downcase
