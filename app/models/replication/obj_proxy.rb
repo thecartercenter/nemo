@@ -229,7 +229,7 @@ class Replication::ObjProxy
                        klass.where(id: id).pluck(assoc.foreign_type).first.constantize
                      else
                        assoc.target_class
-      end
+                     end
       find_copy_id(target_class, orig_foreign_id) ||
         (raise Replication::BackwardAssocError, "
           Couldn't find copy of #{target_class.name} ##{orig_foreign_id}")

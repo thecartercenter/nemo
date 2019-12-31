@@ -123,16 +123,17 @@ class Report::AnswerField < Report::Field
   end
 
   def value_expr(chunks)
-    @value_expr ||= case data_type
-    # for these types, there is a special value expression
-    when "select_one", "select_multiple"
-      self.class.expression(name: "#{data_type}_rank", chunks: chunks)
-    when "datetime", "date", "time"
-      self.class.expression(name: "#{data_type}_value", chunks: chunks)
-    # else it's just the straight up value column
-    else
-      self.class.expression(name: "value", chunks: chunks)
-    end
+    @value_expr ||=
+      case data_type
+      # for these types, there is a special value expression
+      when "select_one", "select_multiple"
+        self.class.expression(name: "#{data_type}_rank", chunks: chunks)
+      when "datetime", "date", "time"
+        self.class.expression(name: "#{data_type}_value", chunks: chunks)
+      # else it's just the straight up value column
+      else
+        self.class.expression(name: "value", chunks: chunks)
+      end
   end
 
   def where_expr(chunks)

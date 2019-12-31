@@ -148,18 +148,19 @@ class Broadcast < ApplicationRecord
   # Returns the recipients of the message. If recipient_selection is set to all_users or all_enumerators,
   # this will be different than `recipients`.
   def actual_recipients
-    @actual_recipients ||= case recipient_selection
-    when "specific"
-      (recipient_users + recipient_groups.flat_map(&:users)).uniq
-    when "all_users"
-      mission.users
-    when "all_enumerators"
-      mission.users.where("assignments.role" => "enumerator")
-    when "", nil
-      []
-    else
-      raise "invalid recipient_selection"
-    end
+    @actual_recipients ||=
+      case recipient_selection
+      when "specific"
+        (recipient_users + recipient_groups.flat_map(&:users)).uniq
+      when "all_users"
+        mission.users
+      when "all_enumerators"
+        mission.users.where("assignments.role" => "enumerator")
+      when "", nil
+        []
+      else
+        raise "invalid recipient_selection"
+      end
   end
 
   def validate_recipients

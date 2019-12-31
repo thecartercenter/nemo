@@ -16,31 +16,31 @@ class Search::Token
 
   # returns an sql string
   def to_sql
-    @sql ||= case kind
+    @sql ||=
+      case kind
+      when :query
+        # expressions should be ANDed together
+        children.map(&:to_sql).join(" AND ")
 
-    when :query
-      # expressions should be ANDed together
-      children.map(&:to_sql).join(" AND ")
+      when :unqualified_expression
+        eq = Search::LexToken.new(Search::LexToken::EQUAL, "=")
+        "(" + default_qualifiers.map { |q| comparison(q, eq, children[0]) }.join(" OR ") + ")"
 
-    when :unqualified_expression
-      eq = Search::LexToken.new(Search::LexToken::EQUAL, "=")
-      "(" + default_qualifiers.map { |q| comparison(q, eq, children[0]) }.join(" OR ") + ")"
+      when :qualified_expression
+        # children[2] will be an :rhs token
+        "(" + comparison(children[0], children[1], children[2]) + ")"
 
-    when :qualified_expression
-      # children[2] will be an :rhs token
-      "(" + comparison(children[0], children[1], children[2]) + ")"
+      when :values
+        # if first form, 'and' is implicit
+        if children[1] && !children[1].is?(:or)
+          "#{children[0].to_sql} AND #{children[1].to_sql}"
+        else
+          children.map(&:to_sql).join
+        end
 
-    when :values
-      # if first form, 'and' is implicit
-      if children[1] && !children[1].is?(:or)
-        "#{children[0].to_sql} AND #{children[1].to_sql}"
       else
-        children.map(&:to_sql).join
+        children[0].to_sql
       end
-
-    else
-      children[0].to_sql
-    end
   end
 
   def is?(kind)

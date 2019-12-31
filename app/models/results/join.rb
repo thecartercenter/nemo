@@ -21,7 +21,7 @@ class Results::Join
                       params[:dependencies].is_a?(Symbol) ? [params[:dependencies]] : params[:dependencies]
                     else
                       []
-    end
+                    end
   end
 
   # expands dependencies to find all necessary joins

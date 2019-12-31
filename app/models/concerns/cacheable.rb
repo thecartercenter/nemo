@@ -23,7 +23,7 @@ module Cacheable
                 else
                   last_update = rel.order("updated_at DESC").first.updated_at.strftime("%Y%m%d%H%M%S")
                   "#{rel.count}-#{last_update}"
-      end
+                end
 
       pieces.join("/")
     end

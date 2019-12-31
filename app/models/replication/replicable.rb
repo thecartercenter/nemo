@@ -135,7 +135,7 @@ module Replication::Replicable
                                                   style: uniqueness[:style]).generate
           else
             send(attrib_name)
-    end
+          end
     copy.send("#{attrib_name}=", val)
   end
 end
