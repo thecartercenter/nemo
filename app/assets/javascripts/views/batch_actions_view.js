@@ -1,14 +1,3 @@
-/* eslint-disable
-    camelcase,
-    consistent-return,
-    no-alert,
-    no-multi-assign,
-    no-param-reassign,
-    no-restricted-globals,
-    no-return-assign,
-    no-undef,
-    no-unused-vars,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*

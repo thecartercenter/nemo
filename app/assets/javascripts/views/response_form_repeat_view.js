@@ -1,7 +1,3 @@
-/* eslint-disable
-    no-multi-assign,
-    no-plusplus,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*

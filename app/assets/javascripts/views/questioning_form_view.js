@@ -1,7 +1,3 @@
-/* eslint-disable
-    no-multi-assign,
-    no-underscore-dangle,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*

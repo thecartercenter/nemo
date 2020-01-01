@@ -1,13 +1,3 @@
-/* eslint-disable
-    consistent-return,
-    guard-for-in,
-    no-alert,
-    no-multi-assign,
-    no-restricted-globals,
-    no-restricted-syntax,
-    no-undef,
-    no-unused-vars,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*

@@ -1,12 +1,3 @@
-/* eslint-disable
-    camelcase,
-    consistent-return,
-    func-names,
-    no-case-declarations,
-    no-return-assign,
-    no-var,
-    vars-on-top,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*

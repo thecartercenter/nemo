@@ -1,13 +1,3 @@
-/* eslint-disable
-    camelcase,
-    func-names,
-    max-len,
-    no-multi-assign,
-    no-param-reassign,
-    no-plusplus,
-    no-restricted-syntax,
-    no-unused-vars,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*

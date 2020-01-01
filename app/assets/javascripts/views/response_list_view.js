@@ -1,9 +1,3 @@
-/* eslint-disable
-    consistent-return,
-    func-names,
-    no-return-assign,
-    no-undef,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*

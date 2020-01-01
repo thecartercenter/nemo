@@ -1,9 +1,3 @@
-/* eslint-disable
-    camelcase,
-    no-multi-assign,
-    no-unused-vars,
-    no-useless-concat,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*

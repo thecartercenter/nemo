@@ -1,11 +1,3 @@
-/* eslint-disable
-    consistent-return,
-    no-multi-assign,
-    no-plusplus,
-    no-return-assign,
-    no-undef,
-    no-unused-vars,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 /*
