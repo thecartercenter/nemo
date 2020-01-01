@@ -1,37 +1,52 @@
-# Models the form for entering a search query.
-class ELMO.Views.SearchFormView extends ELMO.Views.ApplicationView
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+// Models the form for entering a search query.
+const Cls = (ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views.ApplicationView {
+  static initClass() {
+  
+    this.prototype.el = '.search-form';
+  
+    this.prototype.events = {
+      'click .btn-clear': 'clear_search',
+      'click .search-footer a': 'show_help'
+    };
+  }
 
-  el: '.search-form',
+  clear_search(e) {
+    e.preventDefault();
+    return window.location.href = window.location.pathname;
+  }
 
-  events:
-    'click .btn-clear': 'clear_search'
-    'click .search-footer a': 'show_help'
+  show_help(e) {
+    e.preventDefault();
+    return $('#search-help-modal').modal('show');
+  }
 
-  clear_search: (e) ->
-    e.preventDefault()
-    window.location.href = window.location.pathname
+  // Add or replace the specified search qualifier
+  setQualifier(qualifier, val) {
+    const search_box = this.$('.search-str');
+    let current_search = search_box.val();
 
-  show_help: (e) ->
-    e.preventDefault()
-    $('#search-help-modal').modal('show')
+    // Remove the qualifier text if it's already in the current search
+    const regex = new RegExp(`${qualifier}:\\s*(\\w+|\\(.*\\)|".*")\\s?`, 'g');
+    current_search = current_search.replace(regex, '').trim();
 
-  # Add or replace the specified search qualifier
-  setQualifier: (qualifier, val) ->
-    search_box = this.$('.search-str')
-    current_search = search_box.val()
+    // Surround new value with quotes if contains space
+    val = val.replace(/^(.*\s+.*)$/, '"$1"');
 
-    # Remove the qualifier text if it's already in the current search
-    regex = /// #{qualifier}: \s* ( \w+ | \( .* \) | " .* " ) \s? ///g
-    current_search = current_search.replace(regex, '').trim()
+    // Add new qualifier to end of search
+    if (current_search) {
+      search_box.val(current_search + ` ${qualifier}:${val}`);
+    } else {
+      search_box.val(`${qualifier}:${val}`);
+    }
 
-    # Surround new value with quotes if contains space
-    val = val.replace(/^(.*\s+.*)$/, '"$1"')
-
-    # Add new qualifier to end of search
-    if current_search
-      search_box.val(current_search + " #{qualifier}:#{val}")
-    else
-      search_box.val("#{qualifier}:#{val}")
-
-    # Submit form
-    @el.submit()
+    // Submit form
+    return this.el.submit();
+  }
+});
+Cls.initClass();

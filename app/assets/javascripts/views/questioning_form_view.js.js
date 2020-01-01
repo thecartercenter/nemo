@@ -1,48 +1,68 @@
-# Newer view to manage Questioning form.
-class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
-  initialize: (options) ->
-    @super = @constructor.__super__
-    @defaultableTypes = options.defaultableTypes
-    @toggleFields()
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+// Newer view to manage Questioning form.
+const Cls = (ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.QuestionFormView {
+  static initClass() {
+  
+    this.prototype.events = {
+      'change select[id$="_qtype_name"]': 'toggleFields',
+      'change select[id$="_option_set_id"]': 'toggleFields',
+      'change select[id$="_metadata_type"]': 'toggleFields',
+      'click #questioning_read_only': 'toggleFields',
+      'click #questioning_required': 'toggleFields',
+      'keyup #questioning_default': 'toggleFields'
+    };
+  }
+  initialize(options) {
+    this.super = this.constructor.__super__;
+    this.defaultableTypes = options.defaultableTypes;
+    return this.toggleFields();
+  }
 
-  events:
-    'change select[id$="_qtype_name"]': 'toggleFields'
-    'change select[id$="_option_set_id"]': 'toggleFields'
-    'change select[id$="_metadata_type"]': 'toggleFields'
-    'click #questioning_read_only': 'toggleFields'
-    'click #questioning_required': 'toggleFields'
-    'keyup #questioning_default': 'toggleFields'
+  toggleFields() {
+    this.super.toggleFields.call(this);
+    this.showField('default', this.showDefault());
+    this.showField('read_only', this.showReadOnly());
+    this.showField('required', this.showRequired());
+    this.showField('all_levels_required', this.showAllLevelsRequired());
+    this.showField('hidden', this.showHidden());
+    this.showField('display_logic', this.showDisplayLogic());
+    return this.showField('skip_logic', this.showSkipLogic());
+  }
 
-  toggleFields: ->
-    @super.toggleFields.call(this)
-    @showField('default', @showDefault())
-    @showField('read_only', @showReadOnly())
-    @showField('required', @showRequired())
-    @showField('all_levels_required', @showAllLevelsRequired())
-    @showField('hidden', @showHidden())
-    @showField('display_logic', @showDisplayLogic())
-    @showField('skip_logic', @showSkipLogic())
+  showDefault() {
+    return this.defaultableTypes.indexOf(this.fieldValue('qtype_name')) !== -1;
+  }
 
-  showDefault: ->
-    @defaultableTypes.indexOf(@fieldValue('qtype_name')) != -1
+  showReadOnly() {
+    return this.showDefault() && ((this.fieldValue('default') || '').trim() !== '');
+  }
 
-  showReadOnly: ->
-    @showDefault() && (@fieldValue('default') || '').trim() != ''
+  showRequired() {
+    return !this.fieldValue('read_only') && this.super.metadataTypeBlank.call(this);
+  }
 
-  showRequired: ->
-    !@fieldValue('read_only') && @super.metadataTypeBlank.call(this)
+  showAllLevelsRequired() {
+    return this.showRequired() &&
+      (this.fieldValue('required').toString() === 'true') &&
+      (this.fieldValue('qtype_name') === 'select_one') &&
+      this.selectedOptionData('option_set_id', 'multilevel');
+  }
 
-  showAllLevelsRequired: ->
-    @showRequired() &&
-      @fieldValue('required').toString() == 'true' &&
-      @fieldValue('qtype_name') == 'select_one' &&
-      @selectedOptionData('option_set_id', 'multilevel')
+  showHidden() {
+    return this.super.metadataTypeBlank.call(this);
+  }
 
-  showHidden: ->
-    @super.metadataTypeBlank.call(this)
+  showDisplayLogic() {
+    return this.super.metadataTypeBlank.call(this);
+  }
 
-  showDisplayLogic: ->
-    @super.metadataTypeBlank.call(this)
-
-  showSkipLogic: ->
-    @super.metadataTypeBlank.call(this)
+  showSkipLogic() {
+    return this.super.metadataTypeBlank.call(this);
+  }
+});
+Cls.initClass();

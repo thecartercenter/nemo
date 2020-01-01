@@ -1,54 +1,78 @@
-class ELMO.Views.SettingsView extends ELMO.Views.ApplicationView
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const Cls = (ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView {
+  static initClass() {
+  
+    this.prototype.el = 'form.setting_form';
+  
+    this.prototype.events = {
+      'click #external_sql .control a': 'select_external_sql',
+      'click .adapter-settings a.show-credential-fields': 'show_change_credential_fields',
+      'click .using-incoming-sms-token': 'show_using_incoming_sms_token_modal',
+      'click .using-universal-sms-token': 'show_using_universal_sms_token_modal',
+      'click .credential-fields input[type=checkbox]:checked': 'clear_sms_fields'
+    };
+  }
 
-  el: 'form.setting_form'
+  initialize(options) {
+    this.need_credentials = options.need_credentials || {};
+    return this.show_credential_fields_with_errors();
+  }
 
-  events:
-    'click #external_sql .control a': 'select_external_sql'
-    'click .adapter-settings a.show-credential-fields': 'show_change_credential_fields'
-    'click .using-incoming-sms-token': 'show_using_incoming_sms_token_modal'
-    'click .using-universal-sms-token': 'show_using_universal_sms_token_modal'
-    'click .credential-fields input[type=checkbox]:checked': 'clear_sms_fields'
+  select_external_sql(event) {
+    this.$("#external_sql .control pre").selectText();
+    return false;
+  }
 
-  initialize: (options) ->
-    this.need_credentials = options.need_credentials || {}
-    this.show_credential_fields_with_errors()
+  show_change_credential_fields(event) {
+    this.$(event.target).hide();
+    this.$(event.target).closest('.adapter-settings').find(".credential-fields").show();
+    return false;
+  }
 
-  select_external_sql: (event) ->
-    @$("#external_sql .control pre").selectText()
-    return false
+  show_using_universal_sms_token_modal(event) {
+    event.preventDefault();
+    ELMO.app.loading(true);
 
-  show_change_credential_fields: (event) ->
-    @$(event.target).hide()
-    @$(event.target).closest('.adapter-settings').find(".credential-fields").show()
-    return false
+    return $.ajax({
+      url: ELMO.app.url_builder.build('settings', 'using_incoming_sms_token_message?missionless=1'),
+      success(data) {
+        return new ELMO.Views.UsingIncomingSmsTokenModalView({html: data.message.replace(/\n/g, "<br/>")});
+      },
+      complete() {
+        return ELMO.app.loading(false);
+      }
+    });
+  }
 
-  show_using_universal_sms_token_modal: (event) ->
-    event.preventDefault()
-    ELMO.app.loading(true)
+  show_using_incoming_sms_token_modal(event) {
+    event.preventDefault();
+    ELMO.app.loading(true);
 
-    $.ajax
-      url: ELMO.app.url_builder.build('settings', 'using_incoming_sms_token_message?missionless=1')
-      success: (data) ->
-        new ELMO.Views.UsingIncomingSmsTokenModalView({html: data.message.replace(/\n/g, "<br/>")})
-      complete: ->
-        ELMO.app.loading(false)
+    return $.ajax({
+      url: ELMO.app.url_builder.build('settings', 'using_incoming_sms_token_message'),
+      success(data) {
+        return new ELMO.Views.UsingIncomingSmsTokenModalView({html: data.message.replace(/\n/g, "<br/>")});
+      },
+      complete() {
+        return ELMO.app.loading(false);
+      }
+    });
+  }
 
-  show_using_incoming_sms_token_modal: (event) ->
-    event.preventDefault()
-    ELMO.app.loading(true)
+  show_credential_fields_with_errors() {
+    const adapters = this.$('.form-field.has-errors:hidden').closest('.adapter-settings');
+    this.$(adapters).find('.credential-fields').show();
+    return this.$(adapters).find('a.show-credential-fields').hide();
+  }
 
-    $.ajax
-      url: ELMO.app.url_builder.build('settings', 'using_incoming_sms_token_message')
-      success: (data) ->
-        new ELMO.Views.UsingIncomingSmsTokenModalView({html: data.message.replace(/\n/g, "<br/>")})
-      complete: ->
-        ELMO.app.loading(false)
-
-  show_credential_fields_with_errors: ->
-    adapters = @$('.form-field.has-errors:hidden').closest('.adapter-settings')
-    @$(adapters).find('.credential-fields').show()
-    @$(adapters).find('a.show-credential-fields').hide()
-
-  clear_sms_fields: (event) ->
-    inputs = @$(event.target).closest('.adapter-settings').find('input[type=text]')
-    @$(inputs).val('')
+  clear_sms_fields(event) {
+    const inputs = this.$(event.target).closest('.adapter-settings').find('input[type=text]');
+    return this.$(inputs).val('');
+  }
+});
+Cls.initClass();

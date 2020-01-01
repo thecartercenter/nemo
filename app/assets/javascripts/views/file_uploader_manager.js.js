@@ -1,27 +1,44 @@
-class ELMO.Views.FileUploaderManager extends ELMO.Views.ApplicationView
-  initialize: (options) ->
-    Dropzone.autoDiscover = false
-    @uploadsInProgress = 0
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const Cls = (ELMO.Views.FileUploaderManager = class FileUploaderManager extends ELMO.Views.ApplicationView {
+  static initClass() {
+  
+    this.prototype.events =
+      {'submit': 'formSubmitted'};
+  }
+  initialize(options) {
+    Dropzone.autoDiscover = false;
+    return this.uploadsInProgress = 0;
+  }
 
-  events:
-    'submit': 'formSubmitted'
+  isUploading() {
+    return this.uploadsInProgress > 0;
+  }
 
-  isUploading: ->
-    @uploadsInProgress > 0
+  formSubmitted(event) {
+    if (this.uploadsInProgress !== 0) {
+      return event.preventDefault();
+    }
+  }
 
-  formSubmitted: (event) ->
-    if @uploadsInProgress != 0
-      event.preventDefault()
+  uploadStarting() {
+    this.uploadsInProgress++;
+    return this.updateButtons();
+  }
 
-  uploadStarting: ->
-    @uploadsInProgress++
-    @updateButtons()
+  uploadFinished() {
+    this.uploadsInProgress--;
+    return this.updateButtons();
+  }
 
-  uploadFinished: ->
-    @uploadsInProgress--
-    @updateButtons()
-
-  updateButtons: ->
-    canSubmit = @uploadsInProgress == 0
-    @$(".submit-buttons .btn-primary").css('display', if canSubmit then 'inline-block' else 'none')
-    @$("#upload-progress-notice").css('display', if canSubmit then 'none' else 'inline-block')
+  updateButtons() {
+    const canSubmit = this.uploadsInProgress === 0;
+    this.$(".submit-buttons .btn-primary").css('display', canSubmit ? 'inline-block' : 'none');
+    return this.$("#upload-progress-notice").css('display', canSubmit ? 'none' : 'inline-block');
+  }
+});
+Cls.initClass();

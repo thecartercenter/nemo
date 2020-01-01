@@ -1,34 +1,50 @@
-class ELMO.Views.BroadcastsView extends ELMO.Views.FormView
-  el: '.broadcast_form'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const Cls = (ELMO.Views.BroadcastsView = class BroadcastsView extends ELMO.Views.FormView {
+  static initClass() {
+    this.prototype.el = '.broadcast_form';
+  
+    this.prototype.events = {
+      'change #broadcast_medium': 'medium_changed',
+      'change #broadcast_recipient_selection': 'recipient_selection_changed',
+      'keyup #broadcast_body': 'update_char_limit'
+    };
+  }
 
-  initialize: (options) ->
-    @medium_changed()
-    @recipient_selection_changed()
+  initialize(options) {
+    this.medium_changed();
+    this.recipient_selection_changed();
 
-    @$("#broadcast_recipient_ids").select2
-      ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(options.recipient_options_url)
+    return this.$("#broadcast_recipient_ids").select2({
+      ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(options.recipient_options_url)});
+  }
 
-  events:
-    'change #broadcast_medium': 'medium_changed'
-    'change #broadcast_recipient_selection': 'recipient_selection_changed'
-    'keyup #broadcast_body': 'update_char_limit'
+  recipient_selection_changed(e) {
+    const specific = this.form_value('broadcast', 'recipient_selection') === 'specific';
+    return this.showField('recipient_ids', specific);
+  }
 
-  recipient_selection_changed: (e) ->
-    specific = @form_value('broadcast', 'recipient_selection') == 'specific'
-    @showField('recipient_ids', specific)
+  medium_changed(e) {
+    const selected = this.form_value('broadcast', 'medium');
+    const sms_possible = (selected !== 'email_only') && (selected !== '');
+    this.$('#char_limit').toggle(sms_possible);
+    this.showField('which_phone', sms_possible);
+    this.showField('subject', !sms_possible);
+    if (sms_possible) { return this.update_char_limit(); }
+  }
 
-  medium_changed: (e) ->
-    selected = @form_value('broadcast', 'medium')
-    sms_possible = selected != 'email_only' && selected != ''
-    @$('#char_limit').toggle(sms_possible)
-    @showField('which_phone', sms_possible)
-    @showField('subject', !sms_possible)
-    @update_char_limit() if sms_possible
-
-  update_char_limit: ->
-    div = @$('#char_limit')
-    if div.is(':visible')
-      diff = 140 - @$('#broadcast_body').val().length
-      msg = I18n.t('broadcast.chars.' + (if diff >= 0 then 'remaining' else 'too_many'))
-      div.text("#{Math.abs(diff)} #{msg}")
-      div.css('color', if diff >= 0 then 'black' else '#d02000')
+  update_char_limit() {
+    const div = this.$('#char_limit');
+    if (div.is(':visible')) {
+      const diff = 140 - this.$('#broadcast_body').val().length;
+      const msg = I18n.t('broadcast.chars.' + (diff >= 0 ? 'remaining' : 'too_many'));
+      div.text(`${Math.abs(diff)} ${msg}`);
+      return div.css('color', diff >= 0 ? 'black' : '#d02000');
+    }
+  }
+});
+Cls.initClass();

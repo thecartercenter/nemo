@@ -1,38 +1,54 @@
-# Evaluates a single condition in the responses view.
-class ELMO.Views.ResponseConditionGroupChecker extends ELMO.Views.ApplicationView
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+// Evaluates a single condition in the responses view.
+ELMO.Views.ResponseConditionGroupChecker = class ResponseConditionGroupChecker extends ELMO.Views.ApplicationView {
 
-  initialize: (options) ->
-    @conditionGroup = options.group
-    @checkers = @conditionGroup.members.map (m) =>
-      if m.type == "ConditionGroup"
-        new ELMO.Views.ResponseConditionGroupChecker(el: @el, refresh: options.refresh, group: m)
-      else
-        new ELMO.Views.ResponseConditionChecker(el: @el, refresh: options.refresh, condition: m)
+  initialize(options) {
+    this.conditionGroup = options.group;
+    return this.checkers = this.conditionGroup.members.map(m => {
+      if (m.type === "ConditionGroup") {
+        return new ELMO.Views.ResponseConditionGroupChecker({el: this.el, refresh: options.refresh, group: m});
+      } else {
+        return new ELMO.Views.ResponseConditionChecker({el: this.el, refresh: options.refresh, condition: m});
+      }
+    });
+  }
 
-    # Unlike the manager and the leaf node checkers, do NOT do anything to initialize here. The manager takes
-    # care of that by calling refresh in its initialization.
+    // Unlike the manager and the leaf node checkers, do NOT do anything to initialize here. The manager takes
+    // care of that by calling refresh in its initialization.
 
-  # Evaluates the children and returns the result.
-  evaluate: ->
-    if @conditionGroup.trueIf == 'always'
-      @applyNegation(true)
-    else if @conditionGroup.trueIf == 'all_met'
-      @applyNegation(@childrenAllMet())
-    else # any_met
-      @applyNegation(@childrenAnyMet())
+  // Evaluates the children and returns the result.
+  evaluate() {
+    if (this.conditionGroup.trueIf === 'always') {
+      return this.applyNegation(true);
+    } else if (this.conditionGroup.trueIf === 'all_met') {
+      return this.applyNegation(this.childrenAllMet());
+    } else { // any_met
+      return this.applyNegation(this.childrenAnyMet());
+    }
+  }
 
-  childrenAllMet: ->
-    results = @results()
-    results.indexOf(false) == -1
+  childrenAllMet() {
+    const results = this.results();
+    return results.indexOf(false) === -1;
+  }
 
-  childrenAnyMet: ->
-    @results().indexOf(true) != -1
+  childrenAnyMet() {
+    return this.results().indexOf(true) !== -1;
+  }
 
-  applyNegation: (bool) ->
-    if @conditionGroup.negate
-      !bool
-    else
-      bool
+  applyNegation(bool) {
+    if (this.conditionGroup.negate) {
+      return !bool;
+    } else {
+      return bool;
+    }
+  }
 
-  results: ->
-    @checkers.map (c) -> c.evaluate()
+  results() {
+    return this.checkers.map(c => c.evaluate());
+  }
+};

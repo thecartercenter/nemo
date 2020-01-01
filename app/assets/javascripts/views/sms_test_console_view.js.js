@@ -1,28 +1,42 @@
-class ELMO.Views.SmsTestConsoleView extends ELMO.Views.ApplicationView
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const Cls = (ELMO.Views.SmsTestConsoleView = class SmsTestConsoleView extends ELMO.Views.ApplicationView {
+  static initClass() {
+  
+    this.prototype.el = 'form#new_sms_test';
+  
+    this.prototype.events =
+      {'submit': 'submit'};
+  }
 
-  el: 'form#new_sms_test'
+  submit(e) {
+    e.preventDefault();
 
-  events:
-    'submit': 'submit'
+    if (this.$('input#sms_test_from').val().trim() === '') {
+      const msg = I18n.t('activerecord.errors.messages.blank');
+      this.$('.sms_test_from .control').prepend('<div class="form-errors">' + msg + '</div>');
+      return;
+    }
 
-  submit: (e) ->
-    e.preventDefault()
+    ELMO.app.loading(true);
+    this.$('.sms_test_result').hide();
+    this.$('.form-errors').remove();
 
-    if @$('input#sms_test_from').val().trim() == ''
-      msg = I18n.t('activerecord.errors.messages.blank')
-      @$('.sms_test_from .control').prepend('<div class="form-errors">' + msg + '</div>')
-      return
-
-    ELMO.app.loading(true)
-    @$('.sms_test_result').hide()
-    @$('.form-errors').remove()
-
-    $.ajax
-      type: 'POST'
-      url: @$el.attr('action')
-      data: @$el.serialize()
-      success: (data) => @$('.sms_test_result div').html(data)
-      error: => @$('.sms_test_result div').html('<em>' + I18n.t('sms_console.submit_error') + '</em>')
-      complete: =>
-        ELMO.app.loading(false)
-        @$('.sms_test_result').show()
+    return $.ajax({
+      type: 'POST',
+      url: this.$el.attr('action'),
+      data: this.$el.serialize(),
+      success: data => this.$('.sms_test_result div').html(data),
+      error: () => this.$('.sms_test_result div').html('<em>' + I18n.t('sms_console.submit_error') + '</em>'),
+      complete: () => {
+        ELMO.app.loading(false);
+        return this.$('.sms_test_result').show();
+      }
+    });
+  }
+});
+Cls.initClass();

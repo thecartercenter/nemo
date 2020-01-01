@@ -1,40 +1,57 @@
-class ELMO.Views.ResponseFormRepeatView extends ELMO.Views.ApplicationView
-  events:
-    'click > .add-repeat': 'addRepeat'
-    'click .remove-repeat': 'removeRepeat'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const Cls = (ELMO.Views.ResponseFormRepeatView = class ResponseFormRepeatView extends ELMO.Views.ApplicationView {
+  static initClass() {
+    this.prototype.events = {
+      'click > .add-repeat': 'addRepeat',
+      'click .remove-repeat': 'removeRepeat'
+    };
+  }
 
-  initialize: (options) ->
-    @tmpl = options.tmpl
-    @next_index = options.next_index
+  initialize(options) {
+    this.tmpl = options.tmpl;
+    this.next_index = options.next_index;
 
-    # If this ID remains in the DOM and a new copy of the template is inserted,
-    # the Backbone view instance for the newly inserted one won't know which of
-    # them to bind to
-    @$el.removeAttr("id")
+    // If this ID remains in the DOM and a new copy of the template is inserted,
+    // the Backbone view instance for the newly inserted one won't know which of
+    // them to bind to
+    this.$el.removeAttr("id");
 
-    @toggleEmptyNotice()
+    return this.toggleEmptyNotice();
+  }
 
-  children: ->
-    @$("> .children")
+  children() {
+    return this.$("> .children");
+  }
 
-  addRepeat: (event) ->
-    event.preventDefault()
-    @children().append(@tmpl.replace(/__INDEX__/g, @next_index))
-    @toggleEmptyNotice()
-    @next_index++
+  addRepeat(event) {
+    event.preventDefault();
+    this.children().append(this.tmpl.replace(/__INDEX__/g, this.next_index));
+    this.toggleEmptyNotice();
+    return this.next_index++;
+  }
 
-  removeRepeat: (event) ->
-    event.preventDefault()
-    node = $(event.target).closest(".node")
+  removeRepeat(event) {
+    event.preventDefault();
+    const node = $(event.target).closest(".node");
 
-    id = node.find('input[name$="[id]"]').first().val()
-    if id == ""
-      node.remove()
-    else
-      node.hide()
-      node.find('input[name$="[_destroy]"]').first().val("true")
+    const id = node.find('input[name$="[id]"]').first().val();
+    if (id === "") {
+      node.remove();
+    } else {
+      node.hide();
+      node.find('input[name$="[_destroy]"]').first().val("true");
+    }
 
-    @toggleEmptyNotice()
+    return this.toggleEmptyNotice();
+  }
 
-  toggleEmptyNotice: ->
-    @$("> .empty-notice").toggle(@children().find(":visible").length == 0)
+  toggleEmptyNotice() {
+    return this.$("> .empty-notice").toggle(this.children().find(":visible").length === 0);
+  }
+});
+Cls.initClass();

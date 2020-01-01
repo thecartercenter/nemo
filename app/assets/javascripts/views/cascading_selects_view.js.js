@@ -1,49 +1,71 @@
-class ELMO.Views.CascadingSelectsView extends ELMO.Views.ApplicationView
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const Cls = (ELMO.Views.CascadingSelectsView = class CascadingSelectsView extends ELMO.Views.ApplicationView {
+  static initClass() {
+  
+    this.prototype.events =
+      {'change select': 'select_changed'};
+  }
 
-  initialize: (options) ->
-    @option_set_id = options.option_set_id
-    @cur_val = this.val()
+  initialize(options) {
+    this.option_set_id = options.option_set_id;
+    return this.cur_val = this.val();
+  }
 
-  events:
-    'change select': 'select_changed'
+  // private --------
 
-  # private --------
+  select_changed(event) {
+    let next;
+    if (this.value_changed() && (next = this.next_select($(event.target)))) {
+      this.clear_selects_after_and_including(next);
+      return this.reload_options_for(next);
+    }
+  }
 
-  select_changed: (event) ->
-    if this.value_changed() && next = this.next_select($(event.target))
-      this.clear_selects_after_and_including(next)
-      this.reload_options_for(next)
+  // Gets the next select box after the given one.
+  // Returns false if not found.
+  next_select(select) {
+    const next = select.closest('div').next().find('select');
+    return ((next.length > 0) && next) || false;
+  }
 
-  # Gets the next select box after the given one.
-  # Returns false if not found.
-  next_select: (select) ->
-    next = select.closest('div').next().find('select')
-    next.length > 0 && next || false
+  // Clears all selects after and including the given one.
+  clear_selects_after_and_including(select) {
+    let next;
+    select.empty().html('<option></option>');
+    if (next = this.next_select(select)) { return this.clear_selects_after_and_including(next); }
+  }
 
-  # Clears all selects after and including the given one.
-  clear_selects_after_and_including: (select) ->
-    select.empty().html('<option></option>')
-    this.clear_selects_after_and_including(next) if next = this.next_select(select)
+  // Fetches option tags for the given select from the server.
+  reload_options_for(select) {
+    ELMO.app.loading(true);
+    const node_id = this.selected_value_before(select);
+    const url = ELMO.app.url_builder.build('option-sets', this.option_set_id, 'child-nodes');
+    return select.load(url, $.param({node_id}), () => ELMO.app.loading(false));
+  }
 
-  # Fetches option tags for the given select from the server.
-  reload_options_for: (select) ->
-    ELMO.app.loading(true)
-    node_id = @selected_value_before(select)
-    url = ELMO.app.url_builder.build('option-sets', @option_set_id, 'child-nodes')
-    select.load(url, $.param(node_id: node_id), -> ELMO.app.loading(false))
+  selected_value_before(select) {
+    return select.closest('div.level').prev().find('select').val();
+  }
 
-  selected_value_before: (select) ->
-    select.closest('div.level').prev().find('select').val()
+  // Gets an array of values of all the selects.
+  val() {
+    return (this.$('select').map(function() { return $(this).val(); })).get();
+  }
 
-  # Gets an array of values of all the selects.
-  val: ->
-    (@$('select').map -> $(this).val()).get()
-
-  # Checks if the value changed since last inspection. If so, saves new value
-  value_changed: ->
-    new_val = this.val()
-    if @cur_val.join('__') != new_val.join('__')
-      @cur_val = new_val
-      true
-    else
-      false
+  // Checks if the value changed since last inspection. If so, saves new value
+  value_changed() {
+    const new_val = this.val();
+    if (this.cur_val.join('__') !== new_val.join('__')) {
+      this.cur_val = new_val;
+      return true;
+    } else {
+      return false;
+    }
+  }
+});
+Cls.initClass();

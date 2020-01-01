@@ -1,54 +1,75 @@
-class ELMO.Views.PrintFormView extends ELMO.Views.ApplicationView
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const Cls = (ELMO.Views.PrintFormView = class PrintFormView extends ELMO.Views.ApplicationView {
+  static initClass() {
+  
+    this.prototype.el = '#content';
+  
+    this.prototype.events =
+      {'click a.print-link': 'print_form'};
+  }
 
-  initialize: ->
-    # For some reason this doesn't work if you put it in the events hash.
-    $('#form-print-format-tips').on('hidden.bs.modal', => this.load_printable_form())
+  initialize() {
+    // For some reason this doesn't work if you put it in the events hash.
+    return $('#form-print-format-tips').on('hidden.bs.modal', () => this.load_printable_form());
+  }
 
-  el: '#content'
+  print_form(e) {
+    e.preventDefault();
 
-  events:
-    'click a.print-link': 'print_form'
+    this.id = $(e.currentTarget).data('form-id');
 
-  print_form: (e) ->
-    e.preventDefault()
+    if (this.should_show_format_tips()) {
+      return this.show_format_tips_modal();
+    } else {
+      return this.load_printable_form();
+    }
+  }
 
-    this.id = $(e.currentTarget).data('form-id')
+  load_printable_form() {
+    ELMO.app.loading(true);
 
-    if this.should_show_format_tips()
-      this.show_format_tips_modal()
-    else
-      this.load_printable_form()
+    // Delete any previous print content stuff in case print multiple times.
+    $('.print-content').remove();
 
-  load_printable_form: ->
-    ELMO.app.loading(true)
+    // Load specially formatted show page into div.
+    return $.ajax({
+      url: ELMO.app.url_builder.build('forms', this.id),
+      method: 'get',
+      headers: {
+        accept: 'text/html'
+      }, // Without this, we get 404 due to route constraints.
+      data: {print: 1},
+      success: data => {
+        $('<div>').addClass('print-content').html(data).appendTo(this.el);
+        ELMO.app.loading(false);
+        return this.do_print();
+      }
+    });
+  }
 
-    # Delete any previous print content stuff in case print multiple times.
-    $('.print-content').remove()
+  should_show_format_tips() {
+    // Show if not already shown today.
+    return window.localStorage.getItem('form_print_format_tips_shown') !== this.datestamp();
+  }
 
-    # Load specially formatted show page into div.
-    $.ajax
-      url: ELMO.app.url_builder.build('forms', this.id)
-      method: 'get'
-      headers:
-        accept: 'text/html' # Without this, we get 404 due to route constraints.
-      data: {print: 1}
-      success: (data) =>
-        $('<div>').addClass('print-content').html(data).appendTo(this.el)
-        ELMO.app.loading(false)
-        this.do_print()
+  show_format_tips_modal() {
+    window.localStorage.setItem('form_print_format_tips_shown', this.datestamp());
+    return $('#form-print-format-tips').modal('show');
+  }
 
-  should_show_format_tips: ->
-    # Show if not already shown today.
-    window.localStorage.getItem('form_print_format_tips_shown') != this.datestamp()
+  // Shows the print dialog, or just a dummy modal if in test mode.
+  do_print() {
+    return window.print();
+  }
 
-  show_format_tips_modal: ->
-    window.localStorage.setItem('form_print_format_tips_shown', this.datestamp())
-    $('#form-print-format-tips').modal('show')
-
-  # Shows the print dialog, or just a dummy modal if in test mode.
-  do_print: ->
-    window.print()
-
-  datestamp: ->
-    d = new Date()
-    d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate()
+  datestamp() {
+    const d = new Date();
+    return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
+  }
+});
+Cls.initClass();

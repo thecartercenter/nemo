@@ -1,34 +1,50 @@
-# Controls "return to draft status" button and modal.
-class ELMO.Views.ReturnToDraftView extends ELMO.Views.ApplicationView
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+// Controls "return to draft status" button and modal.
+const Cls = (ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.ApplicationView {
+  static initClass() {
+  
+    this.prototype.el = '#action-links-and-modal';
+  
+    this.prototype.events = {
+      'click .return-to-draft-link': 'handleLinkClicked',
+      'shown.bs.modal #return-to-draft-modal': 'handleModalShown',
+      'click #return-to-draft-modal .btn-primary': 'handleAcceptClicked',
+      'keyup #override': 'handleKeyup'
+    };
+  }
 
-  el: '#action-links-and-modal'
+  initialize(params) {
+    this.keyword = params.keyword;
+    this.$('#override').val(''); // Ensure box is empty in case cached.
+    return this.accepted = false;
+  }
 
-  initialize: (params) ->
-    @keyword = params.keyword
-    @$('#override').val('') # Ensure box is empty in case cached.
-    @accepted = false
+  handleLinkClicked(event) {
+    // If accept button was clicked, we just let the link do it's thing.
+    if (this.accepted) { return; }
 
-  events:
-    'click .return-to-draft-link': 'handleLinkClicked'
-    'shown.bs.modal #return-to-draft-modal': 'handleModalShown'
-    'click #return-to-draft-modal .btn-primary': 'handleAcceptClicked'
-    'keyup #override': 'handleKeyup'
+    event.preventDefault();
+    event.stopPropagation();
+    return this.$('#return-to-draft-modal').modal('show');
+  }
 
-  handleLinkClicked: (event) ->
-    # If accept button was clicked, we just let the link do it's thing.
-    return if @accepted
+  handleModalShown(event) {
+    return this.$('#override').focus();
+  }
 
-    event.preventDefault()
-    event.stopPropagation()
-    @$('#return-to-draft-modal').modal('show')
+  handleKeyup(event) {
+    return this.$('.btn-primary').toggle(this.$(event.target).val() === this.keyword);
+  }
 
-  handleModalShown: (event) ->
-    @$('#override').focus()
-
-  handleKeyup: (event) ->
-    @$('.btn-primary').toggle(@$(event.target).val() == @keyword)
-
-  handleAcceptClicked: (event) ->
-    @accepted = true
-    # Trigger another click on the link so we can use the data-method machinery to make the PUT request.
-    @$('.return-to-draft-link').trigger('click')
+  handleAcceptClicked(event) {
+    this.accepted = true;
+    // Trigger another click on the link so we can use the data-method machinery to make the PUT request.
+    return this.$('.return-to-draft-link').trigger('click');
+  }
+});
+Cls.initClass();

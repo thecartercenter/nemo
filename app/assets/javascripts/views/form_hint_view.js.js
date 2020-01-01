@@ -1,4 +1,11 @@
-# Initializes the popovers for hints on a form. Should be called for any form with hints.
-class ELMO.Views.FormHintView extends ELMO.Views.ApplicationView
-  initialize: (params) ->
-    @$('a.hint').popover(html: true)
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+// Initializes the popovers for hints on a form. Should be called for any form with hints.
+ELMO.Views.FormHintView = class FormHintView extends ELMO.Views.ApplicationView {
+  initialize(params) {
+    return this.$('a.hint').popover({html: true});
+  }
+};
