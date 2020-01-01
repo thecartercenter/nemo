@@ -8,6 +8,9 @@ globals:
   $: true
   I18n: true
   ELMO: true
+  Backbone: true
+  Dropzone: true
+  google: true
 rules:
   import/no-unresolved: ['error', { ignore: ['^javascripts/'] }]
   react/prefer-stateless-function: off
