@@ -20,13 +20,12 @@ const Cls = (ELMO.Views.QuestioningFormView = class QuestioningFormView extends 
   }
 
   initialize(options) {
-    this.super = this.constructor.__super__;
     this.defaultableTypes = options.defaultableTypes;
     return this.toggleFields();
   }
 
   toggleFields() {
-    this.super.toggleFields.call(this);
+    super.toggleFields();
     this.showField('default', this.showDefault());
     this.showField('read_only', this.showReadOnly());
     this.showField('required', this.showRequired());
@@ -45,7 +44,7 @@ const Cls = (ELMO.Views.QuestioningFormView = class QuestioningFormView extends 
   }
 
   showRequired() {
-    return !this.fieldValue('read_only') && this.super.metadataTypeBlank.call(this);
+    return !this.fieldValue('read_only') && super.metadataTypeBlank();
   }
 
   showAllLevelsRequired() {
@@ -56,15 +55,15 @@ const Cls = (ELMO.Views.QuestioningFormView = class QuestioningFormView extends 
   }
 
   showHidden() {
-    return this.super.metadataTypeBlank.call(this);
+    return super.metadataTypeBlank();
   }
 
   showDisplayLogic() {
-    return this.super.metadataTypeBlank.call(this);
+    return super.metadataTypeBlank();
   }
 
   showSkipLogic() {
-    return this.super.metadataTypeBlank.call(this);
+    return super.metadataTypeBlank();
   }
 });
 Cls.initClass();
