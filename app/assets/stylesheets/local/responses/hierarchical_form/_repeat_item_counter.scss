@@ -6,8 +6,8 @@
 
   .answer-group.repeat-item > .group-header {
     h2::after {
+      content: ' (' counter(item) ')';
       counter-increment: item;
-      content: " (" counter(item) ")";
     }
   }
 }

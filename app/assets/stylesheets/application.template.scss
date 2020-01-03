@@ -9,25 +9,25 @@
 // Set direction for directional variables
 // These are set super early as they may be used in later variables files.
 $dir: @@@direction@@@;
-@import "directional";
+@import 'directional';
 
 // These need to be loaded in a specific order so that earlier variables can be reused in later files.
-@import "variables/base";
-@import "variables/mixins";
-@import "themes/@@@theme@@@";
-@import "variables/bootstrap";
+@import 'variables/base';
+@import 'variables/mixins';
+@import 'themes/@@@theme@@@';
+@import 'variables/bootstrap';
 
 // Vendor
-@import "bootstrap";
-@import "font-awesome";
-@import "select2";
-@import "trumbowyg";
+@import 'bootstrap';
+@import 'font-awesome';
+@import 'select2';
+@import 'trumbowyg';
 
-@import "token-input";
-@import "jquery-ui-1.12.1-custom";
-@import "jquery.fileupload";
-@import "jquery.fileupload-ui";
-@import "dropzone/basic";
+@import 'token-input';
+@import 'jquery-ui-1.12.1-custom';
+@import 'jquery.fileupload';
+@import 'jquery.fileupload-ui';
+@import 'dropzone/basic';
 
-@import "global/**/*";
-@import "local/**/*";
+@import 'global/**/*';
+@import 'local/**/*';

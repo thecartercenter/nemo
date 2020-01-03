@@ -8,11 +8,11 @@ body {
 
 #userinfo {
   color: $white;
+  float: $right;
+  height: 25px;
+  margin-top: 19px;
   text-align: right;
   padding-#{$right}: 5px;
-  margin-top: 19px;
-  height: 25px;
-  float: $right;
 
   a {
     color: $white;
@@ -25,9 +25,9 @@ body {
 
   .icon-btn {
     display: inline-block;
-    min-width: 60px;
+    margin: 0 5px;
     max-width: 90px;
-    margin: 0 5px 0 5px;
+    min-width: 60px;
     text-align: center;
     vertical-align: top;
 
@@ -41,7 +41,8 @@ body {
     }
   }
 
-  div, span {
+  div,
+  span {
     display: inline-block;
   }
 
@@ -56,24 +57,24 @@ body {
   }
 
   #change-mission {
-    font-size: 9pt;
-    vertical-align: top;
     display: inline-block;
-    width: 190px;
+    font-size: 9pt;
     height: 31px;
+    vertical-align: top;
+    width: 190px;
     margin-#{$right}: 10px;
   }
 }
 
 #title-container {
-  overflow: auto;
   clear: both;
+  overflow: auto;
 
   span.label {
     display: inline-block;
     font-size: 10px;
-    margin: .25em .5em;
-    padding: .5em .8em;
+    margin: 0.25em 0.5em;
+    padding: 0.5em 0.8em;
     vertical-align: middle;
   }
 
@@ -91,15 +92,15 @@ body {
 
   // std seal in title
   h1.title img {
-    width: 16px;
     height: 16px;
+    width: 16px;
   }
 }
 
 #logo {
   color: $white;
-  margin: side-values(10px 0 10px 15px);
   display: inline-block;
+  margin: side-values(10px 0 10px 15px);
 
   // Don't allow the large bounding box to obstruct other header links.
   pointer-events: none;
@@ -111,12 +112,12 @@ body {
 
   img {
     display: inline-block;
-    margin: 12px 0 12px 12px;
     height: 54px;  /* explicit height to prevent shifting during load */
-    vertical-align: bottom;
+    margin: 12px 0 12px 12px;
 
     // Undo 'none' on the parent div.
     pointer-events: all;
+    vertical-align: bottom;
   }
 
   a {
@@ -125,25 +126,25 @@ body {
   }
 
   h1 {
-    font-size: 40px;
     color: $white;
-    line-height: 1;
     display: inline-block;
+    font-size: 40px;
+    line-height: 1;
     margin: 0 10px 5px 0;
   }
 
   h2 {
-    font-size: 24px;
-    font-family: "Raleway", sans-serif;
-    font-weight: bold;
-    width: 300px;
-    margin: 0;
     color: $light-blue;
     display: inline-block;
+    font-family: 'Raleway', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 24px;
+    margin: 0;
+    padding-bottom: 12px;
     text-transform: lowercase;
     vertical-align: bottom;
-    line-height: 24px;
-    padding-bottom: 12px;
+    width: 300px;
 
     /* trophy icon */
     i {
@@ -153,18 +154,18 @@ body {
 }
 
 #content {
-  padding: 20px 25px 30px 25px;
-  min-height: 400px;
   background-color: $white;
+  min-height: 400px;
+  padding: 20px 25px 30px;
 }
 
 #footer {
-  padding-top: 108px;
-  vertical-align: middle;
   background-color: $footer-background-color;
   color: $footer-text-color;
-  text-align: center;
   height: 300px;
+  padding-top: 108px;
+  text-align: center;
+  vertical-align: middle;
 
   a {
     color: $accent-color;

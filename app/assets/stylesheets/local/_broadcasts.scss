@@ -1,6 +1,7 @@
 .broadcasts {
   // Hidden initially, shown by JS
-  .form-field.broadcast_recipient_ids, .form-field.broadcast_which_phone {
+  .form-field.broadcast_recipient_ids,
+  .form-field.broadcast_which_phone {
     display: none;
   }
 

@@ -1,19 +1,19 @@
 div#glb-load-ind {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 68px;
-  margin-top: -34px;
-  margin-left: -200px;
-  background-color: rgba(0,0,0,0.2);
-  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.2);
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  text-align: center;
-  padding-top: 10px;
+  border-radius: 5px;
+  display: none;
   font-size: 16px;
+  height: 68px;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -34px;
+  padding-top: 10px;
+  position: fixed;
+  text-align: center;
+  top: 50%;
+  width: 400px;
   z-index: 1100;
 
   img {

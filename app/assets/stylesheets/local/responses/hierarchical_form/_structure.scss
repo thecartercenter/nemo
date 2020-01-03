@@ -9,11 +9,11 @@
 
   max-width: 1000px;
 
-  .node[data-visible-depth="1"],
-  .node[data-visible-depth="3"],
-  .node[data-visible-depth="5"],
-  .node[data-visible-depth="7"],
-  .node[data-visible-depth="9"] {
+  .node[data-visible-depth='1'],
+  .node[data-visible-depth='3'],
+  .node[data-visible-depth='5'],
+  .node[data-visible-depth='7'],
+  .node[data-visible-depth='9'] {
     > .answer-group,
     > .answer-set,
     > .answer {
@@ -33,12 +33,12 @@
     }
   }
 
-  .node[data-visible-depth="0"],
-  .node[data-visible-depth="2"],
-  .node[data-visible-depth="4"],
-  .node[data-visible-depth="6"],
-  .node[data-visible-depth="8"],
-  .node[data-visible-depth="10"] {
+  .node[data-visible-depth='0'],
+  .node[data-visible-depth='2'],
+  .node[data-visible-depth='4'],
+  .node[data-visible-depth='6'],
+  .node[data-visible-depth='8'],
+  .node[data-visible-depth='10'] {
     > .answer-group,
     > .answer-set,
     > .answer,

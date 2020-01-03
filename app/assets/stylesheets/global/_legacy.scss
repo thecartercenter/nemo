@@ -7,23 +7,38 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-ul { margin-top: 0; padding-left: 20px; }
+ul { margin-top: 0;
+  padding-left: 20px; }
 li { margin-bottom: 5px; }
 table { border-collapse: collapse; }
 td { vertical-align: top; }
 
 /* multi-purpose */
-div.subtitle { margin: -10px 0 10px 0; color: #888888; }
-div.tip { margin-bottom: 10px; width: 800px; }
-div.important { font-weight: bold; color: Black; }
-div.dialog { position: absolute; background-color: $white; border: 1px solid #555; padding: 10px; }
-div.dialog h2 { margin: 0 0 10px 0; }
+div.subtitle { color: #888;
+  margin: -10px 0 10px; }
+
+div.tip { margin-bottom: 10px;
+  width: 800px; }
+
+div.important { color: Black;
+  font-weight: bold; }
+
+div.dialog { background-color: $white;
+  border: 1px solid #555;
+  padding: 10px;
+  position: absolute; }
+div.dialog h2 { margin: 0 0 10px; }
 .translation_missing { color: $error-red; }
 
 /* loading indicator */
-div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
+div.loader { background: image-url('loader.gif') no-repeat;
+  padding-left: 20px; }
 
 div.inline-load-ind {
+  display: inline-block;
+
+  width: 20px;
+
   .success {
     color: $success-green;
   }
@@ -31,9 +46,6 @@ div.inline-load-ind {
   .failure {
     color: $error-red;
   }
-
-  width: 20px;
-  display: inline-block;
 }
 
 i.fa-certificate {
@@ -44,25 +56,33 @@ i.fa-certificate {
 .link_set {
   margin-bottom: 10px;
 
-  a, input[type='submit'] {
+  a,
+  input[type='submit'] {
     display: inline-block;
     padding-right: 10px;
   }
 }
 
 /* option edit */
-.options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
+.options_edit td.value input#option_value,
+.options_new td.value input#option_value { width: 100px; }
 
 /* option set new/edit/show */
-.option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }
+.option_sets_edit div.optcol,
+.option_sets_new div.optcol,
+.option_sets_show div.optcol { float: left;
+  margin-right: 20px; }
 
 /* broadcasts */
 textarea#broadcast_body { height: 170px; }
-.broadcasts_show #send_errors div.control { color: $error-red; font-weight: bold; }
+
+.broadcasts_show #send_errors div.control { color: $error-red;
+  font-weight: bold; }
 .broadcasts_show #send_errors div.control p { margin: 0; }
 
 /* form edit */
-.forms_edit td.name_col, .forms_show td.name_col { width: 500px; }
+.forms_edit td.name_col,
+.forms_show td.name_col { width: 500px; }
 .forms_edit td.rank_col input { width: 25px; }
 .forms_edit #save_ranks_button { margin-top: -15px; }
 
