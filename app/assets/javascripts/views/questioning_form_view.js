@@ -5,7 +5,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Newer view to manage Questioning form.
-const Cls = (ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.QuestionFormView {
+(ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.QuestionFormView {
   static initClass() {
     this.prototype.events = {
       'change select[id$="_qtype_name"]': 'toggleFields',
@@ -63,5 +63,4 @@ const Cls = (ELMO.Views.QuestioningFormView = class QuestioningFormView extends 
   showSkipLogic() {
     return super.metadataTypeBlank();
   }
-});
-Cls.initClass();
+}).initClass();

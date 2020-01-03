@@ -5,7 +5,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Controls "return to draft status" button and modal.
-const Cls = (ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.ApplicationView {
+(ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#action-links-and-modal';
 
@@ -45,5 +45,4 @@ const Cls = (ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO
     // Trigger another click on the link so we can use the data-method machinery to make the PUT request.
     return this.$('.return-to-draft-link').trigger('click');
   }
-});
-Cls.initClass();
+}).initClass();

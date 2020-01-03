@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.CascadingSelectsView = class CascadingSelectsView extends ELMO.Views.ApplicationView {
+(ELMO.Views.CascadingSelectsView = class CascadingSelectsView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.events = { 'change select': 'select_changed' };
   }
@@ -64,5 +64,4 @@ const Cls = (ELMO.Views.CascadingSelectsView = class CascadingSelectsView extend
     }
     return false;
   }
-});
-Cls.initClass();
+}).initClass();

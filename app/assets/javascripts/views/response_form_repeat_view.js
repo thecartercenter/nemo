@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.ResponseFormRepeatView = class ResponseFormRepeatView extends ELMO.Views.ApplicationView {
+(ELMO.Views.ResponseFormRepeatView = class ResponseFormRepeatView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.events = {
       'click > .add-repeat': 'addRepeat',
@@ -53,5 +53,4 @@ const Cls = (ELMO.Views.ResponseFormRepeatView = class ResponseFormRepeatView ex
   toggleEmptyNotice() {
     return this.$('> .empty-notice').toggle(this.children().find(':visible').length === 0);
   }
-});
-Cls.initClass();
+}).initClass();

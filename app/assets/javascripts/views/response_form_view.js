@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.ResponseFormView = class ResponseFormView extends ELMO.Views.ApplicationView {
+(ELMO.Views.ResponseFormView = class ResponseFormView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.events = { 'click .qtype-location .widget a': 'showLocationPicker' };
   }
@@ -22,5 +22,4 @@ const Cls = (ELMO.Views.ResponseFormView = class ResponseFormView extends ELMO.V
     const field = this.$(e.target).closest('.widget').find('input[type=text]');
     return this.locationPicker.show(field);
   }
-});
-Cls.initClass();
+}).initClass();

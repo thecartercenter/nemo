@@ -5,7 +5,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Models an index table view as shown on most index pages.
-const Cls = (ELMO.Views.IndexTableView = class IndexTableView extends ELMO.Views.ApplicationView {
+(ELMO.Views.IndexTableView = class IndexTableView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#index_table';
 
@@ -62,5 +62,4 @@ const Cls = (ELMO.Views.IndexTableView = class IndexTableView extends ELMO.Views
   unhighlight_partner_row(event) {
     return $(event.target).closest('tbody').find('tr.hovered').removeClass('hovered');
   }
-});
-Cls.initClass();
+}).initClass();

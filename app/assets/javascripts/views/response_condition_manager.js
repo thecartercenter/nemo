@@ -5,7 +5,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Handles conditional logic for a single question/answer pair in the response view based on conditions.
-const Cls = (ELMO.Views.ResponseConditionManager = class ResponseConditionManager extends ELMO.Views.ApplicationView {
+(ELMO.Views.ResponseConditionManager = class ResponseConditionManager extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.events = { submit: 'clearOnSubmitIfFalse' };
   }
@@ -52,5 +52,4 @@ const Cls = (ELMO.Views.ResponseConditionManager = class ResponseConditionManage
   results() {
     return this.checkers.map((c) => c.result);
   }
-});
-Cls.initClass();
+}).initClass();

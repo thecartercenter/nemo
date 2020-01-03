@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.RepeatGroupFormView = class RepeatGroupFormView extends ELMO.Views.ApplicationView {
+(ELMO.Views.RepeatGroupFormView = class RepeatGroupFormView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.events = {
       'click .add-instance': 'add_instance',
@@ -30,5 +30,4 @@ const Cls = (ELMO.Views.RepeatGroupFormView = class RepeatGroupFormView extends 
     instance.hide();
     return instance.find('[id$=_destroy]').val('1');
   }
-});
-Cls.initClass();
+}).initClass();

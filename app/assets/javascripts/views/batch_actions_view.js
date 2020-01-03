@@ -7,7 +7,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Models the batch actions done on index pages
-const Cls = (ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.Views.ApplicationView {
+(ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#index_table';
 
@@ -153,5 +153,4 @@ const Cls = (ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.V
 
     return false;
   }
-});
-Cls.initClass();
+}).initClass();

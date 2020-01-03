@@ -5,7 +5,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // For the tags on the questions index page.
-const Cls = (ELMO.Views.QuestionsTagsView = class QuestionsTagsView extends ELMO.Views.ApplicationView {
+(ELMO.Views.QuestionsTagsView = class QuestionsTagsView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '.tags';
 
@@ -16,5 +16,4 @@ const Cls = (ELMO.Views.QuestionsTagsView = class QuestionsTagsView extends ELMO
     e.stopPropagation();
     return ELMO.searchFormView.setQualifier('tag', e.currentTarget.innerText.trim());
   }
-});
-Cls.initClass();
+}).initClass();

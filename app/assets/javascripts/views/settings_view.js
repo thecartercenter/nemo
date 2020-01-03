@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView {
+(ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = 'form.setting_form';
 
@@ -73,5 +73,4 @@ const Cls = (ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.App
     const inputs = this.$(event.target).closest('.adapter-settings').find('input[type=text]');
     return this.$(inputs).val('');
   }
-});
-Cls.initClass();
+}).initClass();

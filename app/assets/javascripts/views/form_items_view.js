@@ -7,7 +7,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Controls add/edit/delete operations for form items list.
-const Cls = (ELMO.Views.FormItemsView = class FormItemsView extends ELMO.Views.ApplicationView {
+(ELMO.Views.FormItemsView = class FormItemsView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '.form-items';
 
@@ -127,5 +127,4 @@ const Cls = (ELMO.Views.FormItemsView = class FormItemsView extends ELMO.Views.A
   go_to_question(e) {
     if (!(this.$(e.target).parents('a').length > 0)) { return window.location.href = this.$(e.currentTarget).data('href'); }
   }
-});
-Cls.initClass();
+}).initClass();

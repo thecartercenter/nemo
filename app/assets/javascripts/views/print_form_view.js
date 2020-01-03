@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.PrintFormView = class PrintFormView extends ELMO.Views.ApplicationView {
+(ELMO.Views.PrintFormView = class PrintFormView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#content';
 
@@ -68,5 +68,4 @@ const Cls = (ELMO.Views.PrintFormView = class PrintFormView extends ELMO.Views.A
     const d = new Date();
     return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
   }
-});
-Cls.initClass();
+}).initClass();

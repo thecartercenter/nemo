@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.UsingIncomingSmsTokenModalView = class UsingIncomingSmsTokenModalView extends ELMO.Views.ApplicationView {
+(ELMO.Views.UsingIncomingSmsTokenModalView = class UsingIncomingSmsTokenModalView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#using-incoming-sms-token-modal';
   }
@@ -17,5 +17,4 @@ const Cls = (ELMO.Views.UsingIncomingSmsTokenModalView = class UsingIncomingSmsT
   show() {
     return this.$el.modal('show');
   }
-});
-Cls.initClass();
+}).initClass();

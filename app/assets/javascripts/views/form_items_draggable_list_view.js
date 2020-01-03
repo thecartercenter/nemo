@@ -6,7 +6,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Controls draggable list behavior for form items list.
-const Cls = (ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends ELMO.Views.ApplicationView {
+(ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '.form-items-list';
   }
@@ -122,5 +122,4 @@ const Cls = (ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableLis
     // the greater rank is the longer one.
     if (ar.length === br.length) { return 0; } else if (ar.length > br.length) { return 1; } return -1;
   }
-});
-Cls.initClass();
+}).initClass();

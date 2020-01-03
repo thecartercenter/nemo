@@ -15,7 +15,7 @@
 // is a hidden input element with a name containing
 // the json key, that element's value is set to the json value
 
-const Cls = (ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.ApplicationView {
+(ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.events = { 'click .existing a.delete': 'deleteExisting' };
   }
@@ -95,5 +95,4 @@ const Cls = (ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.V
   clearMetaFields() {
     return this.$('input:hidden').each((index, e) => $(e).val(''));
   }
-});
-Cls.initClass();
+}).initClass();

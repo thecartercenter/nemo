@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
+(ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
   static initClass() {
     this.prototype.events = {
       'click .save': 'save',
@@ -99,5 +99,4 @@ const Cls = (ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views
   toggle_item_name() {
     return this.showField('group_item_name_', this.$('#qing_group_repeatable')[0].checked, { prefix: true });
   }
-});
-Cls.initClass();
+}).initClass();

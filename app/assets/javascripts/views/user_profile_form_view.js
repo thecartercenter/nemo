@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.UserProfileFormView = class UserProfileFormView extends ELMO.Views.ApplicationView {
+(ELMO.Views.UserProfileFormView = class UserProfileFormView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = 'form.user_form';
 
@@ -51,5 +51,4 @@ const Cls = (ELMO.Views.UserProfileFormView = class UserProfileFormView extends 
     const select_value = this.$('select#user_reset_password_method').val();
     return this.$('.password-fields').toggleClass('d-none', (select_value !== 'enter') && (select_value !== 'enter_and_show'));
   }
-});
-Cls.initClass();
+}).initClass();

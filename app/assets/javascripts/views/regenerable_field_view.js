@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.RegenerableFieldView = class RegenerableFieldView extends ELMO.Views.ApplicationView {
+(ELMO.Views.RegenerableFieldView = class RegenerableFieldView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.events = { 'click .regenerate': 'regenerateField' };
   }
@@ -56,5 +56,4 @@ const Cls = (ELMO.Views.RegenerableFieldView = class RegenerableFieldView extend
       },
     });
   }
-});
-Cls.initClass();
+}).initClass();

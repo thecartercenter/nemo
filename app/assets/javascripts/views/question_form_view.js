@@ -5,7 +5,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Newer view to manage Question form.
-const Cls = (ELMO.Views.QuestionFormView = class QuestionFormView extends ELMO.Views.FormView {
+(ELMO.Views.QuestionFormView = class QuestionFormView extends ELMO.Views.FormView {
   static initClass() {
     // We use $= because the start of the ID can vary depending on whether
     // it's a question form or questioning form.
@@ -65,5 +65,4 @@ const Cls = (ELMO.Views.QuestionFormView = class QuestionFormView extends ELMO.V
   fieldElement(attrib) {
     return this.$(`.form-field[data-field-name=${attrib}] .control`);
   }
-});
-Cls.initClass();
+}).initClass();

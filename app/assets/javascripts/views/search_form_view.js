@@ -5,7 +5,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Models the form for entering a search query.
-const Cls = (ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views.ApplicationView {
+(ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '.search-form';
 
@@ -47,5 +47,4 @@ const Cls = (ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views
     // Submit form
     return this.el.submit();
   }
-});
-Cls.initClass();
+}).initClass();

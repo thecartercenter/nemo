@@ -5,7 +5,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.ApplicationView {
+(ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#user-groups-modal';
 
@@ -131,5 +131,4 @@ const Cls = (ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends 
     this.$(target_row).remove();
     return this.$('.header.link_set').html(data.page_entries_info);
   }
-});
-Cls.initClass();
+}).initClass();

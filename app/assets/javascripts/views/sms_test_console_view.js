@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.SmsTestConsoleView = class SmsTestConsoleView extends ELMO.Views.ApplicationView {
+(ELMO.Views.SmsTestConsoleView = class SmsTestConsoleView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = 'form#new_sms_test';
 
@@ -36,5 +36,4 @@ const Cls = (ELMO.Views.SmsTestConsoleView = class SmsTestConsoleView extends EL
       },
     });
   }
-});
-Cls.initClass();
+}).initClass();

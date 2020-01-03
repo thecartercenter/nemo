@@ -5,7 +5,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Cls = (ELMO.Views.UserListView = class UserListView extends ELMO.Views.ApplicationView {
+(ELMO.Views.UserListView = class UserListView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#index_table';
 
@@ -67,5 +67,4 @@ const Cls = (ELMO.Views.UserListView = class UserListView extends ELMO.Views.App
       },
     });
   }
-});
-Cls.initClass();
+}).initClass();
