@@ -1,52 +1,52 @@
 // ELMO.Views.Dashboard
 //
 // View model for the Dashboard
-(function(ns, klass) {
-
-  var AJAX_RELOAD_INTERVAL = 30; // seconds
-  var PAGE_RELOAD_INTERVAL = 30; // minutes
+(function (ns, klass) {
+  const AJAX_RELOAD_INTERVAL = 30; // seconds
+  const PAGE_RELOAD_INTERVAL = 30; // minutes
 
   // constructor
-  ns.Dashboard = klass = function(params) { var self = this;
+  ns.Dashboard = klass = function (params) {
+    const self = this;
     self.params = params;
 
     // hook up full screen link
-    $("a.full-screen").on('click', function(obj) {
+    $('a.full-screen').on('click', (obj) => {
       self.set_full_screen('toggle');
       return false;
     });
 
     // hook up expand map link
-    $("a.toggle-map").on('click', function(obj) {
+    $('a.toggle-map').on('click', (obj) => {
       self.set_expanded_map('toggle');
       return false;
     });
 
     // readjust stuff on window resize
-    $(window).on('resize', function(){
+    $(window).on('resize', () => {
       self.adjust_pane_sizes();
       self.list_view.adjust_columns();
 
       // clear this timeout in case this is another resize event before it ran out
-      clearTimeout(self.resize_done_timeout)
+      clearTimeout(self.resize_done_timeout);
 
       // set a timeout to refresh the report
       if (ELMO.app.report_controller) {
-        self.resize_done_timeout = setTimeout(function(){
+        self.resize_done_timeout = setTimeout(() => {
           ELMO.app.report_controller.refresh_view();
         }, 1000);
       }
-    })
+    });
 
     // Setup ajax reload timer and test link.
-    self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
-    $('a.reload-ajax').on('click', function(){ self.reload_ajax(); });
+    self.reload_timer = setTimeout(() => { self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
+    $('a.reload-ajax').on('click', () => { self.reload_ajax(); });
 
     // Setup long-running page reload timer, unless it already exists.
     // This timer ensures that we don't have memory issues due to a long running page.
     if (!ELMO.app.dashboard_reload_timer) {
-      ELMO.app.dashboard_reload_timer = setTimeout(function(){ self.reload_page(); }, PAGE_RELOAD_INTERVAL * 60000);
-      $('a.reload-page').on('click', function() { self.reload_page(); });
+      ELMO.app.dashboard_reload_timer = setTimeout(() => { self.reload_page(); }, PAGE_RELOAD_INTERVAL * 60000);
+      $('a.reload-page').on('click', () => { self.reload_page(); });
     }
     // save mission_id as map serialization key
     self.params.map.serialization_key = self.params.mission_id;
@@ -61,38 +61,37 @@
     self.list_view.adjust_columns();
   };
 
-  klass.prototype.run_report = function() {
+  klass.prototype.run_report = function () {
     this.report_view.refresh();
   };
 
-  klass.prototype.adjust_pane_sizes = function() { var self = this;
+  klass.prototype.adjust_pane_sizes = function () {
+    const self = this;
     // set 3 pane widths/heights depending on container size
 
     // the content window padding and space between columns
-    var spacing = 15;
+    const spacing = 15;
 
     // content window inner dimensions
-    var cont_w = $('#content').width() - 4;
-    var cont_h = $(window).height() - $('#logo').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
+    const cont_w = $('#content').width() - 4;
+    const cont_h = $(window).height() - $('#logo').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
 
     // Save map center so we can recenter after resize.
-    var map_center = this.map_view.center();
+    const map_center = this.map_view.center();
 
     if (view_setting('expanded-map')) {
-
-      $('.response_locations').width("100%").height(cont_h);
-
+      $('.response_locations').width('100%').height(cont_h);
     } else {
       // height of the h2 elements
-      var title_h = $('#content h2').height();
+      const title_h = $('#content h2').height();
 
       // height of the stats pane
-      var stats_h = $('.report_stats').height();
+      const stats_h = $('.report_stats').height();
 
       // left col is slightly narrower than right col
-      var left_w = (cont_w - spacing) * .9 / 2;
+      const left_w = (cont_w - spacing) * 0.9 / 2;
       $('.recent_responses, .response_locations').width(left_w);
-      var right_w = cont_w - spacing - left_w - 15;
+      const right_w = cont_w - spacing - left_w - 15;
       $('.report_main').width(right_w);
 
       // must control width of stat block li's
@@ -112,13 +111,14 @@
   };
 
   // Reloads the page via AJAX, passing the current report id
-  klass.prototype.reload_ajax = function(args) { var self = this;
+  klass.prototype.reload_ajax = function (args) {
+    const self = this;
 
     // We only set the 'auto' parameter on this request if NOT in full screen mode.
     // The auto param prevents the AJAX request from resetting the auto-logout timer.
     // The dashboard in full screen mode is meant to be a long-running page so doesn't make
     // sense to let the session expire.
-    var auto = view_setting("full-screen") ? undefined : 1;
+    const auto = view_setting('full-screen') ? undefined : 1;
 
     $.ajax({
       url: ELMO.app.url_builder.build('/'),
@@ -126,9 +126,9 @@
       data: {
         report_id: self.report_view.current_report_id,
         latest_response_id: self.list_view.latest_response_id(),
-        auto: auto
+        auto,
       },
-      success: function(data) {
+      success(data) {
         $('.recent_responses').replaceWith(data.recent_responses);
         $('.report_stats').replaceWith(data.report_stats);
         self.list_view.adjust_columns();
@@ -136,26 +136,27 @@
         self.report_view.refresh();
         self.adjust_pane_sizes();
 
-        self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
+        self.reload_timer = setTimeout(() => { self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
       },
-      error: function() {
+      error() {
         $('#content').html(I18n.t('layout.server_contact_error'));
-      }
+      },
     });
   };
 
   // Reloads the page via full refresh to avoid memory issues.
-  klass.prototype.reload_page = function() { var self = this;
-    var id;
-    window.location.href = ELMO.app.url_builder.build('')
-      + '?r=' + Math.floor((Math.random() * 1000000) + 1)
-      + ((id = self.report_view.current_report_id) ? '&report_id=' + id : '');
+  klass.prototype.reload_page = function () {
+    const self = this;
+    let id;
+    window.location.href = `${ELMO.app.url_builder.build('')
+    }?r=${Math.floor((Math.random() * 1000000) + 1)
+    }${(id = self.report_view.current_report_id) ? `&report_id=${id}` : ''}`;
   };
 
   // Enables/disables full screen mode. Uses stored setting if no param given.
   // Toggles setting if 'toggle' given.
-  klass.prototype.set_full_screen = function(value) {
-    var full = view_setting('full-screen', value);
+  klass.prototype.set_full_screen = function (value) {
+    const full = view_setting('full-screen', value);
 
     if (full) {
       $('#footer').hide();
@@ -167,20 +168,20 @@
       $('#footer').show();
       $('#main-nav').show();
       $('#userinfo').show();
-      $('#logo img').css('height', '54px'); //initial does weird stuff on first load with oversized logo
+      $('#logo img').css('height', '54px'); // initial does weird stuff on first load with oversized logo
       $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
     }
 
     // Set link text
-    $('a.full-screen span').text(I18n.t('dashboard.' + (full ? 'exit' : 'enter') + '_full_screen'));
+    $('a.full-screen span').text(I18n.t(`dashboard.${full ? 'exit' : 'enter'}_full_screen`));
   };
 
   // Enables/disables expanded map. Uses stored setting if no param given.
   // Toggles setting if 'toggle' given.
   // Always enables full screen if expanding map.
   // When collapsing map, disables full screen if it wasn't on when map was expanded.
-  klass.prototype.set_expanded_map = function(value) {
-    var expand = view_setting('expanded-map', value);
+  klass.prototype.set_expanded_map = function (value) {
+    const expand = view_setting('expanded-map', value);
 
     if (expand) {
       var was_full = view_setting('full-screen');
@@ -199,19 +200,16 @@
 
   function view_setting(setting_name, value) {
     // Fetch current.
-    var bool = JSON.parse(localStorage.getItem(setting_name));
+    let bool = JSON.parse(localStorage.getItem(setting_name));
 
     // Return unchanged if no value given.
-    if (typeof value == 'undefined')
-      return bool;
+    if (typeof value === 'undefined') return bool;
 
     // Toggle if requested.
-    else if (value == 'toggle')
-      bool = !bool;
+    else if (value == 'toggle') bool = !bool;
 
     // Else set directly.
-    else
-      bool = value;
+    else bool = value;
 
     // Store for future recall.
     localStorage.setItem(setting_name, bool);

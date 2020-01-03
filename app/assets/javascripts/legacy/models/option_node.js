@@ -1,10 +1,10 @@
 // ELMO.Models.OptionNode < ELMO.Models.NamedItem
 //
 // Client side model for OptionNode
-(function(ns, klass) {
-
+(function (ns, klass) {
   // constructor
-  ns.OptionNode = klass = function(attribs) { var self = this;
+  ns.OptionNode = klass = function (attribs) {
+    const self = this;
     ns.NamedItem.call(self, attribs);
 
     if (self.option) {
@@ -35,8 +35,8 @@
   klass.prototype.parent = ns.NamedItem.prototype;
 
   // update the latitude/longitude value
-  klass.prototype.update_coordinate = function (params) { var self = this;
+  klass.prototype.update_coordinate = function (params) {
+    const self = this;
     self[params.field] = params.value;
   };
-
-})(ELMO.Models);
+}(ELMO.Models));

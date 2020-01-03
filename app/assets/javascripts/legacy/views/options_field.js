@@ -1,10 +1,10 @@
 // ELMO.Views.OptionsField
 //
 // View model for the options area of the option sets form.
-(function(ns, klass) {
-
+(function (ns, klass) {
   // constructor
-  ns.OptionsField = klass = function(params) { var self = this;
+  ns.OptionsField = klass = function (params) {
+    const self = this;
     self.params = params;
     self.children = params.children;
 
@@ -22,13 +22,13 @@
       remove_link: self.params.remove_link,
       parent_change_allowed: self.parent_change_allowed,
       modal_titles: {
-        new: I18n.t("option_set.new_option"),
-        edit: I18n.t("option_set.edit_option")
-      }
+        new: I18n.t('option_set.new_option'),
+        edit: I18n.t('option_set.edit_option'),
+      },
     });
   };
 
-  klass.prototype.add = function() {
+  klass.prototype.add = function () {
     const self = this;
     self.list.new_item();
   };
@@ -36,6 +36,5 @@
   // Don't allow options that are not removable to change parents.
   klass.prototype.parent_change_allowed = function (item) {
     return item.removable;
-  }
-
-})(ELMO.Views);
+  };
+}(ELMO.Views));

@@ -1,14 +1,14 @@
 // ELMO.Views.DraggableList
 //
 // View model for a draggable, editable list of options/levels/whatever.
-(function(ns, klass) {
-
+(function (ns, klass) {
   // constructor
-  ns.DraggableList = klass = function(attribs) { var self = this;
+  ns.DraggableList = klass = function (attribs) {
+    const self = this;
     self.listeners = {};
 
     // copy attribs
-    for (var key in attribs) self[key] = attribs[key];
+    for (const key in attribs) self[key] = attribs[key];
 
     self.removed_items = [];
 
@@ -21,60 +21,61 @@
     self.render_items();
 
     // hookup setup edit/remove links (deferred)
-    self.wrapper.on('click', 'a.action-link-edit', function(){
+    self.wrapper.on('click', 'a.action-link-edit', function () {
       self.edit_item($(this).closest('div.inner').data('item'));
       return false;
     });
 
-    self.wrapper.on('click', 'a.action-link-remove', function(){
+    self.wrapper.on('click', 'a.action-link-remove', function () {
       self.remove_item($(this).closest('div.inner').data('item'));
       return false;
     });
 
     // hookup save and cancel buttons on modal
-    self.modal.find("button.btn-primary, button[data-action]").on("click", function() {
-      const action = $(this).data("action");
-      self.saveItem(action || "close");
+    self.modal.find('button.btn-primary, button[data-action]').on('click', function () {
+      const action = $(this).data('action');
+      self.saveItem(action || 'close');
       return false;
     });
-    self.modal.find("button.btn-secondary").on("click", function(event) {
+    self.modal.find('button.btn-secondary').on('click', (event) => {
       event.stopPropagation();
-      self.modal.modal("hide");
+      self.modal.modal('hide');
       self.cancel_edit();
     });
 
     // show/hide save button when translations change
-    $('body').on('keyup change', '.edit-named-item div.translation input, .edit-named-item div.coordinate input', function(){ self.toggle_save_button(); });
+    $('body').on('keyup change', '.edit-named-item div.translation input, .edit-named-item div.coordinate input', () => { self.toggle_save_button(); });
 
     // Catch modal form submission.
-    self.modal.on('keypress', function(event) {
+    self.modal.on('keypress', (event) => {
       if (event.keyCode == 13) {
         event.preventDefault(); // Prevent submission of the containing form.
-        const btn = self.modal.find(".btn-primary").last();
+        const btn = self.modal.find('.btn-primary').last();
         if (btn.is(':visible')) btn.trigger('click');
       }
-    })
+    });
 
     // Catch ESC key to prevent closing parent modal if exists.
-    self.modal.on('keydown', function(event) {
+    self.modal.on('keydown', (event) => {
       if (event.keyCode == 27) {
         event.stopPropagation();
-        self.modal.modal("hide");
+        self.modal.modal('hide');
       }
-    })
+    });
   };
 
-  klass.prototype.validate_modal = function () { var self = this;
-    var valid = true;
+  klass.prototype.validate_modal = function () {
+    const self = this;
+    let valid = true;
 
     // if all translation boxes in this modal are blank, then the item is invalid
-    valid &= _.some(self.modal.find('div.translation input'), function(item){
+    valid &= _.some(self.modal.find('div.translation input'), (item) => {
       return $(item).val().trim() != '';
     });
 
     if (self.allow_coordinates) {
-      var latitude = self.modal.find('div.coordinate input[data-field=latitude]').val().trim();
-      var longitude = self.modal.find('div.coordinate input[data-field=longitude]').val().trim();
+      const latitude = self.modal.find('div.coordinate input[data-field=latitude]').val().trim();
+      const longitude = self.modal.find('div.coordinate input[data-field=longitude]').val().trim();
 
       if (latitude !== '' || longitude !== '') {
         if (latitude === '' || longitude === '') {
@@ -106,37 +107,41 @@
     return valid;
   };
 
-  klass.prototype.toggle_save_button = function() { var self = this;
+  klass.prototype.toggle_save_button = function () {
+    const self = this;
     // if all translation boxes in this modal are blank, hide the 'save' button
-    var show = self.validate_modal() == true;
+    const show = self.validate_modal() == true;
 
-    if (self.modal_mode === "new") {
-      self.modal.find(".buttons-default").hide();
-      self.modal.find(".buttons-new").toggle(show);
+    if (self.modal_mode === 'new') {
+      self.modal.find('.buttons-default').hide();
+      self.modal.find('.buttons-new').toggle(show);
     } else {
-      self.modal.find(".buttons-new").hide();
-      self.modal.find(".buttons-default").toggle(show);
+      self.modal.find('.buttons-new').hide();
+      self.modal.find('.buttons-default').toggle(show);
     }
   };
 
   // turns nestability on and off
-  klass.prototype.allow_nesting = function(yn) { var self = this;
+  klass.prototype.allow_nesting = function (yn) {
+    const self = this;
     // maxLevels == 0 means no limit
-    if (self.enabled)
+    if (self.enabled) {
       self.ol.nestedSortable({
         handle: 'div',
         items: 'li',
         toleranceElement: '> div',
         placeholder: 'placeholder',
         forcePlaceholderSize: true,
-        maxLevels: yn ? 0 : 1
+        maxLevels: yn ? 0 : 1,
       });
+    }
   };
 
   // renders the html to the view
-  klass.prototype.render_items = function() { var self = this;
+  klass.prototype.render_items = function () {
+    const self = this;
     // render all items
-    self.ol = self.render_item({root: true, children: self.items});
+    self.ol = self.render_item({ root: true, children: self.items });
 
     // append to wrapper div
     self.wrapper.append(self.ol);
@@ -151,28 +156,28 @@
         forcePlaceholderSize: true,
 
         // notify model when sorting changes
-        change: function(){
+        change() {
           self.items.dirty = true;
           self.trigger('change');
         },
 
         // also need to notify if a change gets reverted due to max level. ideally we would be able to
         // wait to see if it gets reverted, but there doesn't seem to be a way.
-        revert: function(){
+        revert() {
           self.trigger('change');
           return false;
         },
 
         // Respect the parent_change_allowed callback.
-        isAllowed: function(placeholder, parent, li) {
+        isAllowed(placeholder, parent, li) {
           if (!self.parent_change_allowed) return true;
 
-          var item = li.find('div.inner').data('item');
-          var current_parent = li.parent().closest('li').find('div.inner').data('item') || null;
-          var new_parent = parent ? parent.find('div.inner').data('item') : null;
+          const item = li.find('div.inner').data('item');
+          const current_parent = li.parent().closest('li').find('div.inner').data('item') || null;
+          const new_parent = parent ? parent.find('div.inner').data('item') : null;
 
           return current_parent == new_parent || self.parent_change_allowed(item, current_parent, new_parent);
-        }
+        },
       });
     }
   };
@@ -180,24 +185,23 @@
   // renders an li tag containing the inner tag plus an ol tag if there are children
   // if item.root = true, returns just the ol
   // ol may be undefined if there are no children
-  klass.prototype.render_item = function(item) { var self = this;
+  klass.prototype.render_item = function (item) {
+    const self = this;
 
     // wrap the item in an object (unless it's root)
-    if (!item.root)
-      item = new self.item_class(item);
+    if (!item.root) item = new self.item_class(item);
 
-    var li = $('<li>');
+    const li = $('<li>');
 
     // render inner
-    if (!item.root)
-      li.append(self.render_inner(item));
+    if (!item.root) li.append(self.render_inner(item));
 
     // recurse and render children
-    var ol;
+    let ol;
     if (item.children) {
       ol = $('<ol>');
       if (item.children.length > 0) self.wrapper.show();
-      item.children.forEach(function(c){ ol.append(self.render_item(c)); });
+      item.children.forEach((c) => { ol.append(self.render_item(c)); });
     }
     li.append(ol);
 
@@ -205,49 +209,45 @@
   };
 
   // builds the inner div tag for an item
-  klass.prototype.render_inner = function(item) { var self = this;
+  klass.prototype.render_inner = function (item) {
+    const self = this;
 
     // make inner tag
-    var inner = $('<div>').attr('class', 'inner');
+    const inner = $('<div>').attr('class', 'inner');
 
     // wrap the item in an object if not already wrapped
-    if (!item.translation)
-      item = new self.item_class(item);
+    if (!item.translation) item = new self.item_class(item);
 
     // add sort icon if not in show mode
-    if (self.enabled)
-      inner.append($('<i>').attr('class', 'fa fa-sort'));
+    if (self.enabled) inner.append($('<i>').attr('class', 'fa fa-sort'));
 
     // add name (add nbsp to make sure div doesn't collapse if name is blank)
     const text = item.translation();
-    if (text === "") {
-      inner.append("&nbsp;");
+    if (text === '') {
+      inner.append('&nbsp;');
     } else {
-      const el = $("<span />").text(text);
+      const el = $('<span />').text(text);
       inner.append(el);
     }
 
     if (item.value || item.value === 0) {
-      const value = $("<span>").addClass("value").text(" (" + item.value + ")");
+      const value = $('<span>').addClass('value').text(` (${item.value})`);
       inner.append(value);
     }
 
     // add edit/remove unless in show mode
     if (!self.options_levels_read_only) {
-      var links = $('<div>').attr('class', 'links')
+      const links = $('<div>').attr('class', 'links');
 
       // only show the edit link if the item is editable
-      if (item.editable)
-        links.append(self.edit_link);
+      if (item.editable) links.append(self.edit_link);
 
       // don't show the removable link if the item isn't removable
       // or if the global removable permission is false
-      if (self.can_remove && item.removable)
-        links.append(self.remove_link);
+      if (self.can_remove && item.removable) links.append(self.remove_link);
 
       // add a spacer if empty, else it won't render right
-      if (links.is(':empty'))
-        links.append('&nbsp;')
+      if (links.is(':empty')) links.append('&nbsp;');
 
       links.appendTo(inner);
     }
@@ -264,13 +264,13 @@
 
   // adds an item to the view
   // item_attribs - the item attributes
-  klass.prototype.add_item = function(item_attribs) { var self = this;
+  klass.prototype.add_item = function (item_attribs) {
+    const self = this;
     // wrap in object
-    var item = new self.item_class(item_attribs);
+    const item = new self.item_class(item_attribs);
 
     // check for duplicates
-    if (self.has_duplicate_of(item))
-      return false;
+    if (self.has_duplicate_of(item)) return false;
 
     // wrap in li and add to view
     $('<li>').html(self.render_inner(item)).appendTo(self.ol);
@@ -282,20 +282,23 @@
   };
 
   // shows the 'new' modal
-  klass.prototype.new_item = function() { var self = this;
-    self.show_modal(new self.item_class(), {mode: 'new'});
+  klass.prototype.new_item = function () {
+    const self = this;
+    self.show_modal(new self.item_class(), { mode: 'new' });
   };
 
   // shows the 'edit' modal
   // item - the model object to be edited
-  klass.prototype.edit_item = function(item) { var self = this;
-    self.show_modal(item, {mode: 'edit'});
+  klass.prototype.edit_item = function (item) {
+    const self = this;
+    self.show_modal(item, { mode: 'edit' });
   };
 
   // shows the new/edit modal
   // item - the model object to be shown
   // options[mode] - whether to show as new or edit
-  klass.prototype.show_modal = function(item, options) { var self = this;
+  klass.prototype.show_modal = function (item, options) {
+    const self = this;
     // save the as an instance var as we will need to access it
     // when the modal gets closed
     self.active_item = item;
@@ -307,11 +310,11 @@
     self.modal.find('.modal-title').text(self.modal_titles[options.mode]);
 
     // clear the text boxes
-    self.modal.find('input[type=text], input[type=number]').val("");
+    self.modal.find('input[type=text], input[type=number]').val('');
 
     // then populate text boxes
-    self.active_item.locales().forEach(function(l){
-      self.modal.find('.translation input[id$=name_' + l + ']').val(self.active_item.translation(l));
+    self.active_item.locales().forEach((l) => {
+      self.modal.find(`.translation input[id$=name_${l}]`).val(self.active_item.translation(l));
     });
 
     // populate coordinates
@@ -326,12 +329,12 @@
     }
 
     // Populate value
-    self.modal.find("#option_value").val(self.active_item.value);
+    self.modal.find('#option_value').val(self.active_item.value);
 
     // show the modal
     self.modal.modal('show');
 
-    self.modal.on('shown.bs.modal', function() {
+    self.modal.on('shown.bs.modal', () => {
       self.modal.find('input[type=text]')[0].focus();
     });
 
@@ -340,12 +343,13 @@
 
   // removes an item from the view
   // item - the model object to be removed
-  klass.prototype.remove_item = function(item) { var self = this;
+  klass.prototype.remove_item = function (item) {
+    const self = this;
     // get li element
-    var li = item.div.closest('li');
+    const li = item.div.closest('li');
 
     // notify models of all children
-    li.find('div.inner').each(function(){ self.removed_items.push($(this).data('item')); });
+    li.find('div.inner').each(function () { self.removed_items.push($(this).data('item')); });
 
     // remove li from view
     li.remove();
@@ -355,7 +359,7 @@
   };
 
   // saves entered translations to data model
-  klass.prototype.saveItem = function(action) {
+  klass.prototype.saveItem = function (action) {
     const self = this;
 
     // If the item is blank, do nothing. We are encountering an issue (part of #8977) that seems
@@ -365,26 +369,24 @@
     // because the save button won't be visible.
     if (!self.validate_modal()) return;
 
-    self.modal.find('.translation input').each(function(){
-      self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
+    self.modal.find('.translation input').each(function () {
+      self.active_item.update_translation({ field: 'name', locale: $(this).data('locale'), value: $(this).val() });
     });
 
-    self.modal.find('.coordinate input').each(function(){
-      self.active_item.update_coordinate({field: $(this).data('field'), value: $(this).val()});
+    self.modal.find('.coordinate input').each(function () {
+      self.active_item.update_coordinate({ field: $(this).data('field'), value: $(this).val() });
     });
 
-    const value = self.modal.find("#option_value");
-    self.active_item[$(value).data("field")] = $(value).val();
+    const value = self.modal.find('#option_value');
+    self.active_item[$(value).data('field')] = $(value).val();
 
     self.wrapper.show();
 
     // render the item in the view
-    var old_div = self.active_item.div; // may be undefined
-    var new_div = self.render_inner(self.active_item);
-    if (self.modal_mode == 'new')
-      self.ol.append($('<li>').html(new_div));
-    else
-      old_div.replaceWith(new_div);
+    const old_div = self.active_item.div; // may be undefined
+    const new_div = self.render_inner(self.active_item);
+    if (self.modal_mode == 'new') self.ol.append($('<li>').html(new_div));
+    else old_div.replaceWith(new_div);
 
     self.dirty = true;
     self.trigger('change');
@@ -392,36 +394,39 @@
     // done with this item
     self.active_item = null;
 
-    if (action === "another") {
+    if (action === 'another') {
       self.new_item();
     } else {
-      self.modal.modal("hide");
+      self.modal.modal('hide');
     }
   };
 
   // cancels the new/edit operation
-  klass.prototype.cancel_edit = function() { var self = this;
+  klass.prototype.cancel_edit = function () {
+    const self = this;
     // done with this item
     self.active_item = null;
   };
 
   // returns number of items
-  klass.prototype.count = function() { var self = this;
+  klass.prototype.count = function () {
+    const self = this;
     return self.ol.find('li').length;
   };
 
   // registers event listeners
-  klass.prototype.on = function(event_name, cb) { var self = this;
-    if (!self.listeners[event_name])
-      self.listeners[event_name] = [];
+  klass.prototype.on = function (event_name, cb) {
+    const self = this;
+    if (!self.listeners[event_name]) self.listeners[event_name] = [];
 
     self.listeners[event_name].push(cb);
   };
 
   // notifies listeners for the given event
-  klass.prototype.trigger = function(event_name) { var self = this;
-    var args = Array.prototype.slice.call(arguments).slice(1);
-    (self.listeners[event_name] || []).forEach(function(f){
+  klass.prototype.trigger = function (event_name) {
+    const self = this;
+    const args = Array.prototype.slice.call(arguments).slice(1);
+    (self.listeners[event_name] || []).forEach((f) => {
       f.apply(self, args);
     });
   };
@@ -440,45 +445,50 @@
   //     ]}
   //   ]}
   // ]
-  klass.prototype.item_tree = function() { var self = this;
+  klass.prototype.item_tree = function () {
+    const self = this;
     return self.ol_to_tree(self.ol);
   };
 
-  klass.prototype.ol_to_tree = function(ol) { var self = this;
-    return ol.find('> li').map(function(){
-
+  klass.prototype.ol_to_tree = function (ol) {
+    const self = this;
+    return ol.find('> li').map(function () {
       // get sub ol
-      var sub_ol = $(this).find('> ol').first();
+      const sub_ol = $(this).find('> ol').first();
 
       // build the hash and recurse
       return {
         item: $(this).find('> div').data('item'),
-        children: sub_ol.length > 0 ? self.ol_to_tree(sub_ol) : null
+        children: sub_ol.length > 0 ? self.ol_to_tree(sub_ol) : null,
       };
     }).get();
   };
 
   // gets the number of top-level items in the list presently
-  klass.prototype.size = function() { var self = this;
+  klass.prototype.size = function () {
+    const self = this;
     return self.ol.find('> li').length;
   };
 
   // gets the maximum depth of any item in the list
-  klass.prototype.max_depth = function() { var self = this;
-    var max = 0;
+  klass.prototype.max_depth = function () {
+    const self = this;
+    let max = 0;
     while (self.ol.find('li '.repeat(max + 1)).length > 0) max++;
     return max;
   };
 
   // checks to see if there is an item matching the given one
-  klass.prototype.has_duplicate_of = function(item) { var self = this;
+  klass.prototype.has_duplicate_of = function (item) {
+    const self = this;
     return self.has_with_name(item.translation());
   };
 
   // checks if there is an item with the given name
-  klass.prototype.has_with_name = function(name) { var self = this;
-    var found = false;
-    self.ol.find('div.inner').each(function(){
+  klass.prototype.has_with_name = function (name) {
+    const self = this;
+    let found = false;
+    self.ol.find('div.inner').each(function () {
       if ($(this).data('item').translation() == name) {
         found = true;
         return false;
@@ -486,5 +496,4 @@
     });
     return found;
   };
-
-})(ELMO.Views);
+}(ELMO.Views));

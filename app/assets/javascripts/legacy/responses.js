@@ -1,6 +1,6 @@
 // setup handler for 'create response'
-$(document).ready(function(){
-  $(document).on("click", "a.create_response", function(){
+$(document).ready(() => {
+  $(document).on('click', 'a.create_response', () => {
     $('#form_chooser').show();
     return false;
   });
