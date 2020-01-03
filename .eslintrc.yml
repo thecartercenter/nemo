@@ -6,6 +6,7 @@ env:
   jest: true
 globals:
   $: true
+  _: true
   I18n: true
   ELMO: true
   Backbone: true

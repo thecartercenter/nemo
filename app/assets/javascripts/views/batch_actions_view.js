@@ -6,7 +6,7 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-// // Models the batch actions done on index pages
+// Models the batch actions done on index pages
 const Cls = (ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#index_table';
@@ -107,8 +107,8 @@ const Cls = (ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.V
   }
 
   // tests if all boxes are checked
-  all_checked(cbs) {
-    if (cbs == null) { cbs = this.get_batch_checkboxes(); }
+  all_checked() {
+    const cbs = this.get_batch_checkboxes();
     return _.every(cbs, (cb) => cb.checked);
   }
 

@@ -4,7 +4,7 @@
  * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-// // Models an index table view as shown on most index pages.
+// Models an index table view as shown on most index pages.
 const Cls = (ELMO.Views.IndexTableView = class IndexTableView extends ELMO.Views.ApplicationView {
   static initClass() {
     this.prototype.el = '#index_table';
