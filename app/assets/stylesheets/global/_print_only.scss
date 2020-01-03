@@ -4,16 +4,16 @@
   *,
   ::after,
   ::before {
-    color: rgb(0, 0, 0) !important;
-    text-shadow: none !important;
     background: 0 0 !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
+    color: rgb(0, 0, 0) !important;
+    text-shadow: none !important;
   }
 
   // Previously provided by normalize.css but removed in BS4.
   a[href]::after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
   }
 
   body,
@@ -25,6 +25,6 @@
 
   @page {
     /* print margins */
-    margin: 15mm 15mm 15mm 15mm;
+    margin: 15mm;
   }
 }

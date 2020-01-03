@@ -51,8 +51,8 @@
   }
 
   .rule {
-    display: flex;
     border-top: $light-border;
+    display: flex;
     margin-#{$left}: 20px;
 
     .rule-main {
@@ -82,8 +82,8 @@
 
     .form-control[name$=\[op\]] {
       flex: 1;
-      width: 75px;
       margin: 0 10px;
+      width: 75px;
     }
 
     .condition-right-side {

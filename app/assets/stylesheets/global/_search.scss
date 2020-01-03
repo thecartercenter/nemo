@@ -5,21 +5,22 @@ form.search-form {
   margin-bottom: 10px;
 
   input.search-str {
+    padding: 3px;
     // Match the width of the filter buttons on most browsers.
     width: 481px;
     margin-#{$right}: 5px;
-    padding: 3px;
   }
 
-  .form-control, .btn {
+  .form-control,
+  .btn {
     height: 28px;
   }
 
   #search_examples {
-    margin: 4px 8px 10px 0;
     color: #666;
     display: inline-block;
     font-size: 8pt;
+    margin: 4px 8px 10px 0;
   }
 }
 

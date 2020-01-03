@@ -4,6 +4,8 @@
     font-style: italic;
   }
 
+  @include hint-icon; // Used at the bottom of form for the incomplete answer checkbox.
+
   .answer-group > .hint {
     @include group-question-hint;
     margin-bottom: 20px;
@@ -13,6 +15,4 @@
     @include group-question-hint;
     margin-bottom: 5px;
   }
-
-  @include hint-icon; // Used at the bottom of form for the incomplete answer checkbox.
 }

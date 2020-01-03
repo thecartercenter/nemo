@@ -1,8 +1,10 @@
 // Expandable settings fields for forms
-.setting-fields, div.less-settings {
+.setting-fields,
+div.less-settings {
   display: none;
 }
 
-div.more-settings, div.less-settings {
+div.more-settings,
+div.less-settings {
   text-align: $right;
 }

@@ -1,5 +1,4 @@
 .draggable-list-wrapper {
-
   + .action {
     color: $accent-color;
 
@@ -29,31 +28,34 @@
       }
 
       div.inner {
+        background: $super-light-gray;
+        border: 1px solid #ccc;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        cursor: default;
 
         margin: 5px 0;
         min-height: 15px;
-        border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
         padding: 5px;
-        border: 1px solid #CCC;
-        background: $super-light-gray;
-        cursor: default;
 
         /* icon */
-        i.fa-times, i.fa-pencil, i.fa-trash-o {
+        i.fa-times,
+        i.fa-pencil,
+        i.fa-trash-o {
           color: $theme-main;
         }
+
         i.fa-sort {
           margin-right: 5px;
         }
 
         /* locales */
         em {
-          font-style: normal;
-          font-size: 10px;
-          margin-left: 5px;
           color: $success-green;
+          font-size: 10px;
+          font-style: normal;
+          margin-left: 5px;
         }
 
         /* edit/remove links */
@@ -74,8 +76,8 @@
 
       // Error message
       div {
-        margin: 5px 0 0 5px;
         color: $error-red;
+        margin: 5px 0 0 5px;
       }
     }
   }

@@ -19,18 +19,19 @@ form.form_form {
     margin-top: 10px;
   }
 
-  .sms-fields, .form_recipients {
+  .sms-fields,
+  .form_recipients {
     display: none; // Initially hidden
   }
 
   ul.admin-stats {
     list-style: none;
-    margin: 5px 0px 0px 0px;
-    padding: 0px;
+    margin: 5px 0 0;
+    padding: 0;
 
     li {
       display: inline-block;
-      margin: 0px 5px 0px 0px;
+      margin: 0 5px 0 0;
     }
   }
 }

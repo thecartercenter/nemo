@@ -2,7 +2,9 @@ form.question_form {
   margin-bottom: 50px;
 }
 
-.questions_index, .forms_choose_questions, .forms_edit {
+.questions_index,
+.forms_choose_questions,
+.forms_edit {
   #index_table {
     .code_col {
       min-width: 100px;
@@ -24,7 +26,8 @@ form.question_form {
     direction: ltr;
   }
 
-  textarea[id*=_ar], textarea[id*=_he] {
+  textarea[id*=_ar],
+  textarea[id*=_he] {
     direction: rtl;
   }
 
@@ -42,27 +45,31 @@ form.question_form {
 
   .minmax {
     .form-field .control .widget input.text[type=text] { // Needed for extra specificity
-      width: 75px;
       display: inline-block;
+      width: 75px;
     }
 
     div.control label {
-      vertical-align: middle
+      vertical-align: middle;
     }
   }
 
   // Initially hidden fields
-  .question_option_set_id, .question_auto_increment, .question_casted_minimum,
-    .question_casted_maximum, .question_key {
+  .question_option_set_id,
+  .question_auto_increment,
+  .question_casted_minimum,
+  .question_casted_maximum,
+  .question_key {
     display: none;
   }
 }
 
 form.questioning_form {
   .form-field#condition {
-    select, input {
-      width: 317px;
+    select,
+    input {
       display: inline;
+      width: 317px;
     }
 
     div.field {
@@ -70,9 +77,9 @@ form.questioning_form {
 
       label {
         display: inline-block;
-        width: 100px;
-        vertical-align: top;
         padding: 0;
+        vertical-align: top;
+        width: 100px;
       }
 
       div.cascading-selects {
@@ -109,10 +116,9 @@ form.questioning_form {
 
 /* Special style for option set box to accommodate link */
 div.form-field.question_option_set_id {
-
   div.control div.widget select {
-    width: 260px;
     display: inline-block;
+    width: 260px;
   }
 }
 

@@ -1,7 +1,13 @@
 nav.navbar-light {
   @include media-breakpoint-up(sm) {
-    padding-top: 0;
     padding-bottom: 0;
+    padding-top: 0;
+  }
+
+  @include if-rtl {
+    .navbar-header {
+      float: right;
+    }
   }
 
   /* For standard label in admin mode */
@@ -10,12 +16,6 @@ nav.navbar-light {
     font-weight: bold;
     margin-right: 1.5rem;
     text-transform: uppercase;
-  }
-
-  @include if-rtl {
-    .navbar-header {
-      float: right;
-    }
   }
 
   // Overriding bootstrap navbar prefs causing RTL bug
@@ -28,15 +28,17 @@ nav.navbar-light {
 
     @include if-rtl {
       display: flex;
-      padding-right: 0px;
       height: 49px; //absolute needed with flex
+      padding-right: 0;
     }
 
     li {
-      padding: 14px 6px;
       margin-bottom: 0;
+      padding: 14px 6px;
 
-      &:hover, &:hover, &:focus {
+      &:hover,
+      &:hover,
+      &:focus {
         color: $accent-color;
       }
 
@@ -46,17 +48,17 @@ nav.navbar-light {
       }
 
       a {
-        text-decoration: none;
-        font-family: "Raleway";
-        font-weight: bold;
-        font-size: 11pt;
-        display: inline-block;
-        vertical-align: middle;
-        padding: 0;
         color: $nav-text-color;
+        display: inline-block;
+        font-family: 'Raleway';
+        font-size: 11pt;
+        font-weight: bold;
 
         // Bootstrap sets this to 11px which causes spacing issues.
         line-height: inherit;
+        padding: 0;
+        text-decoration: none;
+        vertical-align: middle;
 
         @include if-rtl {
           display: flex;
@@ -70,23 +72,24 @@ nav.navbar-light {
         &.dropdown-toggle {
           // Add the same padding as regular nav-link items.
           @include media-breakpoint-up(sm) {
-            padding-right: 0.5rem;
             padding-left: 0.5rem;
+            padding-right: 0.5rem;
           }
         }
 
-        &:hover, &:focus {
-          text-decoration: none;
+        &:hover,
+        &:focus {
           color: $accent-color !important;
+          text-decoration: none;
         }
       }
 
       i {
-        vertical-align: top;
-        margin-right: 5px;
-        display: inline-block;
         color: $nav-icon-color;
+        display: inline-block;
         font-size: 13pt;
+        margin-right: 5px;
+        vertical-align: top;
 
         @include if-rtl {
           vertical-align: middle;
@@ -105,31 +108,34 @@ nav.navbar-light {
     .line {
       border-right: 1px solid $nav-icon-color;
       display: inline-block;
-      width: 2px;
       height: 20px;
+      width: 2px;
     }
 
     ul.dropdown-menu {
-      top: auto;
       left: auto;
       margin-top: 5px;
       text-align: $left;
+      top: auto;
 
       li {
-        font-weight: normal;
         font-family: $font-family-sans-serif;
+        font-weight: normal;
         padding: 4px 9px 6px 15px;
 
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background: none;
         }
+
         a {
-          font-weight: normal;
+          display: block;
           font-family: $font-family-sans-serif;
           font-size: 10pt;
-          display: block;
+          font-weight: normal;
 
-          &:hover, &:focus {
+          &:hover,
+          &:focus {
             background: none;
             color: $accent-color;
           }

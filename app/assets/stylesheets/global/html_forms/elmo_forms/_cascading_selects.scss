@@ -7,26 +7,28 @@ div.cascading-selects {
     }
   }
 
-  label, .option-level {
+  label,
+  .option-level {
+    color: #888;
     display: block !important;
     font-size: 8pt;
     margin-bottom: 3px;
-    color: #888888;
     padding: 0;
   }
 }
 
 .read-only div.cascading-selects {
-  label, .option-level {
-    margin-bottom: 0px;
+  label,
+  .option-level {
+    margin-bottom: 0;
   }
 
   .option-name {
     margin-bottom: 5px;
 
     i { // For blank values
-      font-style: normal;
       color: $lighter-gray;
+      font-style: normal;
     }
   }
 

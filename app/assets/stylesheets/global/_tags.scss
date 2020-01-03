@@ -14,20 +14,20 @@
 // Be careful when editing this mixin as it is included with .token-input-token-elmo
 // which is quite sensitive.
 @mixin tag {
-  overflow: hidden;
-  height: auto !important;
-  padding: 1px 3px;
-  border: 1px solid $pill-border-color;
   background-color: $pill-background-color;
+  border: 1px solid $pill-border-color;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
   color: $pill-text-color;
   cursor: default;
   font-size: 12px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  white-space: nowrap;
+  height: auto !important;
+  overflow: hidden;
+  padding: 1px 3px;
   text-align: center;
   vertical-align: middle;
+  white-space: nowrap;
 
   a {
     color: $pill-text-color;
@@ -49,23 +49,23 @@
 }
 
 .badge-custom {
+  background-color: $pill-background-color;
+  border: 1px solid $pill-border-color;
+  color: $pill-text-color;
   font-size: 100%; // Display full-size instead of shrinking to tiny 75%.
   font-weight: normal;
   margin-left: 2px;
-  color: $pill-text-color;
-  background-color: $pill-background-color;
-  border: 1px solid $pill-border-color;
 
   &.clickable:hover {
-    color: $pill-text-color;
     background-color: $pill-background-hover-color;
+    color: $pill-text-color;
     cursor: pointer;
   }
 }
 
 .all-tags .badge-custom {
   margin-bottom: 6px;
-  margin-#{left}: 0;
   margin-top: 6px;
+  margin-#{left}: 0;
   margin-#{$right}: 6px;
 }

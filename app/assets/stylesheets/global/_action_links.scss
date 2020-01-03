@@ -1,11 +1,12 @@
 a.action-link {
+  display: inline-block;
+
+  text-decoration: none;
+
   i.fa {
     font-size: 14px;
     margin-#{$right}: 3px;
   }
-
-  text-decoration: none;
-  display: inline-block;
 }
 
 table a.action-link {

@@ -2,7 +2,7 @@
 
 // Default $dir if not valid
 @if $dir != ltr and $dir != rtl {
-    $dir: ltr;
+  $dir: ltr;
 }
 
 @function if-ltr($if, $else: null) {
@@ -33,16 +33,16 @@ $right: if-ltr(right, left);
 
 @function corner-values($values) {
   @if $dir == rtl and length($values) > 1 {
-	// Reorder right and left positions in list
-	@if length($values) == 2 {
-		@return nth($values, 2) nth($values, 1);
-	}
-	@else if length($values) == 3 {
-		@return nth($values, 2) nth($values, 1) nth($values, 2) nth($values, 3);
-	}
-	@else {
-		@return nth($values, 2) nth($values, 1) nth($values, 4) nth($values, 3);
-	}
+    // Reorder right and left positions in list
+    @if length($values) == 2 {
+      @return nth($values, 2) nth($values, 1);
+    }
+    @else if length($values) == 3 {
+      @return nth($values, 2) nth($values, 1) nth($values, 2) nth($values, 3);
+    }
+    @else {
+      @return nth($values, 2) nth($values, 1) nth($values, 4) nth($values, 3);
+    }
   }
   @else {
     @return $values;

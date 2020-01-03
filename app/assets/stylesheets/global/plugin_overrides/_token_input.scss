@@ -1,29 +1,29 @@
 /* elmo specific styles for the token input plugin */
 ul.token-input-list-elmo {
-  overflow: hidden;
-  height: 34px;
-  width: 400px;
-  border: 1px solid #CCC;
-  cursor: text;
-  font-size: 12px;
-  z-index: 999;
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  clear: left;
-  display: inline-block;
+  border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  clear: left;
+  cursor: text;
+  display: inline-block;
+  font-size: 12px;
+  height: 34px;
+  list-style-type: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
   vertical-align: middle;
+  width: 400px;
+  z-index: 999;
 }
 
 .control .widget ul.token-input-list-elmo li.token-input-input-token-elmo input[type=text] {
-  border: 0;
-  width: 100px;
-  height: 27px;
-  padding: 3px;
-  margin: 2px 0;
   -webkit-appearance: caret;
+  border: 0;
+  height: 27px;
+  margin: 2px 0;
+  padding: 3px;
+  width: 100px;
 }
 
 .token-input-token-elmo {
@@ -42,23 +42,23 @@ li.token-input-selected-token-elmo {
 }
 
 div.token-input-dropdown-elmo {
-  position: absolute;
-  width: 400px;
   background-color: $super-light-gray;
-  overflow: hidden;
+  border-bottom: 1px solid #ccc;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
   cursor: default;
   font-size: 13px;
+  overflow: hidden;
+  position: absolute;
+  width: 400px;
   z-index: 1;
 }
 
 div.token-input-dropdown-elmo p {
+  color: #777;
+  font-weight: bold;
   margin: 0;
   padding: 5px;
-  font-weight: bold;
-  color: #777;
 }
 
 div.token-input-dropdown-elmo ul {
@@ -68,9 +68,9 @@ div.token-input-dropdown-elmo ul {
 
 div.token-input-dropdown-elmo ul li {
   background-color: $super-light-gray;
-  padding: 3px;
-  margin: 0;
   list-style-type: none;
+  margin: 0;
+  padding: 3px;
 }
 
 div.token-input-dropdown-elmo ul li.token-input-dropdown-item-elmo {
@@ -82,13 +82,13 @@ div.token-input-dropdown-elmo ul li.token-input-dropdown-item2-elmo {
 }
 
 div.token-input-dropdown-elmo ul li em {
-  font-weight: bold;
   font-style: normal;
+  font-weight: bold;
 }
 
 div.token-input-dropdown-elmo ul li div.details {
-  font-size: 11px;
   color: #999;
+  font-size: 11px;
 }
 
 div.token-input-dropdown-elmo ul li .details.create_new {

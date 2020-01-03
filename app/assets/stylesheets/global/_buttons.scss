@@ -1,7 +1,11 @@
 .btn-primary {
   color: $text-over-accent-color;
 
-  &:hover, &:focus, &:active, &:visited, &:disabled {
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited,
+  &:disabled {
     color: $text-over-accent-color;
   }
 }
