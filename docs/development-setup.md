@@ -69,6 +69,14 @@ The latter should be run before opening a pull request.
 
 As part of an effort to clean up old code, you should try to resolve any linter errors in files you touch, unless there are an overwhelming number of them. At bare minimum, the _lines_ you touch should not have any lint.
 
+#### Auto-fixing
+
+Many lints can be automatically fixed. The following commands can help, depending on what type of file you're linting:
+
+- `rubocop --auto-correct file.rb`
+- `yarn run lint:js --fix file.js`
+- `yarn run lint:scss --fix file.scss`
+
 #### Tools
 
 Most code editors have plugins for linting. They will identify and let you click directly into problematic lines. You are encouraged to try one out!
