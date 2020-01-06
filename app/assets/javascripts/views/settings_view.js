@@ -1,14 +1,13 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = 'form.setting_form';
+ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView {
+  get el() { return 'form.setting_form'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'click #external_sql .control a': 'select_external_sql',
       'click .adapter-settings a.show-credential-fields': 'show_change_credential_fields',
       'click .using-incoming-sms-token': 'show_using_incoming_sms_token_modal',
@@ -73,4 +72,4 @@
     const inputs = this.$(event.target).closest('.adapter-settings').find('input[type=text]');
     return this.$(inputs).val('');
   }
-}).initClass();
+};
