@@ -9,9 +9,9 @@ ELMO.Views.ResponseConditionGroupChecker = class ResponseConditionGroupChecker e
     this.conditionGroup = options.group;
     return this.checkers = this.conditionGroup.members.map((m) => {
       if (m.type === 'ConditionGroup') {
-        return new ELMO.Views.ResponseConditionGroupChecker({ el: this.el, refresh: options.refresh, group: m });
+        return new ELMO.Views.ResponseConditionGroupChecker({ el: this.$el, refresh: options.refresh, group: m });
       }
-      return new ELMO.Views.ResponseConditionChecker({ el: this.el, refresh: options.refresh, condition: m });
+      return new ELMO.Views.ResponseConditionChecker({ el: this.$el, refresh: options.refresh, condition: m });
     });
   }
 

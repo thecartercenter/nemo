@@ -25,7 +25,7 @@ ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.Ap
   }
 
   set_body(html) {
-    return $(this.el).html(html);
+    return this.$el.html(html);
   }
 
   set_mode(mode) {
@@ -33,7 +33,7 @@ ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.Ap
   }
 
   show() {
-    return $(this.el).modal('show');
+    return this.$el.modal('show');
   }
 
   create_group(e) {

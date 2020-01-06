@@ -12,7 +12,7 @@ ELMO.Views.ResponseConditionManager = class ResponseConditionManager extends ELM
     this.rootConditionGroup = this.item.conditionGroup;
     this.result = true;
     this.rootChecker = new ELMO.Views.ResponseConditionGroupChecker({
-      el: this.el,
+      el: this.$el,
       refresh: this.refresh.bind(this),
       group: this.rootConditionGroup,
     });

@@ -44,6 +44,6 @@ ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views.ApplicationV
     }
 
     // Submit form
-    return this.el.submit();
+    return this.$el.submit();
   }
 };

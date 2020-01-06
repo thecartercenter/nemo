@@ -39,7 +39,7 @@ ELMO.Views.PrintFormView = class PrintFormView extends ELMO.Views.ApplicationVie
       }, // Without this, we get 404 due to route constraints.
       data: { print: 1 },
       success: (data) => {
-        $('<div>').addClass('print-content').html(data).appendTo(this.el);
+        $('<div>').addClass('print-content').html(data).appendTo(this.$el);
         ELMO.app.loading(false);
         return this.do_print();
       },
