@@ -1,7 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS205: Consider reworking code to avoid use of IIFEs
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
@@ -49,14 +48,12 @@ ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.Applicat
   }
 
   fileUploaded(responseData) {
-    return (() => {
-      const result = [];
-      for (const k in responseData) {
-        const v = responseData[k];
-        result.push(this.$(`input:hidden[name*=${k}]`).val(v));
-      }
-      return result;
-    })();
+    const result = [];
+    for (const k in responseData) {
+      const v = responseData[k];
+      result.push(this.$(`input:hidden[name*=${k}]`).val(v));
+    }
+    return result;
   }
 
   uploadErrored(file, responseData) {

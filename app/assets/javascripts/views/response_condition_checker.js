@@ -1,7 +1,6 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS205: Consider reworking code to avoid use of IIFEs
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Evaluates a single condition in the responses view.
@@ -62,19 +61,17 @@ ELMO.Views.ResponseConditionChecker = class ResponseConditionChecker extends ELM
       if (op === 'neq') { op = 'ninc'; }
     }
 
-    return this.result = (() => {
-      switch (op) {
-        case 'eq': return this.testEquality(actual, expected);
-        case 'lt': return actual < expected;
-        case 'gt': return actual > expected;
-        case 'leq': return actual <= expected;
-        case 'geq': return actual >= expected;
-        case 'neq': return this.testInequality(actual, expected);
-        case 'inc': return actual.indexOf(expected) !== -1;
-        case 'ninc': return actual.indexOf(expected) === -1;
-        default: return false;
-      }
-    })();
+    switch (op) {
+      case 'eq': this.result = this.testEquality(actual, expected); break;
+      case 'lt': this.result = actual < expected; break;
+      case 'gt': this.result = actual > expected; break;
+      case 'leq': this.result = actual <= expected; break;
+      case 'geq': this.result = actual >= expected; break;
+      case 'neq': this.result = this.testInequality(actual, expected); break;
+      case 'inc': this.result = actual.indexOf(expected) !== -1; break;
+      case 'ninc': this.result = actual.indexOf(expected) === -1; break;
+      default: this.result = false;
+    }
   }
 
   // We walk up the node tree until a descendant node contains the given qing ID.

@@ -2,7 +2,6 @@
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
- * DS205: Consider reworking code to avoid use of IIFEs
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Controls add/edit/delete operations for form items list.
@@ -109,14 +108,12 @@ ELMO.Views.FormItemsView = class FormItemsView extends ELMO.Views.ApplicationVie
 
   // Checks all groups and hides/shows delete icons when appropriate.
   update_group_action_icons() {
-    return (() => {
-      const result = [];
-      for (const group of Array.from(this.$('.form-item-group'))) {
-        const link = $(group).find('> .inner .action-link.action-link-destroy');
-        result.push(link[$(group).find('.form-item').length > 0 ? 'hide' : 'show']());
-      }
-      return result;
-    })();
+    const result = [];
+    for (const group of Array.from(this.$('.form-item-group'))) {
+      const link = $(group).find('> .inner .action-link.action-link-destroy');
+      result.push(link[$(group).find('.form-item').length > 0 ? 'hide' : 'show']());
+    }
+    return result;
   }
 
   show_saving_message(show) {
