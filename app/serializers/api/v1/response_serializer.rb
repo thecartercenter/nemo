@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V1::ResponseSerializer < ActiveModel::Serializer
   attributes :id, :submitter, :created_at, :updated_at
   format_keys :underscore

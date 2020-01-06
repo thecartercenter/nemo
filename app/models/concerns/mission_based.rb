@@ -37,7 +37,7 @@ module MissionBased
     def unique_in_mission?(attrib_name)
       rel = self.class.for_mission(mission).where(attrib_name => send(attrib_name))
       rel = rel.where("id != ?", id) unless new_record?
-      rel.count == 0
+      rel.count.zero?
     end
   end
 end

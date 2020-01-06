@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Makes decorators for various base model types.
 module Odk
   class DecoratorFactory

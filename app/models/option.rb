@@ -34,7 +34,7 @@ class Option < ApplicationRecord
   include MissionBased
 
   MAX_NAME_LENGTH = 255
-  LAT_LNG_REGEXP = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
+  LAT_LNG_REGEXP = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/.freeze
 
   has_many :option_nodes, -> { order(:rank) }, inverse_of: :option, dependent: :destroy, autosave: true
   has_many :option_sets, through: :option_nodes

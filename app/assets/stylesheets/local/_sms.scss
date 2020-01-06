@@ -4,15 +4,16 @@
   }
 
   .time_col {
-    width: 130px;
     white-space: nowrap;
+    width: 130px;
   }
 
-  .to_col, .from_col {
+  .to_col,
+  .from_col {
     white-space: nowrap;
 
     small {
-      color: #888888;
+      color: #888;
     }
   }
 
@@ -29,8 +30,8 @@
     word-wrap: break-word;
 
     > div {
-      width: auto;
       overflow: hidden;
+      width: auto;
     }
   }
 
@@ -43,11 +44,11 @@
   }
 
   .received_at_col {
-    width: 130px
+    width: 130px;
   }
 
   .sent_at_col {
-    width: 130px
+    width: 130px;
   }
 
   .adapter_name_col {

@@ -70,9 +70,7 @@ module Results
           pos[0] += tokens[0].size + 1 if tokens[0]
           pos[1] += tokens[1].size + 1 if tokens[1]
 
-          if tokens[1]&.starts_with?("AnswerGroupSet")
-            self.parent_repeat_group_id = tokens[1][-36..-1]
-          end
+          self.parent_repeat_group_id = tokens[1][-36..-1] if tokens[1]&.starts_with?("AnswerGroupSet")
 
           # If we haven't found any differences yet and these two tokens are the same,
           # we can proceed to next tokens.

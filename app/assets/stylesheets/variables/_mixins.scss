@@ -19,8 +19,8 @@
 
 @mixin hint-icon {
   i.hint {
-    cursor: pointer;
     color: $theme-main;
+    cursor: pointer;
     display: inline-block;
     font-size: 1.5em;
     padding: 0 3px; // Right padding is so things look ok when there is a bg color.

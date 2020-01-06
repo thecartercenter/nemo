@@ -14,12 +14,12 @@ table.index_table {
   }
 
   td {
-    height: 34px; // Ensure height is consistent even if icons not present.
-    vertical-align: middle;
 
     border-top: $light-border;
-    padding-top: $cell-top-bot-padding;
+    height: 34px; // Ensure height is consistent even if icons not present.
     padding-bottom: $cell-top-bot-padding;
+    padding-top: $cell-top-bot-padding;
+    vertical-align: middle;
     padding-#{$left}: 3px;
     padding-#{$right}: 20px;
 
@@ -41,8 +41,8 @@ table.index_table {
 
     span.text {
       display: inline-block;
-      padding-top: $cell-top-bot-padding;
       padding-bottom: $cell-top-bot-padding;
+      padding-top: $cell-top-bot-padding;
     }
   }
 
@@ -55,13 +55,14 @@ table.index_table {
     cursor: pointer;
   }
 
-  tbody tr:hover, tbody tr.hovered {
-    background-color: #ECF1F5;
+  tbody tr:hover,
+  tbody tr.hovered {
+    background-color: #ecf1f5;
   }
 
   i.fa-certificate {
-    margin-bottom: -5px;
     font-size: 1.5em;
+    margin-bottom: -5px;
   }
 }
 

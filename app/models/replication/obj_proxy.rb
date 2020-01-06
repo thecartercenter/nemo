@@ -34,14 +34,15 @@ class Replication::ObjProxy
   # Returns an array of Objs matching the association.
   def children(assoc)
     # Retrieve the id (and ancestry, if applicable) of the orig children objects.
-    attribs = if assoc.belongs_to?
-                fk_id = klass.where(id: id).pluck(assoc.foreign_key).first
-                fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
-              elsif assoc.ancestry?
-                child_ancestry = [ancestry, id].compact.join("/")
-                build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class, order: "ORDER BY rank")
-              else # has_one or has_many
-                build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
+    if assoc.belongs_to?
+      fk_id = klass.where(id: id).pluck(assoc.foreign_key).first
+      fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
+    elsif assoc.ancestry?
+      child_ancestry = [ancestry, id].compact.join("/")
+      build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class,
+                                                       order: "ORDER BY rank")
+    else # has_one or has_many
+      build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
     end
   end
 
@@ -193,7 +194,8 @@ class Replication::ObjProxy
       begin
         [assoc.foreign_key, quote_or_null(backward_assoc_id(replicator, context, assoc))]
       rescue Replication::BackwardAssocError
-        # If we have explicit instructions to delete the object if an association is missing, make a note of it.
+        # If we have explicit instructions to delete the object if an association is missing,
+        # make a note of it.
         $ERROR_INFO.ok_to_skip = assoc.skip_obj_if_missing
         raise $ERROR_INFO # Then we send on up the chain.
       end
@@ -227,7 +229,7 @@ class Replication::ObjProxy
                        klass.where(id: id).pluck(assoc.foreign_type).first.constantize
                      else
                        assoc.target_class
-      end
+                     end
       find_copy_id(target_class, orig_foreign_id) ||
         (raise Replication::BackwardAssocError, "
           Couldn't find copy of #{target_class.name} ##{orig_foreign_id}")

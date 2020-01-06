@@ -1,9 +1,11 @@
-require File.expand_path("../../../spec/support/contexts/option_node_support", __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path("../../spec/support/contexts/option_node_support", __dir__)
 
 namespace :db do
   desc "Create fake data for manual testing purposes."
-  task :create_fake_data, [:mission_name] => [:environment] do |t, args|
-    mission_name = args[:mission_name] || "Fake Mission #{rand(10000)}"
+  task :create_fake_data, [:mission_name] => [:environment] do |_t, args|
+    mission_name = args[:mission_name] || "Fake Mission #{rand(10_000)}"
 
     mission = Mission.create(name: mission_name)
 
@@ -15,9 +17,9 @@ namespace :db do
       "counter",
       "decimal",
       "location",
-      [
-        "integer",
-        "long_text"
+      %w[
+        integer
+        long_text
       ],
       "select_one",
       "multilevel_select_one",
@@ -33,12 +35,11 @@ namespace :db do
       "video"
     ])
 
-    smsable_form = FactoryGirl.create(:form,
+    FactoryGirl.create(:form,
       name: "SMS Form",
       smsable: true,
       mission: mission,
-      question_types: QuestionType.with_property(:smsable).map(&:name)
-    )
+      question_types: QuestionType.with_property(:smsable).map(&:name))
 
     puts "Creating users"
     # Create users and groups
@@ -49,7 +50,7 @@ namespace :db do
     FactoryGirl.create_list(:user_group, 5, mission: mission)
 
     50.times do
-      uga = UserGroupAssignment.new(user_group: UserGroup.all.sample, user: User.all.sample);
+      uga = UserGroupAssignment.new(user_group: UserGroup.all.sample, user: User.all.sample)
       uga.save if uga.valid?
     end
 
@@ -65,15 +66,15 @@ namespace :db do
         print "."
         answer_values = [
           Faker::Pokemon.name, # text
-          Faker::Hipster.paragraphs(3).join("\n\n"), #long_text
+          Faker::Hipster.paragraphs(3).join("\n\n"), # long_text
           rand(1000..5000), # integer
           rand(1..100), # counter
           Faker::Number.decimal(rand(1..3), rand(1..5)), # decimal
           "#{Faker::Address.latitude} #{Faker::Address.longitude}", # location
           [rand(1..100), Faker::Hacker.say_something_smart], # integer/long text
           "Cat", # select_one
-          %w(Plant Oak), # multilevel_select_one
-          %w(Cat Dog), # select_multiple
+          %w[Plant Oak], # multilevel_select_one
+          %w[Cat Dog], # select_multiple
           Faker::Time.backward(365), # datetime
           Faker::Date.birthday, # date
           Faker::Time.between(1.year.ago, Date.today, :evening), # time
@@ -90,8 +91,7 @@ namespace :db do
           user: user,
           mission: mission,
           answer_values: answer_values,
-          created_at: Faker::Time.backward(365)
-        )
+          created_at: Faker::Time.backward(365))
       end
     end
     print "\n"

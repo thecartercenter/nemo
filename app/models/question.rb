@@ -230,13 +230,13 @@ class Question < ApplicationRecord
     maximum.blank? ? nil : (qtype_name == "decimal" ? maximum : maximum.to_i)
   end
 
-  def casted_minimum=(m)
-    self.minimum = m
+  def casted_minimum=(n)
+    self.minimum = n
     self.minimum = casted_minimum
   end
 
-  def casted_maximum=(m)
-    self.maximum = m
+  def casted_maximum=(n)
+    self.maximum = n
     self.maximum = casted_maximum
   end
 
@@ -244,8 +244,13 @@ class Question < ApplicationRecord
     return nil unless minimum || maximum
 
     clauses = []
-    clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("question.maxmin.or_eq") + " ") + casted_minimum.to_s if minimum
-    clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " ") + casted_maximum.to_s if maximum
+    or_eq = I18n.t("question.maxmin.or_eq") + " "
+    if minimum
+      clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : or_eq) + casted_minimum.to_s
+    end
+    if maximum
+      clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : or_eq) + casted_maximum.to_s
+    end
     I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end
 
@@ -273,7 +278,8 @@ class Question < ApplicationRecord
     option_set.present? ? option_set.option_levels : []
   end
 
-  # This should be able to be done by adding `order: :name` to the association, but that causes a cryptic SQL error
+  # This should be able to be done by adding `order: :name` to the association,
+  # but that causes a cryptic SQL error
   def sorted_tags
     tags.order(:name)
   end

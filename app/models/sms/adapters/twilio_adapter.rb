@@ -1,8 +1,10 @@
-require 'twilio-ruby'
+# frozen_string_literal: true
+
+require "twilio-ruby"
 
 class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   def self.header_signature_name
-    'X-Twilio-Signature'
+    "X-Twilio-Signature"
   end
 
   # checks if this adapter recognizes an incoming http receive request
@@ -25,7 +27,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
 
     prepare_message_for_delivery(message)
 
-    params = { from: message.from, to: message.to, body: message.body }
+    params = {from: message.from, to: message.to, body: message.body}
     Rails.logger.info("Sending Twilio message: #{params}")
 
     return true if dry_run
@@ -44,7 +46,8 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
       to: params[:To],
       body: params[:Body],
       sent_at: Time.zone.now, # Twilio doesn't supply this
-      adapter_name: service_name)
+      adapter_name: service_name
+    )
   end
 
   def validate(request)

@@ -11,11 +11,11 @@ describe ResponseDecorator do
   let!(:other_question) { create(:question) }
 
   it "should return shortcode in upper case" do
-    expect(decorator.shortcode).to eq response.shortcode.upcase
+    expect(decorator.shortcode).to eq(response.shortcode.upcase)
   end
 
   it "should return answer to the valid question" do
-    expect(decorator.answer_for(form.questions.first)).to eq response.root_node.c[0]
+    expect(decorator.answer_for(form.questions.first)).to eq(response.root_node.c[0])
     expect(decorator.answer_for(other_question)).to be_nil
   end
 end

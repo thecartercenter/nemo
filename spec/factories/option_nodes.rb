@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -38,7 +40,7 @@
 FactoryGirl.define do
   factory :option_node do
     transient do
-      option_names %w(Cat Dog)
+      option_names %w[Cat Dog]
     end
 
     mission { get_mission }
@@ -53,7 +55,7 @@ FactoryGirl.define do
     factory :option_node_with_children do
       option nil
       children_attribs do
-        option_names.map{ |n| { 'option_attribs' => { 'name_translations' => {'en' => n} } } }
+        option_names.map { |n| {"option_attribs" => {"name_translations" => {"en" => n}}} }
       end
     end
 

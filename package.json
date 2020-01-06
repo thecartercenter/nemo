@@ -2,9 +2,9 @@
   "scripts": {
     "i18n:export": "bundle exec rake i18n:js:export",
     "test": "jest",
-    "lint": "eslint --ext .js,.jsx",
-    "lint:all": "yarn run lint .",
-    "lint:react": "yarn run lint app/javascript/"
+    "lint:js": "eslint --ext .js,.jsx",
+    "lint:react": "yarn run lint:js app/javascript/",
+    "lint:scss": "stylelint app/assets/stylesheets/"
   },
   "jest": {
     "roots": [
@@ -69,6 +69,8 @@
     "i18n-js": "3.3.0",
     "jest": "24.8.0",
     "react-dom": "16.9.0",
+    "stylelint": "12.0.1",
+    "stylelint-config-sass-guidelines": "6.2.0",
     "webpack-dev-server": "3.1.11"
   }
 }

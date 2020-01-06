@@ -145,7 +145,7 @@ class Answer < ResponseNode
       WHERE a.type = 'Answer'
         AND (a.option_id = ? OR c.option_id = ?)
         AND a.questioning_id IN (?)",
-                 option_id, option_id, questioning_ids]).first.count > 0
+                 option_id, option_id, questioning_ids]).first.count.positive?
   end
 
   # This is a temporary method for fetching option_node based on the related OptionSet and Option.
@@ -185,8 +185,8 @@ class Answer < ResponseNode
     options.map { |o| choices_by_option[o] || choices.new(option: o, checked: false) }
   end
 
-  # if this answer is for a location question and the value is not blank, returns a two element array representing the
-  # lat long. else returns nil
+  # if this answer is for a location question and the value is not blank,
+  # returns a two element array representing the lat long. else returns nil
   def location
     value.split(" ") if location_type_with_value?
   end
@@ -329,7 +329,7 @@ class Answer < ResponseNode
       column = self.class.column_for_attribute(a)
       self[a] = 0 if self[a].abs > 10**(column.precision - column.scale)
     end
-    self.accuracy = 0 if accuracy.present? && accuracy < 0
+    self.accuracy = 0 if accuracy.present? && accuracy.negative?
     true
   end
 
@@ -381,7 +381,7 @@ class Answer < ResponseNode
       errors.add(:value, :invalid_longitude) if longitude.nil? || longitude < -180 || longitude > 180
       errors.add(:value, :invalid_altitude) if altitude.present? && (altitude >= 1e6 || altitude <= -1e6)
       if accuracy.present?
-        if accuracy < 0
+        if accuracy.negative?
           errors.add(:value, :accuracy_negative)
         elsif accuracy >= 1e6
           errors.add(:value, :invalid_accuracy)

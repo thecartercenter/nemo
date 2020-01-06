@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -78,28 +80,28 @@ class Report::StandardFormReport < Report::Report
   belongs_to(:form)
 
   # Questioning is set to nullify this association upon the Questioning's destruction.
-  belongs_to(:disagg_qing, :class_name => 'Questioning')
+  belongs_to(:disagg_qing, class_name: "Questioning")
 
   attr_reader :summary_collection, :response_count
 
   # question types that we leave off this report (stored as a hash for better performance)
   EXCLUDED_TYPES = {
-    'location' => true,
-    'image' => true,
-    'annotated_image' => true,
-    'signature' => true,
-    'sketch' => true,
-    'video' => true,
-    'audio' => true
-  }
+    "location" => true,
+    "image" => true,
+    "annotated_image" => true,
+    "signature" => true,
+    "sketch" => true,
+    "video" => true,
+    "audio" => true
+  }.freeze
 
   # options for the question_order attrib
-  QUESTION_ORDER_OPTIONS = %w(number type)
+  QUESTION_ORDER_OPTIONS = %w[number type].freeze
 
   # question types that can be used to disaggregated
-  DISAGGABLE_TYPES = %w(select_one)
+  DISAGGABLE_TYPES = %w[select_one].freeze
 
-  TEXT_RESPONSE_OPTIONS = %w(all short_only none)
+  TEXT_RESPONSE_OPTIONS = %w[all short_only none].freeze
 
   # How many non reporting enumerators it will show on the report before summarizing the rest
   MISSING_OBSERVERS_SIZE_LIMIT = 100
@@ -108,12 +110,12 @@ class Report::StandardFormReport < Report::Report
     # add the required methods to the methods option
     h = super(options)
     h[:response_count] = response_count
-    h[:mission] = form.mission.as_json(:only => [:id, :name])
-    h[:form] = form.as_json(:only => [:id, :name])
+    h[:mission] = form.mission.as_json(only: %i[id name])
+    h[:form] = form.as_json(only: %i[id name])
     h[:subsets] = subsets
-    h[:enumerators_without_responses] = enumerators_without_responses.as_json(:only => [:id, :name])
+    h[:enumerators_without_responses] = enumerators_without_responses.as_json(only: %i[id name])
     h[:disagg_question_id] = disagg_question_id
-    h[:disagg_qing] = disagg_qing.as_json(:only => :id, :include => {:question => {:only => :code}})
+    h[:disagg_qing] = disagg_qing.as_json(only: :id, include: {question: {only: :code}})
     h[:no_data] = no_data?
     h[:raw_answer_limit] = Report::SummaryCollectionBuilder::RAW_ANSWER_LIMIT
 
@@ -125,16 +127,20 @@ class Report::StandardFormReport < Report::Report
   # current_ability - the ability under which the report should be run
   def run(current_ability, _options = {})
     # make sure the disagg_qing is still on this form (unlikely to be an error)
-    raise Report::ReportError.new("disaggregation question is not on this form") unless disagg_qing.nil? || disagg_qing.form_id == form_id
+    unless disagg_qing.nil? || disagg_qing.form_id == form_id
+      raise Report::ReportError, "disaggregation question is not on this form"
+    end
 
     # make sure disagg_qing is disaggable
-    raise Report::ReportError.new("disaggregation question is incorrect type") unless can_disaggregate_with?(disagg_qing)
+    unless can_disaggregate_with?(disagg_qing)
+      raise Report::ReportError, "disaggregation question is incorrect type"
+    end
 
     # pre-calculate response count, accounting for user ability
     @response_count = form.responses.accessible_by(current_ability).count
 
     # determine if we should restrict the responses to a single user, or allow all
-    restrict_to_user = current_ability.user.role(form.mission) == 'enumerator' ? current_ability.user : nil
+    restrict_to_user = current_ability.user.role(form.mission) == "enumerator" ? current_ability.user : nil
 
     # generate summary collection (sets of disaggregated summaries)
     @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(form), disagg_qing,
@@ -142,7 +148,7 @@ class Report::StandardFormReport < Report::Report
 
     # now tell each subset to group summaries by tag
     @summary_collection.subsets.each do |s|
-      s.build_tag_groups(question_order: question_order || 'number', group_by_tag: group_by_tag)
+      s.build_tag_groups(question_order: question_order || "number", group_by_tag: group_by_tag)
     end
 
     @summary_collection
@@ -158,17 +164,17 @@ class Report::StandardFormReport < Report::Report
   end
 
   def enumerators_without_responses
-    users = users_without_responses({role: :enumerator, limit: MISSING_OBSERVERS_SIZE_LIMIT})
+    users = users_without_responses(role: :enumerator, limit: MISSING_OBSERVERS_SIZE_LIMIT)
 
     if users.empty?
-      I18n.t('report/report.zero_missing_enumerators')
+      I18n.t("report/report.zero_missing_enumerators")
     else
       truncated = false
       if users.size > MISSING_OBSERVERS_SIZE_LIMIT
         users.slice!(MISSING_OBSERVERS_SIZE_LIMIT..-1)
         truncated = true
       end
-      names = users.map(&:name).join(', ')
+      names = users.map(&:name).join(", ")
       truncation_msg = truncated ? ", ... (#{I18n.t('common.clipped')})" : ""
       "#{names}#{truncation_msg}"
     end
@@ -179,9 +185,9 @@ class Report::StandardFormReport < Report::Report
   def questionings_to_include(form = nil)
     @questionings_to_include ||= (form || self.form).questionings.reject do |qing|
       qing.hidden? ||
-      Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name] ||
-      text_responses == 'short_only' && qing.qtype.name == 'long_text' ||
-      text_responses == 'none' && qing.qtype.textual?
+        Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name] ||
+        text_responses == "short_only" && qing.qtype.name == "long_text" ||
+        text_responses == "none" && qing.qtype.textual?
     end
   end
 
@@ -190,7 +196,7 @@ class Report::StandardFormReport < Report::Report
   end
 
   # no_data is a more accurate name
-  alias_method :no_data?, :empty?
+  alias no_data? empty?
 
   def exportable?
     false
@@ -206,11 +212,11 @@ class Report::StandardFormReport < Report::Report
 
   # settor method allowing the disaggregation *question* and not *questioning* to be set
   def disagg_question_id=(question_id)
-    if question_id.nil?
-      self.disagg_qing = nil
-    else
-      self.disagg_qing = form.questionings.detect{|qing| qing.question_id == question_id}
-    end
+    self.disagg_qing = if question_id.nil?
+                         nil
+                       else
+                         form.questionings.detect { |qing| qing.question_id == question_id }
+                       end
   end
 
   # returns whether this report can be disaggregated by the given questioning

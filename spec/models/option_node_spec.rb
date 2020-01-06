@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -57,7 +59,7 @@ describe OptionNode do
 
     it "should return shortcodes based on sequence" do
       shortcodes = option_set.descendants.map(&:shortcode).sort
-      expect(shortcodes).to eq ["1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e"]
+      expect(shortcodes).to eq(%w[1 2 3 4 5 6 7 8 9 a b c d e])
     end
   end
 
@@ -65,11 +67,11 @@ describe OptionNode do
     let!(:option_set) { create(:option_set, option_names: :multilevel) }
 
     it "should return the highest sequence in the set" do
-      expect(option_set.children[0].max_sequence).to eq 6
+      expect(option_set.children[0].max_sequence).to eq(6)
     end
 
     it "should work even when called on a leaf node" do
-      expect(option_set.children[0].children[0].max_sequence).to eq 6
+      expect(option_set.children[0].children[0].max_sequence).to eq(6)
     end
 
     context "with deleted nodes" do
@@ -78,18 +80,18 @@ describe OptionNode do
       end
 
       it "should ignore the deleted node" do
-        expect(option_set.children[0].max_sequence).to eq 5
+        expect(option_set.children[0].max_sequence).to eq(5)
       end
     end
   end
 
   describe "removable?" do
-    let(:form) { create(:form, question_types: %w(select_one)) }
+    let(:form) { create(:form, question_types: %w[select_one]) }
     let(:node) { form.questions[0].option_set.children[0] }
 
     context "with no answers" do
       it "returns true" do
-        expect(node.removable?).to be true
+        expect(node.removable?).to be(true)
       end
     end
 
@@ -97,7 +99,7 @@ describe OptionNode do
       let!(:responses) { create_list(:response, 2, form: form, answer_values: [node.option_name]) }
 
       it "returns false" do
-        expect(node.removable?).to be false
+        expect(node.removable?).to be(false)
       end
 
       context "if deleted" do
@@ -107,7 +109,7 @@ describe OptionNode do
         end
 
         it "returns true" do
-          expect(node.removable?).to be true
+          expect(node.removable?).to be(true)
         end
       end
     end
@@ -116,7 +118,8 @@ describe OptionNode do
   describe "option_level" do
     before do
       @node = create(:option_node_with_grandchildren)
-      allow_message_expectations_on_nil # Since we want to set expectations on subnode.option_set, which is nil.
+      # We want to set expectations on subnode.option_set, which is nil.
+      allow_message_expectations_on_nil
     end
 
     it "should be nil for root" do
@@ -126,13 +129,13 @@ describe OptionNode do
     it "should be correct for first level" do
       subnode = @node.c[0]
       expect(subnode.option_set).to receive(:try).with(:level, 1).and_return(double(name: "Foo"))
-      expect(subnode.level.name).to eq "Foo"
+      expect(subnode.level.name).to eq("Foo")
     end
 
     it "should be correct for second level" do
       subnode = @node.c[0].c[0]
       expect(subnode.option_set).to receive(:try).with(:level, 2).and_return(double(name: "Bar"))
-      expect(subnode.level.name).to eq "Bar"
+      expect(subnode.level.name).to eq("Bar")
     end
 
     it "might be nil for first level" do
@@ -151,14 +154,14 @@ describe OptionNode do
         "mission_id" => get_mission.id,
         "option" => nil,
         "children_attribs" => [
-          { "option_attribs" => { "name_translations" => {"en" => "Cat"} } },
-          { "option_attribs" => { "id" => @dog.id, "name_translations" => {"en" => "Dog"} } }
+          {"option_attribs" => {"name_translations" => {"en" => "Cat"}}},
+          {"option_attribs" => {"id" => @dog.id, "name_translations" => {"en" => "Dog"}}}
         ]
       )
     end
 
     it "should be correct" do
-      expect_node(["Cat", "Dog"])
+      expect_node(%w[Cat Dog])
     end
   end
 
@@ -172,145 +175,146 @@ describe OptionNode do
         "option" => nil,
         "mission_id" => get_mission.id,
         "children_attribs" => [{
-          "option_attribs" => { "name_translations" => {"en" => "Animal"} },
+          "option_attribs" => {"name_translations" => {"en" => "Animal"}},
           "children_attribs" => [
-            { "option_attribs" => { "name_translations" => {"en" => "Cat"} } },
-            { "option_attribs" => { "id" => @dog.id } } # Existing option
+            {"option_attribs" => {"name_translations" => {"en" => "Cat"}}},
+            {"option_attribs" => {"id" => @dog.id}} # Existing option
           ]
         }, {
-          "option_attribs" => { "name_translations" => {"en" => "Plant"} },
+          "option_attribs" => {"name_translations" => {"en" => "Plant"}},
           "children_attribs" => [
-            { "option_attribs" => { "name_translations" => {"en" => "Tulip"} } },
-            { "option_attribs" => { "id" => @oak.id, "name_translations" => {"en" => "White Oak"}}} # change option name
+            {"option_attribs" => {"name_translations" => {"en" => "Tulip"}}},
+            # change option name
+            {"option_attribs" => {"id" => @oak.id, "name_translations" => {"en" => "White Oak"}}}
           ]
         }]
       )
     end
 
     it "should be correct" do
-      expect_node([["Animal", ["Cat", "Dog"]], ["Plant", ["Tulip", "White Oak"]]])
+      expect_node([["Animal", %w[Cat Dog]], ["Plant", ["Tulip", "White Oak"]]])
     end
   end
 
   describe "updating from hash with no changes" do
     before do
       @node = create(:option_node_with_grandchildren)
-      @node.update_attributes!(no_change_changeset(@node))
+      @node.update!(no_change_changeset(@node))
     end
 
     it "should still be correct" do
-      expect_node([["Animal", ["Cat", "Dog"]], ["Plant", ["Tulip", "Oak"]]])
+      expect_node([["Animal", %w[Cat Dog]], ["Plant", %w[Tulip Oak]]])
     end
 
     it "should not cause ranks to change" do
-      expect(@node.ranks_changed?).to eq false
+      expect(@node.ranks_changed?).to eq(false)
     end
 
     it "should cause options_added? to be false" do
-      expect(@node.options_added?).to eq false
+      expect(@node.options_added?).to eq(false)
     end
 
     it "should cause options_removed? to be false" do
-      expect(@node.options_removed?).to eq false
+      expect(@node.options_removed?).to eq(false)
     end
   end
 
   describe "updating from hash with full set of changes" do
     before do
       @node = create(:option_node_with_grandchildren)
-      @node.update_attributes!(standard_changeset(@node))
+      @node.update!(standard_changeset(@node))
     end
 
     it "should be correct" do
-      expect_node([["Animal", ["Doge"]], ["Plant", ["Cat", "Tulipe"]]])
+      expect_node([["Animal", ["Doge"]], ["Plant", %w[Cat Tulipe]]])
     end
 
     it "should cause ranks_changed? to become true" do
-      expect(@node.ranks_changed?).to eq true
+      expect(@node.ranks_changed?).to eq(true)
     end
 
     it "should cause options_added? to be true" do
-      expect(@node.options_added?).to eq true
+      expect(@node.options_added?).to eq(true)
     end
 
     it "should cause options_removed? to be true" do
-      expect(@node.options_removed?).to eq true
+      expect(@node.options_removed?).to eq(true)
     end
   end
 
   describe "updating from hash, moving two options to a different node" do
     before do
       @node = create(:option_node_with_grandchildren)
-      @node.update_attributes!(move_node_changeset(@node))
+      @node.update!(move_node_changeset(@node))
     end
 
     it "should be correct" do
-      expect_node(["Animal", ["Plant", ["Tulip", "Oak", "Cat", "Dog"]]])
+      expect_node(["Animal", ["Plant", %w[Tulip Oak Cat Dog]]])
     end
 
     it "should cause ranks_changed? to be false" do
-      expect(@node.ranks_changed?).to eq false
+      expect(@node.ranks_changed?).to eq(false)
     end
 
     it "should cause options_added? to be true" do
       # Because moving an option is really adding and removing.
-      expect(@node.options_added?).to eq true
+      expect(@node.options_added?).to eq(true)
     end
 
     it "should cause options_removed? to be true" do
       # Because moving an option is really adding and removing.
-      expect(@node.options_removed?).to eq true
+      expect(@node.options_removed?).to eq(true)
     end
   end
 
   describe "adding an option via hash" do
     before do
       @node = create(:option_node_with_grandchildren)
-      @node.update_attributes!(additive_changeset(@node))
+      @node.update!(additive_changeset(@node))
     end
 
     it "should be correct" do
-      expect_node([["Animal", ["Cat", "Dog", "Ocelot"]], ["Plant", ["Tulip", "Oak"]]])
+      expect_node([["Animal", %w[Cat Dog Ocelot]], ["Plant", %w[Tulip Oak]]])
     end
 
     it "should cause ranks_changed? to be false" do
-      expect(@node.ranks_changed?).to eq false
+      expect(@node.ranks_changed?).to eq(false)
     end
 
     it "should cause options_added? to be true" do
-      expect(@node.options_added?).to eq true
+      expect(@node.options_added?).to eq(true)
     end
 
     it "should cause options_removed? to be false" do
-      expect(@node.options_removed?).to eq false
+      expect(@node.options_removed?).to eq(false)
     end
   end
 
   describe "destroying subtree and adding new subtree" do
     before do
       @node = create(:option_node_with_grandchildren)
-      @node.update_attributes!("children_attribs" => [
+      @node.update!("children_attribs" => [
         no_change_changeset(@node)["children_attribs"][0],
         {
-          "option_attribs" => { "name_translations" => {"en" => "Laser"} },
+          "option_attribs" => {"name_translations" => {"en" => "Laser"}},
           "children_attribs" => [
             {
-              "option_attribs" => { "name_translations" => {"en" => "Green"} }
+              "option_attribs" => {"name_translations" => {"en" => "Green"}}
             },
             {
-              "option_attribs" => { "name_translations" => {"en" => "Red"} }
+              "option_attribs" => {"name_translations" => {"en" => "Red"}}
             }
           ]
-        }]
-      )
+        }
+      ])
     end
 
     it "should be correct" do
-      expect_node([["Animal", ["Cat", "Dog"]], ["Laser", ["Green", "Red"]]])
+      expect_node([["Animal", %w[Cat Dog]], ["Laser", %w[Green Red]]])
     end
 
     it "should not cause ranks_changed? to become true" do
-      expect(@node.ranks_changed?).to eq false
+      expect(@node.ranks_changed?).to eq(false)
     end
   end
 
@@ -318,7 +322,7 @@ describe OptionNode do
     before do
       @node = create(:option_node_with_grandchildren)
 
-      @node.update_attributes!("children_attribs" => [])
+      @node.update!("children_attribs" => [])
     end
 
     it "should be correct" do
@@ -328,18 +332,18 @@ describe OptionNode do
 
   describe "has_grandchildren?" do
     it "should return false for single level node" do
-      expect(create(:option_node_with_children).has_grandchildren?).to eq false
+      expect(create(:option_node_with_children).has_grandchildren?).to eq(false)
     end
 
     it "should return true for multi level node" do
-      expect(create(:option_node_with_grandchildren).has_grandchildren?).to eq true
+      expect(create(:option_node_with_grandchildren).has_grandchildren?).to eq(true)
     end
   end
 
   describe "child_options" do
     it "should return child options in sorted order" do
       node = create(:option_node_with_grandchildren)
-      expect(node.child_options.map(&:name)).to eq %w(Animal Plant)
+      expect(node.child_options.map(&:name)).to eq(%w[Animal Plant])
     end
   end
 

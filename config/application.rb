@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../boot", __FILE__)
+require File.expand_path("boot", __dir__)
 
 require "rails/all"
 require "coffee_script"
@@ -58,9 +58,9 @@ module ELMO
     config.active_job.queue_adapter = :delayed_job
 
     config.generators do |g|
-      g.test_framework :rspec
-      g.integration_framework :rspec
-      g.orm :active_record, primary_key_type: :uuid
+      g.test_framework(:rspec)
+      g.integration_framework(:rspec)
+      g.orm(:active_record, primary_key_type: :uuid)
     end
 
     config.active_record.time_zone_aware_types = [:datetime]

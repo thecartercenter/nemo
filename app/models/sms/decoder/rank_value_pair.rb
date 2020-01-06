@@ -23,7 +23,8 @@ module Sms
             end
           end
 
-          if question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+          if question.minimum &&
+              (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
             if question.minstrictly && val_f <= question.minimum
               raise_parse_error("answer_too_small_strict", minumum: question.minimum)
             elsif val_f < question.minimum
@@ -96,7 +97,7 @@ module Sms
                        option_to_index(option, qing)
                      # otherwise add to invalid and return nonsense index
                      else
-                       invalid << l unless option.present?
+                       invalid << l if option.blank?
                        -1
                      end
                    end
@@ -160,9 +161,10 @@ module Sms
 
           # try to parse time
           begin
-            # add a colon before the last two digits (if needed) and add UTC so timezone doesn't mess things up
+            # add a colon before the last two digits (if needed)
+            # and add UTC so timezone doesn't mess things up
             with_colon = value.gsub(/(\d{1,2})[\.,]?(\d{2})/) do
-              "#{$1}:#{$2}"
+              "#{Regexp.last_match(1)}:#{Regexp.last_match(2)}"
             end
             self.value = Time.parse(with_colon + " UTC")
           rescue ArgumentError
@@ -186,7 +188,7 @@ module Sms
               # otherwise add a colon before the last two digits of the time (if needed) to help with parsing
               # also replace any .'s or ,'s or ;'s as they don't work so well
               to_parse = value.gsub(/(\d{1,2})[\.,;]?(\d{2})[a-z\s]*$/) do
-                "#{$1}:#{$2}"
+                "#{Regexp.last_match(1)}:#{Regexp.last_match(2)}"
               end
             end
             self.value = Time.zone.parse(to_parse)

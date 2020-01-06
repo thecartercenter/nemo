@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 feature "adding and editing qing group on form", js: true do
   let!(:user) { create(:user) }
-  let!(:form) { create(:form, name: "Foo",
-    question_types: %w(integer multilevel_select_one select_one integer)) }
+  let!(:form) do
+    create(:form, name: "Foo",
+                  question_types: %w[integer multilevel_select_one select_one integer])
+  end
 
   before do
     get_mission.setting.update_attribute(:preferred_locales_str, "en,fr")

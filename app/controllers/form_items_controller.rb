@@ -10,6 +10,6 @@ class FormItemsController < ApplicationController
     params[:parent_id] = @form_item.form.root_id if params[:parent_id].blank?
 
     @form_item.move(FormItem.find(params[:parent_id]), params[:rank].to_i)
-    render body: nil, status: :no_content
+    render(body: nil, status: :no_content)
   end
 end

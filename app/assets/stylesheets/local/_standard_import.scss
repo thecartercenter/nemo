@@ -1,5 +1,4 @@
 #standard-import-form {
-
   .modal-body {
     max-height: 560px;
     overflow-y: scroll;
@@ -10,8 +9,8 @@ div.importable {
   display: none;
 
   form {
-    margin-top: 10px;
     border-top: 1px solid #ccc;
+    margin-top: 10px;
 
     /* rows of the list */
     & > div {
@@ -27,12 +26,12 @@ div.importable {
       }
 
       label {
+        cursor: pointer;
         display: block;
         margin-left: 20px;
-        cursor: pointer;
 
         small {
-          color: #888888;
+          color: #888;
           font-size: 11px;
         }
       }

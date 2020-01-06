@@ -16,7 +16,7 @@ $body-bg: $footer-background-color !default;
 //
 $font-family-sans-serif: 'Open Sans', Helvetica, sans-serif !default;
 
-$px-per-rem: 16.0;
+$px-per-rem: 16;
 $font-size-base: (12 / $px-per-rem) * 1rem !default;
 
 //** Unit-less `line-height` for use in components like buttons.
@@ -32,8 +32,8 @@ $padding-base-vertical: (6 / $px-per-rem) * 1rem;
 //== Buttons
 //
 $theme-colors: (
- "primary": $accent-color,
- "secondary": $faint-gray,
+  'primary': $accent-color,
+  'secondary': $faint-gray,
 ) !default;
 
 //== Forms

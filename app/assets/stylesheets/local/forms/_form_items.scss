@@ -3,25 +3,26 @@
   @include top-action-links;
 
   #saving-message {
+    color: #aaa;
     display: none;
     float: right;
-    color: #aaa;
   }
 }
 
 .form-items-list {
-  padding-left: 0;
   counter-reset: item;
+  padding-left: 0;
 
-  &, ol {
+  &,
+  ol {
     counter-reset: rank;
   }
 
   li {
-    list-style-position: inside;
+    background: none;
     border: none;
     display: block;
-    background: none;
+    list-style-position: inside;
   }
 
   .form-item {
@@ -33,41 +34,42 @@
     }
 
     &.form-item-question .inner,
-      &.form-item-group .inner {
+    &.form-item-group .inner {
       cursor: pointer;
     }
 
     &.form-item-hidden {
       .hidden-curtain {
+        background-color: $white;
+        bottom: 0;
         display: block;
+        opacity: 0.7;
         position: absolute;
         top: 0;
-        bottom: 0;
         width: 100%;
-        background-color: $white;
-        opacity: 0.7;
         z-index: 2;
       }
 
       // When being dragged.
       &.ui-sortable-helper {
         .hidden-curtain {
+          bottom: -5px;
           // Not sure why this is needed but it is, on chrome at least
           top: 5px;
-          bottom: -5px;
         }
       }
     }
 
-    .type, .actions {
+    .type,
+    .actions {
       color: $theme-main;
     }
 
     .inner {
       display: table;
-      width: 100%;
       padding: 2px 5px;
       position: relative; // Needed so we can make action icons pop up over curtain.
+      width: 100%;
 
       > * {
         display: table-cell;
@@ -79,20 +81,20 @@
       display: table;
 
       i.fa {
+        color: $theme-main;
         margin-left: 5px;
         margin-right: 5px;
-        color: $theme-main;
       }
     }
 
     // This is the question rank, e.g 8., or 2.1.1.
     .base-info .wrapper::before {
-      counter-increment: rank;
       content: counters(rank, '.') '. ';
-      width: 20px;
-      text-align: right;
+      counter-increment: rank;
       display: table-cell;
       padding: 0 5px;
+      text-align: right;
+      width: 20px;
     }
 
     .base-info .wrapper > div {
@@ -120,19 +122,20 @@
       }
     }
 
-    .standardized, .type {
+    .standardized,
+    .type {
       font-size: 16px;
     }
 
     .standardized {
-      width: 20px;
       padding: 5px 0 0 2px;
+      width: 20px;
     }
 
     .type {
-      width: 20px;
-      text-align: center;
       padding-top: 2px;
+      text-align: center;
+      width: 20px;
 
       i {
         vertical-align: middle;
@@ -140,8 +143,9 @@
     }
 
     .condition {
-      color: #888888;
+      color: #888;
     }
+
     .operator {
       margin-left: 0.25em;
       margin-right: 0.25em;

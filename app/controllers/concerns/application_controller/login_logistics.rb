@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Concerns::ApplicationController::LoginLogistics
   extend ActiveSupport::Concern
 
@@ -56,14 +58,13 @@ module Concerns::ApplicationController::LoginLogistics
   def store_location
     # if the request is a GET, then store as normal
     session[:return_to] = if request.get?
-      request.fullpath
-    # otherwise, store the referrer (if defined), since it doesn't make sense to store a URL for a different method
-    elsif request.referrer
-      request.referrer
-    # otherwise store nothing
-    else
-      nil
-    end
+                            request.fullpath
+                          # otherwise, store the referrer (if defined),
+                          # since it doesn't make sense to store a URL for a different method
+                          elsif request.referer
+                            request.referer
+                            # otherwise store nothing
+                          end
   end
 
   def forget_location

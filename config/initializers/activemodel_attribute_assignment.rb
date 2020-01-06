@@ -1,4 +1,6 @@
-require 'active_support/core_ext/hash/keys'
+# frozen_string_literal: true
+
+require "active_support/core_ext/hash/keys"
 
 # BACKPORT FROM RAILS 5.0
 
@@ -27,7 +29,7 @@ unless defined?(ActiveModel::AttributeAssignment)
       #   cat.name # => 'Gorby'
       #   cat.status => 'sleeping'
       def assign_attributes(new_attributes)
-        if !new_attributes.respond_to?(:stringify_keys)
+        unless new_attributes.respond_to?(:stringify_keys)
           raise ArgumentError, "When assigning attributes, you must pass a hash as an argument."
         end
         return if new_attributes.blank?

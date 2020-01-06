@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionType
   AVAILABLE_PROPERTIES = %w[printable smsable textual headerable defaultable numeric
                             multimedia temporal has_options has_timezone refable reportable].freeze

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
   def self.recognize_receive_request?(request)
-    %w(from body sent_at frontlinecloud) - request.params.keys == []
+    %w[from body sent_at frontlinecloud] - request.params.keys == []
   end
 
   def self.can_deliver?
@@ -15,18 +17,18 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
     prepare_message_for_delivery(message)
 
     # build the request payload
-    recipients = message.recipient_numbers.map { |number| { "type" => "mobile", "value" => number } }
+    recipients = message.recipient_numbers.map { |number| {"type" => "mobile", "value" => number} }
 
     payload = {
       "apiKey" => config.frontlinecloud_api_key,
       "payload" => {
         "message" => message.body,
         "recipients" => recipients
-      },
+      }
     }
     uri = URI("https://cloud.frontlinesms.com/api/1/webhook")
 
-    response = send_request(uri, :post, payload)
+    send_request(uri, :post, payload)
 
     # if we get to this point, it worked
     true
@@ -39,7 +41,8 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
       to: nil, # Frontline doesn't provide this.
       body: params["body"],
       sent_at: convert_time(params["sent_at"]),
-      adapter_name: service_name)
+      adapter_name: service_name
+    )
   end
 
   def validate(request)

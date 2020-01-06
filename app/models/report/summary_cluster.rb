@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # models a cluster of question summaries for a standard form report
 # a cluster is a set of questions with the same qtype and option set or other headings
 class Report::SummaryCluster
@@ -7,8 +9,9 @@ class Report::SummaryCluster
   def self.generate(summaries)
     [].tap do |clusters|
       summaries.each do |s|
-        # if this summary doesn't fit with the current cluster, or if there is no current cluster, create a new one
-        if clusters.last && clusters.last.accepts(s)
+        # if this summary doesn't fit with the current cluster,
+        # or if there is no current cluster, create a new one
+        if clusters.last&.accepts(s)
           clusters.last.add(s)
         else
           clusters << new(s)
@@ -36,7 +39,7 @@ class Report::SummaryCluster
     summary.signature == summaries.first.signature
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     {
       summaries: summaries,
       headers: headers,

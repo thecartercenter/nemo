@@ -3,15 +3,15 @@ div.ui-dialog-content {
 
   div.modal_error {
     color: $error-red;
+    display: none;
     font-weight: bold;
     margin-bottom: 10px;
-    display: none;
   }
 }
 
 .modal-dialog {
-  min-width: 600px;
   max-width: 800px;
+  min-width: 600px;
   width: 90%;
 
   .modal-body {
@@ -21,7 +21,12 @@ div.ui-dialog-content {
       margin-top: 0;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       &:first-child {
         margin-top: 0;
       }
@@ -30,6 +35,6 @@ div.ui-dialog-content {
 }
 
 .modal-small .modal-dialog {
-  min-width: 400px;
   max-width: 400px;
+  min-width: 400px;
 }

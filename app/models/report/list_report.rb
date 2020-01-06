@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -75,7 +77,7 @@ class Report::ListReport < Report::Report
         questions << c.question1
       # otherwise we add the attrib to the select clause
       else
-        rel = rel.select(c.select_expressions.collect{|e| "#{e.sql} AS e#{idx}_#{e.name}"})
+        rel = rel.select(c.select_expressions.collect { |e| "#{e.sql} AS e#{idx}_#{e.name}" })
       end
       joins += c.joins
       rel = rel.joins(Results::Join.list_to_sql(c.joins))
@@ -106,7 +108,7 @@ class Report::ListReport < Report::Report
     apply_filter(rel)
   end
 
-  def header_title(which)
+  def header_title(_which)
     nil
   end
 
@@ -116,14 +118,14 @@ class Report::ListReport < Report::Report
 
   def get_col_header
     hashes = []
-    calculations.each_with_index do |c, idx|
+    calculations.each_with_index do |c, _idx|
       hashes << {name: c.header_title, key: c}
     end
     Report::Header.new(title: nil, cells: hashes)
   end
 
   # processes a row from the db_result by adding the contained data to the result
-  def extract_data_from_row(db_row, db_row_idx)
+  def extract_data_from_row(db_row, _db_row_idx)
     # if the response ID changes, we have to extract the attrib-based values for this response
     if db_row["response_id"] != @last_response_id
       # increment the current row index (or set to 0 if not exist)
@@ -131,25 +133,24 @@ class Report::ListReport < Report::Report
 
       # for each attrib-based calculation, enter a value
       calculations.each_with_index do |c, idx|
-        if c.arg1.is_a?(Report::AttribField)
-          # get the col index
-          col = @header_set[:col].find_key_idx(c)
+        next unless c.arg1.is_a?(Report::AttribField)
+        # get the col index
+        col = @header_set[:col].find_key_idx(c)
 
-          # get the name and type values
-          name = db_row["e#{idx}_#{c.name_expr.name}"]
-          type = db_row["e#{idx}_#{c.data_type_expr.name}"]
-          cell = Report::Formatter.format(name, type, :cell)
+        # get the name and type values
+        name = db_row["e#{idx}_#{c.name_expr.name}"]
+        type = db_row["e#{idx}_#{c.data_type_expr.name}"]
+        cell = Report::Formatter.format(name, type, :cell)
 
-          # enter the value
-          @data.set_cell(@cur_row, col, cell)
-        end
+        # enter the value
+        @data.set_cell(@cur_row, col, cell)
       end
     end
 
     # if this row has a question id
     if qid = db_row["question_id"]
       # get the calculation pertaining to the current question id
-      cur_calc = calculations.detect{|c| c.arg1.is_a?(Report::AnswerField) && c.arg1.question.id == qid}
+      cur_calc = calculations.detect { |c| c.arg1.is_a?(Report::AnswerField) && c.arg1.question.id == qid }
 
       # if calculation was found
       if cur_calc
@@ -193,7 +194,7 @@ class Report::ListReport < Report::Report
 
   def remove_blank_rows
     # remove any blank rows from the data; don't have to worry about row headers as there are none
-    (@data.rows.size-1).downto(0) do |i|
+    (@data.rows.size - 1).downto(0) do |i|
       @data.rows.delete_at(i) if @data.empty_row?(i)
     end
   end

@@ -1,6 +1,5 @@
 # Disable defaults
 AllCops:
-  TargetRailsVersion: 4.2
   Exclude:
     - "bin/**/*"
     - "db/schema.rb"
@@ -8,6 +7,7 @@ AllCops:
     - "tmp/**/*"
     - "uploads/**/*"
     - "vendor/**/*"
+    - "node_modules/**/*"
 
 Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
@@ -55,6 +55,9 @@ Metrics/CyclomaticComplexity:
 Metrics/LineLength:
   Enabled: true
   Max: 110
+  IgnoredPatterns:
+    # Test descriptors
+    - ^\s*(describe|it|context|scenario) ".+" do$
 
 Metrics/MethodLength:
   Max: 12
@@ -67,6 +70,22 @@ Metrics/PerceivedComplexity:
 
 Metrics/ParameterLists:
   CountKeywordArgs: false
+
+Naming/UncommunicativeMethodParamName:
+  AllowedNames:
+    - _
+    - a
+    - b
+    - i
+    - n
+    - k
+    - v
+    - x
+    - y
+    - id
+    - op
+    - to
+    - tz
 
 Style/AsciiComments:
   Enabled: false
@@ -94,6 +113,9 @@ Style/MethodCallWithArgsParentheses:
   Exclude:
     - Gemfile
     - db/migrate/*
+
+Style/NestedTernaryOperator:
+  Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

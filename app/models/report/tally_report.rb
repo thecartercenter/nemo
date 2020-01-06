@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -70,21 +72,22 @@ class Report::TallyReport < Report::Report
   def get_header(type)
     prefix = type == :row ? "pri" : "sec"
     if has_grouping(type)
-      hashes = @db_result.extract_unique_tuples("#{prefix}_name", "#{prefix}_value", "#{prefix}_type").collect do |tuple|
-        {:name => Report::Formatter.format(tuple[0], tuple[2], :header), :key => tuple[0], :sort_value => tuple[1]}
+      unique = @db_result.extract_unique_tuples("#{prefix}_name", "#{prefix}_value", "#{prefix}_type")
+      hashes = unique.collect do |tuple|
+        {name: Report::Formatter.format(tuple[0], tuple[2], :header), key: tuple[0], sort_value: tuple[1]}
       end
     else
-      hashes = [{:name => I18n.t("report/report.tally"), :key => "tally", :sort_value => 0}]
+      hashes = [{name: I18n.t("report/report.tally"), key: "tally", sort_value: 0}]
     end
-    Report::Header.new(:title => header_title(type), :cells => hashes)
+    Report::Header.new(title: header_title(type), cells: hashes)
   end
 
   # processes a row from the db_result by adding the contained data to the result
-  def extract_data_from_row(db_row, db_row_idx)
+  def extract_data_from_row(db_row, _db_row_idx)
     # get row and column indices (for result table) by looking them up in the header list
     row_key = has_grouping(:row) ? db_row["pri_name"] : "tally"
     col_key = has_grouping(:col) ? db_row["sec_name"] : "tally"
-    r, c = @header_set.find_indices(:row => row_key, :col => col_key)
+    r, c = @header_set.find_indices(row: row_key, col: col_key)
 
     # set the matching cell value
     @data.set_cell(r, c, get_result_value(db_row))

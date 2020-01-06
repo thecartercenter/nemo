@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class Sms::Adapters::Factory
   include Singleton
 
-  VALID_ADAPTERS = %w(Generic FrontlineSms FrontlineCloud Twilio TwilioTestStub TestConsole)
+  VALID_ADAPTERS = %w[Generic FrontlineSms FrontlineCloud Twilio TwilioTestStub TestConsole].freeze
 
   def self.name_is_valid?(name)
     VALID_ADAPTERS.include?(name)
@@ -9,8 +11,8 @@ class Sms::Adapters::Factory
 
   # returns an array of known adapter classes
   def self.products(options = {})
-    VALID_ADAPTERS.map{|n| adapter = "Sms::Adapters::#{n}Adapter".constantize}.tap do |adapters|
-      adapters.select!{|a| a.can_deliver?} if options[:can_deliver?]
+    VALID_ADAPTERS.map { |n| "Sms::Adapters::#{n}Adapter".constantize }.tap do |adapters|
+      adapters.select!(&:can_deliver?) if options[:can_deliver?]
     end
   end
 
@@ -20,7 +22,7 @@ class Sms::Adapters::Factory
     options[:config] ||= configatron
     if name_or_class.is_a?(String)
       unless self.class.name_is_valid?(name_or_class)
-        raise ArgumentError.new("invalid adapter name '#{name_or_class}'")
+        raise ArgumentError, "invalid adapter name '#{name_or_class}'"
       end
       klass = Sms::Adapters.const_get("#{name_or_class}Adapter")
     else
@@ -32,7 +34,7 @@ class Sms::Adapters::Factory
   # Creates and returns an adapter that knows how to handle the given HTTP request params.
   # Returns nil if no adapter classes recognized the request.
   def create_for_request(request)
-    klass = self.class.products.detect{|a| a.recognize_receive_request?(request)}
+    klass = self.class.products.detect { |a| a.recognize_receive_request?(request) }
     return nil if klass.nil?
     create(klass)
   end

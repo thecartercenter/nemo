@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Base36
   def self.digits_needed(n)
-    return 1 if n == 0
-    Math::log(n, 36).floor + 1
+    return 1 if n.zero?
+    Math.log(n, 36).floor + 1
   end
 
   def self.to_padded_base36(n, length: nil)
@@ -11,7 +13,7 @@ module Base36
 
   def self.offset(length)
     if length > 1
-      36 ** (length - 1)
+      36**(length - 1)
     else
       0
     end

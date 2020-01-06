@@ -1,13 +1,13 @@
 #login_instructions {
   #preamble {
-    width: 600px;
     margin-bottom: 20px;
+    width: 600px;
   }
 
   #instructions {
-    width: 600px;
-    border: 1px solid #888888;
+    border: 1px solid #888;
     padding: 10px;
+    width: 600px;
   }
 
   table {
@@ -19,15 +19,15 @@
   }
 
   td.name {
+    padding-bottom: 8px;
     width: 150px;
-    padding-bottom:8px;
   }
 
   td.value {
-    font-weight: bold;
     font-family: monospace;
-    width: 300px;
+    font-weight: bold;
     padding-bottom: 8px;
+    width: 300px;
   }
 
   i {

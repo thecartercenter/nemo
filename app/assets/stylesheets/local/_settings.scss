@@ -10,13 +10,13 @@ form.setting_form {
 
   #external_sql .control {
     pre {
-      height: 100px;
-      overflow: auto;
       background-color: $pre-bg;
       border: 1px solid #ccc;
-      margin: 0 0 3px 0;
-      padding: 0.4rem;
       font-size: 8pt;
+      height: 100px;
+      margin: 0 0 3px;
+      overflow: auto;
+      padding: 0.4rem;
       white-space: normal;
     }
 

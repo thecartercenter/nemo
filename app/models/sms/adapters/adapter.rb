@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 # models a generic sms adapter. should be subclassed.
 require "net/http"
 class Sms::Adapters::Adapter
-
   attr_writer :deliveries
   attr_reader :config
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(request)
+  def self.recognize_receive_request?(_request)
     false
   end
 
@@ -44,18 +45,18 @@ class Sms::Adapters::Adapter
     deliveries << message
   end
 
-  def deliver(message)
+  def deliver(_message)
     raise NotImplementedError
   end
 
   # receives one sms messages
   # returns an Sms::Message object
-  def receive(request)
+  def receive(_request)
     raise NotImplementedError
   end
 
   # Validates the authenticity of the request (if supported). If not supported, should do nothing.
-  def validate(request)
+  def validate(_request)
     raise NotImplementedError
   end
 
@@ -87,13 +88,12 @@ class Sms::Adapters::Adapter
     http.read_timeout = 30 # in seconds
     http.use_ssl = true if uri.scheme == "https"
 
-
     # create request
     case method
     when :get
       request = Net::HTTP::Get.new(uri.request_uri)
     when :post # only used for FrontlineCloud
-      request = Net::HTTP::Post.new(uri.request_uri, initheader = { "Content-Type" => "application/json" })
+      request = Net::HTTP::Post.new(uri.request_uri, "Content-Type" => "application/json")
       request.body = payload.to_json
     end
 
@@ -105,8 +105,8 @@ class Sms::Adapters::Adapter
       response = http.request(request)
     rescue Timeout::Error
       raise Sms::Error, "error contacting #{service_name} (timeout)"
-    rescue
-      raise Sms::Error, "error contacting #{service_name} (#{$!.class.name}: #{$!.to_s})"
+    rescue StandardError
+      raise Sms::Error, "error contacting #{service_name} (#{$ERROR_INFO.class.name}: #{$ERROR_INFO})"
     end
 
     # return body if it's a clean success, else error

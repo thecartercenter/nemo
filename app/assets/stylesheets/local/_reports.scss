@@ -2,19 +2,38 @@
 .reports_index .name_col { min-width: 300px; }
 
 /* report info & body */
-div.report_info div { display: inline-block; border-#{$left}: 1px solid #ccc; padding: 0 10px; }
-div.report_info div:first-child { border: none; padding-#{$left}: 0; }
+div.report_info div { display: inline-block;
+  padding: 0 10px;
+  border-#{$left}: 1px solid #ccc; }
+
+div.report_info div:first-child { border: none;
+  padding-#{$left}: 0; }
 div.report_body div#row_count { margin-bottom: 5px; }
-div.report_body table td, div.report_body table th { padding: 2px; border: $light-border; }
+
+div.report_body table td,
+div.report_body table th { border: $light-border;
+  padding: 2px; }
 div.report_body table td.string { text-align: left; }
 div.report_body table td.number { text-align: right; }
-div.report_body table th { font-size: 90%; background-color: $super-light-gray; padding: 2px 5px 2px 2px; }
+
+div.report_body table th { background-color: $super-light-gray;
+  font-size: 90%;
+  padding: 2px 5px 2px 2px; }
 div.report_body table td { background-color: $white; }
 div.report_body table th.col { text-align: $left;  }
-div.report_body table th.row { text-align: $left; white-space: nowrap; }
-div.report_body table td.row_total, div.report_body table td.col_total { background-color: $super-light-gray; }
-div.report_body th.row_grouping_label, div.report_body th.col_grouping_label { color: #888888; font-weight: normal; }
-div.report_body th.row_grouping_label > div { margin-left: 3px; overflow: hidden; }
+
+div.report_body table th.row { text-align: $left;
+  white-space: nowrap; }
+
+div.report_body table td.row_total,
+div.report_body table td.col_total { background-color: $super-light-gray; }
+
+div.report_body th.row_grouping_label,
+div.report_body th.col_grouping_label { color: #888;
+  font-weight: normal; }
+
+div.report_body th.row_grouping_label > div { margin-left: 3px;
+  overflow: hidden; }
 div.report_body th.col_grouping_label { text-align: center; }
 
 /* std form report */
@@ -38,24 +57,23 @@ div.report_body {
   }
 
   div.std-form-report-results {
-
     h2 {
-      font-size: 20px;
       color: #444;
+      font-size: 20px;
       margin-bottom: 0;
     }
 
     /* subset intro */
     small {
-      color: #888888;
-      font-size: 11px;
+      color: #888;
       display: block;
+      font-size: 11px;
       margin-bottom: 10px;
     }
 
     h3 {
+      color: #888;
       font-size: 14px;
-      color: #888888;
       margin-bottom: 10px;
     }
 
@@ -75,34 +93,39 @@ div.report_body {
         margin-left: -20px;
 
         h3 {
-          font-size: 16px;
           color: black;
+          font-size: 16px;
         }
       }
     }
 
     table.subset {
+      margin-bottom: 10px;
       min-width: 600px;
       page-break-inside: auto;
-      margin-bottom: 10px;
 
       /* widths cols depending on number of result cols */
       &.result-cols-1 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 50%; } }
       &.result-cols-2 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 25%; } }
       &.result-cols-3 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 20%; } }
-      &.result-cols-4, &.result-cols-5 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 11%; } }
-      &.result-cols-6, &.result-cols-7, &.result-cols-8 { td.num { width: 4%; } td.qname { width: 15%; } td.structured { width: 10%; } }
+
+      &.result-cols-4,
+      &.result-cols-5 { td.num { width: 4%; } td.qname { width: 40%; } td.structured { width: 11%; } }
+
+      &.result-cols-6,
+      &.result-cols-7,
+      &.result-cols-8 { td.num { width: 4%; } td.qname { width: 15%; } td.structured { width: 10%; } }
 
       /* no page breaks inside rows */
       tr {
-        page-break-inside: avoid;
         page-break-after: auto;
+        page-break-inside: avoid;
       }
 
       tr.cluster-header td {
-        color: #888888;
-        font-weight: bold;
         background-color: #f2f2ff;
+        color: #888;
+        font-weight: bold;
       }
 
       tr.full-width-subhead td {
@@ -111,15 +134,15 @@ div.report_body {
 
       tr.summary {
         div.by-at {
-          float: right;
-          padding: 2px 5px;
           background-color: $super-light-gray;
+          color: #888;
+          float: right;
           font-size: 90%;
-          color: #888888;
           margin: -8px -3px 3px 3px;
+          padding: 2px 5px;
 
           a {
-            color: #888888;
+            color: #888;
           }
         }
       }
@@ -141,8 +164,8 @@ div.report_body {
 }
 
 .report_loading_icon {
+  color: $theme-main;
   text-align: center;
-  color: $theme-main
 }
 
 /* report form */
@@ -164,14 +187,12 @@ div.report_body {
 }
 
 div.report_edit_pane {
-
   div.section {
-
     div.name.horiz {
-      vertical-align: middle;
       display: inline-block;
-      text-align: right;
       padding-right: 10px;
+      text-align: right;
+      vertical-align: middle;
       width: 250px;
     }
 
@@ -188,7 +209,9 @@ div.report_edit_pane {
 
 div.report_edit_pane label { display: inline-block; }
 div.report_edit_pane input { display: inline-block; }
-div.report_edit_pane input[type='radio'] { margin-right: 4px; vertical-align: top; }
+
+div.report_edit_pane input[type='radio'] { margin-right: 4px;
+  vertical-align: top; }
 div.report_edit_pane input[type='text'] { padding: 4px; }
 div.report_edit_pane div.section { padding: 15px 0; }
 div.report_edit_pane div.section:only-child { border-bottom: none; }
@@ -196,29 +219,36 @@ div.report_edit_pane div.section div.choice { display: inline-block; }
 div.report_edit_pane div.section div.name { font-weight: bold; }
 div.report_edit_pane div.section div.controls.vert { display: block; }
 div.report_edit_pane div.section label { margin-right: 10px; }
-div.report_edit_pane div.multiselect div.choices { overflow: auto; background-color: #e6e6e6; border: 1px solid #888888; padding: 5px; }
+
+div.report_edit_pane div.multiselect div.choices { background-color: #e6e6e6;
+  border: 1px solid #888;
+  overflow: auto;
+  padding: 5px; }
 div.report_edit_pane div.multiselect div.links { margin-top: 5px; }
-div.report_edit_pane div.multiselect div.links a { display: inline-block; margin-right: 5px; }
+
+div.report_edit_pane div.multiselect div.links a { display: inline-block;
+  margin-right: 5px; }
 
 div.report_edit_pane.report_type {
   input { vertical-align: top; }
+
   input[type='radio'] {
-    margin-left: 3px;
     float: left;
-    margin-top: 0px;
+    margin-left: 3px;
+    margin-top: 0;
   }
 
   label {
     display: block;
-    margin-left: 30px;
     font-weight: normal;
+    margin-left: 30px;
   }
 
   h3 {
-    font-size: 10pt;
-    margin-bottom: 5px;
     color: $theme-main;
+    font-size: 10pt;
     font-weight: bold;
+    margin-bottom: 5px;
   }
 
   /* rows */
@@ -236,9 +266,9 @@ div.report_edit_pane.report_type {
 
   /* link to show examples */
   a {
-    font-size: 11px;
     color: #aaa;
     display: inline-block;
+    font-size: 11px;
     margin-left: 5px;
   }
 
@@ -247,8 +277,8 @@ div.report_edit_pane.report_type {
     margin-top: 10px;
 
     .ex_lbl {
-      margin-bottom: 5px;
       font-weight: bold;
+      margin-bottom: 5px;
     }
 
     ul {
@@ -260,17 +290,24 @@ div.report_edit_pane.report_type {
 div.report_edit_pane.display_options div.section.display_type input { vertical-align: middle; }
 div.report_edit_pane.display_options div.section.display_type label { margin-right: 15px; }
 div.report_edit_pane.display_options div.section.display_type label > * { vertical-align: middle; }
-div.report_edit_pane.display_options div.section.display_type label > i { font-size: 24pt; color: $theme-main; display: inline-block; margin-right: 5px; padding: 0; line-height: 90%; }
+
+div.report_edit_pane.display_options div.section.display_type label > i { color: $theme-main;
+  display: inline-block;
+  font-size: 24pt;
+  line-height: 90%;
+  margin-right: 5px;
+  padding: 0; }
 /* this icon is a bit bigger than the other one */
-div.report_edit_pane.display_options div.section.display_type label > i.icon-bar-chart { font-size: 22pt; color: $theme-main;}
+div.report_edit_pane.display_options div.section.display_type label > i.icon-bar-chart { color: $theme-main;
+  font-size: 22pt;}
 
 div.report_edit_pane.display_options div.section.tally_type {
   label {
     em {
+      color: #888;
+      display: block;
       font-size: 11px;
       font-style: normal;
-      color: #888888;
-      display: block;
       margin-bottom: 5px;
     }
   }
@@ -280,16 +317,24 @@ div.report_edit_pane.display_options div.section.tally_type {
   }
 }
 
-div.report_edit_pane.display_options input#report_title {
-  width: 300px; font-size: 11pt;
+div.report_edit_pane.display_options input#report_title { font-size: 11pt;
+  width: 300px;
 }
 
 
 
-div.report_edit_pane.form_selection div#form_select div.choices { height: 300px; width: 250px; }
+div.report_edit_pane.form_selection div#form_select div.choices { height: 300px;
+  width: 250px; }
 
-div.report_edit_pane.question_selection div.q_sel_type { margin-bottom: 10px; vertical-align: bottom; width: 300px; display: inline-block; }
-div.report_edit_pane.question_selection div.multiselect div.choices { height: 150px; width: 250px; margin-top: 5px; }
+div.report_edit_pane.question_selection div.q_sel_type { display: inline-block;
+  margin-bottom: 10px;
+  vertical-align: bottom;
+  width: 300px; }
+
+div.report_edit_pane.question_selection div.multiselect div.choices { height: 150px;
+  margin-top: 5px;
+  width: 250px; }
+
 div.report_edit_pane.question_selection div.section {
   .name.horiz {
     width: 315px;
@@ -306,7 +351,8 @@ div.report_edit_pane.fields {
     vertical-align: middle;
   }
 
-  select, a {
+  select,
+  a {
     margin-bottom: 10px;
   }
 }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # models the two headers (row, col) for a given report
 class Report::HeaderSet
   attr_reader :headers
@@ -15,8 +17,10 @@ class Report::HeaderSet
   # looks up the row and column indices for the given row and col header keys
   # raises an error if no match is found (this shouldn't happen)
   def find_indices(keys)
-    [:row, :col].collect do |which|
-      @headers[which].find_key_idx(keys[which]) or raise Report::ReportError.new("no matching #{which} header key for '#{keys[which]}'")
+    %i[row col].collect do |which|
+      index = @headers[which].find_key_idx(keys[which])
+      raise Report::ReportError, "no matching #{which} header key for '#{keys[which]}'" unless index
+      index
     end
   end
 end

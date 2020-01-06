@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   ERROR_MESSAGE_KEYS_TO_HIDE = {
-    :'condition.base' => true
-  }
+    'condition.base': true
+  }.freeze
 
   # Builds a URL with the exact given path based on the system's host, protocol, and port.
   def url_for_path(path)
@@ -10,10 +12,11 @@ module ApplicationHelper
     builder.build(configatron.url.to_h.merge(path: path))
   end
 
-  # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
+  # hackish way of getting the route key identical to what would be returned
+  # by model_name.route_key on a model
   # Should consider merging with ApplicationController's model_class at some point.
   def route_key
-    controller.class.name.underscore.gsub("/", "_").gsub(/_controller$/, "")
+    controller.class.name.underscore.tr("/", "_").gsub(/_controller$/, "")
   end
 
   # Returns the current action (as symbol), but returns :new for create and :edit for update.
@@ -29,11 +32,10 @@ module ApplicationHelper
     html_safe = hash.delete(:html_safe)
     hash.map do |name, msg|
       # Only echo valid message types
-      if msg.present? && (css_class = bootstrap_flash_class(name))
-        msg = msg.html_safe if html_safe
-        content_tag(:div, class: css_class) do
-          content_tag(:strong, t("flash_message_types.#{name}")) << ": " << msg
-        end
+      next unless msg.present? && (css_class = bootstrap_flash_class(name))
+      msg = msg.html_safe if html_safe
+      content_tag(:div, class: css_class) do
+        content_tag(:strong, t("flash_message_types.#{name}")) << ": " << msg
       end
     end.compact.reduce(:<<)
   end
@@ -122,10 +124,11 @@ module ApplicationHelper
     obj.respond_to?(:total_pages)
   end
 
-  # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
+  # if the given array is not paginated, apply an infinite pagination
+  # so the will_paginate methods will still work
   def prepare_for_index(objs)
     if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
-      objs.paginate(page: 1, per_page: 1000000)
+      objs.paginate(page: 1, per_page: 1_000_000)
     else
       objs
     end
@@ -146,16 +149,12 @@ module ApplicationHelper
     @title_args ||= {}
 
     # if action specified outright, use that
-    action = if @title_action
-      @title_action
-    else
-      # use 'new' and 'edit' for 'update' and 'create', respectively
+    action = @title_action ||
       case action_name
       when "update" then "edit"
       when "create" then "new"
       else action_name
       end
-    end
 
     "".html_safe.tap do |ttl|
       model_name = controller_name.classify.downcase
@@ -169,11 +168,12 @@ module ApplicationHelper
       end
 
       # add text
-      if options[:name_only]
-        ttl << @title_args[:name]
-      else
-        ttl << t(action, {scope: "page_titles.#{controller_name}", default: [:all, ""]}.merge(@title_args || {}))
-      end
+      ttl << if options[:name_only]
+               @title_args[:name]
+             else
+               t(action, {scope: "page_titles.#{controller_name}", default: [:all, ""]}
+                           .merge(@title_args || {}))
+             end
     end
   end
 
@@ -221,12 +221,11 @@ module ApplicationHelper
     # add a custom prefix if given
     if options[:prefix]
       # remove the inital cap also
-      message = options[:prefix] + " " + message.gsub(/^([A-Z])/) { $1.downcase }
+      message = options[:prefix] + " " + message.gsub(/^([A-Z])/) { Regexp.last_match(1).downcase }
     end
 
     # add Error: unless in compact mode
     message = t("common.error", count: obj.errors.size) + ": " + message unless options[:compact]
-
 
     message
   end
@@ -235,12 +234,11 @@ module ApplicationHelper
   def nav_links(*klasses)
     links = []
     klasses.each do |k|
-      if can?(:index, k)
-        path = dynamic_path(k, action: :index)
-        active = current_page?(path)
-        links << content_tag(:li, class: "nav-item" + (active ? " active" : "")) do
-          link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path, class: "nav-link")
-        end
+      next unless can?(:index, k)
+      path = dynamic_path(k, action: :index)
+      active = current_page?(path)
+      links << content_tag(:li, class: "nav-item" + (active ? " active" : "")) do
+        link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path, class: "nav-link")
       end
     end
     links.reduce(:<<)

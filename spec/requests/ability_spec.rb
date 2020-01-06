@@ -1,15 +1,16 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "abilities" do
-
   # user tests
   it "coordinators should be able to create users for their current mission" do
     create_user_and_ability(role: "coordinator")
 
     u = User.new
-    expect(@ability.cannot?(:create, u)).to be true
+    expect(@ability.cannot?(:create, u)).to be(true)
     u.assignments.build(mission: get_mission)
-    expect(@ability.can?(:create, u)).to be true
+    expect(@ability.can?(:create, u)).to be(true)
   end
 
   it "staffers should not be able to create users" do
@@ -17,7 +18,7 @@ describe "abilities" do
 
     u = User.new
     u.assignments.build(mission: get_mission)
-    expect(@ability.cannot?(:create, u)).to be true
+    expect(@ability.cannot?(:create, u)).to be(true)
   end
 
   def create_user_and_ability(options)

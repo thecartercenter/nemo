@@ -60,9 +60,9 @@
 
 .filters-popover {
   $container-padding: 12px;
+  max-width: 300px;
 
   width: 80vw !important;
-  max-width: 300px;
 
   &.wide {
     max-width: 450px;
@@ -104,8 +104,8 @@
 
   // Center checkboxes; by default they have weird margins here.
   .form-check {
-    display: flex;
     align-items: center;
+    display: flex;
 
     .form-check-input {
       margin-top: 0;
@@ -113,10 +113,10 @@
   }
 
   .operator-text {
-    max-width: 40px;
     flex: 1;
     font-size: 14px;
     line-height: 32px;
+    max-width: 40px;
     text-align: center;
   }
 }

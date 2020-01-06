@@ -1,33 +1,38 @@
-require 'uri'
+# frozen_string_literal: true
+
+require "uri"
 module Concerns::ApplicationController::Routing
   extend ActiveSupport::Concern
 
   def check_route
-    raise "params[:mission_name] not allowed in #{current_mode} mode" if !mission_mode? && params[:mission_name].present?
+    if !mission_mode? && params[:mission_name].present?
+      raise "params[:mission_name] not allowed in #{current_mode} mode"
+    end
   end
 
-  def default_url_options(options={})
+  def default_url_options(_options = {})
     {locale: I18n.locale, mode: params[:mode], mission_name: current_mission.try(:compact_name)}
   end
 
   def current_mode
-    @current_mode ||= case params[:mode]
-    when 'admin' then 'admin'
-    when 'm' then 'mission'
-    else 'basic'
-    end
+    @current_mode ||=
+      case params[:mode]
+      when "admin" then "admin"
+      when "m" then "mission"
+      else "basic"
+      end
   end
 
   def admin_mode?
-    current_mode == 'admin'
+    current_mode == "admin"
   end
 
   def mission_mode?
-    current_mode == 'mission'
+    current_mode == "mission"
   end
 
   def basic_mode?
-    current_mode == 'basic'
+    current_mode == "basic"
   end
 
   def current_root_path
@@ -45,7 +50,7 @@ module Concerns::ApplicationController::Routing
       flash[:missionchange] = true
 
       uri = URI.parse(request.fullpath)
-      uri.query = uri.query.split('&').reject{|c| c == 'missionchange=1'}.join('&')
+      uri.query = uri.query.split("&").reject { |c| c == "missionchange=1" }.join("&")
       uri.query = nil if uri.query.blank?
       redirect_to(uri.to_s)
     end
@@ -54,14 +59,12 @@ module Concerns::ApplicationController::Routing
   # The path to which the user should be directed if exiting admin mode.
   def admin_mode_exit_path
     current_user.best_mission ?
-      mission_root_path(:mission_name => current_user.best_mission.compact_name) :
+      mission_root_path(mission_name: current_user.best_mission.compact_name) :
       basic_root_path
   end
 
   # Saves the current mission (or lack thereof) to the DB.
   def remember_mission
-    if current_user && current_mode == 'mission'
-      current_user.remember_last_mission(current_mission)
-    end
+    current_user.remember_last_mission(current_mission) if current_user && current_mode == "mission"
   end
 end

@@ -1,20 +1,20 @@
 form.user_import_form {
   /* special form */
   div.batch_line_with_info {
-    padding: 10px 0;
     border-top: $light-border;
+    padding: 10px 0;
 
     input[type=text] {
+      display: inline-block;
       vertical-align: top;
       width: 400px;
-      display: inline-block;
     }
 
     div.info {
-      vertical-align: top;
-      width: 350px;
       display: inline-block;
       margin-left: 5px;
+      vertical-align: top;
+      width: 350px;
     }
 
     &.line_ok div.info {

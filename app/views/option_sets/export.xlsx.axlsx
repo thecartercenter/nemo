@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 xlsx_package.workbook.tap do |wb|
   wb.use_shared_strings = true
 
-  header_style = wb.styles.add_style(b: true, alignment: { horizontal: :center })
+  header_style = wb.styles.add_style(b: true, alignment: {horizontal: :center})
   row_style = wb.styles.add_style(locked: false)
 
-  if @option_set.mission
-    locale = @option_set.mission.default_locale || I18n.default_locale
-  else
-    locale = I18n.default_locale
-  end
+  locale = if @option_set.mission
+             @option_set.mission.default_locale || I18n.default_locale
+           else
+             I18n.default_locale
+           end
 
   I18n.with_locale(locale) do
     wb.add_worksheet(name: @option_set.worksheet_name) do |sheet|

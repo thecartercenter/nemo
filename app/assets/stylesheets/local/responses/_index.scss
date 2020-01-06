@@ -13,20 +13,20 @@
     }
 
     i.fa {
-      margin-right: 5px;
       color: $success-green;
+      margin-right: 5px;
     }
   }
 
   // Search excerpt
   tr.second_row td {
     border-top: none !important;
-    padding-top: 0;
     color: #aaa;
+    padding-top: 0;
 
     p {
-      margin-top: 0;
       margin-bottom: 3px;
+      margin-top: 0;
     }
 
     p:last-child {

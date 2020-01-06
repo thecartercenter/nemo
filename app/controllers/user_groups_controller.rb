@@ -89,6 +89,7 @@ class UserGroupsController < ApplicationController
   end
 
   def load_users(user_ids)
-    @user_groups = User.accessible_by(current_ability).includes(:assignments).where(id: user_ids, assignments: {mission: current_mission})
+    @user_groups = User.accessible_by(current_ability).includes(:assignments)
+      .where(id: user_ids, assignments: {mission: current_mission})
   end
 end

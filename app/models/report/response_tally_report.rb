@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -44,7 +46,6 @@
 # rubocop:enable Metrics/LineLength
 
 class Report::ResponseTallyReport < Report::TallyReport
-
   def as_json(options = {})
     h = super(options)
     h[:calculations_attributes] = calculations
@@ -54,8 +55,6 @@ class Report::ResponseTallyReport < Report::TallyReport
   protected
 
   def prep_query(rel)
-    joins = []
-
     # add tally to select
     rel = rel.select("COUNT(responses.id) AS tally")
 
@@ -65,15 +64,17 @@ class Report::ResponseTallyReport < Report::TallyReport
     # add groupings
     rel = apply_groupings(rel)
 
-    rel = rel.limit(response_limit)
+    rel.limit(response_limit)
   end
 
   # applys both groupings
   def apply_groupings(rel, options = {})
-    raise Report::ReportError.new("primary groupings not allowed for this report type") if pri_grouping && options[:secondary_only]
+    if pri_grouping && options[:secondary_only]
+      raise Report::ReportError, "primary groupings not allowed for this report type"
+    end
     rel = pri_grouping.apply(rel) if pri_grouping
     rel = sec_grouping.apply(rel) if sec_grouping
-    return rel
+    rel
   end
 
   def has_grouping(which)
@@ -93,8 +94,8 @@ class Report::ResponseTallyReport < Report::TallyReport
   private
 
   def grouping(rank)
-    c = calculations.find_by_rank(rank)
-    c.nil? ? nil : Report::Grouping.new(c, [:primary, :secondary][rank-1])
+    c = calculations.find_by(rank: rank)
+    c.nil? ? nil : Report::Grouping.new(c, %i[primary secondary][rank - 1])
   end
 
   def pri_grouping
