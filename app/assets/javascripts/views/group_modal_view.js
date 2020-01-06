@@ -1,12 +1,11 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
-  static initClass() {
-    this.prototype.events = {
+ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
+  get events() {
+    return {
       'click .save': 'save',
       keypress: 'keypress',
       'shown.bs.modal': 'modal_shown',
@@ -99,4 +98,4 @@
   toggle_item_name() {
     return this.showField('group_item_name_', this.$('#qing_group_repeatable')[0].checked, { prefix: true });
   }
-}).initClass();
+};

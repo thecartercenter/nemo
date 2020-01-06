@@ -1,13 +1,10 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.CascadingSelectsView = class CascadingSelectsView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = { 'change select': 'select_changed' };
-  }
+ELMO.Views.CascadingSelectsView = class CascadingSelectsView extends ELMO.Views.ApplicationView {
+  get events() { return { 'change select': 'select_changed' }; }
 
   initialize(options) {
     this.option_set_id = options.option_set_id;
@@ -64,4 +61,4 @@
     }
     return false;
   }
-}).initClass();
+};

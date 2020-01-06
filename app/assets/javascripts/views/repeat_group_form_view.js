@@ -1,12 +1,11 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.RepeatGroupFormView = class RepeatGroupFormView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = {
+ELMO.Views.RepeatGroupFormView = class RepeatGroupFormView extends ELMO.Views.ApplicationView {
+  get events() {
+    return {
       'click .add-instance': 'add_instance',
       'click .remove-instance': 'remove_instance',
     };
@@ -30,4 +29,4 @@
     instance.hide();
     return instance.find('[id$=_destroy]').val('1');
   }
-}).initClass();
+};

@@ -1,12 +1,11 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.ResponseFormRepeatView = class ResponseFormRepeatView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = {
+ELMO.Views.ResponseFormRepeatView = class ResponseFormRepeatView extends ELMO.Views.ApplicationView {
+  get events() {
+    return {
       'click > .add-repeat': 'addRepeat',
       'click .remove-repeat': 'removeRepeat',
     };
@@ -53,4 +52,4 @@
   toggleEmptyNotice() {
     return this.$('> .empty-notice').toggle(this.children().find(':visible').length === 0);
   }
-}).initClass();
+};

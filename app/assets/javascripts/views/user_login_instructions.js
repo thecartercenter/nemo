@@ -1,12 +1,11 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.UserLoginInstructionsView = class UserLoginInstructionsView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = {
+ELMO.Views.UserLoginInstructionsView = class UserLoginInstructionsView extends ELMO.Views.ApplicationView {
+  get events() {
+    return {
       'click .masked a.toggle-mask': 'unmask',
       'click .unmasked a.toggle-mask': 'mask',
     };
@@ -25,4 +24,4 @@
     container.find('.unmasked').addClass('d-none');
     return container.find('.masked').removeClass('d-none');
   }
-}).initClass();
+};

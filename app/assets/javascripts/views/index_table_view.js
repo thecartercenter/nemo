@@ -1,15 +1,14 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Models an index table view as shown on most index pages.
-(ELMO.Views.IndexTableView = class IndexTableView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '#index_table';
+ELMO.Views.IndexTableView = class IndexTableView extends ELMO.Views.ApplicationView {
+  get el() { return '#index_table'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'click table.index_table tbody tr': 'row_clicked',
       'mouseover table.index_table tbody tr': 'highlight_partner_row',
       'mouseout table.index_table tbody tr': 'unhighlight_partner_row',
@@ -62,4 +61,4 @@
   unhighlight_partner_row(event) {
     return $(event.target).closest('tbody').find('tr.hovered').removeClass('hovered');
   }
-}).initClass();
+};

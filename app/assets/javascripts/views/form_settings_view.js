@@ -1,14 +1,13 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.FormSettingsView = class FormSettingsView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = 'form.form_form';
+ELMO.Views.FormSettingsView = class FormSettingsView extends ELMO.Views.ApplicationView {
+  get el() { return 'form.form_form'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'click .more-settings': 'show_setting_fields',
       'click .less-settings': 'hide_setting_fields',
       'click #form_smsable': 'show_hide_sms_settings',
@@ -71,4 +70,4 @@
   init_recipient_select() {
     return this.$('#form_recipient_ids').select2({ ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(this.recipient_options_url) });
   }
-}).initClass();
+};

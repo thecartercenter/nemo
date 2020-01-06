@@ -2,14 +2,13 @@
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '#user-groups-modal';
+ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.ApplicationView {
+  get el() { return '#user-groups-modal'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'ajax:success .action-link-edit': 'process_edit',
       'ajax:success .action-link-destroy': 'process_destroy',
       'click a.update-name': 'update_name',
@@ -131,4 +130,4 @@
     this.$(target_row).remove();
     return this.$('.header.link_set').html(data.page_entries_info);
   }
-}).initClass();
+};

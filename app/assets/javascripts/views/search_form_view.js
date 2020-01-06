@@ -1,15 +1,14 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Models the form for entering a search query.
-(ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '.search-form';
+ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views.ApplicationView {
+  get el() { return '.search-form'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'click .btn-clear': 'clear_search',
       'click .search-footer a': 'show_help',
     };
@@ -47,4 +46,4 @@
     // Submit form
     return this.el.submit();
   }
-}).initClass();
+};

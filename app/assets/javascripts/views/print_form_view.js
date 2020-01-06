@@ -1,15 +1,12 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.PrintFormView = class PrintFormView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '#content';
+ELMO.Views.PrintFormView = class PrintFormView extends ELMO.Views.ApplicationView {
+  get el() { return '#content'; }
 
-    this.prototype.events = { 'click a.print-link': 'print_form' };
-  }
+  get events() { return { 'click a.print-link': 'print_form' }; }
 
   initialize() {
     // For some reason this doesn't work if you put it in the events hash.
@@ -68,4 +65,4 @@
     const d = new Date();
     return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
   }
-}).initClass();
+};

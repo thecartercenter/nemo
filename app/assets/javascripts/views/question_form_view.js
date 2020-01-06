@@ -1,16 +1,15 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Newer view to manage Question form.
-(ELMO.Views.QuestionFormView = class QuestionFormView extends ELMO.Views.FormView {
-  static initClass() {
-    // We use $= because the start of the ID can vary depending on whether
-    // it's a question form or questioning form.
-    // Note, these events must be redefined in any child classes.
-    this.prototype.events = {
+ELMO.Views.QuestionFormView = class QuestionFormView extends ELMO.Views.FormView {
+  // We use $= because the start of the ID can vary depending on whether
+  // it's a question form or questioning form.
+  // Note, these events must be redefined in any child classes.
+  get events() {
+    return {
       'change select[id$="_qtype_name"]': 'toggleFields',
       'change select[id$="_metadata_type"]': 'toggleFields',
     };
@@ -65,4 +64,4 @@
   fieldElement(attrib) {
     return this.$(`.form-field[data-field-name=${attrib}] .control`);
   }
-}).initClass();
+};

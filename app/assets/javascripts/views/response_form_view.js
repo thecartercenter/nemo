@@ -1,13 +1,10 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.ResponseFormView = class ResponseFormView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = { 'click .qtype-location .widget a': 'showLocationPicker' };
-  }
+ELMO.Views.ResponseFormView = class ResponseFormView extends ELMO.Views.ApplicationView {
+  get events() { return { 'click .qtype-location .widget a': 'showLocationPicker' }; }
 
   initialize(params) {
     // Select2's for user and reviewer
@@ -22,4 +19,4 @@
     const field = this.$(e.target).closest('.widget').find('input[type=text]');
     return this.locationPicker.show(field);
   }
-}).initClass();
+};

@@ -1,13 +1,12 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Newer view to manage Questioning form.
-(ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.QuestionFormView {
-  static initClass() {
-    this.prototype.events = {
+ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.QuestionFormView {
+  get events() {
+    return {
       'change select[id$="_qtype_name"]': 'toggleFields',
       'change select[id$="_option_set_id"]': 'toggleFields',
       'change select[id$="_metadata_type"]': 'toggleFields',
@@ -63,4 +62,4 @@
   showSkipLogic() {
     return super.metadataTypeBlank();
   }
-}).initClass();
+};

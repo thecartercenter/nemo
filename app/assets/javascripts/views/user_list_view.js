@@ -2,14 +2,13 @@
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.UserListView = class UserListView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '#index_table';
+ELMO.Views.UserListView = class UserListView extends ELMO.Views.ApplicationView {
+  get el() { return '#index_table'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'click .list-groups': 'show_groups_modal',
       'click .add-to-group': 'add_to_group_modal',
       'click .remove-from-group': 'remove_from_group_modal',
@@ -67,4 +66,4 @@
       },
     });
   }
-}).initClass();
+};

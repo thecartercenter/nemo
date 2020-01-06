@@ -1,15 +1,12 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.SmsTestConsoleView = class SmsTestConsoleView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = 'form#new_sms_test';
+ELMO.Views.SmsTestConsoleView = class SmsTestConsoleView extends ELMO.Views.ApplicationView {
+  get el() { return 'form#new_sms_test'; }
 
-    this.prototype.events = { submit: 'submit' };
-  }
+  get events() { return { submit: 'submit' }; }
 
   submit(e) {
     e.preventDefault();
@@ -36,4 +33,4 @@
       },
     });
   }
-}).initClass();
+};

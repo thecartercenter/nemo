@@ -1,14 +1,13 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.UserProfileFormView = class UserProfileFormView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = 'form.user_form';
+ELMO.Views.UserProfileFormView = class UserProfileFormView extends ELMO.Views.ApplicationView {
+  get el() { return 'form.user_form'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'change select#user_gender': 'toggle_custom_gender_visibility',
       'change select#user_reset_password_method': 'toggle_password_fields',
     };
@@ -51,4 +50,4 @@
     const select_value = this.$('select#user_reset_password_method').val();
     return this.$('.password-fields').toggleClass('d-none', (select_value !== 'enter') && (select_value !== 'enter_and_show'));
   }
-}).initClass();
+};

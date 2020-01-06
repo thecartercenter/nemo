@@ -2,14 +2,11 @@
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Controls draggable list behavior for form items list.
-(ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '.form-items-list';
-  }
+ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends ELMO.Views.ApplicationView {
+  get el() { return '.form-items-list'; }
 
   initialize(params) {
     this.parent_view = params.parent_view;
@@ -122,4 +119,4 @@
     // the greater rank is the longer one.
     if (ar.length === br.length) { return 0; } else if (ar.length > br.length) { return 1; } return -1;
   }
-}).initClass();
+};

@@ -3,15 +3,14 @@
  * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
  * DS205: Consider reworking code to avoid use of IIFEs
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Controls add/edit/delete operations for form items list.
-(ELMO.Views.FormItemsView = class FormItemsView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '.form-items';
+ELMO.Views.FormItemsView = class FormItemsView extends ELMO.Views.ApplicationView {
+  get el() { return '.form-items'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'click .add-group': 'show_new_group_modal',
       'click .form-item-group > .inner': 'show_edit_group_modal',
       'click .form-item-group > .inner .action-link-edit': 'show_edit_group_modal',
@@ -127,4 +126,4 @@
   go_to_question(e) {
     if (!(this.$(e.target).parents('a').length > 0)) { return window.location.href = this.$(e.currentTarget).data('href'); }
   }
-}).initClass();
+};

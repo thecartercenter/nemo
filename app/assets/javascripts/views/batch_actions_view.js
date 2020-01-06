@@ -2,16 +2,15 @@
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Models the batch actions done on index pages
-(ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '#index_table';
+ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.Views.ApplicationView {
+  get el() { return '#index_table'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'click #select-all-link': 'select_all_clicked',
       'click a.select_all_pages': 'select_all_pages_clicked',
       'click a.batch_op_link': 'submit_batch',
@@ -153,4 +152,4 @@
 
     return false;
   }
-}).initClass();
+};

@@ -1,13 +1,10 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.FileUploaderManager = class FileUploaderManager extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = { submit: 'formSubmitted' };
-  }
+ELMO.Views.FileUploaderManager = class FileUploaderManager extends ELMO.Views.ApplicationView {
+  get events() { return { submit: 'formSubmitted' }; }
 
   initialize(options) {
     Dropzone.autoDiscover = false;
@@ -39,4 +36,4 @@
     this.$('.submit-buttons .btn-primary').css('display', canSubmit ? 'inline-block' : 'none');
     return this.$('#upload-progress-notice').css('display', canSubmit ? 'none' : 'inline-block');
   }
-}).initClass();
+};

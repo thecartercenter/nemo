@@ -1,15 +1,14 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Controls "return to draft status" button and modal.
-(ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.el = '#action-links-and-modal';
+ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.ApplicationView {
+  get el() { return '#action-links-and-modal'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'click .return-to-draft-link': 'handleLinkClicked',
       'shown.bs.modal #return-to-draft-modal': 'handleModalShown',
       'click #return-to-draft-modal .btn-primary': 'handleAcceptClicked',
@@ -45,4 +44,4 @@
     // Trigger another click on the link so we can use the data-method machinery to make the PUT request.
     return this.$('.return-to-draft-link').trigger('click');
   }
-}).initClass();
+};

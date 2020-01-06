@@ -1,13 +1,10 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.RegenerableFieldView = class RegenerableFieldView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = { 'click .regenerate': 'regenerateField' };
-  }
+ELMO.Views.RegenerableFieldView = class RegenerableFieldView extends ELMO.Views.ApplicationView {
+  get events() { return { 'click .regenerate': 'regenerateField' }; }
 
   regenerateField(event) {
     event.preventDefault();
@@ -56,4 +53,4 @@
       },
     });
   }
-}).initClass();
+};

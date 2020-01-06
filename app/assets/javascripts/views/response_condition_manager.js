@@ -1,14 +1,11 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 // Handles conditional logic for a single question/answer pair in the response view based on conditions.
-(ELMO.Views.ResponseConditionManager = class ResponseConditionManager extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = { submit: 'clearOnSubmitIfFalse' };
-  }
+ELMO.Views.ResponseConditionManager = class ResponseConditionManager extends ELMO.Views.ApplicationView {
+  get events() { return { submit: 'clearOnSubmitIfFalse' }; }
 
   initialize(options) {
     this.item = options.item;
@@ -52,4 +49,4 @@
   results() {
     return this.checkers.map((c) => c.result);
   }
-}).initClass();
+};

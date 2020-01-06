@@ -1,14 +1,13 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS206: Consider reworking classes to avoid initClass
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-(ELMO.Views.BroadcastsView = class BroadcastsView extends ELMO.Views.FormView {
-  static initClass() {
-    this.prototype.el = '.broadcast_form';
+ELMO.Views.BroadcastsView = class BroadcastsView extends ELMO.Views.FormView {
+  get el() { return '.broadcast_form'; }
 
-    this.prototype.events = {
+  get events() {
+    return {
       'change #broadcast_medium': 'medium_changed',
       'change #broadcast_recipient_selection': 'recipient_selection_changed',
       'keyup #broadcast_body': 'update_char_limit',
@@ -45,4 +44,4 @@
       return div.css('color', diff >= 0 ? 'black' : '#d02000');
     }
   }
-}).initClass();
+};

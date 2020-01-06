@@ -2,7 +2,6 @@
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
  * DS205: Consider reworking code to avoid use of IIFEs
- * DS206: Consider reworking classes to avoid initClass
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
@@ -15,10 +14,8 @@
 // is a hidden input element with a name containing
 // the json key, that element's value is set to the json value
 
-(ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.ApplicationView {
-  static initClass() {
-    this.prototype.events = { 'click .existing a.delete': 'deleteExisting' };
-  }
+ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.ApplicationView {
+  get events() { return { 'click .existing a.delete': 'deleteExisting' }; }
 
   initialize(options) {
     this.genericThumbPath = options.genericThumbPath;
@@ -95,4 +92,4 @@
   clearMetaFields() {
     return this.$('input:hidden').each((index, e) => $(e).val(''));
   }
-}).initClass();
+};
