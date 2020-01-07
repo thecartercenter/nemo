@@ -1,8 +1,6 @@
 // ELMO.Control.Control
-(function(ns, klass) {
-
+(function (ns, klass) {
   // constructor
-  ns.Control = klass = function() {
-  }
-
+  ns.Control = klass = function () {
+  };
 }(ELMO.Control));

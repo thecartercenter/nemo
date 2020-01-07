@@ -1,8 +1,6 @@
 // ELMO.Report.Display
-(function(ns, klass) {
-
+(function (ns, klass) {
   // constructor
-  ns.Display = klass = function() {
-  }
-
+  ns.Display = klass = function () {
+  };
 }(ELMO.Report));

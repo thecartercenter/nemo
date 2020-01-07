@@ -1,8 +1,7 @@
 // ELMO.Report.AttribMenu < ELMO.Report.ObjectMenu
-(function(ns, klass) {
-
+(function (ns, klass) {
   // constructor
-  klass = ns.AttribMenu = function(objs) {
+  klass = ns.AttribMenu = function (objs) {
     this.objs = objs;
   };
 
@@ -10,5 +9,4 @@
   klass.prototype = new ns.ObjectMenu();
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.ObjectMenu.prototype;
-
 }(ELMO.Report));
