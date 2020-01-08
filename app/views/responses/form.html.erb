@@ -13,7 +13,10 @@
     <%= f.field(:form_id, type: :hidden) %>
 
     <%= render("metadata", f: f, context: @context) %>
-    <%= render("responses/answers/nodes", nodes: [@response.root_node], context: @context) %>
+    <%# root_node can be expected to be nil when there are no questions at all on the form. %>
+    <% unless @response.root_node.nil? %>
+      <%= render("responses/answers/nodes", nodes: [@response.root_node], context: @context) %>
+    <% end %>
 
     <div class="row">
       <div class="col-md-6">
