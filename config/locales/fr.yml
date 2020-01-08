@@ -189,7 +189,7 @@ fr:
       internal: "une erreur interne s'est produite lors du traitement de votre téléchargement."
     messages:
       deleted_successfully: "supprimé avec succès"
-      generic_delete_error: "erreur lors de l'opération."
+      generic_delete_error: "Erreur lors de la suppression."
   helpers:
     submit:
       create: "Sauvegarder"
@@ -423,8 +423,10 @@ fr:
         recipient_ids: "Destinateurs de SMS transferé"
         authenticate_sms: "authentifier SMS"
         updated_at: "Dernière modification"
+        current_version_name: "version actuelle"
         item_list_heading: "Questions"
         default_response_name: "Nom de la réponse par défaut"
+        minimum_version_id: "Version minimale acceptée"
       mission:
         compact_name: "Nom Compact"
         locked: "Verrouillé?"
@@ -509,8 +511,8 @@ fr:
         user_id: "Utilisateur/Nom de l'équipe"
         incomplete: "Cette réponse est incomplète"
       report/report:
-        aggregation: "Méthodologie"
-        aggregation_id: "Méthodologie"
+        aggregation: "Opération"
+        aggregation_id: "Opération"
         bar_style: "Histogramme"
         display_type: "Type d'affichage"
         fields: "Attributs/Questions"
@@ -581,6 +583,41 @@ fr:
       user:
         phone: "Ex: +17123241235"
         phone2: "Ex: +2348123456789"
+    action_links:
+      show: "Afficher"
+      edit: "Editer"
+      destroy: "Supprimer"
+      index: "Liste"
+      clone: "Cloner"
+      models:
+        form:
+          new: "Créer un Nouveau Formulaire"
+          sms_guide: "Guide SMS"
+          sms_console: "Console de test SMS"
+          go_live: "Publier"
+          pause: "Pause"
+          return_to_draft: "Retour au statut brouillon"
+          print: "Imprimer"
+        mission:
+          new: "Créer une mission"
+        operation:
+          clear: "Effacer toutes les opérations terminées"
+          destroy: "Effacer"
+        option_set:
+          new: "Créer un Nouvel Ensemble d'Options"
+          export: "Exporter au format XLSX"
+        option_sets/import:
+          new: "Importer un ensemble d'options"
+        question:
+          new: "Créer une Nouvelle Question"
+        report/report:
+          new: "Créer un Nouveau Rapport"
+          export: "Exporter au format CSV"
+        user:
+          new: "Créer un Nouvel Utilisateur"
+        user_group:
+          new: "Nouveau groupe"
+          members: "Lister les membres"
     hints:
       form:
         name: "Un nom descriptif pour le formulaire."
@@ -589,13 +626,14 @@ fr:
         recipient_ids: "Si vous saisissez un utilisateur ou un groupe d'utilisateur ici, les réponses SMS entrant leur seront automatiquement transmises"
         authenticate_sms: "Si coché, l'utilisateur devra entrer son code utilisateur lors de l'envoi de réponse par SMS."
         allow_incomplete: "Si coché, permet l'envoi des formulaires avec des questions obligatoires sans réponse (seulement par web et ODK). Les observateurs utilisant ODK doivent saisir un code de dérogation (voir les paramètres) pour ce faire."
+        current_version_name: "Chaque version du formulaire a un identifiant à 10 chiffres et un code à 3 lettres. Le système de gestion des versions de formulaire est destiné à indiquer de petits changements dans la conception du formulaire afin que les observateurs puissent mettre à jour leurs copies du formulaire."
         access_level: "Public: tous les utilisateurs peuvent accéder aux données via API. Protégé: Seulement les utilisateurs spécifiques peuvent accéder aux donnes via API. Privé: Personne ne peut accéder aux donnes via API."
         default_response_name: "Le texte entré ici sera utilisé comme nom par défaut des formulaires remplis dans ODK. Vous pouvez entrer $CodeQuestion pour inclure la valeur d'une question dans le formulaire.\n\nPar exemple, entrer:\n\nQuestionnaire pour $NumVillage-$NomDeFamille\n\npourrait nommer le formulaire:\n\nQuestionnaire pour 7-Smith\n\nen supposant que vous avez des questions avec les codes 'NumVillage' et 'NomDeFamille'\n\nVous pouvez également entrer une expression de calcul XPath en l’entourant de la fonction calc():\n\n<code></code>\n<code>calc($NumVillage + 100 / 2)</code>"
       mission:
         name: "Le titre de cette mission doit être unique et contenir un maximum de 32 caractères. Il est recommandé d'inclure l'année si des missions futures utiliseront le même titre."
-        locked: "Si une mission est verrouillée, les réponses et les formulaires ne peuvent pas être générés ou modifiées et les utilisateurs ne peuvent pas être ajoutés ou supprimé."
+        locked: "Si une mission est verrouillée, les réponses et les formulaires ne peuvent pas être créés ou modifiés et les utilisateurs ne peuvent pas être ajoutés ou supprimés."
       option:
-        name: "La description de cet option pour les utilisateurs."
+        name: "La description textuelle de cette option que les utilisateurs verront."
       option_set:
         allow_coordinates: "Si cet ensemble d'options autorise des options avec des coordonnées géographiques."
         geographic: "Si cet ensemble d'options représente des informations géographiques, par ex. un ensemble de provinces ou de régions."
@@ -613,8 +651,8 @@ fr:
         code: "Un nom de code court (entre 2-20 caractères), qui devrait contenir seulement des lettres et des chiffres, par ex. UrneClos, HeureDeDepart."
         hint: "Instructions additionnels, par ex. 'Entrez un nombre approximatif de personnes qui sont dans la file d'attente pour voter.'"
         key: "Les réponses aux questions clés aident à résumer les réponses et apparaissent dans la liste des réponses. Exemples de questions clé: Région, Evaluation globale."
-        minimum: "Le valeur minimum pour la résultat. Cochez la boîte s'il minimum n'est pas valable."
-        maximum: "Le valeur maximum pour la résultat. Cochez la boîte s'il minimum n'est pas valable."
+        minimum: "La valeur minimale de la réponse. Cochez la case si le minimum lui-même n'est pas valide."
+        maximum: "La valeur maximale de la réponse. Cochez la case si le maximum lui-même n'est pas valide."
         auto_increment: "Si cette case est coche et vous utilisez ODK, la valeur sera incrémentée chaque fois que vous remplissez un nouveau formulaire."
         name: "Le texte de la question principale, par ex. 'Combien de personnes sont dans la file d'attente?'"
         option_set_id: "Le groupe d'options que l'utilisateur pourra choisir."
@@ -682,11 +720,11 @@ fr:
         login: "Le nom d'utilisateur sera utilisé pour se connecter. Il ne peut contenir que des lettres non accentués, des chiffres, des points et des tirets bas."
         phone: "Le numéro de téléphone doit inclure l'indicatif téléphonique du pays. Par exemple: +25680344523"
         phone2: "Le numéro de téléphone doit inclure l'indicatif téléphonique du pays. Par exemple: +25680344523"
-        admin: "Si cet utilisateur est un administrateur du système tout entier qui peut contrôler les paramètres de missions dans le champ ci-dessous."
+        admin: "Indique si cet utilisateur est un administrateur à l'échelle du système. Vous pouvez contrôler les autorisations par mission en utilisant les champs ci-dessous."
         assignments: "Les missions à qui cet utilisateur est assigné."
-        password: "Pour changer votre mot de passe, entrez un nouveau mot de passe ici."
-        password_confirmation: "Rentrez le nouveau mot de passe."
-        pref_lang: "La langue préféréé pour le système."
+        password: "Saisissez un nouveau mot de passe ici si vous souhaitez modifier votre mot de passe existant."
+        password_confirmation: "Saisissez encore une fois le nouveau mot de passe."
+        pref_lang: "La langue dans laquelle vous souhaitez utiliser le système."
         role: "Le rôle de l'utilisateur dans la mission en cours et s'il est actuellement actif ou non. Les utilisateurs inactifs ne peuvent pas accéder à la mission."
         api_key: "Utiliser cette clé pour se connecter à d'autres applications"
         sms_auth_code: "Utiliser ce code pour envoyer une réponse par SMS"
@@ -732,14 +770,14 @@ fr:
             conditions:
               blank: "Il doit y avoir au moins une condition."
         form:
-          cant_delete_if_has_responses: "Cette forme requiert des réponses."
+          cant_delete_if_has_responses: "Vous ne pouvez pas supprimer ce formulaire car il a des réponses associées."
           ranks_break_conditions: "Les nouveaux rangs invalident au moins une condition."
           general: "Le formulaire est invalide (voir ci-dessous)."
           attributes:
             default_response_name:
               calc_must_wrap_all: "calc(...) doit entourer le nom entier."
         mission:
-          cant_delete_if_assoc: "Impossible de supprimer cette mission parce qu'elle est associée à formulaires, réponses, ou plus d'objets."
+          cant_delete_if_assoc: "Vous ne pouvez pas supprimer cette mission car elle a des formulaires, des réponses ou d'autres objets associés."
           let_num_spc_only: "Utilisez seulement des lettres, des chiffres et des espaces."
           not_unique: "Le titre ressemble à  la mission existante'%{existing}'"
           general: "La mission est invalide (voir ci-dessous)."
@@ -823,7 +861,7 @@ fr:
               blank_unless_goto_end: "Ce champ est obligatoire à moins que vous ne choisissiez 'passer à la fin du formulaire'."
         user:
           at_least_digits: "Entrez au moins %{num} chiffres"
-          cant_delete_if_responses: "Impossible de supprimer cet utilisateur."
+          cant_delete_if_responses: "Vous ne pouvez pas supprimer cet utilisateur car il a des réponses associées."
           duplicate_assignments: "Il y a des tâches en double."
           no_missions: "Vous n'êtes pas affecté à des missions."
           phone_assigned_to_other: "A déjà été attribué à un autre utilisateur"
@@ -869,10 +907,14 @@ fr:
     time_ago: "%{time}"
     time_zone: "Fuseau horaire"
     updated_at: "Mise à jour à"
+    no_live_forms: "Pas de formulaires disponibles"
   actions:
     clone: "Cloner"
     edit: "Editer"
+    go_live: "Publier"
+    pause: "Pause"
     print: "Imprimer"
+    sms_guide: "Guide SMS"
   will_paginate:
     previous_label: "&#8592; Précédent"
     next_label: "Suivant &#8594;"
@@ -1212,6 +1254,8 @@ fr:
     clone_success: "Formulaire '%{form_name}' a été cloné avec succès."
     no_mission: "Pas de Mission"
     no_questions_yet: "Il n'y avait pas de questions trouvées."
+    increment_version: "Incrémenter version"
+    increment_version_warning: "Voulez-vous vraiment incrémenter la version de ce formulaire? Les versions antérieures seront toujours acceptées, sauf si vous modifiez l'attribut Version minimale acceptée ci-dessous."
     invalid_drop_location:
       parent_must_be_group: "Le parent doit être un groupe."
       max_depth: "Les groupes ne peuvent pas être les enfants des autres groupes."
@@ -1234,7 +1278,19 @@ fr:
       many: "Etes-vous certains de vouloir supprimer ces 1 %{count} questions du formulaire?"
       other: "Etes vous sûr de vouloir supprimer ces %{count} questions du formulaire§"
     reqd_sym_definition: "Questions obligatoire sont marquer avec un"
+    return_to_draft:
+      modal:
+        title: "Avertissement: retour au statut de brouillon"
+        body_html: "Le retour au statut Brouillon vous permettra d'apporter des modifications importantes au formulaire, telles que la suppression de questions et la modification d'ensembles d'options. Cela peut entraîner une perte de réponses. Envisagez plutôt de <a href='%{clone_url}' data-method='put'>cloner ce formulaire</a>. "
+        confirm: "Accepter les risques et changer de statut"
+        prompt_html: "Tapez <strong>\"%{override}\"</strong> ci-dessous pour reconnaître les risques et revenir au statut de brouillon:"
+        override: "override"
+    save_and_go_live: "Enregistrer et Publier"
     saving_order: "Enregistrer l'ordre..."
+    statuses:
+      draft: "Brouillon"
+      live: "Publié"
+      paused: "En pause"
     unsaved_rank_notice: "Vous n'avez pas encore enregistrer les modifications vous avez fait à l'ordre des questions.  Vous devriez poussez 'enregistrer' si vous voulez enregistrer les modifications."
   forms:
     sms_guide:
@@ -1321,6 +1377,30 @@ fr:
       selected_rows_page: "Tous les %{count}%{class_name} de cette page sont sélectionnés."
       select_all_rows: "Sélectionner tous les %{count}%{class_name}"
       selected_all_rows: "<strong>Tous les</strong> %{count}%{class_name} sont sélectionnés"
+  integrity_warnings:
+    more_suffix: "%{count} en plus"
+    titles:
+      careful_with_changes: "Soyez prudent avec les modifications"
+      features_disabled: "Certaines fonctionnalités désactivées"
+    reasons:
+      form:
+        published: "Ce formulaire est publié (pas un brouillon)"
+        data: "Ce formulaire a des réponses associées"
+      qing_group:
+        published: "Le formulaire de ce groupe est publié (pas un brouillon)"
+        standard_copy: "Le formulaire de ce groupe est basé sur un standard"
+      question:
+        in_use: "Cette question apparaît sur les formulaires: %{form_list}"
+        published: "Cette question apparaît sur au moins un formulaire publié (pas un brouillon)"
+        standard_copy: "Cette question est basée sur une question standard"
+        data: "Cette question a des réponses associées"
+      option_set:
+        in_use:
+          one: "Cet ensemble d'options apparaît sur %{count} question"
+          other: "Cet ensemble d'options apparaît sur %{count} questions"
+        published: "Cet ensemble d'options apparaît sur au moins un formulaire publié (pas un brouillon)"
+        standard_copy: "Cet ensemble d'options est basé sur un standard"
+        data: "Cet ensemble d'options a des réponses associées"
   location_picker:
     choose_location: "Choisissez l'emplacement"
     current_location: "L'emplacement actuel"
@@ -2008,6 +2088,7 @@ fr:
       first_answer_invalid: "Desolé mais %{token} n'est pas une réponse valide. Rassurez vous d'inclure un point après le numéro de la question"
       form_not_found: "Désolé, il n'y a pas un formulaire avec le code '%{form_code}'."
       form_not_permitted: "Désolé, vous n'avez pas la permission pour soumettre le formulaire '%{form_code}'."
+      form_not_live: "Désolé, le formulaire '%{form_code}' n'est actuellement pas disponible pour les soumissions."
       form_not_smsable: "Désolé, le formulaire '%{form_code}' n'est pas disponible pour l'envoi via SMS."
       form_version_outdated: "Désolé, le formulaire '%{form_code}' concerner une version ancienne. Obtenez un guide de la remise mis à jour, s'il vous plait."
       invalid_form_code: "Désolé, '%{form_code}' n'est pas un code valable pour le formulaire."
@@ -2071,6 +2152,11 @@ fr:
       few: "Il y avait %{count} erreurs."
       many: "Il y avait %{count} erreurs."
       other: "Il y avait %{count} erreurs."
+  tabular_import:
+    errors:
+      wrong_type: "Le fichier téléchargé doit être un fichier Excel de type XLSX valide."
+      no_rows: "Aucune ligne à importer."
+      bad_csv: "Un problème est survenu avec votre fichier CSV: %{msg}"
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
@@ -2161,7 +2247,7 @@ fr:
       email: "Envoyer les instructions de réinitialisation du mot de passe par email"
       print: "Générer un nouveau mot de passe et afficher les instructions de connexion imprimables"
       enter: "Entrer un nouveau mot de passe"
-      enter_and_show: "Générer un nouveau mot de passe et afficher les instructions de connexion imprimables"
+      enter_and_show: "Entrez un nouveau mot de passe et affichez les instructions de connexion imprimables"
   user_group:
     create_prompt: "Veuillez saisir le nom de votre groupe"
     add_users_success: "%{count} utilisateurs ajoutés avec succès au groupe %{group}"
