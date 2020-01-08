@@ -37,16 +37,17 @@ ELMO::Application.configure do
   # We use the Capistrano REVISION as cache key so that
   # 1) we can share one memcache server on a machine with multiple instances
   # 2) cache gets expired on deploy
-  config.cache_store = :dalli_store, (begin
-                                        File.read("config/memcached_server").strip
-                                      rescue StandardError
-                                        nil
-                                      end),
-                       {namespace: "elmo" << (begin
-                                 File.read("REVISION")[0...16]
-                                              rescue StandardError
-                                                ""
-                               end)}
+  memcached_server = begin
+                       File.read("config/memcached_server").strip
+                     rescue StandardError
+                       nil
+                     end
+  revision = begin
+               File.read("REVISION")[0...16]
+             rescue StandardError
+               ""
+             end
+  config.cache_store = :dalli_store, memcached_server, {namespace: "elmo#{revision}"}
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
