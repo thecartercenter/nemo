@@ -6,6 +6,7 @@
     "lint:react": "yarn run lint:js app/javascript/",
     "lint:backbone": "yarn run lint:js app/assets/javascripts/ --ignore-pattern app/assets/javascripts/legacy/",
     "lint:legacy": "yarn run lint:js app/assets/javascripts/legacy/",
+    "lint:lib": "yarn run lint:js lib/assets/javascripts/",
     "lint:scss": "stylelint app/assets/stylesheets/"
   },
   "jest": {
