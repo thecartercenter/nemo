@@ -4,6 +4,9 @@ require File.expand_path("boot", __dir__)
 
 require "rails/all"
 require "coffee_script"
+require "action_view/railtie"
+require "sprockets/railtie"
+require "sprockets/es6"
 
 Bundler.require(*Rails.groups)
 

@@ -43,6 +43,7 @@ gem "react-rails", "~> 2.4"
 gem "sass-rails", "~> 5.0.7"
 gem "select2-rails", "~> 4.0"
 gem "spinjs-rails", "1.3"
+gem "sprockets-es6", "~> 0.9"
 gem "uglifier", "~> 2.7.1"
 gem "webpacker", "~> 3.5"
 
