@@ -301,10 +301,6 @@ class OptionNode < ApplicationRecord
     total_options - (huge? ? TO_SERIALIZE_IF_HUGE : 0)
   end
 
-  def removable?
-    !data?
-  end
-
   def to_s
     "Option Node: ID #{id}  Option ID: " +
       (is_root? ? "[ROOT]" : option_id || "[No option]").to_s +
