@@ -85,7 +85,6 @@ For Atom, install the `linter` package which contains shared stuff, then:
 
 * `linter-eslint`
     * For this one, set your Global Node Installation Path and check the 'Use global ESLint installation' box.
-* `linter-coffeelint`
 * `linter-rubocop`
 * `linter-scss-lint`
 

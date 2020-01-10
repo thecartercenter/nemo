@@ -5,9 +5,6 @@ ruby:
 eslint:
   enabled: false
   config_file: .eslintrc.yml
-coffeescript:
-  enabled: true
-  config_file: coffeelint.json
 scss:
   enabled: true
   config_file: .scss-lint.yml
