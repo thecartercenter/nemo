@@ -7,7 +7,7 @@ After=postgresql.service
 Type=forking
 User=deploy
 Environment=RAILS_ENV=production
-Environment=PATH=/home/deploy/.nvm/versions/node/v10.15.3/bin:/home/deploy/.rbenv/plugins/ruby-build/bin:/home/deploy/.rbenv/shims:/home/deploy/.rbenv/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PATH=/home/deploy/.nvm/versions/node/v10.15.3/bin:/opt/rbenv/plugins/ruby-build/bin:/opt/rbenv/shims:/opt/rbenv/bin:/usr/local/bin:/usr/bin:/bin
 
 WorkingDirectory=/home/deploy/elmo
 ExecStart=/home/deploy/elmo/current/bin/delayed_job start -n 1
