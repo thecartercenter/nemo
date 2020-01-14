@@ -170,3 +170,10 @@ You can run this locally via `bin/delayed_job start`.
     - Also put in your username and password
 1. Retrieve Form
     - In ODK, you should now be able to go to `Get Blank Form` to download the forms from NEMO
+
+### Troubleshooting
+
+If you ever see `check_yarn_integrity error Integrity check failed` or `Your Yarn packages are out of date!`
+simply follow the instructions by running `yarn install --check-files`.
+Note if you previously ran `yarn install` with a different version of Node, the integrity check will fail.
+If you frequently see this error, make sure you execute `nvm use` before `yarn install`.
