@@ -37,7 +37,7 @@
     "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.6.0",
-    "@rails/webpacker": "^4.0.0",
+    "@rails/webpacker": "4.2.2",
     "ignore-loader": "0.1.2",
     "jquery": "3.4.1",
     "lodash": "4.17.13",
@@ -74,6 +74,6 @@
     "react-dom": "16.9.0",
     "stylelint": "12.0.1",
     "stylelint-config-sass-guidelines": "6.2.0",
-    "webpack-dev-server": "3.1.11"
+    "webpack-dev-server": "3.10.1"
   }
 }
