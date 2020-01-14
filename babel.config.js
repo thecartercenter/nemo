@@ -1,6 +1,9 @@
 module.exports = function (api) {
   const validEnv = ['development', 'test', 'production'];
   const currentEnv = api.env();
+  const isDevelopmentEnv = api.env('development');
+  const isProductionEnv = api.env('production');
+  const isTestEnv = api.env('test');
 
   if (!validEnv.includes(currentEnv)) {
     throw new Error(
@@ -13,105 +16,36 @@ module.exports = function (api) {
   }
 
   return {
-    env: {
-      production: {
-        presets: [
-          [
-            '@babel/env',
-            {
-              modules: false,
-              targets: {
-                browsers: '> 1%',
-                uglify: true,
-              },
-              useBuiltIns: 'entry',
-            },
-          ],
-          '@babel/react',
-        ],
-        plugins: [
-          '@babel/syntax-dynamic-import',
-          '@babel/transform-runtime',
-          '@babel/plugin-proposal-object-rest-spread',
-          [
-            '@babel/plugin-proposal-decorators',
-            {
-              legacy: true,
-            },
-          ],
-          [
-            '@babel/plugin-proposal-class-properties',
-            {
-              loose: true,
-            },
-          ],
-        ],
-      },
-      development: {
-        presets: [
-          [
-            '@babel/env',
-            {
-              modules: false,
-              targets: {
-                browsers: '> 1%',
-                uglify: true,
-              },
-              useBuiltIns: 'entry',
-            },
-          ],
-          '@babel/react',
-        ],
-        plugins: [
-          '@babel/syntax-dynamic-import',
-          '@babel/transform-runtime',
-          '@babel/plugin-proposal-object-rest-spread',
-          [
-            '@babel/plugin-proposal-decorators',
-            {
-              legacy: true,
-            },
-          ],
-          [
-            '@babel/plugin-proposal-class-properties',
-            {
-              loose: true,
-            },
-          ],
-        ],
-      },
-      test: {
-        presets: [
-          [
-            '@babel/env',
-            {
-              targets: {
-                browsers: '> 1%',
-                uglify: true,
-              },
-              useBuiltIns: 'entry',
-            },
-          ],
-          '@babel/react',
-        ],
-        plugins: [
-          '@babel/syntax-dynamic-import',
-          '@babel/transform-runtime',
-          '@babel/plugin-proposal-object-rest-spread',
-          [
-            '@babel/plugin-proposal-decorators',
-            {
-              legacy: true,
-            },
-          ],
-          [
-            '@babel/plugin-proposal-class-properties',
-            {
-              loose: true,
-            },
-          ],
-        ],
-      },
-    },
+    presets: [
+      [
+        '@babel/env',
+        {
+          modules: isTestEnv ? undefined : false,
+          targets: {
+            browsers: '> 1%',
+            uglify: true,
+          },
+          useBuiltIns: 'entry',
+        },
+      ],
+      '@babel/react',
+    ],
+    plugins: [
+      '@babel/syntax-dynamic-import',
+      '@babel/transform-runtime',
+      '@babel/plugin-proposal-object-rest-spread',
+      [
+        '@babel/plugin-proposal-decorators',
+        {
+          legacy: true,
+        },
+      ],
+      [
+        '@babel/plugin-proposal-class-properties',
+        {
+          loose: true,
+        },
+      ],
+    ],
   };
 };
