@@ -14,7 +14,6 @@ gem "fog-aws", "~> 3.3.0"
 gem "friendly_id", "~> 5.1.0"
 gem "hairtrigger", "~> 0.2.20"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
-gem "mini_racer", "~> 0.2.4"
 gem "paperclip", "~> 6.0"
 gem "pg", "~> 0.20"
 gem "pg_search", "~> 2.1"
