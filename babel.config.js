@@ -17,19 +17,26 @@ module.exports = function (api) {
 
   return {
     presets: [
-      [
-        '@babel/env',
+      isTestEnv && [
+        '@babel/preset-env',
         {
-          modules: isTestEnv ? undefined : false,
           targets: {
-            browsers: '> 1%',
-            uglify: true,
-          },
+            node: 'current'
+          }
+        }
+      ],
+      (isProductionEnv || isDevelopmentEnv) && [
+        '@babel/preset-env',
+        {
+          forceAllTransforms: true,
           useBuiltIns: 'entry',
-        },
+          corejs: 3,
+          modules: false,
+          exclude: ['transform-typeof-symbol']
+        }
       ],
       '@babel/react',
-    ],
+    ].filter(Boolean),
     plugins: [
       '@babel/syntax-dynamic-import',
       '@babel/transform-runtime',
