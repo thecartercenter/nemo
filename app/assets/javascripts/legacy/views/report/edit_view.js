@@ -195,6 +195,11 @@
       }
     } else {
       button.on('click', () => { return false; });
+      button.attr('disabled', true);
+      if (name === 'run') {
+        button.addClass('btn-secondary');
+        button.removeClass('btn-primary');
+      }
     }
 
     // hide the next button if last pane
