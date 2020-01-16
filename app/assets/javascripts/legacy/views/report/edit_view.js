@@ -52,7 +52,11 @@
 
     // update panes
     const enabled = this.enabled_panes();
-    for (let i = 0; i < this.panes.length; i++) if (enabled[this.panes[i].id]) this.panes[i].update(report, true);
+    for (let i = 0; i < this.panes.length; i++) {
+      if (enabled[this.panes[i].id]) {
+        this.panes[i].update(report, true);
+      }
+    }
 
     // show the modal and the appropriate pane, disable esc for new modal
     $('#report-edit-modal').modal({ show: true, keyboard: false });
@@ -156,7 +160,11 @@
 
   // applies a given function to all panes
   klass.prototype.pane_do = function (func_name) {
-    for (let i = 0; i < this.panes.length; i++) if (this.panes[i][func_name]) this.panes[i][func_name](Array.prototype.slice.call(arguments, 1));
+    for (let i = 0; i < this.panes.length; i++) {
+      if (this.panes[i][func_name]) {
+        this.panes[i][func_name](Array.prototype.slice.call(arguments, 1));
+      }
+    }
   };
 
   klass.prototype.update_buttons = function () {
@@ -181,7 +189,7 @@
       button.on('click', handler);
       button.show();
       button.removeAttr('disabled');
-      if (name == 'run') {
+      if (name === 'run') {
         button.removeClass('btn-secondary');
         button.addClass('btn-primary');
       }
@@ -190,12 +198,16 @@
     }
 
     // hide the next button if last pane
-    if (name == 'next' && !which) button.hide();
+    if (name === 'next' && !which) button.hide();
   };
 
   klass.prototype.broadcast_change = function (src) {
     // update panes if requested
-    for (let i = 0; i < this.panes.length; i++) if (this.panes[i].attribs_to_watch && this.panes[i].attribs_to_watch[src]) this.panes[i].update(this.report, false);
+    for (let i = 0; i < this.panes.length; i++) {
+      if (this.panes[i].attribs_to_watch && this.panes[i].attribs_to_watch[src]) {
+        this.panes[i].update(this.report, false);
+      }
+    }
   };
 
   // returns a hash indicating which panes should be enabled based on the given report
@@ -204,10 +216,10 @@
     return {
       report_type: true,
       display_options: true,
-      form_selection: report.attribs.type != 'Report::StandardFormReport',
-      question_selection: report.attribs.type == 'Report::TallyReport' && report.attribs.tally_type == 'Answer',
-      grouping: report.attribs.type == 'Report::TallyReport' && report.attribs.tally_type == 'Response',
-      fields: report.attribs.type == 'Report::ListReport',
+      form_selection: report.attribs.type !== 'Report::StandardFormReport',
+      question_selection: report.attribs.type === 'Report::TallyReport' && report.attribs.tally_type === 'Answer',
+      grouping: report.attribs.type === 'Report::TallyReport' && report.attribs.tally_type === 'Response',
+      fields: report.attribs.type === 'Report::ListReport',
     };
   };
 }(ELMO.Report));
