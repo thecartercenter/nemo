@@ -168,24 +168,24 @@
   };
 
   klass.prototype.update_buttons = function () {
-    this.enable_button('cancel', true);
+    this.setButtonEnabled('cancel', true);
 
     // these buttons should appear if there is another pane in the appropriate direction
-    this.enable_button('prev', this.next_pane(-1) != null);
-    this.enable_button('next', this.next_pane(1) != null);
+    this.setButtonEnabled('prev', this.next_pane(-1) != null);
+    this.setButtonEnabled('next', this.next_pane(1) != null);
 
     // run button should appear if report has already run or if this is the last pane
-    this.enable_button('run', !this.report.new_record || this.next_pane(1) == null);
+    this.setButtonEnabled('run', !this.report.new_record || this.next_pane(1) == null);
   };
 
-  klass.prototype.enable_button = function (name, which) {
+  klass.prototype.setButtonEnabled = function (name, enable) {
     const button = this.buttons[name];
     const handler = this[`${name}_handler`];
-    button.css('cursor', which ? '' : 'default');
+    button.css('cursor', enable ? '' : 'default');
 
     button.unbind('click');
 
-    if (which) {
+    if (enable) {
       button.on('click', handler);
       button.show();
       button.removeAttr('disabled');
@@ -198,7 +198,7 @@
     }
 
     // hide the next button if last pane
-    if (name === 'next' && !which) button.hide();
+    if (name === 'next' && !enable) button.hide();
   };
 
   klass.prototype.broadcast_change = function (src) {
