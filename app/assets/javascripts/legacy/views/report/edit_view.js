@@ -181,7 +181,10 @@
       button.on('click', handler);
       button.show();
       button.removeAttr('disabled');
-      if (name == 'run') button.addClass('btn-primary');
+      if (name == 'run') {
+        button.removeClass('btn-secondary');
+        button.addClass('btn-primary');
+      }
     } else {
       button.on('click', () => { return false; });
     }
