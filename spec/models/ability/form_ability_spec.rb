@@ -16,7 +16,7 @@ describe "abilities for forms" do
 
     context "when standard" do
       let(:form) { create(:form, :standard, question_types: %w[text]) }
-      let(:permitted) { Ability::CRUD + %i[clone add_questions remove_questions reorder_questions] }
+      let(:permitted) { all - %i[download change_status] }
       it_behaves_like "has specified abilities"
     end
   end
@@ -35,17 +35,12 @@ describe "abilities for forms" do
         let(:form) { create(:form, question_types: %w[text]) }
 
         context "without responses" do
-          let(:permitted) do
-            Ability::CRUD + %i[change_status clone add_questions remove_questions reorder_questions]
-          end
+          let(:permitted) { all - %i[download] }
           it_behaves_like "has specified abilities"
         end
 
         context "with responses" do
-          let(:permitted) do
-            Ability::CRUD - %i[destroy] +
-              %i[change_status clone add_questions remove_questions reorder_questions]
-          end
+          let(:permitted) { all - %i[download destroy] }
 
           before do
             create(:response, form: form, answer_values: ["foo"])
@@ -58,7 +53,7 @@ describe "abilities for forms" do
 
       context "when live" do
         let(:form) { create(:form, :live, question_types: %w[text]) }
-        let(:permitted) { Ability::CRUD - %i[destroy] + %i[change_status download clone] }
+        let(:permitted) { all - %i[add_questions remove_questions reorder_questions destroy] }
         it_behaves_like "has specified abilities"
       end
 
@@ -71,9 +66,7 @@ describe "abilities for forms" do
       context "when unpublished std copy" do
         let(:std) { create(:form, :standard, question_types: %w[text]) }
         let(:form) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-        let(:permitted) do
-          Ability::CRUD + %i[change_status clone add_questions remove_questions reorder_questions]
-        end
+        let(:permitted) { all - %i[download] }
         it_behaves_like "has specified abilities"
       end
     end
