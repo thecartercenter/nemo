@@ -7,7 +7,7 @@ describe "abilities for forms" do
 
   let(:object) { form }
   let(:all) do
-    %i[add_questions change_status clone destroy download remove_questions reorder_questions show update]
+    Ability::CRUD + %i[add_questions change_status clone download remove_questions reorder_questions]
   end
 
   context "admin mode" do
@@ -16,7 +16,7 @@ describe "abilities for forms" do
 
     context "when standard" do
       let(:form) { create(:form, :standard, question_types: %w[text]) }
-      let(:permitted) { %i[show clone update add_questions remove_questions reorder_questions destroy] }
+      let(:permitted) { Ability::CRUD + %i[clone add_questions remove_questions reorder_questions] }
       it_behaves_like "has specified abilities"
     end
   end
@@ -36,14 +36,15 @@ describe "abilities for forms" do
 
         context "without responses" do
           let(:permitted) do
-            %i[show update change_status clone add_questions remove_questions reorder_questions destroy]
+            Ability::CRUD + %i[change_status clone add_questions remove_questions reorder_questions]
           end
           it_behaves_like "has specified abilities"
         end
 
         context "with responses" do
           let(:permitted) do
-            %i[show update change_status clone add_questions remove_questions reorder_questions]
+            Ability::CRUD - %i[destroy] +
+              %i[change_status clone add_questions remove_questions reorder_questions]
           end
 
           before do
@@ -57,7 +58,7 @@ describe "abilities for forms" do
 
       context "when live" do
         let(:form) { create(:form, :live, question_types: %w[text]) }
-        let(:permitted) { %i[show update change_status download clone] }
+        let(:permitted) { Ability::CRUD - %i[destroy] + %i[change_status download clone] }
         it_behaves_like "has specified abilities"
       end
 
@@ -71,7 +72,7 @@ describe "abilities for forms" do
         let(:std) { create(:form, :standard, question_types: %w[text]) }
         let(:form) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
         let(:permitted) do
-          %i[show update change_status clone add_questions remove_questions reorder_questions destroy]
+          Ability::CRUD + %i[change_status clone add_questions remove_questions reorder_questions]
         end
         it_behaves_like "has specified abilities"
       end
