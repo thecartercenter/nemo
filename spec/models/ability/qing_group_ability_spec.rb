@@ -2,13 +2,12 @@
 
 require "rails_helper"
 
-describe "abilities for forms" do
+describe "abilities for qing groups" do
   include_context "ability"
 
-  let(:object) { form }
-  let(:all) do
-    Ability::CRUD + %i[add_questions change_status clone download remove_questions reorder_questions]
-  end
+  let(:object) { qing_group }
+  let(:qing_group) { create(:qing_group, form: form) }
+  let(:all) { Ability::CRUD }
 
   context "admin mode" do
     let(:user) { create(:user, admin: true) }
@@ -16,7 +15,7 @@ describe "abilities for forms" do
 
     context "when standard" do
       let(:form) { create(:form, :standard, question_types: %w[text]) }
-      let(:permitted) { all - %i[download change_status] }
+      let(:permitted) { all }
       it_behaves_like "has specified abilities"
     end
   end
@@ -28,19 +27,19 @@ describe "abilities for forms" do
       let(:user) { create(:user, role_name: "coordinator") }
 
       it "should be able to create and index" do
-        %i[create index].each { |op| expect(ability).to be_able_to(op, Form) }
+        %i[create index].each { |op| expect(ability).to be_able_to(op, QingGroup) }
       end
 
       context "when draft" do
         let(:form) { create(:form, question_types: %w[text]) }
 
         context "without responses" do
-          let(:permitted) { all - %i[download] }
+          let(:permitted) { all }
           it_behaves_like "has specified abilities"
         end
 
         context "with responses" do
-          let(:permitted) { all - %i[download destroy] }
+          let(:permitted) { all }
 
           before do
             create(:response, form: form, answer_values: ["foo"])
@@ -53,7 +52,7 @@ describe "abilities for forms" do
 
       context "when live" do
         let(:form) { create(:form, :live, question_types: %w[text]) }
-        let(:permitted) { all - %i[add_questions remove_questions reorder_questions destroy] }
+        let(:permitted) { all }
         it_behaves_like "has specified abilities"
       end
 
@@ -66,15 +65,15 @@ describe "abilities for forms" do
       context "when unpublished std copy" do
         let(:std) { create(:form, :standard, question_types: %w[text]) }
         let(:form) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-        let(:permitted) { all - %i[download] }
+        let(:permitted) { all }
         it_behaves_like "has specified abilities"
       end
     end
 
     shared_examples_for "enumerator abilities" do
-      it "should be able to index but not create" do
-        expect(ability).to be_able_to(:index, Form)
-        expect(ability).not_to be_able_to(:create, Form)
+      it "shouldn't be able to index or create" do
+        expect(ability).not_to be_able_to(:index, QingGroup)
+        expect(ability).not_to be_able_to(:create, QingGroup)
       end
 
       context "when draft" do
@@ -83,15 +82,9 @@ describe "abilities for forms" do
         it_behaves_like "has specified abilities"
       end
 
-      context "when paused" do
-        let(:form) { create(:form, :paused, question_types: %w[text]) }
-        let(:permitted) { [] }
-        it_behaves_like "has specified abilities"
-      end
-
       context "when live" do
         let(:form) { create(:form, :live, question_types: %w[text]) }
-        let(:permitted) { %i[index show download] }
+        let(:permitted) { [] }
         it_behaves_like "has specified abilities"
       end
     end
