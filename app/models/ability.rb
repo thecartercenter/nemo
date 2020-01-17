@@ -52,7 +52,7 @@ class Ability
   # When refactoring away from :manage, be sure to account for all permissions that may be getting checked
   # at runtime. Places to look are:
   # - Throughout this file
-  # - Throughout the app by grepping can?, cannot?, and accessible_by
+  # - Throughout the app by grepping can?, cannot?, authorize!, and accessible_by
   # - The routes file (are there any custom actions combined authorize_resource?-if so, consider using
   #   skip_authorize_resource and using a stock permission unless the custom one is really needed.)
 
