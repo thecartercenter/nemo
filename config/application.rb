@@ -48,8 +48,12 @@ module ELMO
                                    twilio_account_sid twilio_auth_token frontlinecloud_api_key
                                    session warden secret salt cookie csrf user_credentials session_id data]
 
-    # Enable the asset pipeline
-    config.assets.enabled = true
+    # Intent: Don't use the asset pipeline (sprockets).
+    #
+    # Reality: This seems to change nothing at all,
+    # not even bundle size or output hash for completely clean builds.
+    # Something MUST be overriding it, but the documentation on it is sparse.
+    config.assets.enabled = false
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = "1.0"

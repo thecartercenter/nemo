@@ -13,13 +13,16 @@ Note to install the software below we recommend the following package managers:
     - Use of [rbenv](https://github.com/rbenv/rbenv) is recommended.
     - Running `rbenv install` in the project root will install the version you need.
     - If not using `rbenv`, see the `.ruby-version` file in the project root to get the required version number.
-    - Bundler is expected to be available.  Run `gem install bundler` to install it.
+    - Bundler is expected to be available. Run `gem install bundler` to install it.
 1. Node
     - Use of [nvm](https://github.com/creationix/nvm#installation) is recommended.
-    - Running `nvm install` in the project root will install the version you need.
-    - Note that `nvm` does NOT shim Node executables so `nvm use` is required to load the right Node versions in each new shell session.
+        - Running `nvm install` in the project root will install the version you need.
+        - Note that `nvm` does NOT shim Node executables so `nvm use` is required to load the right Node versions in each new shell session.
+        - Alternatively, use can use e.g. `nvm alias default 10` to default to Node v10 in every new shell session.
     - If not using `nvm`, see the `.nvmrc` file in the project root to get the required version number.
-    - The `yarn` Node module is expected to be installed globally.  Run `npm install -g yarn` to install it.
+    - The [`yarn`](https://yarnpkg.com/en/) executable must be in your PATH. To install it:
+        - `brew install yarn` (on Mac)
+        - `npm install -g yarn` (if you already have `npm`)
 1. Memcached 1.4+
     - For development environments, caching is only needed if you are developing a feature that uses caching and want to test it.
     - In this case, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
@@ -167,3 +170,10 @@ You can run this locally via `bin/delayed_job start`.
     - Also put in your username and password
 1. Retrieve Form
     - In ODK, you should now be able to go to `Get Blank Form` to download the forms from NEMO
+
+### Troubleshooting
+
+If you ever see `check_yarn_integrity error Integrity check failed` or `Your Yarn packages are out of date!`
+simply follow the instructions by running `yarn install --check-files`.
+Note if you previously ran `yarn install` with a different version of Node, the integrity check will fail.
+If you frequently see this error, make sure you execute `nvm use` before `yarn install`.

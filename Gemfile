@@ -39,11 +39,10 @@ gem "jquery-rails", "~> 4.3.3"
 gem "popper_js", "~> 1.14.5"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 2.4"
-gem "sass-rails", "~> 5.0.7"
 gem "select2-rails", "~> 4.0"
 gem "spinjs-rails", "1.3"
-gem "uglifier", "~> 2.7.1"
-gem "webpacker", "~> 3.5"
+gem "uglifier", "~> 4.2"
+gem "webpacker", "~> 4.2"
 
 # Authz and Authn
 gem "activerecord-session_store", "~> 1.1.1"
