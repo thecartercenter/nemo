@@ -52,7 +52,11 @@
 
     // update panes
     const enabled = this.enabled_panes();
-    for (let i = 0; i < this.panes.length; i++) if (enabled[this.panes[i].id]) this.panes[i].update(report, true);
+    for (let i = 0; i < this.panes.length; i++) {
+      if (enabled[this.panes[i].id]) {
+        this.panes[i].update(report, true);
+      }
+    }
 
     // show the modal and the appropriate pane, disable esc for new modal
     $('#report-edit-modal').modal({ show: true, keyboard: false });
@@ -156,43 +160,59 @@
 
   // applies a given function to all panes
   klass.prototype.pane_do = function (func_name) {
-    for (let i = 0; i < this.panes.length; i++) if (this.panes[i][func_name]) this.panes[i][func_name](Array.prototype.slice.call(arguments, 1));
+    for (let i = 0; i < this.panes.length; i++) {
+      if (this.panes[i][func_name]) {
+        this.panes[i][func_name](Array.prototype.slice.call(arguments, 1));
+      }
+    }
   };
 
   klass.prototype.update_buttons = function () {
-    this.enable_button('cancel', true);
+    this.setButtonEnabled('cancel', true);
 
     // these buttons should appear if there is another pane in the appropriate direction
-    this.enable_button('prev', this.next_pane(-1) != null);
-    this.enable_button('next', this.next_pane(1) != null);
+    this.setButtonEnabled('prev', this.next_pane(-1) != null);
+    this.setButtonEnabled('next', this.next_pane(1) != null);
 
     // run button should appear if report has already run or if this is the last pane
-    this.enable_button('run', !this.report.new_record || this.next_pane(1) == null);
+    this.setButtonEnabled('run', !this.report.new_record || this.next_pane(1) == null);
   };
 
-  klass.prototype.enable_button = function (name, which) {
+  klass.prototype.setButtonEnabled = function (name, enable) {
     const button = this.buttons[name];
     const handler = this[`${name}_handler`];
-    button.css('cursor', which ? '' : 'default');
+    button.css('cursor', enable ? '' : 'default');
 
     button.unbind('click');
 
-    if (which) {
+    if (enable) {
       button.on('click', handler);
       button.show();
       button.removeAttr('disabled');
-      if (name == 'run') button.addClass('btn-primary');
+      if (name === 'run') {
+        button.removeClass('btn-secondary');
+        button.addClass('btn-primary');
+      }
     } else {
       button.on('click', () => { return false; });
+      button.attr('disabled', true);
+      if (name === 'run') {
+        button.addClass('btn-secondary');
+        button.removeClass('btn-primary');
+      }
     }
 
     // hide the next button if last pane
-    if (name == 'next' && !which) button.hide();
+    if (name === 'next' && !enable) button.hide();
   };
 
   klass.prototype.broadcast_change = function (src) {
     // update panes if requested
-    for (let i = 0; i < this.panes.length; i++) if (this.panes[i].attribs_to_watch && this.panes[i].attribs_to_watch[src]) this.panes[i].update(this.report, false);
+    for (let i = 0; i < this.panes.length; i++) {
+      if (this.panes[i].attribs_to_watch && this.panes[i].attribs_to_watch[src]) {
+        this.panes[i].update(this.report, false);
+      }
+    }
   };
 
   // returns a hash indicating which panes should be enabled based on the given report
@@ -201,10 +221,10 @@
     return {
       report_type: true,
       display_options: true,
-      form_selection: report.attribs.type != 'Report::StandardFormReport',
-      question_selection: report.attribs.type == 'Report::TallyReport' && report.attribs.tally_type == 'Answer',
-      grouping: report.attribs.type == 'Report::TallyReport' && report.attribs.tally_type == 'Response',
-      fields: report.attribs.type == 'Report::ListReport',
+      form_selection: report.attribs.type !== 'Report::StandardFormReport',
+      question_selection: report.attribs.type === 'Report::TallyReport' && report.attribs.tally_type === 'Answer',
+      grouping: report.attribs.type === 'Report::TallyReport' && report.attribs.tally_type === 'Response',
+      fields: report.attribs.type === 'Report::ListReport',
     };
   };
 }(ELMO.Report));
