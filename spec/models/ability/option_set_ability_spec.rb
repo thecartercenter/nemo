@@ -2,19 +2,20 @@
 
 require "rails_helper"
 
-describe "abilities for qing groups" do
+describe "abilities for option sets" do
   include_context "ability"
 
-  let(:object) { qing_group }
-  let(:qing_group) { create(:qing_group, form: form) }
-  let(:all) { Ability::CRUD }
+  let(:object) { option_set }
+  let(:option_set) { create(:option_set, option_names: %w[Yes No]) }
+  let(:question) { create(:question, qtype_name: "select_one", option_set: option_set) }
+  let(:all) { Ability::CRUD + %i[add_options remove_options reorder_options update_core clone] }
 
   context "admin mode" do
     let(:user) { create(:user, admin: true) }
     let(:ability) { Ability.new(user: user, mode: "admin") }
 
     context "when standard" do
-      let(:form) { create(:form, :standard, question_types: %w[text]) }
+      let(:option_set) { create(:option_set, :standard) }
       let(:permitted) { all }
       it_behaves_like "has specified abilities"
     end
@@ -27,11 +28,11 @@ describe "abilities for qing groups" do
       let(:user) { create(:user, role_name: "coordinator") }
 
       it "should be able to create and index" do
-        %i[create index].each { |op| expect(ability).to be_able_to(op, QingGroup) }
+        %i[create index].each { |op| expect(ability).to be_able_to(op, OptionSet) }
       end
 
       context "when draft" do
-        let(:form) { create(:form, question_types: %w[text]) }
+        let(:form) { create(:form, questions: [question]) }
 
         context "without responses" do
           let(:permitted) { all }
@@ -39,10 +40,10 @@ describe "abilities for qing groups" do
         end
 
         context "with responses" do
-          let(:permitted) { all }
+          let(:permitted) { all - %i[destroy] }
 
           before do
-            create(:response, form: form, answer_values: ["foo"])
+            create(:response, form: form, answer_values: ["Yes"])
             form.reload
           end
 
@@ -51,19 +52,19 @@ describe "abilities for qing groups" do
       end
 
       context "when live" do
-        let(:form) { create(:form, :live, question_types: %w[text]) }
+        let(:form) { create(:form, :live, questions: [question]) }
         let(:permitted) { all }
         it_behaves_like "has specified abilities"
       end
 
       context "when standard" do
-        let(:form) { create(:form, :standard, question_types: %w[text]) }
-        let(:permitted) { [] }
+        let(:form) { create(:form, :standard, questions: [question]) }
+        let(:permitted) { all }
         it_behaves_like "has specified abilities"
       end
 
       context "when unpublished std copy" do
-        let(:std) { create(:form, :standard, question_types: %w[text]) }
+        let(:std) { create(:form, :standard, questions: [question]) }
         let(:form) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
         let(:permitted) { all }
         it_behaves_like "has specified abilities"
@@ -72,8 +73,8 @@ describe "abilities for qing groups" do
 
     shared_examples_for "enumerator abilities" do
       it "shouldn't be able to index or create" do
-        expect(ability).not_to be_able_to(:index, QingGroup)
-        expect(ability).not_to be_able_to(:create, QingGroup)
+        expect(ability).not_to be_able_to(:index, OptionSet)
+        expect(ability).not_to be_able_to(:create, OptionSet)
       end
 
       context "when draft" do
