@@ -99,7 +99,7 @@ module ApplicationHelper
   end
 
   def google_maps_js
-    return "" if google_maps_key_missing? && !offline?
+    return "" if google_maps_key_missing? || offline?
     api_key = configatron.google_maps_api_key
     javascript_include_tag("https://maps.googleapis.com/maps/api/js?key=#{api_key}&v=3")
   end
