@@ -2,24 +2,12 @@
 
 require "rails_helper"
 
-describe "abilities for option sets" do
+describe "abilities for option nodes" do
   include_context "ability"
 
-  let(:object) { option_set }
-  let(:option_set) { create(:option_set, option_names: %w[Yes No]) }
-  let(:question) { create(:question, qtype_name: "select_one", option_set: option_set) }
-  let(:all) { Ability::CRUD + %i[add_options remove_options reorder_options update_core clone] }
-
-  context "admin mode" do
-    let(:user) { create(:user, admin: true) }
-    let(:ability) { Ability.new(user: user, mode: "admin") }
-
-    context "when standard" do
-      let(:option_set) { create(:option_set, :standard) }
-      let(:permitted) { all }
-      it_behaves_like "has specified abilities"
-    end
-  end
+  let(:object) { option_node }
+  let(:option_node) { create(:option_node_with_children) }
+  let(:all) { Ability::CRUD }
 
   context "mission mode" do
     let(:ability) { Ability.new(user: user, mode: "mission", mission: get_mission) }
@@ -28,63 +16,45 @@ describe "abilities for option sets" do
       let(:user) { create(:user, role_name: "coordinator") }
 
       it "should be able to create and index" do
-        %i[create index].each { |op| expect(ability).to be_able_to(op, OptionSet) }
+        %i[create index].each { |op| expect(ability).to be_able_to(op, OptionNode) }
       end
 
-      context "when draft" do
-        let(:form) { create(:form, questions: [question]) }
+      context "with a form" do
+        let(:form) { create(:form, question_types: %w[select_one]) }
+        let(:option_node) { form.questions[0].option_set.children[0] }
 
-        context "without responses" do
+        context "without data" do
           let(:permitted) { all }
           it_behaves_like "has specified abilities"
         end
 
-        context "with responses" do
+        context "with data" do
+          let!(:response) { create(:response, form: form, answer_values: [option_node.option_name]) }
           let(:permitted) { all - %i[destroy] }
 
-          before do
-            create(:response, form: form, answer_values: ["Yes"])
-            form.reload
-          end
-
           it_behaves_like "has specified abilities"
+
+          context "if deleted" do
+            let(:permitted) { all }
+
+            before do
+              response.destroy
+              option_node.reload
+            end
+
+            it_behaves_like "has specified abilities"
+          end
         end
-      end
-
-      context "when live" do
-        let(:form) { create(:form, :live, questions: [question]) }
-        let(:permitted) { all }
-        it_behaves_like "has specified abilities"
-      end
-
-      context "when standard" do
-        let(:form) { create(:form, :standard, questions: [question]) }
-        let(:permitted) { all }
-        it_behaves_like "has specified abilities"
-      end
-
-      context "when unpublished std copy" do
-        let(:std) { create(:form, :standard, questions: [question]) }
-        let(:form) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-        let(:permitted) { all }
-        it_behaves_like "has specified abilities"
       end
     end
 
     shared_examples_for "enumerator abilities" do
       it "shouldn't be able to index or create" do
-        expect(ability).not_to be_able_to(:index, OptionSet)
-        expect(ability).not_to be_able_to(:create, OptionSet)
+        expect(ability).not_to be_able_to(:index, OptionNode)
+        expect(ability).not_to be_able_to(:create, OptionNode)
       end
 
-      context "when draft" do
-        let(:form) { create(:form, question_types: %w[text]) }
-        let(:permitted) { [] }
-        it_behaves_like "has specified abilities"
-      end
-
-      context "when live" do
-        let(:form) { create(:form, :live, question_types: %w[text]) }
+      context "for instance" do
         let(:permitted) { [] }
         it_behaves_like "has specified abilities"
       end
