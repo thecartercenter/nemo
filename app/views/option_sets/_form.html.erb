@@ -14,8 +14,8 @@
           required: true,
           read_only: cannot?(:update_core, @option_set) || @option_set.published?,
           prompt: false) %>
-    <%= f.field(:geographic, type: :check_box, read_only: cannot?(:change_geographic, @option_set)) %>
-    <%= f.field(:allow_coordinates, type: :check_box, read_only: cannot?(:change_geographic, @option_set)) %>
+    <%= f.field(:geographic, type: :check_box, read_only: cannot?(:update_core, @option_set)) %>
+    <%= f.field(:allow_coordinates, type: :check_box, read_only: cannot?(:update_core, @option_set)) %>
     <%= f.field(:multilevel, type: :check_box,
           read_only: cannot?(:update_core, @option_set) || !@option_set.can_be_multilevel? )%>
     <%= f.field(:option_levels, partial: "option_levels") %>
