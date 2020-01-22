@@ -246,6 +246,9 @@ class OptionNode < ApplicationRecord
         # should catch it and display an error. This could still cause crashes of the type that motivated
         # this fix, but they should be much rarer because folks likely won't be trying to delete an option
         # that has so many answers.
+        #
+        # This should ideally consult the `destroy` permission for option_node in the authorization system,
+        # but it all needs to be refactored anyway; it's not worth doing more gross things just for this.
         branch[:removable] = true
 
         # Recursive step.
@@ -338,6 +341,11 @@ class OptionNode < ApplicationRecord
     self.class.unscoped.where(option_set_id: option_set_id).maximum(:sequence) || 0
   end
 
+  def data?
+    # option_set may not be present when node first getting built
+    !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
+  end
+
   protected
 
   # Special method for creating/updating a tree of nodes via the children_attribs hash.
@@ -412,11 +420,6 @@ class OptionNode < ApplicationRecord
     %w[mission_id option_set_id standard_copy].each { |k| hash[k.to_sym] = send(k) }
     %w[mission_id].each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
     hash
-  end
-
-  def data?
-    # option_set may not be present when node first getting built
-    !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
   end
 
   def ensure_no_answers_or_choices

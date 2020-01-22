@@ -152,7 +152,7 @@ class Ability
       end
 
       [Form, OptionSet, OptionSets::Import, Questioning, FormItem, SkipRule,
-       QingGroup, Option, Tag, Tagging].each do |klass|
+       QingGroup, OptionNode, Option, Tag, Tagging].each do |klass|
         can(:manage, klass, mission_id: mission.id)
       end
       can(:condition_form, Constraint, mission_id: mission.id)
@@ -243,6 +243,7 @@ class Ability
     # we need these specialized permissions because option names/hints are updated via option set
     cannot(%i[add_options remove_options reorder_options], OptionSet, &:published?)
     cannot(:destroy, OptionSet) { |o| o.data? || o.in_use? || o.published? }
+    cannot(:destroy, OptionNode, &:data?)
 
     # operations can't be destroyed while their underlying job is in progress
     cannot :destroy, Operation do |op|
