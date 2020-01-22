@@ -70,14 +70,6 @@ class Option < ApplicationRecord
     option_sets.map(&:questions).flatten.uniq
   end
 
-  def data?
-    !answers.empty?
-  end
-
-  def has_choices?
-    !choices.empty?
-  end
-
   def coordinates?
     latitude.present? || longitude.present?
   end
@@ -85,11 +77,6 @@ class Option < ApplicationRecord
   # returns all forms on which this option appears
   def forms
     option_sets.map { |os| os.questionings.map(&:form) }.flatten.uniq
-  end
-
-  # returns whether this option is in use -- is referenced in any answers/choices AND/OR is published
-  def in_use?
-    published? || data? || has_choices?
   end
 
   # gets the names of all option sets in which this option appears
@@ -123,8 +110,7 @@ class Option < ApplicationRecord
 
   def as_json(options = {})
     if options[:for_option_set_form]
-      super(only: %i[id latitude longitude name_translations value],
-            methods: %i[name set_names in_use?])
+      super(only: %i[id latitude longitude name_translations value], methods: %i[name set_names])
     else
       super(options)
     end

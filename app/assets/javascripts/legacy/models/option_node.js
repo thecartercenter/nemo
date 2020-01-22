@@ -18,10 +18,6 @@
 
       // Copy value
       self.value = self.option.value;
-
-      // Alias in_use with no question mark
-      // Note this is a property of option
-      self.inUse = self.option['in_use?'];
     }
 
     // names are editable if the node is not a new record
