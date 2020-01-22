@@ -242,6 +242,8 @@ class OptionNode < ApplicationRecord
         # And option_has_answers? kicks off a big SQL query for a huge set.
         # Conditions association should be eager loaded.
         unless huge?
+          # This should ideally consult the `destroy` permission for option_node in the authorization system,
+          # but it all needs to be refactored anyway; it's not worth doing more gross things just for this.
           branch[:removable] = !option_set.option_has_answers?(node.option_id) && node.conditions.empty?
         end
 
@@ -335,6 +337,11 @@ class OptionNode < ApplicationRecord
     self.class.unscoped.where(option_set_id: option_set_id).maximum(:sequence) || 0
   end
 
+  def data?
+    # option_set may not be present when node first getting built
+    !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
+  end
+
   protected
 
   # Special method for creating/updating a tree of nodes via the children_attribs hash.
@@ -409,11 +416,6 @@ class OptionNode < ApplicationRecord
     %w[mission_id option_set_id standard_copy].each { |k| hash[k.to_sym] = send(k) }
     %w[mission_id].each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
     hash
-  end
-
-  def data?
-    # option_set may not be present when node first getting built
-    !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
   end
 
   def ensure_no_answers_or_choices
