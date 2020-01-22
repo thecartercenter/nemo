@@ -83,6 +83,8 @@ class Ability
        OptionNode, Option, OptionSets::Import, Setting, Tag, Tagging].each do |k|
         can(:manage, k, mission_id: nil)
       end
+      # This is intentionally redundant with `manage` as we're slowly migrating to explicit permissions.
+      can(:update_core, OptionSet, mission_id: nil)
       cannot(:change_status, Form, &:standard?)
 
       can(%i[read create update update_code update_core export bulk_destroy],
@@ -157,6 +159,7 @@ class Ability
       end
       can(:condition_form, Constraint, mission_id: mission.id)
       can(:change_status, Form, mission_id: mission.id)
+      can(:update_core, OptionSet, mission_id: mission.id)
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: mission.id)
