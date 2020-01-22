@@ -94,12 +94,14 @@ module ApplicationHelper
     javascript_tag("$(document).ready(function(){#{content}});")
   end
 
-  # google maps
-  def javascript_google_maps
-    if configatron.has_key(:google_maps_api_key)
-      api_key = configatron.google_maps_api_key
-      javascript_include_tag("https://maps.googleapis.com/maps/api/js?key=#{api_key}&v=3")
-    end
+  def google_maps_key_missing?
+    !configatron.has_key?(:google_maps_api_key)
+  end
+
+  def google_maps_js
+    return "" if google_maps_key_missing? && !offline?
+    api_key = configatron.google_maps_api_key
+    javascript_include_tag("https://maps.googleapis.com/maps/api/js?key=#{api_key}&v=3")
   end
 
   # Converts given object/value to json and runs through html_safe.
@@ -246,5 +248,11 @@ module ApplicationHelper
 
   def conditional_tag(name, condition, options = {}, &block)
     condition ? content_tag(name, options, &block) : capture(&block)
+  end
+
+  # We use this string to concatenate other strings onto to build larger safe strings
+  # and avoid having to call html_safe all over the place.
+  def safe_str
+    "".html_safe # rubocop:disable Rails/OutputSafety # It's an empty string!
   end
 end

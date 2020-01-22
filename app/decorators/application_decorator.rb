@@ -2,16 +2,10 @@
 
 # Base decorator for all decorators in app.
 class ApplicationDecorator < Draper::Decorator
-  delegate :t, :can?, to: :h
+  delegate :t, :can?, :safe_str, to: :h
 
   def conditional_tag(name, condition, options = {}, &block)
     condition ? content_tag(name, options, &block) : yield
-  end
-
-  # We use this string to concatenate other strings onto to build larger safe strings
-  # and avoid having to call html_safe all over the place.
-  def safe_str
-    "".html_safe # rubocop:disable Rails/OutputSafety # It's an empty string!
   end
 
   def nbsp

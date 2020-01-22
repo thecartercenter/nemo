@@ -4,8 +4,9 @@
 # Offline mode.
 # If set to true, you can't reset passwords via email or send broadcasts.
 # Email error reports are also not sent.
-# This should be set to true if the server doesn't have an internet connection.
+# This should be set to true if the server doesn't _always_ have an internet connection.
 # For some functions, such as displaying the map, the system will still check for an internet connection.
+# But if offline_mode is false, it won't perform this check for efficiency's sake.
 configatron.offline_mode = false
 
 # Base secret token for app. Extremely crucial for security.
