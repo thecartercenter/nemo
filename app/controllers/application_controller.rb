@@ -40,5 +40,5 @@ class ApplicationController < ActionController::Base
   before_action :load_accessible_missions
 
   helper_method :current_mode, :current_user, :current_mission, :current_root_path,
-    :admin_mode?, :basic_mode?, :mission_mode?, :admin_mode_exit_path, :offline_mode?
+    :admin_mode?, :basic_mode?, :mission_mode?, :admin_mode_exit_path, :offline_mode?, :offline?
 end

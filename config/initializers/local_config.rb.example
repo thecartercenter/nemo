@@ -5,6 +5,7 @@
 # If set to true, you can't reset passwords via email or send broadcasts.
 # Email error reports are also not sent.
 # This should be set to true if the server doesn't have an internet connection.
+# For some functions, such as displaying the map, the system will still check for an internet connection.
 configatron.offline_mode = false
 
 # Base secret token for app. Extremely crucial for security.
@@ -22,6 +23,23 @@ configatron.url.protocol = "https"
 
 # The port your site runs on (optional).
 #configatron.url.port = 80
+
+# Google Maps API Key (Requires Google Maps Javascript and Geocoding APIs)
+# Key can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
+# Make sure to restrict the key to your domain only, otherwise other sites can steal it.
+#
+# Note the below values for easy access to Google API Console later:
+# Google API Console project name: XXXXXXXXXXXXXXXXXX
+# Google Accounts with access to project: XXXXXX@gmail.com, XXXXXX@gmail.com
+configatron.google_maps_api_key = ENV["ELMO_GOOGLE_MAPS_KEY"] || "XXXXXXXXXXXXXXXXXX"
+
+# reCAPTCHA v2 for brute-force login protection.
+# Not required for strictly offline setups.
+# Keys may be obtained from https://www.google.com/recaptcha/admin
+Recaptcha.configure do |config|
+  config.public_key = "XXXXXXXXXXXXXXXXXX"
+  config.private_key = "XXXXXXXXXXXXXXXXXX"
+end
 
 ##################################
 # Email Settings
@@ -69,25 +87,3 @@ ActionMailer::Base.smtp_settings = {
 # Sets a universal SMS token so that multiple missions can submit to the same URL.
 # Generate with: ruby -e "require 'securerandom'; puts SecureRandom.hex(16)".
 #configatron.universal_sms_token = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
-##################################
-# Other Online-Dependent Settings
-# You can leave these unchanged for offline setups.
-
-# reCAPTCHA v2 for brute-force login protection.
-# Can be left unchanged in offline setups.
-# Keys may be obtained from https://www.google.com/recaptcha/admin
-Recaptcha.configure do |config|
-  config.public_key = "XXXXXXXXXXXXXXXXXX"
-  config.private_key = "XXXXXXXXXXXXXXXXXX"
-end
-
-# Google Maps API Key (Requires Google Maps Javascript and Geocoding APIs)
-# Can be left unchanged in offline setups.
-# Key can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
-# Make sure to restrict the key to your domain only, otherwise other sites can steal it.
-#
-# Note the below values for easy access to Google API Console later:
-# Google API Console project name: XXXXXXXXXXXXXXXXXX
-# Google Accounts with access to project: XXXXXX@gmail.com, XXXXXX@gmail.com
-configatron.google_maps_api_key = ENV["ELMO_GOOGLE_MAPS_KEY"] || "XXXXXXXXXXXXXXXXXX"
