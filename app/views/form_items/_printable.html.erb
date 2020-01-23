@@ -3,6 +3,6 @@
     <%= render "questionings/printable", qing: item.decorate %>
   <% elsif item.is_a?(QingGroup) && item.children? %>
     <%= render "qing_groups/printable", qing_group: item %>
-    <%= render "form_items/printable", items: item.visible_children %>
+    <%= render "form_items/printable", items: item.enabled_children %>
   <% end %>
 <% end %>

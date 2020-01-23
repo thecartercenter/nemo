@@ -131,7 +131,7 @@ class FormItem < ApplicationRecord
     self
   end
 
-  def visible_children
+  def enabled_children
     sorted_children.select(&:enabled?)
   end
 
