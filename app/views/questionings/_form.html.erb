@@ -16,9 +16,10 @@
       <%= f.field(:constraints, partial: "questionings/constraints", locals: {form_item: @questioning}) %>
     <% end %>
     <%= f.field(:default, type: :string, read_only: cannot?(:update_core, @questioning)) %>
-    <%= f.field(:disabled, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
-    <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
     <%= f.field(:required, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
+    <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
+    <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
+    <%= f.field(:disabled, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
     <%= f.field(:all_levels_required, type: :select, prompt: false,
                                       read_only: cannot?(:update_core, @questioning),
                                       options: translate_options(%w[false true],
