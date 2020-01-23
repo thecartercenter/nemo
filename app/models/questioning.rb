@@ -62,7 +62,6 @@ class Questioning < FormItem
   delegate :smsable?, to: :form, prefix: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
-  scope :visible, -> { where(disabled: false) }
   scope :with_type_property, ->(property) { joins(:question).merge(Question.with_type_property(property)) }
 
   validates_with Forms::DynamicPatternValidator,
