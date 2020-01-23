@@ -93,7 +93,7 @@ module Odk
     end
 
     def renderable?
-      visible?
+      enabled?
     end
 
     private

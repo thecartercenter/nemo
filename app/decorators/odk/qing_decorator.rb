@@ -19,7 +19,7 @@ module Odk
     end
 
     def body_tags(group: nil, render_mode: nil, xpath_prefix:)
-      return safe_str unless visible?
+      return safe_str unless enabled?
       render_mode ||= :normal
 
       # Note that subqings here refers to multiple levels of a cascading select question, not groups.
@@ -48,7 +48,7 @@ module Odk
     # preload or calculate. Ideally hidden questions and disabled questions would be different things
     # and we'd render the former but not the latter, but this is what it is for now.
     def renderable?
-      visible? || jr_preload || calculate
+      enabled? || jr_preload || calculate
     end
 
     def constraint_msg(locale)

@@ -74,7 +74,7 @@ module Sms
         end
 
         answers_by_qing = answers.index_by(&:questioning_id)
-        missing_answers = qings.select { |q| q.required? && q.visible? && answers_by_qing[q.id].nil? }
+        missing_answers = qings.select { |q| q.required? && q.enabled? && answers_by_qing[q.id].nil? }
         raise_decoding_error("missing_answers", missing_answers: missing_answers) if missing_answers.any?
         raise_decoding_error("no_answers") unless tree_builder.answers?
 
