@@ -79,7 +79,7 @@ class QuestioningsController < ApplicationController
   end
 
   def questioning_params
-    params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :disabled,
+    params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden, :disabled,
       :required, :default, :read_only, :display_if, :all_levels_required,
       {display_conditions_attributes: condition_params},
       {skip_rules_attributes: [:id, :destination, :dest_item_id, :skip_if, :_destroy,

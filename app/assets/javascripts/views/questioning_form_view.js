@@ -27,6 +27,7 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
     this.showField('read_only', this.showReadOnly());
     this.showField('required', this.showRequired());
     this.showField('all_levels_required', this.showAllLevelsRequired());
+    this.showField('hidden', this.showHidden());
     this.showField('disabled', this.showDisabled());
     this.showField('display_logic', this.showDisplayLogic());
     return this.showField('skip_logic', this.showSkipLogic());
@@ -49,6 +50,10 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
       && (this.fieldValue('required').toString() === 'true')
       && (this.fieldValue('qtype_name') === 'select_one')
       && this.selectedOptionData('option_set_id', 'multilevel');
+  }
+
+  showHidden() {
+    return super.metadataTypeBlank();
   }
 
   showDisabled() {

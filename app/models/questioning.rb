@@ -99,7 +99,7 @@ class Questioning < FormItem
   end
 
   def core_changed?
-    (changed & %w[required disabled default]).any? || conditions_changed?
+    (changed & %w[required hidden disabled default]).any? || conditions_changed?
   end
 
   # Checks if this Questioning is in a repeat group.

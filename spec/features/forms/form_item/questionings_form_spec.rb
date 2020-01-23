@@ -21,6 +21,7 @@ describe "questionings form", js: true  do
         it "should display all fields as editable" do
           visit(edit_qing_path)
           expect_editable("required", true)
+          expect_editable("hidden", true)
           expect_editable("disabled", true)
           expect_editable("display_logic", true, field_type: "select")
           expect_editable("skip_logic", true, field_type: "select")
@@ -39,6 +40,20 @@ describe "questionings form", js: true  do
           end
           expect_visible("display_logic", true)
           expect_visible("skip_logic", true)
+        end
+
+        it "should hide hidden option when metadata field has a value" do
+          visit(edit_qing_path)
+          select("Select One", from: "questioning_question_attributes_qtype_name")
+          expect_visible("hidden", true)
+          select("Date/Time", from: "Type")
+          expect_visible("hidden", true)
+          select("Form Start Time", from: "Metadata Type")
+          expect_visible("hidden", false)
+          within(:css, ".question_metadata_type") do
+            select("", from: "Metadata Type")
+          end
+          expect_visible("hidden", true)
         end
 
         it "should hide disabled option when metadata field has a value" do
@@ -135,6 +150,8 @@ describe "questionings form", js: true  do
         visit(edit_qing_path)
         expect_visible("required", true)
         expect_editable("required", false)
+        expect_visible("hidden", true)
+        expect_editable("hidden", false)
         expect_visible("disabled", true)
         expect_editable("disabled", false)
         expect_visible("display_logic", true)
@@ -150,6 +167,8 @@ describe "questionings form", js: true  do
           visit(edit_qing_path)
           expect_visible("required", true)
           expect_editable("required", false)
+          expect_visible("hidden", true)
+          expect_editable("hidden", false)
           expect_visible("disabled", true)
           expect_editable("disabled", false)
           expect_visible("display_logic", true)
@@ -169,6 +188,7 @@ describe "questionings form", js: true  do
     it "should display all fields as editable" do
       visit(edit_qing_path)
       expect_editable("required", true)
+      expect_editable("hidden", true)
       expect_editable("disabled", true)
       expect_editable("display_logic", true, field_type: "select")
       expect_editable("skip_logic", true, field_type: "select")
