@@ -14,7 +14,10 @@ config/memcached_server
 TODO
 .sass-cache/
 NOTES
-.idea
+
+# IDE
+.idea/*
+!/.idea/runConfigurations/
 
 # MS Office backup files
 ~$*
