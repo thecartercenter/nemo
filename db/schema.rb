@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_23_000517) do
+ActiveRecord::Schema.define(version: 2020_01_23_052706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -173,6 +173,7 @@ ActiveRecord::Schema.define(version: 2020_01_23_000517) do
     t.jsonb "group_hint_translations", default: {}
     t.jsonb "group_item_name_translations", default: {}
     t.jsonb "group_name_translations", default: {}
+    t.boolean "hidden", default: false, null: false
     t.uuid "mission_id"
     t.integer "old_id"
     t.boolean "one_screen"
