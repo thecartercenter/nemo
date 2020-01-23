@@ -105,12 +105,12 @@ describe Report::StandardFormReport do
       build_form_and_responses
 
       # make one question invisible
-      @form.questionings[1].update!(hidden: true)
+      @form.questionings[1].update!(disabled: true)
 
       build_and_run_report
 
       expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1]))
-        .to be_falsey, "summaries should not contain hidden question"
+        .to be_falsey, "summaries should not contain disabled question"
     end
 
     it "should return summaries matching questions" do

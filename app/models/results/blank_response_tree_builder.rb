@@ -26,7 +26,7 @@ module Results
 
     def add_level(form_nodes, response_node)
       form_nodes.each do |form_node|
-        unless form_node.hidden
+        unless form_node.disabled
           if form_node.class == QingGroup && form_node.repeatable?
             add_repeat_group(form_node, response_node)
           elsif form_node.class == QingGroup

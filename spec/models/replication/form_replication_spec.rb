@@ -290,11 +290,11 @@ describe Form do
 
       context "with questioning attributes" do
         before do
-          orig.c[0].update!(hidden: true, group_item_name_translations: {en: "foo"})
+          orig.c[0].update!(disabled: true, group_item_name_translations: {en: "foo"})
         end
 
-        it "should copy hidden attribute" do
-          expect(copy.c[0].hidden).to eq(true)
+        it "should copy disabled attribute" do
+          expect(copy.c[0].disabled).to eq(true)
         end
 
         it "should copy group item name translations" do

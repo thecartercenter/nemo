@@ -35,9 +35,9 @@ describe "questionings", type: :request do
         expect(response).to redirect_to(unauthorized_path)
       end
 
-      it "changing hidden flag should be unauthorized" do
+      it "changing disabled flag should be unauthorized" do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          params: {"questioning" => {"hidden" => "1"}})
+          params: {"questioning" => {"disabled" => "1"}})
         expect(response).to redirect_to(unauthorized_path)
       end
 

@@ -61,7 +61,7 @@ class Questioning < FormItem
   delegate :smsable?, to: :form, prefix: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
-  scope :visible, -> { where(hidden: false) }
+  scope :visible, -> { where(disabled: false) }
   scope :with_type_property, ->(property) { joins(:question).merge(Question.with_type_property(property)) }
 
   validates_with Forms::DynamicPatternValidator,
@@ -99,7 +99,7 @@ class Questioning < FormItem
   end
 
   def core_changed?
-    (changed & %w[required hidden default]).any? || conditions_changed?
+    (changed & %w[required disabled default]).any? || conditions_changed?
   end
 
   # Checks if this Questioning is in a repeat group.
@@ -155,10 +155,10 @@ class Questioning < FormItem
   def normalize
     super
     if question.metadata_type.present?
-      self.hidden = true
+      self.disabled = true
       display_conditions.destroy_all
     end
-    self.required = false if hidden? || read_only?
+    self.required = false if disabled? || read_only?
     self.all_levels_required = false unless multilevel? && required?
   end
 end

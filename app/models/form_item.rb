@@ -219,7 +219,7 @@ class FormItem < ApplicationRecord
   end
 
   def visible?
-    !hidden?
+    !disabled?
   end
 
   def self_and_ancestor_ids

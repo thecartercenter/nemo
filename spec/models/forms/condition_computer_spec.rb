@@ -27,13 +27,13 @@ describe Forms::ConditionComputer do
         "integer",
         ["integer", "integer", %w[integer integer]],
         "integer",
-        "integer" # Hidden question
+        "integer" # Disabled question
       ])
     end
     let(:form_items) { computer.preordered_form_items }
 
     before do
-      form.c[7].update!(hidden: true)
+      form.c[7].update!(disabled: true)
     end
 
     describe "rewrites the conditionable reference on all skip rule conditions" do
@@ -151,7 +151,7 @@ describe Forms::ConditionComputer do
       #   Q6.3.1                    SR5
       #   Q6.3.2                            SR7
       # Q7                                  SR7
-      # Q8          (nothing because it's a hidden question)
+      # Q8          (nothing because it's a disabled question)
 
       it "returns correct ConditionGroups" do
         expect_condition_group(form.c[0], empty: true)

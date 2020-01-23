@@ -42,7 +42,7 @@ describe Odk::FormDecorator, :odk do
 
         context "when question is invisible" do
           before do
-            form.c[0].update!(hidden: true)
+            form.c[0].update!(disabled: true)
           end
 
           it { is_expected.to be(false) }

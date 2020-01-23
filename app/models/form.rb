@@ -201,14 +201,14 @@ class Form < ApplicationRecord
   end
 
   def visible_questionings
-    questionings.reject(&:hidden?)
+    questionings.reject(&:disabled?)
   end
 
   def questions(_reload = false)
     questionings.map(&:question)
   end
 
-  # returns hash of questionings that work with sms forms and are not hidden
+  # returns hash of questionings that work with sms forms and are not disabled
   def smsable_questionings
     smsable_questionings = questionings.select(&:smsable?)
     smsable_questionings.map.with_index { |q, i| [i + 1, q] }.to_h

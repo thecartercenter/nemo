@@ -61,50 +61,50 @@ describe Questioning do
     let(:qing) { build(:questioning, submitted.merge(question: question)).tap(&:valid?) }
     subject { submitted.keys.map { |k| [k, qing.send(k)] }.to_h }
 
-    describe "hidden/required/read_only" do
+    describe "disabled/required/read_only" do
       context do
-        let(:submitted) { {hidden: true, required: true, read_only: false} }
-        it { is_expected.to eq(hidden: true, required: false, read_only: false) }
+        let(:submitted) { {disabled: true, required: true, read_only: false} }
+        it { is_expected.to eq(disabled: true, required: false, read_only: false) }
       end
 
       context do
-        let(:submitted) { {hidden: true, required: false, read_only: false} }
-        it { is_expected.to eq(hidden: true, required: false, read_only: false) }
+        let(:submitted) { {disabled: true, required: false, read_only: false} }
+        it { is_expected.to eq(disabled: true, required: false, read_only: false) }
       end
 
       context do
-        let(:submitted) { {hidden: false, required: true, read_only: false} }
-        it { is_expected.to eq(hidden: false, required: true, read_only: false) }
+        let(:submitted) { {disabled: false, required: true, read_only: false} }
+        it { is_expected.to eq(disabled: false, required: true, read_only: false) }
       end
 
       context do
-        let(:submitted) { {hidden: false, required: true, read_only: true} }
-        it { is_expected.to eq(hidden: false, required: false, read_only: true) }
+        let(:submitted) { {disabled: false, required: true, read_only: true} }
+        it { is_expected.to eq(disabled: false, required: false, read_only: true) }
       end
 
       context do
-        let(:submitted) { {hidden: false, required: false, read_only: true} }
-        it { is_expected.to eq(hidden: false, required: false, read_only: true) }
+        let(:submitted) { {disabled: false, required: false, read_only: true} }
+        it { is_expected.to eq(disabled: false, required: false, read_only: true) }
       end
     end
 
-    describe "question metadata and hidden/required" do
+    describe "question metadata and disabled/required" do
       context do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
-        let(:submitted) { {required: true, hidden: false} }
-        it { is_expected.to eq(required: false, hidden: true) }
+        let(:submitted) { {required: true, disabled: false} }
+        it { is_expected.to eq(required: false, disabled: true) }
       end
 
       context do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
-        let(:submitted) { {required: "", hidden: true} }
-        it { is_expected.to eq(required: false, hidden: true) }
+        let(:submitted) { {required: "", disabled: true} }
+        it { is_expected.to eq(required: false, disabled: true) }
       end
 
       context do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: ""} }
-        let(:submitted) { {required: true, hidden: false} }
-        it { is_expected.to eq(required: true, hidden: false) }
+        let(:submitted) { {required: true, disabled: false} }
+        it { is_expected.to eq(required: true, disabled: false) }
       end
     end
 

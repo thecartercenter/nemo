@@ -83,7 +83,7 @@ class Answer < ResponseNode
 
   accepts_nested_attributes_for(:choices)
 
-  delegate :question, :qtype, :qtype_name, :required?, :hidden?, :multimedia?,
+  delegate :question, :qtype, :qtype_name, :required?, :disabled?, :multimedia?,
     :option_set, :option_set_id, :options, :first_level_option_nodes, :condition,
     :parent_group_name, to: :questioning
   delegate :name, to: :question, prefix: true
@@ -360,7 +360,7 @@ class Answer < ResponseNode
   end
 
   def validate_required
-    return unless empty? && required? && !hidden? && relevant? && !qtype.select_multiple? &&
+    return unless empty? && required? && !disabled? && relevant? && !qtype.select_multiple? &&
       (first_rank? || questioning.all_levels_required?)
     errors.add(:value, :required)
   end
