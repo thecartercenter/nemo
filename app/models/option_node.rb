@@ -342,6 +342,10 @@ class OptionNode < ApplicationRecord
     !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
   end
 
+  def conditions?
+    conditions.any?
+  end
+
   protected
 
   # Special method for creating/updating a tree of nodes via the children_attribs hash.

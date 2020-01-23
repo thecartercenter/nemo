@@ -45,6 +45,16 @@ describe "abilities for option nodes" do
             it_behaves_like "has specified abilities"
           end
         end
+
+        context "with condition" do
+          let(:form) { create(:form, question_types: %w[select_one text]) }
+          let!(:condition) do
+            create(:condition, conditionable: form.c[1], left_qing: form.c[0], value: option_node)
+          end
+          let(:permitted) { all - %i[destroy] }
+
+          it_behaves_like "has specified abilities"
+        end
       end
     end
 
