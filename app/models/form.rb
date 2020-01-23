@@ -200,7 +200,7 @@ class Form < ApplicationRecord
       eager_load: {question: {option_set: :root_node}}, type: "Questioning") || []
   end
 
-  def visible_questionings
+  def enabled_questionings
     questionings.reject(&:disabled?)
   end
 

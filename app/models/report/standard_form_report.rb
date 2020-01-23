@@ -225,6 +225,6 @@ class Report::StandardFormReport < Report::Report
   end
 
   def references?
-    form.visible_questionings.any? { |qing| qing.reference.present? }
+    form.enabled_questionings.any? { |qing| qing.reference.present? }
   end
 end
