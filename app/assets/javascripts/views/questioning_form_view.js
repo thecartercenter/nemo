@@ -42,7 +42,8 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
   }
 
   showRequired() {
-    return !this.fieldValue('read_only') && super.metadataTypeBlank();
+    return !(this.fieldValue('hidden') || this.fieldValue('disabled') || this.fieldValue('read_only'))
+      && super.metadataTypeBlank();
   }
 
   showAllLevelsRequired() {

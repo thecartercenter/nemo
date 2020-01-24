@@ -109,7 +109,7 @@ class Questioning < FormItem
   end
 
   def smsable?
-    enabled? && qtype.smsable?
+    visible? && enabled? && qtype.smsable?
   end
 
   # Duck type
@@ -155,10 +155,10 @@ class Questioning < FormItem
   def normalize
     super
     if question.metadata_type.present?
-      self.disabled = true
+      self.hidden = true
       display_conditions.destroy_all
     end
-    self.required = false if disabled? || read_only?
+    self.required = false if hidden? || disabled? || read_only?
     self.all_levels_required = false unless multilevel? && required?
   end
 end
