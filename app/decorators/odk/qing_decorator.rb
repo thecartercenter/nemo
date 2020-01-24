@@ -44,11 +44,12 @@ module Odk
       qtype_name == "select_one" && decorated_option_set.external_csv?
     end
 
-    # Whether this question is either visible or has some important behind the scenes thing like
-    # preload or calculate. Ideally hidden questions and disabled questions would be different things
-    # and we'd render the former but not the latter, but this is what it is for now.
     def renderable?
-      enabled? || jr_preload || calculate
+      enabled?
+    end
+
+    def behind_the_scenes?
+      jr_preload || calculate
     end
 
     def constraint_msg(locale)
