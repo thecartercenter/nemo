@@ -59,6 +59,12 @@
         </div>
       <% end %>
 
+      <% if qing.hidden? %>
+        <div class="hidden-icon">
+          <i class="fa fa-eye-slash"></i>
+        </div>
+      <% end %>
+
       <% unless read_only %>
         <%= action_link(:edit, edit_questioning_path(qing), label: false) if can?(:update, qing) %>
         <% if can?(:destroy, qing) %>
