@@ -12,6 +12,8 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
       'change select[id$="_metadata_type"]': 'toggleFields',
       'click #questioning_read_only': 'toggleFields',
       'click #questioning_required': 'toggleFields',
+      'click #questioning_hidden': 'toggleFields',
+      'click #questioning_disabled': 'toggleFields',
       'keyup #questioning_default': 'toggleFields',
     };
   }
@@ -42,8 +44,7 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
   }
 
   showRequired() {
-    return !(this.fieldValue('hidden') || this.fieldValue('disabled') || this.fieldValue('read_only'))
-      && super.metadataTypeBlank();
+    return !this.fieldValue('disabled') && !this.fieldValue('read_only') && super.metadataTypeBlank();
   }
 
   showAllLevelsRequired() {

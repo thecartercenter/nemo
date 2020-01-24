@@ -158,7 +158,8 @@ class Questioning < FormItem
       self.hidden = true
       display_conditions.destroy_all
     end
-    self.required = false if hidden? || disabled? || read_only?
+    # If `disabled`, don't normalize `required` in case the user wants to re-enable later.
+    self.required = false if hidden? || read_only?
     self.all_levels_required = false unless multilevel? && required?
   end
 end

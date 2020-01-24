@@ -64,8 +64,13 @@ describe Questioning do
 
     describe "hidden/disabled/required/read_only" do
       context do
-        let(:submitted) { {hidden: true, disabled: true, required: true, read_only: false} }
-        it { is_expected.to eq(hidden: true, disabled: true, required: false, read_only: false) }
+        let(:submitted) { {hidden: true, disabled: false, required: true, read_only: false} }
+        it { is_expected.to eq(hidden: true, disabled: false, required: false, read_only: false) }
+      end
+
+      context do
+        let(:submitted) { {hidden: false, disabled: true, required: true, read_only: false} }
+        it { is_expected.to eq(hidden: false, disabled: true, required: true, read_only: false) }
       end
 
       context do
