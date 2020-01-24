@@ -102,7 +102,7 @@ describe Report::StandardFormReport do
     end
 
     context "with invisible qings" do
-      before(:all) do
+      before do
         build_form_and_responses
 
         # make one question hidden, one disabled
@@ -113,11 +113,11 @@ describe Report::StandardFormReport do
       end
 
       it "should contain hidden qing" do
-        expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1])).to be_truthy
+        expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1])).to be(true)
       end
 
       it "should not contain disabled qing" do
-        expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[2])).to be_falsey
+        expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[2])).to be(false)
       end
     end
 
