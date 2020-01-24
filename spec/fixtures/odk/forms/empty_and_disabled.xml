@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>*formname1*</h:title>
+    <model>
+      <instance>
+        <data id="*form1*" version="*formver1*">
+          <*itemcode1*/>
+          <*itemcode2*>
+            <header/>
+          </*itemcode2*>
+          <*itemcode3* jr:template="">
+            <header/>
+            <*itemcode5*/>
+          </*itemcode3*>
+          <*itemcode6* jr:template="">
+            <header/>
+          </*itemcode6*>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="*itemcode2*:label">
+            <value>Repeat Group 1</value>
+          </text>
+          <text id="*itemcode2*:hint">
+            <value>Repeat Group 1</value>
+          </text>
+          <text id="*itemcode3*:label">
+            <value>Repeat Group 2</value>
+          </text>
+          <text id="*itemcode3*:hint">
+            <value>Repeat Group 2</value>
+          </text>
+          <text id="*itemcode6*:label">
+            <value>Repeat Group 3</value>
+          </text>
+          <text id="*itemcode6*:hint">
+            <value>Repeat Group 3</value>
+          </text>
+          <text id="*itemcode1*:label">
+            <value>Text Question Title 1</value>
+          </text>
+          <text id="*itemcode1*:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="*itemcode5*:label">
+            <value>Text Question Title 3</value>
+          </text>
+          <text id="*itemcode5*:hint">
+            <value>Question Hint 3</value>
+          </text>
+          <text id="*itemcode9*:label">
+            <value>Text Question Title 5</value>
+          </text>
+          <text id="*itemcode9*:hint">
+            <value>Question Hint 5</value>
+          </text>
+          <text id="BLANK">
+            <value/>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/*itemcode1*" type="string"/>
+      <bind nodeset="/data/*itemcode2*"/>
+      <bind nodeset="/data/*itemcode2*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode3*"/>
+      <bind nodeset="/data/*itemcode3*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode3*/*itemcode5*" type="string"/>
+      <bind nodeset="/data/*itemcode6*"/>
+      <bind nodeset="/data/*itemcode6*/header" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/*itemcode1*">
+      <label ref="jr:itext('*itemcode1*:label')"/>
+      <hint ref="jr:itext('*itemcode1*:hint')"/>
+    </input>
+    <group ref="/data/*itemcode2*">
+      <label ref="jr:itext('*itemcode2*:label')"/>
+      <repeat nodeset="/data/*itemcode2*">
+        <group appearance="field-list">
+          <input ref="/data/*itemcode2*/header">
+            <hint ref="jr:itext('*itemcode2*:hint')"/>
+          </input>
+        </group>
+      </repeat>
+    </group>
+    <group ref="/data/*itemcode3*">
+      <label ref="jr:itext('*itemcode3*:label')"/>
+      <repeat nodeset="/data/*itemcode3*">
+        <group appearance="field-list">
+          <input ref="/data/*itemcode3*/header">
+            <hint ref="jr:itext('*itemcode3*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode3*/*itemcode5*">
+            <label ref="jr:itext('*itemcode5*:label')"/>
+            <hint ref="jr:itext('*itemcode5*:hint')"/>
+          </input>
+        </group>
+      </repeat>
+    </group>
+    <group ref="/data/*itemcode6*">
+      <label ref="jr:itext('*itemcode6*:label')"/>
+      <repeat nodeset="/data/*itemcode6*">
+        <group appearance="field-list">
+          <input ref="/data/*itemcode6*/header">
+            <hint ref="jr:itext('*itemcode6*:hint')"/>
+          </input>
+        </group>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

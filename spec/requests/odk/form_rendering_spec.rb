@@ -271,7 +271,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "empty_and_hidden")
+        expect_xml(form, "empty_and_disabled")
       end
     end
   end
