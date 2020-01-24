@@ -93,7 +93,7 @@ describe Questioning do
       context do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
         let(:submitted) { {required: true, hidden: false, disabled: false} }
-        it { is_expected.to eq(required: false, hidden: false, disabled: true) }
+        it { is_expected.to eq(required: false, hidden: true, disabled: false) }
       end
 
       context do

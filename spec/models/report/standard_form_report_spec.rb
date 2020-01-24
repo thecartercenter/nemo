@@ -101,16 +101,24 @@ describe Report::StandardFormReport do
       expect(@report.response_count).to eq(0)
     end
 
-    it "should not contain invisible questionings" do
-      build_form_and_responses
+    context "with invisible qings" do
+      before(:all) do
+        build_form_and_responses
 
-      # make one question invisible
-      @form.questionings[1].update!(disabled: true)
+        # make one question hidden, one disabled
+        @form.questionings[1].update!(hidden: true)
+        @form.questionings[2].update!(disabled: true)
 
-      build_and_run_report
+        build_and_run_report
+      end
 
-      expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1]))
-        .to be_falsey, "summaries should not contain disabled question"
+      it "should contain hidden qing" do
+        expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[1])).to be_truthy
+      end
+
+      it "should not contain disabled qing" do
+        expect(@report.subsets[0].summaries.map(&:questioning).include?(@form.questionings[2])).to be_falsey
+      end
     end
 
     it "should return summaries matching questions" do

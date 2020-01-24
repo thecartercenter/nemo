@@ -118,6 +118,18 @@
           <text id="*itemcode11*:hint">
             <value>Question Hint 11</value>
           </text>
+          <text id="*itemcode12*:label">
+            <value>Datetime Question Title 12</value>
+          </text>
+          <text id="*itemcode12*:hint">
+            <value>Question Hint 12</value>
+          </text>
+          <text id="*itemcode13*:label">
+            <value>Datetime Question Title 13</value>
+          </text>
+          <text id="*itemcode13*:hint">
+            <value>Question Hint 13</value>
+          </text>
           <text id="*itemcode14*:label">
             <value>Barcode Question Title 14</value>
           </text>

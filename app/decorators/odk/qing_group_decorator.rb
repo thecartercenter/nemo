@@ -50,6 +50,8 @@ module Odk
     def body_tags(xpath_prefix:, **_options)
       return main_body_tags(xpath_prefix) if root?
 
+      return safe_str unless visible? && enabled?
+
       xpath = "#{xpath_prefix}/#{odk_code}"
       body_wrapper_tag(xpath) do
         if (fragments = Odk::QingGroupPartitioner.new.fragment(self))

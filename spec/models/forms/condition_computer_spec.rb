@@ -27,12 +27,14 @@ describe Forms::ConditionComputer do
         "integer",
         ["integer", "integer", %w[integer integer]],
         "integer",
+        "integer", # Hidden question
         "integer" # Disabled question
       ])
     end
     let(:form_items) { computer.preordered_form_items }
 
     before do
+      form.c[6].update!(hidden: true)
       form.c[7].update!(disabled: true)
     end
 

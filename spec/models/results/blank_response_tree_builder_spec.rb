@@ -48,6 +48,20 @@ describe Results::BlankResponseTreeBuilder do
     end
   end
 
+  context "hidden question" do
+    let(:form) { create(:form, question_types: %w[text text text]) }
+
+    before do
+      questioning = form.questionings.last
+      questioning.update!(hidden: true)
+    end
+
+    it "does not include hidden question in the tree" do
+      expect_root(response_tree, form)
+      expect_built_children(response_tree, %w[Answer Answer], form.c.reject(&:hidden).map(&:id))
+    end
+  end
+
   context "disabled question" do
     let(:form) { create(:form, question_types: %w[text text text]) }
 
