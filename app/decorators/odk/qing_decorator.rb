@@ -45,10 +45,6 @@ module Odk
       qtype_name == "select_one" && decorated_option_set.external_csv?
     end
 
-    def renderable?
-      enabled?
-    end
-
     def behind_the_scenes?
       jr_preload || calculate
     end

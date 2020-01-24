@@ -94,10 +94,6 @@ module Odk
       children.any?(&:multilevel?)
     end
 
-    def renderable?
-      enabled?
-    end
-
     private
 
     def no_hint?
