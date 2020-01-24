@@ -45,10 +45,6 @@ module Odk
       qtype_name == "select_one" && decorated_option_set.external_csv?
     end
 
-    def behind_the_scenes?
-      jr_preload || calculate
-    end
-
     def constraint_msg(locale)
       msgs = [min_max_error_msg] # Old min/max style, going away later.
       constraints.each do |constraint|
