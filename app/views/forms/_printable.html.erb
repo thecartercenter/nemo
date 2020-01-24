@@ -12,6 +12,6 @@
       <td class="answer text_answer"><div class="answer_box"></div></td>
     </tr>
 
-    <%= render("form_items/printable", items: form.enabled_children) %>
+    <%= render("form_items/printable", items: form.visible_and_enabled_children) %>
   </table>
 </div>
