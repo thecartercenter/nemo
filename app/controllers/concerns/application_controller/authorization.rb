@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "resolv"
+
 module Concerns::ApplicationController::Authorization
   extend ActiveSupport::Concern
 
@@ -68,6 +70,16 @@ module Concerns::ApplicationController::Authorization
 
   def offline_mode?
     configatron.offline_mode
+  end
+
+  # Checks for an internet connection if offline_mode is on. Otherwise always returns false.
+  def offline?
+    return false unless configatron.offline_mode
+    return @offline if defined?(@offline)
+    Resolv::DNS.new.getaddress("icann.org")
+    @offline = false
+  rescue Resolv::ResolvError
+    @offline = true
   end
 
   private

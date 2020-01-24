@@ -1,11 +1,4 @@
-<% content_for(:per_page_js) do
- # load the mapping API
- javascript_google_maps +
-
- # load report stuff
- report_js_includes
-end %>
-
+<% content_for(:per_page_js, safe_str << google_maps_js << report_chart_js) %>
 <% content_for(:audio) do %>
   <%# this path is hard coded because the audio_tag/path helpers are not working and i can't figure out why %>
   <%# they produce /audios/ship-bell.mp3 instead of the correct /assets/ship-bell.mp3 %>
@@ -14,7 +7,7 @@ end %>
 <% end %>
 
 <%# cache the javascript initialization since it will only change if response added %>
-<% cache(@cache_key + '/js_init') do %>
+<% cache(@cache_key + "/js_init") do %>
 
   <%# placing this up here so it's the first call to document.ready, so that the pane sizing happens before report drawing %>
   <%= javascript_doc_ready do %>
@@ -25,9 +18,11 @@ end %>
       # needed for storing the map bounds between refreshes
       mission_id: current_mission.id,
       map: {
+        key_missing: google_maps_key_missing?,
+        offline: offline?,
         locations: @location_answers,
         info_window_url: dashboard_info_window_url,
-        small_marker_url: image_url('markers/small.png')
+        small_marker_url: image_url("markers/small.png")
       },
       report: {
         id: @report_id
@@ -40,9 +35,9 @@ end %>
 <div class="row">
   <div class="col-md left_col">
     <h2>
-      <%= current_user.role(current_mission) == 'enumerator' ? t('dashboard.my_responses') : t('dashboard.recent_responses') %>
+      <%= current_user.role(current_mission) == "enumerator" ? t("dashboard.my_responses") : t("dashboard.recent_responses") %>
     </h2>
-    <%= render partial: 'recent_responses' %>
+    <%= render(partial: "recent_responses") %>
 
     <div>
       <a href="#" class="expand-map toggle-map">
@@ -50,15 +45,15 @@ end %>
         <%= t("dashboard.expand_map") %>
       </a>
       <h2 class="interior">
-        <%= t('dashboard.response_locations') %>
+        <%= t("dashboard.response_locations") %>
       </h2>
-      <%= render partial: 'response_locations' %>
+      <%= render(partial: "response_locations") %>
     </div>
   </div>
 
   <div class="col-md right_col">
-    <%= render partial: 'report_stats' %>
-    <%= render partial: 'report_pane' %>
+    <%= render(partial: "report_stats") %>
+    <%= render(partial: "report_pane") %>
   </div>
 </div>
 
@@ -85,5 +80,5 @@ end %>
     <a href="#" class="reload-ajax">Reload via AJAX</a>
     <a href="#" class="reload-page">Reload Page</a>
   <% end %>
-  <a href="#" class="full-screen"><i class="fa fa-expand"></i> <span><%= I18n.t('dashboard.enter_full_screen') %></span></a>
+  <a href="#" class="full-screen"><i class="fa fa-expand"></i> <span><%= I18n.t("dashboard.enter_full_screen") %></span></a>
 </div>

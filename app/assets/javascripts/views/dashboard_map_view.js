@@ -11,17 +11,21 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
   // constructor
   initialize(params) {
     this.params = params;
-
-    this.offline = typeof (google) === 'undefined';
-    if (this.offline) {
-      return this.show_offline_notice();
+    this.disabled = params.offline || params.key_missing;
+    if (this.disabled) {
+      this.show_disabled_notice();
+    } else {
+      this.setup_map();
     }
-    return this.setup_map();
   }
 
-  show_offline_notice() {
+  show_disabled_notice() {
     $('.response_locations').remove();
-    return $('.response_locations_offline').show();
+    if (this.params.offline) {
+      $('.response-locations-offline').show();
+    } else if (!this.params.key_present) {
+      $('.response-locations-no-key').show();
+    }
   }
 
   setup_map() {
@@ -165,19 +169,19 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
   }
 
   update_map(data) {
-    if (this.offline) { return; }
+    if (this.disabled) { return; }
     return Array.from(data.answers).map((answer) => this.add_answer(answer));
   }
   // TODO: Deal with data.count
 
   center() {
-    if (this.offline) { return null; }
+    if (this.disabled) { return null; }
     return this.map.getCenter();
   }
 
   // Called after viewport is resized. If center is given, sets the new center for the map.
   resized(center) {
-    if (this.offline) { return; }
+    if (this.disabled) { return; }
     google.maps.event.trigger(this.map, 'resize');
     if (center) { return this.map.setCenter(center); }
   }

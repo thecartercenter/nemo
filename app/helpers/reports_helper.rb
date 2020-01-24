@@ -19,7 +19,8 @@ module ReportsHelper
   end
 
   # javascript includes for the report view
-  def report_js_includes
+  def report_chart_js
+    return "" if offline?
     javascript_include_tag("https://www.google.com/jsapi") +
       javascript_tag('if (typeof(google) != "undefined")
         google.load("visualization", "1", {packages:["corechart"]});')

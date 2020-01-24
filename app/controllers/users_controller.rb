@@ -139,8 +139,8 @@ class UsersController < ApplicationController
   def reset_password_options(user)
     options = []
     options << :dont unless user.new_record?
-    options << :email unless configatron.offline_mode
-    options << :print if admin_mode? && configatron.offline_mode || mission_mode?
+    options << :email unless offline_mode?
+    options << :print if admin_mode? && offline_mode? || mission_mode?
     options << (mission_mode? ? :enter_and_show : :enter)
     options
   end
