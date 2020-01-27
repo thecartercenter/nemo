@@ -103,7 +103,7 @@ module Odk
     # Generates a CSV row for a normal node.
     def option_row(node)
       row = [option_set_code(node), node.odk_code]
-      row += configatron.preferred_locales.map { |l| node.option.name(l) } # Names
+      row += configatron.preferred_locales.map { |l| node.option.name(l, fallbacks: true) }
       # Node ID and parent node ID (unless parent is root)
       row << (node.depth > 1 ? node.parent_odk_code : nil)
       row
