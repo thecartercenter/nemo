@@ -55,6 +55,9 @@ module ELMO
     # Something MUST be overriding it, but the documentation on it is sparse.
     config.assets.enabled = false
 
+    # Include images from vendor/assets/ too https://stackoverflow.com/a/14195512/763231
+    config.assets.precompile += %w[*.png *.jpg *.jpeg *.gif *.svg]
+
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = "1.0"
 
