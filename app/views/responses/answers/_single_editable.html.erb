@@ -44,7 +44,7 @@
     </div>
     <%= javascript_doc_ready do %>
       $('#<%= context.input_id(:value) %>').trumbowyg({
-        svgPath: '/assets/trumbowyg-icons.svg',
+        svgPath: '<%= image_path("trumbowyg-icons.svg") %>',
         lang: '<%= I18n.locale %>',
         autogrow: true,
         btns: [
