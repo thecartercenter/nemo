@@ -149,7 +149,7 @@ describe Odk::ItemsetsFormAttachment, :odk do
         configatron.preferred_locales = [:en]
       end
 
-      it "should build file with correct contents" do
+      it "should build file with translations where available and fallback to English where not" do
         ifa.ensure_generated
         expect(csv).to eq(prepare_itemset_expectation("multiple_languages.csv", form))
       end
