@@ -58,10 +58,6 @@ module Odk
       false
     end
 
-    def renderable?
-      true
-    end
-
     def visible?
       true
     end

@@ -5,17 +5,24 @@ module Odk
   class QingGroupDecorator < FormItemDecorator
     delegate_all
 
-    def renderable_children
-      @renderable_children ||=
-        decorate_collection(object.sorted_children, context: context).select(&:renderable?)
+    # Returns all children that are renderable, even if they're not visible.
+    def enabled_children
+      @enabled_children ||=
+        decorate_collection(object.sorted_children, context: context).select(&:enabled?)
+    end
+
+    # Returns all children that are both enabled and visible.
+    def visible_children
+      @visible_children ||=
+        decorate_collection(object.sorted_children, context: context).select { |c| c.enabled? && c.visible? }
     end
 
     def render_as_grid?
       return @render_as_grid if defined?(@render_as_grid)
       return (@render_as_grid = false) if root?
-      return (@render_as_grid = false) if renderable_children.size <= 1 || !one_screen?
-      @render_as_grid = renderable_children.all? do |item|
-        !item.group? && item.grid_renderable?(option_set: renderable_children[0].option_set)
+      return (@render_as_grid = false) if enabled_children.size <= 1 || !one_screen?
+      @render_as_grid = enabled_children.all? do |item|
+        !item.group? && item.grid_renderable?(option_set: enabled_children[0].option_set)
       end
     end
 
@@ -49,8 +56,6 @@ module Odk
     #   questions
     def body_tags(xpath_prefix:, **_options)
       return main_body_tags(xpath_prefix) if root?
-
-      return safe_str unless visible? && enabled?
 
       xpath = "#{xpath_prefix}/#{odk_code}"
       body_wrapper_tag(xpath) do
@@ -153,14 +158,14 @@ module Odk
     def main_body_tags(xpath)
       # If this is a multilevel fragment, we are supposed to render just one of the subqings. %>
       if multilevel_fragment?
-        renderable_children[0].body_tags(group: self, xpath_prefix: xpath)
+        visible_children[0].body_tags(group: self, xpath_prefix: xpath)
       else
         safe_str << grid_label_row(xpath_prefix: xpath) << children_body_tags(xpath)
       end
     end
 
     def children_body_tags(xpath)
-      renderable_children.map do |child|
+      visible_children.map do |child|
         child.body_tags(group: self, render_mode: render_as_grid? ? :grid : :normal, xpath_prefix: xpath)
       end.reduce(:<<)
     end
@@ -169,7 +174,7 @@ module Odk
     # once as a label row and once as a normal row.
     def grid_label_row(xpath_prefix:)
       return +"" unless render_as_grid?
-      renderable_children[0].body_tags(group: self, render_mode: :label_row, xpath_prefix: xpath_prefix)
+      visible_children[0].body_tags(group: self, render_mode: :label_row, xpath_prefix: xpath_prefix)
     end
   end
 end
