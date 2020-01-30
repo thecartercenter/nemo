@@ -2,9 +2,9 @@
   "@odata.context": "http://nemo-odata-demo.s3-website-us-east-1.amazonaws.com/$metadata",
   "value": [
     {
-      "name": "Responses",
+      "name": "responses",
       "kind": "EntitySet",
-      "url": "Responses"
+      "url": "responses"
     }
   ]
 }

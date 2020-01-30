@@ -1,10 +1,10 @@
 {
-  "@odata.context": "http://nemo-odata-demo.s3-website-us-east-1.amazonaws.com/$metadata#Responses",
+  "@odata.context": "http://nemo-odata-demo.s3-website-us-east-1.amazonaws.com/$metadata#responses",
   "value": [
     {
-      "ID": "foo",
-      "FormName": "Form A",
-      "UserName": "User A"
+      "id": "foo",
+      "form_name": "Form A",
+      "user_name": "User A"
     }
   ]
 }
