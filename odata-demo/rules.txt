@@ -9,7 +9,7 @@
     </RoutingRule>
     <RoutingRule>
         <Condition>
-            <KeyPrefixEquals>responses</KeyPrefixEquals>
+            <KeyPrefixEquals>responses3</KeyPrefixEquals>
         </Condition>
         <Redirect>
             <ReplaceKeyPrefixWith>data-responses.json</ReplaceKeyPrefixWith>
