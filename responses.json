@@ -1,10 +1,10 @@
 {
-	"@odata.context": "http://nemo-odata-demo.s3-website-us-east-1.amazonaws.com/$metadata#Responses",
-	"value": [
-		{
-			"CategoryID": 1,
-			"CategoryName": "Beverages",
-			"Description": "Soft drinks, coffees, teas, beers, and ales"
-		}
-	]
+  "@odata.context": "http://nemo-odata-demo.s3-website-us-east-1.amazonaws.com/$metadata#Responses",
+  "value": [
+    {
+      "ID": "foo",
+      "FormName": "Form A",
+      "UserName": "User A"
+    }
+  ]
 }
