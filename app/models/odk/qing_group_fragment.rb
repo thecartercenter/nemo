@@ -61,5 +61,13 @@ module Odk
     def renderable?
       true
     end
+
+    def visible?
+      true
+    end
+
+    def enabled?
+      true
+    end
   end
 end
