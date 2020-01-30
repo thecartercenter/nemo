@@ -1,13 +1,13 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
-    <Schema Namespace="Demo" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <EntityType Name="Response">
+    <Schema Namespace="demo" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="response">
         <Key>
-          <PropertyRef Name="ID"/>
+          <PropertyRef Name="id"/>
         </Key>
-        <Property Name="ID" Type="Edm.String"/>
-        <Property Name="FormName" Type="Edm.String"/>
-        <Property Name="UserName" Type="Edm.String"/>
+        <Property Name="id" Type="Edm.String"/>
+        <Property Name="form_name" Type="Edm.String"/>
+        <Property Name="user_name" Type="Edm.String"/>
       </EntityType>
     </Schema>
   </edmx:DataServices>
