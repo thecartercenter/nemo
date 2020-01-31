@@ -1,10 +1,35 @@
 {
-  "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata",
-  "value": [
-    {
-      "name": "responses",
-      "kind": "EntitySet",
-      "url": "responses"
-    }
-  ]
+    "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata",
+    "value": [
+        {
+            "name": "Photos",
+            "kind": "EntitySet",
+            "url": "Photos"
+        },
+        {
+            "name": "People",
+            "kind": "EntitySet",
+            "url": "People"
+        },
+        {
+            "name": "Airlines",
+            "kind": "EntitySet",
+            "url": "Airlines"
+        },
+        {
+            "name": "Airports",
+            "kind": "EntitySet",
+            "url": "Airports"
+        },
+        {
+            "name": "Me",
+            "kind": "Singleton",
+            "url": "Me"
+        },
+        {
+            "name": "GetNearestAirport",
+            "kind": "FunctionImport",
+            "url": "GetNearestAirport"
+        }
+    ]
 }
