@@ -59,7 +59,7 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
   }
 
   showDisabled() {
-    return super.metadataTypeBlank();
+    return true;
   }
 
   showDisplayLogic() {

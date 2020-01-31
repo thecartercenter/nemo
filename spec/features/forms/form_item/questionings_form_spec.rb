@@ -56,14 +56,14 @@ describe "questionings form", js: true  do
           expect_visible("hidden", true)
         end
 
-        it "should hide disabled option when metadata field has a value" do
+        it "should not hide disabled option when metadata field has a value" do
           visit(edit_qing_path)
           select("Select One", from: "questioning_question_attributes_qtype_name")
           expect_visible("disabled", true)
           select("Date/Time", from: "Type")
           expect_visible("disabled", true)
           select("Form Start Time", from: "Metadata Type")
-          expect_visible("disabled", false)
+          expect_visible("disabled", true)
           within(:css, ".question_metadata_type") do
             select("", from: "Metadata Type")
           end
