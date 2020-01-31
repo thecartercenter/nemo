@@ -1,10 +1,10 @@
 {
-  "@odata.context": "http://nemo-odata-demo.s3-website-us-east-1.amazonaws.com/$metadata",
+  "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata",
   "value": [
     {
       "name": "responses",
       "kind": "EntitySet",
-      "url": "responses3"
+      "url": "responses"
     }
   ]
 }

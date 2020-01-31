@@ -1,5 +1,5 @@
 {
-  "@odata.context": "http://nemo-odata-demo.s3-website-us-east-1.amazonaws.com/$metadata#responses",
+  "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#responses",
   "value": [
     {
       "id": "foo",
