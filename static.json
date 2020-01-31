@@ -4,5 +4,10 @@
     "/": "root.json",
     "/*metadata": "metadata.xml",
     "/responses": "responses.json"
+  },
+  "headers": {
+    "/**": {
+      "OData-Version": "4.0"
+    }
   }
 }
