@@ -2,7 +2,7 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="demo" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <EntityType Name="responses">
+      <EntityType Name="response">
         <Key>
           <PropertyRef Name="id"/>
         </Key>
@@ -10,6 +10,11 @@
         <Property Name="form_name" Type="Edm.String"/>
         <Property Name="user_name" Type="Edm.String"/>
       </EntityType>
+      <EntityContainer Name="DefaultContainer">
+        <EntitySet EntityType="demo.response" Name="responses">
+          <Annotation String="responses" Term="Org.OData.Core.V1.ResourcePath"/>
+        </EntitySet>
+      </EntityContainer>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
