@@ -14,7 +14,7 @@ module Odk
     # Returns all children that are both enabled and visible.
     def visible_children
       @visible_children ||=
-        decorate_collection(object.sorted_children, context: context).select { |c| c.enabled? && c.visible? }
+        decorate_collection(object.sorted_children, context: context).select(&:visible?)
     end
 
     def render_as_grid?

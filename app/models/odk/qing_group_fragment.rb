@@ -59,7 +59,7 @@ module Odk
     end
 
     def visible?
-      true
+      enabled?
     end
 
     def enabled?

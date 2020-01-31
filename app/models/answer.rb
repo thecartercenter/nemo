@@ -360,7 +360,7 @@ class Answer < ResponseNode
   end
 
   def validate_required
-    return unless empty? && required? && visible? && enabled? && relevant? && !qtype.select_multiple? &&
+    return unless empty? && required? && visible? && relevant? && !qtype.select_multiple? &&
       (first_rank? || questioning.all_levels_required?)
     errors.add(:value, :required)
   end

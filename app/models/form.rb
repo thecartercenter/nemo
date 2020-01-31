@@ -84,7 +84,7 @@ class Form < ApplicationRecord
     select(forms[Arel.star]).select(count_subquery)
   }
 
-  delegate :children, :sorted_children, :visible_and_enabled_children, :c, :sc,
+  delegate :children, :sorted_children, :visible_children, :c, :sc,
     :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
   delegate :number, to: :current_version

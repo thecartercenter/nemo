@@ -109,7 +109,7 @@ class Questioning < FormItem
   end
 
   def smsable?
-    visible? && enabled? && qtype.smsable?
+    visible? && qtype.smsable?
   end
 
   # Duck type

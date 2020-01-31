@@ -131,8 +131,8 @@ class FormItem < ApplicationRecord
     self
   end
 
-  def visible_and_enabled_children
-    sorted_children.select { |child| child.visible? && child.enabled? }
+  def visible_children
+    sorted_children.select(&:visible?)
   end
 
   def preordered_descendants(eager_load: nil, type: nil)
@@ -224,7 +224,7 @@ class FormItem < ApplicationRecord
   end
 
   def visible?
-    !hidden?
+    !hidden? && enabled?
   end
 
   def self_and_ancestor_ids

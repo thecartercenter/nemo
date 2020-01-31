@@ -19,7 +19,7 @@ module Odk
     end
 
     def body_tags(group: nil, render_mode: nil, xpath_prefix:)
-      return safe_str unless visible? && enabled?
+      return safe_str unless visible?
 
       render_mode ||= :normal
 
