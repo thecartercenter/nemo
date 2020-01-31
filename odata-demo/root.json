@@ -1,5 +1,5 @@
 {
-    "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata",
+    "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata",
     "value": [
         {
             "name": "Photos",
