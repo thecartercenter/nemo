@@ -20,92 +20,92 @@ describe "questionings form", js: true  do
       context "with simple form" do
         it "should display all fields as editable" do
           visit(edit_qing_path)
-          expect_editable("required", true)
-          expect_editable("hidden", true)
-          expect_editable("disabled", true)
-          expect_editable("display_logic", true, field_type: "select")
-          expect_editable("skip_logic", true, field_type: "select")
+          expect_field_visibility("required", :editable)
+          expect_field_visibility("hidden", :editable)
+          expect_field_visibility("disabled", :editable)
+          expect_field_visibility("display_logic", :editable, field_type: "select")
+          expect_field_visibility("skip_logic", :editable, field_type: "select")
         end
 
         it "should display logic iff metadata is not selected on a metadata type question" do
           visit(edit_qing_path)
           select("Date/Time", from: "Type")
-          expect_visible("display_logic", true)
-          expect_visible("skip_logic", true)
+          expect_field_visibility("display_logic", :read_only)
+          expect_field_visibility("skip_logic", :read_only)
           select("Form Start Time", from: "Metadata Type")
-          expect_visible("display_logic", false)
-          expect_visible("skip_logic", false)
+          expect_field_visibility("display_logic", :hidden)
+          expect_field_visibility("skip_logic", :hidden)
           within(:css, ".question_metadata_type") do
             select("", from: "Metadata Type")
           end
-          expect_visible("display_logic", true)
-          expect_visible("skip_logic", true)
+          expect_field_visibility("display_logic", :read_only)
+          expect_field_visibility("skip_logic", :read_only)
         end
 
         it "should hide hidden option when metadata field has a value" do
           visit(edit_qing_path)
           select("Select One", from: "questioning_question_attributes_qtype_name")
-          expect_visible("hidden", true)
+          expect_field_visibility("hidden", :editable)
           select("Date/Time", from: "Type")
-          expect_visible("hidden", true)
+          expect_field_visibility("hidden", :editable)
           select("Form Start Time", from: "Metadata Type")
-          expect_visible("hidden", false)
+          expect_field_visibility("hidden", :hidden)
           within(:css, ".question_metadata_type") do
             select("", from: "Metadata Type")
           end
-          expect_visible("hidden", true)
+          expect_field_visibility("hidden", :editable)
         end
 
         it "should not hide disabled option when metadata field has a value" do
           visit(edit_qing_path)
           select("Select One", from: "questioning_question_attributes_qtype_name")
-          expect_visible("disabled", true)
+          expect_field_visibility("disabled", :editable)
           select("Date/Time", from: "Type")
-          expect_visible("disabled", true)
+          expect_field_visibility("disabled", :editable)
           select("Form Start Time", from: "Metadata Type")
-          expect_visible("disabled", true)
+          expect_field_visibility("disabled", :editable)
           within(:css, ".question_metadata_type") do
             select("", from: "Metadata Type")
           end
-          expect_visible("disabled", true)
+          expect_field_visibility("disabled", :editable)
         end
 
         it "should display default only if question type is defaultable" do
           visit(edit_qing_path)
           select("Select One", from: "questioning_question_attributes_qtype_name")
-          expect_editable("default", false)
+          expect_field_visibility("default", :hidden)
           select("Text", from: "Type") # Text is defaultable
-          expect_editable("default", true)
+          expect_field_visibility("default", :editable)
           select("Select One", from: "Type")
-          expect_editable("default", false)
+          expect_field_visibility("default", :hidden)
         end
 
         it "should display readonly only if default is not empty" do
           visit(edit_qing_path)
           select("Text", from: "Type") # Text is defaultable
-          expect_editable("read_only", false)
+          expect_field_visibility("read_only", :hidden)
           fill_in("Default Answer", with: "Test")
-          expect_editable("read_only", true)
+          expect_field_visibility("read_only", :editable)
           fill_in("Default Answer", with: "")
           page.execute_script('$("#questioning_default").trigger("keyup")')
-          expect_editable("read_only", false)
+          expect_field_visibility("read_only", :hidden)
         end
 
         it "should display required only if not read_only and no metadata type" do
           visit(edit_qing_path)
-          expect_visible("required", true)
+          expect_field_visibility("required", :editable)
 
           select("Date/Time", from: "Type")
           select("Form Start Time", from: "Metadata Type")
-          expect_visible("required", false)
+          expect_field_visibility("required", :hidden)
 
           select("", from: "Metadata Type")
-          expect_visible("required", true)
+          expect_field_visibility("required", :editable)
 
           select("Text", from: "Type", match: :prefer_exact) # Text is defaultable
           fill_in("Default Answer", with: "Test")
           check("Read Only")
-          expect_visible("required", false)
+          expect_field_visibility("required", :hidden)
         end
 
         it "should be able to add media prompt to through questioning form" do
@@ -125,19 +125,19 @@ describe "questionings form", js: true  do
 
         it "should display all_levels_required only if multilevel select one and required" do
           visit(edit_qing_path)
-          expect_visible("all_levels_required", false)
+          expect_field_visibility("all_levels_required", :hidden)
 
           check("Required")
-          expect_visible("all_levels_required", false)
+          expect_field_visibility("all_levels_required", :hidden)
 
           select("Select One", from: "Type")
-          expect_visible("all_levels_required", false)
+          expect_field_visibility("all_levels_required", :hidden)
 
           select("Regular", from: "Option Set")
-          expect_visible("all_levels_required", false)
+          expect_field_visibility("all_levels_required", :hidden)
 
           select("Multi", from: "Option Set")
-          expect_visible("all_levels_required", true)
+          expect_field_visibility("all_levels_required", :read_only)
         end
       end
     end
@@ -148,16 +148,11 @@ describe "questionings form", js: true  do
 
       it "should display all fields as not editable" do
         visit(edit_qing_path)
-        expect_visible("required", true)
-        expect_editable("required", false)
-        expect_visible("hidden", true)
-        expect_editable("hidden", false)
-        expect_visible("disabled", true)
-        expect_editable("disabled", false)
-        expect_visible("display_logic", true)
-        expect_editable("display_logic", false, field_type: "select")
-        expect_visible("skip_logic", true)
-        expect_editable("skip_logic", false, field_type: "select")
+        expect_field_visibility("required", :read_only)
+        expect_field_visibility("hidden", :read_only)
+        expect_field_visibility("disabled", :read_only)
+        expect_field_visibility("display_logic", :read_only, field_type: "select")
+        expect_field_visibility("skip_logic", :read_only, field_type: "select")
       end
 
       context "with media question" do
@@ -165,16 +160,11 @@ describe "questionings form", js: true  do
 
         it "should display all fields as not editable" do
           visit(edit_qing_path)
-          expect_visible("required", true)
-          expect_editable("required", false)
-          expect_visible("hidden", true)
-          expect_editable("hidden", false)
-          expect_visible("disabled", true)
-          expect_editable("disabled", false)
-          expect_visible("display_logic", true)
-          expect_editable("display_logic", false, field_type: "select")
-          expect_visible("skip_logic", true)
-          expect_editable("skip_logic", false, field_type: "select")
+          expect_field_visibility("required", :read_only)
+          expect_field_visibility("hidden", :read_only)
+          expect_field_visibility("disabled", :read_only)
+          expect_field_visibility("display_logic", :read_only, field_type: "select")
+          expect_field_visibility("skip_logic", :read_only, field_type: "select")
         end
       end
     end
@@ -187,11 +177,21 @@ describe "questionings form", js: true  do
 
     it "should display all fields as editable" do
       visit(edit_qing_path)
-      expect_editable("required", true)
-      expect_editable("hidden", true)
-      expect_editable("disabled", true)
-      expect_editable("display_logic", true, field_type: "select")
-      expect_editable("skip_logic", true, field_type: "select")
+      expect_field_visibility("required", :editable)
+      expect_field_visibility("hidden", :editable)
+      expect_field_visibility("disabled", :editable)
+      expect_field_visibility("display_logic", :editable, field_type: "select")
+      expect_field_visibility("skip_logic", :editable, field_type: "select")
+    end
+  end
+
+  # `value` can be one of :hidden, :read_only, :editable
+  def expect_field_visibility(field, value, **options)
+    case value
+    when :hidden then expect_visible(field, false) && expect_editable(field, false, options)
+    when :read_only then expect_visible(field, true) && expect_editable(field, false, options)
+    when :editable then expect_visible(field, true) && expect_editable(field, true, options)
+    else raise ArgumentError
     end
   end
 
