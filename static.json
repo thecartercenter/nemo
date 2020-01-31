@@ -2,7 +2,7 @@
   "root": "odata-demo/",
   "routes": {
     "/": "root.json",
-    "/metadata": "metadata.xml",
+    "/*metadata": "metadata.xml",
     "/responses": "responses.json"
   }
 }
