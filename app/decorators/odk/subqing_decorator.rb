@@ -31,7 +31,8 @@ module Odk
     end
 
     def required?
-      questioning.required? && questioning.visible? && (questioning.all_levels_required? || first_rank?)
+      questioning.required? && questioning.visible? &&
+        (questioning.all_levels_required? || first_rank?)
     end
 
     private

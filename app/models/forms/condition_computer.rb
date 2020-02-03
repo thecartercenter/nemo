@@ -44,7 +44,7 @@ module Forms
       active_rules.each do |rule|
         # We don't apply skip rules to hidden items because they’re usually auto-populated.
         # For example, metadata questions are automatically hidden and we don't want to skip those.
-        next if item.hidden?
+        next if item.disabled?
         next if item.descendants.include?(rule.dest_item)
         next if item_has_been_added_to_ancestor?(rule.condition_group, item)
         add_to_table(item, rule.condition_group)

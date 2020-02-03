@@ -10,6 +10,7 @@
 #  ancestry                     :text
 #  ancestry_depth               :integer          not null
 #  default                      :string
+#  disabled                     :boolean          default(FALSE), not null
 #  display_if                   :string           default("always"), not null
 #  group_hint_translations      :jsonb
 #  group_item_name_translations :jsonb
@@ -61,7 +62,6 @@ class Questioning < FormItem
   delegate :smsable?, to: :form, prefix: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
-  scope :visible, -> { where(hidden: false) }
   scope :with_type_property, ->(property) { joins(:question).merge(Question.with_type_property(property)) }
 
   validates_with Forms::DynamicPatternValidator,
@@ -99,7 +99,7 @@ class Questioning < FormItem
   end
 
   def core_changed?
-    (changed & %w[required hidden default]).any? || conditions_changed?
+    (changed & %w[required hidden disabled default]).any? || conditions_changed?
   end
 
   # Checks if this Questioning is in a repeat group.
@@ -158,6 +158,7 @@ class Questioning < FormItem
       self.hidden = true
       display_conditions.destroy_all
     end
+    # If `disabled`, don't normalize `required` in case the user wants to re-enable later.
     self.required = false if hidden? || read_only?
     self.all_levels_required = false unless multilevel? && required?
   end

@@ -50,6 +50,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       label_tag: elmo_field_label(field_name, options),
       field_html: elmo_field(field_name, options) + (options[:append] || ""),
       hint_html: elmo_field_hint(field_name, options),
+      inline_hint_html: elmo_field_inline_hint(field_name, options),
       errors: errors
     })
   end
@@ -243,39 +244,54 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     label(field_name, label_html, class: "main")
   end
 
-  # generates html for a field hint block
+  # Generates html for a field hint block.
+  # This will be done by default if no hint is specified.
   def elmo_field_hint(field_name, options)
-    return "" if options[:hint] == false
+    return "" if options[:hint] == false || options[:inline_hint].present?
 
-    # if hint text is not given explicitly, look it up
-    unless options[:hint]
-      # get the text based on the field_name and the form mode
-      # if field is read_only, we first try the field_name name plus read_only,
-      # else we try field_name plus 'editable'
-      # then we try just field_name
-      # so for a field_name called 'name' in read_only mode,
-      # we'd try activerecord.hints.themodel.name.read_only, then just .name
-      # if all fail then we return ''
-      keys_to_try = [
-        :"#{field_name}.#{options[:read_only] ? "read_only" : "editable"}",
-        field_name.to_sym,
-        ""
-      ]
-      options[:hint] = I18n.t(keys_to_try.first,
-        scope: [:activerecord, :hints, @object.class.model_name.i18n_key],
-        default: keys_to_try.drop(1))
-    end
+    # If hint text is not given explicitly, look it up.
+    options[:hint] = hint_text(field_name, options) unless options[:hint]
 
-    # if we get this far and hint is still blank, return blank
-    if options[:hint].blank?
+    # If we get this far and hint is still blank, return blank.
+    options[:hint].blank? ? "" : format_hint(options[:hint])
+  end
+
+  # Generates html for an inline field hint block.
+  # This will NOT be done by default if no hint is specified.
+  def elmo_field_inline_hint(field_name, options)
+    return "" if options[:inline_hint].blank?
+
+    # If hint text is not given explicitly, look it up.
+    options[:inline_hint] = hint_text(field_name, options) if options[:inline_hint] == true
+
+    # If we get this far and inline_hint is still blank, return blank.
+    # No need to format since it should be a single paragraph.
+    options[:inline_hint].presence || ""
+  end
+
+  # get the hint text based on the field_name and the form mode
+  # if field is read_only, we first try the field_name name plus read_only,
+  # else we try field_name plus 'editable'
+  # then we try just field_name
+  # so for a field_name called 'name' in read_only mode,
+  # we'd try activerecord.hints.themodel.name.read_only, then just .name
+  # if all fail then we return ''
+  def hint_text(field_name, options)
+    keys_to_try = [
+      :"#{field_name}.#{options[:read_only] ? "read_only" : "editable"}",
+      field_name.to_sym,
       ""
-    else
-      # run the hint text through simple format,
-      # but no need to sanitize since we don't want to lose links
-      # AND we know this text will not be coming from the user
-      # We also need to be careful not to allow any double quotes
-      # as this value will be included in a HTML attrib.
-      @template.simple_format(options[:hint], {}, sanitize: false).tr('"', "'")
-    end
+    ]
+    I18n.t(keys_to_try.first, scope: [:activerecord, :hints, @object.class.model_name.i18n_key],
+                              default: keys_to_try.drop(1))
+  end
+
+  # run the hint text through simple format,
+  # but no need to sanitize since we don't want to lose links
+  # AND we know this text will not be coming from the user
+  # We also need to be careful not to allow any double quotes
+  # as this value will be included in a HTML attrib.
+  def format_hint(hint)
+    @template.simple_format(hint, {}, sanitize: false).tr('"', "'")
   end
 end

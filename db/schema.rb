@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_205852) do
+ActiveRecord::Schema.define(version: 2020_01_24_001444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -166,6 +166,7 @@ ActiveRecord::Schema.define(version: 2019_12_06_205852) do
     t.integer "ancestry_depth", null: false
     t.datetime "created_at", null: false
     t.string "default"
+    t.boolean "disabled", default: false, null: false
     t.string "display_if", default: "always", null: false
     t.uuid "form_id", null: false
     t.integer "form_old_id"

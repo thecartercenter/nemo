@@ -36,13 +36,13 @@ describe Odk::FormDecorator, :odk do
           form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
         end
 
-        context "when question is visible" do
+        context "when question is enabled" do
           it { is_expected.to be(true) }
         end
 
-        context "when question is invisible" do
+        context "when question is disabled" do
           before do
-            form.c[0].update!(hidden: true)
+            form.c[0].update!(disabled: true)
           end
 
           it { is_expected.to be(false) }

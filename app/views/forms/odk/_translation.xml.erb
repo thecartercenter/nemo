@@ -5,7 +5,7 @@
 
   <%# Regular question translations %>
   <% @questionings.each do |qing| %>
-    <% if qing.visible? %>
+    <% if qing.enabled? %>
       <% qing.subqings.each do |subq| %>
         <text id="<%= subq.odk_code %>:label">
           <value><%= subq.name(lang, fallbacks: true) %></value>

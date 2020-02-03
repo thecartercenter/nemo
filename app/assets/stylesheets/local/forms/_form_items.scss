@@ -38,7 +38,7 @@
       cursor: pointer;
     }
 
-    &.form-item-hidden {
+    &.form-item-disabled {
       .hidden-curtain {
         background-color: $white;
         bottom: 0;
@@ -107,7 +107,8 @@
       white-space: nowrap;
 
       .refd-qing-links,
-      .skip-rule-links {
+      .skip-rule-links,
+      .hidden-icon {
         display: inline-block;
         margin-right: 10px;
       }

@@ -184,7 +184,7 @@ class Report::StandardFormReport < Report::Report
   # takes an optional form argument to allow eager loaded form
   def questionings_to_include(form = nil)
     @questionings_to_include ||= (form || self.form).questionings.reject do |qing|
-      qing.hidden? ||
+      qing.disabled? ||
         Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name] ||
         text_responses == "short_only" && qing.qtype.name == "long_text" ||
         text_responses == "none" && qing.qtype.textual?
@@ -225,6 +225,6 @@ class Report::StandardFormReport < Report::Report
   end
 
   def references?
-    form.visible_questionings.any? { |qing| qing.reference.present? }
+    form.enabled_questionings.any? { |qing| qing.reference.present? }
   end
 end

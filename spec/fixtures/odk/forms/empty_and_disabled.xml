@@ -11,17 +11,11 @@
           </*itemcode2*>
           <*itemcode3* jr:template="">
             <header/>
-            <*itemcode4*/>
             <*itemcode5*/>
           </*itemcode3*>
           <*itemcode6* jr:template="">
             <header/>
-            <*itemcode7*/>
           </*itemcode6*>
-          <*itemcode8* jr:template="">
-            <header/>
-            <*itemcode9*/>
-          </*itemcode8*>
         </data>
       </instance>
       <itext>
@@ -44,35 +38,17 @@
           <text id="*itemcode6*:hint">
             <value>Repeat Group 3</value>
           </text>
-          <text id="*itemcode8*:label">
-            <value>Repeat Group 4</value>
-          </text>
-          <text id="*itemcode8*:hint">
-            <value>Repeat Group 4</value>
-          </text>
           <text id="*itemcode1*:label">
             <value>Text Question Title 1</value>
           </text>
           <text id="*itemcode1*:hint">
             <value>Question Hint 1</value>
           </text>
-          <text id="*itemcode4*:label">
-            <value>Text Question Title 2</value>
-          </text>
-          <text id="*itemcode4*:hint">
-            <value>Question Hint 2</value>
-          </text>
           <text id="*itemcode5*:label">
             <value>Text Question Title 3</value>
           </text>
           <text id="*itemcode5*:hint">
             <value>Question Hint 3</value>
-          </text>
-          <text id="*itemcode7*:label">
-            <value>Text Question Title 4</value>
-          </text>
-          <text id="*itemcode7*:hint">
-            <value>Question Hint 4</value>
           </text>
           <text id="*itemcode9*:label">
             <value>Text Question Title 5</value>
@@ -90,14 +66,9 @@
       <bind nodeset="/data/*itemcode2*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode3*"/>
       <bind nodeset="/data/*itemcode3*/header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode3*/*itemcode4*" type="string"/>
       <bind nodeset="/data/*itemcode3*/*itemcode5*" type="string"/>
       <bind nodeset="/data/*itemcode6*"/>
       <bind nodeset="/data/*itemcode6*/header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode6*/*itemcode7*" type="string"/>
-      <bind nodeset="/data/*itemcode8*"/>
-      <bind nodeset="/data/*itemcode8*/header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode8*/*itemcode9*" type="string"/>
     </model>
   </h:head>
   <h:body>

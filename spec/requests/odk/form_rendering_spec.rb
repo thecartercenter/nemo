@@ -256,7 +256,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     context "empty group, hidden group, group with hidden question, group with only hidden question" do
       let!(:form) do
         create(:form, :live,
-          name: "Empty and Hidden",
+          name: "Empty and hidden",
           question_types: ["text",
                            {repeating: {name: "Repeat Group 1", items: []}},
                            {repeating: {name: "Repeat Group 2", items: %w[text text]}},
@@ -272,6 +272,28 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
       it "should render proper xml" do
         expect_xml(form, "empty_and_hidden")
+      end
+    end
+
+    context "empty group, disabled group, group with disabled question, group with only disabled question" do
+      let!(:form) do
+        create(:form, :live,
+          name: "Empty and disabled",
+          question_types: ["text",
+                           {repeating: {name: "Repeat Group 1", items: []}},
+                           {repeating: {name: "Repeat Group 2", items: %w[text text]}},
+                           {repeating: {name: "Repeat Group 3", items: %w[text]}},
+                           {repeating: {name: "Repeat Group 4", items: %w[text]}}])
+      end
+
+      before do
+        form.c[2].c[0].update!(disabled: true, required: true)
+        form.c[3].c[0].update!(disabled: true)
+        form.c[4].update!(disabled: true)
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "empty_and_disabled")
       end
     end
   end

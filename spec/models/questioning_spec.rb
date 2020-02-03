@@ -10,6 +10,7 @@
 #  ancestry                     :text
 #  ancestry_depth               :integer          not null
 #  default                      :string
+#  disabled                     :boolean          default(FALSE), not null
 #  display_if                   :string           default("always"), not null
 #  group_hint_translations      :jsonb
 #  group_item_name_translations :jsonb
@@ -61,50 +62,55 @@ describe Questioning do
     let(:qing) { build(:questioning, submitted.merge(question: question)).tap(&:valid?) }
     subject { submitted.keys.map { |k| [k, qing.send(k)] }.to_h }
 
-    describe "hidden/required/read_only" do
+    describe "hidden/disabled/required/read_only" do
       context do
-        let(:submitted) { {hidden: true, required: true, read_only: false} }
-        it { is_expected.to eq(hidden: true, required: false, read_only: false) }
+        let(:submitted) { {hidden: true, disabled: false, required: true, read_only: false} }
+        it { is_expected.to eq(hidden: true, disabled: false, required: false, read_only: false) }
       end
 
       context do
-        let(:submitted) { {hidden: true, required: false, read_only: false} }
-        it { is_expected.to eq(hidden: true, required: false, read_only: false) }
+        let(:submitted) { {hidden: false, disabled: true, required: true, read_only: false} }
+        it { is_expected.to eq(hidden: false, disabled: true, required: true, read_only: false) }
       end
 
       context do
-        let(:submitted) { {hidden: false, required: true, read_only: false} }
-        it { is_expected.to eq(hidden: false, required: true, read_only: false) }
+        let(:submitted) { {hidden: true, disabled: true, required: false, read_only: false} }
+        it { is_expected.to eq(hidden: true, disabled: true, required: false, read_only: false) }
       end
 
       context do
-        let(:submitted) { {hidden: false, required: true, read_only: true} }
-        it { is_expected.to eq(hidden: false, required: false, read_only: true) }
+        let(:submitted) { {hidden: false, disabled: false, required: true, read_only: false} }
+        it { is_expected.to eq(hidden: false, disabled: false, required: true, read_only: false) }
       end
 
       context do
-        let(:submitted) { {hidden: false, required: false, read_only: true} }
-        it { is_expected.to eq(hidden: false, required: false, read_only: true) }
+        let(:submitted) { {hidden: false, disabled: false, required: true, read_only: true} }
+        it { is_expected.to eq(hidden: false, disabled: false, required: false, read_only: true) }
+      end
+
+      context do
+        let(:submitted) { {hidden: false, disabled: false, required: false, read_only: true} }
+        it { is_expected.to eq(hidden: false, disabled: false, required: false, read_only: true) }
       end
     end
 
-    describe "question metadata and hidden/required" do
+    describe "question metadata and hidden/disabled/required" do
       context do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
-        let(:submitted) { {required: true, hidden: false} }
-        it { is_expected.to eq(required: false, hidden: true) }
+        let(:submitted) { {required: true, hidden: false, disabled: false} }
+        it { is_expected.to eq(required: false, hidden: true, disabled: false) }
       end
 
       context do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
-        let(:submitted) { {required: "", hidden: true} }
-        it { is_expected.to eq(required: false, hidden: true) }
+        let(:submitted) { {required: "", hidden: true, disabled: true} }
+        it { is_expected.to eq(required: false, hidden: true, disabled: true) }
       end
 
       context do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: ""} }
-        let(:submitted) { {required: true, hidden: false} }
-        it { is_expected.to eq(required: true, hidden: false) }
+        let(:submitted) { {required: true, disabled: false} }
+        it { is_expected.to eq(required: true, disabled: false) }
       end
     end
 

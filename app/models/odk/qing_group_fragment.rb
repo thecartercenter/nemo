@@ -15,7 +15,7 @@ module Odk
 
     attr_accessor :children, :qing_group, :level
 
-    delegate :hidden, :id, :group_name, :group_hint, :group_name_translations,
+    delegate :disabled, :id, :group_name, :group_hint, :group_name_translations,
       :group_hint_translations, :repeatable, to: :qing_group
 
     def initialize(qing_group, children, level = nil)
@@ -58,7 +58,11 @@ module Odk
       false
     end
 
-    def renderable?
+    def visible?
+      enabled?
+    end
+
+    def enabled?
       true
     end
   end

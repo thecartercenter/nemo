@@ -12,6 +12,8 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
       'change select[id$="_metadata_type"]': 'toggleFields',
       'click #questioning_read_only': 'toggleFields',
       'click #questioning_required': 'toggleFields',
+      'click #questioning_hidden': 'toggleFields',
+      'click #questioning_disabled': 'toggleFields',
       'keyup #questioning_default': 'toggleFields',
     };
   }
@@ -28,6 +30,7 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
     this.showField('required', this.showRequired());
     this.showField('all_levels_required', this.showAllLevelsRequired());
     this.showField('hidden', this.showHidden());
+    this.showField('disabled', this.showDisabled());
     this.showField('display_logic', this.showDisplayLogic());
     return this.showField('skip_logic', this.showSkipLogic());
   }
@@ -41,7 +44,7 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
   }
 
   showRequired() {
-    return !this.fieldValue('read_only') && super.metadataTypeBlank();
+    return !this.fieldValue('disabled') && !this.fieldValue('read_only') && super.metadataTypeBlank();
   }
 
   showAllLevelsRequired() {
@@ -53,6 +56,10 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
 
   showHidden() {
     return super.metadataTypeBlank();
+  }
+
+  showDisabled() {
+    return true;
   }
 
   showDisplayLogic() {

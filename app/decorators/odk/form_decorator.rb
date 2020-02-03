@@ -49,11 +49,11 @@ module Odk
 
     # Whether this form needs an accompanying manifest for odk.
     def needs_manifest?
-      needs_external_csv? || visible_questionings.any?(&:media_prompt?)
+      needs_external_csv? || enabled_questionings.any?(&:media_prompt?)
     end
 
     def needs_external_csv?
-      visible_questionings.any? { |q| decorate(q).select_one_with_external_csv? }
+      enabled_questionings.any? { |q| decorate(q).select_one_with_external_csv? }
     end
   end
 end

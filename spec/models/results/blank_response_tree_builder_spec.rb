@@ -61,4 +61,18 @@ describe Results::BlankResponseTreeBuilder do
       expect_built_children(response_tree, %w[Answer Answer], form.c.reject(&:hidden).map(&:id))
     end
   end
+
+  context "disabled question" do
+    let(:form) { create(:form, question_types: %w[text text text]) }
+
+    before do
+      questioning = form.questionings.last
+      questioning.update!(disabled: true)
+    end
+
+    it "does not include disabled question in the tree" do
+      expect_root(response_tree, form)
+      expect_built_children(response_tree, %w[Answer Answer], form.c.reject(&:disabled).map(&:id))
+    end
+  end
 end

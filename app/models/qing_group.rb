@@ -10,6 +10,7 @@
 #  ancestry                     :text
 #  ancestry_depth               :integer          not null
 #  default                      :string
+#  disabled                     :boolean          default(FALSE), not null
 #  display_if                   :string           default("always"), not null
 #  group_hint_translations      :jsonb
 #  group_item_name_translations :jsonb

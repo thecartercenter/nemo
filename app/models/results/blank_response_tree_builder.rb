@@ -26,7 +26,9 @@ module Results
 
     def add_level(form_nodes, response_node)
       form_nodes.each do |form_node|
-        unless form_node.hidden
+        # If we ever add hidden functionality to web forms this will need to get more granular,
+        # and the hidden check will need to happen in the partials instead.
+        unless form_node.hidden? || form_node.disabled?
           if form_node.class == QingGroup && form_node.repeatable?
             add_repeat_group(form_node, response_node)
           elsif form_node.class == QingGroup

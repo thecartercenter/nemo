@@ -82,6 +82,18 @@
         font-size: 12px;
         margin-top: 5px;
       }
+
+      &.inline-hint {
+        color: $gray-text;
+        display: flex;
+        flex-direction: row;
+
+        input {
+          margin-right: 10px;
+          // Checkbox gets aligned differently with `display: flex`.
+          margin-top: 2px;
+        }
+      }
     }
   }
 
