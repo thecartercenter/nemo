@@ -18,7 +18,8 @@
     <%= f.field(:default, type: :string, read_only: cannot?(:update_core, @questioning)) %>
     <%= f.field(:required, type: :check_box, read_only: cannot?(:update_core, @questioning), inline_hint: true) %>
     <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning), inline_hint: true) %>
-    <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning), inline_hint: true) %>
+    <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning), inline_hint: true,
+        hint: t("activerecord.hints.questioning.hidden_more_info")) %>
     <%= f.field(:disabled, type: :check_box, read_only: cannot?(:update_core, @questioning), inline_hint: true) %>
     <%= f.field(:all_levels_required, type: :select, read_only: cannot?(:update_core, @questioning),
         prompt: false, options: translate_options(%w[false true], [:form_item, :all_levels_required_options])) %>

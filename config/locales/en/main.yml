@@ -651,6 +651,7 @@ en:
         default: "Text entered here will be pre-filled in the answer space (for ODK Collect only). You can enter $QuestionCode to include the value of a previous question, and $!RepeatNum to include the number of the current item in a repeat group.\n\nFor example, entering\n\n&nbsp;&nbsp;&nbsp;ID: $Household-$!RepeatNum\n\nwould pre-fill the answer with\n\n&nbsp;&nbsp;&nbsp;ID: 176-2\n\nfor the second person in household 176, assuming you have a question with code 'Household'. You can also enter an XPath calculate expression by wrapping it with <code>calc()</code>:\n\n&nbsp;&nbsp;&nbsp;<code>calc($VillageNum + 100 / 2)</code>"
         display_logic: "Conditions which must be met in order for this question to be shown to the user."
         hidden: "ODK Collect only: Hide question but still collect default answer"
+        hidden_more_info: "Read more about hidden questions in the <a href='https://elmo-nemo.readthedocs.io/en/master/content/formsquestions/formsquestions.html#questions'>documentation</a>."
         disabled: "Hide question and do not collect anything"
         read_only: "ODK Collect only: Cannot change default answer"
         required: "Whether this question must be completed"

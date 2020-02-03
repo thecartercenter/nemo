@@ -247,7 +247,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # Generates html for a field hint block.
   # This will be done by default if no hint is specified.
   def elmo_field_hint(field_name, options)
-    return "" if options[:hint] == false || options[:inline_hint].present?
+    return "" if options[:hint] == false || (options[:hint].blank? && options[:inline_hint].present?)
 
     # If hint text is not given explicitly, look it up.
     options[:hint] = hint_text(field_name, options) unless options[:hint]
