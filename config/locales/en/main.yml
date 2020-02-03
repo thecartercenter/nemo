@@ -608,10 +608,10 @@ en:
         sms_relay: "Whether to enable forwarding incoming SMS responses to users and user groups"
         recipient_ids: "If you enter user or user group names here, any incoming SMS responses will be forwarded to them automatically."
         authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an enumerator to spoof submissions."
-        allow_incomplete: "If checked, allows forms with incomplete required questions to be submitted anyway (via web and ODK only). Enumerators using ODK must enter an override code (see the Settings page) to do so."
+        allow_incomplete: "If checked, allows forms with incomplete required questions to be submitted anyway (via web and ODK Collect only). Enumerators using ODK Collect must enter an override code (see the Settings page) to do so."
         current_version_name: "Each form version has a 10-digit ID and a 3-letter code. The form versioning system is intended to indicate small changes in the form design so that enumerators can update their copies of the form."
         access_level: "Public: Any user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
-        default_response_name: "Text entered here will be used as the default name of filled forms in ODK. You can enter $QuestionCode to include the value of a question in the form.\n\nFor example, entering:\n\n&nbsp;&nbsp;&nbsp;Survey for $VillageNum-$Household\n\nmight name the form:\n\n&nbsp;&nbsp;&nbsp;Survey for 7-Smith\n\nassuming you have questions with codes 'VillageNum' and 'Household'\n\nYou can also enter an XPath calculate expression by wrapping it with <code>calc()</code>:\n\n&nbsp;&nbsp;&nbsp;<code>calc($VillageNum + 100 / 2)</code>"
+        default_response_name: "Text entered here will be used as the default name of filled forms in ODK Collect. You can enter $QuestionCode to include the value of a question in the form.\n\nFor example, entering:\n\n&nbsp;&nbsp;&nbsp;Survey for $VillageNum-$Household\n\nmight name the form:\n\n&nbsp;&nbsp;&nbsp;Survey for 7-Smith\n\nassuming you have questions with codes 'VillageNum' and 'Household'\n\nYou can also enter an XPath calculate expression by wrapping it with <code>calc()</code>:\n\n&nbsp;&nbsp;&nbsp;<code>calc($VillageNum + 100 / 2)</code>"
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
         locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
@@ -632,15 +632,15 @@ en:
           Appendix: Include the list of options in an appendix created by a Coordinator.
           Treat as text: Accept options for this option set as if they were text entries"
       qing_group:
-        group_item_name: "You can enter $QuestionCode to include the value of a question (for ODK only).\n\nFor example, suppose you are making a repeat group where the code for the first question is 'HouseholdID' and you enter\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID \n\n You create one group and answer '123' for 'HouseholdID.' Then you create a second group and answer '789' for 'HouseholdID.' The first group item name will be 'Household: 123.' The second group item name will be 'Household: 789.'"
+        group_item_name: "You can enter $QuestionCode to include the value of a question (for ODK Collect only).\n\nFor example, suppose you are making a repeat group where the code for the first question is 'HouseholdID' and you enter\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID \n\n You create one group and answer '123' for 'HouseholdID.' Then you create a second group and answer '789' for 'HouseholdID.' The first group item name will be 'Household: 123.' The second group item name will be 'Household: 789.'"
       question:
-        media_prompt: "Attach a media file that enumerators can view or listen to when viewing the question in ODK. Video (mp4), audio (mp3, ogg, wav, flac), and image (png, jpg) files are all acceptable. File can be up to %{max_size_mib}MiB in size."
+        media_prompt: "Attach a media file that enumerators can view or listen to when viewing the question in ODK Collect. Video (mp4), audio (mp3, ogg, wav, flac), and image (png, jpg) files are all acceptable. File can be up to %{max_size_mib}MiB in size."
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
         key: "Answers to key questions help summarize responses and appear in the response listing. Common key questions are location and overall evaluation."
         minimum: "The minimum value for the response. Check the box if the minimum itself is not valid."
         maximum: "The maximum value for the response. Check the box if the maximum itself is not valid."
-        auto_increment: "If this box is checked and you are using ODK, the value will be incremented each time you fill out a new form."
+        auto_increment: "If this box is checked and you are using ODK Collect, the value will be incremented each time you fill out a new form."
         name: "The main question text, e.g. 'How many people are in line?'"
         option_set_id: "The set of options the user will be able to choose from."
         qtype_name: "The kind of information the user will be entering."
@@ -648,14 +648,14 @@ en:
         metadata_type: "A special value that can be pre-filled into this question. If chosen, this question will be automatically hidden and not required, and any conditions will be removed."
         reference: "A URL that supports the question. Must start with http:// or https://."
       questioning:
-        default: "Text entered here will be pre-filled in the answer space (for ODK only). You can enter $QuestionCode to include the value of a previous question, and $!RepeatNum to include the number of the current item in a repeat group.\n\nFor example, entering\n\n&nbsp;&nbsp;&nbsp;ID: $Household-$!RepeatNum\n\nwould pre-fill the answer with\n\n&nbsp;&nbsp;&nbsp;ID: 176-2\n\nfor the second person in household 176, assuming you have a question with code 'Household'. You can also enter an XPath calculate expression by wrapping it with <code>calc()</code>:\n\n&nbsp;&nbsp;&nbsp;<code>calc($VillageNum + 100 / 2)</code>"
+        default: "Text entered here will be pre-filled in the answer space (for ODK Collect only). You can enter $QuestionCode to include the value of a previous question, and $!RepeatNum to include the number of the current item in a repeat group.\n\nFor example, entering\n\n&nbsp;&nbsp;&nbsp;ID: $Household-$!RepeatNum\n\nwould pre-fill the answer with\n\n&nbsp;&nbsp;&nbsp;ID: 176-2\n\nfor the second person in household 176, assuming you have a question with code 'Household'. You can also enter an XPath calculate expression by wrapping it with <code>calc()</code>:\n\n&nbsp;&nbsp;&nbsp;<code>calc($VillageNum + 100 / 2)</code>"
         display_logic: "Conditions which must be met in order for this question to be shown to the user."
         hidden: "ODK Collect only: Hide question but still collect default answer"
         disabled: "Hide question and do not collect anything"
         read_only: "ODK Collect only: Cannot change default answer"
         required: "Whether this question must be completed"
         skip_logic: "Rules for which question should be shown to the user after this question."
-        constraints: "Conditions which must be met in order for an answer to be accepted. Currently for ODK only."
+        constraints: "Conditions which must be met in order for an answer to be accepted. Currently for ODK Collect only."
         all_levels_required: "For a multi-level select question, should the enumerator be required to enter a value for every level of the question?"
       report/report:
         name: "A descriptive title for this report."
@@ -678,7 +678,7 @@ en:
           * The default language for SMS replies
           * The languages for Questions and Options
         override_code: |-
-          This code should be given to enumerators if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
+          This code should be given to enumerators if the ability to send incomplete responses is needed. ODK Collect will not allow submission of incomplete responses without this code.
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
         incoming_sms_numbers_str: "Enter the phone number(s) (including country code, separated by commas) to which incoming SMSes for SMS forms should be sent. Only needed if using SMS submissions."
@@ -1548,8 +1548,8 @@ en:
     one_screen_disabled: "Not available because the group contains either a condition or another group"
     tooltips:
       repeatable: "Repeatable"
-      one_screen: "Shows on one screen in ODK"
-      multi_screen: "Shows on multiple screens in ODK"
+      one_screen: "Shows on one screen in ODK Collect"
+      multi_screen: "Shows on multiple screens in ODK Collect"
 
   question_type:
     text: "Text"
@@ -2305,7 +2305,7 @@ en:
       preamble_plural: |-
         Login instructions are shown below. Please print these pages now and ensure the users below receive their instructions.
         Since the users' passwords are stored in encrypted format, they will be irretrievable after you leave this page.
-      qr_code: "ODK QR Code"
+      qr_code: "ODK Collect QR Code"
       site_url: "Site URL"
       title: "Login Instructions"
       welcome: "Welcome to %{site}. Your credentials are as follows:"
