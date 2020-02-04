@@ -24,7 +24,7 @@
         </Key>
         <Property Name="_id" Type="Edm.String"/>
         <Property Name="_meta" Type="demo.response_meta"/>
-        <Property Name="household_members" Type="Collection(demo.repeat:form_b:r1)"/>
+        <Property Name="Household members" Type="Collection(demo.repeat:form_b:r1)"/>
       </EntityType>
       <EntityType Name="repeat:form_b:r1">
         <Property Name="name" Type="Edm.String"/>

@@ -10,9 +10,9 @@
         "submission_time": "2020-01-01T00:00Z",
         "reviewed": false
       },
-      "household_members": [
+      "Household members": [
         {
-          "name": "Foo",
+          "name": "Foo Bar",
           "age": "21",
           "eyes": [
             {
@@ -26,7 +26,7 @@
           ]
         },
         {
-          "name": "Bar",
+          "name": "Baz Qux",
           "age": "22",
           "eyes": [
             {
