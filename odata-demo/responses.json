@@ -24,6 +24,46 @@
         "id": "u1",
         "name": "User A"
       }
+    },
+    {
+      "id": "r3",
+      "answers_form_a": null,
+      "answers_form_b": {
+        "household_members": [
+          {
+            "name": "Foo",
+            "age": "21",
+            "eyes": [
+              {
+                "side": "left",
+                "healthy": true
+              },
+              {
+                "side": "right",
+                "healthy": true
+              }
+            ]
+          },
+          {
+            "name": "Bar",
+            "age": "22",
+            "eyes": [
+              {
+                "side": "left",
+                "healthy": true
+              },
+              {
+                "side": "right",
+                "healthy": true
+              }
+            ]
+          }
+        ]
+      },
+      "user": {
+        "id": "u1",
+        "name": "User A"
+      }
     }
   ]
 }

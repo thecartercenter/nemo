@@ -13,10 +13,19 @@
       </EntityType>
       <EntityType Name="answers_form_a">
         <Property Name="name" Type="Edm.String"/>
-        <Property Name="age" Type="Edm.String"/>
+        <Property Name="age" Type="Edm.Int32"/>
       </EntityType>
       <EntityType Name="answers_form_b">
-        <Property Name="household_members" Type="Collection(Edm.String)"/>
+        <Property Name="household_members" Type="Collection(demo.repeat_form_b_1)"/>
+      </EntityType>
+      <EntityType Name="repeat_form_b_1">
+        <Property Name="name" Type="Edm.String"/>
+        <Property Name="age" Type="Edm.Int32"/>
+        <Property Name="eyes" Type="Collection(demo.repeat_form_b_2)"/>
+      </EntityType>
+      <EntityType Name="repeat_form_b_2">
+        <Property Name="side" Type="Edm.String"/>
+        <Property Name="healthy" Type="Edm.Boolean"/>
       </EntityType>
       <EntityType Name="user">
         <Key>
