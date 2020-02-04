@@ -2,21 +2,22 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="demo" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <EntityType Name="response">
+      <EntityType Name="response:form_a">
         <Key>
           <PropertyRef Name="id"/>
         </Key>
         <Property Name="id" Type="Edm.String"/>
-        <Property Name="answers:form_a" Type="demo.answers:form_a"/>
-        <Property Name="answers:form_b" Type="demo.answers:form_b"/>
-        <Property Name="user" Type="demo.user"/>
-      </EntityType>
-      <EntityType Name="answers:form_a">
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
+        <Property Name="user" Type="demo.user"/>
       </EntityType>
-      <EntityType Name="answers:form_b">
+      <EntityType Name="response:form_b">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.String"/>
         <Property Name="household_members" Type="Collection(demo.repeat:form_b:a)"/>
+        <Property Name="user" Type="demo.user"/>
       </EntityType>
       <EntityType Name="repeat:form_b:a">
         <Property Name="name" Type="Edm.String"/>
@@ -35,8 +36,11 @@
         <Property Name="name" Type="Edm.String"/>
       </EntityType>
       <EntityContainer Name="DefaultContainer">
-        <EntitySet EntityType="demo.response" Name="responses">
-          <Annotation String="responses" Term="Org.OData.Core.V1.ResourcePath"/>
+        <EntitySet Name="responses:form_a" EntityType="demo.response:form_a">
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="responses_form_a"/>
+        </EntitySet>
+        <EntitySet Name="responses:form_b" EntityType="demo.response:form_b">
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="responses_form_b"/>
         </EntitySet>
       </EntityContainer>
     </Schema>

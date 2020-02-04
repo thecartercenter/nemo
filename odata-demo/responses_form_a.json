@@ -1,0 +1,23 @@
+{
+  "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#responses_form_a",
+  "value": [
+    {
+      "id": "r1",
+      "name": "Foo",
+      "age": "21",
+      "user": {
+        "id": "u1",
+        "name": "User A"
+      }
+    },
+    {
+      "id": "r2",
+      "name": "Bar",
+      "age": "22",
+      "user": {
+        "id": "u1",
+        "name": "User A"
+      }
+    }
+  ]
+}

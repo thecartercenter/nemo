@@ -2,9 +2,14 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata",
   "value": [
     {
-      "name": "responses",
+      "name": "responses:form_a",
       "kind": "EntitySet",
-      "url": "responses"
+      "url": "responses_form_a"
+    },
+    {
+      "name": "responses:form_b",
+      "kind": "EntitySet",
+      "url": "responses_form_b"
     }
   ]
 }

@@ -1,0 +1,42 @@
+{
+  "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#responses_form_b",
+  "value": [
+    {
+      "id": "r3",
+      "household_members": [
+        {
+          "name": "Foo",
+          "age": "21",
+          "eyes": [
+            {
+              "side": "left",
+              "healthy": true
+            },
+            {
+              "side": "right",
+              "healthy": true
+            }
+          ]
+        },
+        {
+          "name": "Bar",
+          "age": "22",
+          "eyes": [
+            {
+              "side": "left",
+              "healthy": true
+            },
+            {
+              "side": "right",
+              "healthy": true
+            }
+          ]
+        }
+      ],
+      "user": {
+        "id": "u1",
+        "name": "User A"
+      }
+    }
+  ]
+}
