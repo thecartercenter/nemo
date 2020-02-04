@@ -3,11 +3,11 @@
   "value": [
     {
       "id": "r1",
-      "answers_form_a": {
+      "answers:form_a": {
         "name": "Foo",
         "age": "21"
       },
-      "answers_form_b": null,
+      "answers:form_b": null,
       "user": {
         "id": "u1",
         "name": "User A"
@@ -15,11 +15,11 @@
     },
     {
       "id": "r2",
-      "answers_form_a": {
+      "answers:form_a": {
         "name": "Bar",
         "age": "22"
       },
-      "answers_form_b": null,
+      "answers:form_b": null,
       "user": {
         "id": "u1",
         "name": "User A"
@@ -27,8 +27,8 @@
     },
     {
       "id": "r3",
-      "answers_form_a": null,
-      "answers_form_b": {
+      "answers:form_a": null,
+      "answers:form_b": {
         "household_members": [
           {
             "name": "Foo",

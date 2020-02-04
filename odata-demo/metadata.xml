@@ -7,23 +7,23 @@
           <PropertyRef Name="id"/>
         </Key>
         <Property Name="id" Type="Edm.String"/>
-        <Property Name="answers_form_a" Type="demo.answers_form_a"/>
-        <Property Name="answers_form_b" Type="demo.answers_form_b"/>
+        <Property Name="answers:form_a" Type="demo.answers:form_a"/>
+        <Property Name="answers:form_b" Type="demo.answers:form_b"/>
         <Property Name="user" Type="demo.user"/>
       </EntityType>
-      <EntityType Name="answers_form_a">
+      <EntityType Name="answers:form_a">
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
       </EntityType>
-      <EntityType Name="answers_form_b">
-        <Property Name="household_members" Type="Collection(demo.repeat_form_b_1)"/>
+      <EntityType Name="answers:form_b">
+        <Property Name="household_members" Type="Collection(demo.repeat:form_b:a)"/>
       </EntityType>
-      <EntityType Name="repeat_form_b_1">
+      <EntityType Name="repeat:form_b:a">
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
-        <Property Name="eyes" Type="Collection(demo.repeat_form_b_2)"/>
+        <Property Name="eyes" Type="Collection(demo.repeat:form_b:b)"/>
       </EntityType>
-      <EntityType Name="repeat_form_b_2">
+      <EntityType Name="repeat:form_b:b">
         <Property Name="side" Type="Edm.String"/>
         <Property Name="healthy" Type="Edm.Boolean"/>
       </EntityType>
