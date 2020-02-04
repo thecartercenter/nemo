@@ -4,7 +4,8 @@
     "/": "root.json",
     "/*metadata": "metadata.xml",
     "/responses_form_a": "responses_form_a.json",
-    "/responses_form_b": "responses_form_b.json"
+    "/responses_form_b": "responses_form_b.json",
+    "/responses_form_c": "responses_form_c.json"
   },
   "headers": {
     "/**": {

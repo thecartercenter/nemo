@@ -10,6 +10,11 @@
       "name": "responses:form_b",
       "kind": "EntitySet",
       "url": "responses_form_b"
+    },
+    {
+      "name": "responses:form_c",
+      "kind": "EntitySet",
+      "url": "responses_form_c"
     }
   ]
 }

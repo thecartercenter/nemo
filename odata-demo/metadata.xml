@@ -26,12 +26,29 @@
         <Property Name="_meta" Type="demo.response_meta"/>
         <Property Name="Household members" Type="Collection(demo.repeat:form_b:r1)"/>
       </EntityType>
+      <EntityType Name="response:form_c">
+        <Key>
+          <PropertyRef Name="_id"/>
+        </Key>
+        <Property Name="_id" Type="Edm.String"/>
+        <Property Name="_meta" Type="demo.response_meta"/>
+        <Property Name="Household members" Type="Collection(demo.repeat:form_c:r1)"/>
+      </EntityType>
       <EntityType Name="repeat:form_b:r1">
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
         <Property Name="eyes" Type="Collection(demo.repeat:form_b:r2)"/>
       </EntityType>
       <EntityType Name="repeat:form_b:r2">
+        <Property Name="side" Type="Edm.String"/>
+        <Property Name="healthy" Type="Edm.Boolean"/>
+      </EntityType>
+      <EntityType Name="repeat:form_c:r1">
+        <Property Name="name" Type="Edm.String"/>
+        <Property Name="age" Type="Edm.Int32"/>
+        <Property Name="eyes" Type="Collection(demo.repeat:form_c:r2)"/>
+      </EntityType>
+      <EntityType Name="repeat:form_c:r2">
         <Property Name="side" Type="Edm.String"/>
         <Property Name="healthy" Type="Edm.Boolean"/>
       </EntityType>
@@ -48,6 +65,9 @@
         </EntitySet>
         <EntitySet Name="responses:form_b" EntityType="demo.response:form_b">
           <Annotation Term="Org.OData.Core.V1.ResourcePath" String="responses_form_b"/>
+        </EntitySet>
+        <EntitySet Name="responses:form_c" EntityType="demo.response:form_c">
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="responses_form_c"/>
         </EntitySet>
       </EntityContainer>
     </Schema>
