@@ -2,11 +2,11 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#responses_form_b",
   "value": [
     {
-      "_id": "r3",
+      "_id": "r3xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       "_meta": {
-        "shortcode": "s3",
-        "form_name": "fn3",
-        "submitter_name": "sn3",
+        "shortcode": "S3-XXX-XXXXX",
+        "form_name": "Form B",
+        "submitter_name": "User B",
         "submission_time": "2020-01-01T00:00Z",
         "reviewed": false
       },

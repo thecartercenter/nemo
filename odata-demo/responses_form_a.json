@@ -2,27 +2,27 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#responses_form_a",
   "value": [
     {
-      "_id": "r1",
+      "_id": "r1xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       "_meta": {
-        "shortcode": "s1",
-        "form_name": "fn1",
-        "submitter_name": "sn1",
+        "shortcode": "S1-XXX-XXXXX",
+        "form_name": "Form A",
+        "submitter_name": "User A",
         "submission_time": "2020-01-01T00:00Z",
         "reviewed": false
       },
-      "name": "Foo",
+      "name": "Foo Bar",
       "age": "21"
     },
     {
-      "_id": "r2",
+      "_id": "r2xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       "_meta": {
-        "shortcode": "s2",
-        "form_name": "fn2",
-        "submitter_name": "sn2",
+        "shortcode": "S2-XXX-XXXXX",
+        "form_name": "Form A",
+        "submitter_name": "User A",
         "submission_time": "2020-01-01T00:00Z",
         "reviewed": false
       },
-      "name": "Bar",
+      "name": "Baz Qux",
       "age": "22"
     }
   ]
