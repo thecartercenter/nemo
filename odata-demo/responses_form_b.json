@@ -1,5 +1,5 @@
 {
-  "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#responses_form_b",
+  "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#responses:form_b",
   "value": [
     {
       "_id": "r3xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
