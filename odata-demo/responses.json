@@ -3,10 +3,23 @@
   "value": [
     {
       "id": "r1",
-      "form": {
-        "id": "f1",
-        "name": "Form A"
+      "answers_form_a": {
+        "name": "Foo",
+        "age": "21"
       },
+      "answers_form_b": null,
+      "user": {
+        "id": "u1",
+        "name": "User A"
+      }
+    },
+    {
+      "id": "r2",
+      "answers_form_a": {
+        "name": "Bar",
+        "age": "22"
+      },
+      "answers_form_b": null,
       "user": {
         "id": "u1",
         "name": "User A"

@@ -7,15 +7,16 @@
           <PropertyRef Name="id"/>
         </Key>
         <Property Name="id" Type="Edm.String"/>
-        <Property Name="form" Type="demo.form"/>
+        <Property Name="answers_form_a" Type="demo.answers_form_a"/>
+        <Property Name="answers_form_b" Type="demo.answers_form_b"/>
         <Property Name="user" Type="demo.user"/>
       </EntityType>
-      <EntityType Name="form">
-        <Key>
-          <PropertyRef Name="id"/>
-        </Key>
-        <Property Name="id" Type="Edm.String"/>
+      <EntityType Name="answers_form_a">
         <Property Name="name" Type="Edm.String"/>
+        <Property Name="age" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="answers_form_b">
+        <Property Name="household_members" Type="Collection(Edm.String)"/>
       </EntityType>
       <EntityType Name="user">
         <Key>
