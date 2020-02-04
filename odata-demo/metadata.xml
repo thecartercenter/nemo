@@ -24,14 +24,14 @@
         </Key>
         <Property Name="_id" Type="Edm.String"/>
         <Property Name="_meta" Type="demo.response_meta"/>
-        <Property Name="household_members" Type="Collection(demo.repeat:form_b:a)"/>
+        <Property Name="household_members" Type="Collection(demo.repeat:form_b:r1)"/>
       </EntityType>
-      <EntityType Name="repeat:form_b:a">
+      <EntityType Name="repeat:form_b:r1">
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
-        <Property Name="eyes" Type="Collection(demo.repeat:form_b:b)"/>
+        <Property Name="eyes" Type="Collection(demo.repeat:form_b:r2)"/>
       </EntityType>
-      <EntityType Name="repeat:form_b:b">
+      <EntityType Name="repeat:form_b:r2">
         <Property Name="side" Type="Edm.String"/>
         <Property Name="healthy" Type="Edm.Boolean"/>
       </EntityType>
