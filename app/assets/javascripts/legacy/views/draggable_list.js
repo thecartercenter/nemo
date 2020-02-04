@@ -48,7 +48,7 @@
 
     // Catch modal form submission.
     self.modal.on('keypress', (event) => {
-      if (event.keyCode == 13) {
+      if (event.key === 'Enter') {
         event.preventDefault(); // Prevent submission of the containing form.
         const btn = self.modal.find('.btn-primary').last();
         if (btn.is(':visible')) btn.trigger('click');
@@ -57,7 +57,7 @@
 
     // Catch ESC key to prevent closing parent modal if exists.
     self.modal.on('keydown', (event) => {
-      if (event.keyCode == 27) {
+      if (event.key === 'Escape') {
         event.stopPropagation();
         self.modal.modal('hide');
       }

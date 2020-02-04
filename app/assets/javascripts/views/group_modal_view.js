@@ -36,7 +36,7 @@ ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
   }
 
   keypress(e) {
-    if (e.keyCode === 13) { // Enter
+    if (e.key === 'Enter') {
       e.preventDefault();
       return this.save();
     }
