@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 // Controls "return to draft status" button and modal.
 ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.ApplicationView {
   get el() { return '#action-links-and-modal'; }
@@ -18,30 +13,33 @@ ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.Applic
 
   initialize(params) {
     this.keyword = params.keyword;
-    this.$('#override').val(''); // Ensure box is empty in case cached.
-    return this.accepted = false;
+    // Ensure box is empty in case cached.
+    this.$('#override').val('');
+    this.accepted = false;
   }
 
   handleLinkClicked(event) {
-    // If accept button was clicked, we just let the link do it's thing.
-    if (this.accepted) { return; }
+    // If accept button was clicked, we just let the link do its thing.
+    if (this.accepted) return;
 
+    // Otherwise show the modal instead.
     event.preventDefault();
     event.stopPropagation();
-    return this.$('#return-to-draft-modal').modal('show');
+    this.$('#return-to-draft-modal').modal('show');
   }
 
-  handleModalShown(event) {
-    return this.$('#override').focus();
+  handleModalShown() {
+    this.$('#override').focus();
   }
 
   handleKeyup(event) {
-    return this.$('.btn-primary').toggle(this.$(event.target).val() === this.keyword);
+    const correctKeyword = this.$(event.target).val() === this.keyword;
+    this.$('.btn-primary').toggle(correctKeyword);
   }
 
-  handleAcceptClicked(event) {
+  handleAcceptClicked() {
     this.accepted = true;
     // Trigger another click on the link so we can use the data-method machinery to make the PUT request.
-    return this.$('.return-to-draft-link').trigger('click');
+    this.$('.return-to-draft-link').trigger('click');
   }
 };
