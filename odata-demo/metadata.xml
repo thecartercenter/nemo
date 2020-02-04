@@ -2,7 +2,7 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="demo" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <EntityType Name="response">
+      <EntityType Name="response" OpenType="true">
         <Key>
           <PropertyRef Name="id"/>
         </Key>
