@@ -63,9 +63,8 @@
 
     this.show_pane(idx);
 
-    // hookup esc key
     if (!this.report.new_record) {
-      this.esc_handler = function (e) { if (e.keyCode === 27) _this.cancel(); };
+      this.esc_handler = function (e) { if (e.key === 'Escape') _this.cancel(); };
       $(document).bind('keyup', this.esc_handler);
     }
   };
