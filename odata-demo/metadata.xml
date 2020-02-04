@@ -7,8 +7,22 @@
           <PropertyRef Name="id"/>
         </Key>
         <Property Name="id" Type="Edm.String"/>
-        <Property Name="form_name" Type="Edm.String"/>
-        <Property Name="user_name" Type="Edm.String"/>
+        <Property Name="form" Type="demo.form"/>
+        <Property Name="user" Type="demo.user"/>
+      </EntityType>
+      <EntityType Name="form">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.String"/>
+        <Property Name="name" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="user">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.String"/>
+        <Property Name="name" Type="Edm.String"/>
       </EntityType>
       <EntityContainer Name="DefaultContainer">
         <EntitySet EntityType="demo.response" Name="responses">

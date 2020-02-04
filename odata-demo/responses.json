@@ -2,9 +2,15 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#responses",
   "value": [
     {
-      "id": "foo",
-      "form_name": "Form A",
-      "user_name": "User A"
+      "id": "r1",
+      "form": {
+        "id": "f1",
+        "name": "Form A"
+      },
+      "user": {
+        "id": "u1",
+        "name": "User A"
+      }
     }
   ]
 }
