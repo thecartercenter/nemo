@@ -32,6 +32,7 @@
         </Key>
         <Property Name="_id" Type="Edm.String"/>
         <Property Name="_meta" Type="demo.response_meta"/>
+        <Property Name="city" Type="Edm.String"/>
         <Property Name="Household members" Type="Collection(demo.repeat:form_c:r1)"/>
       </EntityType>
       <EntityType Name="repeat:form_b:r1">
