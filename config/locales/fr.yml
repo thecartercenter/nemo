@@ -101,7 +101,6 @@ fr:
     confirm_login: "Confirmer Connexion"
     logout: "Déconnexion"
     manage: "Gérer"
-    map_offline: "La carte n'est pas disponible hors connexion"
     less_settings: "moins de paramètres"
     more_settings: "plus de paramètres"
     near: "Près"
@@ -663,9 +662,6 @@ fr:
       questioning:
         default: "Le texte saisi ici sera pré-rempli dans l'espace de réponse (pour ODK uniquement). Vous pouvez entrer $CodeQuestion pour inclure la valeur d'une question précédente et $!RepeatNum pour inclure le numéro de l'élément actuel dans un groupe qui se répète..\n\nPar exemple, entrer\n\nID: $Menage-$!RepeatNum\n\nen assumant que vous avez une question avec le code 'Menage', pour la deuxième personne du ménage 176, pré-remplirait la réponse avec\n\nID: 176-2\n\nVous pouvez également entrer une expression de calcul XPath en l’incluant dans la fonction calc():\n\n<code></code>\n<code>calc($NumVillage + 100 / 2)</code>"
         display_logic: "Conditions qui doivent être remplies pour que cette question soit visible pour l'utilisateur"
-        hidden: "Utilisez cette option pour masquer une question que vous ne pouvez pas supprimer. Cette valeur remplacera la condition et les paramètres requis ci-dessous."
-        read_only: "en cochant cette case, l'observateur ne pourra pas changer les champs préalablement remplis avec ODK. Ceci n'affectera pas les réponses par web ou SMS"
-        required: "Si cette question est obligatoire sur ce formulaire ou est facultative. Appliqué uniquement si la question n'est pas masqué."
         skip_logic: "Règles pour savoir quelle question afficher après cette question."
         constraints: "Conditions à remplir pour qu'une réponse soit acceptée. Actuellement pour ODK seulement."
         all_levels_required: "Pour une question de sélection à plusieurs niveau, est-ce que l'énumérateur doit saisir une valeur pour chaque niveau ?"

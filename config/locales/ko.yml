@@ -50,7 +50,6 @@ ko:
     confirm_login: "로그인 확인"
     logout: "로그아웃"
     manage: "관리"
-    map_offline: "오프라인 모드에서는 지도를 사용할 수 없습니다."
     less_settings: "설정 덜 보기"
     more_settings: "설정 더 보기"
     near: "근접한"
@@ -500,9 +499,6 @@ ko:
         option_set_id: "사용자가 선택할 선택지 묶음"
         qtype_name: "사용자가 입력할 정보의 종류"
         access_level: "고유값: 원본 질문지와 같은 접속 레벨 \n비공개: 원본 질문지의 접속레벨과 무관하게 어떤 사용자도 API를 통해 데이타에 접속할수 없음"
-      questioning:
-        hidden: "이 질문이 질문지에 보여지게 하시겠습니까? 질문을 삭제할 수 없을때 이 기능을 사용하십시오. 숨겨진 질문에는 아래에서 선택된 조건들과 옵션이 적용되지 않습니다."
-        required: "이 질문이 반드시 응답되어야 하는 질문입니까? "
       report/report:
         name: "이 보고서의 내용을 설명하는 제목"
         aggregation_id: "이 복합된 데이터에 수행하고 싶은 명령"

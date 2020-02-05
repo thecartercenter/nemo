@@ -342,9 +342,6 @@ es:
         option_set_id: "El conjunto de opciones de las cuales el usuario podrá elegir."
         qtype_name: "El tipo de información que el usuario proveerá."
         access_level: "Heredar: El mismo nivel de acceso que la clase padre del formulario. Sector privado: No se puede acceder a los datos a través de la API, independientemente del nivel de acceso a la clase padre del formulario."
-      questioning:
-        hidden: "Si esta pregunta se mostrará o no en este formulario. Utilice esta opción para desactivar una pregunta si no la puede eliminar. Este valor se anulará el estado y parámetros necesarios indicados a continuación."
-        required: "Si esta pregunta debe ser completada o no en este formulario o es opcional. Sólo se ejecutará si la pregunta no oculta la condición especificada anteriormente."
       report/report:
         name: "Un título descriptivo para este informe."
         aggregation_id: "La operación que se desea realizar en las estadísticas combinadas."
