@@ -4,17 +4,17 @@
     {
       "name": "Responses: Form A",
       "kind": "EntitySet",
-      "url": "responses_form_a"
+      "url": "Responses_Form_A"
     },
     {
       "name": "Responses: Form B",
       "kind": "EntitySet",
-      "url": "responses_form_b"
+      "url": "Responses_Form_B"
     },
     {
       "name": "Responses: Form C",
       "kind": "EntitySet",
-      "url": "responses_form_c"
+      "url": "Responses_Form_C"
     }
   ]
 }

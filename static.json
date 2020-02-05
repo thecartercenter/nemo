@@ -3,9 +3,9 @@
   "routes": {
     "/": "root.json",
     "/*metadata": "metadata.xml",
-    "/responses_form_a": "responses_form_a.json",
-    "/responses_form_b": "responses_form_b.json",
-    "/responses_form_c": "responses_form_c.json"
+    "/Responses_Form_A": "responses_form_a.json",
+    "/Responses_Form_B": "responses_form_b.json",
+    "/Responses_Form_C": "responses_form_c.json"
   },
   "headers": {
     "/**": {
