@@ -53,13 +53,6 @@
         <Property Name="side" Type="Edm.String"/>
         <Property Name="healthy" Type="Edm.Boolean"/>
       </EntityType>
-      <EntityType Name="user">
-        <Key>
-          <PropertyRef Name="id"/>
-        </Key>
-        <Property Name="id" Type="Edm.String"/>
-        <Property Name="name" Type="Edm.String"/>
-      </EntityType>
       <EntityContainer Name="DefaultContainer">
         <EntitySet Name="Responses: Form A" EntityType="demo.response.form_a">
           <Annotation Term="Org.OData.Core.V1.ResourcePath" String="responses_form_a"/>
