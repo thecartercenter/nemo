@@ -4,43 +4,43 @@
     <Schema Namespace="demo" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EntityType Name="response">
         <Key>
-          <PropertyRef Name="id"/>
+          <PropertyRef Name="ResponseID"/>
         </Key>
-        <Property Name="id" Type="Edm.String"/>
-        <Property Name="shortcode" Type="Edm.String"/>
-        <Property Name="form_name" Type="Edm.String"/>
-        <Property Name="submitter_name" Type="Edm.String"/>
-        <Property Name="submission_time" Type="Edm.DateTimeOffset"/>
-        <Property Name="reviewed" Type="Edm.Boolean"/>
+        <Property Name="ResponseSubmitDate" Type="Edm.DateTimeOffset"/>
+        <Property Name="ResponseSubmitterName" Type="Edm.String"/>
+        <Property Name="ResponseID" Type="Edm.String"/>
+        <Property Name="ResponseShortcode" Type="Edm.String"/>
+        <Property Name="ResponseReviewed" Type="Edm.Boolean"/>
+        <Property Name="FormName" Type="Edm.String"/>
       </EntityType>
       <EntityType Name="response.form_a" BaseType="demo.response">
-        <Property Name="name" Type="Edm.String"/>
-        <Property Name="age" Type="Edm.Int32"/>
+        <Property Name="FullName" Type="Edm.String"/>
+        <Property Name="Age" Type="Edm.Int64"/>
       </EntityType>
       <EntityType Name="response.form_b" BaseType="demo.response">
-        <Property Name="Household members" Type="Collection(demo.repeat.form_b.r1)"/>
+        <Property Name="HouseholdMembers" Type="Collection(demo.repeat.form_b.r1)"/>
       </EntityType>
       <EntityType Name="response.form_c" BaseType="demo.response">
-        <Property Name="city" Type="Edm.String"/>
-        <Property Name="Household members" Type="Collection(demo.repeat.form_c.r1)"/>
+        <Property Name="City" Type="Edm.String"/>
+        <Property Name="HouseholdMembers" Type="Collection(demo.repeat.form_c.r1)"/>
       </EntityType>
       <EntityType Name="repeat.form_b.r1">
-        <Property Name="name" Type="Edm.String"/>
-        <Property Name="age" Type="Edm.Int32"/>
-        <Property Name="eyes" Type="Collection(demo.repeat.form_b.r2)"/>
+        <Property Name="FullName" Type="Edm.String"/>
+        <Property Name="Age" Type="Edm.Int64"/>
+        <Property Name="Eyes" Type="Collection(demo.repeat.form_b.r2)"/>
       </EntityType>
       <EntityType Name="repeat.form_b.r2">
-        <Property Name="side" Type="Edm.String"/>
-        <Property Name="healthy" Type="Edm.Boolean"/>
+        <Property Name="Side" Type="Edm.String"/>
+        <Property Name="Healthy" Type="Edm.Boolean"/>
       </EntityType>
       <EntityType Name="repeat.form_c.r1">
-        <Property Name="name" Type="Edm.String"/>
-        <Property Name="age" Type="Edm.Int32"/>
-        <Property Name="eyes" Type="Collection(demo.repeat.form_c.r2)"/>
+        <Property Name="Name" Type="Edm.String"/>
+        <Property Name="Age" Type="Edm.Int64"/>
+        <Property Name="Eyes" Type="Collection(demo.repeat.form_c.r2)"/>
       </EntityType>
       <EntityType Name="repeat.form_c.r2">
-        <Property Name="side" Type="Edm.String"/>
-        <Property Name="healthy" Type="Edm.Boolean"/>
+        <Property Name="Side" Type="Edm.String"/>
+        <Property Name="Healthy" Type="Edm.Boolean"/>
       </EntityType>
       <EntityContainer Name="DefaultContainer">
         <EntitySet Name="Responses: Form A" EntityType="demo.response.form_a">

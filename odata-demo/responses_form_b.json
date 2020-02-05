@@ -2,38 +2,38 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#Responses: Form B",
   "value": [
     {
-      "id": "r3xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "shortcode": "S3-XXX-XXXXX",
-      "form_name": "Form B",
-      "submitter_name": "User B",
-      "submission_time": "2020-01-01T00:00Z",
-      "reviewed": false,
-      "Household members": [
+      "ResponseID": "r3xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "ResponseShortcode": "S3-XXX-XXXXX",
+      "FormName": "Form B",
+      "ResponseSubmitterName": "User B",
+      "ResponseSubmitDate": "2020-01-01T00:00Z",
+      "ResponseReviewed": false,
+      "HouseholdMembers": [
         {
-          "name": "Foo Bar",
-          "age": "21",
-          "eyes": [
+          "FullName": "Foo Bar",
+          "Age": "21",
+          "Eyes": [
             {
-              "side": "left",
-              "healthy": true
+              "Side": "left",
+              "Healthy": true
             },
             {
-              "side": "right",
-              "healthy": true
+              "Side": "right",
+              "Healthy": true
             }
           ]
         },
         {
-          "name": "Baz Qux",
-          "age": "22",
-          "eyes": [
+          "FullName": "Baz Qux",
+          "Age": "22",
+          "Eyes": [
             {
-              "side": "left",
-              "healthy": true
+              "Side": "left",
+              "Healthy": true
             },
             {
-              "side": "right",
-              "healthy": true
+              "Side": "right",
+              "Healthy": true
             }
           ]
         }

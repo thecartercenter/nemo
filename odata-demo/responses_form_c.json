@@ -2,39 +2,39 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#Responses: Form C",
   "value": [
     {
-      "id": "r4xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "shortcode": "S4-XXX-XXXXX",
-      "form_name": "Form C",
-      "submitter_name": "User C",
-      "submission_time": "2020-01-01T00:00Z",
-      "reviewed": false,
-      "city": "San Francisco",
-      "Household members": [
+      "ResponseID": "r4xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "ResponseShortcode": "S4-XXX-XXXXX",
+      "FormName": "Form C",
+      "ResponseSubmitterName": "User C",
+      "ResponseSubmitDate": "2020-01-01T00:00Z",
+      "ResponseReviewed": false,
+      "City": "San Francisco",
+      "HouseholdMembers": [
         {
-          "name": "Fox Box",
-          "age": "23",
-          "eyes": [
+          "FullName": "Fox Box",
+          "Age": "23",
+          "Eyes": [
             {
-              "side": "left",
-              "healthy": true
+              "Side": "left",
+              "Healthy": true
             },
             {
-              "side": "right",
-              "healthy": true
+              "Side": "right",
+              "Healthy": true
             }
           ]
         },
         {
-          "name": "Biz Quack",
-          "age": "24",
-          "eyes": [
+          "FullName": "Biz Quack",
+          "Age": "24",
+          "Eyes": [
             {
-              "side": "left",
-              "healthy": true
+              "Side": "left",
+              "Healthy": true
             },
             {
-              "side": "right",
-              "healthy": true
+              "Side": "right",
+              "Healthy": true
             }
           ]
         }

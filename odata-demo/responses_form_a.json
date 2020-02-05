@@ -2,24 +2,24 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#Responses: Form A",
   "value": [
     {
-      "id": "r1xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "shortcode": "S1-XXX-XXXXX",
-      "form_name": "Form A",
-      "submitter_name": "User A",
-      "submission_time": "2020-01-01T00:00Z",
-      "reviewed": false,
-      "name": "Foo Bar",
-      "age": "21"
+      "ResponseID": "r1xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "ResponseShortcode": "S1-XXX-XXXXX",
+      "FormName": "Form A",
+      "ResponseSubmitterName": "User A",
+      "ResponseSubmitDate": "2020-01-01T00:00Z",
+      "ResponseReviewed": false,
+      "FullName": "Foo Bar",
+      "Age": "21"
     },
     {
-      "id": "r2xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "shortcode": "S2-XXX-XXXXX",
-      "form_name": "Form A",
-      "submitter_name": "User A",
-      "submission_time": "2020-01-01T00:00Z",
-      "reviewed": false,
-      "name": "Baz Qux",
-      "age": "22"
+      "ResponseID": "r2xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "ResponseShortcode": "S2-XXX-XXXXX",
+      "FormName": "Form A",
+      "ResponseSubmitterName": "User A",
+      "ResponseSubmitDate": "2020-01-01T00:00Z",
+      "ResponseReviewed": false,
+      "FullName": "Baz Qux",
+      "Age": "22"
     }
   ]
 }
