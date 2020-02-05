@@ -2,14 +2,12 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#Responses: Form B",
   "value": [
     {
-      "_id": "r3xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "_meta": {
-        "shortcode": "S3-XXX-XXXXX",
-        "form_name": "Form B",
-        "submitter_name": "User B",
-        "submission_time": "2020-01-01T00:00Z",
-        "reviewed": false
-      },
+      "id": "r3xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "shortcode": "S3-XXX-XXXXX",
+      "form_name": "Form B",
+      "submitter_name": "User B",
+      "submission_time": "2020-01-01T00:00Z",
+      "reviewed": false,
       "Household members": [
         {
           "name": "Foo Bar",

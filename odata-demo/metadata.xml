@@ -2,36 +2,25 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="demo" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <ComplexType Name="response_meta">
+      <EntityType Name="response">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.String"/>
         <Property Name="shortcode" Type="Edm.String"/>
         <Property Name="form_name" Type="Edm.String"/>
         <Property Name="submitter_name" Type="Edm.String"/>
         <Property Name="submission_time" Type="Edm.DateTimeOffset"/>
         <Property Name="reviewed" Type="Edm.Boolean"/>
-      </ComplexType>
-      <EntityType Name="response.form_a">
-        <Key>
-          <PropertyRef Name="_id"/>
-        </Key>
-        <Property Name="_id" Type="Edm.String"/>
-        <Property Name="_meta" Type="demo.response_meta"/>
+      </EntityType>
+      <EntityType Name="response.form_a" BaseType="demo.response">
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
       </EntityType>
-      <EntityType Name="response.form_b">
-        <Key>
-          <PropertyRef Name="_id"/>
-        </Key>
-        <Property Name="_id" Type="Edm.String"/>
-        <Property Name="_meta" Type="demo.response_meta"/>
+      <EntityType Name="response.form_b" BaseType="demo.response">
         <Property Name="Household members" Type="Collection(demo.repeat.form_b.r1)"/>
       </EntityType>
-      <EntityType Name="response.form_c">
-        <Key>
-          <PropertyRef Name="_id"/>
-        </Key>
-        <Property Name="_id" Type="Edm.String"/>
-        <Property Name="_meta" Type="demo.response_meta"/>
+      <EntityType Name="response.form_c" BaseType="demo.response">
         <Property Name="city" Type="Edm.String"/>
         <Property Name="Household members" Type="Collection(demo.repeat.form_c.r1)"/>
       </EntityType>

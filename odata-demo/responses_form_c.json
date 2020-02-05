@@ -2,14 +2,12 @@
   "@odata.context": "https://nemo-odata-demo.herokuapp.com/$metadata#Responses: Form C",
   "value": [
     {
-      "_id": "r4xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "_meta": {
-        "shortcode": "S4-XXX-XXXXX",
-        "form_name": "Form C",
-        "submitter_name": "User C",
-        "submission_time": "2020-01-01T00:00Z",
-        "reviewed": false
-      },
+      "id": "r4xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "shortcode": "S4-XXX-XXXXX",
+      "form_name": "Form C",
+      "submitter_name": "User C",
+      "submission_time": "2020-01-01T00:00Z",
+      "reviewed": false,
       "city": "San Francisco",
       "Household members": [
         {
