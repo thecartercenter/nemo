@@ -9,7 +9,7 @@
       "ResponseSubmitDate": "2020-01-01T00:00Z",
       "ResponseReviewed": false,
       "FullName": "Foo Bar",
-      "Age": "21"
+      "Age": 21
     },
     {
       "ResponseID": "r2xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -19,7 +19,7 @@
       "ResponseSubmitDate": "2020-01-01T00:00Z",
       "ResponseReviewed": false,
       "FullName": "Baz Qux",
-      "Age": "22"
+      "Age": 22
     }
   ]
 }

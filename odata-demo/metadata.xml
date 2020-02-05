@@ -34,7 +34,7 @@
         <Property Name="Healthy" Type="Edm.Boolean"/>
       </EntityType>
       <EntityType Name="Repeat.Form_C.R1">
-        <Property Name="Name" Type="Edm.String"/>
+        <Property Name="FullName" Type="Edm.String"/>
         <Property Name="Age" Type="Edm.Int64"/>
         <Property Name="Eyes" Type="Collection(Demo.Repeat.Form_C.R2)"/>
       </EntityType>

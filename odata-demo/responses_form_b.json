@@ -11,7 +11,7 @@
       "HouseholdMembers": [
         {
           "FullName": "Foo Bar",
-          "Age": "21",
+          "Age": 21,
           "Eyes": [
             {
               "Side": "left",
@@ -25,7 +25,7 @@
         },
         {
           "FullName": "Baz Qux",
-          "Age": "22",
+          "Age": 22,
           "Eyes": [
             {
               "Side": "left",
