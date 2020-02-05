@@ -9,7 +9,7 @@
         <Property Name="submission_time" Type="Edm.DateTimeOffset"/>
         <Property Name="reviewed" Type="Edm.Boolean"/>
       </ComplexType>
-      <EntityType Name="response:form_a">
+      <EntityType Name="response.form_a">
         <Key>
           <PropertyRef Name="_id"/>
         </Key>
@@ -18,38 +18,38 @@
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
       </EntityType>
-      <EntityType Name="response:form_b">
+      <EntityType Name="response.form_b">
         <Key>
           <PropertyRef Name="_id"/>
         </Key>
         <Property Name="_id" Type="Edm.String"/>
         <Property Name="_meta" Type="demo.response_meta"/>
-        <Property Name="Household members" Type="Collection(demo.repeat:form_b:r1)"/>
+        <Property Name="Household members" Type="Collection(demo.repeat.form_b.r1)"/>
       </EntityType>
-      <EntityType Name="response:form_c">
+      <EntityType Name="response.form_c">
         <Key>
           <PropertyRef Name="_id"/>
         </Key>
         <Property Name="_id" Type="Edm.String"/>
         <Property Name="_meta" Type="demo.response_meta"/>
         <Property Name="city" Type="Edm.String"/>
-        <Property Name="Household members" Type="Collection(demo.repeat:form_c:r1)"/>
+        <Property Name="Household members" Type="Collection(demo.repeat.form_c.r1)"/>
       </EntityType>
-      <EntityType Name="repeat:form_b:r1">
+      <EntityType Name="repeat.form_b.r1">
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
-        <Property Name="eyes" Type="Collection(demo.repeat:form_b:r2)"/>
+        <Property Name="eyes" Type="Collection(demo.repeat.form_b.r2)"/>
       </EntityType>
-      <EntityType Name="repeat:form_b:r2">
+      <EntityType Name="repeat.form_b.r2">
         <Property Name="side" Type="Edm.String"/>
         <Property Name="healthy" Type="Edm.Boolean"/>
       </EntityType>
-      <EntityType Name="repeat:form_c:r1">
+      <EntityType Name="repeat.form_c.r1">
         <Property Name="name" Type="Edm.String"/>
         <Property Name="age" Type="Edm.Int32"/>
-        <Property Name="eyes" Type="Collection(demo.repeat:form_c:r2)"/>
+        <Property Name="eyes" Type="Collection(demo.repeat.form_c.r2)"/>
       </EntityType>
-      <EntityType Name="repeat:form_c:r2">
+      <EntityType Name="repeat.form_c.r2">
         <Property Name="side" Type="Edm.String"/>
         <Property Name="healthy" Type="Edm.Boolean"/>
       </EntityType>
@@ -61,13 +61,13 @@
         <Property Name="name" Type="Edm.String"/>
       </EntityType>
       <EntityContainer Name="DefaultContainer">
-        <EntitySet Name="responses:form_a" EntityType="demo.response:form_a">
+        <EntitySet Name="Responses: Form A" EntityType="demo.response.form_a">
           <Annotation Term="Org.OData.Core.V1.ResourcePath" String="responses_form_a"/>
         </EntitySet>
-        <EntitySet Name="responses:form_b" EntityType="demo.response:form_b">
+        <EntitySet Name="Responses: Form B" EntityType="demo.response.form_b">
           <Annotation Term="Org.OData.Core.V1.ResourcePath" String="responses_form_b"/>
         </EntitySet>
-        <EntitySet Name="responses:form_c" EntityType="demo.response:form_c">
+        <EntitySet Name="Responses: Form C" EntityType="demo.response.form_c">
           <Annotation Term="Org.OData.Core.V1.ResourcePath" String="responses_form_c"/>
         </EntitySet>
       </EntityContainer>
