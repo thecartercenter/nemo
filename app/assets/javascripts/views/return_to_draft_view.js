@@ -7,6 +7,7 @@ ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.Applic
       'click .return-to-draft-link': 'handleLinkClicked',
       'shown.bs.modal #return-to-draft-modal': 'handleModalShown',
       'click #return-to-draft-modal .btn-primary': 'handleAcceptClicked',
+      'keypress #override': 'handleKeypress',
       'keyup #override': 'handleKeyup',
     };
   }
@@ -32,14 +33,23 @@ ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.Applic
     this.$('#override').focus();
   }
 
-  handleKeyup(event) {
-    const correctKeyword = this.$(event.target).val() === this.keyword;
-    this.$('.btn-primary').toggle(correctKeyword);
+  handleKeypress(event) {
+    if (event.key === 'Enter' && this.isCorrectKeyword()) {
+      this.$('#return-to-draft-modal .btn-primary').trigger('click');
+    }
+  }
+
+  handleKeyup() {
+    this.$('.btn-primary').toggle(this.isCorrectKeyword());
   }
 
   handleAcceptClicked() {
     this.accepted = true;
     // Trigger another click on the link so we can use the data-method machinery to make the PUT request.
     this.$('.return-to-draft-link').trigger('click');
+  }
+
+  isCorrectKeyword() {
+    return this.$('#override').val() === this.keyword;
   }
 };
