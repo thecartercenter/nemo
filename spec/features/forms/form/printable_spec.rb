@@ -14,22 +14,26 @@ feature "forms", js: true do
   end
 
   describe "print from index" do
-    scenario "should work and show tip the first time" do
-      visit(forms_path)
+    context "first time" do
+      before do
+        visit(forms_path)
+      end
 
-      # First time printing should show tips.
-      find("a.print-link").click
-      expect(page).to have_css("h4", text: "Print Format Tips")
+      it "should work and show tip" do
+        find("a.print-link").click
+        expect(page).to have_css("h4", text: "Print Format Tips")
+      end
     end
 
     context "with shown flag set" do
-      scenario "should not show tip" do
+      before do
         visit(forms_path)
-        expect(page).to have_content("Form")
-        date = Date.today.strftime("%Y-%m-%d")
-        page.execute_script("window.localStorage.setItem('form_print_format_tips_shown', '#{date}')")
 
-        # Second time printing should not show tips.
+        date = Time.zone.today.strftime("%Y-%m-%d")
+        page.execute_script("window.localStorage.setItem('form_print_format_tips_shown', '#{date}')")
+      end
+
+      it "should not show tip" do
         find("a.print-link").click
         expect(page).not_to have_css("h4", text: "Print Format Tips")
       end
