@@ -105,6 +105,20 @@ module FeatureSpecHelpers
     page.evaluate_script("jQuery.active").zero?
   end
 
+  def wait_for_load_start
+    expect(page).to have_css("#glb-load-ind")
+  end
+
+  def wait_for_load_stop
+    expect(page).not_to have_css("#glb-load-ind")
+  end
+
+  def wait_for_load
+    # Should show, then hide the global loading indicator.
+    wait_for_load_start
+    wait_for_load_stop
+  end
+
   def select2(value, options = {})
     # invoke the select2 open action via JS
     execute_script("$('##{options[:from]}').select2('open')")

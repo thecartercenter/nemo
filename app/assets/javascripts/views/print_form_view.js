@@ -61,8 +61,12 @@ ELMO.Views.PrintFormView = class PrintFormView extends ELMO.Views.ApplicationVie
     return window.print();
   }
 
+  // Returns a date in yyyy-mm-dd format.
   datestamp() {
+    // TODO: Clean up this logic with Moment when we migrate to package.json dependencies.
     const d = new Date();
-    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${month}-${day}`;
   }
 };
