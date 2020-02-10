@@ -2,7 +2,9 @@
 dist: trusty # Need this in order to use Chrome headless, as of 2/6/18
 bundler_args: --without development
 language: ruby
-cache: bundler
+cache:
+  bundler: true
+  yarn: true
 rvm:
   - 2.4.3
 sudo: required
