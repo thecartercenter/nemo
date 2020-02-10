@@ -53,7 +53,7 @@
       <div class="less-settings"><a href="#"><%= t("common.less_settings") %></a></div>
       <% unless read_only %>
         <div class="submit-buttons">
-          <%= f.submit(class: "btn btn-primary float-right") %>
+          <%= f.submit(class: "btn btn-primary") %>
           <% if form.persisted? && !form.live? && can?(:change_status, form) %>
             <%= f.submit(I18n.t("form.save_and_go_live"),
                   name: "save_and_go_live", class: "btn btn-secondary") %>

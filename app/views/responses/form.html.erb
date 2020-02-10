@@ -39,14 +39,14 @@
       </div>
       <div class="col-md-6">
         <div class="submit-buttons">
+          <%= render("file_upload/upload_in_progress_button", single_file: false) %>
+          <% unless @context.read_only? %>
+            <%= f.submit(class: "btn btn-primary") %>
+          <% end %>
           <% if form_mode == :edit && can?(:review, @response) %>
             <%= f.submit(t("response.save_and_mark_reviewed"),
                   class: "btn btn-secondary", name: "commit_and_mark_reviewed", read_only: false) %>
           <% end %>
-          <% unless @context.read_only? %>
-            <%= f.submit(class: "btn btn-primary") %>
-          <% end %>
-          <%= render("file_upload/upload_in_progress_button", single_file: false) %>
         </div>
       </div>
     </div>
