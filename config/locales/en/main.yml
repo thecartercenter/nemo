@@ -1730,9 +1730,9 @@ en:
       video: "Are you sure you want to delete this video?"
     drop_more_info: "More info"
     drop_hint:
-      image: "The image should be at most 5 MB in size. Accepted formats are: jpg, png."
-      video: "The video should be at most 25 MB in size. Accepted formats are: 3gp, mp4, webm, mpg, wmv, avi."
-      audio: "The audio should be at most 10 MB in size. Accepted formats are: mp3, ogg, webm, wav."
+      image: "The image should be at most %{max_size_mib} MiB in size. Accepted formats are: jpg, png."
+      video: "The video should be at most %{max_size_mib} MiB in size. Accepted formats are: 3gp, mp4, webm, mpg, wmv, avi."
+      audio: "The audio should be at most %{max_size_mib} MiB in size. Accepted formats are: mp3, ogg, webm, wav."
     csv_headers:
       response_id: "ResponseID"
       reviewed: "Reviewed"
