@@ -5,7 +5,7 @@
   <%= f.field(:file, required: true, partial: "file_upload/operation_file_uploader",
                      locals: {operation_type_prefix: "option_set_imports"}) %>
   <div class="submit-buttons">
-    <%= f.submit(class: "btn btn-primary") %>
     <%= render("file_upload/upload_in_progress_button", single_file: true) %>
+    <%= f.submit(class: "btn btn-primary") %>
   </div>
 <% end %>
