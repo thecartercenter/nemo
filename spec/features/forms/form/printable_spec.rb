@@ -3,14 +3,23 @@
 require "rails_helper"
 
 feature "forms", js: true do
-  let!(:user) { create(:user) }
-  let!(:form) do
+  let(:user) { create(:user) }
+  let(:form) do
     create(:form, name: "Foo", question_types: %w[integer multilevel_select_one select_one integer])
   end
   let(:forms_path) { "/en/m/#{form.mission.compact_name}/forms" }
 
+  let!(:original_max) { Capybara.default_max_wait_time }
+
   before do
+    # Allow longer delays because specs were failing on Travis.
+    Capybara.default_max_wait_time = 10
+
     login(user)
+  end
+
+  after do
+    Capybara.default_max_wait_time = original_max
   end
 
   describe "print from index" do
