@@ -88,6 +88,9 @@ gem "i18n_country_select", "~> 1.1.7"
 gem "iso-639", "~> 0.2.5"
 gem "rails-i18n", "~> 5.1"
 
+# Analytics
+gem "scout_apm", "~> 2.6"
+
 # The below are used for building load test plans.
 # Needed in prod because test plans are built on prod instances.
 # Faker is also used in specs.
