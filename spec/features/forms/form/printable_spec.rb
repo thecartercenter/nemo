@@ -9,17 +9,11 @@ feature "forms", js: true do
   end
   let(:forms_path) { "/en/m/#{form.mission.compact_name}/forms" }
 
-  let!(:original_max) { Capybara.default_max_wait_time }
+  # Allow longer delays because specs were failing on Travis.
+  let(:longer_wait_time) { 10 }
 
   before do
-    # Allow longer delays because specs were failing on Travis.
-    Capybara.default_max_wait_time = 10
-
     login(user)
-  end
-
-  after do
-    Capybara.default_max_wait_time = original_max
   end
 
   describe "print from index" do
@@ -30,14 +24,16 @@ feature "forms", js: true do
       end
 
       it "should work and show tip" do
-        find("a.print-link").click
-        expect(page).to have_css("h4", text: "Print Format Tips")
+        using_wait_time longer_wait_time do
+          find("a.print-link").click
+          expect(page).to have_css("h4", text: "Print Format Tips")
 
-        click_button("OK")
-        wait_for_load
+          click_button("OK")
+          wait_for_load
 
-        # Should still be on same page.
-        expect(current_url).to end_with("forms")
+          # Should still be on same page.
+          expect(current_url).to end_with("forms")
+        end
       end
     end
 
@@ -50,9 +46,11 @@ feature "forms", js: true do
       end
 
       it "should not show tip" do
-        find("a.print-link").click
-        wait_for_load
-        expect(page).not_to have_css("h4", text: "Print Format Tips")
+        using_wait_time longer_wait_time do
+          find("a.print-link").click
+          wait_for_load
+          expect(page).not_to have_css("h4", text: "Print Format Tips")
+        end
       end
     end
   end
