@@ -139,6 +139,7 @@
         self.reload_timer = setTimeout(() => { self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
       },
       error() {
+        if (ELMO.unloading) return;
         $('#content').html(I18n.t('layout.server_contact_error'));
       },
     });
