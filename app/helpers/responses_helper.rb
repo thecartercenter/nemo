@@ -40,9 +40,8 @@ module ResponsesHelper
   def responses_index_links(responses)
     links = []
 
-    # only add the export link if there are responses and the user is auth'd to export
     if !responses.empty? && can?(:export, Response)
-      links << link_to(t("response.export_to_csv"), responses_path(format: :csv, search: params[:search]))
+      links << link_to(t("response.export_to_csv"), "#", id: "export-link")
     end
 
     links << batch_op_link(
