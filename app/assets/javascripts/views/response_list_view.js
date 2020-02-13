@@ -3,8 +3,14 @@
  * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-// Handles polling for new responses.
+// Handles exports and polling for new responses.
 ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.ApplicationView {
+  get events() {
+    return {
+      'click #export-link': 'showExportModal',
+    };
+  }
+
   initialize(options) {
     this.reloadCount = 0;
     if (options.refreshInterval > 0) {
@@ -13,6 +19,11 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
     if (options.showReloadCount) {
       return $('<span id="reload-count"> | Reloads: 0</span>').appendTo($('#footer'));
     }
+  }
+
+  showExportModal(event) {
+    event.preventDefault();
+    this.$('#export-modal').modal('show');
   }
 
   fetch() {
