@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   include Concerns::ApplicationController::Crud
   include Concerns::ApplicationController::ErrorHandling
   include Concerns::ApplicationController::LoginLogistics
+  include Concerns::ApplicationController::Monitoring
   include Concerns::ApplicationController::Reflection
   include Concerns::ApplicationController::Routing
   include Concerns::ApplicationController::Settings
@@ -36,6 +37,7 @@ class ApplicationController < ActionController::Base
   before_action :protect_admin_mode
   before_action :remember_mission
   before_action :remember_context, only: :index
+  before_action :set_scout_context
   before_action :load_settings_for_mission_into_config
   before_action :load_accessible_missions
 
