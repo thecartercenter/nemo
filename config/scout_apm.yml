@@ -4,7 +4,7 @@ common: &defaults
 
   # key: Your Organization key for Scout APM. Found on the settings screen. This key does not provide API access.
   # - Default: none
-  key: 9RpPhZ6njN0zkJslfJuS
+  key: <%= configatron.scout.key %>
 
   # log_level: Verboseness of logs.
   # - Default: 'info'
@@ -25,7 +25,7 @@ production:
 
 development:
   <<: *defaults
-  monitor: false
+  name: <%= "ELMO-dev-#{`hostname`.strip}" %>
 
 test:
   <<: *defaults
@@ -33,4 +33,3 @@ test:
 
 staging:
   <<: *defaults
-
