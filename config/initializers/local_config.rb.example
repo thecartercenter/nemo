@@ -42,6 +42,9 @@ Recaptcha.configure do |config|
   config.private_key = "XXXXXXXXXXXXXXXXXX"
 end
 
+# Your organization identifier for Scout monitoring (optional).
+#configatron.scout.key = "XXXXXXXXXXXXXXXXXX"
+
 ##################################
 # Email Settings
 # You can leave these unchanged for offline setups.
