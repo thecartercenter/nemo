@@ -2,6 +2,7 @@
 
 ELMO::Application.routes.draw do
   mount(JasmineRails::Engine => "/specs") if defined?(JasmineRails)
+  mount(OData::Engine, at: "/odata/v1")
 
   # Special shortcut for simulating login in feature specs.
   get("test-login", to: "user_sessions#test_login") if Rails.env.test?
