@@ -45,6 +45,7 @@ ELMO.Views.RegenerableFieldView = class RegenerableFieldView extends ELMO.Views.
         return successIndicator.show();
       },
       error() {
+        if (ELMO.unloading) return;
         inlineLoadInd.hide();
         return errorIndicator.show();
       },

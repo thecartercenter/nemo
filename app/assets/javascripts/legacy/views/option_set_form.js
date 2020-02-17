@@ -279,7 +279,8 @@
           $('.elmo-form-wrapper').replaceWith(jqxhr.responseText);
         }
       },
-      error(jqxhr) {
+      error() {
+        if (ELMO.unloading) return;
         // if we get an HTTP error, it's some server thing so just display a generic message
         $('.elmo-form-wrapper').replaceWith('Server Error');
         // Stop loading

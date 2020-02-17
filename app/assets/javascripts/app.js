@@ -38,6 +38,12 @@
       if (!ajaxopts.url.match(/\bauto=1\b/)) self.reset_session_countdown();
     });
 
+    // Signal when the user is navigating to a different page, because that
+    // causes XHR requests to fail in some browsers, and we can ignore those failures.
+    $(window).on('beforeunload', () => {
+      ELMO.unloading = true;
+    });
+
     // prevent double submission of any forms on the page
     $('form').preventDoubleSubmission();
 

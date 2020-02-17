@@ -128,8 +128,13 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
         url: this.params.info_window_url,
         method: 'get',
         data: { response_id: marker.r_id },
-        success(data) { return $('div.info_window').replaceWith(data); },
-        error() { return $('div.info_window').html(I18n.t('layout.server_contact_error')); },
+        success(data) {
+          $('div.info_window').replaceWith(data);
+        },
+        error() {
+          if (ELMO.unloading) return;
+          $('div.info_window').html(I18n.t('layout.server_contact_error'));
+        },
       });
     });
   }
