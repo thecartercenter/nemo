@@ -1,30 +1,27 @@
-<div class="elmo-form-wrapper">
-  <div class="elmo-form">
-    <div class="modal fade" id="export-modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title"><%= t('response.export_to_csv') %></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div class="modal fade" id="export-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <%= elmo_form_for(ResponseCSVExportOptions.new, url: responses_path(format: :csv), method: "get") do |f| %>
+        <div class="modal-header">
+          <h4 class="modal-title"><%= t('response.export_to_csv') %></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="fields">
+            <input type="hidden" name="search" value="<%= params[:search] %>" />
+            <%= f.field(:long_text_behavior, type: :select, required: true,
+                options: translate_options(ResponseCSVExportOptions::LONG_TEXT_BEHAVIOR_OPTIONS, [:response, :long_text_behavior_options])) %>
           </div>
-          <div class="modal-body">
-            <%= elmo_fields_for("export_options", ResponseCSVExportOptions.new) do |f| %>
-              <div class="fields">
-                <%= f.field(:long_text_behavior, type: :select, required: true,
-                    options: translate_options(ResponseCSVExportOptions::LONG_TEXT_BEHAVIOR_OPTIONS, [:response, :long_text_behavior_options])) %>
-              </div>
-            <% end %>
-          </div>
-          <div class="modal-footer">
+        </div>
+        <div class="modal-footer">
+          <div class="submit-buttons">
+            <%= f.submit(class: "btn btn-primary") %>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">
               <%= t("common.cancel") %>
             </button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">
-              <%= t("common.ok") %>
-            </button>
           </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-  </div>
-</div>
+        </div>
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
