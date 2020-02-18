@@ -1763,6 +1763,10 @@ en:
       few: "%{count} responses deleted successfully."
       many: "%{count} responses deleted successfully."
       other: "%{count} responses deleted successfully."
+    long_text_behavior_options:
+      exclude: "Exclude"
+      truncate: "Truncate for Excel (slower)"
+      include: "Include"
 
   role:
     role: "Role"
