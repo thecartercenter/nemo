@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 // Handles exports and polling for new responses.
 ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.ApplicationView {
   get events() {
@@ -17,7 +12,7 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
       setInterval(this.fetch.bind(this), options.refreshInterval);
     }
     if (options.showReloadCount) {
-      return $('<span id="reload-count"> | Reloads: 0</span>').appendTo($('#footer'));
+      $('<span id="reload-count"> | Reloads: 0</span>').appendTo($('#footer'));
     }
   }
 
@@ -33,7 +28,7 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
     const batchView = ELMO.batch_actions_views.response;
     if (batchView) { // May be nil if no objects.
       batchView.get_selected_items().each(function () {
-        return url = Utils.add_url_param(url, `sel[]=${$(this).data('response-id')}`);
+        url = Utils.add_url_param(url, `sel[]=${$(this).data('response-id')}`);
       });
       if (batchView.select_all_pages_field.val()) {
         url = Utils.add_url_param(url, 'select_all_pages=1');
@@ -41,7 +36,7 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
     }
 
     ELMO.app.loading(true);
-    return $.ajax({ url, method: 'get', success: this.update.bind(this) });
+    $.ajax({ url, method: 'get', success: this.update.bind(this) });
   }
 
   update(data) {
@@ -53,15 +48,15 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
     ELMO.batch_actions_views.response.update_links();
 
     // Highlight any new rows.
-    return this.getIds().forEach((id) => {
-      if (this.oldIds.indexOf(id) === -1) { return this.$(`#${id}`).effect('highlight', {}, 1000); }
+    this.getIds().forEach((id) => {
+      if (this.oldIds.indexOf(id) === -1) {
+        this.$(`#${id}`).effect('highlight', {}, 1000);
+      }
     });
   }
 
   // Gets IDs of each row in index table
   getIds() {
-    const ids = [];
-    this.$('.index_table_body tr').each(function () { return ids.push(this.id); });
-    return ids;
+    return this.$('.index_table_body tr').map((index, row) => row.id).toArray();
   }
 };
