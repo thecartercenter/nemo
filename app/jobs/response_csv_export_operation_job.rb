@@ -2,8 +2,9 @@
 
 # Operation for exporting response CSV.
 class ResponseCsvExportOperationJob < OperationJob
-  def perform(operation, search: nil)
+  def perform(operation, search: nil, export_options: nil)
     ability = Ability.new(user: operation.creator, mission: mission)
+    long_text_behavior = export_options.try(:[], :long_text_behavior) || "include"
     result = generate_csv(responses(ability, search))
     operation_succeeded(result)
   rescue Search::ParseError => error
