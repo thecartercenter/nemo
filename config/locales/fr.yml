@@ -624,10 +624,8 @@ fr:
         sms_relay: "s'il faut autoriser le transfert de SMS aux utilisateurs et groupes"
         recipient_ids: "Si vous saisissez un utilisateur ou un groupe d'utilisateur ici, les réponses SMS entrant leur seront automatiquement transmises"
         authenticate_sms: "Si coché, l'utilisateur devra entrer son code utilisateur lors de l'envoi de réponse par SMS."
-        allow_incomplete: "Si coché, permet l'envoi des formulaires avec des questions obligatoires sans réponse (seulement par web et ODK). Les observateurs utilisant ODK doivent saisir un code de dérogation (voir les paramètres) pour ce faire."
         current_version_name: "Chaque version du formulaire a un identifiant à 10 chiffres et un code à 3 lettres. Le système de gestion des versions de formulaire est destiné à indiquer de petits changements dans la conception du formulaire afin que les observateurs puissent mettre à jour leurs copies du formulaire."
         access_level: "Public: tous les utilisateurs peuvent accéder aux données via API. Protégé: Seulement les utilisateurs spécifiques peuvent accéder aux donnes via API. Privé: Personne ne peut accéder aux donnes via API."
-        default_response_name: "Le texte entré ici sera utilisé comme nom par défaut des formulaires remplis dans ODK. Vous pouvez entrer $CodeQuestion pour inclure la valeur d'une question dans le formulaire.\n\nPar exemple, entrer:\n\nQuestionnaire pour $NumVillage-$NomDeFamille\n\npourrait nommer le formulaire:\n\nQuestionnaire pour 7-Smith\n\nen supposant que vous avez des questions avec les codes 'NumVillage' et 'NomDeFamille'\n\nVous pouvez également entrer une expression de calcul XPath en l’entourant de la fonction calc():\n\n<code></code>\n<code>calc($NumVillage + 100 / 2)</code>"
       mission:
         name: "Le titre de cette mission doit être unique et contenir un maximum de 32 caractères. Il est recommandé d'inclure l'année si des missions futures utiliseront le même titre."
         locked: "Si une mission est verrouillée, les réponses et les formulaires ne peuvent pas être créés ou modifiés et les utilisateurs ne peuvent pas être ajoutés ou supprimés."
@@ -643,16 +641,12 @@ fr:
           read_only: "Les options qui apparaissent pour les questions à l'aide de cet ensemble des options."
         option_levels: "Les titres pour chaque niveau d'options, (p.ex 'Pays', 'Province', 'Ville'). Notez que les titres des niveaux sont différent parmi les options elles-mêmes. "
         sms_guide_formatting: "Les significations des options sont les suivantes: Auto: Determiner automatiquement si il faut utiliser 'inline' ou 'appendix'. Inline: Montre la liste des options dans le guide SMS. Appendix: Inclue la liste des options dans un tableau créé par le coordonnateur. Treat as text: Considere les options comme des textes saisis"
-      qing_group:
-        group_item_name: "Vous pouvez saisir $QuestionCode pour inclure la valeur d'une question (pour ODK seulement)\nPar exemple, imaginons que nous créons un groupe répétable où le code de la question est 'HouseholdID' et nous saisissons\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID\n\nVous créez un groupe et répondez '123' pour \"HouseholdID'. En suite vous créez un deuxième groupe et vous répondez '789' pour 'HouseholdID'. Le premier nom du groupe sera 'HouseholdID:123'. Le second groupe sera 'Household:789'"
       question:
-        media_prompt: "Joignez un fichier multimédia que les énumérateurs peuvent visualiser ou écouter lors de la consultation de la question dans ODK. Video (mp4), audio (mp3, ogg, wav, flac), et fichiers image (png, jpg) sont tous acceptés. La taille des fichiers peut être jusqu'à %{max_size_mib}."
         code: "Un nom de code court (entre 2-20 caractères), qui devrait contenir seulement des lettres et des chiffres, par ex. UrneClos, HeureDeDepart."
         hint: "Instructions additionnels, par ex. 'Entrez un nombre approximatif de personnes qui sont dans la file d'attente pour voter.'"
         key: "Les réponses aux questions clés aident à résumer les réponses et apparaissent dans la liste des réponses. Exemples de questions clé: Région, Evaluation globale."
         minimum: "La valeur minimale de la réponse. Cochez la case si le minimum lui-même n'est pas valide."
         maximum: "La valeur maximale de la réponse. Cochez la case si le maximum lui-même n'est pas valide."
-        auto_increment: "Si cette case est coche et vous utilisez ODK, la valeur sera incrémentée chaque fois que vous remplissez un nouveau formulaire."
         name: "Le texte de la question principale, par ex. 'Combien de personnes sont dans la file d'attente?'"
         option_set_id: "Le groupe d'options que l'utilisateur pourra choisir."
         qtype_name: "Le type d'information que l'utilisateur entrera."
@@ -660,10 +654,8 @@ fr:
         metadata_type: "Une valeur spéciale qui peut être pré-remplie dans cette question. Si cette option est choisie, cette question sera automatiquement masquée et non requise, et toutes les conditions seront supprimées."
         reference: "Une URL pour complémenter la question. Doit commencer par http: // ou https: //."
       questioning:
-        default: "Le texte saisi ici sera pré-rempli dans l'espace de réponse (pour ODK uniquement). Vous pouvez entrer $CodeQuestion pour inclure la valeur d'une question précédente et $!RepeatNum pour inclure le numéro de l'élément actuel dans un groupe qui se répète..\n\nPar exemple, entrer\n\nID: $Menage-$!RepeatNum\n\nen assumant que vous avez une question avec le code 'Menage', pour la deuxième personne du ménage 176, pré-remplirait la réponse avec\n\nID: 176-2\n\nVous pouvez également entrer une expression de calcul XPath en l’incluant dans la fonction calc():\n\n<code></code>\n<code>calc($NumVillage + 100 / 2)</code>"
         display_logic: "Conditions qui doivent être remplies pour que cette question soit visible pour l'utilisateur"
         skip_logic: "Règles pour savoir quelle question afficher après cette question."
-        constraints: "Conditions à remplir pour qu'une réponse soit acceptée. Actuellement pour ODK seulement."
         all_levels_required: "Pour une question de sélection à plusieurs niveau, est-ce que l'énumérateur doit saisir une valeur pour chaque niveau ?"
       report/report:
         name: "Un titre descriptif pour ce rapport."
@@ -685,10 +677,6 @@ fr:
             * La langue préférée pour les nouveau utilisateurs
             * La langue préférée pour les réponses SMS
             * La langue pour les questions et les options
-        override_code: |-
-            Ce code doit être remis aux observateur si il y a besoin d'envoyer des formulaires incomplets. Les formulaires avec des questions obligatoires sans réponses ne pourront pas être soumis sans ce code.
-
-            Si vous générez un nouveau code, veuillez sauvegarder l'ancien code s'il existe des formulaires non soumis.
         incoming_sms_numbers_str: "Entrez le ou les numéros de téléphone (y compris le code du pays, séparés par des virgules) auxquels les SMS entrants pour les formulaires SMS doivent être envoyés. Nécessaire uniquement si vous utilisez des soumissions SMS."
         incoming_sms_token: |-
             ce jeton est inclu dans l'URL utilisé par le fournisseur de SMS entrant pour eviter l'envoi des messages non autorisés.
@@ -1501,8 +1489,6 @@ fr:
     one_screen_disabled: "Non disponible car le groupe contient une condition ou un autre groupe."
     tooltips:
       repeatable: "Répétable"
-      one_screen: "S'affiche sur un seul écran sur ODK"
-      multi_screen: "S'affiche sur plusieurs écran sur ODK"
   question_type:
     text: "Texte"
     long_text: "Texte Long"
@@ -1676,10 +1662,6 @@ fr:
       audio: "Etes vous sûr de vouloir supprimer ce son?"
       video: "Etes vous sûr de vouloir supprimer cette vidéo?"
     drop_more_info: "Plus d'info"
-    drop_hint:
-      image: "L'image doit avoir au plus 5Mb de taille. les formats acceptés sont jpg, png."
-      video: "La vidéo doit avoir au plus 25 Mb. les formats acceptés sont 3gp, mp4, webm, mpg, wmv, avi"
-      audio: "l'audio doit avoir au plus 10Mb, les formats acceptés sont: mp3, ogg, webm, wav"
     csv_headers:
       response_id: "NumeroReponse"
       reviewed: "Revu"
@@ -2227,7 +2209,6 @@ fr:
       preamble_plural: |-
           Les instructions de connexion se trouvent ci-dessous. Merci de les imprimer et de vous assurer que les utilisateurs reçoivent les instructions.
           Les mots de passe sont emmagasinés dans un format encodé, ils seront donc irrécupérables après avoir quitté cette page.
-      qr_code: "QR Code de ODK"
       site_url: "Adresse URL du site"
       title: "L'instructions détaillées pour se connecter."
       welcome: "Bienvenue à %{site}. Votre titres sont les suivants:"

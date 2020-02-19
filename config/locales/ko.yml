@@ -1261,10 +1261,6 @@ ko:
       audio: "정말로 이 오디오 파일을 삭제하시겠습니까?"
       video: "정말로 이 비디오 파일을 삭제하시겠습니까?"
     drop_more_info: "더 많은 정보 보기"
-    drop_hint:
-      image: "이미지 파일은 최대 5MB이어야 합니다. 허용되는 형식:jpg, png"
-      video: "비디오 파일은 최대 25MB이어야 합니다. 허용되는 형식: 3gp, mp4, webm, mpg, wmv, avi"
-      audio: "오디오 파일은 최대 10MB이어야 합니다. 허용되는 형식: mp3, ogg, webm, wav"
   role:
     role: "역할"
     reviewer: "검토자"
