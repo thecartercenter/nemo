@@ -156,6 +156,9 @@ You'll also need to run `rails db:test:prepare` for specs to pass.
 Operations like data import run asynchronously using a background tool called delayed_job.
 You can run this locally via `bin/delayed_job start`.
 
+To log output from these background jobs, you can use `Delayed::Worker.logger.info("foo")` and
+view `log/dj.log` within a few minutes (the log file doesn't always update immediately).
+
 ### Testing with ODK
 
 1. Download the ODK application onto your Android phone or tablet
