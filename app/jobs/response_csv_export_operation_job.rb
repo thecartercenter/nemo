@@ -4,8 +4,8 @@
 class ResponseCsvExportOperationJob < OperationJob
   def perform(operation, search: nil, export_options: nil)
     ability = Ability.new(user: operation.creator, mission: mission)
-    long_text_behavior = export_options.try(:[], :long_text_behavior) || "include"
-    result = generate_csv(responses(ability, search))
+    options_to_splat = export_options&.permit(:long_text_behavior) || {}
+    result = generate_csv(responses(ability, search), **options_to_splat)
     operation_succeeded(result)
   rescue Search::ParseError => error
     operation_failed(error.to_s)
@@ -26,8 +26,8 @@ class ResponseCsvExportOperationJob < OperationJob
     ResponsesSearcher.new(relation: responses, query: search, scope: {mission: mission}).apply
   end
 
-  def generate_csv(responses)
-    attachment = Results::Csv::Generator.new(responses).export
+  def generate_csv(responses, **export_options)
+    attachment = Results::Csv::Generator.new(responses, **export_options).export
     timestamp = Time.current.to_s(:filename_datetime)
     attachment_download_name = "#{mission.compact_name}-responses-#{timestamp}.csv"
     {attachment: attachment, attachment_download_name: attachment_download_name}
