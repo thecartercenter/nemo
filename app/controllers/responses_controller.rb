@@ -302,14 +302,13 @@ class ResponsesController < ApplicationController
   end
 
   def enqueue_csv_export
-    params.permit(%i[search response_csv_export_options])
-
+    export_options = params[:response_csv_export_options].permit(%i[long_text_behavior])
     operation = Operation.new(
       creator: current_user,
       mission: current_mission,
       job_class: ResponseCsvExportOperationJob,
       details: t("operation.details.response_csv_export"),
-      job_params: {search: params[:search], export_options: params[:response_csv_export_options]}
+      job_params: {search: params[:search], export_options: export_options}
     )
     operation.enqueue
   end
