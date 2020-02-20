@@ -6,6 +6,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }
   let(:responses) { [] }
   let(:generator) { Results::Csv::Generator.new(relation) }
+  let(:submission_time) { Time.zone.parse("2015-11-20 12:30 UTC") }
   subject(:output) { generator.export.read }
 
   around do |example|
@@ -46,7 +47,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       # Need to freeze the time so the times in the expectation file match.
       # The times shown in the resulting CSV should be in the current zone, not UTC.
       # So e.g. 6:30am instead of 12:30pm.
-      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+      Timecop.freeze(submission_time) do
         create_response(
           form: form1,
           answer_values: ["foo✓", %w[Canada Calgary],
@@ -120,7 +121,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     before do
-      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+      Timecop.freeze(submission_time) do
         create_response(form: repeat_form, answer_values: [
           1,
           {repeating: [
@@ -160,7 +161,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     let(:form1) { create(:form, question_types: ["text"]) }
 
     before do
-      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+      Timecop.freeze(submission_time) do
         Timecop.freeze(1.minute) do
           create_response(
             form: form1,
@@ -194,7 +195,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     let(:form1) { create(:form, question_types: %w[text image]) }
 
     before do
-      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+      Timecop.freeze(submission_time) do
         image_obj = Media::Image.create!(item: media_fixture("images/the_swing.jpg"))
         create_response(form: form1, answer_values: ["foo", image_obj])
       end
@@ -211,7 +212,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     let(:form2) { create(:form, question_types: %w[text]) }
 
     before do
-      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+      Timecop.freeze(submission_time) do
         Timecop.freeze(1.minute) do
           create_response(form: form1, answer_values: %w[foo bar])
         end
@@ -243,7 +244,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     before do
-      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+      Timecop.freeze(submission_time) do
         create_response(form: form1, mission: missions[0], answer_values: ["foo"])
         create_response(form: form2, mission: missions[1], answer_values: ["bar"])
       end
@@ -270,7 +271,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       group.update!(group_name_fr: "Groupe")
       option.update!(name_fr: "L'option")
 
-      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+      Timecop.freeze(submission_time) do
         create_response(form: form, answer_values: [{repeating: [[option.name_en]]}])
       end
     end
@@ -288,7 +289,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       form.c[0].option_set.options[1].update!(value: 3)
       form.c[1].option_set.options[0].update!(value: 5)
       form.c[1].option_set.options[1].update!(value: 8)
-      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+      Timecop.freeze(submission_time) do
         create_response(form: form, answer_values: ["Cat", %w[Cat Dog]])
       end
     end
