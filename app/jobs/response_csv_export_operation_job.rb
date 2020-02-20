@@ -4,7 +4,7 @@
 class ResponseCsvExportOperationJob < OperationJob
   def perform(operation, search: nil, export_options: nil)
     ability = Ability.new(user: operation.creator, mission: mission)
-    options_to_splat = export_options&.permit(:long_text_behavior) || {}
+    options_to_splat = export_options&.symbolize_keys || {}
     result = generate_csv(responses(ability, search), **options_to_splat)
     operation_succeeded(result)
   rescue Search::ParseError => error
