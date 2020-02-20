@@ -12,7 +12,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
   let(:submission_path) { "/m/#{mission.compact_name}/submission" }
 
   context "with single part" do
-    it "should successfully process the submission" do
+    it "should successfully process the submission and clean up" do
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
@@ -25,6 +25,20 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       expect(form_response.answers.count).to eq(2)
       expect(form_response.odk_xml_file_name).to eq("submission.xml")
       expect(form_response.odk_xml_file_size).to be > 0
+
+      tmp_files = Dir.glob(ResponsesController::TMP_UPLOADS_PATH.join("*.xml"))
+      expect(FileUtils.rm(tmp_files)).to be_empty
+    end
+
+    it "should save a temp file for failures" do
+      submission_file = prepare_and_upload_submission_file("no_version.xml")
+
+      post submission_path, params: {xml_submission_file: submission_file},
+                            headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)}
+      expect(response).not_to have_http_status(:created)
+
+      tmp_files = Dir.glob(ResponsesController::TMP_UPLOADS_PATH.join("*.xml"))
+      expect(FileUtils.rm(tmp_files)).not_to be_empty
     end
   end
 

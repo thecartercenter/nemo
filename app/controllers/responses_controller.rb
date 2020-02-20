@@ -4,6 +4,8 @@ class ResponsesController < ApplicationController
   PER_PAGE = 20
   REFRESH_INTERVAL = 30_000 # ms
 
+  TMP_UPLOADS_PATH = Rails.root.join("tmp", "odk_uploads")
+
   include BatchProcessable
   include OdkHeaderable
   include ResponseIndexable
@@ -168,16 +170,25 @@ class ResponsesController < ApplicationController
   end
 
   def handle_odk_submission
-    return render_xml_submission_failure("No XML file attached.", 422) unless params[:xml_submission_file]
+    submission_file = params[:xml_submission_file]
+    return render_xml_submission_failure("No XML file attached.", 422) unless submission_file
 
     # See config/initializers/http_status_code.rb for custom status definitions
     begin
+      # Place the uploaded file in a temporary path we control so that if saving the response fails,
+      # we can inspect the XML to find out why.
+      upload_path = submission_file.tempfile.path
+      upload_name = File.basename(upload_path)
+      tmp_path = TMP_UPLOADS_PATH.join(upload_name)
+      FileUtils.mkdir_p(TMP_UPLOADS_PATH)
+      FileUtils.cp(upload_path, tmp_path)
+
       @response.user_id = current_user.id
       @response.device_id = params[:deviceID]
-      @response.odk_xml = params[:xml_submission_file]
+      @response.odk_xml = submission_file
       @response = odk_response_parser.populate_response
       authorize!(:submit_to, @response.form)
-      @response.save(validate: false)
+      FileUtils.rm(tmp_path) if @response.save(validate: false)
       render(body: nil, status: :created)
     rescue CanCan::AccessDenied => e
       render_xml_submission_failure(e, :forbidden)
