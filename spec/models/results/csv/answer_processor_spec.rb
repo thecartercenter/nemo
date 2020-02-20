@@ -128,8 +128,8 @@ describe Results::Csv::AnswerProcessor do
 
   context "long_text_behavior" do
     before do
-      stub_const("Results::Csv::AnswerProcessor::MAX_NEWLINES", 1)
-      stub_const("Results::Csv::AnswerProcessor::MAX_CHARACTERS", 12)
+      stub_const(Results::Csv::AnswerProcessor, "MAX_NEWLINES", 1)
+      stub_const(Results::Csv::AnswerProcessor, "MAX_CHARACTERS", 12)
     end
 
     it "truncates after max characters" do

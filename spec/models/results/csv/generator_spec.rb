@@ -5,7 +5,8 @@ require "rails_helper"
 describe Results::Csv::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }
   let(:responses) { [] }
-  let(:generator) { Results::Csv::Generator.new(relation) }
+  let(:export_options) { {} }
+  let(:generator) { Results::Csv::Generator.new(relation, **export_options) }
   let(:submission_time) { Time.zone.parse("2015-11-20 12:30 UTC") }
   subject(:output) { generator.export.read }
 
@@ -296,6 +297,22 @@ describe Results::Csv::Generator, :reset_factory_sequences do
 
     it "exports numeric values" do
       is_expected.to match_user_facing_csv(prepare_response_csv_expectation("option_values.csv"))
+    end
+  end
+
+  context "with long_text_behavior" do
+    let(:export_options) { {long_text_behavior: "truncate"} }
+    let(:form) { create(:form, question_types: %w[text text]) }
+
+    before do
+      stub_const(Results::Csv::AnswerProcessor, "MAX_CHARACTERS", 6)
+      Timecop.freeze(submission_time) do
+        create_response(form: form, answer_values: ["foo", "foo bar baz"])
+      end
+    end
+
+    it "exports truncated values" do
+      is_expected.to match_user_facing_csv(prepare_response_csv_expectation("truncated_values.csv"))
     end
   end
 
