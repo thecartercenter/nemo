@@ -175,13 +175,7 @@ class ResponsesController < ApplicationController
 
     # See config/initializers/http_status_code.rb for custom status definitions
     begin
-      # Place the uploaded file in a temporary path we control so that if saving the response fails,
-      # we can inspect the XML to find out why.
-      upload_path = submission_file.tempfile.path
-      upload_name = File.basename(upload_path)
-      tmp_path = TMP_UPLOADS_PATH.join(upload_name)
-      FileUtils.mkdir_p(TMP_UPLOADS_PATH)
-      FileUtils.cp(upload_path, tmp_path)
+      tmp_path = copy_to_tmp_path(submission_file)
 
       @response.user_id = current_user.id
       @response.device_id = params[:deviceID]
@@ -202,6 +196,17 @@ class ResponsesController < ApplicationController
     rescue SubmissionError => e
       render_xml_submission_failure(e, :unprocessable_entity)
     end
+  end
+
+  # Copy the uploaded file to a temporary path we control so that if saving the response fails,
+  # we can inspect the XML to find out why.
+  def copy_to_tmp_path(submission_file)
+    upload_path = submission_file.tempfile.path
+    upload_name = File.basename(upload_path)
+    tmp_path = TMP_UPLOADS_PATH.join(upload_name)
+    FileUtils.mkdir_p(TMP_UPLOADS_PATH)
+    FileUtils.cp(upload_path, tmp_path)
+    tmp_path
   end
 
   def odk_response_parser
