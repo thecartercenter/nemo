@@ -13,7 +13,9 @@ common: &defaults
 
   # name: Application name in APM Web UI
   # - Default: the application names comes from the Rails or Sinatra class name
-  # name:
+  #
+  # Take the first part of the hostname, e.g. cejp-web and cejp-db will both be "ELMO-prod-cejp"
+  name: <%= "ELMO-prod-#{`hostname`.strip.split("-")[0]}" %>
 
   # monitor: Enable Scout APM or not
   # - Default: none
