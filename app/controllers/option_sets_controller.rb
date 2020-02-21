@@ -156,6 +156,7 @@ class OptionSetsController < ApplicationController
   # Also, we don't catch validation errors since they should be handled on client side.
   rescue DeletionError
     flash.now[:error] = $ERROR_INFO.to_s
+    prep_form_vars
     render(partial: "form")
     raise ActiveRecord::Rollback # Rollback the transaction without re-raising the error.
   end

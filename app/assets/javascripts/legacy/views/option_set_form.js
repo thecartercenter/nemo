@@ -276,6 +276,7 @@
           // otherwise we got an error,
           // so replace the div with the new partial (this will instantiate a new instance of this class)
         } else {
+          ELMO.app.loading(false);
           $('.elmo-form-wrapper').replaceWith(jqxhr.responseText);
         }
       },

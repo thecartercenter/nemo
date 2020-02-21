@@ -238,12 +238,15 @@ class OptionNode < ApplicationRecord
         %w[id rank].each { |k| branch[k.to_sym] = node[k] }
         branch[:option] = node.option.as_json(for_option_set_form: true)
 
-        # Don't need to look up this property if huge, since not editable.
-        # And option_has_answers? kicks off a big SQL query for a huge set.
-        # Conditions association should be eager loaded.
-        unless huge?
-          branch[:removable] = !option_set.option_has_answers?(node.option_id) && node.conditions.empty?
-        end
+        # We've temporarily removed the check for whether this node has associated answers because it
+        # is too expensive to check for option sets with lots of questions and answers
+        # (e.g. the 'Yes/No' set). Once we change answers to point directly to option_nodes, this will
+        # be much cheaper to check given that we can use indices.
+        # Until then, if someone tries to delete a node that has answers, the DeletionError check below
+        # should catch it and display an error. This could still cause crashes of the type that motivated
+        # this fix, but they should be much rarer because folks likely won't be trying to delete an option
+        # that has so many answers.
+        branch[:removable] = true
 
         # Recursive step.
         branch[:children] = arrange_as_json(children) unless children.empty?
