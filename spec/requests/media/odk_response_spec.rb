@@ -12,6 +12,10 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
   let(:submission_path) { "/m/#{mission.compact_name}/submission" }
 
   context "with single part" do
+    before do
+      FileUtils.rm_rf(ResponsesController::TMP_UPLOADS_PATH)
+    end
+
     it "should successfully process the submission and clean up" do
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")

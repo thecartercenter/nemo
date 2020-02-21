@@ -170,8 +170,9 @@ class ResponsesController < ApplicationController
   end
 
   def handle_odk_submission
-    submission_file = params[:xml_submission_file]
-    return render_xml_submission_failure("No XML file attached.", 422) unless submission_file
+    unless (submission_file = params[:xml_submission_file])
+      return render_xml_submission_failure("No XML file attached.", :unprocessable_entity)
+    end
 
     # See config/initializers/http_status_code.rb for custom status definitions
     begin
@@ -182,7 +183,8 @@ class ResponsesController < ApplicationController
       @response.odk_xml = submission_file
       @response = odk_response_parser.populate_response
       authorize!(:submit_to, @response.form)
-      FileUtils.rm(tmp_path) if @response.save(validate: false)
+      @response.save(validate: false)
+      FileUtils.rm(tmp_path)
       render(body: nil, status: :created)
     rescue CanCan::AccessDenied => e
       render_xml_submission_failure(e, :forbidden)
