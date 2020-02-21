@@ -7,7 +7,7 @@
   <div class="control <%= options[:read_only] ? 'read-only' : '' %>">
     <%# errors %>
     <%= content_tag(:div, errors.join(' '), :class => 'form-errors') if errors.present? %>
-    <div class="widget<%= inline_hint_html ? " inline-hint" : "" %>">
+    <div class="widget<%= inline_hint_html.present? ? " inline-hint" : "" %>">
       <%= field_html %>
       <%= inline_hint_html %>
     </div>
