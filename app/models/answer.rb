@@ -23,6 +23,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  option_id         :uuid
+#  option_node_id    :uuid
 #  parent_id         :uuid
 #  questioning_id    :uuid             not null
 #  response_id       :uuid             not null
@@ -31,6 +32,7 @@
 #
 #  index_answers_on_new_rank        (new_rank)
 #  index_answers_on_option_id       (option_id)
+#  index_answers_on_option_node_id  (option_node_id)
 #  index_answers_on_parent_id       (parent_id)
 #  index_answers_on_questioning_id  (questioning_id)
 #  index_answers_on_response_id     (response_id)
@@ -41,6 +43,7 @@
 #  answers_option_id_fkey       (option_id => options.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_questioning_id_fkey  (questioning_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_response_id_fkey     (response_id => responses.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...                 (option_node_id => option_nodes.id)
 #
 # rubocop:enable Metrics/LineLength
 
