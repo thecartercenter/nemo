@@ -671,6 +671,8 @@ en:
         bar_style: "Whether bars should be stacked or side-by-side."
       response:
         incomplete: "Check this box if there are required questions for which you can't provide answers. You will then be able to save this response without answering those questions and this response will be marked as 'incomplete'."
+      response_csv_export_options:
+        long_text_behavior: "Some programs limit the number of characters and lines each data cell can contain. You can optionally modify the exported data as follows:\n\n\n\n&nbsp;&nbsp;&nbsp;<b>Exclude</b>: If an answer hits a limit, that answer will exported as blank.\n\n&nbsp;&nbsp;&nbsp;<b>Truncate</b>: If an answer hits a limit, it will be cut off there. This may break HTML contained in the exported answer.\n\n&nbsp;&nbsp;&nbsp;<b>Include</b>: No modification will be made."
       setting:
         preferred_locales_str: |-
           Enter the <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
