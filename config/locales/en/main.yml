@@ -50,6 +50,7 @@ en:
       many: "Examples"
       other: "Examples"
     example_abbr: "e.g."
+    export: "Export"
     file_drop_message: "Click or drop file here"
     found: "Found"
     generate: "Generate"
