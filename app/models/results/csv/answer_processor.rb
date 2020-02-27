@@ -138,8 +138,8 @@ module Results
         count = 0
         loop do
           idx = str.index("\r\n", offset)
-          return str if idx.nil? # No more newlines and not at max, so it's good.
-          if count >= MAX_NEWLINES
+          return str if idx.nil? # No more newlines and not yet at max, so it's good.
+          if count >= MAX_NEWLINES # This newline sets it over the limit, so end before the newline.
             return exclude ? "" : str[0, idx]
           end
           offset = idx + 1
