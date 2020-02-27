@@ -1722,6 +1722,14 @@ en:
     reviewed: "This response has been reviewed"
     edit_this_response: "Edit This Response"
     export_to_csv: "Export to CSV Format"
+    export_options:
+      summary:
+        zero: "No responses to be exported."
+        one: "%{count} response to be exported."
+        two: "%{count} responses to be exported."
+        few: "%{count} responses to be exported."
+        many: "%{count} responses to be exported."
+        other: "%{count} responses to be exported."
     loading: "Loading Response..."
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save & Mark Reviewed"

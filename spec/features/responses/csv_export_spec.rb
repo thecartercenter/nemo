@@ -23,8 +23,11 @@ feature "responses csv export" do
   scenario "exporting csv" do
     visit(responses_path(params))
 
+    click_link("Export to CSV Format")
+    expect(page).to(have_content("#{Response.all.length} responses to be exported"))
+
     perform_enqueued_jobs do
-      click_link("Export to CSV Format")
+      click_button("Export")
     end
 
     expect(page).to(have_content("Response CSV export queued"))
