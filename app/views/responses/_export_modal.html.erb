@@ -8,6 +8,7 @@
         </div>
         <div class="modal-body">
           <div class="fields">
+            <p><%= t('response.export_options.summary', count: responses.total_entries) %></p>
             <input type="hidden" name="search" value="<%= params[:search] %>" />
             <%= f.field(:long_text_behavior, type: :select, required: true,
                 options: translate_options(ResponseCSVExportOptions::LONG_TEXT_BEHAVIOR_OPTIONS, [:response, :long_text_behavior_options])) %>
