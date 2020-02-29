@@ -396,7 +396,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rainbow (3.0.0)
-    rake (10.4.2)
+    rake (12.3.3)
     random_data (1.6.0)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
@@ -624,7 +624,7 @@ DEPENDENCIES
   rails-controller-testing
   rails-erd (~> 1.4.0)
   rails-i18n (~> 5.1)
-  rake (~> 10.4.2)
+  rake (~> 12.3.3)
   random_data (~> 1.6.0)
   rdiscount (~> 2.1.8)
   react-rails (~> 2.4)

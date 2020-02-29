@@ -20,7 +20,7 @@ gem "pg_search", "~> 2.1"
 gem "phony", "~> 2.15.26"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 gem "rails", "~> 5.2.2"
-gem "rake", "~> 10.4.2"
+gem "rake", "~> 12.3.3"
 gem "random_data", "~> 1.6.0" # Deprecated: Use Faker instead
 gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
 gem "responders", "~> 2.4.0"
