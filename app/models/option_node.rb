@@ -52,6 +52,8 @@ class OptionNode < ApplicationRecord
 
   belongs_to :option_set
   belongs_to :option, autosave: true
+  has_many :answers, dependent: :restrict_with_exception
+  has_many :choices, dependent: :restrict_with_exception
   has_many :conditions
   has_ancestry cache_depth: true
 
