@@ -162,13 +162,12 @@ module ResponseFactoryHelper
     if values.present?
       values.each do |v|
         next if v.blank?
-        option = qing.all_options.select { |o| o.canonical_name == v }.first
-        option_id = option.present? ? option.id : nil
+        option_node = qing.option_set.descendants.select { |node| node.canonical_name == v }.first
         set.children.build(
           {
             type: "Answer",
             form_item: qing,
-            option_id: option_id
+            option_node: option_node
           }.merge(rank_attributes(set))
         )
       end
@@ -185,13 +184,13 @@ module ResponseFactoryHelper
     case qing.qtype_name
     when "select_one" # not multilevel
       if value.present?
-        option = qing.all_options.select { |o| o.canonical_name == value }.first
-        attrs[:option_id] = option.id
+        option_node = qing.option_set.descendants.select { |node| node.canonical_name == value }.first
+        attrs[:option_node] = option_node
       end
     when "select_multiple"
-      options_by_name = qing.options.index_by(&:name)
-      choices = value.map do |c|
-        Choice.new(option: options_by_name[c]) || raise("could not find option with name '#{c}'")
+      option_nodes_by_name = qing.first_level_option_nodes.index_by(&:canonical_name)
+      choices = value.map do |n|
+        Choice.new(option_node: option_nodes_by_name[n]) || raise("could not find option with name '#{n}'")
       end
       attrs[:choices] = choices
     when "date", "time", "datetime"

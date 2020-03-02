@@ -182,19 +182,6 @@ describe Odk::ResponseParser do
             expect_built_children(response.root_node, %w[Answer] * 4, form.c.map(&:id), expected_values)
           end
         end
-
-        context "with option from another mission" do
-          let(:other_mission) { create(:mission) }
-          let(:other_form) { create(:form, mission: other_mission, question_types: question_types) }
-          let(:other_option_code) { "on#{other_form.c[3].option_set.c[0].id}" }
-          let(:xml_values) { ["Quick", "The quick brown fox", "9.6", other_option_code] }
-
-          it "should error" do
-            expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(ArgumentError)
-          end
-        end
       end
 
       context "response with select multiple" do
@@ -207,20 +194,6 @@ describe Odk::ResponseParser do
         it "should create the appropriate answer tree" do
           Odk::ResponseParser.new(response: response, files: files).populate_response
           expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
-        end
-
-        context "with option from another mission" do
-          let(:other_mission) { create(:mission) }
-          let(:other_form) { create(:form, mission: other_mission, question_types: question_types) }
-          let(:opt1) { other_form.c[0].option_set.sorted_children[0] }
-          let(:opt2) { other_form.c[0].option_set.sorted_children[1] }
-          let(:xml_values) { ["on#{opt1.id} on#{opt2.id}", "", "A"] }
-
-          it "should error" do
-            expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(ArgumentError)
-          end
         end
       end
 
@@ -473,23 +446,6 @@ describe Odk::ResponseParser do
           [form.c[3].id, form.c[3].id],
           expected_values[5, 6]
         )
-      end
-
-      context "with option from another mission" do
-        let(:other_mission) { create(:mission) }
-        let(:other_form) { create(:form, mission: other_mission, question_types: question_types) }
-        let(:level1_opt) { other_form.c[1].option_set.sorted_children[1] }
-        let(:level2_opt) { other_form.c[1].option_set.sorted_children[1].sorted_children[0] }
-        let(:fixture_name) { "multilevel_response" }
-        let(:xml_values) do
-          ["A", "on#{level1_opt.id}", "on#{level2_opt.id}", "", "", "", ""]
-        end
-
-        it "should error" do
-          expect do
-            Odk::ResponseParser.new(response: response, files: files).populate_response
-          end.to raise_error(ArgumentError)
-        end
       end
     end
   end

@@ -64,6 +64,7 @@ class Answer < ResponseNode
   alias questioning form_item
 
   belongs_to :option, inverse_of: :answers
+  belongs_to :option_node, inverse_of: :answers
   belongs_to :response, inverse_of: :answers, touch: true
   has_many :choices, -> { order(:created_at) }, dependent: :destroy, inverse_of: :answer, autosave: true
   has_many :options, through: :choices
@@ -151,41 +152,32 @@ class Answer < ResponseNode
                  option_id, option_id, questioning_ids]).first.count.positive?
   end
 
-  # This is a temporary method for fetching option_node based on the related OptionSet and Option.
-  # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
-  def option_node
-    OptionNode.find_by(option_id: option_id, option_set_id: option_set_id)
+  def option=(option)
+    self[:option_node_id] = OptionNode.find_by(option_id: option.id, option_set_id: option_set_id)&.id
+    super
   end
 
-  def option_node_id
-    option_node&.id
+  def option_id=(id)
+    self[:option_node_id] = OptionNode.find_by(option_id: id, option_set_id: option_set_id)&.id
+    super
   end
 
-  # This is a temporary method for assigning option based on an OptionNode ID.
-  # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
-  #
-  # Raises a loud error if the OptionNode is not in the OptionSet (or the mission) for security purposes.
+  def option_node=(node)
+    self[:option_id] = node.option_id # Temporary until we get rid of option_id column.
+    super
+  end
+
   def option_node_id=(id)
-    self.option_id = if id.present?
-                       option_id = OptionNode.where(option_set_id: option_set_id).id_to_option_id(id)
-                       raise ArgumentError if option_id.nil?
-                       option_id
-                     end
+    if id.present?
+      node = OptionNode.find(id)
+      self[:option_id] = node.option_id # Temporary until we get rid of option_id column.
+    end
+    super
   end
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
   def level
     option_set.try(:multilevel?) ? option_set.levels[(rank || 1) - 1] : nil
-  end
-
-  def choices_by_option
-    @choices_by_option ||= choices.select(&:checked?).index_by(&:option)
-  end
-
-  def all_choices
-    # for each option, if we have a matching choice, just return it (checked? defaults to true)
-    # otherwise create one and set checked? to false
-    options.map { |o| choices_by_option[o] || choices.new(option: o, checked: false) }
   end
 
   # if this answer is for a location question and the value is not blank,

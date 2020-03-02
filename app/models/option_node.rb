@@ -53,7 +53,8 @@ class OptionNode < ApplicationRecord
   belongs_to :option_set
   belongs_to :option, autosave: true
   has_many :conditions, inverse_of: :option_node, dependent: :restrict_with_exception
-
+  has_many :answers, dependent: :restrict_with_exception
+  has_many :choices, dependent: :restrict_with_exception
   has_ancestry cache_depth: true
 
   before_validation { self.ancestry = nil if ancestry.blank? }
@@ -80,6 +81,7 @@ class OptionNode < ApplicationRecord
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :option, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
+  delegate :canonical_name, :coordinates?, :latitude, :longitude, to: :option
 
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)

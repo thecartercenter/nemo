@@ -31,5 +31,15 @@ module Results
         value
       end
     end
+
+    # Returns a collection for use in the select_multiple form, which is always single level.
+    # For each option, if we have a matching choice, just return it (checked? defaults to true)
+    # otherwise create one and set checked? to false.
+    def all_choices
+      choices_by_option_node = choices.select(&:checked?).index_by(&:option_node)
+      option_set.first_level_option_nodes.map do |node|
+        choices_by_option_node[node] || choices.build(option_node: node, checked: false)
+      end
+    end
   end
 end
