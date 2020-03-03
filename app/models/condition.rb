@@ -49,7 +49,7 @@ class Condition < ApplicationRecord
                          inverse_of: :referring_conditions_via_left
   belongs_to :right_qing, class_name: "Questioning", foreign_key: "right_qing_id",
                           inverse_of: :referring_conditions_via_right
-  belongs_to :option_node
+  belongs_to :option_node, inverse_of: :conditions
 
   before_validation :normalize
   before_validation :clean_times

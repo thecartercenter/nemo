@@ -49,7 +49,7 @@ describe "abilities for option nodes" do
         context "with condition" do
           let(:form) { create(:form, question_types: %w[select_one text]) }
           let!(:condition) do
-            create(:condition, conditionable: form.c[1], left_qing: form.c[0], value: option_node)
+            create(:condition, conditionable: form.c[1], left_qing: form.c[0], option_node: option_node)
           end
           let(:permitted) { all - %i[destroy] }
 
