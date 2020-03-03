@@ -4,11 +4,11 @@ module Results
   module Csv
     # Generates CSV from responses in an efficient way. Built to handle millions of Answers.
     class Generator
-      attr_accessor :buffer, :answer_processor, :header_map, :response_scope, :export_options
+      attr_accessor :buffer, :answer_processor, :header_map, :response_scope, :options
 
-      def initialize(response_scope, **export_options)
+      def initialize(response_scope, options:)
         self.response_scope = response_scope
-        self.export_options = export_options
+        self.options = options
         self.header_map = HeaderMap.new
         self.buffer = Buffer.new(header_map: header_map)
         self.answer_processor = AnswerProcessor.new(buffer)
@@ -45,7 +45,7 @@ module Results
         buffer.csv = csv
         AnswerQuery.new(response_scope: response_scope).run.each do |row|
           buffer.process_row(row)
-          answer_processor.process(row, **export_options)
+          answer_processor.process(row, **options)
         end
         buffer.finish
       end
