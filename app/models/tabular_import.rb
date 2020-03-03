@@ -8,7 +8,7 @@ class TabularImport
 
   validates :file, presence: true
 
-  def initialize(**attribs)
+  def initialize(*args)
     super
     self.mission = Mission.find(mission_id) if mission_id.present?
     self.run_errors = []

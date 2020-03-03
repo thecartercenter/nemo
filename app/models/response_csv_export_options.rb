@@ -8,7 +8,7 @@ class ResponseCSVExportOptions
 
   LONG_TEXT_BEHAVIOR_OPTIONS = %w[exclude truncate include].freeze
 
-  def initialize(**attribs)
+  def initialize(*args)
     super
     self.long_text_behavior = "include"
   end
