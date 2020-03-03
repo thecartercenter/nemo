@@ -45,6 +45,8 @@ class ResponsesController < ApplicationController
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
 
+        @response_csv_export_options = ResponseCSVExportOptions.new
+
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: responses}) if request.xhr?
       end
