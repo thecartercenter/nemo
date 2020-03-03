@@ -84,6 +84,10 @@ module Results
       # Performance-critical; try to do everything in-place.
       # We do this with loops instead of regexps b/c regexps are slow.
       def normalize_value(str)
+        if long_text_behavior == "exclude"
+          str.slice!(0..-1)
+          return
+        end
         convert_unix_line_endings_to_windows(str)
         convert_mac_line_endings_to_windows(str)
         convert_long_text(str)
@@ -120,26 +124,25 @@ module Results
       # Modify the string according to long_text_behavior.
       def convert_long_text(str)
         return if long_text_behavior == "include"
-        exclude = long_text_behavior == "exclude" # Otherwise truncate.
 
         if str.length > MAX_CHARACTERS
-          str.slice!((exclude ? 0 : MAX_CHARACTERS)..-1)
+          str.slice!(MAX_CHARACTERS..-1)
           str.chomp! # Don't allow a dangling "\r" with no "\n".
         end
 
-        trim_at_max_newlines(str, exclude)
+        trim_at_max_newlines(str)
       end
 
       # Assuming line endings have already been normalized,
       # count them and stop at the max.
-      def trim_at_max_newlines(str, exclude)
+      def trim_at_max_newlines(str)
         offset = 0
         count = 0
         loop do
           idx = str.index("\r\n", offset)
           return if idx.nil? # No more newlines and not yet at max, so it's good.
           if count >= MAX_NEWLINES # This newline sets it over the limit, so end before the newline.
-            str.slice!((exclude ? 0 : idx)..-1)
+            str.slice!(idx..-1)
             return
           end
           offset = idx + 1
