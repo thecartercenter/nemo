@@ -1,14 +1,14 @@
 <div class="modal fade" id="export-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <%= elmo_form_for(ResponseCSVExportOptions.new, url: responses_path(format: :csv), method: "get") do |f| %>
+      <%= elmo_form_for(@response_csv_export_options, url: responses_path(format: :csv), method: "get") do |f| %>
         <div class="modal-header">
-          <h4 class="modal-title"><%= t('response.export_to_csv') %></h4>
+          <h4 class="modal-title"><%= t("response.export_to_csv") %></h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
           <div class="fields">
-            <p><%= t('response.export_options.summary', count: responses.total_entries) %></p>
+            <p><%= t("response.export_options.summary", count: responses.total_entries) %></p>
             <input type="hidden" name="search" value="<%= params[:search] %>" />
             <%= f.field(:long_text_behavior, type: :select, required: true,
                 options: translate_options(ResponseCSVExportOptions::LONG_TEXT_BEHAVIOR_OPTIONS, [:response, :long_text_behavior_options])) %>

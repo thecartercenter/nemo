@@ -164,7 +164,7 @@ describe Results::Csv::AnswerProcessor do
       )
     end
 
-    it "counts each /r/n as a single line" do
+    it "counts each CRLF as a single line" do
       expect(buffer).to receive(:write).with("Q1", "\r\nfoo")
       processor.process(
         {"question_code" => "Q1", "value" => +"\r\nfoo\r\nbar\r\n"},
@@ -172,7 +172,7 @@ describe Results::Csv::AnswerProcessor do
       )
     end
 
-    it "handles a dangling /r at end of truncated string" do
+    it "handles a dangling CR at end of truncated string" do
       expect(buffer).to receive(:write).with("Q1", "1234567890a")
       processor.process(
         {"question_code" => "Q1", "value" => +"1234567890a\r\nb"},
