@@ -74,19 +74,19 @@ module Results
       # Writes the first non-blank column in VALUE_COLS.
       def write_value
         VALUE_COLS.each do |c|
-          value = row[c]
-          next if value.blank?
-          value = normalize_value(value) if c == "value"
-          buffer.write(code, value)
+          next if row[c].blank?
+          normalize_value(row[c]) if c == "value"
+          buffer.write(code, row[c])
           break
         end
       end
 
+      # Performance-critical; try to do everything in-place.
+      # We do this with loops instead of regexps b/c regexps are slow.
       def normalize_value(str)
-        # We do this with loops instead of regexps b/c regexps are slow.
         convert_unix_line_endings_to_windows(str)
         convert_mac_line_endings_to_windows(str)
-        handle_long_text(str)
+        convert_long_text(str)
       end
 
       # Insert \r before any \ns without \rs before
@@ -117,15 +117,14 @@ module Results
         end
       end
 
-      # Return a string that's been modified according to long_text_behavior.
-      def handle_long_text(str)
-        return str if long_text_behavior == "include"
+      # Modify the string according to long_text_behavior.
+      def convert_long_text(str)
+        return if long_text_behavior == "include"
         exclude = long_text_behavior == "exclude" # Otherwise truncate.
 
-        chars = str.length
-        if chars > MAX_CHARACTERS
-          return "" if exclude
-          str = str[0, MAX_CHARACTERS].sub(/\r$/, "") # Don't allow a dangling "\r" with no "\n".
+        if str.length > MAX_CHARACTERS
+          str.slice!((exclude ? 0 : MAX_CHARACTERS)..-1)
+          str.chomp! # Don't allow a dangling "\r" with no "\n".
         end
 
         trim_at_max_newlines(str, exclude)
@@ -138,9 +137,10 @@ module Results
         count = 0
         loop do
           idx = str.index("\r\n", offset)
-          return str if idx.nil? # No more newlines and not yet at max, so it's good.
+          return if idx.nil? # No more newlines and not yet at max, so it's good.
           if count >= MAX_NEWLINES # This newline sets it over the limit, so end before the newline.
-            return exclude ? "" : str[0, idx]
+            str.slice!((exclude ? 0 : idx)..-1)
+            return
           end
           offset = idx + 1
           count += 1
