@@ -314,10 +314,10 @@ class Answer < ResponseNode
       LOCATION_ATTRIBS.each_with_index do |a, i|
         self[a] = parse_token(tokens[i])
       end
-    elsif option.present? && option.coordinates?
-      self.latitude = option.latitude
-      self.longitude = option.longitude
-    elsif choice = choices.detect(&:coordinates?)
+    elsif option_node&.coordinates?
+      self.latitude = option_node.latitude
+      self.longitude = option_node.longitude
+    elsif (choice = choices.detect(&:coordinates?))
       self.latitude = choice.latitude
       self.longitude = choice.longitude
     end
