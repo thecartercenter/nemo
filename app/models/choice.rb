@@ -62,25 +62,42 @@ class Choice < ApplicationRecord
   end
 
   def option=(option)
-    self[:option_node_id] = OptionNode.find_by(option_id: option.id, option_set_id: answer.option_set_id)&.id
+    self[:option_node_id] =
+      if option.nil?
+        nil
+      else
+        OptionNode.find_by(option_id: option.id, option_set_id: answer.option_set_id)&.id
+      end
     super
   end
 
   def option_id=(id)
-    self[:option_node_id] = OptionNode.find_by(option_id: id, option_set_id: answer.option_set_id)&.id
+    self[:option_node_id] =
+      if id.blank?
+        nil
+      else
+        OptionNode.find_by(option_id: id, option_set_id: answer.option_set_id)&.id
+      end
     super
   end
 
   def option_node=(node)
-    self[:option_id] = node.option_id # Temporary until we get rid of option_id column.
+    self[:option_id] =
+      if node.nil?
+        nil
+      else
+        node.option_id # Temporary until we get rid of option_id column.
+      end
     super
   end
 
   def option_node_id=(id)
-    if id.present?
-      node = OptionNode.find(id)
-      self[:option_id] = node.option_id # Temporary until we get rid of option_id column.
-    end
+    self[:option_id] =
+      if id.blank?
+        nil
+      else
+        OptionNode.find_by(id: id)&.option_id
+      end
     super
   end
 
