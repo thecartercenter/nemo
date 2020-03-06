@@ -73,6 +73,8 @@ class OptionNode < ApplicationRecord
   alias options_added? options_added
   alias options_removed? options_removed
 
+  scope :by_canonical_name, ->(name) { joins(:option).where("LOWER(canonical_name) = ?", name.downcase) }
+
   replicable child_assocs: %i[children option], backward_assocs: :option_set,
              # If the source of the clone is an option set, we need to replicate all nodes.
              # Otherwise they are reusable just like the OptionSet itself.
@@ -300,6 +302,11 @@ class OptionNode < ApplicationRecord
       translations = configatron.preferred_locales.map { |locale| p.name(locale.to_s) }
       translations.compact.first
     end
+  end
+
+  # Path to this node without the root.
+  def path
+    ancestors[1..-1] << self
   end
 
   # Returns the total number of options omitted from the JSON serialization.

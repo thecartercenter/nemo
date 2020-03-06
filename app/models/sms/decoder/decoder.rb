@@ -64,8 +64,9 @@ module Sms
           next unless (qing = find_qing(pair.rank))
 
           begin
+            pair.qing = qing
             parent = tree_builder.build_or_find_parent_node_for_qing(qing)
-            pair.parse(qing).each do |attribs|
+            pair.parse.each do |attribs|
               answers << tree_builder.add_answer(parent, attribs)
             end
           rescue Sms::Decoder::ParseError => err

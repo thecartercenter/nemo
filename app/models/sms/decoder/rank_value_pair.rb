@@ -3,10 +3,23 @@
 module Sms
   module Decoder
     # Parses a single rank/value pair as part of an incoming SMS message.
-    class RankValuePair < Struct.new(:rank, :value)
+    class RankValuePair
+      include ActiveModel::Model
+
+      attr_accessor :rank, :value, :qing, :invalid_option_codes
+
+      def initialize(*args)
+        super
+        self.invalid_option_codes = []
+      end
+
+      delegate :first_level_option_nodes, to: :option_set
+
       # Generates a hash of Answer attributes from the rank and value in the context of the given qing.
       # Raises an error if parsing failed.
-      def parse(qing)
+      def parse
+        raise ArgumentError, "qing must be set before parsing" if qing.nil?
+
         case qing.question.qtype.name
         when "integer", "counter"
           # for integer question, make sure the value looks like a number
@@ -43,99 +56,38 @@ module Sms
           build_answer(qing, value: value)
 
         when "select_one"
-          if qing.sms_formatting_as_text?
-            option = qing.option_set.all_options.by_canonical_name(value).first
-            raise_parse_error("answer_not_valid_option") unless option
-            attribs_set = qing.option_set.path_to_option(option).map { |o| {option: o} }
-            build_answer(qing, attribs_set)
+          if option_set.sms_formatting_as_text?
+            option_node = option_set.descendants.by_canonical_name(value).first
+            build_answer_from_option_node(qing, option_node)
 
-          elsif qing.sms_formatting_as_appendix?
-            option = qing.option_set.fetch_by_shortcode(value.downcase).try(:option)
-            raise_parse_error("answer_not_valid_option") unless option
-            attribs_set = qing.option_set.path_to_option(option).map { |o| {option: o} }
-            build_answer(qing, attribs_set)
+          elsif option_set.sms_formatting_as_appendix?
+            option_node = option_set.fetch_by_shortcode(value.downcase)
+            build_answer_from_option_node(qing, option_node)
 
-          else
-            # make sure the value is a letter(s)
+          else # Default formatting, just top level options and letters.
             raise_parse_error("answer_not_valid_option") unless value =~ /\A[a-z]+\z/i
-
-            # convert to number (1-based)
             idx = letters_to_index(value.downcase)
-
-            # make sure it makes sense for the option set
-            raise_parse_error("answer_not_valid_option") if idx > qing.question.options.size
-
-            # if we get to here, we're good, so add
-            build_answer(qing, option: qing.question.options[idx - 1])
+            raise_parse_error("answer_not_valid_option") if idx > first_level_option_nodes.size
+            build_answer(qing, option_node: first_level_option_nodes[idx - 1])
           end
 
         when "select_multiple"
-          # case insensitive
           value.downcase!
+          codes = split_select_multiple_value
+          idxs = convert_select_multiple_codes_to_indices(codes)
 
-          # hopefully this stays empty!
-          invalid = []
-
-          # split options
-
-          # if the option set has no commas, and has <= 26 options, assume it's a legacy submission
-          # and split on spaces, otherwise split on commas
-          if qing.option_set.descendants.count <= 26 && value =~ /\A[A-Z]+\z/i
-            raise_parse_error("answer_not_valid_long_option_multi") if value.length > 10
-            split_options = value.split("")
-          else
-            split_options = value.split(/\s*,\s*/)
-          end
-
-          idxs = if qing.option_set.sms_formatting == "appendix"
-                   # fetch each option by shortcode
-                   split_options.map do |l|
-                     option = qing.option_set.fetch_by_shortcode(l).try(:option)
-                     # make sure an option was found
-                     if option.present?
-                       # convert to an index
-                       option_to_index(option, qing)
-                     # otherwise add to invalid and return nonsense index
-                     else
-                       invalid << l if option.blank?
-                       -1
-                     end
-                   end
-                 else
-                   # deal with each option, accumulating a list of indices
-                   split_options.map do |l|
-                     # make sure it's a letter
-                     if l =~ /\A[a-z]\z/i
-
-                       # convert to an index
-                       idx = letters_to_index(l)
-
-                       # make sure this index makes sense for the option set
-                       invalid << l if idx > qing.question.options.size
-
-                       idx
-
-                     # otherwise add to invalid and return a nonsense index
-                     else
-                       invalid << l
-                       -1
-                     end
-                   end
-                 end
-
-          # raise appropriate error if we found invalid answer(s)
-          if invalid.size > 1
+          if invalid_option_codes.size > 1
             raise_parse_error("answer_not_valid_options_multi",
               value: value,
-              invalid_options: invalid.join(", "))
-          elsif invalid.size == 1
+              invalid_options: invalid_option_codes.join(", "))
+          elsif invalid_option_codes.size == 1
             raise_parse_error("answer_not_valid_option_multi",
               value: value,
-              invalid_options: invalid.first)
+              invalid_options: invalid_option_codes.first)
           end
 
-          # if we get to here, we're good, so add
-          build_answer(qing, choices: idxs.uniq.map { |i| Choice.new(option: qing.question.options[i - 1]) })
+          choices = idxs.uniq.map { |i| Choice.new(option_node: first_level_option_nodes[i - 1]) }
+          build_answer(qing, choices: choices)
 
         when "text", "long_text"
           build_answer(qing, value: value)
@@ -203,6 +155,10 @@ module Sms
 
       private
 
+      def option_set
+        @option_set ||= qing.option_set
+      end
+
       # converts a series of letters to the corresponding index, e.g. a => 1, b => 2, z => 26, aa => 27, etc.
       def letters_to_index(letters)
         sum = 0
@@ -212,9 +168,46 @@ module Sms
         sum
       end
 
-      def option_to_index(option, qing)
-        # add one because of how letter indexes are counted
-        qing.question.options.index { |o| o.id == option.id } + 1
+      def split_select_multiple_value
+        # if the option set has no commas, and has <= 26 options, assume it's a legacy submission
+        # and split on spaces, otherwise split on commas
+        if first_level_option_nodes.size <= 26 && value =~ /\A[A-Z]+\z/i
+          raise_parse_error("answer_not_valid_long_option_multi") if value.length > 10
+          value.split("")
+        else
+          value.split(/\s*,\s*/)
+        end
+      end
+
+      def convert_select_multiple_codes_to_indices(codes)
+        if option_set.sms_formatting_as_appendix?
+          codes.map do |shortcode|
+            option_node = option_set.fetch_by_shortcode(shortcode)
+            if option_node.present?
+              first_level_option_nodes.index(option_node) + 1
+            else
+              invalid_option_codes << shortcode
+              -1
+            end
+          end
+        else
+          codes.map do |letter|
+            if letter.match?(/\A[a-z]\z/i)
+              idx = letters_to_index(letter)
+              invalid_option_codes << letter if idx > first_level_option_nodes.size
+              idx
+            else
+              invalid_option_codes << letter
+              -1
+            end
+          end
+        end
+      end
+
+      def build_answer_from_option_node(qing, option_node)
+        raise_parse_error("answer_not_valid_option") unless option_node
+        attribs_set = option_node.path.map { |node| {option_node: node} }
+        build_answer(qing, attribs_set)
       end
 
       def build_answer(qing, attribs_set)

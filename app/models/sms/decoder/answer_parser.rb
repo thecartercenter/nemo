@@ -41,7 +41,7 @@ module Sms
       end
 
       def append_pair(rank, value)
-        pairs << RankValuePair.new(rank, value) if value.present?
+        pairs << RankValuePair.new(rank: rank, value: value) if value.present?
       end
     end
   end
