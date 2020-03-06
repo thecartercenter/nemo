@@ -244,14 +244,6 @@ class Answer < ResponseNode
     questioning&.parent && questioning.parent.type == "QingGroup"
   end
 
-  def option_name
-    option&.canonical_name
-  end
-
-  def option_names
-    choices.map(&:option).map(&:canonical_name).join(", ") if choices
-  end
-
   def media_object_id
     media_object.try(:id)
   end
