@@ -11,9 +11,9 @@ describe "summary collection with multiple subsets" do
   it "collection should have proper disagg values" do
     # build a form with two questions: the one we want to analyze and the one we want to disaggregate by
     prepare_form_and_collection("integer", "select_one", "a" => [1, 2, 4], "b" => [8, 9])
-    options = @form.questionings[1].options
-    expect(@collection.subsets[0].disagg_value).to eq(options[0])
-    expect(@collection.subsets[1].disagg_value).to eq(options[1])
+    nodes = @form.c[1].first_level_option_nodes
+    expect(@collection.subsets[0].disagg_value).to eq(nodes[0])
+    expect(@collection.subsets[1].disagg_value).to eq(nodes[1])
   end
 
   it "collections with integer questions should have correct summaries" do
@@ -69,10 +69,10 @@ describe "summary collection with multiple subsets" do
 
   it "collection subsets should be correct if no answers for one of the options" do
     prepare_form_and_collection("integer", "select_one", "a" => [1, 2, 4, 6], "b" => [8, 9], "c" => [])
-    options = @form.questionings[1].options
+    nodes = @form.questionings[1].first_level_option_nodes
 
     # subset should still be created
-    expect(@collection.subsets[2].disagg_value).to eq(options[2])
+    expect(@collection.subsets[2].disagg_value).to eq(nodes[2])
 
     # but should be marked no_data
     expect(@collection.subsets[2].no_data?).to eq(true)
@@ -141,7 +141,7 @@ describe "summary collection with multiple subsets" do
   end
 
   def subsets_by_disagg_value
-    @subsets_by_disagg_value ||= @collection.subsets.index_by { |s| s.disagg_value.try(:name) }
+    @subsets_by_disagg_value ||= @collection.subsets.index_by { |s| s.disagg_value&.name }
   end
 
   def header_names_for_disagg_value(val)

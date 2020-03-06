@@ -83,7 +83,7 @@ class OptionNode < ApplicationRecord
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :option, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
-  delegate :canonical_name, :coordinates?, :latitude, :longitude, to: :option
+  delegate :name, :canonical_name, :coordinates?, :latitude, :longitude, to: :option
 
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)

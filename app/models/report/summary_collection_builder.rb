@@ -234,12 +234,12 @@ class Report::SummaryCollectionBuilder
       # loop over each questioning to generate summaries
       summaries = select_qs.map do |qing|
         # build headers
-        headers = qing.options.map { |option| {name: option.name, option: option} }
+        headers = qing.first_level_option_nodes.map { |node| {name: node.name, option_node: node} }
 
         # build tallies, keeping a running sum of non-null answers
         non_null_count = 0
-        items = qing.options.map do |o|
-          count = tallies[[disagg_value, qing.id, o.id]] || 0
+        items = qing.first_level_option_nodes.map do |node|
+          count = tallies[[disagg_value, qing.id, node.id]] || 0
           non_null_count += count
           Report::SummaryItem.new(count: count)
         end
@@ -273,13 +273,14 @@ class Report::SummaryCollectionBuilder
     Report::SummaryCollection.new(subsets: subsets, questionings: select_qs)
   end
 
-  # gets a hash of form [disagg_value, qing_id, option_id] => tally for the given select questioning_ids
+  # gets a hash of form [disagg_value, qing_id, option_node_id] => tally for the given select questioning_ids
   def get_select_question_tallies(qing_ids)
     # build and run queries for select_one and _multiple
     # Re:  "AND (parents.type != 'AnswerSet' OR a.new_rank = 0)" - exclude answers in answer sets except
     # top level ones
     query = <<-SQL
-        SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
+        SELECT #{disagg_select_expr} qings.id AS qing_id,
+          a.option_node_id AS option_node_id, COUNT(a.id) AS answer_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.type = 'Answer'
@@ -290,14 +291,14 @@ class Report::SummaryCollectionBuilder
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
             AND (parents.type != 'AnswerSet' OR a.new_rank = 0)
-          GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
+          GROUP BY #{disagg_group_by_expr} qings.id, a.option_node_id
     SQL
 
     sel_one_res = sql_runner.run(query, qing_ids)
 
     query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id,
-          c.option_id AS option_id, COUNT(c.id) AS choice_count
+          c.option_node_id AS option_node_id, COUNT(c.id) AS choice_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.type = 'Answer'
@@ -307,7 +308,7 @@ class Report::SummaryCollectionBuilder
           WHERE q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
-          GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
+          GROUP BY #{disagg_group_by_expr} qings.id, c.option_node_id
     SQL
 
     sel_mult_res = sql_runner.run(query, qing_ids)
@@ -318,13 +319,13 @@ class Report::SummaryCollectionBuilder
       # get the object from the disagg value as returned from the db
       row["disagg_value"] = disagg_value_db_to_obj[row["disagg_value"]]
 
-      tallies[[row["disagg_value"], row["qing_id"], row["option_id"]]] = row["answer_count"]
+      tallies[[row["disagg_value"], row["qing_id"], row["option_node_id"]]] = row["answer_count"]
     end
     sel_mult_res.each do |row|
       # get the object from the disagg value as returned from the db
       row["disagg_value"] = disagg_value_db_to_obj[row["disagg_value"]]
 
-      tallies[[row["disagg_value"], row["qing_id"], row["option_id"]]] = row["choice_count"]
+      tallies[[row["disagg_value"], row["qing_id"], row["option_node_id"]]] = row["choice_count"]
     end
     tallies
   end
@@ -567,7 +568,7 @@ class Report::SummaryCollectionBuilder
     # otherwise we return each of the options for the question, plus nil,
     # since we need to include a subset for responses with no answer to the disagg_qing
     else
-      disagg_qing.options + [nil]
+      disagg_qing.first_level_option_nodes + [nil]
     end
   end
 
@@ -577,7 +578,7 @@ class Report::SummaryCollectionBuilder
     if disagg_qing.nil?
       {"all" => :all}
     else
-      @disagg_value_db_to_obj ||= Hash[*disagg_qing.options.map { |o| [o.id, o] }.flatten]
+      @disagg_value_db_to_obj ||= Hash[*disagg_qing.first_level_option_nodes.map { |n| [n.id, n] }.flatten]
     end
   end
 
@@ -586,7 +587,7 @@ class Report::SummaryCollectionBuilder
     if disagg_qing.nil?
       "CAST('all' AS TEXT)"
     else
-      "disagg_ans.option_id"
+      "disagg_ans.option_node_id"
     end
   end
 

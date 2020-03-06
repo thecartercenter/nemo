@@ -111,17 +111,17 @@ describe "summary collection with single subset" do
       prepare_form("select_one", %w[Yes No No No Yes])
       @responses.last.destroy
       prepare_collection
-      options = @form.questions[0].option_set.options
-      expect(headers_and_items(:option, :count)).to eq(options[0] => 1, options[1] => 3)
-      expect(headers_and_items(:option, :pct)).to eq(options[0] => 25.0, options[1] => 75.0)
+      nodes = @form.questions[0].first_level_option_nodes
+      expect(headers_and_items(:option_node, :count)).to eq(nodes[0] => 1, nodes[1] => 3)
+      expect(headers_and_items(:option_node, :pct)).to eq(nodes[0] => 25.0, nodes[1] => 75.0)
     end
 
     it "should be correct with multilevel option set" do
       prepare_form_and_collection("multilevel_select_one",
         [%w[Animal Dog], %w[Animal], %w[Animal Cat], %w[Plant Tulip]])
-      animal, plant = @form.questions[0].option_set.options # Top level options
-      expect(headers_and_items(:option, :count)).to eq(animal => 3, plant => 1)
-      expect(headers_and_items(:option, :pct)).to eq(animal => 75.0, plant => 25.0)
+      animal, plant = @form.questions[0].first_level_option_nodes
+      expect(headers_and_items(:option_node, :count)).to eq(animal => 3, plant => 1)
+      expect(headers_and_items(:option_node, :pct)).to eq(animal => 75.0, plant => 25.0)
     end
 
     it "null_count should be correct" do
@@ -131,9 +131,9 @@ describe "summary collection with single subset" do
 
     it "should still have items if no values" do
       prepare_form_and_collection("select_one", [nil, nil])
-      options = @form.questions[0].option_set.options
-      expect(headers_and_items(:option, :count)).to eq(options[0] => 0, options[1] => 0)
-      expect(headers_and_items(:option, :pct)).to eq(options[0] => 0, options[1] => 0)
+      nodes = @form.questions[0].first_level_option_nodes
+      expect(headers_and_items(:option_node, :count)).to eq(nodes[0] => 0, nodes[1] => 0)
+      expect(headers_and_items(:option_node, :pct)).to eq(nodes[0] => 0, nodes[1] => 0)
     end
   end
 
@@ -142,12 +142,12 @@ describe "summary collection with single subset" do
       prepare_form("select_multiple", [%w[A], %w[B C], %w[A C], %w[C], %w[A]], option_names: %w[A B C])
       @responses.last.destroy
       prepare_collection
-      options = @form.questions[0].option_set.options
-      expect(headers_and_items(:option, :count)).to eq(
-        options[0] => 2, options[1] => 1, options[2] => 3
+      nodes = @form.questions[0].first_level_option_nodes
+      expect(headers_and_items(:option_node, :count)).to eq(
+        nodes[0] => 2, nodes[1] => 1, nodes[2] => 3
       )
-      expect(headers_and_items(:option, :pct)).to eq(
-        options[0] => 50.0, options[1] => 25.0, options[2] => 75.0
+      expect(headers_and_items(:option_node, :pct)).to eq(
+        nodes[0] => 50.0, nodes[1] => 25.0, nodes[2] => 75.0
       )
     end
 
