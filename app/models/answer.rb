@@ -67,7 +67,6 @@ class Answer < ResponseNode
   belongs_to :option_node, inverse_of: :answers
   belongs_to :response, inverse_of: :answers, touch: true
   has_many :choices, -> { order(:created_at) }, dependent: :destroy, inverse_of: :answer, autosave: true
-  has_many :options, through: :choices
   has_one :media_object, dependent: :destroy, inverse_of: :answer, autosave: true, class_name: "Media::Object"
 
   before_validation :replicate_location_values
