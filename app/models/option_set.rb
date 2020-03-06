@@ -207,7 +207,7 @@ class OptionSet < ApplicationRecord
   # Checks if this option set is used in at least one question
   # or if any copies are used in at least one question.
   def in_use?
-    ttl_question_count.positive?
+    question_count.positive?
   end
 
   # Checks if option set is used in at least one select_multiple question.
