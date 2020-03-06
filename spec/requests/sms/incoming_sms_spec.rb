@@ -76,7 +76,7 @@ describe "incoming sms", :sms do
     let(:form) { setup_form(questions: [%w[select_one select_one]] * 5) }
 
     # SMS insert is a bottleneck for SMS-heavy missions so it has to be efficient.
-    # 130 is about 10 queries per answer plus some overhead. This may seem like a lot but it's pretty good.
+    # 150 is about 10 queries per answer plus some overhead. This may seem like a lot but it's pretty good.
     # Before optimization it was in the thousands.
     it "should use a minimum number of queries" do
       request_args = build_incoming_request(incoming: "#{form_code} 1.a 2.a 3.a 4.a 5.a 6.a 7.a 8.a 9.a 10.a",
@@ -84,7 +84,7 @@ describe "incoming sms", :sms do
       expect do
         # This is what assert_sms_response does, but without a bunch of extra stuff.
         send(*request_args)
-      end.to make_database_queries(count: 0..130)
+      end.to make_database_queries(count: 0..150)
     end
   end
 

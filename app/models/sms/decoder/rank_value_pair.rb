@@ -159,6 +159,10 @@ module Sms
         @option_set ||= qing.option_set
       end
 
+      def first_level_option_nodes
+        @first_level_option_nodes ||= option_set.first_level_option_nodes
+      end
+
       # converts a series of letters to the corresponding index, e.g. a => 1, b => 2, z => 26, aa => 27, etc.
       def letters_to_index(letters)
         sum = 0
