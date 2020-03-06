@@ -58,7 +58,6 @@ class OptionNode < ApplicationRecord
   has_ancestry cache_depth: true
 
   before_validation { self.ancestry = nil if ancestry.blank? }
-  before_destroy :ensure_no_answers_or_choices
   after_save :update_children
 
   attr_accessor :children_attribs
@@ -423,9 +422,5 @@ class OptionNode < ApplicationRecord
     %w[mission_id option_set_id standard_copy].each { |k| hash[k.to_sym] = send(k) }
     %w[mission_id].each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
     hash
-  end
-
-  def ensure_no_answers_or_choices
-    raise DeletionError, :cant_delete_if_has_response if data?
   end
 end
