@@ -44,13 +44,11 @@ describe Results::SqlGenerator do
         INNER JOIN form_items questionings ON answers.questioning_id = questionings.id
         INNER JOIN questions questions ON questionings.question_id = questions.id
         LEFT JOIN option_sets option_sets ON questions.option_set_id = option_sets.id
-        LEFT JOIN options ao ON answers.option_id = ao.id
-        LEFT JOIN option_nodes ans_opt_nodes ON ans_opt_nodes.option_id = ao.id
-          AND ans_opt_nodes.option_set_id = option_sets.id
+        LEFT JOIN option_nodes ans_opt_nodes ON ans_opt_nodes.id = answers.option_node_id
+        LEFT JOIN options ao ON ans_opt_nodes.option_id = ao.id
         LEFT JOIN choices choices ON choices.answer_id = answers.id
-        LEFT JOIN options co ON choices.option_id = co.id
-        LEFT JOIN option_nodes ch_opt_nodes ON ch_opt_nodes.option_id = co.id
-          AND ch_opt_nodes.option_set_id = option_sets.id
+        LEFT JOIN option_nodes ch_opt_nodes ON ch_opt_nodes.id = choices.option_node_id
+        LEFT JOIN options co ON ch_opt_nodes.option_id = co.id
       WHERE (responses.mission_id = '#{mission.id}')
       ORDER BY responses.created_at DESC"))
 

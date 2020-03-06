@@ -61,9 +61,8 @@ class Results::Join
       dependencies: %i[answers option_sets],
       name: :options,
       sql: [
-        "LEFT JOIN options __ao ON __answers.option_id = __ao.id",
-        "LEFT JOIN option_nodes __ans_opt_nodes ON __ans_opt_nodes.option_id = __ao.id " \
-          "AND __ans_opt_nodes.option_set_id = __option_sets.id"
+        "LEFT JOIN option_nodes __ans_opt_nodes ON __ans_opt_nodes.id = __answers.option_node_id",
+        "LEFT JOIN options __ao ON __ans_opt_nodes.option_id = __ao.id"
       ]
     ),
     choices: new(
@@ -71,9 +70,8 @@ class Results::Join
       name: :choices,
       sql: [
         "LEFT JOIN choices __choices ON __choices.answer_id = __answers.id",
-        "LEFT JOIN options __co ON __choices.option_id = __co.id",
-        "LEFT JOIN option_nodes __ch_opt_nodes ON __ch_opt_nodes.option_id = __co.id " \
-          "AND __ch_opt_nodes.option_set_id = __option_sets.id"
+        "LEFT JOIN option_nodes __ch_opt_nodes ON __ch_opt_nodes.id = __choices.option_node_id",
+        "LEFT JOIN options __co ON __ch_opt_nodes.option_id = __co.id"
       ]
     ),
     forms: new(
