@@ -63,7 +63,7 @@ class Answer < ResponseNode
   attr_accessor :location_values_replicated
   alias questioning form_item
 
-  belongs_to :option, inverse_of: :answers
+  belongs_to :option
   belongs_to :option_node, inverse_of: :answers
   belongs_to :response, inverse_of: :answers, touch: true
   has_many :choices, -> { order(:created_at) }, dependent: :destroy, inverse_of: :answer, autosave: true

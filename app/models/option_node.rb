@@ -186,17 +186,6 @@ class OptionNode < ApplicationRecord
     (sc = sorted_children).any? ? sc.first : self
   end
 
-  def options_by_id(nodes, options = {})
-    return @options_by_id if @options_by_id
-
-    rel = Option.where(id: nodes.map(&:option_id))
-
-    # These eager loads create a bunch of extra queries so we only do them if really necessary.
-    rel = rel.includes(:option_sets, :answers, :choices) if options[:eager_load_option_assocs]
-
-    @options_by_id = rel.index_by(&:id)
-  end
-
   # an odk-friendly unique code
   def odk_code
     Odk::CodeMapper.instance.code_for_item(self)
@@ -223,8 +212,7 @@ class OptionNode < ApplicationRecord
               descendants.ordered_by_ancestry_and("rank")
             end
 
-    # Manually eager load options.
-    opt_hash = options_by_id(nodes, options)
+    opt_hash = Option.where(id: nodes.map(&:option_id)).index_by(&:id)
     nodes.each { |n| n.option = opt_hash[n.option_id] }
 
     # arrange_nodes is an Ancestry gem function that takes a set of nodes
@@ -241,7 +229,9 @@ class OptionNode < ApplicationRecord
     hash.map do |node, children|
       {}.tap do |branch|
         %w[id rank].each { |k| branch[k.to_sym] = node[k] }
-        branch[:option] = node.option.as_json(for_option_set_form: true)
+        branch[:option] = node.option.as_json(
+          only: %i[id latitude longitude name_translations value], methods: %i[name]
+        )
 
         # We've temporarily removed the check for whether this node has associated answers because it
         # is too expensive to check for option sets with lots of questions and answers
@@ -266,7 +256,7 @@ class OptionNode < ApplicationRecord
   # rows are created for leaf nodes only and contain the node id and the
   # localized option names in the mission preferred locale.
   def arrange_as_rows(hash = nil, parent_path = [])
-    hash = arrange_with_options(eager_load_option_assocs: false) if hash.nil?
+    hash = arrange_with_options if hash.nil?
 
     hash.each_with_object([]) do |(node, children), rows|
       path = parent_path + [node.option]

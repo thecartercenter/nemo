@@ -38,8 +38,6 @@ class Option < ApplicationRecord
 
   has_many :option_nodes, -> { order(:rank) }, inverse_of: :option, dependent: :destroy, autosave: true
   has_many :option_sets, through: :option_nodes
-  has_many :answers, inverse_of: :option, dependent: :restrict_with_exception
-  has_many :choices, inverse_of: :option, dependent: :restrict_with_exception
 
   before_validation :normalize
   after_save :invalidate_cache
@@ -79,11 +77,6 @@ class Option < ApplicationRecord
     option_sets.map { |os| os.questionings.map(&:form) }.flatten.uniq
   end
 
-  # gets the names of all option sets in which this option appears
-  def set_names
-    option_sets.map(&:name).join(", ")
-  end
-
   # Returns an Option in the given mission that has same canonical name as this Option.
   # Returns nil if not found.
   def similar_for_mission(other_mission)
@@ -105,14 +98,6 @@ class Option < ApplicationRecord
       self.longitude = match[3].to_d.truncate(6)
     else
       @_invalid_coordinates_flag = true
-    end
-  end
-
-  def as_json(options = {})
-    if options[:for_option_set_form]
-      super(only: %i[id latitude longitude name_translations value], methods: %i[name set_names])
-    else
-      super(options)
     end
   end
 

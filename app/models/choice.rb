@@ -31,7 +31,7 @@
 
 class Choice < ApplicationRecord
   belongs_to :answer, inverse_of: :choices, touch: true
-  belongs_to :option, inverse_of: :choices
+  belongs_to :option
   belongs_to :option_node, inverse_of: :choices
 
   delegate :option_name, to: :option_node
