@@ -13,17 +13,17 @@ describe "answer location data" do
     before do
       # Configure select one question to be geographic
       form.c[1].option_set.update!(geographic: true, allow_coordinates: true)
-      form.c[1].options[0].update!(latitude: 0, longitude: 0)
+      form.c[1].first_level_option_nodes[0].option.update!(latitude: 0, longitude: 0)
 
       # Configure select multiple question to be geographic
-      option_one = form.c[2].options[0]
-      option_two = form.c[2].options[1]
+      option1 = form.c[2].first_level_option_nodes[0].option
+      option2 = form.c[2].first_level_option_nodes[1].option
       form.c[2].option_set.update!(geographic: true, allow_coordinates: true)
-      option_one.update!(latitude: 0, longitude: 0)
-      option_two.update!(latitude: 0, longitude: 0)
+      option1.update!(latitude: 0, longitude: 0)
+      option2.update!(latitude: 0, longitude: 0)
 
       create(:response, form: form, answer_values:
-        ["12.34 -56.78", form.c[1].options[0].name, [option_one.name, option_two.name], "Non geo answer", 12])
+        ["12.34 -56.78", form.c[1].options[0].name, [option1.name, option2.name], "Non geo answer", 12])
     end
 
     it "returns all answers for locations on a certain mission" do
@@ -55,7 +55,7 @@ describe "answer location data" do
   describe "#coordinates?" do
     context "with a select_one question" do
       let(:question_types) { %w[select_one] }
-      let(:option) { form.c[0].options[0] }
+      let(:option) { form.c[0].first_level_option_nodes[0].option }
       let(:answer_value) { option.name }
 
       it "should return false if the selected option does not have coordinates" do
@@ -71,8 +71,8 @@ describe "answer location data" do
 
     context "with a select_multiple question" do
       let(:question_types) { %w[select_multiple] }
-      let(:option_one) { form.c[0].options[0] }
-      let(:option_two) { form.c[0].options[1] }
+      let(:option_node1) { form.c[0].first_level_option_nodes[0] }
+      let(:option_node2) { form.c[0].first_level_option_nodes[1] }
       let(:answer_value) { choices.map(&:option_name) }
 
       context "with no choices" do
@@ -84,7 +84,9 @@ describe "answer location data" do
       end
 
       context "with choices" do
-        let(:choices) { [build(:choice, option: option_one), build(:choice, option: option_two)] }
+        let(:choices) do
+          [build(:choice, option_node: option_node1), build(:choice, option_node: option_node2)]
+        end
 
         before do
           form.c[0].option_set.update!(geographic: true, allow_coordinates: true)
@@ -95,13 +97,13 @@ describe "answer location data" do
         end
 
         it "should return true if all of the selected options have coordinates" do
-          option_one.update!(latitude: 0, longitude: 0)
-          option_two.update!(latitude: 0, longitude: 0)
+          option_node1.option.update!(latitude: 0, longitude: 0)
+          option_node2.option.update!(latitude: 0, longitude: 0)
           expect(answer.coordinates?).to be(true)
         end
 
         it "should return true if any of the selected options have coordinates" do
-          option_one.update!(latitude: 0, longitude: 0)
+          option_node1.option.update!(latitude: 0, longitude: 0)
           expect(answer.coordinates?).to be(true)
         end
       end
@@ -141,7 +143,7 @@ describe "answer location data" do
 
     context "when answer is for a select one question of a location" do
       let(:question_types) { %w[select_one] }
-      let(:option) { form.c[0].options[0] }
+      let(:option) { form.c[0].first_level_option_nodes[0].option }
       let(:answer_value) { option.name }
 
       it "copies the coordinates from the option to the answer lat/long columns" do
