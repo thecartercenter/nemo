@@ -51,9 +51,11 @@ module Results
             INNER JOIN form_items qings ON answers.questioning_id = qings.id
             INNER JOIN questions ON qings.question_id = questions.id
             LEFT OUTER JOIN option_sets ON questions.option_set_id = option_sets.id
-            LEFT OUTER JOIN options answer_options ON answer_options.id = answers.option_id
+            LEFT OUTER JOIN option_nodes answer_opt_nodes ON answer_opt_nodes.id = answers.option_node_id
+            LEFT OUTER JOIN options answer_options ON answer_options.id = answer_opt_nodes.option_id
             LEFT OUTER JOIN choices ON choices.answer_id = answers.id
-            LEFT OUTER JOIN options choice_options ON choices.option_id = choice_options.id
+            LEFT OUTER JOIN option_nodes choice_opt_nodes ON choice_opt_nodes.id = choices.option_node_id
+            LEFT OUTER JOIN options choice_options ON choice_options.id = choice_opt_nodes.option_id
         SQL
       end
 
