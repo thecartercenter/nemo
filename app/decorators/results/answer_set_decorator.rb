@@ -20,7 +20,7 @@ module Results
 
     def select_options(answer, level_context)
       h.options_from_collection_for_select(option_nodes(level_context),
-        "id", "option_name", answer&.option_node_id)
+        "id", "name", answer&.option_node_id)
     end
 
     def option_nodes(level_context)

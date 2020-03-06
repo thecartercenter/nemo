@@ -9,7 +9,7 @@
 
     <%= select_tag(context.input_name(:option_node_id),
           options_from_collection_for_select(answer.first_level_option_nodes,
-          "id", "option_name", answer.option_node_id),
+          "id", "name", answer.option_node_id),
           include_blank: true,
           class: "form-control") %>
 

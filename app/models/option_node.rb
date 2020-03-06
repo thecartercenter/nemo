@@ -81,7 +81,6 @@ class OptionNode < ApplicationRecord
              dont_reuse: ->(replicator) { replicator.source.is_a?(OptionSet) }
 
   delegate :shortcode_length, to: :option_set
-  delegate :name, to: :option, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :name, :canonical_name, :coordinates?, :latitude, :longitude, to: :option
 

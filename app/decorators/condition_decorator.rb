@@ -23,7 +23,7 @@ class ConditionDecorator < ApplicationDecorator
     bits = []
     if left_qing_has_options?
       bits << option_node.level_name if left_qing.multilevel?
-      target = option_node.option_name
+      target = option_node.name
     else
       target = value
     end

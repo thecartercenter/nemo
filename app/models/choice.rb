@@ -34,11 +34,13 @@ class Choice < ApplicationRecord
   belongs_to :option
   belongs_to :option_node, inverse_of: :choices
 
-  delegate :option_name, to: :option_node
-
   before_save :replicate_location_values
 
   attr_writer :mission_id
+
+  def option_name
+    option_node&.name
+  end
 
   def checked
     # Only explicitly false should return false.

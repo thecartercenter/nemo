@@ -138,7 +138,7 @@ shared_context "response tree" do
       end
     when "select_one"
       el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
-      OptionNode.find(el.value).option_name if el.value
+      OptionNode.find(el.value).name if el.value
     else
       actual_value = page.find("#" + path_selector(path, "value"), visible: :all).value
       expect(actual_value).to eq(expected_value)

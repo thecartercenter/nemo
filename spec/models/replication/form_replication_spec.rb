@@ -104,7 +104,7 @@ describe Form do
         it "should produce correct new option node reference" do
           expect(copy_conditions[0].option_node_id).to eq(copy_option_node.id)
           expect(copy_conditions[0].option_node.option).to eq(copy_option_node.option)
-          expect(copy_conditions[0].option_node.option_name).to eq("Tulip")
+          expect(copy_conditions[0].option_node.name).to eq("Tulip")
         end
       end
 
@@ -362,7 +362,7 @@ describe Form do
         it "should produce correct new option node reference" do
           expect(copy_condition.option_node_id).to eq(copy_option_node.id)
           expect(copy_condition.option_node.option).to eq(copy_option_node.option)
-          expect(copy_condition.option_node.option_name).to eq("Tulip")
+          expect(copy_condition.option_node.name).to eq("Tulip")
         end
       end
     end

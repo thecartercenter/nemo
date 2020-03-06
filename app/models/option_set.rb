@@ -348,7 +348,7 @@ class OptionSet < ApplicationRecord
     # Looks up an option node in this set by its name. Useful for specs.
     def node(*names)
       names.reduce(self) do |match, name|
-        match = match.children.detect { |c| c.option_name == name }
+        match = match.children.detect { |c| c.name == name }
         raise ArgumentError, "Could find option with name #{name} in set #{set}" if match.nil?
         match
       end

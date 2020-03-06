@@ -29,7 +29,7 @@ describe "abilities for option nodes" do
         end
 
         context "with data" do
-          let!(:response) { create(:response, form: form, answer_values: [option_node.option_name]) }
+          let!(:response) { create(:response, form: form, answer_values: [option_node.name]) }
           let(:permitted) { all - %i[destroy] }
 
           it_behaves_like "has specified abilities"

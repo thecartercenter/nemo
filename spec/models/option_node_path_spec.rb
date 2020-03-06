@@ -27,7 +27,7 @@ describe OptionNodePath do
       let(:path) { OptionNodePath.new(option_set: sl_set, target_node: node) }
 
       it "should be correct for valid levels" do
-        expect(path.nodes_for_depth(1).map(&:option_name)).to eq(%w[Cat Dog])
+        expect(path.nodes_for_depth(1).map(&:name)).to eq(%w[Cat Dog])
       end
     end
 
@@ -39,8 +39,8 @@ describe OptionNodePath do
       end
 
       it "should be correct for valid levels" do
-        expect(path.nodes_for_depth(1).map(&:option_name)).to eq(%w[Animal Plant])
-        expect(path.nodes_for_depth(2).map(&:option_name)).to eq(%w[Cat Dog])
+        expect(path.nodes_for_depth(1).map(&:name)).to eq(%w[Animal Plant])
+        expect(path.nodes_for_depth(2).map(&:name)).to eq(%w[Cat Dog])
       end
     end
 
@@ -48,8 +48,8 @@ describe OptionNodePath do
       let(:path) { OptionNodePath.new(option_set: sml_set, target_node: interior_node) }
 
       it "should be correct for valid level" do
-        expect(path.nodes_for_depth(1).map(&:option_name)).to eq(%w[Animal Plant])
-        expect(path.nodes_for_depth(2).map(&:option_name)).to eq(%w[Tree Flower])
+        expect(path.nodes_for_depth(1).map(&:name)).to eq(%w[Animal Plant])
+        expect(path.nodes_for_depth(2).map(&:name)).to eq(%w[Tree Flower])
       end
 
       it "should be empty for unspecified level" do
@@ -61,7 +61,7 @@ describe OptionNodePath do
       let(:path) { OptionNodePath.new(option_set: ml_set, target_node: nil) }
 
       it "should be correct" do
-        expect(path.nodes_for_depth(1).map(&:option_name)).to eq(%w[Animal Plant])
+        expect(path.nodes_for_depth(1).map(&:name)).to eq(%w[Animal Plant])
         expect(path.nodes_for_depth(2)).to eq([])
       end
     end

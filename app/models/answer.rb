@@ -91,7 +91,6 @@ class Answer < ResponseNode
     :parent_group_name, to: :questioning
   delegate :name, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
-  delegate :name, to: :option, prefix: true, allow_nil: true
   delegate :mission, to: :response
 
   scope :public_access, lambda {
@@ -189,6 +188,10 @@ class Answer < ResponseNode
         OptionNode.find_by(id: id)&.option_id
       end
     super
+  end
+
+  def option_name
+    option_node&.name
   end
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
