@@ -45,6 +45,17 @@ Remove the default ruby installation so we can install our own later:
     sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'
     sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'
 
+### Connect to a remote database (optional, advanced)
+
+If you have split servers (e.g. web on one server and database on another), make sure to also modify the following:
+
+Web server:
+- Follow the instructions in the web server's `database.yml` to configure the connection
+
+Database server:
+- Modify `/etc/postgresql/10/main/pg_hba.conf` to allow remote connections
+- Modify `/etc/postgresql/10/main/postgresql.conf` to listen on any ports needed
+
 ### Setup SSL and configure Nginx
 
 #### To get a free SSL certificate from LetsEncrypt

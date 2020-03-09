@@ -7,6 +7,14 @@ production:
   <<: *default
   database: elmo_production
 
+# Alternatively, if you have split servers (e.g. web on one server and database on another)
+#production:
+#  <<: *default
+#  database: elmo_production
+#  host: 10.0.0.2 # Wherever the DB can be accessed locally
+#  user: deploy # Database user
+#  password: 123ChangeMe # Database user password, set via psql
+
 test:
   <<: *default
   database: elmo_test
