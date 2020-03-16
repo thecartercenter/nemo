@@ -111,7 +111,8 @@ def build_item(item, form, parent, evaluator)
     group = create(:qing_group,
       parent: parent,
       form: form,
-      group_name_en: item[:name],
+      # Group name is required, but may not be defined on `item`.
+      group_name_en: item[:name] || "Group #{rand(100_000)}",
       group_hint_en: item[:name],
       group_item_name: item[:item_name],
       repeatable: true)
