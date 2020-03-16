@@ -56,4 +56,14 @@ feature "adding and editing qing group on form", js: true do
     within(".modal") { click_button("Save") }
     within(".form-items") { expect(page).to have_content("New Group Name") }
   end
+
+  scenario "add a new group to a form (blank name)" do
+    visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+
+    click_link("Add Group")
+    fill_in("Name (English)", with: "")
+    within(".modal") { click_button("Save") }
+
+    expect(page).to have_content("This field is required")
+  end
 end

@@ -39,8 +39,11 @@ class QingGroupsController < ApplicationController
     # Adding group requires same permissions as removing questions.
     authorize!(:add_questions, @qing_group.form)
     @qing_group.parent = @qing_group.form.root_group
-    @qing_group.save!
-    render(partial: "group", locals: {qing_group: @qing_group.decorate})
+    if @qing_group.save
+      render(partial: "group", locals: {qing_group: @qing_group.decorate})
+    else
+      render_errors
+    end
   end
 
   def show
@@ -49,8 +52,11 @@ class QingGroupsController < ApplicationController
   end
 
   def update
-    @qing_group.update!(qing_group_params)
-    render(partial: "group_inner", locals: {qing_group: @qing_group.decorate})
+    if @qing_group.update(qing_group_params)
+      render(partial: "group_inner", locals: {qing_group: @qing_group.decorate})
+    else
+      render_errors
+    end
   end
 
   def destroy
@@ -61,6 +67,18 @@ class QingGroupsController < ApplicationController
   end
 
   private
+
+  def render_errors
+    # The modal renders custom field name suffixes for each locale, so errors need to be
+    # bubbled up in order for them to show up at all.
+    # Alternatively, we could map the errors into new hash keys, adding each locale as a suffix.
+    #
+    # Currently, only group_name has validations.
+    @qing_group.errors[:base] << @qing_group.errors.details[:group_name].map do |error:|
+      "#{t('attributes.name')}: #{t("activerecord.errors.messages.#{error}")}"
+    end
+    render(partial: "modal_body", locals: {qing_group: @qing_group.decorate}, status: :unprocessable_entity)
+  end
 
   def validate_destroy
     return render(json: [], status: :not_found) unless @qing_group.children.empty?

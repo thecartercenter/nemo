@@ -55,6 +55,9 @@ class QingGroup < FormItem
 
   delegate :standard_copy?, :published?, to: :form
 
+  # Don't require a name for root groups.
+  validates :group_name, presence: true, if: -> { parent.present? }
+
   alias c sorted_children
 
   def code
