@@ -9,6 +9,7 @@ globals:
   _: true
   I18n: true
   ELMO: true
+  ReactRailsUJS: true
   Backbone: true
   Dropzone: true
   google: true
