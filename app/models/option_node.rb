@@ -240,8 +240,12 @@ class OptionNode < ApplicationRecord
         # this fix, but they should be much rarer because folks likely won't be trying to delete an option
         # that has so many answers.
         #
-        # This should ideally consult the `destroy` permission for option_node in the authorization system,
-        # but it all needs to be refactored anyway; it's not worth doing more gross things just for this.
+        # This should ideally consult the `destroy` permission for option_node in the authorization system.
+        # But Ability is not easily accessed from models. Also, the option set form is due for a refactor
+        # and will likely not need JSON serialization in the future. So for now we'll just duplicate
+        # the logic to test if removal is allowed. See the `user_independent_permissions` method
+        # in Ability for the source of this.
+        # branch[:removable] = !data? && !in_use?
         branch[:removable] = true
 
         # Recursive step.
@@ -339,12 +343,15 @@ class OptionNode < ApplicationRecord
     self.class.unscoped.where(option_set_id: option_set_id).maximum(:sequence) || 0
   end
 
+  # Whether this node appears in any Answers or Choices.
+  # We delegate this to an external object for performance reasons.
   def data?
-    # option_set may not be present when node first getting built
-    !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
+    answers.any? || choices.any?
   end
 
-  def conditions?
+  # Whether this node is used in any Forms.
+  # We delegate this to an external object for performance reasons.
+  def in_use?
     conditions.any?
   end
 

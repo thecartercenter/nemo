@@ -34,6 +34,8 @@
   };
 
   // Don't allow options that are not removable to change parents.
+  // This is because the way parent change is implemented on the backend is via deleting and re-creating
+  // the OptionNode under a new parent, which won't be allowed if the OptionNode has data.
   klass.prototype.parent_change_allowed = function (item) {
     return item.removable;
   };

@@ -204,8 +204,14 @@ class OptionSet < ApplicationRecord
     !standard? && questionings.any?(&:published?)
   end
 
-  # Checks if this option set is used in at least one question
-  # or if any copies are used in at least one question.
+  # Whether this OptionSet appears on any Questionings that have data.
+  # Since Questionings can't change OptionSet once they have data, this is sufficient.
+  def data?
+    !standard? && questionings.any?(&:data?)
+  end
+
+  # Whether this OptionSet is used any Questions. We don't need to check conditions
+  # because a condition can't refer to a node in this set without the set being used in a question.
   def in_use?
     question_count.positive?
   end
@@ -227,10 +233,6 @@ class OptionSet < ApplicationRecord
 
   def copy_question_count
     standard? ? copies.to_a.sum(&:question_count) : 0
-  end
-
-  def data?
-    !standard? && questionings.any?(&:data?)
   end
 
   def answers_for_option?(option_id)
