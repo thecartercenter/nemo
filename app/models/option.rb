@@ -41,7 +41,6 @@ class Option < ApplicationRecord
 
   before_validation :normalize
   after_save :invalidate_cache
-  after_save :update_answer_search_vectors, if: :names_changed?
   after_destroy :invalidate_cache
 
   scope :with_questions_and_forms,
@@ -119,14 +118,6 @@ class Option < ApplicationRecord
   # invalidate the mission option cache after save, destroy
   def invalidate_cache
     Rails.cache.delete("mission_options/#{mission_id}")
-  end
-
-  def names_changed?
-    saved_change_to_name_translations?
-  end
-
-  def update_answer_search_vectors
-    Results::AnswerSearchVectorUpdater.instance.update_for_option(self)
   end
 
   def check_invalid_coordinates_flag

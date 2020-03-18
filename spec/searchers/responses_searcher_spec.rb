@@ -237,8 +237,12 @@ describe ResponsesSearcher do
 
     before do
       # Add option names a different languages
-      q5.option_set.c[0].option.update!(name_fr: "chat")
-      q6.option_set.c[0].option.update!(name_fr: "marteau")
+      node = q5.option_set.c[0]
+      node.update!(option_attribs: {id: node.option_id,
+                                    name_translations: {name_en: "Cat", name_fr: "chat"}})
+      node = q6.option_set.c[0]
+      node.update!(option_attribs: {id: node.option_id,
+                                    name_translations: {name_en: "hammer", name_fr: "marteau"}})
     end
 
     it "matches the correct objects" do

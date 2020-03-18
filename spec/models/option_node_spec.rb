@@ -318,4 +318,32 @@ describe OptionNode do
       expect(results).to eq(%w[Foo])
     end
   end
+
+  describe "#update_answer_search_vectors" do
+    let!(:form) { create(:form, question_types: %w[select_one]) }
+    let!(:response) { create(:response, form: form, answer_values: ["Cat"]) }
+    let!(:option_node) { form.c[0].option_set.c[0] }
+
+    context "when name translations haven't changed" do
+      it "doesn't call update_answer_search_vectors" do
+        expect(Results::AnswerSearchVectorUpdater.instance).not_to receive(:update_for_option_node)
+        option_node.update!(option_attribs: {id: option_node.option_id,
+                                             name_translations: {"en" => "Cat"}, value: 99})
+      end
+    end
+
+    context "when name translations have changed" do
+      it "calls update_answer_search_vectors" do
+        expect(Results::AnswerSearchVectorUpdater.instance).to receive(:update_for_option_node)
+        option_node.update!(option_attribs: {id: option_node.option_id,
+                                             name_translations: {"en" => "Changed"}})
+      end
+
+      it "calls update_answer_search_vectors even for different language change" do
+        expect(Results::AnswerSearchVectorUpdater.instance).to receive(:update_for_option_node)
+        option_node.update!(option_attribs: {id: option_node.option_id,
+                                             name_translations: {"en" => "Cat", "it" => "Chatto"}})
+      end
+    end
+  end
 end

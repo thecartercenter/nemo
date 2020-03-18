@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_26_203050) do
+ActiveRecord::Schema.define(version: 2020_03_06_173716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -679,16 +679,17 @@ ActiveRecord::Schema.define(version: 2020_02_26_203050) do
       on("answers").
       before(:insert, :update) do
     <<-SQL_ACTIONS
-          IF NEW.type = 'Answer' THEN
-            NEW.tsv := TO_TSVECTOR('simple', COALESCE(
-              NEW.value,
-              (SELECT STRING_AGG(opt_name_translation.value, ' ')
-                FROM options, jsonb_each_text(options.name_translations) opt_name_translation
-                WHERE options.id = NEW.option_id
-                  OR options.id IN (SELECT option_id FROM choices WHERE answer_id = NEW.id)),
-              ''
-            ));
-          END IF;
+new.tsv :=         TO_TSVECTOR('simple', COALESCE(
+          new.value,
+          (SELECT STRING_AGG(opt_name_translation.value, ' ')
+            FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation
+            WHERE
+              options.id = option_nodes.option_id
+              AND (option_nodes.id = new.option_node_id
+                OR option_nodes.id IN (SELECT option_node_id FROM choices WHERE answer_id = new.id))),
+          ''
+        ))
+;
     SQL_ACTIONS
   end
 

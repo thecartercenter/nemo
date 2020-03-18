@@ -5,18 +5,11 @@ module Results
   class AnswerSearchVectorUpdater
     include Singleton
 
-    # Efficiently updates the TSV for all answers referencing the given option.
-    def update_for_option(option)
+    # Efficiently updates the TSV for all answers referencing the given option node.
+    def update_for_option_node(option_node)
       SqlRunner.instance.run("ALTER TABLE answers DISABLE TRIGGER answers_before_insert_update_row_tr")
-
-      # Update answers with matching option_id (easy).
-      names = option.name_translations.values.reject(&:blank?).join(" ")
-      SqlRunner.instance.run("UPDATE answers SET tsv = TO_TSVECTOR('simple', ?) "\
-        "WHERE answers.option_id = ?", names, option.id)
-
-      # Update answers with a matching choice option_id (hard).
-      SqlRunner.instance.run(update_answers_with_choices, option.id)
-
+      SqlRunner.instance.run(update_answers_with_matching_node_id, search_tokens(option_node), option_node.id)
+      SqlRunner.instance.run(update_answers_with_choices, option_node.id)
       SqlRunner.instance.run("ALTER TABLE answers ENABLE TRIGGER answers_before_insert_update_row_tr")
     end
 
@@ -28,15 +21,28 @@ module Results
         TO_TSVECTOR('simple', COALESCE(
           new.value,
           (SELECT STRING_AGG(opt_name_translation.value, ' ')
-            FROM options, JSONB_EACH_TEXT(options.name_translations) opt_name_translation
-            WHERE options.id = new.option_id
-              OR options.id IN (SELECT option_id FROM choices WHERE answer_id = new.id)),
+            FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation
+            WHERE
+              options.id = option_nodes.option_id
+              AND (option_nodes.id = new.option_node_id
+                OR option_nodes.id IN (SELECT option_node_id FROM choices WHERE answer_id = new.id))),
           ''
         ))
       SQL
     end
 
     private
+
+    def search_tokens(option_node)
+      option_node.name_translations.values.reject(&:blank?).join(" ")
+    end
+
+    def update_answers_with_matching_node_id
+      <<-SQL
+        UPDATE answers SET tsv = TO_TSVECTOR('simple', ?)
+          WHERE answers.option_node_id = ?
+      SQL
+    end
 
     # We need to first build up a subquery of TSVs with the translations of all associated options,
     # then update by using a subquery-style update.
@@ -53,15 +59,18 @@ module Results
         SELECT
           answers.id AS answer_id,
           TO_TSVECTOR('simple', STRING_AGG(opt_name_translation.value, ' ')) AS tsv
-        FROM answers, choices, options, JSONB_EACH_TEXT(options.name_translations) opt_name_translation
-        WHERE answers.id = choices.answer_id AND choices.option_id = options.id
-          AND answers.id IN (#{answer_ids_with_option_as_choice})
+        FROM answers, choices, option_nodes, options,
+          JSONB_EACH_TEXT(options.name_translations) opt_name_translation
+        WHERE answers.id IN (#{answer_ids_with_option_node_as_choice})
+          AND answers.id = choices.answer_id
+          AND choices.option_node_id = option_nodes.id
+          AND option_nodes.option_id = options.id
         GROUP BY answers.id
       SQL
     end
 
-    def answer_ids_with_option_as_choice
-      "SELECT answer_id FROM choices WHERE option_id = ?"
+    def answer_ids_with_option_node_as_choice
+      "SELECT answer_id FROM choices WHERE option_node_id = ?"
     end
   end
 end

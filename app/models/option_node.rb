@@ -59,6 +59,7 @@ class OptionNode < ApplicationRecord
 
   before_validation { self.ancestry = nil if ancestry.blank? }
   after_save :update_children
+  after_save :update_answer_search_vectors
 
   attr_accessor :children_attribs
   attr_reader :option_attribs
@@ -81,7 +82,7 @@ class OptionNode < ApplicationRecord
 
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :level, prefix: true, allow_nil: true
-  delegate :name, :canonical_name, :coordinates?, :latitude, :longitude, to: :option
+  delegate :name, :name_translations, :canonical_name, :coordinates?, :latitude, :longitude, to: :option
 
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
@@ -406,5 +407,10 @@ class OptionNode < ApplicationRecord
     %w[mission_id option_set_id standard_copy].each { |k| hash[k.to_sym] = send(k) }
     %w[mission_id].each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
     hash
+  end
+
+  def update_answer_search_vectors
+    return unless option&.saved_change_to_name_translations?
+    Results::AnswerSearchVectorUpdater.instance.update_for_option_node(self)
   end
 end
