@@ -130,7 +130,6 @@ class Question < ApplicationRecord
   delegate :options,
     :first_level_option_nodes,
     :all_options,
-    :first_leaf_option,
     :first_leaf_option_node,
     :first_level_options,
     :multilevel?,
@@ -168,7 +167,7 @@ class Question < ApplicationRecord
     qtype_name == "location"
   end
 
-  def has_conditions?
+  def conditions?
     Condition.referring_to_question(self).any?
   end
 

@@ -71,7 +71,7 @@ class OptionSet < ApplicationRecord
 
   delegate :ranks_changed?, :children, :c, :options_added?, :options_removed?,
     :total_options, :descendants, :all_options, :max_depth, :options_not_serialized, :arrange_as_rows,
-    :arrange_with_options, :sorted_children, :first_leaf_option, :first_leaf_option_node,
+    :arrange_with_options, :sorted_children, :first_leaf_option_node,
     to: :root_node
 
   # These methods are for the form.
@@ -92,20 +92,6 @@ class OptionSet < ApplicationRecord
   def self.preload_top_level_options(option_sets)
     return if option_sets.empty?
     OptionNode.preload_child_options(option_sets.map(&:root_node))
-  end
-
-  # Loads all options for sets with the given IDs in a constant number of queries.
-  def self.all_options_for_sets(set_ids)
-    return [] if set_ids.empty?
-    root_node_ids = where(id: set_ids).all.map(&:root_node_id)
-    where_clause = root_node_ids.map { |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(" OR ")
-    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{where_clause})").to_a
-  end
-
-  def self.first_level_option_nodes_for_sets(set_ids)
-    return [] if set_ids.empty?
-    root_node_ids = where(id: set_ids).to_a.map(&:root_node_id)
-    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).to_a
   end
 
   def children_attribs=(attribs)
@@ -189,17 +175,6 @@ class OptionSet < ApplicationRecord
     questionings.any?(&:form_smsable?)
   end
 
-  def option_has_answers?(option_id)
-    # Do one query for all and cache.
-    @option_ids_with_answers ||= Answer.where(
-      questioning_id: questionings.map(&:id),
-      option_id: descendants.map(&:option_id)
-    ).pluck("DISTINCT option_id")
-
-    # Respond to particular request.
-    @option_ids_with_answers.include?(option_id)
-  end
-
   def published?
     !standard? && questionings.any?(&:published?)
   end
@@ -233,10 +208,6 @@ class OptionSet < ApplicationRecord
 
   def copy_question_count
     standard? ? copies.to_a.sum(&:question_count) : 0
-  end
-
-  def answers_for_option?(option_id)
-    questionings.any? && Answer.any_for_option_and_questionings?(option_id, questionings.map(&:id))
   end
 
   def answer_count
@@ -281,14 +252,8 @@ class OptionSet < ApplicationRecord
     end
   end
 
-  def sms_formatting
-    @sms_formatting ||=
-      case sms_guide_formatting
-      when "auto"
-        descendants.count <= 26 ? "inline" : "appendix"
-      else
-        sms_guide_formatting
-      end
+  def sms_formatting_as_inline?
+    sms_formatting == "inline"
   end
 
   def sms_formatting_as_text?
@@ -328,12 +293,8 @@ class OptionSet < ApplicationRecord
   end
 
   def shortcode_length
-    @max_sequence ||= descendants.maximum(:sequence).try(&:to_i) || 1
+    @max_sequence ||= descendants.maximum(:sequence)&.to_i || 1
     @shortcode_length ||= Base36.digits_needed(@max_sequence)
-  end
-
-  def shortcode_offset
-    @shortcode_offset ||= Base36.offset(shortcode_length)
   end
 
   def fetch_by_shortcode(shortcode)
@@ -358,6 +319,20 @@ class OptionSet < ApplicationRecord
   end
 
   private
+
+  def shortcode_offset
+    @shortcode_offset ||= Base36.offset(shortcode_length)
+  end
+
+  def sms_formatting
+    @sms_formatting ||=
+      case sms_guide_formatting
+      when "auto"
+        descendants.count <= 26 ? "inline" : "appendix"
+      else
+        sms_guide_formatting
+      end
+  end
 
   def copy_attribs_to_root_node
     root_node.assign_attributes(

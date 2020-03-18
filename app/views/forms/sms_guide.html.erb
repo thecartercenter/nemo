@@ -88,7 +88,7 @@
             </div>
 
             <%# Options area, for select_* questions %>
-            <% if qing.has_options? && qing.option_set.sms_formatting == "inline" %>
+            <% if qing.has_options? && qing.option_set.sms_formatting_as_inline? %>
               <div class="options">
                 <% qing.options.each_with_index do |opt, idx| %>
                   <span><%= index_to_letter(idx + 1) %>) <%= opt.name(@locale, fallbacks: true) %></span>

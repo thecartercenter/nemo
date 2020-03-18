@@ -93,26 +93,16 @@ class OptionNode < ApplicationRecord
     roots.each { |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
   end
 
-  # Efficiently gets an option id from an option node id. id may be a string or integer.
-  def self.id_to_option_id(id)
-    where(id: id).pluck(:option_id).first
-  end
-
-  # Efficiently gets an option id from an option node old_id. id may be a string or integer.
-  def self.old_id_to_option_id(id)
-    where(old_id: id).pluck(:option_id).first
-  end
-
   # Overriding this to avoid error from ancestry.
   alias _children children
   def children
     new_record? ? [] : _children
   end
 
-  def has_grandchildren?
-    return @has_grandchildren if defined?(@has_grandchildren)
-    @has_grandchildren = descendants(at_depth: 2).any?
+  def sorted_children
+    children.order(:rank).includes(:option)
   end
+  alias c sorted_children
 
   def all_options
     Option.where(id: descendants.map(&:option_id))
@@ -125,10 +115,6 @@ class OptionNode < ApplicationRecord
   # Returns options of children, ordered by rank.
   def child_options
     @child_options ||= sorted_children.map(&:option)
-  end
-
-  def child_with_option_id(oid)
-    children.detect { |c| c.option_id == oid }
   end
 
   # The total number of descendant options.
@@ -169,15 +155,6 @@ class OptionNode < ApplicationRecord
 
   def preordered_descendants
     self.class.sort_by_ancestry(descendants.order(:rank)) { |a, b| a.rank <=> b.rank }
-  end
-
-  def sorted_children
-    children.order(:rank).includes(:option)
-  end
-  alias c sorted_children
-
-  def first_leaf_option
-    (sc = sorted_children).any? ? sc.first.first_leaf_option : option
   end
 
   def first_leaf_option_node

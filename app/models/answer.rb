@@ -138,18 +138,6 @@ class Answer < ResponseNode
       .paginate(page: 1, per_page: 1000)
   end
 
-  # Tests if there exists at least one answer referencing the option and questionings with the given IDs.
-  def self.any_for_option_and_questionings?(option_id, questioning_ids)
-    find_by_sql(["
-      SELECT COUNT(*) AS count
-      FROM answers a
-        LEFT OUTER JOIN choices c ON c.answer_id = a.id
-      WHERE a.type = 'Answer'
-        AND (a.option_id = ? OR c.option_id = ?)
-        AND a.questioning_id IN (?)",
-                 option_id, option_id, questioning_ids]).first.count.positive?
-  end
-
   def option=(option)
     self[:option_node_id] =
       if option.nil?

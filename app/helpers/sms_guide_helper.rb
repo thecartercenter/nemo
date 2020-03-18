@@ -58,7 +58,7 @@ module SmsGuideHelper
       when "decimal" then "12.5"
       when "select_one"
         if qing.sms_formatting_as_text?
-          qing.first_leaf_option.name(locale, fallbacks: true)
+          qing.first_leaf_option_node.name(locale, fallbacks: true)
         elsif qing.sms_formatting_as_appendix?
           qing.first_leaf_option_node.shortcode
         else

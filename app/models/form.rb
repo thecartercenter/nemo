@@ -190,7 +190,7 @@ class Form < ApplicationRecord
   end
 
   def option_sets_with_appendix
-    option_sets.select { |os| os.sms_formatting == "appendix" }
+    option_sets.select(&:sms_formatting_as_appendix?)
   end
 
   # Returns all descendant questionings in one flat array, sorted in pre-order traversal and rank order.

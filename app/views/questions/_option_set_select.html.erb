@@ -10,7 +10,7 @@
         {include_blank: true}, class: "form-control") %>
   <%= link_to("+ " + t("activerecord.action_links.models.option_set.new"), '#', class: "create_option_set") %>
   <br/>
-  <% if form.object.has_conditions? %>
+  <% if form.object.conditions? %>
     <div class="note">
       <%= icon_tag("warning") %>
       <%= t("question.opt_set_warning") %>
