@@ -149,16 +149,6 @@ class OptionSetsController < ApplicationController
       # render where we should redirect
       render(json: option_sets_path.to_json)
     end
-
-  # These shouldn't generally happen since the delete link
-  # is hidden in cases where options shouldn't be deleted.
-  # Only remotely possible if answer arrives between when form rendered and submitted.
-  # Also, we don't catch validation errors since they should be handled on client side.
-  rescue DeletionError
-    flash.now[:error] = $ERROR_INFO.to_s
-    prep_form_vars
-    render(partial: "form")
-    raise ActiveRecord::Rollback # Rollback the transaction without re-raising the error.
   end
 
   def option_set_params
