@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_06_173716) do
+ActiveRecord::Schema.define(version: 2020_03_18_190315) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -36,7 +36,6 @@ ActiveRecord::Schema.define(version: 2020_03_06_173716) do
     t.integer "new_rank", default: 0, null: false
     t.integer "old_inst_num", default: 1, null: false
     t.integer "old_rank", default: 1, null: false
-    t.uuid "option_id"
     t.uuid "option_node_id"
     t.uuid "parent_id"
     t.string "pending_file_name"
@@ -48,7 +47,6 @@ ActiveRecord::Schema.define(version: 2020_03_06_173716) do
     t.datetime "updated_at", null: false
     t.text "value"
     t.index ["new_rank"], name: "index_answers_on_new_rank"
-    t.index ["option_id"], name: "index_answers_on_option_id"
     t.index ["option_node_id"], name: "index_answers_on_option_node_id"
     t.index ["parent_id"], name: "index_answers_on_parent_id"
     t.index ["questioning_id"], name: "index_answers_on_questioning_id"
@@ -97,12 +95,9 @@ ActiveRecord::Schema.define(version: 2020_03_06_173716) do
     t.datetime "created_at", null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
-    t.uuid "option_id", null: false
     t.uuid "option_node_id"
     t.datetime "updated_at", null: false
-    t.index ["answer_id", "option_id"], name: "index_choices_on_answer_id_and_option_id", unique: true
     t.index ["answer_id"], name: "index_choices_on_answer_id"
-    t.index ["option_id"], name: "index_choices_on_option_id"
     t.index ["option_node_id"], name: "index_choices_on_option_node_id"
   end
 
@@ -610,7 +605,6 @@ ActiveRecord::Schema.define(version: 2020_03_06_173716) do
 
   add_foreign_key "answers", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "answers", "option_nodes"
-  add_foreign_key "answers", "options", name: "answers_option_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "answers", "responses", name: "answers_response_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "assignments", "missions", name: "assignments_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "assignments", "users", name: "assignments_user_id_fkey", on_update: :restrict, on_delete: :restrict
@@ -618,7 +612,6 @@ ActiveRecord::Schema.define(version: 2020_03_06_173716) do
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "answers", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "option_nodes"
-  add_foreign_key "choices", "options", name: "choices_option_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "form_items", column: "left_qing_id"
   add_foreign_key "conditions", "form_items", column: "right_qing_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict

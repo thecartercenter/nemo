@@ -3,7 +3,7 @@
 
    when "select_one" %>
 
-  <%= content_tag(:div, answer.option.try(:name), data: {val: [answer.option_node_id]}) %>
+  <%= content_tag(:div, answer.option_node_name, data: {val: [answer.option_node_id]}) %>
 
   <%= render("responses/answers/map", answer: answer) if answer.coordinates? %>
 

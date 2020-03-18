@@ -22,7 +22,6 @@
 #  value             :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  option_id         :uuid
 #  option_node_id    :uuid
 #  parent_id         :uuid
 #  questioning_id    :uuid             not null
@@ -31,7 +30,6 @@
 # Indexes
 #
 #  index_answers_on_new_rank        (new_rank)
-#  index_answers_on_option_id       (option_id)
 #  index_answers_on_option_node_id  (option_node_id)
 #  index_answers_on_parent_id       (parent_id)
 #  index_answers_on_questioning_id  (questioning_id)
@@ -40,7 +38,6 @@
 #
 # Foreign Keys
 #
-#  answers_option_id_fkey       (option_id => options.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_questioning_id_fkey  (questioning_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_response_id_fkey     (response_id => responses.id) ON DELETE => restrict ON UPDATE => restrict
 #  fk_rails_...                 (option_node_id => option_nodes.id)
@@ -63,7 +60,6 @@ class Answer < ResponseNode
   attr_accessor :location_values_replicated
   alias questioning form_item
 
-  belongs_to :option
   belongs_to :option_node, inverse_of: :answers
   belongs_to :response, inverse_of: :answers, touch: true
   has_many :choices, -> { order(:created_at) }, dependent: :destroy, inverse_of: :answer, autosave: true
@@ -91,6 +87,7 @@ class Answer < ResponseNode
     :parent_group_name, to: :questioning
   delegate :name, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
+  delegate :name, to: :option_node, prefix: true, allow_nil: true
   delegate :mission, to: :response
 
   scope :public_access, lambda {
@@ -138,46 +135,6 @@ class Answer < ResponseNode
       .paginate(page: 1, per_page: 1000)
   end
 
-  def option=(option)
-    self[:option_node_id] =
-      if option.nil?
-        nil
-      else
-        OptionNode.find_by(option_id: option.id, option_set_id: option_set_id)&.id
-      end
-    super
-  end
-
-  def option_id=(id)
-    self[:option_node_id] =
-      if id.blank?
-        nil
-      else
-        OptionNode.find_by(option_id: id, option_set_id: option_set_id)&.id
-      end
-    super
-  end
-
-  def option_node=(node)
-    self[:option_id] =
-      if node.nil?
-        nil
-      else
-        node.option_id # Temporary until we get rid of option_id column.
-      end
-    super
-  end
-
-  def option_node_id=(id)
-    self[:option_id] =
-      if id.blank?
-        nil
-      else
-        OptionNode.find_by(id: id)&.option_id
-      end
-    super
-  end
-
   def option_name
     option_node&.name
   end
@@ -219,7 +176,7 @@ class Answer < ResponseNode
   # check various fields for blankness
   def empty?
     value.blank? && time_value.blank? && date_value.blank? &&
-      datetime_value.blank? && option_id.nil? && media_object.nil?
+      datetime_value.blank? && option_node_id.nil? && media_object.nil?
   end
   alias blank? empty?
 
