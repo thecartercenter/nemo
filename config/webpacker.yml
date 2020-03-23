@@ -52,8 +52,10 @@ development:
   <<: *default
   compile: true
 
-  # Verifies that correct packages and versions are installed by inspecting package.json, yarn.lock, and node_modules
-  check_yarn_integrity: true
+  # Verifies that correct packages and versions are installed by inspecting package.json, yarn.lock, and node_modules.
+  # However, it uses a buggy deprecated utility and needs to be fixed before we can use it reliably.
+  # https://github.com/rails/webpacker/issues/2354
+  # check_yarn_integrity: true
 
   # Reference: https://webpack.js.org/configuration/dev-server/
   dev_server:
