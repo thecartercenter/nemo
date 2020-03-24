@@ -95,7 +95,10 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
     puts "\nPlease fix them or run:"
     puts "    touch #{FLAG_PATH}"
     puts "and then run the migration again to have the migration"
-    puts "add the missing options to the sets in question.\n\n"
+    puts "add the missing options to the sets in question."
+    puts "If the option set is not in active use, feel free to use the automated fix."
+    puts "If the option set is in active use, consider the effects of adding new options to it."
+    puts "You may prefer to manually delete the answers/choices in question."
   end
 
   def print_missing_pairs_for_option_set(opt_set_id, pairs)
