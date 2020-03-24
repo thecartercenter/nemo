@@ -76,7 +76,7 @@ ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
         this.list_view.add_new_group(data);
         this.hide();
       },
-      error: this.replaceModalBody,
+      error: this.replaceModalBody.bind(this),
       complete: () => {
         ELMO.app.loading(false);
       },
@@ -94,14 +94,14 @@ ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
         this.list_view.update_group_on_edit(data);
         this.hide();
       },
-      error: this.replaceModalBody,
+      error: this.replaceModalBody.bind(this),
       complete: () => {
         ELMO.app.loading(false);
       },
     });
   }
 
-  replaceModalBody = ({ responseText }) => {
+  replaceModalBody({ responseText }) {
     this.$('.modal-body').replaceWith(responseText);
     ReactRailsUJS.mountComponents('.modal-body');
   }
