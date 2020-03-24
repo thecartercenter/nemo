@@ -217,13 +217,6 @@ class OptionNode < ApplicationRecord
         # should catch it and display an error. This could still cause crashes of the type that motivated
         # this fix, but they should be much rarer because folks likely won't be trying to delete an option
         # that has so many answers.
-        #
-        # This should ideally consult the `destroy` permission for option_node in the authorization system.
-        # But Ability is not easily accessed from models. Also, the option set form is due for a refactor
-        # and will likely not need JSON serialization in the future. So for now we'll just duplicate
-        # the logic to test if removal is allowed. See the `user_independent_permissions` method
-        # in Ability for the source of this.
-        # branch[:removable] = !data? && !in_use?
         branch[:removable] = true
 
         # Recursive step.
