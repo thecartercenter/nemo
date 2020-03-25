@@ -22,7 +22,7 @@
 #
 # Foreign Keys
 #
-#  form_versions_form_id_fkey  (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...  (form_id => forms.id)
 #
 # rubocop:enable Metrics/LineLength
 

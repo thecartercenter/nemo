@@ -42,9 +42,9 @@
 #
 # Foreign Keys
 #
-#  questions_mission_id_fkey     (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  questions_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
-#  questions_original_id_fkey    (original_id => questions.id) ON DELETE => nullify ON UPDATE => restrict
+#  fk_rails_...  (mission_id => missions.id)
+#  fk_rails_...  (option_set_id => option_sets.id)
+#  fk_rails_...  (original_id => questions.id) ON DELETE => nullify
 #
 # rubocop:enable Metrics/LineLength
 

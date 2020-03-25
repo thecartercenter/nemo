@@ -20,8 +20,8 @@
 #
 # Foreign Keys
 #
-#  choices_answer_id_fkey  (answer_id => answers.id) ON DELETE => restrict ON UPDATE => restrict
-#  fk_rails_...            (option_node_id => option_nodes.id)
+#  fk_rails_...  (answer_id => answers.id)
+#  fk_rails_...  (option_node_id => option_nodes.id)
 #
 # rubocop:enable Metrics/LineLength
 
