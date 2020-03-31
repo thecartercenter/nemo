@@ -10,7 +10,7 @@ feature "forms", js: true do
   let(:forms_path) { "/en/m/#{form.mission.compact_name}/forms" }
 
   # Allow longer delays because specs were failing on Travis.
-  let(:longer_wait_time) { 10 }
+  let(:longer_wait_time) { 20 }
 
   before do
     login(user)
