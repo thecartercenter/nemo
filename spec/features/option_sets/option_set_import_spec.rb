@@ -30,6 +30,6 @@ feature "option set import", js: true do
     Delayed::Worker.new.work_off
     click_link("operations panel")
     click_on("Option Set 'simple.csv' import")
-    expect(page).to have_content("Status Success")
+    expect(page).to have_content("Status\nSuccess")
   end
 end

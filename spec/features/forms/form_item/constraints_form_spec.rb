@@ -36,7 +36,7 @@ feature "constraints form fields", js: true do
       let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} [#{form.c[1].code}] is equal to 10" }
 
       scenario "read-only mode" do
-        expected = "Valid only if any of these conditions are met #{first_cond_str} #{second_cond_str}"
+        expected = "Valid only if any of these conditions are met\n#{first_cond_str}\n#{second_cond_str}"
         visit("#{url_prefix}/questionings/#{form.c[2].id}")
         expect(page).to have_content(expected)
       end
@@ -141,7 +141,7 @@ feature "constraints form fields", js: true do
 
         click_on("Save")
 
-        rule2 = "Valid only if all of these conditions are met #{first_cond_str} #{second_cond_str}"
+        rule2 = "Valid only if all of these conditions are met\n#{first_cond_str}\n#{second_cond_str}"
         visit("#{url_prefix}/questionings/#{form.c[2].id}")
         expect(page).to have_content(rule2)
       end
