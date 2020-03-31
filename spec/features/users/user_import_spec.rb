@@ -19,6 +19,6 @@ feature "user import", js: true do
     Delayed::Worker.new.work_off
     click_link("operations panel")
     click_on("User import from varying_info.xlsx")
-    expect(page).to have_content("Status Success")
+    expect(page).to have_content("Status\nSuccess")
   end
 end
