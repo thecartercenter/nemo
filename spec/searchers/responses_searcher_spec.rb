@@ -257,11 +257,11 @@ describe ResponsesSearcher do
 
       # Exact phrase matching should work
       # Parentheses don't force exact phrase matching
-      expect(search(%{text:(quick brown)})). to contain_exactly(r1, r3)
+      expect(search(%{text:(quick brown)})).to contain_exactly(r1, r3)
 
-      # TODO: FIX EXACT PHRASE MATCHING
-      # expect(search(%{text:"quick brown"}, r1)
-      # expect(search(%{"quick brown"}, r1)
+      # TODO: Fix exact phrase matching: https://github.com/Casecommons/pg_search/issues/345
+      # expect(search(%(text:"quick brown"))).to contain_exactly(r1)
+      # expect(search(%("quick brown"))).to contain_exactly(r1)
 
       # Question codes should work as qualifiers
       expect(search("text:apple")).to contain_exactly(r1, r2)
