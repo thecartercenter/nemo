@@ -32,8 +32,9 @@ feature "response form reviewer notes", js: true do
       fill_in("Notes", with: "testing")
       click_button("Save")
 
-      expect(response.reload.reviewer_notes).to eq("testing")
-      expect(response.reload.reviewed).to eq(true)
+      visit(response_path(response, params))
+      expect(page).to have_selector("#response_reviewer_notes", text: "testing")
+      expect(page).to have_field("response_reviewed", checked: true)
     end
 
     scenario "can not submit answers" do
@@ -56,8 +57,7 @@ feature "response form reviewer notes", js: true do
       click_button("Save")
 
       visit(response_path(response, params))
-      input = find("#response_reviewer_notes")
-      expect(input.value).to eq("testing")
+      expect(page).to have_selector("#response_reviewer_notes", text: "testing")
     end
   end
 end
