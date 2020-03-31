@@ -94,20 +94,11 @@ class ResponsesSearcher < Searcher
         attribs[:form_items] = {question_id: question.id}
       end
 
-      # Run the full text search and get the matching answer IDs
-      answer_ids = Answer.joins(:response, :form_item).where(attribs)
-        .search_by_value(expression.values).pluck(:id)
-
-      # turn into an sql fragment
-      fragment = if answer_ids.present?
-                   # Get all response IDs and join into string
-                   Answer.select("response_id").distinct.where(id: answer_ids)
-                     .map { |r| "'#{r.response_id}'" }
-                     .join(",")
-                 end
-
-      # fall back if we get an empty fragment
-      fragment.presence || "'00000000-0000-0000-0000-000000000000'"
+      Answer.select("response_id").distinct
+        .joins(:response, :form_item).where(attribs)
+        .search_by_value(expression.values)
+        .reorder(nil) # Disable "rank" because we don't need it here and it breaks the query.
+        .to_sql
     end
 
     save_filter_data(search)
