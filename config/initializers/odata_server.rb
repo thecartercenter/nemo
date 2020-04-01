@@ -13,8 +13,10 @@ class SimpleEntities
   attr_reader :values
 
   def initialize
+    # All published forms in the missions, regardless of if they have response
     @values = Response.distinct.pluck(:form_id).map do |id|
       name = Form.find(id).name
+      # Better string
       SimpleEntity.new("Response#{name}")
     end
   end

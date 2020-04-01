@@ -48,6 +48,8 @@ ELMO::Application.routes.draw do
   # Mission-mode-only routes
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/,
                                    defaults: {mode: "m"} do
+    # mount(OData::Engine, at: "/odata/v1")
+
     # Regular form resources are defined under the admin-or-mission section.
     resources :forms, only: [] do
       member do
