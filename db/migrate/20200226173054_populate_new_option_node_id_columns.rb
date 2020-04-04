@@ -104,10 +104,10 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
   def print_missing_pairs_for_option_set(opt_set_id, pairs)
     opt_set = OptionSet.find(opt_set_id)
     puts "-----------------------------------------------------------------------------------------------"
-    puts "Option Set: #{opt_set.name}, (#{opt_set.mission&.compact_name || 'admin'}, #{opt_set.id})"
+    puts "Option Set: `#{opt_set.name}`, (#{opt_set.mission&.compact_name || 'admin'}, #{opt_set.id})"
     puts "  Existing top-level options (up to 10):"
-    puts opt_set.first_level_options[0...10].map { |o| "    #{o.name_translations}" }.join("\n")
-    puts "  Missing options:"
+    puts opt_set.first_level_options[0...10].map { |o| "    #{o.name_translations}, (#{o.id})" }.join("\n")
+    puts "  Options that were expected but not found:"
     pairs.each do |pair|
       option = Option.find(pair[1])
       puts "    #{option.name_translations}, (#{option.id})"
