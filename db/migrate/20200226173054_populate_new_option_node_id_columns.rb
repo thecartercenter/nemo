@@ -10,12 +10,15 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
   def up
     copy_option_id_to_option_node_id
     if (pairs = missing_pairs).any?
-      if File.exist?(FLAG_PATH)
-        create_missing_nodes(pairs)
-        copy_option_id_to_option_node_id
-      else
-        print_missing_pairs(pairs)
-        raise Exception
+      merge_missing_pairs(pairs)
+      if (pairs = missing_pairs).any?
+        if File.exist?(FLAG_PATH)
+          create_missing_nodes(pairs)
+          copy_option_id_to_option_node_id
+        else
+          print_missing_pairs(pairs)
+          raise Exception
+        end
       end
     end
     assert_no_missing_pairs_or_non_matching_option_ids
@@ -62,7 +65,8 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
     SQL
   end
 
-  def execute_partitioned(query, table, parts = 100)
+  # TODO: Revert to 100
+  def execute_partitioned(query, table, parts = 1)
     per_part = 16**32 / parts
     max = 16**32 - 1
     (0...parts).to_a.each do |num|
@@ -85,6 +89,46 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
     pairs.concat(null_choices.map { |c| [c.answer.option_set_id, c.option_id] })
   end
 
+  def merge_missing_pairs(pairs)
+    puts "Attempting to merge missing pairs..."
+
+    pairs.uniq.group_by { |p| p[0] }.each do |opt_set_id, subpairs|
+      merge_missing_pairs_for_option_set(opt_set_id, subpairs)
+    end
+  end
+
+  def merge_missing_pairs_for_option_set(opt_set_id, pairs)
+    opt_set = OptionSet.find(opt_set_id)
+    opt_ids = {}
+
+    print_option_set_title(opt_set)
+
+    # Index the existing options by hash.
+    # TODO: Performance if huge?
+    # TODO: Recurse for nested levels
+    opt_set.first_level_options.map do |o|
+      names = o.name_translations.map { |lang, name| [lang, name&.strip] }
+      opt_ids[names.hash] = o.id
+    end
+
+    # See if any of the missing pairs have the same hash as an existing option.
+    pairs.each do |pair|
+      pair_opt_id = pair[1]
+      names = Option.find(pair_opt_id).name_translations.map { |lang, name| [lang, name&.strip] }
+
+      if (existing_opt_id = opt_ids[names.hash])
+        puts "  Merging match for #{names} " \
+          "(missing pair option #{pair_opt_id}, existing option #{existing_opt_id})"
+        node = OptionNode.find_by(option_id: existing_opt_id)
+        # TODO: Performance
+        Answer.where(option_id: pair_opt_id).each { |a| a.update!(option_node_id: node.id) }
+        Choice.where(option_id: pair_opt_id).each { |c| c.answer.update!(option_node_id: node.id) }
+      else
+        puts "  Failed to find match for #{names} (option #{pair_opt_id})"
+      end
+    end
+  end
+
   def print_missing_pairs(pairs)
     puts "Some answers/choices refer to options not contained in the expected option set:\n"
 
@@ -103,8 +147,7 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
 
   def print_missing_pairs_for_option_set(opt_set_id, pairs)
     opt_set = OptionSet.find(opt_set_id)
-    puts "-----------------------------------------------------------------------------------------------"
-    puts "Option Set: `#{opt_set.name}`, (#{opt_set.mission&.compact_name || 'admin'}, #{opt_set.id})"
+    print_option_set_title(opt_set)
     puts "  Existing top-level options (up to 10):"
     puts opt_set.first_level_options[0...10].map { |o| "    #{o.name_translations}, (#{o.id})" }.join("\n")
     puts "  Options that were expected but not found:"
@@ -112,6 +155,11 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
       option = Option.find(pair[1])
       puts "    #{option.name_translations}, (#{option.id})"
     end
+  end
+
+  def print_option_set_title(opt_set)
+    puts "-----------------------------------------------------------------------------------------------"
+    puts "Option Set: `#{opt_set.name}`, (#{opt_set.mission&.compact_name || 'admin'}, #{opt_set.id})"
   end
 
   def create_missing_nodes(pairs)
