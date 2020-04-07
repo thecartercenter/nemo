@@ -33,8 +33,8 @@ feature "skip logic form fields", js: true do
       let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} [#{form.c[1].code}] is equal to 10" }
 
       scenario "read-only mode" do
-        expected = "Skip to #{dest_qing_str} if any of these conditions are met "\
-          "#{first_cond_str} "\
+        expected = "Skip to #{dest_qing_str} if any of these conditions are met\n"\
+          "#{first_cond_str}\n"\
           "#{second_cond_str}"
         visit("#{url_prefix}/questionings/#{form.c[2].id}")
         expect(page).to have_content(expected)
@@ -125,8 +125,8 @@ feature "skip logic form fields", js: true do
 
         click_on "Save"
 
-        rule2 = "Skip to #{dest_qing_str} if all of these conditions are met "\
-          "#{first_cond_str} "\
+        rule2 = "Skip to #{dest_qing_str} if all of these conditions are met\n"\
+          "#{first_cond_str}\n"\
           "#{second_cond_str}"
 
         visit("#{url_prefix}/questionings/#{form.c[2].id}")
