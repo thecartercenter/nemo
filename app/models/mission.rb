@@ -56,7 +56,9 @@ class Mission < ApplicationRecord
   scope :sorted_by_name, -> { order(Arel.sql("LOWER(name)")) }
   scope :sorted_recent_first, -> { order(created_at: :desc) }
 
-  delegate(:override_code, :default_locale, to: :setting)
+  clone_options follow: %i[setting]
+
+  delegate :override_code, :default_locale, to: :setting
 
   # Raises ActiveRecord::RecordNotFound if not found.
   def self.with_compact_name(name)

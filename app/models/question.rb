@@ -144,6 +144,8 @@ class Question < ApplicationRecord
              uniqueness: {field: :code, style: :camel_case}, dont_copy: %i[key access_level],
              compatibility: %i[qtype_name option_set_id]
 
+  clone_options follow: %i[option_set taggings]
+
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(num)
     where(key: true).all.sort_by { |q| q.questionings.size }[0...num]

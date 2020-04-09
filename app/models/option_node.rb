@@ -80,6 +80,8 @@ class OptionNode < ApplicationRecord
              # Otherwise they are reusable just like the OptionSet itself.
              dont_reuse: ->(replicator) { replicator.source.is_a?(OptionSet) }
 
+  clone_options follow: %i[option]
+
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :name, :name_translations, :canonical_name, :coordinates?, :latitude, :longitude, to: :option

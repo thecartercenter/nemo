@@ -122,6 +122,8 @@ class User < ApplicationRecord
     length: {minimum: 8, if: :require_password?})
   validates(:password_confirmation, length: {minimum: 8}, if: :require_password?)
 
+  clone_options follow: %i[assignments user_group_assignments]
+
   scope(:by_name, -> { order("users.name") })
   scope :assigned_to, ->(mission) { where(id: Assignment.select(:user_id).where(mission_id: mission.id)) }
   scope :with_only_one_assignment, lambda {

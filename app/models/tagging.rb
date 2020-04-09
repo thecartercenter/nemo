@@ -33,4 +33,6 @@ class Tagging < ApplicationRecord
   delegate :mission_id, to: :question
 
   replicable child_assocs: :tag, backward_assocs: :question
+
+  clone_options follow: %i[tag]
 end

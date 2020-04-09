@@ -30,4 +30,6 @@ class UserGroupAssignment < ApplicationRecord
 
   validates :user, uniqueness: {scope: :user_group}
   validates :user, :user_group, presence: true
+
+  clone_options follow: %i[user_group]
 end

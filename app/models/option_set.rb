@@ -69,6 +69,8 @@ class OptionSet < ApplicationRecord
   replicable child_assocs: :root_node, backwards_assocs: :questions,
              uniqueness: {field: :name, style: :sep_words}
 
+  clone_options follow: %i[option_nodes]
+
   delegate :ranks_changed?, :children, :c, :options_added?, :options_removed?,
     :total_options, :descendants, :all_options, :max_depth, :options_not_serialized, :arrange_as_rows,
     :arrange_with_options, :sorted_children, :first_leaf_option_node,
