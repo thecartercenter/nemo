@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+# Base class for all AR models
 class ApplicationRecord < ActiveRecord::Base
+  acts_as_copy_target
+
   self.abstract_class = true
 
   # dsl-style method for setting clone options
