@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_23_001444) do
+ActiveRecord::Schema.define(version: 2020_04_10_153801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -624,22 +624,18 @@ ActiveRecord::Schema.define(version: 2020_03_23_001444) do
   add_foreign_key "form_items", "questions"
   add_foreign_key "form_versions", "forms"
   add_foreign_key "forms", "form_items", column: "root_id"
-  add_foreign_key "forms", "forms", column: "original_id", on_delete: :nullify
   add_foreign_key "forms", "missions"
   add_foreign_key "media_objects", "answers"
   add_foreign_key "operations", "missions"
   add_foreign_key "operations", "users", column: "creator_id"
   add_foreign_key "option_nodes", "missions"
-  add_foreign_key "option_nodes", "option_nodes", column: "original_id", on_delete: :nullify
   add_foreign_key "option_nodes", "option_sets"
   add_foreign_key "option_nodes", "options"
   add_foreign_key "option_sets", "missions"
   add_foreign_key "option_sets", "option_nodes", column: "root_node_id"
-  add_foreign_key "option_sets", "option_sets", column: "original_id", on_delete: :nullify
   add_foreign_key "options", "missions"
   add_foreign_key "questions", "missions"
   add_foreign_key "questions", "option_sets"
-  add_foreign_key "questions", "questions", column: "original_id", on_delete: :nullify
   add_foreign_key "report_calculations", "questions", column: "question1_id"
   add_foreign_key "report_calculations", "report_reports"
   add_foreign_key "report_option_set_choices", "option_sets"
