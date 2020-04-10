@@ -28,8 +28,8 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/odata_server.git
-  revision: 47423de24b2ea7c209083849c6011bb0d2c2c19f
-  branch: master
+  revision: 751c3abd7950e6a44bb537de2b2dde67b7712d66
+  branch: sassafras
   specs:
     odata_server (0.1.0)
       rails (>= 5.2)

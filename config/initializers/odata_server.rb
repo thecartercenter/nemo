@@ -64,6 +64,5 @@ schema = OData::ActiveRecordSchema::Base.new("NEMO", classes: [Response],
                                                      group_by_form: true,
                                                      transform_json_for_root: transform_json_for_root,
                                                      transform_schema_for_metadata: transform_schema_for_metadata,
-                                                     transform_results_for_resource: nil,
                                                      transform_json_for_resource: transform_json_for_resource)
 OData::Edm::DataServices.schemas << schema
