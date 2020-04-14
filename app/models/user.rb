@@ -44,7 +44,7 @@
 #
 # Foreign Keys
 #
-#  users_last_mission_id_fkey  (last_mission_id => missions.id) ON DELETE => nullify ON UPDATE => restrict
+#  fk_rails_...  (last_mission_id => missions.id) ON DELETE => nullify
 #
 # rubocop:enable Metrics/LineLength
 
@@ -121,6 +121,8 @@ class User < ApplicationRecord
     format: {with: PASSWORD_FORMAT, if: :require_password?, message: :invalid_password},
     length: {minimum: 8, if: :require_password?})
   validates(:password_confirmation, length: {minimum: 8}, if: :require_password?)
+
+  clone_options follow: %i[assignments user_group_assignments]
 
   scope(:by_name, -> { order("users.name") })
   scope :assigned_to, ->(mission) { where(id: Assignment.select(:user_id).where(mission_id: mission.id)) }

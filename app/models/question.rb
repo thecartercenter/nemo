@@ -42,9 +42,9 @@
 #
 # Foreign Keys
 #
-#  questions_mission_id_fkey     (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  questions_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
-#  questions_original_id_fkey    (original_id => questions.id) ON DELETE => nullify ON UPDATE => restrict
+#  fk_rails_...  (mission_id => missions.id)
+#  fk_rails_...  (option_set_id => option_sets.id)
+#  fk_rails_...  (original_id => questions.id) ON DELETE => nullify
 #
 # rubocop:enable Metrics/LineLength
 
@@ -143,6 +143,8 @@ class Question < ApplicationRecord
   replicable child_assocs: %i[option_set taggings], backwards_assocs: :questioning, sync: :code,
              uniqueness: {field: :code, style: :camel_case}, dont_copy: %i[key access_level],
              compatibility: %i[qtype_name option_set_id]
+
+  clone_options follow: %i[option_set taggings]
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(num)

@@ -38,10 +38,10 @@
 #
 # Foreign Keys
 #
-#  report_reports_creator_id_fkey      (creator_id => users.id) ON DELETE => restrict ON UPDATE => restrict
-#  report_reports_disagg_qing_id_fkey  (disagg_qing_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
-#  report_reports_form_id_fkey         (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
-#  report_reports_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...  (creator_id => users.id)
+#  fk_rails_...  (disagg_qing_id => form_items.id)
+#  fk_rails_...  (form_id => forms.id)
+#  fk_rails_...  (mission_id => missions.id)
 #
 # rubocop:enable Metrics/LineLength
 

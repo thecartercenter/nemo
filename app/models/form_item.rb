@@ -41,9 +41,9 @@
 #
 # Foreign Keys
 #
-#  form_items_form_id_fkey      (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
-#  form_items_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  form_items_question_id_fkey  (question_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...  (form_id => forms.id)
+#  fk_rails_...  (mission_id => missions.id)
+#  fk_rails_...  (question_id => questions.id)
 #
 # rubocop:enable Metrics/LineLength
 
@@ -96,6 +96,8 @@ class FormItem < ApplicationRecord
 
   replicable child_assocs: %i[question display_conditions skip_rules constraints children],
              backward_assocs: :form
+
+  clone_options follow: %i[question display_conditions skip_rules constraints]
 
   accepts_nested_attributes_for :display_conditions, allow_destroy: true
   accepts_nested_attributes_for :skip_rules, allow_destroy: true

@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  user_group_assignments_user_group_id_fkey  (user_group_id => user_groups.id) ON DELETE => restrict ON UPDATE => restrict
-#  user_group_assignments_user_id_fkey        (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...  (user_group_id => user_groups.id)
+#  fk_rails_...  (user_id => users.id)
 #
 # rubocop:enable Metrics/LineLength
 

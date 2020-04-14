@@ -45,11 +45,11 @@
 #
 # Foreign Keys
 #
-#  responses_checked_out_by_id_fkey  (checked_out_by_id => users.id) ON DELETE => restrict ON UPDATE => restrict
-#  responses_form_id_fkey            (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
-#  responses_mission_id_fkey         (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  responses_reviewer_id_fkey        (reviewer_id => users.id) ON DELETE => restrict ON UPDATE => restrict
-#  responses_user_id_fkey            (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...  (checked_out_by_id => users.id)
+#  fk_rails_...  (form_id => forms.id)
+#  fk_rails_...  (mission_id => missions.id)
+#  fk_rails_...  (reviewer_id => users.id)
+#  fk_rails_...  (user_id => users.id)
 #
 # rubocop:enable Metrics/LineLength
 

@@ -32,9 +32,9 @@
 #
 # Foreign Keys
 #
-#  forms_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  forms_original_id_fkey  (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
-#  forms_root_id_fkey      (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...  (mission_id => missions.id)
+#  fk_rails_...  (original_id => forms.id) ON DELETE => nullify
+#  fk_rails_...  (root_id => form_items.id)
 #
 # rubocop:enable Metrics/LineLength
 
@@ -59,6 +59,12 @@ class Form < ApplicationRecord
 
   # For some reason dependent: :destroy doesn't work with this assoc. See destroy_items for workaround.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
+
+  # This association is used for cloning only, hence it being private.
+  has_many :form_items
+  private :form_items, :form_items=
+
+  clone_options follow: %i[form_items versions]
 
   before_create :init_downloads
   before_validation :normalize

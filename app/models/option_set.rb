@@ -27,9 +27,9 @@
 #
 # Foreign Keys
 #
-#  option_sets_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  option_sets_option_node_id_fkey  (root_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
-#  option_sets_original_id_fkey     (original_id => option_sets.id) ON DELETE => nullify ON UPDATE => restrict
+#  fk_rails_...  (mission_id => missions.id)
+#  fk_rails_...  (original_id => option_sets.id) ON DELETE => nullify
+#  fk_rails_...  (root_node_id => option_nodes.id)
 #
 # rubocop:enable Metrics/LineLength
 
@@ -68,6 +68,8 @@ class OptionSet < ApplicationRecord
 
   replicable child_assocs: :root_node, backwards_assocs: :questions,
              uniqueness: {field: :name, style: :sep_words}
+
+  clone_options follow: %i[option_nodes]
 
   delegate :ranks_changed?, :children, :c, :options_added?, :options_removed?,
     :total_options, :descendants, :all_options, :max_depth, :options_not_serialized, :arrange_as_rows,

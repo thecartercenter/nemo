@@ -30,10 +30,10 @@
 #
 # Foreign Keys
 #
-#  option_nodes_mission_id_fkey     (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
-#  option_nodes_option_id_fkey      (option_id => options.id) ON DELETE => restrict ON UPDATE => restrict
-#  option_nodes_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
-#  option_nodes_original_id_fkey    (original_id => option_nodes.id) ON DELETE => nullify ON UPDATE => restrict
+#  fk_rails_...  (mission_id => missions.id)
+#  fk_rails_...  (option_id => options.id)
+#  fk_rails_...  (option_set_id => option_sets.id)
+#  fk_rails_...  (original_id => option_nodes.id) ON DELETE => nullify
 #
 # rubocop:enable Metrics/LineLength
 

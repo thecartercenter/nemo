@@ -18,8 +18,8 @@
 #
 # Foreign Keys
 #
-#  taggings_question_id_fkey  (question_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
-#  taggings_tag_id_fkey       (tag_id => tags.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...  (question_id => questions.id)
+#  fk_rails_...  (tag_id => tags.id)
 #
 # rubocop:enable Metrics/LineLength
 
@@ -33,4 +33,6 @@ class Tagging < ApplicationRecord
   delegate :mission_id, to: :question
 
   replicable child_assocs: :tag, backward_assocs: :question
+
+  clone_options follow: %i[tag]
 end
