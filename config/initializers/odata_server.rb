@@ -56,7 +56,7 @@ transform_schema_for_metadata = lambda do |schema|
   SimpleSchema.new
 end
 
-transform_json_for_resource = lambda do |json|
+transform_json_for_resource_feed = lambda do |json|
   json
 end
 
@@ -64,5 +64,5 @@ schema = OData::ActiveRecordSchema::Base.new("NEMO", classes: [Response],
                                                      group_by_form: true,
                                                      transform_json_for_root: transform_json_for_root,
                                                      transform_schema_for_metadata: transform_schema_for_metadata,
-                                                     transform_json_for_resource: transform_json_for_resource)
+                                                     transform_json_for_resource_feed: transform_json_for_resource_feed)
 OData::Edm::DataServices.schemas << schema
