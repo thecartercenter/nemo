@@ -60,9 +60,18 @@ transform_json_for_resource_feed = lambda do |json|
   json
 end
 
-schema = OData::ActiveRecordSchema::Base.new("NEMO", classes: [Response],
-                                                     group_by_form: true,
+schema = OData::ActiveRecordSchema::Base.new("NEMO", skip_require: true,
+                                                     skip_add_entity_types: true,
                                                      transform_json_for_root: transform_json_for_root,
                                                      transform_schema_for_metadata: transform_schema_for_metadata,
                                                      transform_json_for_resource_feed: transform_json_for_resource_feed)
+
+# Manually add our entity types with some extra options.
+# TODO: Clean this up and make more efficient.
+forms = Response.distinct.pluck(:form_id).map { |id| {id: id, name: Form.find(id).name} }
+forms.each do |id:, name:|
+  # TODO: Confirm if suffix shows up in PowerBI
+  schema.add_entity_type(Response, where: {form_id: id}, name: "Responses: #{name}", reflect_on_associations: false)
+end
+
 OData::Edm::DataServices.schemas << schema
