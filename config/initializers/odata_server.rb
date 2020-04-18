@@ -13,11 +13,10 @@ class SimpleEntities
   attr_reader :values
 
   def initialize
-    # All published forms in the missions, regardless of if they have response
+    # TODO: All published forms in the missions, regardless of if they have response
     @values = Response.distinct.pluck(:form_id).map do |id|
       name = Form.find(id).name
-      # Better string
-      SimpleEntity.new("Response#{name}")
+      SimpleEntity.new("Responses: #{name}")
     end
   end
 end
@@ -70,8 +69,14 @@ schema = OData::ActiveRecordSchema::Base.new("NEMO", skip_require: true,
 # TODO: Clean this up and make more efficient.
 forms = Response.distinct.pluck(:form_id).map { |id| {id: id, name: Form.find(id).name} }
 forms.each do |id:, name:|
-  # TODO: Confirm if suffix shows up in PowerBI
-  schema.add_entity_type(Response, where: {form_id: id}, name: "Responses: #{name}", reflect_on_associations: false)
+  name = "Responses: #{name}"
+  entity = schema.add_entity_type(Response, where: {form_id: id},
+                                            name: name,
+                                            reflect_on_associations: false)
+  # We don't want to double-pluralize since it already says "Responses".
+  def entity.plural_name
+    name
+  end
 end
 
 OData::Edm::DataServices.schemas << schema
