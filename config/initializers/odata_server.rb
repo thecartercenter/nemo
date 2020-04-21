@@ -92,4 +92,4 @@ class ODataServer
   end
 end
 
-ODataServer.refresh_schema
+ODataServer.refresh_schema if Settings.odata_api.present? || Rails.env.test?
