@@ -106,5 +106,12 @@ module ELMO
 
     # This is the default. It can be overridden in local_config.rb, which comes later.
     configatron.offline_mode = false
+
+    # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
+    config.to_prepare do
+      Dir.glob(Rails.root.join("app", "overrides", "**", "*_override.rb")).each do |override|
+        require_dependency override
+      end
+    end
   end
 end

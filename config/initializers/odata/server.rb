@@ -55,5 +55,3 @@ module OData
     end
   end
 end
-
-OData::Server.refresh_schema if Settings.odata_api.present? || Rails.env.test?
