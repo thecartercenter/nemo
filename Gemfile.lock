@@ -27,6 +27,14 @@ GIT
       with_advisory_lock (>= 4.0.0)
 
 GIT
+  remote: https://github.com/sassafrastech/odata_server.git
+  revision: 751c3abd7950e6a44bb537de2b2dde67b7712d66
+  branch: sassafras
+  specs:
+    odata_server (0.1.0)
+      rails (>= 5.2)
+
+GIT
   remote: https://github.com/sassafrastech/rack-attack.git
   revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
   specs:
@@ -618,6 +626,7 @@ DEPENDENCIES
   launchy (~> 2.5)
   letter_opener (~> 1.4.1)
   mocha (~> 1.1.0)
+  odata_server!
   paperclip (~> 6.0)
   pg (~> 0.20)
   pg_search (~> 2.1)
