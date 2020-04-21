@@ -23,17 +23,22 @@ shared_context "odata" do
 end
 
 shared_context "odata_with_forms" do
-  before do
-    # TODO: What to do about access_level: private on questions?
-    @form = create(:form, question_types: %w[integer select_one text])
-    create(:form, question_types: %w[text])
+  let(:form) { create(:form, :live, question_types: %w[integer select_one text]) }
+  let(:unpublished_form) { create(:form, question_types: %w[text]) }
+  let(:other_mission) { create(:mission) }
+  let(:other_form) { create(:form, :live, mission: other_mission, question_types: %w[text]) }
 
+  before do
     Timecop.freeze(Time.now - 10.days) do
-      create(:response, form: @form, answer_values: [1, "Dog", "Foo"])
+      create(:response, form: form, answer_values: [1, "Dog", "Foo"])
     end
     Timecop.freeze(Time.now - 5.days) do
-      create(:response, form: @form, answer_values: [2, "Cat", "Bar"])
+      create(:response, form: form, answer_values: [2, "Cat", "Bar"])
     end
-    create(:response, form: @form, answer_values: [3, "Mouse", "Baz"])
+    create(:response, form: form, answer_values: [3, "Dog", "Baz"])
+
+    create(:response, form: unpublished_form, answer_values: ["X"])
+
+    create(:response, mission: other_mission, form: other_form, answer_values: ["X"])
   end
 end

@@ -33,14 +33,13 @@ ODataController.class_eval do
 
   # Manually add our entity types, grouping responses by form.
   def add_entity_types(schema)
-    # TODO: Get all forms, not just those with responses.
-    forms = Response
+    forms = Form
+      .live
       .where(mission: current_mission)
       .distinct
-      .pluck(:form_id)
-      .map { |id| {id: id, name: Form.find(id).name} }
+      .pluck(:id, :name)
 
-    forms.each { |id:, name:| add_form_entity_type(schema, id, name) }
+    forms.each { |id, name| add_form_entity_type(schema, id, name) }
   end
 
   # Add an entity type to the schema for a given form.

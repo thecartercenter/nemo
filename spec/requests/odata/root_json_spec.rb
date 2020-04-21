@@ -23,8 +23,7 @@ describe "root json" do
       expect_output({
         "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}/odata/v1/$metadata?mode=m",
         value: [
-          # TODO: This should eventually include both forms.
-          {name: "Responses: Sample Form 1", kind: "EntitySet", url: "Responses: Sample Form 1"},
+          {name: "Responses: Sample Form 1", kind: "EntitySet", url: "Responses: Sample Form 1"}
         ]
       }.to_json)
     end
