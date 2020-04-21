@@ -47,36 +47,44 @@ class SimpleProperty
   end
 end
 
-transform_json_for_root = lambda do |json|
-  json
-end
+class ODataServer
+  @transform_json_for_root = lambda do |json|
+    json
+  end
 
-transform_schema_for_metadata = lambda do |schema|
-  SimpleSchema.new
-end
+  @transform_schema_for_metadata = lambda do |schema|
+    SimpleSchema.new
+  end
 
-transform_json_for_resource_feed = lambda do |json|
-  json
-end
+  @transform_json_for_resource_feed = lambda do |json|
+    json
+  end
 
-schema = OData::ActiveRecordSchema::Base.new("NEMO", skip_require: true,
-                                                     skip_add_entity_types: true,
-                                                     transform_json_for_root: transform_json_for_root,
-                                                     transform_schema_for_metadata: transform_schema_for_metadata,
-                                                     transform_json_for_resource_feed: transform_json_for_resource_feed)
+  def self.refresh_schema
+    schema = OData::ActiveRecordSchema::Base
+      .new("NEMO", skip_require: true,
+                   skip_add_entity_types: true,
+                   transform_json_for_root: @transform_json_for_root,
+                   transform_schema_for_metadata: @transform_schema_for_metadata,
+                   transform_json_for_resource_feed: @transform_json_for_resource_feed)
 
-# Manually add our entity types with some extra options.
-# TODO: Clean this up and make more efficient.
-forms = Response.distinct.pluck(:form_id).map { |id| {id: id, name: Form.find(id).name} }
-forms.each do |id:, name:|
-  name = "Responses: #{name}"
-  entity = schema.add_entity_type(Response, where: {form_id: id},
-                                            name: name,
-                                            reflect_on_associations: false)
-  # We don't want to double-pluralize since it already says "Responses".
-  def entity.plural_name
-    name
+    # Manually add our entity types with some extra options.
+    # TODO: Clean this up and make more efficient.
+    forms = Response.distinct.pluck(:form_id).map { |id| {id: id, name: Form.find(id).name} }
+    forms.each do |id:, name:|
+      name = "Responses: #{name}"
+      entity = schema.add_entity_type(Response, where: {form_id: id},
+                                      name: name,
+                                      reflect_on_associations: false)
+      # We don't want to double-pluralize since it already says "Responses".
+      def entity.plural_name
+        name
+      end
+    end
+
+    ODataController.data_services.clear_schemas
+    ODataController.data_services.append_schemas([schema])
   end
 end
 
-OData::Edm::DataServices.schemas << schema
+ODataServer.refresh_schema
