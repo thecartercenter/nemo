@@ -3,30 +3,30 @@
 ODataController.class_eval do
   before_action :refresh_schema
 
-  @transform_json_for_root = lambda do |json|
-    json
-  end
-
-  @transform_schema_for_metadata = lambda do |schema|
-    schema
-  end
-
-  @transform_json_for_resource_feed = lambda do |json|
-    json
-  end
-
   def refresh_schema
     schema = OData::ActiveRecordSchema::Base
       .new("NEMO", skip_require: true,
                    skip_add_entity_types: true,
-                   transform_json_for_root: @transform_json_for_root,
-                   transform_schema_for_metadata: @transform_schema_for_metadata,
-                   transform_json_for_resource_feed: @transform_json_for_resource_feed)
+                   transform_json_for_root: ->(*args) { transform_json_for_root(*args) },
+                   transform_schema_for_metadata: ->(*args) { transform_schema_for_metadata(*args) },
+                   transform_json_for_resource_feed: ->(*args) { transform_json_for_resource_feed(*args) })
 
     add_entity_types(schema)
 
     ODataController.data_services.clear_schemas
     ODataController.data_services.append_schemas([schema])
+  end
+
+  def transform_json_for_root(json)
+    json
+  end
+
+  def transform_schema_for_metadata(schema)
+    schema
+  end
+
+  def transform_json_for_resource_feed(json)
+    json
   end
 
   # Manually add our entity types, grouping responses by form.

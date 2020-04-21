@@ -107,6 +107,7 @@ module ELMO
     # This is the default. It can be overridden in local_config.rb, which comes later.
     configatron.offline_mode = false
 
+    # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
     config.to_prepare do
       Dir.glob(Rails.root.join("app", "overrides", "**", "*_override.rb")).each do |override|
