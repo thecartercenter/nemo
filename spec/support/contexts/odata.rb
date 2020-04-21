@@ -8,7 +8,6 @@ shared_context "odata" do
 
   before do
     Timecop.freeze("2020-01-01T12:00Z")
-    OData::Server.refresh_schema
   end
 
   after do
@@ -36,7 +35,5 @@ shared_context "odata_with_forms" do
       create(:response, form: @form, answer_values: [2, "Cat", "Bar"])
     end
     create(:response, form: @form, answer_values: [3, "Mouse", "Baz"])
-
-    OData::Server.refresh_schema
   end
 end
