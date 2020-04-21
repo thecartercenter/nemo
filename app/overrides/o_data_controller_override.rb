@@ -3,6 +3,8 @@
 ODataController.class_eval do
   before_action :refresh_schema
 
+  # The odata engine expects a static schema, but our schema may change
+  # whenever forms are updated and also depending on the current mission context.
   def refresh_schema
     schema = OData::ActiveRecordSchema::Base
       .new("NEMO", skip_require: true,
@@ -31,8 +33,9 @@ ODataController.class_eval do
 
   # Manually add our entity types, grouping responses by form.
   def add_entity_types(schema)
-    # TODO: Scope to current mission
+    # TODO: Get all forms, not just those with responses.
     forms = Response
+      .where(mission: current_mission)
       .distinct
       .pluck(:form_id)
       .map { |id| {id: id, name: Form.find(id).name} }
