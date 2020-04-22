@@ -41,5 +41,18 @@ module Results
         choices_by_option_node[node] || choices.build(option_node: node, checked: false)
       end
     end
+
+    # Returns an array of hashes of form {latitude: x, longitude: y} for the answer (select one, location)
+    # or any choices with coordinates (select multiple).
+    def latlngs
+      case qtype_name
+      when "select_one", "location"
+        [{latitude: latitude, longitude: longitude}]
+      when "select_multiple"
+        choices.select(&:coordinates?).map { |c| {latitude: c.latitude, longitude: c.longitude} }
+      else
+        []
+      end
+    end
   end
 end

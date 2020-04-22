@@ -19,7 +19,7 @@ feature "response form read only mode", js: true do
     let(:answer_values) { %w[foo 123] }
 
     it "renders" do
-      visit response_path(response, params)
+      visit(response_path(response, params))
 
       expect(page).to have_css("a", text: user.name)
       expect_read_only_value([0], "foo")
@@ -32,7 +32,7 @@ feature "response form read only mode", js: true do
     let(:answer_values) { %w[] }
 
     it "renders" do
-      visit response_path(response, params)
+      visit(response_path(response, params))
       expect(page).to have_css("a", text: user.name)
     end
   end
@@ -78,7 +78,7 @@ feature "response form read only mode", js: true do
     end
 
     it "renders" do
-      visit response_path(response, params)
+      visit(response_path(response, params))
 
       expect_read_only_value([0, 0], "123")
       expect_image([1], form.root_group.c[1].id)
@@ -88,6 +88,23 @@ feature "response form read only mode", js: true do
       expect_read_only_value([3, 0, 1, 0], "456")
       expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
       expect_read_only_value([3, 0, 3], "testing Hi")
+    end
+  end
+
+  context "with answer map" do
+    let(:question_types) { %w[select_one select_multiple location] }
+    let(:answer_values) { ["Cat", %w[Cat Dog], "30.1 30.2"] }
+
+    before do
+      [0, 1].each do |idx|
+        form.c[idx].option_set.c[0].option.update!(latitude: 30, longitude: 30)
+        form.c[idx].option_set.c[1].option.update!(latitude: 31, longitude: 31)
+      end
+    end
+
+    it "renders map properly" do
+      visit(response_path(response, params))
+      expect(page).to have_css(".gm-style", count: 3) # Should be inserted by GMaps on successful render.
     end
   end
 end
