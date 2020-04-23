@@ -88,10 +88,17 @@
         display: flex;
         flex-direction: row;
 
+        // Inline hints generally have something in front of them,
+        // e.g. an inline checkbox or inline text value.
         input {
           margin-right: 10px;
           // Checkbox gets aligned differently with `display: flex`.
           margin-top: 2px;
+        }
+
+        .ro-val {
+          color: $main-text-color;
+          margin-right: 10px;
         }
       }
     }
