@@ -30,8 +30,8 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     json
   end
 
-  def transform_schema_for_metadata(schema)
-    schema
+  def transform_schema_for_metadata(_schema)
+    OData::SimpleSchema.new
   end
 
   def transform_json_for_resource_feed(json)
