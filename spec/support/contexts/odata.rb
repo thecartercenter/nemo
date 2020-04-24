@@ -37,6 +37,6 @@ shared_context "odata_with_forms" do
     end
     create(:response, form: @form, answer_values: [3, "Mouse", "Baz"])
 
-    ODataServer.refresh_schema
+    OData::Server.refresh_schema
   end
 end
