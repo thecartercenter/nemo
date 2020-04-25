@@ -10,7 +10,7 @@ describe "root json" do
   context "with no forms" do
     it "renders as expected" do
       expect_output({
-        "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}/odata/v1/$metadata?mode=m",
+        "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}/odata/v1/$metadata",
         value: []
       }.to_json)
     end
@@ -21,7 +21,7 @@ describe "root json" do
 
     it "renders as expected" do
       expect_output({
-        "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}/odata/v1/$metadata?mode=m",
+        "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}/odata/v1/$metadata",
         value: [
           {name: "Responses: Sample Form 1", kind: "EntitySet", url: "Responses: Sample Form 1"},
           {name: "Responses: Sample Form 2", kind: "EntitySet", url: "Responses: Sample Form 2"}
