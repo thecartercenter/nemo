@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-ODataController.class_eval do
+# Here we re-open odata_server's main controller
+# to add NEMO things like before_action.
+ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   before_action :refresh_schema
 
   # The odata engine expects a static schema, but our schema may change
