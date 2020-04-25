@@ -20,11 +20,13 @@ describe "root json" do
     include_context "odata_with_forms"
 
     it "renders as expected" do
+      entity_1_name = "Responses: #{form.name}"
+      entity_2_name = "Responses: #{form_with_no_responses.name}"
       expect_output({
         "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}/odata/v1/$metadata",
         value: [
-          {name: "Responses: Sample Form 1", kind: "EntitySet", url: "Responses: Sample Form 1"},
-          {name: "Responses: Sample Form 2", kind: "EntitySet", url: "Responses: Sample Form 2"}
+          {name: entity_1_name, kind: "EntitySet", url: entity_1_name},
+          {name: entity_2_name, kind: "EntitySet", url: entity_2_name}
         ]
       }.to_json)
     end
