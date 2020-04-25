@@ -11,9 +11,11 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     schema = OData::ActiveRecordSchema::Base
       .new("NEMO", skip_require: true,
                    skip_add_entity_types: true,
-                   transform_json_for_root: ->(*args) { transform_json_for_root(*args) },
-                   transform_schema_for_metadata: ->(*args) { transform_schema_for_metadata(*args) },
-                   transform_json_for_resource_feed: ->(*args) { transform_json_for_resource_feed(*args) })
+                   transformers: {
+                     root: ->(*args) { transform_json_for_root(*args) },
+                     metadata: ->(*args) { transform_schema_for_metadata(*args) },
+                     feed: ->(*args) { transform_json_for_resource_feed(*args) }
+                   })
 
     add_entity_types(schema)
 
@@ -39,6 +41,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
       .live
       .where(mission: current_mission)
       .distinct
+      .order(:name)
       .pluck(:id, :name)
 
     forms.each { |id, name| add_form_entity_type(schema, id, name) }
