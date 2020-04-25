@@ -23,7 +23,8 @@ shared_context "odata" do
 end
 
 shared_context "odata_with_forms" do
-  let(:form) { create(:form, :live, question_types: %w[integer select_one text]) }
+  let!(:form) { create(:form, :live, question_types: %w[integer select_one text]) }
+  let!(:form_with_no_responses) { create(:form, :live, question_types: %w[text]) }
   let(:unpublished_form) { create(:form, question_types: %w[text]) }
   let(:other_mission) { create(:mission) }
   let(:other_form) { create(:form, :live, mission: other_mission, question_types: %w[text]) }
