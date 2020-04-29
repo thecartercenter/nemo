@@ -4,9 +4,9 @@ module OData
   class SimpleSchema
     attr_reader :namespace, :entity_types
 
-    def initialize
+    def initialize(distinct_forms)
       @namespace = "NEMO"
-      @entity_types = SimpleEntities.new
+      @entity_types = SimpleEntities.new(distinct_forms)
     end
   end
 end
