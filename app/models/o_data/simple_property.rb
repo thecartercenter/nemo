@@ -4,7 +4,8 @@ module OData
   class SimpleProperty
     attr_reader :name, :return_type
 
-    def initialize(name)
+    # Name is only needed for key_property.
+    def initialize(name: "")
       @name = name
       @return_type = :text
     end
