@@ -5,19 +5,21 @@
 ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   before_action :refresh_schema
 
+  NAMESPACE = "NEMO"
+
   private
 
   # The odata engine expects a static schema, but our schema may change
   # whenever forms are updated and also depending on the current mission context.
   def refresh_schema
     schema = OData::ActiveRecordSchema::Base
-      .new("NEMO", skip_require: true,
-                   skip_add_entity_types: true,
-                   transformers: {
-                     root: ->(*args) { transform_json_for_root(*args) },
-                     metadata: ->(*args) { transform_schema_for_metadata(*args) },
-                     feed: ->(*args) { transform_json_for_resource_feed(*args) }
-                   })
+      .new(NAMESPACE, skip_require: true,
+                      skip_add_entity_types: true,
+                      transformers: {
+                        root: ->(*args) { transform_json_for_root(*args) },
+                        metadata: ->(*args) { transform_schema_for_metadata(*args) },
+                        feed: ->(*args) { transform_json_for_resource_feed(*args) }
+                      })
 
     add_entity_types(schema, distinct_forms)
 
