@@ -7,11 +7,11 @@ module OData
 
     # Property types are defined in odata_server's
     # `Property.column_adapter_return_types` static variable.
-    def initialize(name, key_name: "ID", property_types: {}, extra_tags: {})
+    def initialize(name, key_name: nil, property_types: {}, extra_tags: {})
       @name = name
       @plural_name = name
       @qualified_name = name
-      @key_property = SimpleProperty.new(name: key_name)
+      @key_property = key_name ? SimpleProperty.new(name: key_name) : nil
       @properties = property_types.transform_values { |type| SimpleProperty.new(return_type: type) }
       @navigation_properties = []
       @extra_tags = extra_tags
