@@ -5,9 +5,9 @@ module OData
     attr_reader :name, :return_type
 
     # Name is only needed for key_property.
-    def initialize(name: "")
+    def initialize(name: "", return_type: :text)
       @name = name
-      @return_type = :text
+      @return_type = OData::ActiveRecordSchema::Property.column_adapter_return_types[return_type]
     end
 
     def nullable?
