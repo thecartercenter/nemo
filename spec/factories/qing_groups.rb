@@ -53,8 +53,8 @@ FactoryGirl.define do
     parent { form.root_group }
     type "QingGroup"
     mission { form.mission }
-    group_name "group"
-    group_hint "hint"
+    sequence(:group_name) { |i| "Group #{i}" }
+    sequence(:group_hint) { |i| "Group Hint #{i}" }
     one_screen true
   end
 end
