@@ -53,6 +53,11 @@ class ResponseNode < ApplicationRecord
   belongs_to :form_item, inverse_of: :response_nodes, foreign_key: "questioning_id"
   belongs_to :response
 
+  # Used only for Answer, but included here for eager loading.
+  belongs_to :option_node, inverse_of: :answers
+  has_many :choices, -> { order(:created_at) }, foreign_key: :answer_id, dependent: :destroy,
+                                                inverse_of: :answer, autosave: true
+
   # We don't use the advisory lock for now because it slows down concurrent inserts a lot and doesn't
   # seem necessary since we don't do a lot of concurrent edits.
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true,
