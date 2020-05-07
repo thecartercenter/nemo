@@ -41,6 +41,8 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   end
 
   def transform_json_for_resource_feed(json)
+    # TODO: Use Tom's code here
+    json[:value] = []
     json
   end
 
