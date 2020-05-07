@@ -41,8 +41,11 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   end
 
   def transform_json_for_resource_feed(json)
-    # TODO: Use Tom's code here
-    json[:value] = []
+    json[:value] = json[:value].map do |response|
+      response_id = response["Id"]
+      response = Response.find(response_id)
+      Results::ResponseJsonGenerator.new(response).as_json
+    end
     json
   end
 
