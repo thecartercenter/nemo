@@ -26,14 +26,22 @@ module Results
 
     delegate :form, :user, to: :response
 
+    # Adds data for the given node to the given object. Object may be an array or hash.
     def add_answers(node, object)
       node.children.each do |child_node|
         if child_node.is_a?(Answer)
           object[child_node.question_code] = value_for(child_node)
         elsif child_node.is_a?(AnswerSet)
           object[child_node.question_code] = answer_set_value(child_node)
-        elsif child_node.is_a?(AnswerGroup) && !child_node.repeatable?
-          add_answers(child_node, object[child_node.group_name.gsub(/[^a-z0-9]/i, "")] = {})
+        elsif child_node.is_a?(AnswerGroup)
+          if child_node.repeatable?
+            object << (item = {})
+            add_answers(child_node, item)
+          else
+            add_answers(child_node, object[group_key(child_node)] = {})
+          end
+        elsif child_node.is_a?(AnswerGroupSet)
+          add_answers(child_node, object[group_key(child_node)] = [])
         end
       end
     end
@@ -59,6 +67,10 @@ module Results
       when "location" then answer.attributes.slice(*%w[latitude longitude altitude accuracy])
       else answer.value.presence
       end
+    end
+
+    def group_key(group)
+      group.group_name.gsub(/[^a-z0-9]/i, "")
     end
   end
 end

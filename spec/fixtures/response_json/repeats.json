@@ -1,0 +1,53 @@
+{
+  "ResponseID": "*id1*",
+  "ResponseShortcode": "*shortcode1*",
+  "FormName": "Sample Form 1",
+  "ResponseSubmitterName": "A User 1",
+  "ResponseSubmitDate": "2020-04-20T06:30:00-06:00",
+  "ResponseReviewed": true,
+  "IntegerQ1": 1,
+  "Fruit": [
+    {
+      "TextQ2": "Apple",
+      "IntegerQ3": 1,
+      "SelectMultipleQ4": [
+        "Cat",
+        "Dog"
+      ],
+      "Slice": [
+        {
+          "DecimalQ5": 1.65
+        },
+        {
+          "DecimalQ5": 1.3
+        }
+      ]
+    },
+    {
+      "TextQ2": "Banana",
+      "IntegerQ3": 2,
+      "SelectMultipleQ4": [
+        "Cat"
+      ],
+      "Slice": [
+        {
+          "DecimalQ5": 1.27
+        },
+        {
+          "DecimalQ5": 1.77
+        }
+      ]
+    }
+  ],
+  "IntegerQ6": 2,
+  "Vegetable": [
+    {
+      "TextQ7": "Asparagus",
+      "SelectOneQ8": {
+        "Country": "Ghana",
+        "City": "Accra"
+      },
+      "IntegerQ9": 3
+    }
+  ]
+}

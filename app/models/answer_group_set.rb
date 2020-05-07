@@ -49,6 +49,7 @@
 # Its children are AnswerGroups.
 class AnswerGroupSet < ResponseNode
   alias qing_group form_item
+  delegate :group_name, :group_hint, to: :form_item
 
   def name
     qing_group.group_name
