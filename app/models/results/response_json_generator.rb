@@ -33,7 +33,7 @@ module Results
         elsif child_node.is_a?(AnswerSet)
           object[child_node.question_code] = answer_set_value(child_node)
         elsif child_node.is_a?(AnswerGroup) && !child_node.repeatable?
-          add_answers(child_node, object)
+          add_answers(child_node, object[child_node.group_name.gsub(/[^a-z0-9]/i, "")] = {})
         end
       end
     end

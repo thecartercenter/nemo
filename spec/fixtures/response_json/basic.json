@@ -20,8 +20,10 @@
     "accuracy": null
   },
   "SelectOneQ7": "Cat",
-  "SelectOneQ8": "Dog",
-  "SelectOneQ9": "Cat",
+  "Group1": {
+    "SelectOneQ8": "Dog",
+    "SelectOneQ9": "Cat"
+  },
   "SelectMultipleQ10": [
     "Cat",
     "Dog"
