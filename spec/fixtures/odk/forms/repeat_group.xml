@@ -35,10 +35,10 @@
             <value>Hi’ "<output value="/data/*itemcode1*/*itemcode2*"/>"</value>
           </text>
           <text id="*itemcode5*:label">
-            <value>Group Name</value>
+            <value>Group 2</value>
           </text>
           <text id="*itemcode5*:hint">
-            <value>Group Hint</value>
+            <value>Group Hint 2</value>
           </text>
           <text id="*itemcode8*:label">
             <value>Grp2</value>
