@@ -16,17 +16,17 @@ describe "root json" do
     end
   end
 
-  context "with several forms" do
+  context "with basic forms" do
     include_context "odata_with_basic_forms"
 
     it "renders as expected" do
-      entity_1_name = "Responses: #{form.name}"
-      entity_2_name = "Responses: #{form_with_no_responses.name}"
+      names = ["Responses: #{form.name}", "Responses: #{form_with_no_responses.name}"]
+      urls = %W[Responses-#{form.id} Responses-#{form_with_no_responses.id}]
       expect_output({
         "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}/odata/v1/$metadata",
         value: [
-          {name: entity_1_name, kind: "EntitySet", url: entity_1_name},
-          {name: entity_2_name, kind: "EntitySet", url: entity_2_name}
+          {name: names[0], kind: "EntitySet", url: urls[0]},
+          {name: names[1], kind: "EntitySet", url: urls[1]}
         ]
       }.to_json)
     end
