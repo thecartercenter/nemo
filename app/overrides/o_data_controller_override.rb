@@ -3,11 +3,13 @@
 # Here we re-open odata_server's main controller
 # to add NEMO things like before_action.
 ODataController.class_eval do # rubocop:disable Metrics/BlockLength
-  before_action :refresh_schema
-
   NAMESPACE = "NEMO"
 
   private
+
+  def before_action
+    refresh_schema
+  end
 
   # The odata engine expects a static schema, but our schema may change
   # whenever forms are updated and also depending on the current mission context.
