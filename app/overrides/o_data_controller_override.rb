@@ -62,6 +62,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     name = "Responses: #{name}"
     entity = schema.add_entity_type(Response, where: {form_id: id},
                                               name: name,
+                                              url_name: "Responses-#{id}",
                                               reflect_on_associations: false)
 
     # We don't want to double-pluralize since it already says "Responses",
