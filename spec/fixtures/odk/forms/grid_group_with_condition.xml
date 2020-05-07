@@ -17,10 +17,10 @@
       <itext>
         <translation lang="English">
           <text id="*itemcode2*:label">
-            <value>Group Name</value>
+            <value>Group 1</value>
           </text>
           <text id="*itemcode2*:hint">
-            <value>Group Hint</value>
+            <value>Group Hint 1</value>
           </text>
           <text id="*itemcode1*:label">
             <value>Text Question Title 1</value>

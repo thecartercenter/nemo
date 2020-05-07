@@ -108,21 +108,12 @@ def build_item(item, form, parent, evaluator)
   if item.is_a?(Hash) && item.key?(:repeating)
     item = item[:repeating]
     item = {items: item} if item.is_a?(Array)
-    group = create(:qing_group,
-      parent: parent,
-      form: form,
-      # Group name is required, but may not be defined on `item`.
-      group_name_en: item[:name] || "Group #{rand(100_000)}",
-      group_hint_en: item[:name],
-      group_item_name: item[:item_name],
-      repeatable: true)
+    attribs = {parent: parent, form: form, group_item_name: item[:item_name], repeatable: true}
+    attribs[:group_name_en] = attribs[:group_hint_en] = item[:name] if item[:name].present?
+    group = create(:qing_group, attribs)
     item[:items].each { |c| build_item(c, form, group, evaluator) }
   elsif item.is_a?(Array)
-    group = create(:qing_group,
-      parent: parent,
-      form: form,
-      group_name_en: "Group Name",
-      group_hint_en: "Group Hint")
+    group = create(:qing_group, parent: parent, form: form)
     item.each { |q| build_item(q, form, group, evaluator) }
   else # must be a questioning
     create_questioning(item, form, parent: parent, evaluator: evaluator)
