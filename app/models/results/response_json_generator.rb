@@ -3,6 +3,8 @@
 module Results
   # Generates cached JSON for a given response.
   class ResponseJsonGenerator
+    include ActionView::Helpers::TextHelper
+
     attr_accessor :response
 
     def initialize(response)
@@ -50,9 +52,9 @@ module Results
       set = {}
       answer_set.children.each do |answer|
         option_node = answer.option_node
-        set[option_node.level_name] = answer.option_name
+        set[option_node.level_name] = answer.option_name if option_node
       end
-      set
+      set.to_s
     end
 
     def value_for(answer)
@@ -63,9 +65,13 @@ module Results
       when "integer", "counter" then answer.value&.to_i
       when "decimal" then answer.value&.to_f
       when "select_one" then answer.option_name
-      when "select_multiple" then answer.choices.empty? ? nil : answer.choices.map(&:option_name).sort
-      when "location" then answer.attributes.slice(*%w[latitude longitude altitude accuracy])
-      else answer.value.presence
+      when "select_multiple" then answer.choices.empty? ? nil : answer.choices.map(&:option_name).sort.to_s
+      when "location" then answer.attributes.slice(*%w[latitude longitude altitude accuracy]).to_s
+      else
+        value = answer.value.presence
+        # TODO: Is this parsing something we want to do? Is there already a conventional way?
+        #   Output is SUPER GROSS without it because of copy/paste from MS Word.
+        value&.match(/\A<!--/) ? simple_format(value) : value.to_s
       end
     end
 
