@@ -62,6 +62,10 @@ class AnswerSet < ResponseNode
     answers.any?(&:invalid?)
   end
 
+  def question_code
+    questioning.code
+  end
+
   private
 
   # Returns the non-nil answer with the lowest rank. May return nil if the set is blank.
