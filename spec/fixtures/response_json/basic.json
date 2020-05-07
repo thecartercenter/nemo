@@ -1,0 +1,32 @@
+{
+  "ResponseID": "*id1*",
+  "ResponseShortcode": "*shortcode1*",
+  "FormName": "Sample Form 1",
+  "ResponseSubmitterName": "A User 1",
+  "ResponseSubmitDate": "2020-04-20T06:30:00-06:00",
+  "ResponseReviewed": false,
+  "TextQ1": "foo✓",
+  "SelectOneQ2": {
+    "Country": "Canada",
+    "City": "Calgary"
+  },
+  "LongTextQ3": "alpha",
+  "IntegerQ4": 100,
+  "DecimalQ5": -123.5,
+  "LocationQ6": {
+    "latitude": "15.937378",
+    "longitude": "44.36453",
+    "altitude": null,
+    "accuracy": null
+  },
+  "SelectOneQ7": "Cat",
+  "SelectOneQ8": "Dog",
+  "SelectOneQ9": "Cat",
+  "SelectMultipleQ10": [
+    "Cat",
+    "Dog"
+  ],
+  "DatetimeQ11": "2015-10-12T12:15:12-06:00",
+  "DateQ12": "2014-11-09",
+  "TimeQ13": "23:15:00"
+}

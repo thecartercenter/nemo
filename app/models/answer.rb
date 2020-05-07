@@ -60,9 +60,7 @@ class Answer < ResponseNode
   attr_accessor :location_values_replicated
   alias questioning form_item
 
-  belongs_to :option_node, inverse_of: :answers
   belongs_to :response, inverse_of: :answers, touch: true
-  has_many :choices, -> { order(:created_at) }, dependent: :destroy, inverse_of: :answer, autosave: true
   has_one :media_object, dependent: :destroy, inverse_of: :answer, autosave: true, class_name: "Media::Object"
 
   before_validation :replicate_location_values
@@ -85,7 +83,7 @@ class Answer < ResponseNode
   delegate :question, :qtype, :qtype_name, :required?, :visible?, :enabled?, :multimedia?,
     :option_set, :option_set_id, :options, :first_level_option_nodes, :condition,
     :parent_group_name, to: :questioning
-  delegate :name, to: :question, prefix: true
+  delegate :name, :code, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :name, to: :option_node, prefix: true, allow_nil: true
   delegate :mission, to: :response

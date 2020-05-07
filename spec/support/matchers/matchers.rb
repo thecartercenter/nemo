@@ -2,6 +2,23 @@
 
 require "rspec/expectations"
 
+# Generates a diff failure message with adjusted actual and/or expected values instead of the ones
+# passed to the matcher.
+def diff_with_adjusted_actual_expected(actual, expected)
+  message = <<~TEXT.strip
+    expected: #{expected.inspect}
+    got: #{actual.inspect}
+  TEXT
+
+  diff = RSpec::Expectations.differ.diff(actual, expected)
+
+  unless diff.strip.empty?
+    diff_label = RSpec::Matchers::ExpectedsForMultipleDiffs::DEFAULT_DIFF_LABEL
+    message << "\n\n" << diff_label << diff
+  end
+  message
+end
+
 RSpec::Matchers.define(:end_with) do |expected|
   match do |actual|
     actual[-expected.size..-1] == expected
@@ -99,30 +116,23 @@ RSpec::Matchers.define(:match_words) do |expected|
   expected = expected.to_s
 
   match do |actual|
-    actual = actual.to_s
-    actual.strip.gsub(/[[:blank:]]+/, "").gsub(/\n+/, "") == expected.strip.gsub(/[[:blank:]]+/, "")
+    actual.to_s.strip.gsub(/[[:blank:]]+/, "").gsub(/\n+/, "") == expected.strip.gsub(/[[:blank:]]+/, "")
       .gsub(/\n+/, "")
   end
 
   failure_message do |actual|
-    actual = actual.to_s
-    actual_normalized = actual.strip.gsub(/^\s+/, "")
-      .gsub(/[[:blank:]]+/, "\s").gsub(/\n+/, "").gsub(/\s+$/, "")
-    expected_normalized = expected.strip.gsub(/^\s+/, "")
-      .gsub(/[[:blank:]]+/, "\s").gsub(/\n+/, "").gsub(/\s+$/, "")
+    actual = actual.to_s.strip.gsub(/^\s+/, "").gsub(/[[:blank:]]+/, "\s").gsub(/\n+/, "").gsub(/\s+$/, "")
+    expected = expected.strip.gsub(/^\s+/, "").gsub(/[[:blank:]]+/, "\s").gsub(/\n+/, "").gsub(/\s+$/, "")
+    diff_with_adjusted_actual_expected(actual, expected)
+  end
+end
 
-    message = <<~TEXT.strip
-      expected: #{expected_normalized.inspect}
-      got: #{actual_normalized.inspect}
-    TEXT
+RSpec::Matchers.define(:match_json) do |expected|
+  match do |actual|
+    JSON.pretty_generate(actual).strip == expected.strip
+  end
 
-    diff = RSpec::Expectations.differ.diff(actual_normalized, expected_normalized)
-
-    unless diff.strip.empty?
-      diff_label = RSpec::Matchers::ExpectedsForMultipleDiffs::DEFAULT_DIFF_LABEL
-      message << "\n\n" << diff_label << diff
-    end
-
-    message
+  failure_message do |actual|
+    diff_with_adjusted_actual_expected(JSON.pretty_generate(actual).strip, expected.strip)
   end
 end
