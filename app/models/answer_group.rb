@@ -49,7 +49,7 @@
 # Its children can be Answers, AnswerSets, AnswerGroups, or AnswerGroupSets.
 class AnswerGroup < ResponseNode
   alias qing_group form_item
-  delegate :group_hint, to: :form_item
+  delegate :group_name, :group_hint, to: :form_item
 
   def repeatable?
     parent.is_a?(AnswerGroupSet)
