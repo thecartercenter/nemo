@@ -31,9 +31,11 @@ module OData
       property_types = parent.c.map do |c|
         if c.is_a?(QingGroup)
           repeat_number += 1
-          name = get_repeat_name(root_name, repeat_number, parent_name)
-          add_children(parent: c, parent_name: name, children: children)
-          [c.group_name, "Collection(#{ODataController::NAMESPACE}.#{name})"]
+          entity_name = get_entity_name(root_name, repeat_number, parent_name)
+          add_children(parent: c, parent_name: entity_name, children: children)
+          child_name = "#{ODataController::NAMESPACE}.#{entity_name}"
+          child_type = c.repeatable? ? "Collection(#{child_name})" : child_name
+          [c.group_name, child_type]
         else
           [c.name, c.qtype.odata_type.to_sym]
         end
@@ -43,8 +45,8 @@ module OData
                                                   property_types: property_types))
     end
 
-    # Return the OData EntityType name for a repeat group based on its nesting.
-    def get_repeat_name(root_name, repeat_number, parent_name)
+    # Return the OData EntityType name for a group based on its nesting.
+    def get_entity_name(root_name, repeat_number, parent_name)
       if root_name
         # The first level of repeats starts with the word "Repeat"
         "Repeat.#{root_name}.R#{repeat_number}"
