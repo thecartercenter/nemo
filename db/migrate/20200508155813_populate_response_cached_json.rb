@@ -10,7 +10,11 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
     mission_ids = %w[sandbox haitimalaria riverblindnessnigeria2017].map do |compact_name|
       Mission.find_by(compact_name: compact_name).id
     end
-    responses = Response.where(mission_id: mission_ids)
+    # form_ids = Form.live.distinct(:id).pluck(:id)
+    form_ids = Form.live.distinct(:id).map do |form|
+      form.id if form.name.match?(/CDDAtt/i)
+    end.compact
+    responses = Response.where(mission_id: mission_ids, form_id: form_ids)
     remaining_responses = ENV["FORCE_REDO"] ? responses : responses.where(cached_json: nil)
 
     cache_responses(remaining_responses)
