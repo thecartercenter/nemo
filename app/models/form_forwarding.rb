@@ -20,7 +20,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (form_id => forms.id)
+#  form_forwardings_form_id_fkey  (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 

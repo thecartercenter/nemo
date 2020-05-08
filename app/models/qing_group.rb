@@ -41,9 +41,9 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (form_id => forms.id)
-#  fk_rails_...  (mission_id => missions.id)
-#  fk_rails_...  (question_id => questions.id)
+#  form_items_form_id_fkey      (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
+#  form_items_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  form_items_question_id_fkey  (question_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 

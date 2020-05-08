@@ -21,7 +21,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (answer_id => answers.id)
+#  media_objects_answer_id_fkey  (answer_id => answers.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 

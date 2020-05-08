@@ -19,7 +19,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (user_id => users.id)
+#  whitelistings_user_id_fkey  (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 
