@@ -45,17 +45,17 @@ module OData
     end
 
     def child_qing_group(child, group_number:, parent_name:, root_name:, children:)
-      entity_name = entity_name_for(root_name, group_number, parent_name)
+      entity_name = entity_name_for(root_name, group_number, parent_name).vanilla
       build_nested_children(parent: child, parent_name: entity_name, children: children)
       child_name = "#{SimpleSchema::NAMESPACE}.#{entity_name}"
       child_type = child.repeatable? ? "Collection(#{child_name})" : child_name
       # TODO: Remove `(group_number)` once we use unique group_code in an upcoming commit.
-      ["#{child.group_name} (#{group_number})", child_type]
+      ["#{child.code.vanilla} (#{group_number})", child_type]
     end
 
     def child_qing(child)
       qtype = OData::QuestionType.new(child.qtype)
-      [child.name, qtype.odata_type]
+      [child.code.vanilla, qtype.odata_type]
     end
 
     # Return the OData EntityType name for a group based on its nesting.
