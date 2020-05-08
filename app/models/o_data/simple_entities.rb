@@ -31,13 +31,13 @@ module OData
       property_types = parent.c.map do |c|
         if c.is_a?(QingGroup)
           group_number += 1
-          entity_name = get_entity_name(root_name, group_number, parent_name)
+          entity_name = get_entity_name(root_name, group_number, parent_name).vanilla
           add_children(parent: c, parent_name: entity_name, children: children)
           child_name = "#{ODataController::NAMESPACE}.#{entity_name}"
           child_type = c.repeatable? ? "Collection(#{child_name})" : child_name
-          [c.group_name, child_type]
+          [c.code.vanilla, child_type]
         else
-          [c.name, c.qtype.odata_type.to_sym]
+          [c.code.vanilla, c.qtype.odata_type.to_sym]
         end
       end.to_h
 
