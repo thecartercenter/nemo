@@ -76,7 +76,7 @@ module Results
     end
 
     def group_key(group)
-      group.group_name.gsub(/[^a-z0-9]/i, "")
+      group.group_name.vanilla
     end
   end
 end
