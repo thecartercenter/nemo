@@ -24,7 +24,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (mission_id => missions.id)
+#  broadcasts_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 

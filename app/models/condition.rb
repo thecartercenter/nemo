@@ -28,10 +28,10 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (left_qing_id => form_items.id)
-#  fk_rails_...  (mission_id => missions.id)
-#  fk_rails_...  (option_node_id => option_nodes.id)
-#  fk_rails_...  (right_qing_id => form_items.id)
+#  conditions_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  conditions_option_node_id_fkey  (option_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...                    (left_qing_id => form_items.id)
+#  fk_rails_...                    (right_qing_id => form_items.id)
 #
 # rubocop:enable Metrics/LineLength
 

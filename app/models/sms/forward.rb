@@ -35,10 +35,10 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (broadcast_id => broadcasts.id)
-#  fk_rails_...  (mission_id => missions.id)
-#  fk_rails_...  (reply_to_id => sms_messages.id)
-#  fk_rails_...  (user_id => users.id)
+#  sms_messages_broadcast_id_fkey  (broadcast_id => broadcasts.id) ON DELETE => restrict ON UPDATE => restrict
+#  sms_messages_mission_id_fkey    (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  sms_messages_reply_to_id_fkey   (reply_to_id => sms_messages.id) ON DELETE => restrict ON UPDATE => restrict
+#  sms_messages_user_id_fkey       (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 

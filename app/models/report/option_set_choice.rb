@@ -17,8 +17,8 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (option_set_id => option_sets.id)
-#  fk_rails_...  (report_report_id => report_reports.id)
+#  report_option_set_choices_option_set_id_fkey     (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
+#  report_option_set_choices_report_report_id_fkey  (report_report_id => report_reports.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 

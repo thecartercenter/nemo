@@ -19,7 +19,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (broadcast_id => broadcasts.id)
+#  broadcast_addressings_broadcast_id_fkey  (broadcast_id => broadcasts.id) ON DELETE => restrict ON UPDATE => restrict
 #
 # rubocop:enable Metrics/LineLength
 
