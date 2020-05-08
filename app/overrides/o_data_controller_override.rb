@@ -27,10 +27,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   end
 
   def transform_json_for_root(json)
-    # Trim off URL params; something internally
-    # is trying to keep `mode` when generating `metadata_url`.
-    json["@odata.context"].sub!("?mode=m", "")
-    json
+    trim_context_params(json)
   end
 
   def transform_schema_for_metadata(_schema)
@@ -43,6 +40,13 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
       response = Response.find(response_id)
       Results::ResponseJsonGenerator.new(response).as_json
     end
+    trim_context_params(json)
+  end
+
+  # Trim off URL params; something internally
+  # is trying to keep `mode` when generating `metadata_url`.
+  def trim_context_params(json)
+    json["@odata.context"].sub!("?mode=m", "")
     json
   end
 
