@@ -9,7 +9,7 @@ module OData
                                                  property_types: {
                                                    ResponseSubmitDate: :datetime,
                                                    ResponseSubmitterName: :string,
-                                                   ResponseID: :string,
+                                                   ResponseID: :id,
                                                    ResponseShortcode: :string,
                                                    ResponseReviewed: :boolean,
                                                    FormName: :string
