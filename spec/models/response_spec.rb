@@ -6,6 +6,7 @@
 # Table name: responses
 #
 #  id                   :uuid             not null, primary key
+#  cached_json          :jsonb
 #  checked_out_at       :datetime
 #  incomplete           :boolean          default(FALSE), not null
 #  odk_hash             :string(255)

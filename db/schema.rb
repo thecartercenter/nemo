@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_10_153801) do
+ActiveRecord::Schema.define(version: 2020_05_08_052833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -411,6 +411,7 @@ ActiveRecord::Schema.define(version: 2020_04_10_153801) do
   end
 
   create_table "responses", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.jsonb "cached_json"
     t.datetime "checked_out_at"
     t.uuid "checked_out_by_id"
     t.datetime "created_at", null: false
