@@ -21,6 +21,11 @@ module Results
       object["ResponseReviewed"] = response.reviewed?
       root = response.root_node_including_tree(:choices, form_item: :question, option_node: :option_set)
       add_answers(root, object)
+      # Make sure we include everything from the metadata in our response,
+      # even if the Response didn't include that answer.
+      response.form.c.map do |c|
+        object[c.code.vanilla] ||= nil
+      end
       object
     end
 
