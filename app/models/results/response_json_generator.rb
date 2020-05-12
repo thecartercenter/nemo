@@ -20,7 +20,7 @@ module Results
       object["ResponseSubmitDate"] = response.created_at.iso8601
       object["ResponseReviewed"] = response.reviewed?
       root = response.root_node_including_tree(:choices, form_item: :question, option_node: :option_set)
-      add_answers(root, object)
+      add_answers(root, object) unless root.nil?
       # Make sure we include everything from the metadata in our response,
       # even if the Response didn't include that answer.
       response.form.c.map do |c|
@@ -65,8 +65,8 @@ module Results
     def value_for(answer)
       case answer.qtype_name
       when "date" then answer.date_value
-      when "time" then answer.time_value.to_s(:std_time)
-      when "datetime" then answer.datetime_value.iso8601
+      when "time" then answer.time_value&.to_s(:std_time)
+      when "datetime" then answer.datetime_value&.iso8601
       when "integer", "counter" then answer.value&.to_i
       when "decimal" then answer.value&.to_f
       when "select_one" then answer.option_name
@@ -76,7 +76,7 @@ module Results
         value = answer.value.presence
         # TODO: Is this parsing something we want to do? Is there already a conventional way?
         #   Output is SUPER GROSS without it because of copy/paste from MS Word.
-        value&.match(/\A<!--/) ? simple_format(value) : value.to_s
+        value&.match(/\A<!--/) ? simple_format(value) : value&.to_s
       end
     end
 
