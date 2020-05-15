@@ -51,7 +51,7 @@ feature "adding and editing qing group on form", js: true do
       expect(page).to have_field("qing_group_group_item_name_en", with: "Test Name")
       expect(page).to have_field("qing_group_group_item_name_fr", with: "Nom d'essaie")
 
-      # Test display condition saved. Detailed test is in display_conditions_form_spec
+      # Test display condition saved. Detailed logic is in display_logic_form_spec
       expect(page).to have_select("qing_group_display_logic",
         selected: "Display this group if all of these conditions are met")
 

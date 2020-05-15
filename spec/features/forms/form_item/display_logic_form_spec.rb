@@ -13,13 +13,13 @@ feature "display logic form fields", js: true do
 
   include_context "form design conditional logic"
 
-  shared_examples_for "correct behavior" do
-    before do
-      login(user)
-      visit("#{url_prefix}/forms/#{form.id}/edit")
-      expect(page).to have_content("Edit Form")
-    end
+  before do
+    login(user)
+    visit("#{url_prefix}/forms/#{form.id}/edit")
+    expect(page).to have_content("Edit Form")
+  end
 
+  shared_examples_for "correct behavior" do
     scenario "add a new question with multiple conditions" do
       click_link("Add Questions")
       fill_in("Code", with: "NewQ")
@@ -186,6 +186,27 @@ feature "display logic form fields", js: true do
   context "regular mode" do
     let(:url_prefix) { "/en/m/#{form.mission.compact_name}" }
     include_examples "correct behavior"
+
+    scenario "happy path for qing_group" do
+      click_link("Add Group")
+      fill_in("Name (English)", with: "Foo Group")
+      select("Display this group if any", from: "qing_group_display_logic")
+      within(all(".condition-fields")[0]) do
+        select_left_qing(form.c[2].code)
+        select_operator("= equals")
+        select_values("Plant", "Oak")
+      end
+      within(".modal") { click_button("Save") }
+
+      # Open it back up and check that the values were persisted.
+      find("li.form-item-group").click
+      within(".modal") do
+        expect(page).to have_select("qing_group_display_logic",
+          selected: "Display this group if any of these conditions are met")
+        expect(page).to have_select("qing_group[display_conditions_attributes][0][option_node_ids][]",
+          selected: "Oak")
+      end
+    end
   end
 
   context "admin mode" do
