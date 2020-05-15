@@ -96,7 +96,7 @@ class QingGroupsController < ApplicationController
     condition_params = [:id, :left_qing_id, :op, :value, :_destroy, option_node_ids: []]
     translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint, :group_item_name)
     params.require(:qing_group).permit(
-      %i[form_id repeatable one_screen] + translation_keys,
+      %i[form_id repeatable one_screen display_if] + translation_keys,
       display_conditions_attributes: condition_params
     )
   end
