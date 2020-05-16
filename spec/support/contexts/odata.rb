@@ -20,9 +20,15 @@ shared_context "odata" do
     # Don't worry about trailing newlines.
     expect(response.body.rstrip).to eq(expected.rstrip)
   end
+
+  def expect_output_fixture(filename, substitutions = {})
+    get(path)
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to eq(prepare_fixture("odata/#{filename}", substitutions))
+  end
 end
 
-shared_context "odata_with_forms" do
+shared_context "odata_with_basic_forms" do
   let!(:form) { create(:form, :live, question_types: %w[integer select_one text]) }
   let!(:form_with_no_responses) { create(:form, :live, question_types: %w[text]) }
   let(:unpublished_form) { create(:form, question_types: %w[text]) }

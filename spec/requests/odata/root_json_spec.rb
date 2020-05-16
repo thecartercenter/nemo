@@ -17,7 +17,7 @@ describe "root json" do
   end
 
   context "with several forms" do
-    include_context "odata_with_forms"
+    include_context "odata_with_basic_forms"
 
     it "renders as expected" do
       entity_1_name = "Responses: #{form.name}"

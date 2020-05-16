@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="NEMO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Response">
+        <Key>
+          <PropertyRef Name="ResponseID"/>
+        </Key>
+        <Property Name="ResponseSubmitDate" Type="Edm.DateTimeOffset" Nullable="true"/>
+        <Property Name="ResponseSubmitterName" Type="Edm.String" Nullable="true"/>
+        <Property Name="ResponseID" Type="Edm.Guid" Nullable="true"/>
+        <Property Name="ResponseShortcode" Type="Edm.String" Nullable="true"/>
+        <Property Name="ResponseReviewed" Type="Edm.Boolean" Nullable="true"/>
+        <Property Name="FormName" Type="Edm.String" Nullable="true"/>
+      </EntityType>
+      <EntityContainer Name="NEMOService">
+        <EntitySet Name="Response" EntityType="NEMO.Response">
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

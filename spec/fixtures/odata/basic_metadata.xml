@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="NEMO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Response">
+        <Key>
+          <PropertyRef Name="ResponseID"/>
+        </Key>
+        <Property Name="ResponseSubmitDate" Type="Edm.DateTimeOffset" Nullable="true"/>
+        <Property Name="ResponseSubmitterName" Type="Edm.String" Nullable="true"/>
+        <Property Name="ResponseID" Type="Edm.Guid" Nullable="true"/>
+        <Property Name="ResponseShortcode" Type="Edm.String" Nullable="true"/>
+        <Property Name="ResponseReviewed" Type="Edm.Boolean" Nullable="true"/>
+        <Property Name="FormName" Type="Edm.String" Nullable="true"/>
+      </EntityType>
+      <EntityType Name="Responses: *form1*" BaseType="NEMO.Response">
+        <Property Name="Integer Question Title 1" Type="Edm.Int64" Nullable="true"/>
+        <Property Name="Select One Question Title 2" Type="Edm.String" Nullable="true"/>
+        <Property Name="Text Question Title 3" Type="Edm.String" Nullable="true"/>
+      </EntityType>
+      <EntityType Name="Responses: *form2*" BaseType="NEMO.Response">
+        <Property Name="Text Question Title 4" Type="Edm.String" Nullable="true"/>
+      </EntityType>
+      <EntityContainer Name="NEMOService">
+        <EntitySet Name="Response" EntityType="NEMO.Response">
+        </EntitySet>
+        <EntitySet Name="Responses: *form1*" EntityType="NEMO.Responses: *form1*">
+        </EntitySet>
+        <EntitySet Name="Responses: *form2*" EntityType="NEMO.Responses: *form2*">
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
