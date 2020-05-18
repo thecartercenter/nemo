@@ -13,7 +13,7 @@ branches:
   - /^deploy-.*$/ # These are always just reset --hard's to other branches
   - /^v[\d\.]+$/ # No need to test version tags as they are tested as part of their branch
 before_install:
-  - gem update bundler --no-rdoc --no-ri
+  - gem update bundler --no-document
   - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
