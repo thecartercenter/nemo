@@ -1,5 +1,4 @@
 ---
-dist: trusty # Need this in order to use Chrome headless, as of 2/6/18
 bundler_args: --without development
 language: ruby
 cache:
