@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module OData
+  # Represents all the OData entities for our metadata.
   class SimpleEntities
     attr_reader :values
 

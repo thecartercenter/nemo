@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 module OData
+  # Represents a single OData entity for our metadata.
+  # This can be a top-level type (e.g. User) or a sub-type (e.g. a repeat group).
   class SimpleEntity
     attr_reader :name, :plural_name, :qualified_name, :key_property, :properties, :navigation_properties,
       :extra_tags
 
-    # Property types are defined in odata_server's
-    # `Property.column_adapter_return_types` static variable.
-    #
     # TODO: Not all of these should be rendered as EntitySets (bottom of $metadata),
     #   e.g. repeat groups should be excluded. This may not affect Power BI.
     def initialize(name, key_name: nil, property_types: {}, extra_tags: {})
