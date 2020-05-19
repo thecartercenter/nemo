@@ -35,7 +35,7 @@ module OData
           add_children(parent: c, parent_name: entity_name, children: children)
           child_name = "#{ODataController::NAMESPACE}.#{entity_name}"
           child_type = c.repeatable? ? "Collection(#{child_name})" : child_name
-          [c.group_name, child_type]
+          ["#{c.group_name} (#{group_number})", child_type]
         else
           [c.name, c.qtype.odata_type.to_sym]
         end

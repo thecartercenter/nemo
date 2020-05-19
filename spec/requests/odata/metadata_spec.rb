@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "root json" do
+describe "$metadata" do
   include_context "odata"
 
   let(:path) { "#{mission_api_route}/$metadata" }
@@ -18,6 +18,14 @@ describe "root json" do
 
     it "renders as expected" do
       expect_output_fixture("basic_metadata.xml", form: [form.name, form_with_no_responses.name])
+    end
+  end
+
+  context "with nested groups" do
+    include_context "odata_with_nested_groups"
+
+    it "renders as expected" do
+      expect_output_fixture("nested_groups_metadata.xml", form: [form.name])
     end
   end
 end

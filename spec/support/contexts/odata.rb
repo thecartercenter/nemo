@@ -47,3 +47,16 @@ shared_context "odata_with_basic_forms" do
     create(:response, mission: other_mission, form: other_form, answer_values: ["X"])
   end
 end
+
+shared_context "odata_with_nested_groups" do
+  let!(:form) { create(:form, :live, question_types: ["text", %w[text integer], ["text", %w[integer text]]]) }
+
+  before do
+    Timecop.freeze(Time.now.utc - 10.days) do
+      create(:response, form: form, answer_values: ["A", ["B", 10], ["D", [21, "E1"], [22, "E2"]]])
+    end
+    Timecop.freeze(Time.now.utc - 5.days) do
+      create(:response, form: form, answer_values: [])
+    end
+  end
+end
