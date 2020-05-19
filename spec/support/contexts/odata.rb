@@ -56,7 +56,7 @@ shared_context "odata_with_nested_groups" do
 
   before do
     Timecop.freeze(Time.now.utc - 10.days) do
-      create(:response, form: form, answer_values: ["A", ["B", 10], ["D", [21, "E1"], [22, "E2"]]])
+      create(:response, form: form, answer_values: [%w[A B], ["C", 10], ["D", [21, "E1"]]])
     end
     Timecop.freeze(Time.now.utc - 5.days) do
       create(:response, form: form, answer_values: [])
