@@ -54,7 +54,8 @@ module OData
     end
 
     def child_qing(child)
-      [child.name, child.qtype.odata_type.to_sym]
+      qtype = OData::QuestionType.new(child.qtype)
+      [child.name, qtype.odata_type]
     end
 
     # Return the OData EntityType name for a group based on its nesting.

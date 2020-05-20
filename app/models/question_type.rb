@@ -3,97 +3,79 @@
 class QuestionType
   AVAILABLE_PROPERTIES = %w[printable smsable textual headerable defaultable numeric
                             multimedia temporal has_options has_timezone refable reportable].freeze
-  attr_reader :name, :odk_name, :odata_type, :properties
+  attr_reader :name, :odk_name, :properties
 
   @attributes = [{
     name: "text",
     odk_name: "string",
-    odata_type: "string",
     properties: %w[printable smsable textual headerable defaultable refable reportable]
   }, {
     name: "long_text",
     odk_name: "string",
-    odata_type: "string",
     properties: %w[printable smsable textual refable defaultable reportable]
   }, {
     name: "barcode",
     odk_name: "barcode",
-    odata_type: "string",
     properties: %w[printable smsable textual refable reportable]
   }, {
     name: "integer",
     odk_name: "int",
-    odata_type: "integer",
     properties: %w[printable smsable numeric headerable refable defaultable reportable]
   }, {
     name: "counter",
     odk_name: "int",
-    odata_type: "integer",
     properties: %w[printable smsable numeric headerable refable defaultable reportable]
   }, {
     name: "decimal",
     odk_name: "decimal",
-    odata_type: "decimal",
     properties: %w[printable smsable numeric headerable refable defaultable reportable]
   }, {
     name: "location",
     odk_name: "geopoint",
-    odata_type: "string",
     properties: %w[reportable]
   }, {
     name: "select_one",
     odk_name: "select1",
-    odata_type: "string",
     properties: %w[printable has_options smsable headerable refable reportable]
   }, {
     name: "select_multiple",
     odk_name: "select",
-    odata_type: "string",
     properties: %w[printable has_options smsable headerable refable reportable]
   }, {
     name: "datetime",
     odk_name: "dateTime",
-    odata_type: "datetime",
     properties: %w[printable temporal has_timezone smsable headerable refable defaultable reportable]
   }, {
     name: "date",
     odk_name: "date",
-    odata_type: "date",
     properties: %w[printable temporal smsable headerable refable defaultable reportable]
   }, {
     name: "time",
     odk_name: "time",
-    odata_type: "time",
     properties: %w[printable temporal smsable headerable refable defaultable reportable]
   }, {
     name: "image",
     odk_name: "binary",
-    odata_type: "string",
     properties: %w[multimedia]
   }, {
     name: "annotated_image",
     odk_name: "binary",
-    odata_type: "string",
     properties: %w[multimedia]
   }, {
     name: "signature",
     odk_name: "binary",
-    odata_type: "string",
     properties: %w[multimedia printable]
   }, {
     name: "sketch",
     odk_name: "binary",
-    odata_type: "string",
     properties: %w[multimedia printable]
   }, {
     name: "audio",
     odk_name: "binary",
-    odata_type: "string",
     properties: %w[multimedia]
   }, {
     name: "video",
     odk_name: "binary",
-    odata_type: "string",
     properties: %w[multimedia]
   }]
 
