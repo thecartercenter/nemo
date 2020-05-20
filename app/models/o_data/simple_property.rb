@@ -9,8 +9,9 @@ module OData
     # Note: Property types are defined in odata_server's
     # `Property.column_adapter_return_types` static variable.
     def initialize(name: "", return_type: :text)
+      return_types_map = OData::ActiveRecordSchema::Property.column_adapter_return_types
       @name = name
-      @return_type = OData::ActiveRecordSchema::Property.column_adapter_return_types[return_type] || return_type
+      @return_type = return_types_map[return_type] || return_type
     end
 
     def nullable?
