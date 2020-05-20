@@ -31,7 +31,7 @@ shared_context "odata" do
   end
 end
 
-shared_context "odata_with_basic_forms" do
+shared_context "odata with basic forms" do
   let!(:form) { create(:form, :live, question_types: %w[integer select_one text]) }
   let!(:form_with_no_responses) { create(:form, :live, question_types: %w[text]) }
   let(:unpublished_form) { create(:form, question_types: %w[text]) }
@@ -51,7 +51,7 @@ shared_context "odata_with_basic_forms" do
   end
 end
 
-shared_context "odata_with_nested_groups" do
+shared_context "odata with nested groups" do
   let!(:form) { create(:form, :live, question_types: ["text", %w[text integer], ["text", %w[integer text]]]) }
 
   before do
