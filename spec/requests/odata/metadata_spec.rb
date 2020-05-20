@@ -18,6 +18,10 @@ describe "$metadata" do
 
   context "with nested groups" do
     include_context "odata with nested groups"
-    it { expect_output_fixture("nested_groups_metadata.xml", forms: [form]) }
+    it do
+      # TODO: These names will be generated differently in an upcoming commit.
+      substitutions = {group_name: ["Group Name (1)", "Group Name (1)", "Group Name (2)"]}
+      expect_output_fixture("nested_groups_metadata.xml", forms: [form], substitutions: substitutions)
+    end
   end
 end

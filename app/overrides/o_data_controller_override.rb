@@ -3,7 +3,7 @@
 # Here we re-open odata_server's main controller
 # to add NEMO things like before_action.
 ODataController.class_eval do # rubocop:disable Metrics/BlockLength
-  private
+  private # rubocop:disable Layout/EmptyLinesAroundAccessModifier
 
   def before_action
     refresh_schema

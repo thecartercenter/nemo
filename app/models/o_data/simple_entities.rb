@@ -49,6 +49,7 @@ module OData
       build_nested_children(parent: child, parent_name: entity_name, children: children)
       child_name = "#{SimpleSchema::NAMESPACE}.#{entity_name}"
       child_type = child.repeatable? ? "Collection(#{child_name})" : child_name
+      # TODO: Remove `(group_number)` once we use unique group_code in an upcoming commit.
       ["#{child.group_name} (#{group_number})", child_type]
     end
 

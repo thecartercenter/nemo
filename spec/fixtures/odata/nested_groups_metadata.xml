@@ -8,7 +8,7 @@
       </EntityType>
       <EntityType Name="Group.*form1*.G2">
         <Property Name="*q_name4*" Type="Edm.String" Nullable="true"/>
-        <Property Name="Group Name (1)" Type="NEMO.Group.*form1*.G2.G1" Nullable="true"/>
+        <Property Name="*group_name1*" Type="NEMO.Group.*form1*.G2.G1" Nullable="true"/>
       </EntityType>
       <EntityType Name="Group.*form1*.G2.G1">
         <Property Name="*q_name5*" Type="Edm.Int64" Nullable="true"/>
@@ -27,8 +27,8 @@
       </EntityType>
       <EntityType Name="Responses: *form1*" BaseType="NEMO.Response">
         <Property Name="*q_name1*" Type="Edm.String" Nullable="true"/>
-        <Property Name="Group Name (1)" Type="NEMO.Group.*form1*.G1" Nullable="true"/>
-        <Property Name="Group Name (2)" Type="NEMO.Group.*form1*.G2" Nullable="true"/>
+        <Property Name="*group_name2*" Type="NEMO.Group.*form1*.G1" Nullable="true"/>
+        <Property Name="*group_name3*" Type="NEMO.Group.*form1*.G2" Nullable="true"/>
       </EntityType>
       <EntityContainer Name="NEMOService">
         <EntitySet Name="Group.*form1*.G1" EntityType="NEMO.Group.*form1*.G1">
