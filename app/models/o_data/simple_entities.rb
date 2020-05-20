@@ -3,7 +3,7 @@
 module OData
   # Represents all the OData entities for our metadata.
   class SimpleEntities
-    attr_reader :values
+    attr_accessor :values
 
     RESPONSE_BASE_PROPERTIES = {
       ResponseSubmitDate: :datetime,
@@ -24,13 +24,13 @@ module OData
                               root_name: form.name)
       end.flatten
 
-      @values = [response_base] + response_entities
+      self.values = [response_base] + response_entities
     end
 
     # Add an Entity for each of the parent's children, recursing into groups.
     def build_nested_children(parent:, parent_name:, base_type: nil, root_name: nil, children: [])
       group_number = 0
-      property_types = parent.c.map do |child|
+      property_types = parent.sorted_children.map do |child|
         if child.is_a?(QingGroup)
           group_number += 1
           child_qing_group(child, group_number: group_number, parent_name: parent_name,
@@ -45,7 +45,7 @@ module OData
     end
 
     def child_qing_group(child, group_number:, parent_name:, root_name:, children:)
-      entity_name = get_entity_name(root_name, group_number, parent_name)
+      entity_name = entity_name_for(root_name, group_number, parent_name)
       build_nested_children(parent: child, parent_name: entity_name, children: children)
       child_name = "#{ODataController::NAMESPACE}.#{entity_name}"
       child_type = child.repeatable? ? "Collection(#{child_name})" : child_name
@@ -57,7 +57,7 @@ module OData
     end
 
     # Return the OData EntityType name for a group based on its nesting.
-    def get_entity_name(root_name, group_number, parent_name)
+    def entity_name_for(root_name, group_number, parent_name)
       if root_name
         # The first level starts with the word "Group"
         "Group.#{root_name}.G#{group_number}"

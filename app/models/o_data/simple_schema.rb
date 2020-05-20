@@ -5,11 +5,11 @@ module OData
   # when generating metadata. It's much simpler than the default and also
   # able to perform NEMO-specific logic.
   class SimpleSchema
-    attr_reader :namespace, :entity_types
+    attr_accessor :namespace, :entity_types
 
     def initialize(distinct_forms)
-      @namespace = "NEMO"
-      @entity_types = SimpleEntities.new(distinct_forms)
+      self.namespace = "NEMO"
+      self.entity_types = SimpleEntities.new(distinct_forms)
     end
   end
 end
