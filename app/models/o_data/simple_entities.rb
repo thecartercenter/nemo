@@ -20,7 +20,7 @@ module OData
       response_entities = distinct_forms.map do |form|
         build_nested_children(parent: form,
                               parent_name: "Responses: #{form.name}",
-                              base_type: "#{ODataController::NAMESPACE}.Response",
+                              base_type: "#{SimpleSchema::NAMESPACE}.Response",
                               root_name: form.name)
       end.flatten
 
@@ -47,7 +47,7 @@ module OData
     def child_qing_group(child, group_number:, parent_name:, root_name:, children:)
       entity_name = entity_name_for(root_name, group_number, parent_name)
       build_nested_children(parent: child, parent_name: entity_name, children: children)
-      child_name = "#{ODataController::NAMESPACE}.#{entity_name}"
+      child_name = "#{SimpleSchema::NAMESPACE}.#{entity_name}"
       child_type = child.repeatable? ? "Collection(#{child_name})" : child_name
       ["#{child.group_name} (#{group_number})", child_type]
     end

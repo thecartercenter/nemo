@@ -10,8 +10,7 @@ module OData
     def initialize(name, key_name: nil, property_types: {}, extra_tags: {})
       self.name = name
       self.plural_name = name
-      # TODO: Fix `warning: toplevel constant NAMESPACE referenced by ODataController::NAMESPACE`
-      self.qualified_name = "#{ODataController::NAMESPACE}.#{name}"
+      self.qualified_name = "#{SimpleSchema::NAMESPACE}.#{name}"
       self.key_property = key_name ? SimpleProperty.new(name: key_name) : nil
       self.properties = property_types.transform_values do |type|
         SimpleProperty.new(return_type: type)

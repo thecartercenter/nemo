@@ -3,8 +3,6 @@
 # Here we re-open odata_server's main controller
 # to add NEMO things like before_action.
 ODataController.class_eval do # rubocop:disable Metrics/BlockLength
-  NAMESPACE = "NEMO"
-
   private
 
   def before_action
@@ -14,8 +12,9 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   # The odata engine expects a static schema, but our schema may change
   # whenever forms are updated and also depending on the current mission context.
   def refresh_schema
+    namespace = OData::SimpleSchema::NAMESPACE
     schema = OData::ActiveRecordSchema::Base
-      .new(NAMESPACE, skip_require: true,
+      .new(namespace, skip_require: true,
                       skip_add_entity_types: true,
                       transformers: {
                         root: ->(*args) { transform_json_for_root(*args) },
