@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 # Here we re-open odata_server's main controller
-# to add NEMO things like before_action.
+# to do NEMO things like schema overrides.
 ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   private # rubocop:disable Layout/EmptyLinesAroundAccessModifier
 
-  def before_action
-    refresh_schema
-  end
-
+  # This is called automatically by the engine's before_action.
+  #
   # The odata engine expects a static schema, but our schema may change
   # whenever forms are updated and also depending on the current mission context.
   def refresh_schema

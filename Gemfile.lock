@@ -28,7 +28,7 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/odata_server.git
-  revision: d50d523353c34aebe635f90be45685a03d26818e
+  revision: d9b69be9218e3e5f4a4cd729b268539a2d7c765c
   branch: sassafras
   specs:
     odata_server (0.1.0)
