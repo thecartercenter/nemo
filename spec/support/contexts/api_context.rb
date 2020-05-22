@@ -10,7 +10,7 @@ shared_context "api" do
   let(:json) { JSON.parse(response.body) }
 end
 
-shared_context "api_form_with_responses" do
+shared_context "api form with responses" do
   before do
     decoy = create(:form, mission: mission, access_level: "public", question_types: %w[integer])
     create(:response, form: decoy, answer_values: [1])

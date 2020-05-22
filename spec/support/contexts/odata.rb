@@ -20,9 +20,19 @@ shared_context "odata" do
     # Don't worry about trailing newlines.
     expect(response.body.rstrip).to eq(expected.rstrip)
   end
+
+  def expect_output_fixture(filename, forms: [], substitutions: {})
+    form_names = forms.map(&:name)
+    form_q_names = forms.map(&:questionings).flatten.map(&:name)
+    get(path)
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to eq(prepare_fixture("odata/#{filename}", form: form_names,
+                                                                     q_name: form_q_names,
+                                                                     **substitutions))
+  end
 end
 
-shared_context "odata_with_forms" do
+shared_context "odata with basic forms" do
   let!(:form) { create(:form, :live, question_types: %w[integer select_one text]) }
   let!(:form_with_no_responses) { create(:form, :live, question_types: %w[text]) }
   let(:unpublished_form) { create(:form, question_types: %w[text]) }
@@ -39,5 +49,18 @@ shared_context "odata_with_forms" do
     create(:response, form: form, answer_values: [3, "Dog", "Baz"])
     create(:response, form: unpublished_form, answer_values: ["X"])
     create(:response, mission: other_mission, form: other_form, answer_values: ["X"])
+  end
+end
+
+shared_context "odata with nested groups" do
+  let!(:form) { create(:form, :live, question_types: ["text", %w[text integer], ["text", %w[integer text]]]) }
+
+  before do
+    Timecop.freeze(Time.now.utc - 10.days) do
+      create(:response, form: form, answer_values: [%w[A B], ["C", 10], ["D", [21, "E1"]]])
+    end
+    Timecop.freeze(Time.now.utc - 5.days) do
+      create(:response, form: form, answer_values: [])
+    end
   end
 end

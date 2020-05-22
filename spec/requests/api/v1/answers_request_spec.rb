@@ -6,7 +6,7 @@ describe "answers API requests" do
   include_context "api"
 
   describe "list answers by form" do
-    include_context "api_form_with_responses"
+    include_context "api form with responses"
 
     it "should return appropriate json sorted newest first" do
       get "/api/v1/m/mission1/answers?form_id=#{@form.id}&question_id=#{@form.questions[0].id}",
