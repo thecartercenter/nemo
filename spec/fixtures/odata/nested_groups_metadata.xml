@@ -3,16 +3,16 @@
   <edmx:DataServices>
     <Schema Namespace="NEMO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EntityType Name="Group.*form1*.G1">
-        <Property Name="*q_name2*" Type="Edm.String" Nullable="true"/>
-        <Property Name="*q_name3*" Type="Edm.Int64" Nullable="true"/>
+        <Property Name="*q_code2*" Type="Edm.String" Nullable="true"/>
+        <Property Name="*q_code3*" Type="Edm.Int64" Nullable="true"/>
       </EntityType>
       <EntityType Name="Group.*form1*.G2">
-        <Property Name="*q_name4*" Type="Edm.String" Nullable="true"/>
+        <Property Name="*q_code4*" Type="Edm.String" Nullable="true"/>
         <Property Name="*group_name1*" Type="NEMO.Group.*form1*.G2.G1" Nullable="true"/>
       </EntityType>
       <EntityType Name="Group.*form1*.G2.G1">
-        <Property Name="*q_name5*" Type="Edm.Int64" Nullable="true"/>
-        <Property Name="*q_name6*" Type="Edm.String" Nullable="true"/>
+        <Property Name="*q_code5*" Type="Edm.Int64" Nullable="true"/>
+        <Property Name="*q_code6*" Type="Edm.String" Nullable="true"/>
       </EntityType>
       <EntityType Name="Response">
         <Key>
@@ -26,7 +26,7 @@
         <Property Name="FormName" Type="Edm.String" Nullable="true"/>
       </EntityType>
       <EntityType Name="Responses: *form1*" BaseType="NEMO.Response">
-        <Property Name="*q_name1*" Type="Edm.String" Nullable="true"/>
+        <Property Name="*q_code1*" Type="Edm.String" Nullable="true"/>
         <Property Name="*group_name2*" Type="NEMO.Group.*form1*.G1" Nullable="true"/>
         <Property Name="*group_name3*" Type="NEMO.Group.*form1*.G2" Nullable="true"/>
       </EntityType>

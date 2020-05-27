@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "$metadata" do
+describe "OData $metadata" do
   include_context "odata"
 
   let(:path) { "#{mission_api_route}/$metadata" }
@@ -19,8 +19,7 @@ describe "$metadata" do
   context "with nested groups" do
     include_context "odata with nested groups"
     it do
-      # TODO: These names will be generated differently in an upcoming commit.
-      substitutions = {group_name: ["Group Name (1)", "Group Name (1)", "Group Name (2)"]}
+      substitutions = {group_name: ["Group 3 (1)", "Group 1 (1)", "Group 2 (2)"]}
       expect_output_fixture("nested_groups_metadata.xml", forms: [form], substitutions: substitutions)
     end
   end
