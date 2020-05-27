@@ -14,12 +14,12 @@
         <Property Name="FormName" Type="Edm.String" Nullable="true"/>
       </EntityType>
       <EntityType Name="Responses: *form1*" BaseType="NEMO.Response">
-        <Property Name="*q_name1*" Type="Edm.Int64" Nullable="true"/>
-        <Property Name="*q_name2*" Type="Edm.String" Nullable="true"/>
-        <Property Name="*q_name3*" Type="Edm.String" Nullable="true"/>
+        <Property Name="*q_code1*" Type="Edm.Int64" Nullable="true"/>
+        <Property Name="*q_code2*" Type="Edm.String" Nullable="true"/>
+        <Property Name="*q_code3*" Type="Edm.String" Nullable="true"/>
       </EntityType>
       <EntityType Name="Responses: *form2*" BaseType="NEMO.Response">
-        <Property Name="*q_name4*" Type="Edm.String" Nullable="true"/>
+        <Property Name="*q_code4*" Type="Edm.String" Nullable="true"/>
       </EntityType>
       <EntityContainer Name="NEMOService">
         <EntitySet Name="Response" EntityType="NEMO.Response">
