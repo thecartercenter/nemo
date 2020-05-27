@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "root json" do
+describe "OData root" do
   include_context "odata"
 
   let(:path) { mission_api_route }

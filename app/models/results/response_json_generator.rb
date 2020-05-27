@@ -71,7 +71,7 @@ module Results
       when "decimal" then answer.value&.to_f
       when "select_one" then answer.option_name
       when "select_multiple" then answer.choices.empty? ? nil : answer.choices.map(&:option_name).sort.to_s
-      when "location" then answer.attributes.slice(*%w[latitude longitude altitude accuracy]).to_s
+      when "location" then answer.attributes.slice("latitude", "longitude", "altitude", "accuracy").to_s
       else
         value = answer.value.presence
         # Data that's been copied from MS Word contains a bunch of HTML decoration.
@@ -81,7 +81,7 @@ module Results
     end
 
     def group_key(group)
-      group.group_name.vanilla
+      group.code.vanilla
     end
   end
 end

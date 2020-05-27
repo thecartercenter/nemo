@@ -23,11 +23,11 @@ shared_context "odata" do
 
   def expect_output_fixture(filename, forms: [], substitutions: {})
     form_names = forms.map(&:name)
-    form_q_names = forms.map(&:questionings).flatten.map(&:name)
+    form_q_codes = forms.map(&:questionings).flatten.map(&:code)
     get(path)
     expect(response).to have_http_status(:ok)
     expect(response.body).to eq(prepare_fixture("odata/#{filename}", form: form_names,
-                                                                     q_name: form_q_names,
+                                                                     q_code: form_q_codes,
                                                                      **substitutions))
   end
 end
