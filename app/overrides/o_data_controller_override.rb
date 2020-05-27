@@ -38,8 +38,12 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     json[:value] = json[:value].map do |response|
       response_id = response["Id"]
       response = Response.find(response_id)
-      # TODO: Either lazy cache this here, or ensure a bg job will do it?
-      response.cached_json || Results::ResponseJsonGenerator.new(response).as_json
+      # Until we have a reliable background job, allow lazy-generating the cached JSON.
+      unless response.cached_json
+        cached_json = Results::ResponseJsonGenerator.new(response).as_json
+        response.update!(cached_json: cached_json)
+      end
+      response.cached_json
     end
     trim_context_params(json)
   end

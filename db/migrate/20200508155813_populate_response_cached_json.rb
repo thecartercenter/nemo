@@ -6,15 +6,17 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
   disable_ddl_transaction!
 
   def up
-    # TODO: Temporary filter; sandbox haitimalaria riverblindnessnigeria2017
-    mission_ids = %w[sandbox haitimalaria riverblindnessnigeria2017].map do |compact_name|
+    # Optionally limit to a subset of missions (if env flag is set).
+    mission_ids = %w[sandbox].map do |compact_name|
       Mission.find_by(compact_name: compact_name).id
     end
-    # form_ids = Form.live.distinct(:id).pluck(:id)
-    form_ids = Form.live.distinct(:id).map do |form|
-      form.id if form.name.match?(/CDDAtt/i)
+
+    # Optionally limit to a subset of live forms (if env flag is set).
+    form_ids = Form.live.map do |form|
+      form.id if form.name.match?(/.*/i)
     end.compact
-    responses = Response.where(mission_id: mission_ids, form_id: form_ids)
+
+    responses = ENV["SUBSET"] ? Response.where(mission_id: mission_ids, form_id: form_ids) : Response.all
     remaining_responses = ENV["FORCE_REDO"] ? responses : responses.where(cached_json: nil)
 
     cache_responses(remaining_responses)
