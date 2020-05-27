@@ -74,8 +74,8 @@ module Results
       when "location" then answer.attributes.slice(*%w[latitude longitude altitude accuracy]).to_s
       else
         value = answer.value.presence
-        # TODO: Is this parsing something we want to do? Is there already a conventional way?
-        #   Output is SUPER GROSS without it because of copy/paste from MS Word.
+        # Data that's been copied from MS Word contains a bunch of HTML decoration.
+        # Get rid of that via simple_format.
         value&.match(/\A<!--/) ? simple_format(value) : value&.to_s
       end
     end
