@@ -14,14 +14,13 @@ shared_context "odata" do
     Timecop.return
   end
 
-  def expect_output(expected)
+  def expect_json(expected)
     get(path)
     expect(response).to have_http_status(:ok)
-    # Don't worry about trailing newlines.
-    expect(response.body.rstrip).to eq(expected.rstrip)
+    expect(JSON.parse(response.body)).to match_json(JSON.pretty_generate(expected))
   end
 
-  def expect_output_fixture(filename, forms: [], substitutions: {})
+  def expect_fixture(filename, forms: [], substitutions: {})
     form_names = forms.map(&:name)
     form_q_codes = forms.map(&:questionings).flatten.map(&:code)
     get(path)

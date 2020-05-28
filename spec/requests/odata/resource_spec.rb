@@ -14,23 +14,23 @@ describe "OData resource" do
     let(:path) { "#{mission_api_route}/Responses-invalid" }
 
     it "renders as expected" do
-      expect_output({
+      expect_json(
         "error": {
           "code": "",
           "message": "Resource not found for the segment 'Responses-invalid'."
         }
-      }.to_json)
+      )
     end
   end
 
-  context "with basic form" do
+  context "with basic form", :reset_factory_sequences do
     include_context "odata with basic forms"
 
     let(:path) { "#{mission_api_route}/Responses-#{form.id}" }
     let(:first_response) { form.responses.first }
 
     it "renders as expected" do
-      expect_output({
+      expect_json(
         "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}" \
           "/odata/v1/$metadata#Responses: #{form.name}",
         value: [
@@ -44,7 +44,7 @@ describe "OData resource" do
                                             "SelectOneQ2": "Dog",
                                             "TextQ3": "Foo")
         ]
-      }.to_json)
+      )
     end
   end
 end
