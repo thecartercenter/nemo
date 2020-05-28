@@ -21,11 +21,7 @@ module Results
       object["ResponseReviewed"] = response.reviewed?
       root = response.root_node_including_tree(:choices, form_item: :question, option_node: :option_set)
       add_answers(root, object) unless root.nil?
-      # Make sure we include everything from the metadata in our response,
-      # even if the Response didn't include that answer.
-      response.form.c.map do |c|
-        object[c.code.vanilla] ||= nil
-      end
+      add_nil_answers(object, response)
       object
     end
 
@@ -41,15 +37,19 @@ module Results
         elsif child_node.is_a?(AnswerSet)
           object[child_node.question_code] = answer_set_value(child_node)
         elsif child_node.is_a?(AnswerGroup)
-          if child_node.repeatable?
-            object << (item = {})
-            add_answers(child_node, item)
-          else
-            add_answers(child_node, object[group_key(child_node)] = {})
-          end
+          add_group_answers(child_node, object)
         elsif child_node.is_a?(AnswerGroupSet)
           add_answers(child_node, object[group_key(child_node)] = [])
         end
+      end
+    end
+
+    def add_group_answers(group, object)
+      if group.repeatable?
+        object << (item = {})
+        add_answers(group, item)
+      else
+        add_answers(group, object[group_key(group)] = {})
       end
     end
 
@@ -72,11 +72,21 @@ module Results
       when "select_one" then answer.option_name
       when "select_multiple" then answer.choices.empty? ? nil : answer.choices.map(&:option_name).sort.to_s
       when "location" then answer.attributes.slice("latitude", "longitude", "altitude", "accuracy").to_s
-      else
-        value = answer.value.presence
-        # Data that's been copied from MS Word contains a bunch of HTML decoration.
-        # Get rid of that via simple_format.
-        value&.match(/\A<!--/) ? simple_format(value) : value&.to_s
+      else format_value(answer.value)
+      end
+    end
+
+    def format_value(value)
+      # Data that's been copied from MS Word contains a bunch of HTML decoration.
+      # Get rid of that via simple_format.
+      /\A<!--/.match?(value) ? simple_format(value) : value.to_s
+    end
+
+    # Make sure we include everything from the metadata in our output,
+    # even if the Response didn't include that answer originally.
+    def add_nil_answers(object, response)
+      response.form.c.map do |c|
+        object[c.code.vanilla] ||= nil
       end
     end
 
