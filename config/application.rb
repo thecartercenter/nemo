@@ -5,6 +5,10 @@ require File.expand_path("boot", __dir__)
 require "rails/all"
 require "coffee_script"
 
+# This may be required on Mac with Homebrew.
+# https://github.com/oneclick/rubyinstaller2/issues/96#issuecomment-548249647
+require "em/pure_ruby" unless defined?(EventMachine)
+
 Bundler.require(*Rails.groups)
 
 module ELMO

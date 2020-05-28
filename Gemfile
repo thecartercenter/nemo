@@ -9,6 +9,7 @@ gem "dalli", "~> 2.7.4" # memcache
 gem "delayed_job_active_record", "~> 4.1.3"
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe" # mean, median, etc.
 gem "draper", "~> 3.0.1"
+gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
 gem "fog-aws", "~> 3.3.0"
 gem "friendly_id", "~> 5.1.0"
