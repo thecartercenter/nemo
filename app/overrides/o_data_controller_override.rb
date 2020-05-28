@@ -51,7 +51,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   # Trim off URL params; something internally
   # is trying to keep `mode` when generating `metadata_url`.
   def trim_context_params(json)
-    json["@odata.context"].sub!("?mode=m", "")
+    json["@odata.context"]&.sub!("?mode=m", "")
     json
   end
 
