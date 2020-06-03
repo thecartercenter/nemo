@@ -2,7 +2,7 @@
 
 <%= index_table(responses) %>
 
-<%= render("export_modal") %>
+<%= render("export_csv_modal") %>
 
 <%= javascript_doc_ready do %>
   ELMO.responseListView = new ELMO.Views.ResponseListView(<%=json(
