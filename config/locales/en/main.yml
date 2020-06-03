@@ -1721,7 +1721,9 @@ en:
   response:
     reviewed: "This response has been reviewed"
     edit_this_response: "Edit This Response"
-    export_to_csv: "Export to CSV Format"
+    export: "Export"
+    export_to_csv: "CSV Format"
+    export_to_odata: "OData via API"
     export_options:
       summary:
         zero: "No responses to be exported."

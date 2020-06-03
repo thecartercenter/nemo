@@ -46,12 +46,35 @@ module ResponsesHelper
       confirm: "response.bulk_destroy_confirm"
     )
 
-    if !responses.empty? && can?(:export, Response)
-      links << link_to(t("response.export_to_csv"), "#", id: "export-link")
-    end
+    links << export_dropdown(responses) if can?(:export, Response)
 
-    # return the assembled list of links
     links
+  end
+
+  def export_dropdown(responses)
+    [export_dropdown_parent, export_dropdown_children(responses)].reduce(:<<)
+  end
+
+  def export_dropdown_parent
+    link_to(t("response.export"), "#", id: "export-dropdown",
+                                       class: "dropdown-toggle",
+                                       role: "button",
+                                       "data-toggle": "dropdown",
+                                       "aria-haspopup": "true")
+  end
+
+  def export_dropdown_children(responses)
+    content_tag(:div, class: "dropdown-menu",
+                      "aria-labelledby": "export-dropdown") do
+      [
+        unless responses.empty?
+          link_to(t("response.export_to_csv"), "#", id: "export-csv-link",
+                                                    class: "dropdown-item")
+        end,
+        link_to(t("response.export_to_odata"), "#", id: "export-odata-link",
+                                                    class: "dropdown-item")
+      ].compact.reduce(:<<)
+    end
   end
 
   # takes a recent count (e.g. [5, "week"]) and translates it
