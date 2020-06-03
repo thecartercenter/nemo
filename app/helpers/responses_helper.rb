@@ -40,15 +40,15 @@ module ResponsesHelper
   def responses_index_links(responses)
     links = []
 
-    if !responses.empty? && can?(:export, Response)
-      links << link_to(t("response.export_to_csv"), "#", id: "export-link")
-    end
-
     links << batch_op_link(
       name: t("response.bulk_destroy"),
       path: bulk_destroy_responses_path(search: params[:search]),
       confirm: "response.bulk_destroy_confirm"
     )
+
+    if !responses.empty? && can?(:export, Response)
+      links << link_to(t("response.export_to_csv"), "#", id: "export-link")
+    end
 
     # return the assembled list of links
     links
