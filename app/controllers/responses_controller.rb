@@ -46,6 +46,7 @@ class ResponsesController < ApplicationController
         @selected_all_pages = params[:select_all_pages]
 
         @response_csv_export_options = ResponseCSVExportOptions.new
+        @odata_url = request.original_url.sub("/responses", "/odata/v1")
 
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: responses}) if request.xhr?

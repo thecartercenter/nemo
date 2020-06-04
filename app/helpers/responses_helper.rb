@@ -56,11 +56,11 @@ module ResponsesHelper
   end
 
   def export_dropdown_parent
-    link_to(t("response.export"), "#", id: "export-dropdown",
-                                       class: "dropdown-toggle",
-                                       role: "button",
-                                       "data-toggle": "dropdown",
-                                       "aria-haspopup": "true")
+    link_to(t("response.export.export"), "#", id: "export-dropdown",
+                                              class: "dropdown-toggle",
+                                              role: "button",
+                                              "data-toggle": "dropdown",
+                                              "aria-haspopup": "true")
   end
 
   def export_dropdown_children(responses)
@@ -68,10 +68,10 @@ module ResponsesHelper
                       "aria-labelledby": "export-dropdown") do
       [
         unless responses.empty?
-          link_to(t("response.export_to_csv"), "#", id: "export-csv-link",
+          link_to(t("response.export.to_csv"), "#", id: "export-csv-link",
                                                     class: "dropdown-item")
         end,
-        link_to(t("response.export_to_odata"), "#", id: "export-odata-link",
+        link_to(t("response.export.to_odata"), "#", id: "export-odata-link",
                                                     class: "dropdown-item")
       ].compact.reduce(:<<)
     end
