@@ -10,6 +10,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.singular(/^o_data$/i, "o_data")
   inflect.acronym("API")
   inflect.acronym("CSV")
+  inflect.acronym("URL")
 
   #   inflect.singular /^(ox)en/i, '\1'
   #   inflect.irregular 'person', 'people'

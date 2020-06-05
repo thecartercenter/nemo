@@ -6,14 +6,12 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
-        <p><%= t("response.export.odata_prompt_html") %></p>
-        <form>
-          <div class="form-group">
-            <label for="api-endpoint"><%= t("response.export.odata_url_label") %></label>
-            <input type="text" class="form-control" id="api-endpoint" name="api-endpoint"
-                   disabled value=<%= @odata_url %>>
+        <%= elmo_form_for(@response_odata_export_options, url: "") do |f| %>
+          <div class="fields">
+            <p><%= t("response.export.odata_prompt_html") %></p>
+            <%= f.field(:api_url, type: :text, read_only: true) %>
           </div>
-        </form>
+        <% end %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
