@@ -4,6 +4,8 @@ require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe FormsController, :odk, type: :request do
+  include_context "basic auth"
+
   let(:mission) { create(:mission) }
   let(:user) { create(:user, role_name: :coordinator, mission: mission) }
   let(:form_simple) { create(:form, :live, mission: mission) }
@@ -15,7 +17,6 @@ describe FormsController, :odk, type: :request do
     create(:form, :live, mission: mission,
                          question_types: %w[integer multilevel_select_one super_multilevel_select_one])
   end
-  let(:basic_auth) { {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)} }
 
   before do
     # Stub threshold constant so that multilevel opt set is rendered normally,
@@ -28,7 +29,7 @@ describe FormsController, :odk, type: :request do
       let!(:forms) { [form_simple, form_select, form_small_multi, form_both_multi] }
 
       it "should succeed" do
-        get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
+        get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: auth_header)
         expect(response).to be_successful
 
         # Only form_both_multi should have a manifest.
@@ -43,7 +44,7 @@ describe FormsController, :odk, type: :request do
       end
 
       it "should succeed with no locale" do
-        get("/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
+        get("/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: auth_header)
         expect(response).to be_successful
       end
     end
@@ -54,7 +55,7 @@ describe FormsController, :odk, type: :request do
         get(
           "/en/m/#{mission.compact_name}/forms/#{form_both_multi.id}",
           params: {format: :xml},
-          headers: basic_auth
+          headers: auth_header
         )
         expect(response).to be_successful
       end
@@ -63,7 +64,7 @@ describe FormsController, :odk, type: :request do
         get(
           "/m/#{mission.compact_name}/forms/#{form_both_multi.id}",
           params: {format: :xml},
-          headers: basic_auth
+          headers: auth_header
         )
         expect(response).to be_successful
       end
@@ -72,7 +73,7 @@ describe FormsController, :odk, type: :request do
     describe "odk manifest" do
       context "for form with only small option sets" do
         it "should render empty manifest tag" do
-          get("/en/m/#{mission.compact_name}/forms/#{form_small_multi.id}/manifest", headers: basic_auth)
+          get("/en/m/#{mission.compact_name}/forms/#{form_small_multi.id}/manifest", headers: auth_header)
           expect(response).to be_successful
           assert_select("manifest", count: 1)
           assert_select("mediaFile", count: 0)
@@ -83,7 +84,7 @@ describe FormsController, :odk, type: :request do
         let(:ifa) { Odk::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         it "should render regular manifest tag" do
-          get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: basic_auth)
+          get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: auth_header)
           expect(response).to be_successful
           assert_select("filename", text: "itemsets.csv")
           assert_select("hash", text: ifa.md5)
@@ -98,7 +99,7 @@ describe FormsController, :odk, type: :request do
           end
 
           it "should use https in URL" do
-            get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: basic_auth)
+            get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: auth_header)
             expect(response).to be_successful
             assert_select("downloadUrl", text: "https://www.example.com/#{ifa.path}")
           end
@@ -114,7 +115,7 @@ describe FormsController, :odk, type: :request do
         end
 
         it "should render manifest tags correctly" do
-          get("/m/#{mission.compact_name}/forms/#{form.id}/manifest", headers: basic_auth)
+          get("/m/#{mission.compact_name}/forms/#{form.id}/manifest", headers: auth_header)
           expect(response).to be_successful
 
           download_url = "http://www.example.com/en/m/#{mission.compact_name}/questions"
@@ -142,19 +143,19 @@ describe FormsController, :odk, type: :request do
           let(:url_prefix) { "/en/m/#{mission.compact_name}/questions" }
 
           it do
-            get("#{url_prefix}/#{form.c[0].question_id}/media_prompt", headers: basic_auth)
+            get("#{url_prefix}/#{form.c[0].question_id}/media_prompt", headers: auth_header)
             expect(response).to be_successful
             expect(response.header["Content-Disposition"]).to include(form.c[0].question.id)
           end
 
           it do
-            get("#{url_prefix}/#{form.c[1].question_id}/media_prompt", headers: basic_auth)
+            get("#{url_prefix}/#{form.c[1].question_id}/media_prompt", headers: auth_header)
             expect(response).to be_successful
             expect(response.header["Content-Disposition"]).to include(form.c[1].question.id)
           end
 
           it "should work with legacy endpoint" do
-            get("#{url_prefix}/#{form.c[1].question_id}/audio_prompt", headers: basic_auth)
+            get("#{url_prefix}/#{form.c[1].question_id}/audio_prompt", headers: auth_header)
             expect(response).to be_successful
           end
         end
@@ -170,7 +171,7 @@ describe FormsController, :odk, type: :request do
         end
 
         it "should succeed" do
-          get("/#{ifa.path}", headers: basic_auth)
+          get("/#{ifa.path}", headers: auth_header)
           expect(response).to be_successful
           expect(response.body).to match(/,Cat/) # Full contents tested in model spec
         end
@@ -182,13 +183,13 @@ describe FormsController, :odk, type: :request do
     let(:mission) { create(:mission, locked: true) }
 
     it "listing forms should return 403" do
-      get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
+      get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: auth_header)
       expect(response.status).to eq(403)
       expect(response.body.strip).to be_empty
     end
 
     it "showing form with format xml should return 403" do
-      get("/m/#{mission.compact_name}/forms/#{form_simple.id}", params: {format: :xml}, headers: basic_auth)
+      get("/m/#{mission.compact_name}/forms/#{form_simple.id}", params: {format: :xml}, headers: auth_header)
       expect(response.status).to eq(403)
       expect(response.body.strip).to be_empty
     end

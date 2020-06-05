@@ -3,6 +3,7 @@
 require "rails_helper"
 
 describe "odk media submissions", :odk, :reset_factory_sequences, type: :request do
+  include_context "basic auth"
   include_context "odk submissions"
 
   let(:user) { create(:user, role_name: "enumerator") }
@@ -21,7 +22,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
       post submission_path, params: {xml_submission_file: submission_file, "the_swing.jpg" => image},
-                            headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)}
+                            headers: auth_header
       expect(response).to have_http_status(:created)
 
       form_response = Response.last
@@ -37,8 +38,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     it "should save a temp file for failures" do
       submission_file = prepare_and_upload_submission_file("no_version.xml")
 
-      post submission_path, params: {xml_submission_file: submission_file},
-                            headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)}
+      post submission_path, params: {xml_submission_file: submission_file}, headers: auth_header
       expect(response).not_to have_http_status(:created)
 
       tmp_files = Dir.glob(ResponsesController::TMP_UPLOADS_PATH.join("*.xml"))
@@ -62,9 +62,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
           "the_swing.jpg" => image,
           "*isIncomplete*" => "yes"
         },
-        headers: {
-          "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
-        }
+        headers: auth_header
       expect(response).to have_http_status(:created)
       expect(Response.count).to eq(1)
 
@@ -74,9 +72,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
           xml_submission_file: submission_file2,
           "another_swing.jpg" => image2
         },
-        headers: {
-          "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
-        }
+        headers: auth_header
 
       expect(response).to have_http_status(:created)
 
