@@ -48,7 +48,7 @@ ELMO::Application.routes.draw do
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/,
                                    defaults: {mode: "m"} do
     if Settings.odata_api.present? || Rails.env.test?
-      mount(OData::Engine, at: "/odata/v1", defaults: {direct_auth: "basic"}) 
+      mount(OData::Engine, at: "/odata/v1", defaults: {direct_auth: "basic"})
     end
 
     # Regular form resources are defined under the admin-or-mission section.

@@ -8,6 +8,10 @@ class ResponseODataExportOptions
 
   def initialize(*args)
     super
-    self.api_url = request_url.sub("/responses", "/odata/v1")
+    self.api_url = if Settings.odata_api.present? || Rails.env.test?
+                     request_url.sub("/responses", "/odata/v1")
+                   else
+                     "Coming soon"
+                   end
   end
 end
