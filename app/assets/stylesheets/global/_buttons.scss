@@ -9,3 +9,11 @@
     color: $text-over-accent-color;
   }
 }
+
+// Remove Bootstrap button styling to make it look like a regular <a>
+.btn-link.btn-a {
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  cursor: pointer;
+}

@@ -8,7 +8,7 @@ ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView 
 
   get events() {
     return {
-      'click #external_sql .control a': 'selectExternalSql',
+      'click #copy-btn': 'selectExternalSql',
       'click .adapter-settings a.show-credential-fields': 'show_change_credential_fields',
       'click .using-incoming-sms-token': 'show_using_incoming_sms_token_modal',
       'click .using-universal-sms-token': 'show_using_universal_sms_token_modal',
@@ -18,12 +18,13 @@ ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView 
 
   initialize(options) {
     this.need_credentials = options.need_credentials || {};
+    // eslint-disable-next-line no-new
+    new Clipboard('#copy-btn');
     return this.show_credential_fields_with_errors();
   }
 
   selectExternalSql() {
-    this.$('#external_sql .control pre').selectText();
-    return false;
+    this.$('#copy-value').selectText();
   }
 
   show_change_credential_fields(event) {

@@ -53,8 +53,8 @@
     </div>
 
     <h2 class="mt-4"><%= t("activerecord.attributes.setting.external_sql") %></h2>
-    <%= f.field(:external_sql, type: :pre, value: @external_sql,
-      append: link_to(t("layout.select_all"), "#")) %>
+    <%= f.field(:external_sql, type: :pre, value: @external_sql, id: "copy-value",
+      append: content_tag(:div, t("layout.copy_to_clipboard"), class: "btn btn-link btn-a", id: "copy-btn", "data-clipboard-target": "#copy-value")) %>
   <% end %>
 
   <div class="submit-buttons">

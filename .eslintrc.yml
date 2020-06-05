@@ -11,6 +11,7 @@ globals:
   ELMO: true
   ReactRailsUJS: true
   Backbone: true
+  Clipboard: true
   Dropzone: true
   google: true
 rules:

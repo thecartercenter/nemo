@@ -9,8 +9,8 @@
         <%= elmo_form_for(@response_odata_export_options, url: "") do |f| %>
           <div class="fields">
             <p><%= t("response.export.odata_prompt_html") %></p>
-            <%= f.field(:api_url, type: :pre, class: "mb-1",
-              append: link_to(t("layout.select_all"), "#")) %>
+            <%= f.field(:api_url, type: :pre, class: "mb-1", id: "copy-value",
+              append: content_tag(:div, t("layout.copy_to_clipboard"), class: "btn btn-link btn-a", id: "copy-btn", "data-clipboard-target": "#copy-value")) %>
           </div>
         <% end %>
       </div>

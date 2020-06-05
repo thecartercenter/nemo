@@ -25,6 +25,7 @@
 //= require backbone
 //= require backbone_rails_sync
 //= require backbone_datalink
+//= require clipboard
 //= require i18n
 //= require i18n/translations
 //= require popper
