@@ -21,6 +21,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:step] - Step attribute for number fields.
   # options[:value] - Value to use instead of loading from the DB.
   # options[:class] - Class string to append to the field.
+  # options[:copyable] - If true, will add 'Copy to Clipboard' button below the field.
 
   # The placeholder attribute is handled using I18n. See placeholder code below
 
@@ -43,6 +44,14 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     wrapper_classes << options[:wrapper_class]
     wrapper_classes << "#{@object.class.model_name.param_key}_#{field_name}"
     wrapper_classes << "has-errors" if errors.present?
+
+    if options[:copyable]
+      text = I18n.t("layout.copy_to_clipboard")
+      options[:id] ||= "copy-value-#{field_name}"
+      options[:append] = @template.content_tag(:div, text, class: "btn btn-link btn-a",
+                                                           id: "copy-btn-#{field_name}",
+                                                           "data-clipboard-target": "##{options[:id]}")
+    end
 
     # get key chunks and render partial
     @template.render(partial: "layouts/elmo_form_field", locals: {

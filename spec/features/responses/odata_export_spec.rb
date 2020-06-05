@@ -21,7 +21,7 @@ feature "responses odata export", js: true do
     click_link("OData via API")
     expect(page).to(have_selector(".widget pre", text: %r{/odata/v1}))
 
-    find("#copy-btn").click
+    find("#copy-btn-api_url").click
     expect(clipboard).to match(%r{/odata/v1})
   end
 end
