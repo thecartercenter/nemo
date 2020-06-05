@@ -4,6 +4,7 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
     return {
       'click #export-csv-link': 'showExportCsvModal',
       'click #export-odata-link': 'showExportODataModal',
+      'click #api_url .control a': 'selectApiUrl',
     };
   }
 
@@ -26,6 +27,11 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
   showExportODataModal(event) {
     event.preventDefault();
     this.$('#export-odata-modal').modal('show');
+  }
+
+  selectApiUrl() {
+    this.$('#api_url .control pre').selectText();
+    return false;
   }
 
   fetch() {

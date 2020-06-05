@@ -20,6 +20,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:unnamed] - Remove the name attribute for the tag so it doesn't show up in the submission data.
   # options[:step] - Step attribute for number fields.
   # options[:value] - Value to use instead of loading from the DB.
+  # options[:class] - Class string to append to the field.
 
   # The placeholder attribute is handled using I18n. See placeholder code below
 
@@ -184,7 +185,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         tag_options = options.slice(:id, :data) # Include these attribs with all tags, if given.
 
         tag_options[:name] = nil if options[:unnamed]
-        tag_options[:class] = "form-control"
+        tag_options[:class] = "form-control #{options[:class] || ''}".strip
 
         placeholder_key = "activerecord.placeholders.#{@object.class.model_name.i18n_key}.#{field_name}"
         placeholder = I18n.t(placeholder_key, default: "")
