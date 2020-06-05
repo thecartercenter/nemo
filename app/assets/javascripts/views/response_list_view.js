@@ -4,12 +4,14 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
     return {
       'click #export-csv-link': 'showExportCsvModal',
       'click #export-odata-link': 'showExportODataModal',
-      'click #api_url .control a': 'selectApiUrl',
+      'click #copy-value': 'selectApiUrl',
     };
   }
 
   initialize(options) {
     this.$('#export-dropdown').dropdown();
+    // eslint-disable-next-line no-new
+    new Clipboard('#copy-btn');
     this.reloadCount = 0;
     if (options.refreshInterval > 0) {
       setInterval(this.fetch.bind(this), options.refreshInterval);
@@ -30,8 +32,7 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
   }
 
   selectApiUrl() {
-    this.$('#api_url .control pre').selectText();
-    return false;
+    this.$('#copy-value').selectText();
   }
 
   fetch() {

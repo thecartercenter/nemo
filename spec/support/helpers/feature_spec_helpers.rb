@@ -151,4 +151,18 @@ module FeatureSpecHelpers
     yield
     ActionMailer::Base.deliveries[old_count..-1] || []
   end
+
+  # Get the contents of the user's clipboard.
+  def clipboard
+    page.driver.browser.execute_cdp(
+      "Browser.grantPermissions",
+      origin: page.server_url, permissions: %w[clipboardReadWrite clipboardSanitizedWrite]
+    )
+    # Unset the clipboard after reading, for purity.
+    page.evaluate_script(%{
+      text = navigator.clipboard.readText();
+      navigator.clipboard.writeText('');
+      text;
+    })
+  end
 end

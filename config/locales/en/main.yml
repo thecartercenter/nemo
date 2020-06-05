@@ -888,6 +888,7 @@ en:
     are_you_sure: "Are you sure?"
     change_language: "Change Language"
     created_by: "Created by"
+    copy_to_clipboard: "Copy to Clipboard"
     delete_warning: "Are you sure you want to permanently delete the %{obj_description}?"
     deselect_all: "Deselect All"
     loading: "Loading..."

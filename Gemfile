@@ -35,6 +35,7 @@ gem "whenever", "~> 0.9.4", require: false
 
 # JS/CSS
 gem "bootstrap", "~> 4.3.1"
+gem "clipboard-rails", "~> 1.7.1"
 gem "dropzonejs-rails", "~> 0.7.3"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 0.4.5"
