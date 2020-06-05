@@ -8,7 +8,7 @@ ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView 
 
   get events() {
     return {
-      'click #external_sql .control a': 'select_external_sql',
+      'click #external_sql .control a': 'selectExternalSql',
       'click .adapter-settings a.show-credential-fields': 'show_change_credential_fields',
       'click .using-incoming-sms-token': 'show_using_incoming_sms_token_modal',
       'click .using-universal-sms-token': 'show_using_universal_sms_token_modal',
@@ -21,7 +21,7 @@ ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView 
     return this.show_credential_fields_with_errors();
   }
 
-  select_external_sql(event) {
+  selectExternalSql() {
     this.$('#external_sql .control pre').selectText();
     return false;
   }
