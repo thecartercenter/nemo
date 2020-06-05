@@ -19,6 +19,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:data] - Data attributes that will be included with input tag
   # options[:unnamed] - Remove the name attribute for the tag so it doesn't show up in the submission data.
   # options[:step] - Step attribute for number fields.
+  # options[:value] - Value to use instead of loading from the DB.
 
   # The placeholder attribute is handled using I18n. See placeholder code below
 
@@ -145,7 +146,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
     # otherwise generate field based on type
     else
-      val = @object.send(field_name)
+      val = options.key?(:value) ? options[:value] : @object.send(field_name)
 
       # if field is read only, just show the value
       if options[:read_only]
@@ -204,6 +205,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
         when :textarea
           text_area(field_name, tag_options)
+
+        when :pre
+          @template.content_tag(:pre, val, tag_options)
 
         when :password
           # add 'text' class for legacy support
