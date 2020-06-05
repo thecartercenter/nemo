@@ -3,6 +3,8 @@
 # Here we re-open odata_server's main controller
 # to do NEMO things like schema overrides.
 ODataController.class_eval do # rubocop:disable Metrics/BlockLength
+  authorize_resource class: false
+
   private # rubocop:disable Layout/EmptyLinesAroundAccessModifier
 
   # This is called automatically by the engine's before_action.
@@ -57,6 +59,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
 
   def distinct_forms
     Form
+      .accessible_by(current_ability)
       .live
       .where(mission: current_mission)
       .distinct
@@ -71,6 +74,10 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   # Add an entity type to the schema for a given form.
   def add_form_entity_type(schema, id, name)
     name = "Responses: #{name}"
+
+    # We technically should be doing an authorization scope on Responses, but it would not be
+    # straightforward so we just rely on the :o_data permissions only being held by roles
+    # who can see all responses in a mission.
     entity = schema.add_entity_type(Response, where: {form_id: id},
                                               name: name,
                                               url_name: "Responses-#{id}",

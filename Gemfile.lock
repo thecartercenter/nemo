@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/sassafrastech/odata_server.git
+  revision: c94de409b0d969e5b82189dcdb646fe2f5fb995b
+  branch: sassafras
+  specs:
+    odata_server (0.1.0)
+      rails (>= 5.2)
+
+GIT
   remote: https://github.com/codebrew/backbone-rails.git
   revision: 231090bd690cd365a9486c17b00eec1e73ec37ec
   specs:
@@ -25,14 +33,6 @@ GIT
     closure_tree (7.0.0)
       activerecord (>= 4.2.10)
       with_advisory_lock (>= 4.0.0)
-
-GIT
-  remote: https://github.com/sassafrastech/odata_server.git
-  revision: d9b69be9218e3e5f4a4cd729b268539a2d7c765c
-  branch: sassafras
-  specs:
-    odata_server (0.1.0)
-      rails (>= 5.2)
 
 GIT
   remote: https://github.com/sassafrastech/rack-attack.git

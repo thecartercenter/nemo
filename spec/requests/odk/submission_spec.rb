@@ -7,13 +7,13 @@ require "rails_helper"
 # NOTE: This spec file is the only one that uses the "odk submissions" context, which is deprecated.
 # Future work on this file should switch it to using the newer method of building XML fixtures.
 describe "odk submissions", :odk, type: :request do
+  include_context "basic auth"
   include_context "odk submissions"
 
   let(:mission) { create(:mission) }
   let(:submission_mission) { mission }
   let(:submission_path) { "/m/#{submission_mission.compact_name}/submission" }
   let(:user) { create(:user, role_name: "enumerator", mission: mission) }
-  let(:auth_headers) { {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)} }
   let(:form) { create(:form, :live, mission: mission, question_types: %w[integer]) }
   let(:formver) { nil } # Don't override the version by default
   let(:fixture_name) { "single_question" }
@@ -32,11 +32,11 @@ describe "odk submissions", :odk, type: :request do
 
   context "get and head requests" do
     it "should return 204 and no content" do
-      head(submission_path, params: {format: "xml"}, headers: auth_headers)
+      head(submission_path, params: {format: "xml"}, headers: auth_header)
       expect(response).to have_http_status(:no_content)
       expect(response.body).to be_empty
 
-      get(submission_path, params: {format: "xml"}, headers: auth_headers)
+      get(submission_path, params: {format: "xml"}, headers: auth_header)
       expect(response).to have_http_status(:no_content)
       expect(response.body).to be_empty
     end
@@ -44,14 +44,14 @@ describe "odk submissions", :odk, type: :request do
 
   context "normal submission" do
     it "should work and have mission set to current mission" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.mission).to eq(mission)
       expect(nemo_response.device_id).to eq(nil)
     end
 
     it "should save device ID if present" do
-      post("#{submission_path}?deviceID=test", params: request_params, headers: auth_headers)
+      post("#{submission_path}?deviceID=test", params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.device_id).to eq("test")
     end
@@ -61,7 +61,7 @@ describe "odk submissions", :odk, type: :request do
     let(:submission_mission) { create(:mission) }
 
     it "should fail" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:forbidden)
     end
   end
@@ -71,7 +71,7 @@ describe "odk submissions", :odk, type: :request do
 
     it "should raise error" do
       expect do
-        post(submission_path, params: request_params, headers: auth_headers)
+        post(submission_path, params: request_params, headers: auth_header)
       end.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
@@ -81,7 +81,7 @@ describe "odk submissions", :odk, type: :request do
     let(:form) { create(:form, :draft, question_types: %w[integer]) }
 
     it "should fail with 460" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:form_not_live)
     end
   end
@@ -90,7 +90,7 @@ describe "odk submissions", :odk, type: :request do
     let(:form) { create(:form, :paused, question_types: %w[integer]) }
 
     it "should fail with 460" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:form_not_live)
     end
   end
@@ -99,7 +99,7 @@ describe "odk submissions", :odk, type: :request do
     let(:formver) { "1999010100" }
 
     it "should fail with upgrade_required" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:upgrade_required)
     end
   end
@@ -108,7 +108,7 @@ describe "odk submissions", :odk, type: :request do
     let(:fixture_name) { "no_version" }
 
     it "should fail with upgrade_required" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:upgrade_required)
     end
   end
@@ -117,7 +117,7 @@ describe "odk submissions", :odk, type: :request do
     let(:mission) { create(:mission, locked: true) }
 
     it "should fail" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:forbidden)
     end
   end
@@ -126,7 +126,7 @@ describe "odk submissions", :odk, type: :request do
     let(:user) { create(:user, role_name: "enumerator", active: false) }
 
     it "should fail" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:unauthorized)
     end
   end
@@ -140,7 +140,7 @@ describe "odk submissions", :odk, type: :request do
     end
 
     it "should still accept response" do
-      post(submission_path, params: request_params, headers: auth_headers)
+      post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.children.size).to eq(1)
     end

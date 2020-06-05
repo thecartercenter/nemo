@@ -31,7 +31,7 @@ describe "OData resource" do
 
     it "renders as expected" do
       expect_json(
-        "@odata.context": "http://www.example.com/en/m/#{get_mission.compact_name}" \
+        "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
           "/odata/v1/$metadata#Responses: #{form.name}",
         value: [
           json_for(form, form.responses[0], "IntegerQ1": 3,

@@ -178,6 +178,16 @@ class Ability
     can(%i[update destroy], Report::Report, mission_id: mission.id, creator_id: user.id)
     can(:export, Report::Report)
 
+    # Deliberately using :manage here because we are treating OData as a black box.
+    # Given that it is an engine, explicitly listing its controller actions seems wrong.
+    # They are all in service of the same outcome, sending data.
+    # If you can do one you should be able to do all.
+    #
+    # It is important for now that this permission only be granted to roles that can see
+    # all responses in a mission since we are not consulting accessible_by when loading Responses.
+    # This is due to the way the OData engine does this.
+    can(:manage, :o_data)
+
     if mission.locked?
       can(%i[index read export], Response, mission_id: mission.id)
     else
