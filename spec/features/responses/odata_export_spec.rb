@@ -19,6 +19,6 @@ feature "responses odata export", js: true do
 
     click_link("Export")
     click_link("OData via API")
-    expect(page).to(have_field("api-endpoint", with: %r{/odata/v1}, disabled: true))
+    expect(page).to(have_selector(".widget .ro-val", text: %r{/odata/v1}))
   end
 end
