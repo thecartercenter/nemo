@@ -53,7 +53,8 @@
     </div>
 
     <h2 class="mt-4"><%= t("activerecord.attributes.setting.external_sql") %></h2>
-    <%= f.field(:external_sql, partial: "external_sql") %>
+    <%= f.field(:external_sql, type: :pre, value: @external_sql,
+      append: link_to(t("layout.select_all"), "#")) %>
   <% end %>
 
   <div class="submit-buttons">
