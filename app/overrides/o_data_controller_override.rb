@@ -41,7 +41,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
       response_id = response["Id"]
       response = Response.find(response_id)
       # Until we have a reliable background job, allow lazy-generating the cached JSON.
-      unless response.cached_json
+      unless response.cached_json && Settings.force_fresh_odata.blank?
         cached_json = Results::ResponseJsonGenerator.new(response).as_json
         response.update!(cached_json: cached_json)
       end
