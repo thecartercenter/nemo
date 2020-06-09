@@ -21,7 +21,7 @@ module Results
       object["ResponseReviewed"] = response.reviewed?
       root = response.root_node_including_tree(:choices, form_item: :question, option_node: :option_set)
       add_answers(root, object) unless root.nil?
-      add_nil_answers(object, response)
+      add_nil_answers(response.form, object)
       object
     end
 
@@ -55,6 +55,14 @@ module Results
       end
     end
 
+    # Make sure we include everything specified by metadata in our output,
+    # even if an older Response didn't include that qing/group originally.
+    def add_nil_answers(node, object)
+      node.children.map do |child|
+        object[child.code.vanilla] ||= nil
+      end
+    end
+
     def answer_set_value(answer_set)
       set = {}
       answer_set.children.each do |answer|
@@ -82,14 +90,6 @@ module Results
       # Data that's been copied from MS Word contains a bunch of HTML decoration.
       # Get rid of that via simple_format.
       /\A<!--/.match?(value) ? simple_format(value) : value.to_s
-    end
-
-    # Make sure we include everything from the metadata in our output,
-    # even if the Response didn't include that answer originally.
-    def add_nil_answers(object, response)
-      response.form.c.map do |c|
-        object[c.code.vanilla] ||= nil
-      end
     end
 
     # Returns the OData key for a given group, response node, or form node.
