@@ -39,7 +39,8 @@ module Results
         elsif child_node.is_a?(AnswerGroup)
           add_group_answers(child_node, object)
         elsif child_node.is_a?(AnswerGroupSet)
-          add_answers(child_node, object[group_key(child_node)] = [])
+          set = object[node_key(child_node)] = []
+          add_answers(child_node, set)
         end
       end
     end
@@ -49,7 +50,8 @@ module Results
         object << (item = {})
         add_answers(group, item)
       else
-        add_answers(group, object[group_key(group)] = {})
+        subgroup = object[node_key(group)] = {}
+        add_answers(group, subgroup)
       end
     end
 
@@ -90,8 +92,9 @@ module Results
       end
     end
 
-    def group_key(group)
-      group.code.vanilla
+    # Returns the OData key for a given group, response node, or form node.
+    def node_key(node)
+      node.code.vanilla
     end
   end
 end
