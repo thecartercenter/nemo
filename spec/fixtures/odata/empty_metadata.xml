@@ -2,7 +2,7 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="NEMO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <EntityType Name="Response">
+      <EntityType Name="Response" OpenType="true">
         <Key>
           <PropertyRef Name="ResponseID"/>
         </Key>
