@@ -19,7 +19,8 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
                       transformers: {
                         root: ->(*args) { transform_json_for_root(*args) },
                         metadata: ->(*args) { transform_schema_for_metadata(*args) },
-                        feed: ->(*args) { transform_json_for_resource_feed(*args) }
+                        feed: ->(*args) { transform_json_for_resource_feed(*args) },
+                        entry: ->(*args) { transform_json_for_resource(*args) }
                       })
 
     add_entity_types(schema, distinct_forms)
@@ -37,17 +38,20 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   end
 
   def transform_json_for_resource_feed(json)
-    json[:value] = json[:value].map do |response|
-      response_id = response["Id"]
-      response = Response.find(response_id)
-      # Until we have a reliable background job, allow lazy-generating the cached JSON.
-      unless response.cached_json && Settings.force_fresh_odata.blank?
-        cached_json = Results::ResponseJsonGenerator.new(response).as_json
-        response.update!(cached_json: cached_json)
-      end
-      response.cached_json
-    end
     trim_context_params(json)
+  end
+
+  def transform_json_for_resource(json)
+    response_id = json["Id"]
+    response = Response.find(response_id)
+    # Until we have a reliable background job, allow lazy-generating the cached JSON.
+    unless response.cached_json && Settings.force_fresh_odata.blank?
+      cached_json = Results::ResponseJsonGenerator.new(response).as_json
+      response.update!(cached_json: cached_json)
+    end
+    cached_json = response.cached_json
+    cached_json["@odata.context"] = json["@odata.context"] if json["@odata.context"]
+    trim_context_params(cached_json)
   end
 
   # Trim off URL params; something internally
