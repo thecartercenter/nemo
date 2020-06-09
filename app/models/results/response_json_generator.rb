@@ -58,8 +58,16 @@ module Results
     # Make sure we include everything specified by metadata in our output,
     # even if an older Response didn't include that qing/group originally.
     def add_nil_answers(node, object)
+      # Note: This logic is similar to add_answers, but with Form instead of Response.
+      # The logic seems more readable when they're independent like this.
+      # It also preserves old data better.
       node.children.map do |child|
-        object[child.code.vanilla] ||= nil
+        if child.is_a?(QingGroup)
+          subgroup = object[node_key(child)] ||= {}
+          add_nil_answers(child, subgroup)
+        else
+          object[node_key(child)] ||= nil
+        end
       end
     end
 
