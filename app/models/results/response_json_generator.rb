@@ -63,11 +63,20 @@ module Results
       # It also preserves old data better.
       node.children.map do |child|
         if child.is_a?(QingGroup)
-          subgroup = object[node_key(child)] ||= {}
-          add_nil_answers(child, subgroup)
+          add_nil_group_answers(child, object)
         else
           object[node_key(child)] ||= nil
         end
+      end
+    end
+
+    def add_nil_group_answers(group, object)
+      if group.repeatable?
+        entries = object[node_key(group)] ||= []
+        entries.each { |entry| add_nil_answers(group, entry) }
+      else
+        subgroup = object[node_key(group)] ||= {}
+        add_nil_answers(group, subgroup)
       end
     end
 
