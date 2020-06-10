@@ -1711,7 +1711,6 @@ ar:
   response:
     reviewed: "تمت مراجعة هذا الرد"
     edit_this_response: "تعديل هذا الرد"
-    export_to_csv: "تصدير بصيغة CSV"
     loading: "تحميل الرد..."
     observation_time: "وقت المراقبة "
     save_and_mark_reviewed: "حفظ ووضع علامة تمت المراجعة"

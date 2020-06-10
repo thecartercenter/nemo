@@ -965,7 +965,6 @@ es:
       none: "No Mostrar Nada"
   response:
     edit_this_response: "Editar esta Respuesta"
-    export_to_csv: "Exportación a formato CSV"
     loading: "Cargando Respuesta..."
     observation_time: "Hora de Observación"
     view_response: "Ver Respuesta"

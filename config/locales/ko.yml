@@ -1251,7 +1251,6 @@ ko:
       none: "보일 자료가 없습니다"
   response:
     edit_this_response: "이 응답지 수정하기"
-    export_to_csv: "CSV 형식으로 내보내기"
     loading: "응답지 로딩중"
     observation_time: "관찰 시간"
     view_response: "응답지 보기"

@@ -1650,7 +1650,6 @@ fr:
   response:
     reviewed: "Cette réponse a été revu"
     edit_this_response: "Modifier cette réponse"
-    export_to_csv: "Exporter au format CSV"
     loading: "Chargement Réponse..."
     observation_time: "Le temps d'Observation"
     save_and_mark_reviewed: "Enregistrer et Marquer comme Revu"
