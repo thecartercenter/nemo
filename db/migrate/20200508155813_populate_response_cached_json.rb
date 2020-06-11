@@ -33,12 +33,13 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
     ActiveRecord::Base.logger.level = 1
 
     total = responses.count
-    curr = 0
-    responses.find_each do |response|
-      puts "Updating #{response.shortcode}... (#{curr += 1} / #{total})"
+    start = Time.now
+    Parallel.each_with_index(responses.find_each, in_processes: Etc.nprocessors) do |response, index|
+      puts "Updating #{response.shortcode}... (#{index} / #{total})"
       json = Results::ResponseJsonGenerator.new(response).as_json
       response.update!(cached_json: json)
     end
+    puts "Elapsed: #{Time.now - start}" if ENV["BENCHMARK"]
 
     ActiveRecord::Base.logger.level = old_level
   end
