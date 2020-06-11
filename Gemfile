@@ -6,7 +6,6 @@ gem "actionpack-page_caching", "~> 1.1.0"
 gem "attribute_normalizer", "~> 1.2.0"
 gem "daemons", "~> 1.2.1"
 gem "dalli", "~> 2.7.4" # memcache
-gem "delayed_job_active_record", "~> 4.1.3"
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe" # mean, median, etc.
 gem "draper", "~> 3.0.1"
 gem "eventmachine", "~> 1.2", platform: :ruby
@@ -87,6 +86,10 @@ gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree.git"
 
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"
+
+# Performance
+gem "delayed_job_active_record", "~> 4.1.3"
+gem "parallel", "~> 1.19"
 
 # I18n
 gem "i18n-country-translations", "~> 1.2.3"
