@@ -73,9 +73,13 @@ module Results
     def add_nil_group_answers(group, object)
       if group.repeatable?
         entries = object[node_key(group)] ||= []
+        # Make sure it's an array of hashes, not a hash (in case 'repeatable' changed).
+        entries = object[node_key(group)] = [entries] unless entries.is_a?(Array)
         entries.each { |entry| add_nil_answers(group, entry) }
       else
         subgroup = object[node_key(group)] ||= {}
+        # Make sure it's a hash, not an array of hashes (in case 'repeatable' changed).
+        subgroup = object[node_key(group)] = subgroup.first if subgroup.is_a?(Array)
         add_nil_answers(group, subgroup)
       end
     end
