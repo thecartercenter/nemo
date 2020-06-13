@@ -12,11 +12,11 @@ module Cloning
       self.relations_by_class = relations.group_by(&:klass)
     end
 
+    # Returns a hash of form {ModelClass => [Relation, Relation, ...], ...}, mapping model classes
+    # to arrays of Relations.
     def expanded
       initial_relations.each { |r| expand(r) }
-      relations_by_class.values.map do |relations|
-        relations.inject { |joined, rel| joined.or(rel) }
-      end
+      relations_by_class
     end
 
     private

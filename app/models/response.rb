@@ -75,6 +75,10 @@ class Response < ApplicationRecord
   has_many :answers, -> { order(:new_rank) },
     autosave: true, dependent: :destroy, inverse_of: :response
 
+  # This association used only for cloning, hence it being private.
+  has_many :response_nodes
+  private :response_nodes, :response_nodes=
+
   has_closure_tree_root :root_node, class_name: "ResponseNode"
 
   has_attached_file :odk_xml
@@ -112,6 +116,8 @@ class Response < ApplicationRecord
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
   delegate :c, :children, :debug_tree, :matching_group_set, to: :root_node
+
+  clone_options follow: %i[response_nodes form user reviewer]
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)

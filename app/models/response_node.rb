@@ -58,6 +58,11 @@ class ResponseNode < ApplicationRecord
   belongs_to :form_item, inverse_of: :response_nodes, foreign_key: "questioning_id"
   belongs_to :response
 
+  # These associations are used for cloning only, hence them being private.
+  has_many :up_hierarchies, class_name: "AnswerHierarchy", foreign_key: "ancestor_id"
+  has_many :down_hierarchies, class_name: "AnswerHierarchy", foreign_key: "descendant_id"
+  private :up_hierarchies, :up_hierarchies=, :down_hierarchies, :down_hierarchies=
+
   # Used only for Answer, but included here for eager loading.
   belongs_to :option_node, inverse_of: :answers
   has_many :choices, -> { order(:created_at) }, foreign_key: :answer_id, dependent: :destroy,
@@ -81,6 +86,8 @@ class ResponseNode < ApplicationRecord
   delegate :code, to: :form_item
   alias c children
   alias destroy? _destroy
+
+  clone_options follow: %i[choices up_hierarchies down_hierarchies]
 
   def debug_tree(indent: 0)
     child_tree = children.map { |c| c.debug_tree(indent: indent + 1) }.join
