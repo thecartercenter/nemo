@@ -608,6 +608,8 @@ ActiveRecord::Schema.define(version: 2020_10_19_195418) do
     t.index ["whitelistable_id"], name: "index_whitelistings_on_whitelistable_id"
   end
 
+  add_foreign_key "answer_hierarchies", "answers", column: "ancestor_id"
+  add_foreign_key "answer_hierarchies", "answers", column: "descendant_id"
   add_foreign_key "answers", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "answers", "missions"
   add_foreign_key "answers", "option_nodes"
