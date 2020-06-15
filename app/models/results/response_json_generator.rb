@@ -29,9 +29,10 @@ module Results
 
     delegate :form, :user, to: :response
 
-    # Adds data for the given node to the given object. Object may be an array or hash.
-    def add_answers(node, object)
-      node.children.each do |child_node|
+    # Adds data for the given Response node to the given object.
+    # Object may be an array or hash.
+    def add_answers(response_node, object)
+      response_node.children.each do |child_node|
         if child_node.is_a?(Answer)
           object[child_node.question_code] = value_for(child_node)
         elsif child_node.is_a?(AnswerSet)
@@ -57,15 +58,15 @@ module Results
 
     # Make sure we include everything specified by metadata in our output,
     # even if an older Response didn't include that qing/group originally.
-    def add_nil_answers(node, object)
+    def add_nil_answers(form_item, object)
       # Note: This logic is similar to add_answers, but with Form instead of Response.
       # The logic seems more readable when they're independent like this.
       # It also preserves old data better.
-      node.children.map do |child|
-        if child.is_a?(QingGroup)
-          add_nil_group_answers(child, object)
+      form_item.children.map do |child_item|
+        if child_item.is_a?(QingGroup)
+          add_nil_group_answers(child_item, object)
         else
-          object[node_key(child)] ||= nil
+          object[node_key(child_item)] ||= nil
         end
       end
     end
