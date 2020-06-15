@@ -1726,7 +1726,7 @@ en:
       export: "Export"
       to_csv: "CSV Format"
       to_odata: "OData via API"
-      odata_prompt_html: "Use the NEMO API to access data using the OData standard. You can copy this URL into your data processing software, such as Power BI. Read more about the API in the documentation."
+      odata_prompt_html: "Use the NEMO API to access data using the OData standard. You can copy this URL into your data processing software, such as Power BI."
     export_options:
       summary:
         zero: "No responses to be exported."
