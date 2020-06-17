@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "actionpack-page_caching", "~> 1.1.0"
+gem "actionpack-page_caching", "~> 1.2.1"
 gem "attribute_normalizer", "~> 1.2.0"
 gem "daemons", "~> 1.2.1"
 gem "dalli", "~> 2.7.4" # memcache
