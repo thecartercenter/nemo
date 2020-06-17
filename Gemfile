@@ -19,7 +19,7 @@ gem "immigrant", "~> 0.3.1" # foreign key maintenance
 gem "paperclip", "~> 6.0"
 gem "pg", "~> 0.20"
 gem "pg_search", "~> 2.1"
-gem "phony", "~> 2.15.26"
+gem "phony", "~> 2.15"
 gem "postgres-copy", "~> 1.0"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 gem "rake", "~> 12.3.3"
