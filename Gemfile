@@ -2,6 +2,8 @@
 
 source "http://rubygems.org"
 
+gem "rails", "~> 5.2"
+
 gem "actionpack-page_caching", "~> 1.1.0"
 gem "attribute_normalizer", "~> 1.2.0"
 gem "daemons", "~> 1.2.1"
@@ -20,7 +22,6 @@ gem "pg_search", "~> 2.1"
 gem "phony", "~> 2.15.26"
 gem "postgres-copy", "~> 1.0"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
-gem "rails", "~> 5.2.2"
 gem "rake", "~> 12.3.3"
 gem "random_data", "~> 1.6.0" # Deprecated: Use Faker instead
 gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
@@ -100,6 +101,9 @@ gem "rails-i18n", "~> 5.1"
 
 # Analytics
 gem "scout_apm", "~> 2.6"
+
+# Force Sprockets to stay on v3 for now.
+gem "sprockets", "~> 3"
 
 # The below are used for building load test plans.
 # Needed in prod because test plans are built on prod instances.
