@@ -12,44 +12,76 @@ module Results
     end
 
     def as_json
-      object = {}
-      object["ResponseID"] = response.id
-      object["ResponseShortcode"] = response.shortcode
-      object["FormName"] = form.name
-      object["ResponseSubmitterName"] = user.name
-      object["ResponseSubmitDate"] = response.created_at.iso8601
-      object["ResponseReviewed"] = response.reviewed?
+      json = {}
+      json["ResponseID"] = response.id
+      json["ResponseShortcode"] = response.shortcode
+      json["FormName"] = form.name
+      json["ResponseSubmitterName"] = user.name
+      json["ResponseSubmitDate"] = response.created_at.iso8601
+      json["ResponseReviewed"] = response.reviewed?
       root = response.root_node_including_tree(:choices, form_item: :question, option_node: :option_set)
-      add_answers(root, object) unless root.nil?
-      add_nil_answers(object, response)
-      object
+      add_answers(root, json) unless root.nil?
+      add_nil_answers(response.form, json)
+      json
     end
 
     private
 
     delegate :form, :user, to: :response
 
-    # Adds data for the given node to the given object. Object may be an array or hash.
-    def add_answers(node, object)
-      node.children.each do |child_node|
+    # Adds data for the given Response node to the given json object.
+    # Object may be an array or hash.
+    def add_answers(response_node, json)
+      response_node.children.each do |child_node|
         if child_node.is_a?(Answer)
-          object[child_node.question_code] = value_for(child_node)
+          json[child_node.question_code] = value_for(child_node)
         elsif child_node.is_a?(AnswerSet)
-          object[child_node.question_code] = answer_set_value(child_node)
+          json[child_node.question_code] = answer_set_value(child_node)
         elsif child_node.is_a?(AnswerGroup)
-          add_group_answers(child_node, object)
+          add_group_answers(child_node, json)
         elsif child_node.is_a?(AnswerGroupSet)
-          add_answers(child_node, object[group_key(child_node)] = [])
+          set = json[node_key(child_node)] = []
+          add_answers(child_node, set)
         end
       end
     end
 
-    def add_group_answers(group, object)
+    def add_group_answers(group, json)
       if group.repeatable?
-        object << (item = {})
+        json << (item = {})
         add_answers(group, item)
       else
-        add_answers(group, object[group_key(group)] = {})
+        subgroup = json[node_key(group)] = {}
+        add_answers(group, subgroup)
+      end
+    end
+
+    # Make sure we include everything specified by metadata in our output,
+    # even if an older Response didn't include that qing/group originally.
+    def add_nil_answers(form_item, json)
+      # Note: This logic is similar to add_answers, but with Form instead of Response.
+      # The logic seems more readable when they're independent like this.
+      # It also preserves old data better.
+      form_item.children.map do |child_item|
+        if child_item.is_a?(QingGroup)
+          add_nil_group_answers(child_item, json)
+        else
+          json[node_key(child_item)] ||= nil
+        end
+      end
+    end
+
+    def add_nil_group_answers(group, json)
+      if group.repeatable?
+        entries = json[node_key(group)] ||= []
+        # Make sure it's an array of hashes, not a hash (in case 'repeatable' changed).
+        entries = json[node_key(group)] = [entries] unless entries.is_a?(Array)
+        entries.each { |entry| add_nil_answers(group, entry) }
+      else
+        subgroup = json[node_key(group)] ||= {}
+        # Make sure it's a hash, not an array of hashes (in case 'repeatable' changed).
+        subgroup = json[node_key(group)] = subgroup.first if subgroup.is_a?(Array)
+        add_nil_answers(group, subgroup)
       end
     end
 
@@ -82,16 +114,9 @@ module Results
       /\A<!--/.match?(value) ? simple_format(value) : value.to_s
     end
 
-    # Make sure we include everything from the metadata in our output,
-    # even if the Response didn't include that answer originally.
-    def add_nil_answers(object, response)
-      response.form.c.map do |c|
-        object[c.code.vanilla] ||= nil
-      end
-    end
-
-    def group_key(group)
-      group.code.vanilla
+    # Returns the OData key for a given group, response node, or form node.
+    def node_key(node)
+      node.code.vanilla
     end
   end
 end

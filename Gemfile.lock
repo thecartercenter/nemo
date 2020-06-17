@@ -343,7 +343,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    parallel (1.12.1)
+    parallel (1.19.1)
     parser (2.5.3.0)
       ast (~> 2.4.0)
     pg (0.21.0)
@@ -631,6 +631,7 @@ DEPENDENCIES
   mocha (~> 1.1.0)
   odata_server!
   paperclip (~> 6.0)
+  parallel (~> 1.19)
   pg (~> 0.20)
   pg_search (~> 2.1)
   phony (~> 2.15.26)

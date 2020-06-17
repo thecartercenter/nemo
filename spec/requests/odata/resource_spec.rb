@@ -27,7 +27,6 @@ describe "OData resource" do
     include_context "odata with basic forms"
 
     let(:path) { "#{mission_api_route}/Responses-#{form.id}" }
-    let(:first_response) { form.responses.first }
 
     it "renders as expected" do
       expect_json(
@@ -45,6 +44,20 @@ describe "OData resource" do
                                             "TextQ3": "Foo")
         ]
       )
+    end
+
+    context "navigating to an Entry" do
+      let(:path) { "#{mission_api_route}/Responses-#{form.id}(#{form.responses[0].id})" }
+
+      it "renders as expected" do
+        expect_json(
+          json_for(form, form.responses[0], "IntegerQ1": 3,
+                                            "SelectOneQ2": "Dog",
+                                            "TextQ3": "Baz")
+            .merge("@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
+              "/odata/v1/$metadata#Responses: #{form.name}/$entity")
+        )
+      end
     end
   end
 end

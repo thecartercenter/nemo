@@ -84,6 +84,60 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
     end
   end
 
+  context "legacy response - repeat group that no longer repeats" do
+    let(:form) do
+      create(:form,
+        question_types:
+          [{repeating: {name: "Fruit", items: [
+            "text",                                   # 1
+            "integer",                                # 2
+            {repeating: {name: "Slice", items: [
+              "decimal"                               # 3
+            ]}}
+          ]}}])
+    end
+    let!(:response) do
+      create(:response, form: form, reviewed: true, answer_values: [
+        # This is submitted as a repeat group, but will later NOT repeat.
+        # The second entry is not expected to render anymore.
+        {repeating: [
+          ["Apple", 1, {repeating: [[1.65], [1.3]]}],
+          ["Banana", 2, {repeating: [[1.27], [1.77]]}]
+        ]}
+      ])
+    end
+
+    it "produces correct json" do
+      form.c[0].update!(repeatable: false)
+      is_expected.to match_json(prepare_response_json_expectation("legacy_repeat_now_group.json"))
+    end
+  end
+
+  context "legacy response - group that now repeats" do
+    let(:form) do
+      create(:form,
+        question_types:
+          [[
+            "text",                                   # 1
+            "integer",                                # 2
+            {repeating: {name: "Slice", items: [
+              "decimal"                               # 3
+            ]}}
+          ]])
+    end
+    let!(:response) do
+      create(:response, form: form, reviewed: true, answer_values: [
+        # This is submitted as a regular group, but will later repeat.
+        ["Apple", 1, {repeating: [[1.65], [1.3]]}]
+      ])
+    end
+
+    it "produces correct json" do
+      form.c[0].update!(repeatable: true)
+      is_expected.to match_json(prepare_response_json_expectation("legacy_group_now_repeat.json"))
+    end
+  end
+
   def prepare_response_json_expectation(filename)
     prepare_fixture("response_json/#{filename}",
       id: [response.id], shortcode: [response.shortcode])

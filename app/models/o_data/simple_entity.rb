@@ -16,7 +16,9 @@ module OData
         SimpleProperty.new(return_type: type)
       end
       self.navigation_properties = []
-      self.extra_tags = extra_tags
+      # Mark all types as "open" so Power BI doesn't fail when old responses
+      # contain deprecated qings.
+      self.extra_tags = {OpenType: true}.merge(extra_tags)
     end
   end
 end
