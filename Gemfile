@@ -77,7 +77,7 @@ gem "versionist", "~> 1.4.1"
 gem "odata_server", github: "sassafrastech/odata_server", branch: "sassafras"
 
 # Configuration
-gem "config", "~> 1.7"
+gem "config", "~> 2.2"
 gem "configatron", "~> 4.5.0" # Deprecated, prefer `config` gem
 
 # Tree modelling
