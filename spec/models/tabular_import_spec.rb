@@ -31,7 +31,7 @@ describe TabularImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["There was an issue with your CSV file: Unclosed quoted field on line 1."])
+      expect(run_errors).to eq(["There was an issue with your CSV file: Unclosed quoted field in line 1."])
     end
   end
 
