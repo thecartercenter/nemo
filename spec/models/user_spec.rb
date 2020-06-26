@@ -211,12 +211,20 @@ describe User do
       end
     end
 
-    it "should not allow invalid chars" do
-      # TODO
-      ["foo bar", "foo✓bar", "foébar", "foo'bar"].each do |login|
+    it "should allow unicode word chars" do
+      %w[foo_bar.baz foébar テスト].each do |login|
+        user = build(:user, login: login)
+        expect(user).to be_valid, "Expected login to be allowed: #{login}"
+      end
+    end
+
+    it "should disallow unicode non-word chars" do
+      ["foo bar", "foo\nbar", "foo'bar", "foo✓bar", "foo😂bar", "foo\u00A0bar"].each do |login|
         user = build(:user, login: login)
         expect(user).not_to be_valid
-        expect(user.errors[:login].join).to match(/letters, numbers, periods/)
+        # TODO: Update error messages.
+        expect(user.errors[:login].join)
+          .to match(/letters, numbers, periods/), "Expected login to be disallowed: #{login}"
       end
     end
 
