@@ -82,13 +82,6 @@ class User < ApplicationRecord
     c.disable_perishable_token_maintenance = true
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
-
-    # Authlogic model validation is deprecated in 4.4.0
-    # Will be removed entirely from 5.0.0
-    # These fields are manually validated below
-    c.validate_email_field = false
-    c.validate_login_field = false
-    c.validate_password_field = false
   end
 
   after_initialize(:set_default_pref_lang)
