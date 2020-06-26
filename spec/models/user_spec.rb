@@ -212,6 +212,7 @@ describe User do
     end
 
     it "should not allow invalid chars" do
+      # TODO
       ["foo bar", "foo✓bar", "foébar", "foo'bar"].each do |login|
         user = build(:user, login: login)
         expect(user).not_to be_valid

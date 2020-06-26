@@ -161,6 +161,16 @@ class User < ApplicationRecord
   def self.find_with_credentials(login, password)
     user = find_by(login: login)
     user&.valid_password?(password) ? user : nil
+  rescue ActiveRecord::StatementInvalid
+    return nil if login.encoding == Encoding::UTF_8 && password.encoding == Encoding::UTF_8
+    find_with_credentials(reencode(login), reencode(password))
+  end
+
+  # Convert strings from Basic auth with Latin-1 encoding into UTF-8 so we can recognize characters:
+  # https://forum.getodk.org/t/support-for-special-characters-in-usernames-basic-auth/27696
+  def self.reencode(str)
+    str.force_encoding("iso8859-1")
+    str.valid_encoding? ? str.encode("utf-8") : ""
   end
 
   # Returns an array of hashes of format {name: "Some User", response_count: 2}

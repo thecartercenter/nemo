@@ -25,4 +25,7 @@ describe "basic authentication for xml requests" do
       assert_response :success
     end
   end
+
+  # TODO: Spec for username string encoding.
+  #   encode('iso8859-1') for Latin-1 like ODK Collect sends.
 end
