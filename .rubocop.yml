@@ -1,5 +1,9 @@
+require: rubocop-rails
+
 # Disable defaults
 AllCops:
+  # Enable future cops not specified here.
+  NewCops: enable
   Exclude:
     - "bin/**/*"
     - "db/schema.rb"
@@ -9,7 +13,10 @@ AllCops:
     - "vendor/**/*"
     - "node_modules/**/*"
 
-Layout/AlignParameters:
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/CaseIndentation:
@@ -18,13 +25,13 @@ Layout/CaseIndentation:
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
   EnforcedStyle: consistent
 
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 
 Layout/MultilineMethodCallIndentation:
@@ -36,7 +43,14 @@ Layout/MultilineOperationIndentation:
 Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
 
-Lint/UnneededCopDisableDirective:
+Layout/LineLength:
+  Enabled: true
+  Max: 110
+  IgnoredPatterns:
+    # Test descriptors
+    - ^\s*(describe|it|context|scenario) ".+" do$
+
+Lint/RedundantCopDisableDirective:
   Enabled: false
 
 Metrics/BlockLength:
@@ -52,13 +66,6 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Metrics/LineLength:
-  Enabled: true
-  Max: 110
-  IgnoredPatterns:
-    # Test descriptors
-    - ^\s*(describe|it|context|scenario) ".+" do$
-
 Metrics/MethodLength:
   Max: 12
 
@@ -71,7 +78,7 @@ Metrics/PerceivedComplexity:
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   AllowedNames:
     - _
     - a

@@ -222,7 +222,7 @@ ELMO::Application.routes.draw do
   end
 
   # Special SMS routes. No locale.
-  def sms_submission_route(as:) # rubocop:disable Naming/UncommunicativeMethodParamName
+  def sms_submission_route(as:) # rubocop:disable Naming/MethodParameterName
     match("/sms/submit/:token", to: "sms#create", token: /[0-9a-f]{32}/, via: %i[get post], as: as)
   end
   scope "/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: {mode: "m"} do
