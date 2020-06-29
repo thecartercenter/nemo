@@ -154,5 +154,6 @@ group :development, :test do
   gem "awesome_print", "~> 1.6.1"
   gem "database_cleaner", "~> 1.7.0"
   gem "db-query-matchers", "~> 0.9"
+  gem "rubocop", "~> 0.71.0"
   gem "timecop", "~> 0.7.3"
 end
