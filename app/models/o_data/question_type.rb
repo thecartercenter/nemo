@@ -17,7 +17,7 @@ module OData
       "decimal" => :decimal,
       "location" => :string,
       "select_one" => :string,
-      "select_multiple" => :string,
+      "select_multiple" => [:string],
       "datetime" => :datetime,
       "date" => :date,
       "time" => :time,

@@ -102,7 +102,7 @@ module Results
       when "integer", "counter" then answer.value&.to_i
       when "decimal" then answer.value&.to_f
       when "select_one" then answer.option_name
-      when "select_multiple" then answer.choices.empty? ? nil : answer.choices.map(&:option_name).sort.to_s
+      when "select_multiple" then answer.choices.empty? ? [] : answer.choices.map(&:option_name).sort
       when "location" then answer.attributes.slice("latitude", "longitude", "altitude", "accuracy").to_s
       else format_value(answer.value)
       end
