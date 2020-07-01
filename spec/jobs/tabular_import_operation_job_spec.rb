@@ -27,7 +27,7 @@ describe TabularImportOperationJob do
       expect(operation.completed?).to be(true)
       expect(operation.failed?).to be(true)
       expect(operation.job_error_report).to match("* Row 2: Main Phone: Please enter at least 9 digits."\
-        "\n* Row 3: Username: Please use only unaccented letters, numbers, periods, and underscores.")
+        "\n* Row 3: Username: Please use only letters, numbers, periods, and underscores.")
     end
   end
 end

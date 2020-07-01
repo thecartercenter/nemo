@@ -149,7 +149,7 @@ describe UserImport do
       expect(import).not_to be_succeeded
       expect(run_errors).to eq([
         "Row 2: Main Phone: Please enter at least 9 digits.",
-        "Row 3: Username: Please use only unaccented letters, numbers, periods, and underscores."
+        "Row 3: Username: Please use only letters, numbers, periods, and underscores."
       ])
     end
   end
