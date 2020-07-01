@@ -212,7 +212,7 @@ describe User do
     end
 
     it "should allow unicode word chars" do
-      %w[foo_bar.baz foébar テスト].each do |login|
+      %w[foo_bar.baz 123 foébar テスト].each do |login|
         user = build(:user, login: login)
         expect(user).to be_valid, "Expected login to be allowed: #{login}"
       end
