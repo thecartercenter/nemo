@@ -82,13 +82,6 @@ class User < ApplicationRecord
     c.disable_perishable_token_maintenance = true
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
-
-    # Authlogic model validation is deprecated in 4.4.0
-    # Will be removed entirely from 5.0.0
-    # These fields are manually validated below
-    c.validate_email_field = false
-    c.validate_login_field = false
-    c.validate_password_field = false
   end
 
   after_initialize(:set_default_pref_lang)
@@ -109,7 +102,7 @@ class User < ApplicationRecord
   validate(:must_have_password_on_enter)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
-  validates(:login, format: {with: /\A[a-zA-Z0-9\._]+\z/}, uniqueness: true)
+  validates(:login, format: {with: /\A[[:word:].]+\z/}, uniqueness: true)
   validates(:email, format: {with: /@/}, length: {maximum: 100}, allow_blank: true)
 
   # This validation causes issues when deleting missions,
@@ -168,6 +161,16 @@ class User < ApplicationRecord
   def self.find_with_credentials(login, password)
     user = find_by(login: login)
     user&.valid_password?(password) ? user : nil
+  rescue ActiveRecord::StatementInvalid
+    return nil if login.encoding == Encoding::UTF_8 && password.encoding == Encoding::UTF_8
+    find_with_credentials(reencode(login), reencode(password))
+  end
+
+  # Convert strings from Basic auth with Latin-1 encoding into UTF-8 so we can recognize characters:
+  # https://forum.getodk.org/t/support-for-special-characters-in-usernames-basic-auth/27696
+  def self.reencode(str)
+    str.force_encoding("iso8859-1")
+    str.valid_encoding? ? str.encode("utf-8") : ""
   end
 
   # Returns an array of hashes of format {name: "Some User", response_count: 2}

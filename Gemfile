@@ -50,7 +50,7 @@ gem "webpacker", "~> 4.2"
 
 # Authz and Authn
 gem "activerecord-session_store", "~> 1.1.1"
-gem "authlogic", "~> 4.4.2"
+gem "authlogic", "~> 6.1"
 gem "cancancan", "~> 2.3.0"
 gem "draper-cancancan", "~> 1.1"
 gem "scrypt", "~> 3.0"

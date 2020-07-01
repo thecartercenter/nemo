@@ -115,11 +115,11 @@ GEM
       activesupport (>= 3.0.0)
     ast (2.4.1)
     attribute_normalizer (1.2.0)
-    authlogic (4.4.2)
-      activerecord (>= 4.2, < 5.3)
-      activesupport (>= 4.2, < 5.3)
+    authlogic (6.1.0)
+      activemodel (>= 5.2, < 6.1)
+      activerecord (>= 5.2, < 6.1)
+      activesupport (>= 5.2, < 6.1)
       request_store (~> 1.0)
-      scrypt (>= 1.2, < 4.0)
     autoprefixer-rails (9.5.0)
       execjs
     awesome_print (1.6.1)
@@ -434,7 +434,7 @@ GEM
       tilt
     recaptcha (0.4.0)
     regexp_parser (1.7.1)
-    request_store (1.4.1)
+    request_store (1.5.0)
       rack (>= 1.4)
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
@@ -597,7 +597,7 @@ DEPENDENCIES
   api-pagination (~> 4.1.1)
   assert_difference (~> 1.0.0)
   attribute_normalizer (~> 1.2.0)
-  authlogic (~> 4.4.2)
+  authlogic (~> 6.1)
   awesome_print (~> 1.6.1)
   axlsx (~> 2.1.1)!
   axlsx_rails (~> 0.5.0)

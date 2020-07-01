@@ -709,7 +709,7 @@ en:
         body: "Enter the body of the message."
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
-        login: "The username will be used to log in. It may contain only unaccented letters, numbers, periods, and underscores."
+        login: "The username will be used to log in. It may contain only letters, numbers, periods, and underscores."
         phone: "Phone number must include the country code. Example: +25680344523"
         phone2: "Phone number must include the country code. Example: +25680344523"
         admin: "Whether this user is a system-wide administrator. You can control per-mission permissions using the fields below."
@@ -865,7 +865,7 @@ en:
             assignments:
               cant_be_empty_if_not_admin: "At least one assignment is required if user is not an admin."
             login:
-              invalid: "Please use only unaccented letters, numbers, periods, and underscores."
+              invalid: "Please use only letters, numbers, periods, and underscores."
             reset_password_method:
               cant_passwd_email: "Not allowed unless an email address is provided."
         user_import:
