@@ -51,6 +51,7 @@ class Answer < ResponseNode
   include PgSearch
 
   LOCATION_ATTRIBS = %i[latitude longitude altitude accuracy].freeze
+  LOCATION_COLS = LOCATION_ATTRIBS.map(&:to_s).freeze
 
   # Convert value to tsvector for use in full text search.
   trigger.before(:insert, :update) do

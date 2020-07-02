@@ -19,7 +19,6 @@ module Results
     class AnswerProcessor
       attr_accessor :buffer, :row, :long_text_behavior
 
-      LOCATION_COLS = %w[latitude longitude altitude accuracy].freeze
       VALUE_COLS = %w[value time_value date_value datetime_value].freeze
 
       # Microsoft Excel limitations.
@@ -49,12 +48,12 @@ module Results
       end
 
       def location_cols?
-        LOCATION_COLS.any? { |c| row[c].present? }
+        Answer::LOCATION_COLS.any? { |c| row[c].present? }
       end
 
       # Writes all four location values with appropriate header.
       def write_location_cells
-        LOCATION_COLS.each do |c|
+        Answer::LOCATION_COLS.each do |c|
           suffix = I18n.t("response.csv_headers.#{c}")
           buffer.write("#{code}:#{suffix}", row[c]) if row[c].present?
         end
