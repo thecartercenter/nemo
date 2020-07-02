@@ -14,17 +14,25 @@ module OData
       FormName: :string
     }.freeze
 
+    GEOGRAPHIC_PROPERTIES = Answer::LOCATION_COLS.map do |key|
+      [key.titleize.to_s, :decimal]
+    end.to_h
+
     def initialize(distinct_forms)
       response_base = SimpleEntity.new("Response", key_name: "ResponseID",
                                                    property_types: RESPONSE_BASE_PROPERTIES)
-      response_entities = distinct_forms.map do |form|
+      geographic = SimpleEntity.new("Geographic", property_types: GEOGRAPHIC_PROPERTIES)
+
+      self.values = [response_base, geographic] + response_entities(distinct_forms)
+    end
+
+    def response_entities(distinct_forms)
+      distinct_forms.map do |form|
         build_nested_children(parent: form,
                               parent_name: "Responses: #{form.name}",
                               base_type: "#{SimpleSchema::NAMESPACE}.Response",
                               root_name: form.name)
       end.flatten
-
-      self.values = [response_base] + response_entities
     end
 
     # Add an Entity for each of the parent's children, recursing into groups.

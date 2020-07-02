@@ -103,9 +103,15 @@ module Results
       when "decimal" then answer.value&.to_f
       when "select_one" then answer.option_name
       when "select_multiple" then answer.choices.empty? ? [] : answer.choices.map(&:option_name).sort
-      when "location" then answer.attributes.slice("latitude", "longitude", "altitude", "accuracy").to_s
+      when "location" then location_value(answer)
       else format_value(answer.value)
       end
+    end
+
+    def location_value(answer)
+      Answer::LOCATION_COLS.map do |key|
+        [key.titleize, answer.attributes[key]&.to_f]
+      end.to_h
     end
 
     def format_value(value)

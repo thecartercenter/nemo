@@ -10,7 +10,12 @@
   "LongTextQ3": "alpha",
   "IntegerQ4": 100,
   "DecimalQ5": -123.5,
-  "LocationQ6": "{\"latitude\"=>0.15937378e2, \"longitude\"=>0.4436453e2, \"altitude\"=>nil, \"accuracy\"=>nil}",
+  "LocationQ6": {
+    "Latitude": 15.937378,
+    "Longitude": 44.36453,
+    "Altitude": null,
+    "Accuracy": null
+  },
   "SelectOneQ7": "Cat",
   "Group 1": {
     "SelectOneQ8": "Dog",

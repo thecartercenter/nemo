@@ -15,7 +15,7 @@ module OData
       "integer" => :integer,
       "counter" => :integer,
       "decimal" => :decimal,
-      "location" => :string,
+      "location" => "#{SimpleSchema::NAMESPACE}.Geographic",
       "select_one" => :string,
       "select_multiple" => [:string],
       "datetime" => :datetime,
