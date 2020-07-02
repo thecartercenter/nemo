@@ -5,6 +5,7 @@ module Forms
     # Enumerates integrity warnings for Forms
     class Warner
       MAX_FORMS = 3
+      MAX_QUESTIONS = 3
 
       attr_accessor :object
 

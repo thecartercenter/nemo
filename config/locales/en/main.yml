@@ -1432,9 +1432,7 @@ en:
         standard_copy: "This question is based on a standard"
         data: "This question has associated responses"
       option_set:
-        in_use:
-          one: "This option set appears on %{count} question"
-          other: "This option set appears on %{count} questions"
+        in_use: "This option set appears on questions: %{question_list}"
         published: "This option set appears on at least one published (not-draft) form"
         standard_copy: "This option set is based on a standard"
         data: "This option set has associated responses"
