@@ -2,6 +2,14 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="NEMO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Custom" OpenType="true">
+      </EntityType>
+      <EntityType Name="Geographic" OpenType="true">
+        <Property Name="Latitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Longitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Altitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Accuracy" Type="Edm.Decimal" Nullable="true"/>
+      </EntityType>
       <EntityType Name="Group.*form1*.G1" OpenType="true">
         <Property Name="*q_code2*" Type="Edm.String" Nullable="true"/>
         <Property Name="*q_code3*" Type="Edm.Int64" Nullable="true"/>
@@ -31,6 +39,10 @@
         <Property Name="Group 2" Type="NEMO.Group.*form1*.G2" Nullable="true"/>
       </EntityType>
       <EntityContainer Name="NEMOService">
+        <EntitySet Name="Custom" EntityType="NEMO.Custom">
+        </EntitySet>
+        <EntitySet Name="Geographic" EntityType="NEMO.Geographic">
+        </EntitySet>
         <EntitySet Name="Group.*form1*.G1" EntityType="NEMO.Group.*form1*.G1">
         </EntitySet>
         <EntitySet Name="Group.*form1*.G2" EntityType="NEMO.Group.*form1*.G2">

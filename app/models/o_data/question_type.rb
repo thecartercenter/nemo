@@ -17,6 +17,7 @@ module OData
       "decimal" => :decimal,
       "location" => "#{SimpleSchema::NAMESPACE}.Geographic",
       "select_one" => :string,
+      "multilevel_select_one" => "#{SimpleSchema::NAMESPACE}.Custom",
       "select_multiple" => [:string],
       "datetime" => :datetime,
       "date" => :date,
@@ -29,12 +30,16 @@ module OData
       "video" => :string
     }.freeze
 
+    def self.odata_type_for(name)
+      ODATA_TYPES[name]
+    end
+
     def initialize(question_type)
       self.question_type = question_type
     end
 
     def odata_type
-      ODATA_TYPES[name]
+      QuestionType.odata_type_for(name)
     end
   end
 end

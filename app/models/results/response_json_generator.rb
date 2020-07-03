@@ -91,7 +91,7 @@ module Results
         option_node = answer.option_node
         set[option_node.level_name] = answer.option_name if option_node
       end
-      set.to_s
+      set
     end
 
     def value_for(answer)

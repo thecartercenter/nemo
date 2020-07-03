@@ -6,7 +6,10 @@
   "ResponseSubmitDate": "2020-04-20T06:30:00-06:00",
   "ResponseReviewed": false,
   "TextQ1": "foo✓",
-  "SelectOneQ2": "{\"Country\"=>\"Canada\", \"City\"=>\"Calgary\"}",
+  "SelectOneQ2": {
+    "Country": "Canada",
+    "City": "Calgary"
+  },
   "LongTextQ3": "alpha",
   "IntegerQ4": 100,
   "DecimalQ5": -123.5,

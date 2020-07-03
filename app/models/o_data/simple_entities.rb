@@ -19,11 +19,15 @@ module OData
     end.to_h
 
     def initialize(distinct_forms)
+      # To be inherited from.
       response_base = SimpleEntity.new("Response", key_name: "ResponseID",
                                                    property_types: RESPONSE_BASE_PROPERTIES)
+      # Generic type for lat/lng data.
       geographic = SimpleEntity.new("Geographic", property_types: GEOGRAPHIC_PROPERTIES)
+      # Empty type that can be extended for any type of data, e.g. cascading select_one.
+      custom = SimpleEntity.new("Custom", property_types: {})
 
-      self.values = [response_base, geographic] + response_entities(distinct_forms)
+      self.values = [response_base, geographic, custom] + response_entities(distinct_forms)
     end
 
     def response_entities(distinct_forms)
@@ -61,8 +65,13 @@ module OData
     end
 
     def child_qing(child)
-      qtype = OData::QuestionType.new(child.qtype)
-      [child.code.vanilla, qtype.odata_type]
+      multilevel = child.option_set&.multilevel?
+      odata_type = if multilevel
+                     OData::QuestionType.odata_type_for("multilevel_select_one")
+                   else
+                     OData::QuestionType.new(child.qtype).odata_type
+                   end
+      [child.code.vanilla, odata_type]
     end
 
     # Return the OData EntityType name for a group based on its nesting.

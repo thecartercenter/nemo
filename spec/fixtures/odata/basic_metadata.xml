@@ -2,6 +2,14 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="NEMO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Custom" OpenType="true">
+      </EntityType>
+      <EntityType Name="Geographic" OpenType="true">
+        <Property Name="Latitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Longitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Altitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Accuracy" Type="Edm.Decimal" Nullable="true"/>
+      </EntityType>
       <EntityType Name="Response" OpenType="true">
         <Key>
           <PropertyRef Name="ResponseID"/>
@@ -22,6 +30,10 @@
         <Property Name="*q_code4*" Type="Edm.String" Nullable="true"/>
       </EntityType>
       <EntityContainer Name="NEMOService">
+        <EntitySet Name="Custom" EntityType="NEMO.Custom">
+        </EntitySet>
+        <EntitySet Name="Geographic" EntityType="NEMO.Geographic">
+        </EntitySet>
         <EntitySet Name="Response" EntityType="NEMO.Response">
         </EntitySet>
         <EntitySet Name="Responses: *form1*" EntityType="NEMO.Responses: *form1*">
