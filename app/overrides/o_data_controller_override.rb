@@ -49,6 +49,11 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
       response = Response.find(json["Id"])
       cached_json = Results::ResponseJsonGenerator.new(response).as_json
       response.update!(cached_json: cached_json)
+      # Normally this replacement happens in SQL when querying the data.
+      # It's not performant, but this is a fallback for when the JSON hasn't already been cached.
+      cached_json = JSON.parse(
+        cached_json.to_json.gsub(Results::ResponseJsonGenerator::BASE_URL_SIGNIFIER, request.base_url)
+      )
     end
     cached_json["@odata.context"] = json["@odata.context"] if json["@odata.context"]
     trim_context_params(cached_json)
@@ -82,7 +87,10 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     # We technically should be doing an authorization scope on Responses, but it would not be
     # straightforward so we just rely on the :o_data permissions only being held by roles
     # who can see all responses in a mission.
-    entity = schema.add_entity_type(Response, where: {form_id: id},
+    old = Results::ResponseJsonGenerator::BASE_URL_SIGNIFIER
+    new = request.base_url
+    response = Response.select("*, replace(cached_json::text, '#{old}', '#{new}')::jsonb AS cached_json")
+    entity = schema.add_entity_type(response, where: {form_id: id},
                                               name: name,
                                               url_name: "Responses-#{id}",
                                               reflect_on_associations: false)

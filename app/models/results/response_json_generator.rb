@@ -7,6 +7,8 @@ module Results
 
     attr_accessor :response
 
+    BASE_URL_SIGNIFIER = "__NEMO_HOST__"
+
     def initialize(response)
       self.response = response
     end
@@ -95,6 +97,7 @@ module Results
     end
 
     def value_for(answer)
+      return media_value(answer) if answer.multimedia?
       case answer.qtype_name
       when "date" then answer.date_value
       when "time" then answer.time_value&.to_s(:std_time)
@@ -106,6 +109,18 @@ module Results
       when "location" then location_value(answer)
       else format_value(answer.value)
       end
+    end
+
+    def media_value(answer)
+      media = answer.media_object
+      return nil if media.blank?
+      path = Rails.application.routes.url_helpers.media_object_path(
+        id: media.id,
+        type: Media::ObjectsController.media_type(media.type),
+        mission_name: get_mission.compact_name,
+        locale: get_mission.default_locale
+      )
+      "#{BASE_URL_SIGNIFIER}#{path}"
     end
 
     def location_value(answer)
