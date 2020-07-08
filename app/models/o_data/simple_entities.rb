@@ -25,6 +25,8 @@ module OData
       # Generic type for lat/lng data.
       geographic = SimpleEntity.new("Geographic", property_types: GEOGRAPHIC_PROPERTIES)
       # Empty type that can be extended for any type of data, e.g. cascading select_one.
+      # This allows Power BI to accept any arbitrary fields (we could instead add new metadata types
+      # for each cascading select, but that doesn't really improve the user experience).
       custom = SimpleEntity.new("Custom", property_types: {})
 
       self.values = [response_base, geographic, custom] + response_entities(distinct_forms)
