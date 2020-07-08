@@ -66,11 +66,7 @@ module OData
 
     def child_qing(child)
       multilevel = child.option_set&.multilevel?
-      odata_type = if multilevel
-                     OData::QuestionType.odata_type_for("multilevel_select_one")
-                   else
-                     OData::QuestionType.new(child.qtype).odata_type
-                   end
+      odata_type = OData::QuestionType.odata_type_for(multilevel ? "multilevel_select_one" : child.qtype.name)
       [child.code.vanilla, odata_type]
     end
 

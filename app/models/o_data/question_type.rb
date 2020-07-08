@@ -33,13 +33,5 @@ module OData
     def self.odata_type_for(name)
       ODATA_TYPES[name]
     end
-
-    def initialize(question_type)
-      self.question_type = question_type
-    end
-
-    def odata_type
-      QuestionType.odata_type_for(name)
-    end
   end
 end
