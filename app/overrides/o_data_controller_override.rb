@@ -89,9 +89,10 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     # who can see all responses in a mission.
     old = Results::ResponseJsonGenerator::BASE_URL_SIGNIFIER
     new = request.base_url
-    response = Response.select("*, replace(cached_json::text, '#{old}', '#{new}')::jsonb AS cached_json")
-    entity = schema.add_entity_type(response, where: {form_id: id},
-                                              name: name,
+    response = Response
+      .where(form_id: id)
+      .select("*, replace(cached_json::text, '#{old}', '#{new}')::jsonb AS cached_json")
+    entity = schema.add_entity_type(response, name: name,
                                               url_name: "Responses-#{id}",
                                               reflect_on_associations: false)
 
