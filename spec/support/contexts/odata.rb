@@ -7,7 +7,7 @@ shared_context "odata" do
 
   let(:mission) { create(:mission) }
   let!(:user) { create(:user, mission: mission, role_name: :staffer) }
-  let(:api_route) { "/odata/v1" }
+  let(:api_route) { OData::BASE_PATH }
   let(:mission_api_route) { "/en/m/#{mission.compact_name}#{api_route}" }
 
   before do

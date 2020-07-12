@@ -31,7 +31,7 @@ describe "OData resource" do
     it "renders as expected" do
       expect_json(
         "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
-          "/odata/v1/$metadata#Responses: #{form.name}",
+          "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
         value: [
           json_for(form, form.responses[0], "IntegerQ1": 3,
                                             "SelectOneQ2": "Dog",
@@ -55,7 +55,7 @@ describe "OData resource" do
                                             "SelectOneQ2": "Dog",
                                             "TextQ3": "Baz")
             .merge("@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
-              "/odata/v1/$metadata#Responses: #{form.name}/$entity")
+              "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}/$entity")
         )
       end
     end
