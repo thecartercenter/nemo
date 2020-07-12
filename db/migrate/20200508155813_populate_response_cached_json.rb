@@ -47,10 +47,10 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
   def cache_response(response)
     json = Results::ResponseJsonGenerator.new(response).as_json
     response.update!(cached_json: json)
-  rescue StandardError => exeption
+  rescue StandardError => e
     puts "Failed to update Response #{response.shortcode}"
     puts "  Mission: #{response.mission.name}"
     puts "  Form:    #{response.form.name}"
-    puts "  #{exeption.message}"
+    puts "  #{e.message}"
   end
 end
