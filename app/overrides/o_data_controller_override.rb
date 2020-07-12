@@ -12,7 +12,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   # The odata engine expects a static schema, but our schema may change
   # whenever forms are updated and also depending on the current mission context.
   def refresh_schema
-    namespace = OData::SimpleSchema::NAMESPACE
+    namespace = OData::NAMESPACE
     schema = OData::ActiveRecordSchema::Base
       .new(namespace, skip_require: true,
                       skip_add_entity_types: true,
