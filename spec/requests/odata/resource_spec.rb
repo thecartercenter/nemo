@@ -60,6 +60,22 @@ describe "OData resource" do
       end
     end
   end
+
+  context "with multilingual form", :reset_factory_sequences do
+    include_context "odata with multilingual forms"
+
+    let(:path) { "#{mission_api_route}/Responses-#{form.id}" }
+
+    it "renders as expected" do
+      expect_json(
+        "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
+          "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
+        value: [
+          json_for(form, form.responses[0], "SelectOneQ1": "Chat")
+        ]
+      )
+    end
+  end
 end
 
 def json_for(form, response, **answers)

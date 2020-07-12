@@ -55,6 +55,19 @@ shared_context "odata with basic forms" do
   end
 end
 
+shared_context "odata with multilingual forms" do
+  let(:form) { create(:form, :live, mission: mission, question_types: %w[select_one]) }
+
+  before do
+    mission.setting.update!(preferred_locales: %i[fr en])
+    node = form.c[0].question.option_set.c[0]
+    node.option.update!(name_fr: "Chat")
+
+    # Submitted as "Cat" but should be rendered as "Chat".
+    create(:response, mission: mission, form: form, answer_values: ["Cat"])
+  end
+end
+
 shared_context "odata with nested groups" do
   let!(:form) { create(:form, :live, question_types: ["text", %w[text integer], ["text", %w[integer text]]]) }
 

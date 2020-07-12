@@ -15,21 +15,34 @@ module Results
 
     def as_json
       json = {}
-      json["ResponseID"] = response.id
-      json["ResponseShortcode"] = response.shortcode
-      json["FormName"] = form.name
-      json["ResponseSubmitterName"] = user.name
-      json["ResponseSubmitDate"] = response.created_at.iso8601
-      json["ResponseReviewed"] = response.reviewed?
-      root = response.root_node_including_tree(:choices, form_item: :question, option_node: :option_set)
-      add_answers(root, json) unless root.nil?
-      add_nil_answers(response.form, json)
+      in_locale(response.mission.default_locale) do
+        add_metadata(json)
+        root = response.root_node_including_tree(:choices, form_item: :question, option_node: :option_set)
+        add_answers(root, json) unless root.nil?
+        add_nil_answers(response.form, json)
+      end
       json
     end
 
     private
 
     delegate :form, :user, to: :response
+
+    def in_locale(locale)
+      original_locale = I18n.locale
+      I18n.locale = locale
+      yield
+      I18n.locale = original_locale
+    end
+
+    def add_metadata(json)
+      json["ResponseID"] = response.id
+      json["ResponseShortcode"] = response.shortcode
+      json["FormName"] = form.name
+      json["ResponseSubmitterName"] = user.name
+      json["ResponseSubmitDate"] = response.created_at.iso8601
+      json["ResponseReviewed"] = response.reviewed?
+    end
 
     # Adds data for the given Response node to the given json object.
     # Object may be an array or hash.
