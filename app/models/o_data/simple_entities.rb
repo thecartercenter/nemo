@@ -14,17 +14,31 @@ module OData
       FormName: :string
     }.freeze
 
+    GEOGRAPHIC_PROPERTIES = Answer::LOCATION_COLS.map do |key|
+      [key.titleize.to_s, :decimal]
+    end.to_h
+
     def initialize(distinct_forms)
+      # To be inherited from.
       response_base = SimpleEntity.new("Response", key_name: "ResponseID",
                                                    property_types: RESPONSE_BASE_PROPERTIES)
-      response_entities = distinct_forms.map do |form|
+      # Generic type for lat/lng data.
+      geographic = SimpleEntity.new("Geographic", property_types: GEOGRAPHIC_PROPERTIES)
+      # Empty type that can be extended for any type of data, e.g. cascading select_one.
+      # This allows Power BI to accept any arbitrary fields (we could instead add new metadata types
+      # for each cascading select, but that doesn't really improve the user experience).
+      custom = SimpleEntity.new("Custom", property_types: {})
+
+      self.values = [response_base, geographic, custom] + response_entities(distinct_forms)
+    end
+
+    def response_entities(distinct_forms)
+      distinct_forms.map do |form|
         build_nested_children(parent: form,
                               parent_name: "Responses: #{form.name}",
                               base_type: "#{SimpleSchema::NAMESPACE}.Response",
                               root_name: form.name)
       end.flatten
-
-      self.values = [response_base] + response_entities
     end
 
     # Add an Entity for each of the parent's children, recursing into groups.
@@ -53,8 +67,9 @@ module OData
     end
 
     def child_qing(child)
-      qtype = OData::QuestionType.new(child.qtype)
-      [child.code.vanilla, qtype.odata_type]
+      multilevel = child.option_set&.multilevel?
+      odata_type = OData::QuestionType.odata_type_for(multilevel ? "multilevel_select_one" : child.qtype.name)
+      [child.code.vanilla, odata_type]
     end
 
     # Return the OData EntityType name for a group based on its nesting.

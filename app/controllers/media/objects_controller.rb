@@ -8,6 +8,15 @@ module Media
     before_action :set_media_object, only: %i[show destroy]
     skip_authorization_check
 
+    def self.media_type(class_name)
+      case class_name
+      when "Media::Audio" then "audios"
+      when "Media::Video" then "videos"
+      when "Media::Image" then "images"
+      else raise "A valid media class must be specified"
+      end
+    end
+
     def show
       style = params[:style] || "original"
       @answer = @media_object.answer

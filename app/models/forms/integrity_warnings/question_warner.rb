@@ -2,7 +2,7 @@
 
 module Forms
   module IntegrityWarnings
-    # Enumerates integrity warnings for QingGroups
+    # Enumerates integrity warnings for Questions
     class QuestionWarner < Warner
       protected
 
@@ -25,7 +25,7 @@ module Forms
         form_count = object.forms.size
         more_suffix =
           if form_count > MAX_FORMS
-            str = I18n.t("integrity_warnings.more_suffix", count: form_count - 3)
+            str = I18n.t("integrity_warnings.more_suffix", count: form_count - MAX_FORMS)
             "(+#{str})"
           end
         [object.forms.by_name[0...MAX_FORMS].map(&:name).join(", "), more_suffix].compact.join(" ")

@@ -7,6 +7,8 @@ module Results
 
     attr_accessor :response
 
+    BASE_URL_PLACEHOLDER = "__NEMO_HOST__"
+
     def initialize(response)
       self.response = response
     end
@@ -91,10 +93,11 @@ module Results
         option_node = answer.option_node
         set[option_node.level_name] = answer.option_name if option_node
       end
-      set.to_s
+      set
     end
 
     def value_for(answer)
+      return media_value(answer) if answer.multimedia?
       case answer.qtype_name
       when "date" then answer.date_value
       when "time" then answer.time_value&.to_s(:std_time)
@@ -102,10 +105,28 @@ module Results
       when "integer", "counter" then answer.value&.to_i
       when "decimal" then answer.value&.to_f
       when "select_one" then answer.option_name
-      when "select_multiple" then answer.choices.empty? ? nil : answer.choices.map(&:option_name).sort.to_s
-      when "location" then answer.attributes.slice("latitude", "longitude", "altitude", "accuracy").to_s
+      when "select_multiple" then answer.choices.empty? ? [] : answer.choices.map(&:option_name).sort
+      when "location" then location_value(answer)
       else format_value(answer.value)
       end
+    end
+
+    def media_value(answer)
+      media = answer.media_object
+      return nil if media.blank?
+      path = Rails.application.routes.url_helpers.media_object_path(
+        id: media.id,
+        type: Media::ObjectsController.media_type(media.type),
+        mission_name: get_mission.compact_name,
+        locale: get_mission.default_locale
+      )
+      "#{BASE_URL_PLACEHOLDER}#{path}"
+    end
+
+    def location_value(answer)
+      Answer::LOCATION_COLS.map do |key|
+        [key.titleize, answer.attributes[key]&.to_f]
+      end.to_h
     end
 
     def format_value(value)

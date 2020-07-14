@@ -32,16 +32,19 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
                                      "time",                       # 13
                                      "image"])                     # 14
     end
+    let(:image) do
+      Media::Image.create(item: File.open(Rails.root.join("spec/fixtures/media/images/the_swing.jpg")))
+    end
     let(:response) do
       create(:response, form: form,
                         answer_values: ["foo✓", %w[Canada Calgary],
                                         "alpha", 100, -123.50,
                                         "15.937378 44.36453", "Cat", %w[Dog Cat], %w[Dog Cat],
-                                        "2015-10-12 18:15:12 UTC", "2014-11-09", "23:15"])
+                                        "2015-10-12 18:15:12 UTC", "2014-11-09", "23:15", image])
     end
 
     it "produces correct json" do
-      is_expected.to match_json(prepare_response_json_expectation("basic.json"))
+      is_expected.to match_json(prepare_response_json_expectation("basic.json", image_id: [image.id]))
     end
   end
 
@@ -138,8 +141,8 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
     end
   end
 
-  def prepare_response_json_expectation(filename)
+  def prepare_response_json_expectation(filename, **substitutions)
     prepare_fixture("response_json/#{filename}",
-      id: [response.id], shortcode: [response.shortcode])
+      id: [response.id], shortcode: [response.shortcode], **substitutions)
   end
 end

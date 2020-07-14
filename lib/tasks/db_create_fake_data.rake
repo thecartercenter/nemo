@@ -55,9 +55,9 @@ namespace :db do
     end
 
     # Define media paths
-    image_path = Rails.root.join("spec", "fixtures", "media", "images", "the_swing.png").to_s
-    audio_path = Rails.root.join("spec", "fixtures", "media", "audio", "powerup.mp3").to_s
-    video_path = Rails.root.join("spec", "fixtures", "media", "video", "jupiter.mp4").to_s
+    image_path = Rails.root.join("spec/fixtures/media/images/the_swing.png")
+    audio_path = Rails.root.join("spec/fixtures/media/audio/powerup.mp3")
+    video_path = Rails.root.join("spec/fixtures/media/video/jupiter.mp4")
 
     print "Creating responses"
 

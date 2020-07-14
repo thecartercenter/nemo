@@ -10,7 +10,10 @@
     {
       "TextQ2": "Apple",
       "IntegerQ3": 1,
-      "SelectMultipleQ4": "[\"Cat\", \"Dog\"]",
+      "SelectMultipleQ4": [
+        "Cat",
+        "Dog"
+      ],
       "Slice": [
         {
           "DecimalQ5": 1.65
@@ -23,7 +26,9 @@
     {
       "TextQ2": "Banana",
       "IntegerQ3": 2,
-      "SelectMultipleQ4": "[\"Cat\"]",
+      "SelectMultipleQ4": [
+        "Cat"
+      ],
       "Slice": [
         {
           "DecimalQ5": 1.27
@@ -38,7 +43,10 @@
   "Vegetable": [
     {
       "TextQ7": "Asparagus",
-      "SelectOneQ8": "{\"Country\"=>\"Ghana\", \"City\"=>\"Accra\"}",
+      "SelectOneQ8": {
+        "Country": "Ghana",
+        "City": "Accra"
+      },
       "IntegerQ9": 3
     }
   ]
