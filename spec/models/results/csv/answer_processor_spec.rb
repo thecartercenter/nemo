@@ -135,7 +135,15 @@ describe Results::Csv::AnswerProcessor do
     it "excludes long text" do
       expect(buffer).to receive(:write).with("Q1", "")
       processor.process(
-        {"question_code" => "Q1", "value" => +"12345"},
+        {"question_code" => "Q1", "value" => +"12345", "qtype_name" => "long_text"},
+        long_text_behavior: "exclude"
+      )
+    end
+
+    it "doesn't exclude regular text" do
+      expect(buffer).to receive(:write).with("Q1", "12345")
+      processor.process(
+        {"question_code" => "Q1", "value" => +"12345", "qtype_name" => "text"},
         long_text_behavior: "exclude"
       )
     end
@@ -143,7 +151,7 @@ describe Results::Csv::AnswerProcessor do
     it "truncates after max characters" do
       expect(buffer).to receive(:write).with("Q1", "1234567890ab")
       processor.process(
-        {"question_code" => "Q1", "value" => +"1234567890abcde"},
+        {"question_code" => "Q1", "value" => +"1234567890abcde", "qtype_name" => "long_text"},
         long_text_behavior: "truncate"
       )
     end
@@ -151,7 +159,7 @@ describe Results::Csv::AnswerProcessor do
     it "truncates after max newlines (below max)" do
       expect(buffer).to receive(:write).with("Q1", "12\r\n345")
       processor.process(
-        {"question_code" => "Q1", "value" => +"12\r345"},
+        {"question_code" => "Q1", "value" => +"12\r345", "qtype_name" => "long_text"},
         long_text_behavior: "truncate"
       )
     end
@@ -159,7 +167,7 @@ describe Results::Csv::AnswerProcessor do
     it "truncates after max newlines (above max)" do
       expect(buffer).to receive(:write).with("Q1", "12\r\n34")
       processor.process(
-        {"question_code" => "Q1", "value" => +"12\n34\n5"},
+        {"question_code" => "Q1", "value" => +"12\n34\n5", "qtype_name" => "long_text"},
         long_text_behavior: "truncate"
       )
     end
@@ -167,7 +175,7 @@ describe Results::Csv::AnswerProcessor do
     it "counts each CRLF as a single line" do
       expect(buffer).to receive(:write).with("Q1", "\r\nfoo")
       processor.process(
-        {"question_code" => "Q1", "value" => +"\r\nfoo\r\nbar\r\n"},
+        {"question_code" => "Q1", "value" => +"\r\nfoo\r\nbar\r\n", "qtype_name" => "long_text"},
         long_text_behavior: "truncate"
       )
     end
@@ -175,7 +183,7 @@ describe Results::Csv::AnswerProcessor do
     it "handles a dangling CR at end of truncated string" do
       expect(buffer).to receive(:write).with("Q1", "1234567890a")
       processor.process(
-        {"question_code" => "Q1", "value" => +"1234567890a\r\nb"},
+        {"question_code" => "Q1", "value" => +"1234567890a\r\nb", "qtype_name" => "long_text"},
         long_text_behavior: "truncate"
       )
     end

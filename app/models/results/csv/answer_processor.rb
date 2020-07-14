@@ -44,6 +44,10 @@ module Results
         row["question_code"]
       end
 
+      def qtype
+        row["qtype_name"]
+      end
+
       def select_cols?
         row["answer_option_name"].present? || row["choice_option_name"].present?
       end
@@ -84,13 +88,14 @@ module Results
       # Performance-critical; try to do everything in-place.
       # We do this with loops instead of regexps b/c regexps are slow.
       def normalize_value(str)
-        if long_text_behavior == "exclude"
+        long_text = qtype == "long_text"
+        if long_text && long_text_behavior == "exclude"
           str.slice!(0..-1)
           return
         end
         convert_unix_line_endings_to_windows(str)
         convert_mac_line_endings_to_windows(str)
-        convert_long_text(str)
+        convert_long_text(str) if long_text
       end
 
       # Insert \r before any \ns without \rs before
