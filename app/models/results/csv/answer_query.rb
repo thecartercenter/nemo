@@ -37,6 +37,7 @@ module Results
             #{choice_option_name} AS choice_option_name,
             choice_options.value AS choice_option_value,
             questions.code AS question_code,
+            questions.qtype_name AS qtype_name,
             #{option_level_name} AS option_level_name
         SQL
       end
