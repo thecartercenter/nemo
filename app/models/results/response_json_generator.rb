@@ -7,7 +7,7 @@ module Results
 
     attr_accessor :response
 
-    BASE_URL_SIGNIFIER = "__NEMO_HOST__"
+    BASE_URL_PLACEHOLDER = "__NEMO_HOST__"
 
     def initialize(response)
       self.response = response
@@ -120,7 +120,7 @@ module Results
         mission_name: get_mission.compact_name,
         locale: get_mission.default_locale
       )
-      "#{BASE_URL_SIGNIFIER}#{path}"
+      "#{BASE_URL_PLACEHOLDER}#{path}"
     end
 
     def location_value(answer)
