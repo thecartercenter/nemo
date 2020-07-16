@@ -44,7 +44,7 @@
     "core-js": "3.6.4",
     "ignore-loader": "0.1.2",
     "jquery": "3.5.0",
-    "lodash": "4.17.13",
+    "lodash": "4.17.19",
     "mobx": "5.9.4",
     "mobx-react": "5.4.3",
     "moment": "^2.24.0",
