@@ -35,7 +35,8 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
     total = responses.count
     start = Time.zone.now
     num_procs = ENV["NUM_PROCS"] ? ENV["NUM_PROCS"].to_i : Etc.nprocessors
-    Parallel.each_with_index(responses.find_each, in_processes: num_procs, isolation: true) do |response, index|
+    Parallel.each_with_index(responses.find_each, in_processes: num_procs,
+                                                  isolation: true) do |response, index|
       puts "Updating #{response.shortcode}... (#{index} / #{total})"
       cache_response(response)
     end
