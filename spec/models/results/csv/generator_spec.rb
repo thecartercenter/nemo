@@ -302,12 +302,12 @@ describe Results::Csv::Generator, :reset_factory_sequences do
 
   context "with long_text_behavior" do
     let(:options) { {long_text_behavior: "truncate"} }
-    let(:form) { create(:form, question_types: %w[text text]) }
+    let(:form) { create(:form, question_types: %w[text long_text]) }
 
     before do
       stub_const(Results::Csv::AnswerProcessor, "MAX_CHARACTERS", 6)
       Timecop.freeze(submission_time) do
-        create_response(form: form, answer_values: ["foo", "foo bar baz"])
+        create_response(form: form, answer_values: ["regular text preserved", "long text truncated"])
       end
     end
 
