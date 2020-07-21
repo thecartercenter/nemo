@@ -46,7 +46,9 @@ class ResponsesController < ApplicationController
         @selected_all_pages = params[:select_all_pages]
 
         @response_csv_export_options = ResponseCSVExportOptions.new
-        @response_odata_export_options = ResponseODataExportOptions.new(request_url: request.original_url)
+        @response_odata_export_options = ResponseODataExportOptions.new(
+          mission_url: "#{request.base_url}#{current_root_path}"
+        )
 
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: responses}) if request.xhr?

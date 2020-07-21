@@ -7,7 +7,7 @@ shared_context "odata" do
 
   let(:mission) { create(:mission) }
   let!(:user) { create(:user, mission: mission, role_name: :staffer) }
-  let(:api_route) { "/odata/v1" }
+  let(:api_route) { OData::BASE_PATH }
   let(:mission_api_route) { "/en/m/#{mission.compact_name}#{api_route}" }
 
   before do
@@ -52,6 +52,19 @@ shared_context "odata with basic forms" do
     create(:response, mission: mission, form: form, answer_values: [3, "Dog", "Baz"])
     create(:response, mission: mission, form: unpublished_form, answer_values: ["X"])
     create(:response, mission: other_mission, form: other_form, answer_values: ["X"])
+  end
+end
+
+shared_context "odata with multilingual forms" do
+  let(:form) { create(:form, :live, mission: mission, question_types: %w[select_one]) }
+
+  before do
+    mission.setting.update!(preferred_locales: %i[fr en])
+    node = form.c[0].question.option_set.c[0]
+    node.option.update!(name_fr: "Chat")
+
+    # Submitted as "Cat" but should be rendered as "Chat".
+    create(:response, mission: mission, form: form, answer_values: ["Cat"])
   end
 end
 

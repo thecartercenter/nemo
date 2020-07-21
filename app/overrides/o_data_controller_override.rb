@@ -12,7 +12,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   # The odata engine expects a static schema, but our schema may change
   # whenever forms are updated and also depending on the current mission context.
   def refresh_schema
-    namespace = OData::SimpleSchema::NAMESPACE
+    namespace = OData::NAMESPACE
     schema = OData::ActiveRecordSchema::Base
       .new(namespace, skip_require: true,
                       skip_add_entity_types: true,
@@ -47,8 +47,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     # Until we have a reliable background job, allow lazy-generating the cached JSON.
     if cached_json.blank? || Settings.force_fresh_odata.present?
       response = Response.find(json["Id"])
-      cached_json = Results::ResponseJsonGenerator.new(response).as_json
-      response.update!(cached_json: cached_json)
+      cached_json = cache_response(response)
       # Normally this replacement happens in SQL when querying the data.
       # It's not performant, but this is a fallback for when the JSON hasn't already been cached.
       cached_json = JSON.parse(
@@ -57,6 +56,16 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     end
     cached_json["@odata.context"] = json["@odata.context"] if json["@odata.context"]
     trim_context_params(cached_json)
+  end
+
+  def cache_response(response)
+    json = Results::ResponseJsonGenerator.new(response).as_json
+    response.update!(cached_json: json)
+    json
+  rescue StandardError => e
+    # Phone home without failing the entire API request.
+    ExceptionNotifier.notify_exception(e)
+    {error: e.class.name}
   end
 
   # Trim off URL params; something internally

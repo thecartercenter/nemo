@@ -4,12 +4,12 @@
 class ResponseODataExportOptions
   include ActiveModel::Model
 
-  attr_accessor :request_url, :api_url
+  attr_accessor :mission_url, :api_url
 
   def initialize(*args)
     super
     self.api_url = if Settings.odata_api.present? || Rails.env.test?
-                     request_url.sub("/responses", "/odata/v1")
+                     "#{mission_url}#{OData::BASE_PATH}"
                    else
                      "Coming soon"
                    end

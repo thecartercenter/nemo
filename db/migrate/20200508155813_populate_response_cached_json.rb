@@ -35,7 +35,8 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
     total = responses.count
     start = Time.zone.now
     num_procs = ENV["NUM_PROCS"] ? ENV["NUM_PROCS"].to_i : Etc.nprocessors
-    Parallel.each_with_index(responses.find_each, in_processes: num_procs) do |response, index|
+    Parallel.each_with_index(responses.find_each, in_processes: num_procs,
+                                                  isolation: true) do |response, index|
       puts "Updating #{response.shortcode}... (#{index} / #{total})"
       cache_response(response)
     end
@@ -47,10 +48,10 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
   def cache_response(response)
     json = Results::ResponseJsonGenerator.new(response).as_json
     response.update!(cached_json: json)
-  rescue StandardError => exeption
+  rescue StandardError => e
     puts "Failed to update Response #{response.shortcode}"
     puts "  Mission: #{response.mission.name}"
     puts "  Form:    #{response.form.name}"
-    puts "  #{exeption.message}"
+    puts "  #{e.message}"
   end
 end
