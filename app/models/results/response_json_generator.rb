@@ -130,8 +130,8 @@ module Results
       path = Rails.application.routes.url_helpers.media_object_path(
         id: media.id,
         type: Media::ObjectsController.media_type(media.type),
-        mission_name: get_mission.compact_name,
-        locale: get_mission.default_locale
+        mission_name: response.mission.compact_name,
+        locale: response.mission.default_locale
       )
       "#{BASE_URL_PLACEHOLDER}#{path}"
     end
