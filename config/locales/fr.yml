@@ -701,7 +701,6 @@ fr:
         body: "Entrez le corps du message."
       user:
         name: "Le nom complet de l'utilisateur. Par exemple: 'Tout-le-monde Durant' ou 'Équipe 1.1'"
-        login: "Le nom d'utilisateur sera utilisé pour se connecter. Il ne peut contenir que des lettres non accentués, des chiffres, des points et des tirets bas."
         phone: "Le numéro de téléphone doit inclure l'indicatif téléphonique du pays. Par exemple: +25680344523"
         phone2: "Le numéro de téléphone doit inclure l'indicatif téléphonique du pays. Par exemple: +25680344523"
         admin: "Indique si cet utilisateur est un administrateur à l'échelle du système. Vous pouvez contrôler les autorisations par mission en utilisant les champs ci-dessous."
@@ -853,8 +852,6 @@ fr:
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "Au moins une tâche est obligatoire pour l'utilisateurs non-administratifs."
-            login:
-              invalid: "Utilisez seulement des lettres sans accent, des chiffres et des espaces."
             reset_password_method:
               cant_passwd_email: "Non autorisé sauf si une adresse email est fournie."
         user_import:
@@ -1379,9 +1376,6 @@ fr:
         standard_copy: "Cette question est basée sur une question standard"
         data: "Cette question a des réponses associées"
       option_set:
-        in_use:
-          one: "Cet ensemble d'options apparaît sur %{count} question"
-          other: "Cet ensemble d'options apparaît sur %{count} questions"
         published: "Cet ensemble d'options apparaît sur au moins un formulaire publié (pas un brouillon)"
         standard_copy: "Cet ensemble d'options est basé sur un standard"
         data: "Cet ensemble d'options a des réponses associées"

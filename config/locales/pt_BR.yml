@@ -708,7 +708,6 @@ pt-BR:
         body: "Insira o corpo da mensagem"
       user:
         name: "Nome completo da/o usuária/o. Por exemplo: 'João Silva' ou 'Time 1.1'"
-        login: "O nome de usuária/o será usado para fazer login no sistema. Pode conter apenas letras sem acentos, números, pontos e underlines."
         phone: "Número de telefone tem que incluir o código de país. Por exemplo: +5523456789"
         phone2: "Número de telefone tem que incluir o código de país. Por exemplo: +5523456789"
         admin: "Se esta/e usuária/o é um/a administrador/a de todo o sistema. Você pode controlar as permissões usando os campos abaixo."
@@ -860,8 +859,6 @@ pt-BR:
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "Pelo menos uma atribuição é obrigatória se a/o usuária/o não é admin."
-            login:
-              invalid: "Por favor, use apenas números, pontos, underline e letras sem acentos."
             reset_password_method:
               cant_passwd_email: "Não permitido, a não ser que um endereço de email seja adicionado."
         user_import:
@@ -1379,9 +1376,6 @@ pt-BR:
         standard_copy: "Esta questão é baseada num modelo"
         data: "Esta questão tem submissões associadas"
       option_set:
-        in_use:
-          one: "Este conjunto de opções aparece em %{count} questão"
-          other: "Este conjunto de opções aparece em %{count} questões"
         published: "Este conjunto de opções aparece em pelo menos um formulário publicado (que não é rascunho)"
         standard_copy: "Este conjunto de opções é baseado em um modelo"
         data: "Este conjunto de opções tem submissões associadas"
