@@ -5,11 +5,16 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
   # have to fail the transaction part-way through.
   disable_ddl_transaction!
 
+  # rubocop:disable Style/MultilineTernaryOperator
   def up
     responses = Response.where(filters)
-    remaining_responses = ENV["FORCE_REDO"] ? responses : responses.where(cached_json: nil)
-    cache_responses(remaining_responses)
+    responses = ENV["FORCE_REDO"] ? responses : responses.where(cached_json: nil)
+    responses = ENV["IGNORE_MIN_AGO"] ?
+      responses.where("updated_at < ?", ENV["IGNORE_MIN_AGO"].to_i.minutes.ago) :
+      responses
+    cache_responses(responses)
   end
+  # rubocop:enable
 
   # By default with no ENV flags, migrate nothing so the deploy is faster.
   def filters
