@@ -48,6 +48,15 @@ ELMO::Application.configure do
 
   config.action_view.logger = nil
 
+  config.to_prepare do
+    # # [Performance] Uncomment to profile specific methods.
+    # Rack::MiniProfiler.profile_method(User, :foo) { "executing foo" }
+    #
+    # # Reduce the sample rate if your browser is slow
+    # # (default: 0.5 ms; moderate: 5 ms; fast and rough: 10-20 ms).
+    # Rack::MiniProfiler.config.flamegraph_sample_rate = 10
+  end
+
   config.after_initialize do
     # # [Performance] Uncomment for automatic n+1 query alerts.
     # Bullet.enable = true
