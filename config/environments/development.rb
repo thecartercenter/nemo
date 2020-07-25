@@ -47,13 +47,14 @@ ELMO::Application.configure do
   config.i18n.fallbacks = false
 
   config.action_view.logger = nil
-  # bullet gem for query optimization
-  # config.after_initialize do
-  #   Bullet.enable = true
-  #   Bullet.bullet_logger = true
-  #   Bullet.console = true
-  #   Bullet.rails_logger = true
-  # end
+
+  config.after_initialize do
+    # # [Performance] Uncomment for automatic n+1 query alerts.
+    # Bullet.enable = true
+    # Bullet.bullet_logger = true # log/bullet.log
+    # Bullet.console = true
+    # Bullet.rails_logger = true
+  end
 
   # React development variant (unminified)
   config.react.variant = :development

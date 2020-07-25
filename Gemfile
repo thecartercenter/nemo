@@ -113,7 +113,7 @@ gem "ruby-jmeter", "~> 2.13.4"
 
 group :development do
   gem "binding_of_caller", "~> 0.7.2"
-  gem "bullet", "~> 5.9"
+  gem "bullet", "~> 6.1"
   gem "fix-db-schema-conflicts", "~> 3.0"
   # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
   gem "letter_opener", "~> 1.4.1"
