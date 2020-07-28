@@ -65,11 +65,11 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     json
   rescue StandardError => e
     # Phone home without failing the entire API request.
-    puts "Failed to update Response #{response.shortcode}"
-    puts "  Mission: #{response.mission.name}"
-    puts "  Form:    #{response.form.name}"
-    puts "  #{e.message}"
-    ExceptionNotifier.notify_exception(e)
+    Rails.logger.debug("Failed to update Response #{response.shortcode}")
+    Rails.logger.debug("  Mission: #{response.mission.name}")
+    Rails.logger.debug("  Form:    #{response.form.name}")
+    Rails.logger.debug("  #{e.message}")
+    ExceptionNotifier.notify_exception(e, data: {shortcode: response.shortcode})
     {error: e.class.name}
   end
 

@@ -55,9 +55,9 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
     # Disable validation for a ~25% performance gain.
     response.update_without_validate!(cached_json: json)
   rescue StandardError => e
-    puts "Failed to update Response #{response.shortcode}"
-    puts "  Mission: #{response.mission.name}"
-    puts "  Form:    #{response.form.name}"
-    puts "  #{e.message}"
+    Rails.logger.debug("Failed to update Response #{response.shortcode}")
+    Rails.logger.debug("  Mission: #{response.mission.name}")
+    Rails.logger.debug("  Form:    #{response.form.name}")
+    Rails.logger.debug("  #{e.message}")
   end
 end

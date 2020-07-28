@@ -17,7 +17,9 @@ module Results
       json = {}
       in_locale(response.mission.default_locale) do
         add_metadata(json)
-        root = response.root_node_including_tree(:choices, form_item: :question, option_node: [:option_set, :option])
+        root = response.root_node_including_tree(
+          :choices, form_item: :question, option_node: %i[option_set option]
+        )
         add_answers(root, json) unless root.nil?
         add_nil_answers(response.form, json)
       end
