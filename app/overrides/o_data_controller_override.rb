@@ -44,10 +44,10 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
 
   def transform_json_for_entry(json)
     cached_json = json["CachedJson"]
-    # Until we have a reliable background job, allow lazy-generating the cached JSON.
+    # Lazy-cache the JSON if it hasn't been cached yet.
     if cached_json.blank? || Settings.force_fresh_odata.present?
       response = Response.find(json["Id"])
-      cached_json = cache_response(response)
+      cached_json = CacheODataJob.cache_response(response)
       # Normally this replacement happens in SQL when querying the data.
       # It's not performant, but this is a fallback for when the JSON hasn't already been cached.
       cached_json = JSON.parse(
@@ -56,21 +56,6 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     end
     cached_json["@odata.context"] = json["@odata.context"] if json["@odata.context"]
     trim_context_params(cached_json)
-  end
-
-  def cache_response(response)
-    json = Results::ResponseJsonGenerator.new(response).as_json
-    # Disable validation for a ~25% performance gain.
-    response.update_without_validate!(cached_json: json)
-    json
-  rescue StandardError => e
-    # Phone home without failing the entire API request.
-    Rails.logger.debug("Failed to update Response #{response.shortcode}")
-    Rails.logger.debug("  Mission: #{response.mission.name}")
-    Rails.logger.debug("  Form:    #{response.form.name}")
-    Rails.logger.debug("  #{e.message}")
-    ExceptionNotifier.notify_exception(e, data: {shortcode: response.shortcode})
-    {error: e.class.name}
   end
 
   # Trim off URL params; something internally
