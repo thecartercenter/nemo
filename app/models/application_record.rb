@@ -19,7 +19,7 @@ class ApplicationRecord < ActiveRecord::Base
   def update_without_validate!(**args)
     with_transaction_returning_status do
       assign_attributes(**args)
-      save!(validate: false)
+      save(validate: false)
     end
   end
 end
