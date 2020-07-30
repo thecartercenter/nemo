@@ -14,4 +14,12 @@ class ApplicationRecord < ActiveRecord::Base
     end
     class_variable_set("@@clone_options", options)
   end
+
+  # Identical to calling update! but with validate: false.
+  def update_without_validate!(**args)
+    with_transaction_returning_status do
+      assign_attributes(**args)
+      save(validate: false)
+    end
+  end
 end

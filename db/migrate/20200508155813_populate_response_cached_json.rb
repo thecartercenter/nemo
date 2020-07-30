@@ -7,7 +7,7 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
 
   # rubocop:disable Style/MultilineTernaryOperator
   def up
-    responses = Response.where(filters)
+    responses = Response.where(filters).order(created_at: :desc)
     responses = ENV["FORCE_REDO"] ? responses : responses.where(cached_json: nil)
     responses = ENV["IGNORE_MIN_AGO"] ?
       responses.where("updated_at < ?", ENV["IGNORE_MIN_AGO"].to_i.minutes.ago) :
@@ -40,8 +40,8 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
     total = responses.count
     start = Time.zone.now
     num_procs = ENV["NUM_PROCS"] ? ENV["NUM_PROCS"].to_i : Etc.nprocessors
-    Parallel.each_with_index(responses.find_each, in_processes: num_procs,
-                                                  isolation: true) do |response, index|
+    Parallel.each_with_index(responses.each, in_processes: num_procs,
+                                             isolation: true) do |response, index|
       puts "Updating #{response.shortcode}... (#{index} / #{total})"
       cache_response(response)
     end
@@ -52,11 +52,12 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
 
   def cache_response(response)
     json = Results::ResponseJsonGenerator.new(response).as_json
-    response.update!(cached_json: json)
+    # Disable validation for a ~25% performance gain.
+    response.update_without_validate!(cached_json: json)
   rescue StandardError => e
-    puts "Failed to update Response #{response.shortcode}"
-    puts "  Mission: #{response.mission.name}"
-    puts "  Form:    #{response.form.name}"
-    puts "  #{e.message}"
+    Rails.logger.debug("Failed to update Response #{response.shortcode}")
+    Rails.logger.debug("  Mission: #{response.mission.name}")
+    Rails.logger.debug("  Form:    #{response.form.name}")
+    Rails.logger.debug("  #{e.message}")
   end
 end

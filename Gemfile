@@ -113,13 +113,23 @@ gem "ruby-jmeter", "~> 2.13.4"
 
 group :development do
   gem "binding_of_caller", "~> 0.7.2"
-  gem "bullet", "~> 5.9"
   gem "fix-db-schema-conflicts", "~> 3.0"
-  # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
   gem "letter_opener", "~> 1.4.1"
   gem "rails-erd", "~> 1.4.0"
   gem "spring", "~> 1.3.3"
   gem "thin", "~> 1.7.0"
+
+  # N+1 detection. Config is in environments/development.rb
+  gem "bullet", "~> 6.1"
+
+  # Great for debugging i18n paths (uncomment temporarily when needed).
+  # gem "i18n-debug", "~> 1.1"
+
+  # Profiling. Config is in environments/development.rb (uncomment temporarily when needed).
+  # gem "rack-mini-profiler", "~> 2.0" # Automatically adds UI to the top left of all webpages.
+  # gem "memory_profiler", "~> 0.9.14" # Append to URL: ?pp=profile-memory
+  # gem "flamegraph", "~> 0.9.5" # Append to URL: ?pp=flamegraph
+  # gem "stackprof", "~> 0.2.15"
 end
 
 group :development, :test do

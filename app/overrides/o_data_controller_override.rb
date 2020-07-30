@@ -60,11 +60,16 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
 
   def cache_response(response)
     json = Results::ResponseJsonGenerator.new(response).as_json
-    response.update!(cached_json: json)
+    # Disable validation for a ~25% performance gain.
+    response.update_without_validate!(cached_json: json)
     json
   rescue StandardError => e
     # Phone home without failing the entire API request.
-    ExceptionNotifier.notify_exception(e)
+    Rails.logger.debug("Failed to update Response #{response.shortcode}")
+    Rails.logger.debug("  Mission: #{response.mission.name}")
+    Rails.logger.debug("  Form:    #{response.form.name}")
+    Rails.logger.debug("  #{e.message}")
+    ExceptionNotifier.notify_exception(e, data: {shortcode: response.shortcode})
     {error: e.class.name}
   end
 
