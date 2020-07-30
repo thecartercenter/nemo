@@ -54,7 +54,14 @@ class Operation < ApplicationRecord
 
   belongs_to :creator, class_name: "User"
 
-  has_attached_file :attachment
+  has_attached_file :attachment,
+    fog_file: lambda { |attachment|
+      {
+        # Set some metadata so files download instead of rendering in browser.
+        content_type: attachment.content_type,
+        content_disposition: "attachment; filename=#{attachment.original_filename}"
+      }
+    }
   do_not_validate_attachment_file_type :attachment
 
   def name

@@ -29,6 +29,13 @@ class ResponseCsvExportOperationJob < OperationJob
     attachment = Results::Csv::Generator.new(responses, options: options).export
     timestamp = Time.current.to_s(:filename_datetime)
     attachment_download_name = "#{mission.compact_name}-responses-#{timestamp}.csv"
-    {attachment: attachment, attachment_download_name: attachment_download_name}
+    {
+      attachment: attachment,
+      # Metadata for disk storage.
+      attachment_download_name: attachment_download_name,
+      # Metadata for cloud storage.
+      attachment_file_name: attachment_download_name,
+      attachment_content_type: "text/csv"
+    }
   end
 end
