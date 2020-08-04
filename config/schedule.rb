@@ -15,3 +15,7 @@ env(:GEM_HOME, ENV["GEM_HOME"])
 every "30 */6 * * *" do
   runner "CleanupJob.perform_later"
 end
+
+every 1.minute do
+  runner "CacheODataJob.perform_later"
+end
