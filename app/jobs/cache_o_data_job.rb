@@ -2,9 +2,14 @@
 
 # Caches OData that may have changed.
 class CacheODataJob < ApplicationJob
-  queue_as :default
+  # Default to lower-priority queue.
+  queue_as :odata
 
   def perform
+    enqueued_jobs = Delayed::Job.where("handler LIKE '%job_class: CacheODataJob%'").where(failed_at: nil)
+    # Wait to get called again by the scheduler if something else is already in progress.
+    return if enqueued_jobs.count > 1
+
     responses = Response.where(dirty_json: true)
     responses.each do |response|
       CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
