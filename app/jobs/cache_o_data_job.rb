@@ -4,7 +4,7 @@
 class CacheODataJob < ApplicationJob
   # Batches should be sufficiently small to not interfere with user-initiated jobs like Reports.
   # In practice, 100 responses take ~10-30 seconds to cache on a small VM.
-  BATCH_SIZE = 500
+  BATCH_SIZE = 300
 
   # A user-facing Operation should be created if there are so many responses to cache
   # that it's worth tracking progress.
@@ -26,7 +26,7 @@ class CacheODataJob < ApplicationJob
 
     # Self-enqueue if there are responses left to cache after this batch.
     if Response.exists?(dirty_json: true)
-      self.class.set(wait: 1.second).perform_later
+      self.class.perform_later
     else
       complete_operation
     end
