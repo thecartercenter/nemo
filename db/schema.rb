@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_05_010128) do
+ActiveRecord::Schema.define(version: 2020_08_05_014859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -266,6 +266,7 @@ ActiveRecord::Schema.define(version: 2020_08_05_010128) do
     t.string "job_id", limit: 255
     t.datetime "job_started_at"
     t.uuid "mission_id", comment: "Operations are possible in admin mode"
+    t.string "notes", limit: 255
     t.string "provider_job_id", limit: 255
     t.boolean "unread", default: true, null: false
     t.datetime "updated_at", null: false
