@@ -17,6 +17,7 @@
 #  job_error_report                                  :text
 #  job_failed_at                                     :datetime
 #  job_started_at                                    :datetime
+#  notes                                             :string(255)
 #  unread                                            :boolean          default(TRUE), not null
 #  url                                               :string
 #  created_at                                        :datetime         not null
