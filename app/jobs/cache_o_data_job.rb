@@ -53,8 +53,10 @@ class CacheODataJob < ApplicationJob
   # otherwise create an operation only if the number of responses exceeds the threshold.
   def create_or_update_operation
     ongoing = Operation.find_by(job_class: CacheODataOperationJob.name, job_completed_at: nil)
-    return if ongoing.nil? && Response.where(dirty_json: true).count < OPERATION_THRESHOLD
+    num_responses = Response.where(dirty_json: true).count
+    return if ongoing.nil? && num_responses < OPERATION_THRESHOLD
     ongoing = enqueue_operation if ongoing.nil?
+    ongoing.update!(notes: "#{I18n.t('operation.notes.remaining')}: #{num_responses}")
   end
 
   def enqueue_operation
@@ -71,7 +73,7 @@ class CacheODataJob < ApplicationJob
 
   def complete_operation
     Operation.where(job_class: CacheODataOperationJob.name, job_completed_at: nil)
-      .update(job_completed_at: Time.current)
+      .update(job_completed_at: Time.current, notes: nil)
   end
 
   def cache_batch
