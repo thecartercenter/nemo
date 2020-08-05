@@ -6,6 +6,7 @@ en:
       option_sets_import: "Option Set '%{file}' import"
       response_csv_export: "Response CSV export"
       broadcast: "Broadcast '%{message}'"
+      cache_odata: "Refreshing API data"
     operations_panel: "Operations Panel"
     status:
       completed: "Success"
