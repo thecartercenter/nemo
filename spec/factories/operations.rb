@@ -21,7 +21,7 @@
 #  url                                               :string
 #  created_at                                        :datetime         not null
 #  updated_at                                        :datetime         not null
-#  creator_id                                        :uuid             not null
+#  creator_id                                        :uuid
 #  job_id                                            :string(255)
 #  mission_id(Operations are possible in admin mode) :uuid
 #  provider_job_id                                   :string(255)

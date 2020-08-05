@@ -29,7 +29,11 @@ module OperationsHelper
     when "details"
       link_to(operation.details, operation.default_path)
     when "creator"
-      link_to(operation.creator.name, user_path(operation.creator))
+      if operation.creator
+        link_to(operation.creator.name, user_path(operation.creator))
+      else
+        t("common.system")
+      end
     when "created_at"
       t("layout.time_ago", time: time_ago_in_words(operation.created_at))
     when "status"
