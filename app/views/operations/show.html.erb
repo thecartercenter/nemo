@@ -7,7 +7,11 @@
   <% end %>
   <%= f.field :details, link: @operation.url %>
   <%= f.field :status, read_only_content: t("operation.status.#{@operation.status}") %>
-  <%= f.field :creator, read_only_content: link_to(@operation.creator.try(:name), @operation.creator) %>
+  <%= f.field :creator, read_only_content: if @operation.creator
+                                             link_to(@operation.creator.try(:name), @operation.creator)
+                                           else
+                                             t("common.system")
+                                           end %>
   <%= f.field :job_started_at %>
   <% if @operation.failed? %>
     <%= f.field :job_failed_at %>
