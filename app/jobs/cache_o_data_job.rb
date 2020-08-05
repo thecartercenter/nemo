@@ -10,6 +10,9 @@ class CacheODataJob < ApplicationJob
   # that it's worth tracking progress.
   OPERATION_THRESHOLD = 1000
 
+  # Frequency at which the Operation.notes should be updated for the user.
+  NOTES_INTERVAL = 100
+
   # Default to lower-priority queue.
   queue_as :odata
 
@@ -52,11 +55,21 @@ class CacheODataJob < ApplicationJob
   # Update the existing operation, if found;
   # otherwise create an operation only if the number of responses exceeds the threshold.
   def create_or_update_operation
-    ongoing = Operation.find_by(job_class: CacheODataOperationJob.name, job_completed_at: nil)
+    ongoing = existing_operation
     num_responses = Response.where(dirty_json: true).count
     return if ongoing.nil? && num_responses < OPERATION_THRESHOLD
-    ongoing = enqueue_operation if ongoing.nil?
+    enqueue_operation if ongoing.nil?
+    update_notes
+  end
+
+  def update_notes
+    ongoing = existing_operation
+    num_responses = Response.where(dirty_json: true).count
     ongoing.update!(notes: "#{I18n.t('operation.notes.remaining')}: #{num_responses}")
+  end
+
+  def existing_operation
+    Operation.find_by(job_class: CacheODataOperationJob.name, job_completed_at: nil)
   end
 
   def enqueue_operation
@@ -68,7 +81,6 @@ class CacheODataJob < ApplicationJob
       job_params: {}
     )
     operation.enqueue
-    operation
   end
 
   def complete_operation
@@ -78,8 +90,9 @@ class CacheODataJob < ApplicationJob
 
   def cache_batch
     responses = Response.where(dirty_json: true).limit(BATCH_SIZE)
-    responses.each do |response|
+    responses.each_with_index do |response, index|
       CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
+      update_notes if (index % NOTES_INTERVAL).zero?
     end
   end
 end
