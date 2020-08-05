@@ -102,6 +102,7 @@ class Response < ApplicationRecord
   scope :created_after, ->(date) { where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
   scope :latest_first, -> { order(created_at: :desc) }
+  scope :dirty, -> { where(dirty_json: true) }
 
   # loads basic belongs_to associations
   scope :with_basic_assoc, -> { includes(:form, :user) }

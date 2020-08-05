@@ -16,22 +16,6 @@ class CacheODataJob < ApplicationJob
   # Default to lower-priority queue.
   queue_as :odata
 
-  def perform
-    enqueued = Delayed::Job.where("handler LIKE '%job_class: CacheODataJob%'").where(failed_at: nil).count
-    # Wait to get called again by the scheduler if something else is already in progress.
-    return if enqueued > 1
-
-    create_or_update_operation
-    cache_batch
-
-    # Self-enqueue if there are responses left to cache after this batch.
-    if Response.exists?(dirty_json: true)
-      self.class.perform_later
-    else
-      complete_operation
-    end
-  end
-
   # This can be invoked synchronously or asynchronously, depending on need.
   def self.cache_response(response, logger: Rails.logger)
     json = Results::ResponseJsonGenerator.new(response).as_json
@@ -39,37 +23,59 @@ class CacheODataJob < ApplicationJob
     response.update_without_validate!(cached_json: json, dirty_json: false)
     json
   rescue StandardError => e
-    logger.debug(
-      "Failed to update Response #{response.shortcode}\n" \
-      "  Mission: #{response.mission.name}\n" \
-      "  Form:    #{response.form.name}\n" \
-      "  #{e.message}"
-    )
     # Phone home without failing the entire operation.
+    logger.debug(debug_msg(e, response))
     ExceptionNotifier.notify_exception(e, data: {shortcode: response.shortcode})
     {error: e.class.name}
   end
 
-  private
-
-  # Update the existing operation, if found;
-  # otherwise create an operation only if the number of responses exceeds the threshold.
-  def create_or_update_operation
-    ongoing = existing_operation
-    num_responses = Response.where(dirty_json: true).count
-    return if ongoing.nil? && num_responses < OPERATION_THRESHOLD
-    enqueue_operation if ongoing.nil?
-    update_notes
+  def self.debug_msg(error, response)
+    "Failed to update Response #{response.shortcode}\n" \
+      "  Mission: #{response.mission.name}\n" \
+      "  Form:    #{response.form.name}\n" \
+      "  #{error.message}"
   end
 
-  def update_notes
-    ongoing = existing_operation
-    num_responses = Response.where(dirty_json: true).count
-    ongoing.update!(notes: "#{I18n.t('operation.notes.remaining')}: #{num_responses}")
+  def perform
+    # Wait to get called again by the scheduler if this job is already in progress.
+    return if existing_jobs > 1
+
+    create_or_update_operation
+    cache_batch
+    loop_or_finish
+  end
+
+  private
+
+  def existing_jobs
+    Delayed::Job.where("handler LIKE '%job_class: #{self.class.name}%'").where(failed_at: nil).count
   end
 
   def existing_operation
     Operation.find_by(job_class: CacheODataOperationJob.name, job_completed_at: nil)
+  end
+
+  # Update the existing operation, if found;
+  # otherwise create an operation only if the number of responses exceeds the threshold.
+  def create_or_update_operation
+    if existing_operation.nil?
+      return if Response.dirty.count < OPERATION_THRESHOLD
+      enqueue_operation
+    end
+    update_notes
+  end
+
+  def cache_batch
+    responses = Response.dirty.limit(BATCH_SIZE)
+    responses.each_with_index do |response, index|
+      CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
+      update_notes if (index % NOTES_INTERVAL).zero?
+    end
+  end
+
+  def update_notes
+    num_responses = Response.dirty.count
+    existing_operation.update!(notes: "#{I18n.t('operation.notes.remaining')}: #{num_responses}")
   end
 
   def enqueue_operation
@@ -83,16 +89,17 @@ class CacheODataJob < ApplicationJob
     operation.enqueue
   end
 
+  # Self-enqueue a new batch if there are responses left to cache.
+  def loop_or_finish
+    if Response.exists?(dirty_json: true)
+      self.class.perform_later
+    else
+      complete_operation
+    end
+  end
+
   def complete_operation
     Operation.where(job_class: CacheODataOperationJob.name, job_completed_at: nil)
       .update(job_completed_at: Time.current, notes: nil)
-  end
-
-  def cache_batch
-    responses = Response.where(dirty_json: true).limit(BATCH_SIZE)
-    responses.each_with_index do |response, index|
-      CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
-      update_notes if (index % NOTES_INTERVAL).zero?
-    end
   end
 end
