@@ -26,6 +26,9 @@ class CacheODataJob < ApplicationJob
     # Phone home without failing the entire operation.
     logger.debug(debug_msg(e, response))
     ExceptionNotifier.notify_exception(e, data: {shortcode: response.shortcode})
+    # It didn't get cached due to the error, but it shouldn't remain dirty
+    # because the error will recur forever. Let the cached_json remain `nil`.
+    response.update_without_validate!(cached_json: nil, dirty_json: false)
     {error: e.class.name}
   end
 
@@ -75,7 +78,7 @@ class CacheODataJob < ApplicationJob
 
   def update_notes
     num_responses = Response.dirty.count
-    existing_operation.update!(notes: "#{I18n.t('operation.notes.remaining')}: #{num_responses}")
+    existing_operation&.update!(notes: "#{I18n.t('operation.notes.remaining')}: #{num_responses}")
   end
 
   def enqueue_operation
@@ -100,6 +103,6 @@ class CacheODataJob < ApplicationJob
 
   def complete_operation
     Operation.where(job_class: CacheODataOperationJob.name, job_completed_at: nil)
-      .update(job_completed_at: Time.current, notes: nil)
+      .update(job_completed_at: Time.current, notes: "#{I18n.t('operation.notes.remaining')}: 0")
   end
 end
