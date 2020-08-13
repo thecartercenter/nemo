@@ -41,9 +41,8 @@ class WelcomeController < ApplicationController
 
   private
 
-  def dashboard_index
-    # we need to check for a cache fragment here because some of the below fetches are not lazy
-    @cache_key = [
+  def cache_key
+    @cache_key ||= [
       # we include the locale in the cache key so the translations are correct
       I18n.locale.to_s,
 
@@ -51,11 +50,16 @@ class WelcomeController < ApplicationController
       Response.per_mission_cache_key(current_mission),
 
       # we include assignments in the cache key since users show up in low activity etc.
-      # if a user gets removed or added to the mission, that should show up
+      # if a user gets removed or added to the mission, or role changes, that should show up
       # but we don't include user's in the cache key since users get updated every request
       # and that would defeat the purpose
       Assignment.per_mission_cache_key(current_mission)
     ].join("-")
+  end
+
+  def dashboard_index
+    # we need to check for a cache fragment here because some of the below fetches are not lazy
+    @cache_key = cache_key
 
     # get a relation for accessible responses
     accessible_responses = Response.accessible_by(current_ability)
@@ -72,11 +76,16 @@ class WelcomeController < ApplicationController
 
     # do the non-lazy loads inside these blocks so they don't run if we get a cache hit
     unless fragment_exist?(@cache_key + "/js_init")
-      # get location answers
       location_answers = Answer.location_answers_for_mission(current_mission, current_user)
 
-      @location_answers_count = location_answers.total_entries
-      @location_answers = location_answers.map { |a| [a.response_id, a.latitude, a.longitude] }
+      # These two SQL queries are both very expensive.
+      @location_answers, @location_answers_count =
+        Rails.cache.fetch(cache_key + "/location_answers") do
+          [
+            location_answers.pluck(:response_id, :latitude, :longitude),
+            location_answers.total_entries
+          ]
+        end
     end
 
     unless fragment_exist?(@cache_key + "/stat_blocks")
