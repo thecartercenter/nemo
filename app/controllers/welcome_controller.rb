@@ -57,6 +57,12 @@ class WelcomeController < ApplicationController
     ].join("-")
   end
 
+  def cache_key_with_current_user
+    # User gets updated on every request, so don't include timestamp.
+    # Their role is already part of the Assignment cache in the cache_key.
+    @cache_key_with_current_user ||= "#{cache_key}-users/#{current_user.id}"
+  end
+
   def dashboard_index
     # we need to check for a cache fragment here because some of the below fetches are not lazy
     @cache_key = cache_key
@@ -80,7 +86,7 @@ class WelcomeController < ApplicationController
 
       # These two SQL queries are both very expensive.
       @location_answers, @location_answers_count =
-        Rails.cache.fetch(cache_key + "/location_answers") do
+        Rails.cache.fetch(cache_key_with_current_user + "/location_answers") do
           [
             location_answers.pluck(:response_id, :latitude, :longitude),
             location_answers.total_entries
