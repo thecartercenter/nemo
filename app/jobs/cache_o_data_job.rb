@@ -69,7 +69,7 @@ class CacheODataJob < ApplicationJob
   end
 
   def cache_batch
-    responses = Response.dirty.limit(BATCH_SIZE)
+    responses = Response.dirty.order(created_at: :desc).limit(BATCH_SIZE)
     responses.each_with_index do |response, index|
       CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
       update_notes if (index % NOTES_INTERVAL).zero?
