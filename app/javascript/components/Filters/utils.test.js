@@ -64,7 +64,8 @@ it('gets filter string (all filters)', () => {
 });
 
 it('submits searches', () => {
-  window.location.search = '?foo=bar';
+  // Page should go away after search, but other params should pass through.
+  window.location.search = '?foo=bar&page=2';
   expect(window.location.assign.mock.calls).toMatchSnapshot();
 
   submitSearch('foo');
