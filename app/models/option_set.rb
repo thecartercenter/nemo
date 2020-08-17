@@ -355,6 +355,7 @@ class OptionSet < ApplicationRecord
   def normalize_fields
     self.name = name.strip
     self.allow_coordinates = false unless geographic?
+    self.level_names = nil unless multilevel?
     true
   end
 
