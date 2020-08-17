@@ -959,14 +959,14 @@ en:
           zero:  "No Questions found"
           one:   "Displaying <b>1</b> Question"
           other: "Displaying <b>all %{count}</b> Questions"
-          multi_page_html: "Displaying Questions <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
+        multi_page_html: "Displaying Questions <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     questioning: # should be same as question
       page_entries_info:
         single_page_html:
           zero:  "No Questions found"
           one:   "Displaying <b>1</b> Question"
           other: "Displaying <b>all %{count}</b> Questions"
-          multi_page_html: "Displaying Questions <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
+        multi_page_html: "Displaying Questions <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
     report/report:
       page_entries_info:
         single_page_html:
