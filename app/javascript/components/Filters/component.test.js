@@ -78,18 +78,14 @@ describe('integration', () => {
     // Call prop directly since Select2 is stubbed out.
     overlay.find('Select2').prop('onSelect')({ target: { value: defaultProps.filtersStore.allForms[0].id } });
 
-    expect(window.location.assign).toMatchSnapshot();
-    overlay.find('Button.btn-apply').simulate('click');
-    expect(window.location.assign).toMatchSnapshot();
+    expectLocationToChangeOnClick(overlay.find('Button.btn-apply'));
   });
 
   it('navigates on apply question filter', () => {
     wrapper.find('Button#question-filter').simulate('click');
     const overlay = quietMount(wrapper.find('OverlayTrigger#question-filter').prop('overlay'));
 
-    expect(window.location.assign).toMatchSnapshot();
-    overlay.find('Button.btn-apply').simulate('click');
-    expect(window.location.assign).toMatchSnapshot();
+    expectLocationToChangeOnClick(overlay.find('Button.btn-apply'));
   });
 
   it('navigates on apply reviewed filter', () => {
@@ -97,9 +93,7 @@ describe('integration', () => {
     const overlay = quietMount(wrapper.find('OverlayTrigger#reviewed-filter').prop('overlay'));
     overlay.find('#no').simulate('click');
 
-    expect(window.location.assign).toMatchSnapshot();
-    overlay.find('Button.btn-apply').simulate('click');
-    expect(window.location.assign).toMatchSnapshot();
+    expectLocationToChangeOnClick(overlay.find('Button.btn-apply'));
   });
 
   it('navigates on apply submitter filter', () => {
@@ -112,16 +106,18 @@ describe('integration', () => {
       overlay.find(`Select2#${type}`).prop('onSelect')({ params: { data: { id, text: name } } });
     });
 
-    expect(window.location.assign).toMatchSnapshot();
-    overlay.find('Button.btn-apply').simulate('click');
-    expect(window.location.assign).toMatchSnapshot();
+    expectLocationToChangeOnClick(overlay.find('Button.btn-apply'));
   });
 
   it('navigates on apply advanced search', () => {
     wrapper.find('.search-str').simulate('change', { target: { value: 'something else' } });
 
-    expect(window.location.assign).toMatchSnapshot();
-    wrapper.find('Button.btn-advanced-search').simulate('click');
-    expect(window.location.assign).toMatchSnapshot();
+    expectLocationToChangeOnClick(wrapper.find('Button.btn-advanced-search'));
   });
 });
+
+function expectLocationToChangeOnClick(element) {
+  expect(window.location.assign).toMatchSnapshot();
+  element.simulate('click');
+  expect(window.location.assign).toMatchSnapshot();
+}
