@@ -65,19 +65,19 @@ it('gets filter string (all filters)', () => {
 
 it('submits searches', () => {
   window.location.search = '?foo=bar';
-  expect(window.location.assign).toMatchSnapshot();
+  expect(window.location.assign.mock.calls).toMatchSnapshot();
 
   submitSearch('foo');
-  expect(window.location.assign).toMatchSnapshot();
+  expect(window.location.assign.mock.calls).toMatchSnapshot();
 
   window.location.assign.mockClear();
   submitSearch(null);
-  expect(window.location.assign).toMatchSnapshot();
+  expect(window.location.assign.mock.calls).toMatchSnapshot();
 
   window.location.assign.mockClear();
   window.location.search = '?';
   submitSearch(null);
-  expect(window.location.assign).toMatchSnapshot();
+  expect(window.location.assign.mock.calls).toMatchSnapshot();
 });
 
 it('checks if param is truthy', () => {

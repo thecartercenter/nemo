@@ -20,52 +20,28 @@ exports[`gets item name (found) 1`] = `"One"`;
 
 exports[`gets item name (not found) 1`] = `"Unknown"`;
 
-exports[`submits searches 1`] = `[MockFunction]`;
+exports[`submits searches 1`] = `Array []`;
 
 exports[`submits searches 2`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      "?foo=bar&search=foo",
-    ],
+Array [
+  Array [
+    "?foo=bar&search=foo",
   ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
+]
 `;
 
 exports[`submits searches 3`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      "?foo=bar",
-    ],
+Array [
+  Array [
+    "?foo=bar",
   ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
+]
 `;
 
 exports[`submits searches 4`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      "/pathname",
-    ],
+Array [
+  Array [
+    "/pathname",
   ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
+]
 `;

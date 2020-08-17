@@ -111,13 +111,13 @@ describe('integration', () => {
 
   it('navigates on apply advanced search', () => {
     wrapper.find('.search-str').simulate('change', { target: { value: 'something else' } });
-
     expectLocationToChangeOnClick(wrapper.find('Button.btn-advanced-search'));
   });
 });
 
 function expectLocationToChangeOnClick(element) {
-  expect(window.location.assign).toMatchSnapshot();
+  expect(window.location.assign.mock.calls.length).toBe(0);
   element.simulate('click');
-  expect(window.location.assign).toMatchSnapshot();
+  expect(window.location.assign.mock.calls.length).toBe(1);
+  expect(window.location.assign.mock.calls[0]).toMatchSnapshot();
 }
