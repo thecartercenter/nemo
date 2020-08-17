@@ -24,7 +24,10 @@ ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views.ApplicationV
     return $('#search-help-modal').modal('show');
   }
 
-  // Add or replace the specified search qualifier
+  /**
+   * Add or replace the specified search qualifier.
+   * @deprecated - Use the newer Filters#submitSearch method instead.
+   */
   setQualifier(qualifier, val) {
     const search_box = this.$('.search-str');
     let current_search = search_box.val();
