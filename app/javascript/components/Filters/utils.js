@@ -114,13 +114,15 @@ export function getFilterString({
 }
 
 /**
- * Reload the page with the given search.
+ * Reload the page with the given search,
+ * resetting the page number.
  */
 export function submitSearch(filterString) {
   const parsed = queryString.parse(window.location.search);
-  // The `search` query param will be removed from the URL if it's `undefined`.
+  // Params will be removed from the URL if `undefined`.
   const search = filterString || undefined;
-  const params = queryString.stringify({ ...parsed, search });
+  const page = undefined;
+  const params = queryString.stringify({ ...parsed, search, page });
 
   window.location.assign(params
     ? `?${params}`
