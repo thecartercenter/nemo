@@ -34,7 +34,7 @@ module FormsHelper
       if (count = form.responses_count).zero?
         0
       else
-        link_to(count, responses_path(search: "form:\"#{form.name}\""))
+        link_to(count, responses_path(search: "form-id:\"#{form.id}\""))
       end
     when "downloads" then form.downloads || 0
     when "smsable" then tbool(form.smsable?)
