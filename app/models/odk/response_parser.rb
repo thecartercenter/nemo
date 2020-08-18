@@ -34,6 +34,7 @@ module Odk
 
     def process_xml(raw_odk_xml)
       data = Nokogiri::XML(raw_odk_xml).root
+      raise SubmissionError, "invalid XML" if data.nil?
       lookup_and_check_form(data["id"], data["version"])
       if existing_response
         answer_parser.add_media_to_existing_response
