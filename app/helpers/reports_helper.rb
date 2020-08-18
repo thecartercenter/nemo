@@ -25,4 +25,8 @@ module ReportsHelper
       javascript_tag('if (typeof(google) != "undefined")
         google.load("visualization", "1", {packages:["corechart"]});')
   end
+
+  def shortcode_map(response_ids)
+    Response.where(id: response_ids).pluck(:id, :shortcode).to_h
+  end
 end
