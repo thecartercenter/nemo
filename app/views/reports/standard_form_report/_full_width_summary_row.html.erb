@@ -12,10 +12,11 @@
     </td>
   </tr>
 <% else %>
+  <% shortcodes = shortcode_map(summary.items.map(&:response_id)) %>
   <% summary.items.each do |item| %>
     <tr class="summary">
       <td colspan="<%= result_cols + 2 %>">
-        <%= render("reports/standard_form_report/item", item: item) %>
+        <%= render("reports/standard_form_report/item", item: item, shortcode: shortcodes[item.response_id]) %>
       </td>
       <%= render("reports/standard_form_report/reference", summary: summary) %>
     </tr>
