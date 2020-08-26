@@ -39,6 +39,7 @@ exports[`renders as expected (with info button) 1`] = `
     Search
   </Button>
   <i
+    aria-label="[missing \\"en.search.help_title\\" translation]"
     className="fa fa-info-circle hint"
     onClick={[Function]}
     onKeyDown={[Function]}

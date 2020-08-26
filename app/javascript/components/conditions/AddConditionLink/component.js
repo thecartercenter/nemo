@@ -21,7 +21,7 @@ class AddConditionLink extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         {/* TODO: Improve a11y. */}
         {/* eslint-disable-next-line */}
         <a onClick={this.handleAddClick} tabIndex="0">
@@ -30,7 +30,7 @@ class AddConditionLink extends React.Component {
           {I18n.t('form_item.add_condition')}
         </a>
         {/* eslint-enable */}
-      </React.Fragment>
+      </>
     );
   }
 }

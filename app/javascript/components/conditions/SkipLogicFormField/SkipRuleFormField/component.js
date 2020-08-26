@@ -125,10 +125,10 @@ class SkipRuleFormField extends React.Component {
           <ConditionSetFormField />
           <div className="links">
             {skipIf !== 'always' && (
-              <React.Fragment>
+              <>
                 <AddConditionLink />
                 &nbsp;&nbsp;
-              </React.Fragment>
+              </>
             )}
             {/* TODO: Improve a11y. */}
             {/* eslint-disable-next-line */}

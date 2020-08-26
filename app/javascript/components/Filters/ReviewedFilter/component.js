@@ -31,7 +31,7 @@ class FormFilter extends React.Component {
     const { isReviewed } = filtersStore;
 
     return (
-      <React.Fragment>
+      <>
         <div>
           <Form.Label>{I18n.t('filter.is_reviewed')}</Form.Label>
         </div>
@@ -48,7 +48,7 @@ class FormFilter extends React.Component {
             </Button>
           ))}
         </ButtonGroup>
-      </React.Fragment>
+      </>
     );
   }
 

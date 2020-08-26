@@ -3,12 +3,11 @@ form {
   margin: 0;
 
   .submit-buttons {
-    margin-top: 20px;
-
     display: flex;
     // Display buttons in reverse order so the "primary" action
     // can be added to the DOM first and still be on the right.
     flex-direction: row-reverse;
+    margin-top: 20px;
 
     .btn {
       margin-#{$left}: 3px;

@@ -51,6 +51,7 @@ class AdvancedSearchFilter extends React.Component {
           <i
             className="fa fa-info-circle hint"
             role="button"
+            aria-label={I18n.t('search.help_title')}
             tabIndex={0}
             onKeyDown={this.handleKeyDown(this.showSearchHelp)}
             onClick={this.showSearchHelp}

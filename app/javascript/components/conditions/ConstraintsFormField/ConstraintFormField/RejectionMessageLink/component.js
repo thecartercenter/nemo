@@ -33,7 +33,7 @@ class RejectionMessageLink extends React.Component {
       ? 'form_item.rejection_message.add'
       : 'form_item.rejection_message.edit';
     return (
-      <React.Fragment>
+      <>
         {/* eslint-disable-next-line */}
         <a href="#" onClick={this.handleShow} tabIndex="0">
           <i className="fa fa-pencil edit-rejection-message" />
@@ -49,7 +49,7 @@ class RejectionMessageLink extends React.Component {
           rejectionMsgTranslations={rejectionMsgTranslations}
         />
         {/* eslint-enable */}
-      </React.Fragment>
+      </>
     );
   }
 }

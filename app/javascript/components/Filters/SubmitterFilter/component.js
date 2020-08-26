@@ -55,7 +55,7 @@ class SubmitterFilter extends React.Component {
     const { selectedSubmittersForType, handleSelectSubmitterForType } = filtersStore;
 
     return (
-      <React.Fragment>
+      <>
         {SUBMITTER_TYPES.map((type) => {
           const { dataUrl, resultsKey } = select2Config[type];
 
@@ -78,7 +78,7 @@ class SubmitterFilter extends React.Component {
             />
           );
         })}
-      </React.Fragment>
+      </>
     );
   }
 
