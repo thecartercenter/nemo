@@ -60,7 +60,9 @@
 
 .filters-popover {
   $container-padding: 12px;
+
   max-width: 300px;
+  padding: $container-padding;
 
   width: 80vw !important;
 
@@ -68,14 +70,8 @@
     max-width: 450px;
   }
 
-  .popover-content {
-    padding: $container-padding;
-  }
-
   &.popover-multi-select2 {
-    .popover-body {
-      padding-top: 0;
-    }
+    padding-top: 0;
 
     .select2-container {
       // Replace container padding top with popover margin so it's all consistent.
