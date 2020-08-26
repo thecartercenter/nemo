@@ -944,14 +944,12 @@ pt-BR:
           zero: "Nenhuma questão encontrada"
           one: "Exibindo <b>1</b> questão"
           other: "Exibindo <b>todas as %{count}</b> questões"
-          multi_page_html: "Exibindo questões <b>%{from} - %{to}</b> de <b>%{count}</b> no total"
     questioning:
       page_entries_info:
         single_page_html:
           zero: "Nenhuma questão encontrada"
           one: "Exibindo <b>1</b> questão"
           other: "Exibindo <b>todas as %{count}</b> questões"
-          multi_page_html: "Exibindo as questões <b>%{from} - %{to}</b> de <b>%{count}</b> em total"
     report/report:
       page_entries_info:
         single_page_html:

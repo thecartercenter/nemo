@@ -977,14 +977,12 @@ ar:
           zero: "لم يتم العثور على أسئلة"
           one: "عرض <b> 1 </b> السؤال"
           other: "عرض <b> %{count} </b> أسئلة"
-          multi_page_html: "عرض الأسئلة <b>%{to} - %{from} </b> من <b> %{count} </b> المجموع"
     questioning:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على أسئلة"
           one: "عرض <b> 1 </b> السؤال"
           other: "عرض <b> %{count} </b> أسئلة"
-          multi_page_html: "عرض الأسئلة <b>%{to} - %{from} </b> من <b> %{count} </b> المجموع"
     report/report:
       page_entries_info:
         single_page_html:

@@ -937,14 +937,12 @@ fr:
           zero: "Il n'y avait pas de questions trouvées."
           one: "<b>1</b> question affichée"
           other: "<b>Affichage de %{count}</b> questions"
-          multi_page_html: "Affichage des questions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     questioning:
       page_entries_info:
         single_page_html:
           zero: "Pas de questions trouvées"
           one: "<b>1</b> question affichée"
           other: "<b>Affichage de %{count}</b> questions"
-          multi_page_html: "Affichage des questions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     report/report:
       page_entries_info:
         single_page_html:

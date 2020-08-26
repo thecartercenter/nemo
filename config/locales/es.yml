@@ -532,14 +532,12 @@ es:
           zero: "No se han encontrado Preguntas"
           one: "Mostrando <b>1</b> Pregunta"
           other: "Mostrando <b>todas %{count}</b> Preguntas"
-          multi_page_html: "Mostrnado Preguntas <b>%{from} - %{to}</b> de <b>%{count}</b> en total"
     questioning:
       page_entries_info:
         single_page_html:
           zero: "No se han encontrado Preguntas"
           one: "Mostrando <b>1</b> Pregunta"
           other: "Mostrando <b>todas %{count}</b> Preguntas"
-          multi_page_html: "Mostrando Preguntas <b>%{from} - %{to}</b> de <b>%{count}</b> en total"
     report/report:
       page_entries_info:
         single_page_html:

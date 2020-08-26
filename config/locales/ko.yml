@@ -720,14 +720,12 @@ ko:
           zero: "질문을 찾지 못했습니다."
           one: " <b>1</b>개의 질문을 찾았습니다."
           other: "<b>총 %{count}</b>개의 질문을 찾았습니다."
-          multi_page_html: " <b>%{from} - %{to}</b> 총 <b>%{count}</b>개의 질문을 찾았습니다."
     questioning:
       page_entries_info:
         single_page_html:
           zero: "질문을 찾지 못했습니다."
           one: " <b>1</b>개의 질문을 찾았습니다."
           other: "<b>총 %{count}</b>개의 질문을 찾았습니다."
-          multi_page_html: " <b>%{from} - %{to}</b> 총 <b>%{count}</b>개의 질문을 찾았습니다."
     report/report:
       page_entries_info:
         single_page_html:
