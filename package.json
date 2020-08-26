@@ -26,10 +26,6 @@
       "\\.css$": "<rootDir>/app/javascript/__mocks__/style-mock.js"
     }
   },
-  "resolutions": {
-    "minimist_README": "Force security fix",
-    "minimist": "~1.2.2"
-  },
   "dependencies": {
     "@babel/core": "7.11.4",
     "@babel/plugin-proposal-class-properties": "7.10.4",
