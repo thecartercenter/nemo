@@ -134,7 +134,11 @@ describe OptionSets::Import do
     option_set = import.option_set
     expect(option_set).to have_attributes(name: "MySet", geographic?: false, mission: mission)
     expect(option_set.levels).to be_nil
-    expect(option_set.level_names).to include("en" => "Province")
+    if option_set.multilevel?
+      expect(option_set.level_names).to include(en: "Province")
+    else
+      expect(option_set.level_names).to be_nil
+    end
     expect(option_set.total_options).to eq(26)
     expect(option_set.all_options).to include(have_attributes(canonical_name: "Kinshasa"))
   end
