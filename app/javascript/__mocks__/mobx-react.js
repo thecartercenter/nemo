@@ -1,4 +1,4 @@
-const mobxReact = require.requireActual('mobx-react');
+const mobxReact = jest.requireActual('mobx-react');
 
 module.exports = {
   ...mobxReact,
