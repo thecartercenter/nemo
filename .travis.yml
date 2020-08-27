@@ -6,7 +6,6 @@ cache:
   yarn: true
 rvm:
   - 2.7.1
-sudo: required
 branches:
   except:
   - /^deploy-.*$/ # These are always just reset --hard's to other branches
@@ -26,6 +25,7 @@ before_script:
   - unzip chromedriver_linux64.zip
   - sudo cp chromedriver /usr/local/bin/.
   - export DISPLAY=:99.0
+  - nvm install $(cat .nvmrc)
   - yarn install --ignore-engines
 script:
   - bundle exec rspec --format progress
