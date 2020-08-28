@@ -45,6 +45,14 @@ Remove the default ruby installation so we can install our own later:
     sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'
     sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'
 
+Optional: Disable unattended upgrades to prevent Delayed Job from getting killed
+(security note: make sure you upgrade regularly if you're going to disable this):
+
+    sudo $EDITOR /etc/apt/apt.conf.d/50unattended-upgrades
+    # Find the section called "Unattended-Upgrade::Package-Blacklist"
+    # and add the following line:
+        "postgresql-.*";
+
 ### Connect to a remote database (optional, advanced)
 
 If you have split servers (e.g. web on one server and database on another), make sure to also modify the following:
