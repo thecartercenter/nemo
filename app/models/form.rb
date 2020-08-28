@@ -42,6 +42,7 @@ class Form < ApplicationRecord
   include Replication::Replicable
   include Replication::Standardizable
   include MissionBased
+  include Wisper.model
 
   def self.receivable_association
     {name: :form_forwardings, fk: :recipient}
