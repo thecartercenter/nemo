@@ -50,6 +50,7 @@
 # A group of questions on a form.
 class QingGroup < FormItem
   include Translatable
+  include Wisper.model
 
   translates :group_name, :group_hint, :group_item_name
 
