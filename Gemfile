@@ -14,13 +14,9 @@ gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
 gem "fog-aws", "~> 3.3.0"
 gem "friendly_id", "~> 5.1.0"
-gem "hairtrigger", "~> 0.2.20"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
 gem "paperclip", "~> 6.0"
-gem "pg", "~> 0.20"
-gem "pg_search", "~> 2.1"
 gem "phony", "~> 2.15"
-gem "postgres-copy", "~> 1.0"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 gem "rake", "~> 12.3.3"
 gem "random_data", "~> 1.6.0" # Deprecated: Use Faker instead
@@ -31,7 +27,6 @@ gem "rubyzip", "~> 1.3"
 gem "term-ansicolor", "~> 1.3.0"
 gem "thor", "0.19.1" # Newer versions produce command line argument errors. Remove constraint when fixed.
 gem "twilio-ruby", "~> 4.1.0"
-gem "whenever", "~> 0.9.4", require: false
 
 # JS/CSS
 gem "bootstrap", "~> 4.3.1"
@@ -88,9 +83,18 @@ gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree.git"
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"
 
-# Performance
+# DB
+gem "hairtrigger", "~> 0.2.20"
+gem "pg", "~> 0.20"
+gem "pg_search", "~> 2.1"
+gem "postgres-copy", "~> 1.0"
+gem "wisper", "~> 2.0"
+gem "wisper-activerecord", "~> 1.0"
+
+# Background/async
 gem "delayed_job_active_record", "~> 4.1.3"
 gem "parallel", "~> 1.19"
+gem "whenever", "~> 0.9.4", require: false
 
 # I18n
 gem "i18n-country-translations", "~> 1.2.3"
