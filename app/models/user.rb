@@ -50,6 +50,7 @@
 
 class User < ApplicationRecord
   include Cacheable
+  include Wisper.model
 
   ROLES = %w[enumerator reviewer staffer coordinator].freeze
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)

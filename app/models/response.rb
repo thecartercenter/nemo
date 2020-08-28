@@ -59,6 +59,7 @@ class Response < ApplicationRecord
   extend FriendlyId
   include MissionBased
   include Cacheable
+  include Wisper.model
 
   LOCK_OUT_TIME = 10.minutes
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
