@@ -21,6 +21,17 @@ module OData
       Response.where(user_id: user.id).update_all(dirty_json: true)
     end
 
+    def update_question_successful(question)
+      return unless attribs_changed?(question, %w[code])
+      form_ids = question.forms.pluck(:id)
+      Response.where(form_id: form_ids).update_all(dirty_json: true)
+    end
+
+    def update_qing_group_successful(qing_group)
+      return unless attribs_changed?(qing_group, %w[repeatable group_name_translations])
+      Response.where(form_id: qing_group.form.id).update_all(dirty_json: true)
+    end
+
     private
 
     def attribs_changed?(object, attribs)
