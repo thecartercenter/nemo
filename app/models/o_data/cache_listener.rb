@@ -11,6 +11,12 @@ module OData
       response.update!(dirty_json: true)
     end
 
+    def update_answer_successful(answer)
+      return unless attribs_changed?(answer, %w[value date_value time_value datetime_value pending_file_name
+                                                option_node_id accuracy altitude latitude longitude])
+      answer.response.update!(dirty_json: true)
+    end
+
     def update_form_successful(form)
       return unless attribs_changed?(form, %w[name])
       Response.where(form_id: form.id).update_all(dirty_json: true)

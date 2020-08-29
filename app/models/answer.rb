@@ -49,6 +49,7 @@
 class Answer < ResponseNode
   include ActionView::Helpers::NumberHelper
   include PgSearch
+  include Wisper.model
 
   LOCATION_ATTRIBS = %i[latitude longitude altitude accuracy].freeze
   LOCATION_COLS = LOCATION_ATTRIBS.map(&:to_s).freeze
