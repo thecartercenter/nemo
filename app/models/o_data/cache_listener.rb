@@ -33,8 +33,13 @@ module OData
       Response.where(form_id: form_ids).update_all(dirty_json: true)
     end
 
+    def update_questioning_successful(questioning)
+      return unless attribs_changed?(questioning, %w[rank])
+      Response.where(form_id: questioning.form_id).update_all(dirty_json: true)
+    end
+
     def update_qing_group_successful(qing_group)
-      return unless attribs_changed?(qing_group, %w[repeatable group_name_translations])
+      return unless attribs_changed?(qing_group, %w[rank repeatable group_name_translations])
       Response.where(form_id: qing_group.form.id).update_all(dirty_json: true)
     end
 

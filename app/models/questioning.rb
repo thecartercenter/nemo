@@ -49,6 +49,8 @@
 
 # Models the appearance of a question on a form.
 class Questioning < FormItem
+  include Wisper.model
+
   alias answers response_nodes
 
   delegate :all_options, :media_prompt?, :auto_increment?, :code, :code=, :first_leaf_option_node,

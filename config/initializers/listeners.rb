@@ -7,5 +7,6 @@ Rails.application.config.after_initialize do
   Form.subscribe(OData::CacheListener.instance)
   User.subscribe(OData::CacheListener.instance)
   Question.subscribe(OData::CacheListener.instance)
+  Questioning.subscribe(OData::CacheListener.instance)
   QingGroup.subscribe(OData::CacheListener.instance)
 end
