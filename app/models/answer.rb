@@ -204,6 +204,10 @@ class Answer < ResponseNode
     elsif media_object_id != id
       self.media_object = Media::Object.find_by(id: id, answer_id: nil)
     end
+
+    # Manually mark as dirty since the creation of media objects
+    # is difficult to listen for otherwise.
+    response.update!(dirty_json: true)
   end
 
   def has_media_object?

@@ -12,7 +12,7 @@ module OData
     end
 
     def update_answer_successful(answer)
-      return unless attribs_changed?(answer, %w[value date_value time_value datetime_value pending_file_name
+      return unless attribs_changed?(answer, %w[value date_value time_value datetime_value
                                                 option_node_id accuracy altitude latitude longitude])
       answer.response.update!(dirty_json: true)
     end
