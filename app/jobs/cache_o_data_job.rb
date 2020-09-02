@@ -58,18 +58,22 @@ class CacheODataJob < ApplicationJob
     Operation.find_by(job_class: CacheODataOperationJob.name, job_completed_at: nil)
   end
 
+  def remaining_responses
+    Response.dirty.live
+  end
+
   # Update the existing operation, if found;
   # otherwise create an operation only if the number of responses exceeds the threshold.
   def create_or_update_operation
     if existing_operation.nil?
-      return if Response.dirty.count < OPERATION_THRESHOLD
+      return if remaining_responses.count < OPERATION_THRESHOLD
       enqueue_operation
     end
     update_notes
   end
 
   def cache_batch
-    responses = Response.dirty.live.order(created_at: :desc).limit(BATCH_SIZE)
+    responses = remaining_responses.order(created_at: :desc).limit(BATCH_SIZE)
     responses.each_with_index do |response, index|
       CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
       update_notes if (index % NOTES_INTERVAL).zero?
@@ -77,7 +81,7 @@ class CacheODataJob < ApplicationJob
   end
 
   def update_notes
-    num_responses = Response.dirty.count
+    num_responses = remaining_responses.count
     existing_operation&.update!(notes: "#{I18n.t('operation.notes.remaining')}: #{num_responses}")
   end
 
@@ -94,8 +98,7 @@ class CacheODataJob < ApplicationJob
 
   # Self-enqueue a new batch if there are responses left to cache.
   def loop_or_finish
-    # TODO: Is this join performant enough with big data?
-    if Response.live.exists?(dirty_json: true)
+    if remaining_responses.exists?
       self.class.perform_later
     else
       complete_operation
