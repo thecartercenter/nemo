@@ -207,7 +207,7 @@ class Answer < ResponseNode
 
     # Manually mark as dirty since the creation of media objects
     # is difficult to listen for otherwise.
-    response.update!(dirty_json: true)
+    response&.update!(dirty_json: true)
   end
 
   def has_media_object?
