@@ -34,6 +34,9 @@ module OData
     end
 
     def update_questioning_successful(questioning)
+      # Note: Simple rank changes are a "false positive"; could be
+      # more performant if we listen specifically for *parent* changes
+      # instead (though Wisper may not easily handle this attrib).
       return unless attribs_changed?(questioning, %w[rank])
       Response.where(form_id: questioning.form_id).update_all(dirty_json: true)
     end
