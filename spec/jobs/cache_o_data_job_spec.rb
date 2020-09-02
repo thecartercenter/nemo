@@ -42,6 +42,15 @@ describe CacheODataJob do
       described_class.perform_now
       expect(Response.all.pluck(:dirty_json)).to eq([false] * num_responses)
     end
+
+    it "ignores non-live responses" do
+      responses[0].form.update_status("draft")
+      responses[1].form.update_status("paused")
+      responses[2].form.update_status("live")
+
+      described_class.perform_now
+      expect(Response.all.pluck(:dirty_json)).to eq([true, true, false])
+    end
   end
 
   context "operation notes" do

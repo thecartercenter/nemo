@@ -69,7 +69,7 @@ class CacheODataJob < ApplicationJob
   end
 
   def cache_batch
-    responses = Response.dirty.order(created_at: :desc).limit(BATCH_SIZE)
+    responses = Response.dirty.live.order(created_at: :desc).limit(BATCH_SIZE)
     responses.each_with_index do |response, index|
       CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
       update_notes if (index % NOTES_INTERVAL).zero?
@@ -94,7 +94,8 @@ class CacheODataJob < ApplicationJob
 
   # Self-enqueue a new batch if there are responses left to cache.
   def loop_or_finish
-    if Response.exists?(dirty_json: true)
+    # TODO: Is this join performant enough with big data?
+    if Response.live.exists?(dirty_json: true)
       self.class.perform_later
     else
       complete_operation
