@@ -29,6 +29,9 @@
       <EntityType Name="Responses: *form2*" OpenType="true" BaseType="NEMO.Response">
         <Property Name="*q_code4*" Type="Edm.String" Nullable="true"/>
       </EntityType>
+      <EntityType Name="Responses: *form3*" OpenType="true" BaseType="NEMO.Response">
+        <Property Name="*q_code5*" Type="Edm.String" Nullable="true"/>
+      </EntityType>
       <EntityContainer Name="NEMOService">
         <EntitySet Name="Custom" EntityType="NEMO.Custom">
         </EntitySet>
@@ -39,6 +42,8 @@
         <EntitySet Name="Responses: *form1*" EntityType="NEMO.Responses: *form1*">
         </EntitySet>
         <EntitySet Name="Responses: *form2*" EntityType="NEMO.Responses: *form2*">
+        </EntitySet>
+        <EntitySet Name="Responses: *form3*" EntityType="NEMO.Responses: *form3*">
         </EntitySet>
       </EntityContainer>
     </Schema>
