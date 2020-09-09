@@ -14,7 +14,7 @@ class Report::Formatter
     when "time"
       I18n.l(value.is_a?(Time) ? value : Time.parse(value.to_s), format: :time_only)
     when "decimal"
-      format("%.2f", value)
+      Kernel.format("%<value>.2f", value: value)
     when "long_text"
       sanitize(context == :header ? truncate(value, length: 96) : value)
     else
