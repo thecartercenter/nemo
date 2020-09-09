@@ -20,14 +20,17 @@ describe "OData root" do
     include_context "odata with basic forms"
 
     it "renders as expected" do
-      names = ["Responses: #{form.name}", "Responses: #{form_with_no_responses.name}"]
-      urls = %W[Responses-#{form.id} Responses-#{form_with_no_responses.id}]
+      forms = [form, form_with_no_responses, paused_form]
+      values = forms.map do |form|
+        {
+          name: "Responses: #{form.name}",
+          kind: "EntitySet",
+          url: "Responses-#{form.id}"
+        }
+      end
       expect_json(
         "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}#{OData::BASE_PATH}/$metadata",
-        value: [
-          {name: names[0], kind: "EntitySet", url: urls[0]},
-          {name: names[1], kind: "EntitySet", url: urls[1]}
-        ]
+        value: values
       )
     end
   end

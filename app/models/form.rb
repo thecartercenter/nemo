@@ -79,6 +79,7 @@ class Form < ApplicationRecord
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
 
   scope :live, -> { where(status: "live") }
+  scope :published, -> { where.not(status: "draft") }
   scope :by_name, -> { order(:name) }
   scope :by_status, -> { order("CASE status WHEN 'draft' THEN 2 ELSE 1 END") }
   scope :default_order, -> { by_name }

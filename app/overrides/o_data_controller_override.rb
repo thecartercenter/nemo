@@ -68,7 +68,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   def distinct_forms
     Form
       .accessible_by(current_ability)
-      .live
+      .published
       .where(mission: current_mission)
       .distinct
       .order(:name)

@@ -13,7 +13,7 @@ describe "OData $metadata" do
 
   context "with several basic forms" do
     include_context "odata with basic forms"
-    it { expect_fixture("basic_metadata.xml", forms: [form, form_with_no_responses]) }
+    it { expect_fixture("basic_metadata.xml", forms: [form, form_with_no_responses, paused_form]) }
   end
 
   context "with nested groups", :reset_factory_sequences do

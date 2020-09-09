@@ -6,7 +6,7 @@ shared_context "odata" do
   include_context "basic auth"
 
   let(:mission) { create(:mission) }
-  let!(:user) { create(:user, mission: mission, role_name: :staffer) }
+  let!(:user) { create(:user, mission: mission, role_name: :coordinator) }
   let(:api_route) { OData::BASE_PATH }
   let(:mission_api_route) { "/en/m/#{mission.compact_name}#{api_route}" }
 
@@ -38,7 +38,8 @@ end
 shared_context "odata with basic forms" do
   let!(:form) { create(:form, :live, mission: mission, question_types: %w[integer select_one text]) }
   let!(:form_with_no_responses) { create(:form, :live, mission: mission, question_types: %w[text]) }
-  let(:unpublished_form) { create(:form, mission: mission, question_types: %w[text]) }
+  let(:paused_form) { create(:form, :paused, mission: mission, question_types: %w[text]) }
+  let(:draft_form) { create(:form, :draft, mission: mission, question_types: %w[text]) }
   let(:other_mission) { create(:mission) }
   let(:other_form) { create(:form, :live, mission: other_mission, question_types: %w[text]) }
 
@@ -50,7 +51,8 @@ shared_context "odata with basic forms" do
       create(:response, mission: mission, form: form, answer_values: [2, "Cat", "Bar"])
     end
     create(:response, mission: mission, form: form, answer_values: [3, "Dog", "Baz"])
-    create(:response, mission: mission, form: unpublished_form, answer_values: ["X"])
+    create(:response, mission: mission, form: paused_form, answer_values: ["X"])
+    create(:response, mission: mission, form: draft_form, answer_values: ["X"])
     create(:response, mission: other_mission, form: other_form, answer_values: ["X"])
   end
 end
