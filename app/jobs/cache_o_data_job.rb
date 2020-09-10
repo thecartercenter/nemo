@@ -73,7 +73,9 @@ class CacheODataJob < ApplicationJob
   end
 
   def cache_batch
-    responses = remaining_responses.order(created_at: :desc).limit(BATCH_SIZE)
+    responses = remaining_responses
+      .order(cached_json: :desc, created_at: :desc)
+      .limit(BATCH_SIZE)
     Delayed::Worker.logger.info("Caching batch (#{responses.count})...")
     responses.each_with_index do |response, index|
       CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
