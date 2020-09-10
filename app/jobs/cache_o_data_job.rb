@@ -74,6 +74,7 @@ class CacheODataJob < ApplicationJob
 
   def cache_batch
     responses = remaining_responses.order(created_at: :desc).limit(BATCH_SIZE)
+    Delayed::Worker.logger.info("Caching batch (#{responses.count})...")
     responses.each_with_index do |response, index|
       CacheODataJob.cache_response(response, logger: Delayed::Worker.logger)
       update_notes if (index % NOTES_INTERVAL).zero?
@@ -82,10 +83,13 @@ class CacheODataJob < ApplicationJob
 
   def update_notes
     num_responses = remaining_responses.count
-    existing_operation&.update!(notes: "#{I18n.t('operation.notes.remaining')}: #{num_responses}")
+    notes = "#{I18n.t('operation.notes.remaining')}: #{num_responses}"
+    Delayed::Worker.logger.info(notes)
+    existing_operation&.update!(notes: notes)
   end
 
   def enqueue_operation
+    Delayed::Worker.logger.info("Creating operation...")
     operation = Operation.new(
       creator: nil,
       mission: nil,
@@ -106,6 +110,7 @@ class CacheODataJob < ApplicationJob
   end
 
   def complete_operation
+    Delayed::Worker.logger.info("Done.")
     Operation.where(job_class: CacheODataOperationJob.name, job_completed_at: nil)
       .update(job_completed_at: Time.current, notes: "#{I18n.t('operation.notes.remaining')}: 0")
   end
