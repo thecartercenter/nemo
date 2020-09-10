@@ -59,7 +59,7 @@ class CacheODataJob < ApplicationJob
   end
 
   def remaining_responses
-    Response.dirty.live
+    Response.dirty.published
   end
 
   # Update the existing operation, if found;

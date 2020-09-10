@@ -49,7 +49,7 @@ describe CacheODataJob do
       responses[2].form.update_status("live")
 
       described_class.perform_now
-      expect(Response.all.pluck(:dirty_json)).to eq([true, true, false])
+      expect(Response.all.pluck(:dirty_json)).to eq([true, false, false])
     end
   end
 

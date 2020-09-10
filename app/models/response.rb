@@ -104,7 +104,7 @@ class Response < ApplicationRecord
   scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
   scope :latest_first, -> { order(created_at: :desc) }
   scope :dirty, -> { where(dirty_json: true) }
-  scope :live, -> { joins(:form).merge(Form.live) }
+  scope :published, -> { joins(:form).merge(Form.published) }
 
   # loads basic belongs_to associations
   scope :with_basic_assoc, -> { includes(:form, :user) }
