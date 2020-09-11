@@ -14,5 +14,9 @@ ExecStart=/home/deploy/elmo/bin/delayed_job start -n 1
 ExecStop=/home/deploy/elmo/bin/delayed_job stop
 TimeoutSec=120
 
+# Use all resources available, but step back when more important things are running.
+CPUWeight=20
+IOWeight=20
+
 [Install]
 WantedBy=multi-user.target

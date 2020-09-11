@@ -3,14 +3,16 @@
 # Caches OData that may have changed.
 class CacheODataJob < ApplicationJob
   # Batches should be sufficiently small to not interfere with user-initiated jobs like Reports.
-  # In practice, 100 responses take ~10-30 seconds to cache on a small VM.
-  BATCH_SIZE = 300
+  # In practice, 100 responses take ~30-200 seconds to cache on a normal VM like `B2s`.
+  # It takes just a few milliseconds to transition between each batch.
+  BATCH_SIZE = 30
 
   # A user-facing Operation should be created if there are so many responses to cache
   # that it's worth tracking progress.
-  OPERATION_THRESHOLD = 1000
+  OPERATION_THRESHOLD = 300
 
   # Frequency at which the Operation.notes should be updated for the user.
+  # Has no effect if it's greater than BATCH_SIZE (notes are always updated on new batch).
   NOTES_INTERVAL = 100
 
   # Default to lower-priority queue.
