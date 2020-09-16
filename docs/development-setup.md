@@ -26,6 +26,7 @@ Note to install the software below we recommend the following package managers:
 1. Memcached 1.4+
     - For development environments, caching is only needed if you are developing a feature that uses caching and want to test it.
     - In this case, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
+    - When using Homebrew via `brew install memcached; brew services start memcached`, slab size can be configured at `/usr/local/Cellar/memcached/1.x.x/homebrew.mxcl.memcached.plist`
 1. PostgreSQL 10+
     - Create empty databases for use by the app: `createdb elmo_development && createdb elmo_test`
 1. ImageMagick 6.7+

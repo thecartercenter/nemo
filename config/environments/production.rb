@@ -47,7 +47,8 @@ ELMO::Application.configure do
              rescue StandardError
                ""
              end
-  config.cache_store = :dalli_store, memcached_server, {namespace: "elmo#{revision}"}
+  config.cache_store = :dalli_store, memcached_server, {namespace: "elmo#{revision}",
+                                                        compress: true}
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this

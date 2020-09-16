@@ -15,11 +15,15 @@ ELMO::Application.configure do
   config.consider_all_requests_local = true
 
   # Caching may need to be turned on when testing caching itself.
-  # To do so, run `rails dev:cache` which will create this tempfile.
+  # To do so, you can run `rails dev:cache` which will create this tempfile.
+  # If you want to override this long-term, please do it privately in `local_config.rb`.
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
-    # See the dev setup guide for info on configuring memcached locally.
-    config.cache_store = :dalli_store, nil, {value_max_bytes: 2.megabytes}
+    config.cache_store = :dalli_store, nil, {namespace: "v1",
+                                             compress: true,
+                                             # See the dev setup guide for info on configuring memcached.
+                                             value_max_bytes: 2.megabytes,
+                                             error_when_over_max_size: true}
   else
     config.action_controller.perform_caching = false
     config.cache_store = :null_store
