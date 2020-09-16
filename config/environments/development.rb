@@ -14,13 +14,16 @@ ELMO::Application.configure do
   # Show full error reports
   config.consider_all_requests_local = true
 
-  # Caching may need to be turned on when testing caching itself. If so, please use
-  # config/initializers/local_config.rb to override this value,
-  # or change it here but please don't commit the change!
-  config.action_controller.perform_caching = false
-
-  # This is here only in case the above value is overridden as described.
-  config.cache_store = :dalli_store, nil, {value_max_bytes: 2.megabytes}
+  # Caching may need to be turned on when testing caching itself.
+  # To do so, run `rails dev:cache` which will create this tempfile.
+  if Rails.root.join("tmp/caching-dev.txt").exist?
+    config.action_controller.perform_caching = true
+    # See the dev setup guide for info on configuring memcached locally.
+    config.cache_store = :dalli_store, nil, {value_max_bytes: 2.megabytes}
+  else
+    config.action_controller.perform_caching = false
+    config.cache_store = :null_store
+  end
 
   # care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
