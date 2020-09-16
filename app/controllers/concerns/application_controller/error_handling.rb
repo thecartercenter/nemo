@@ -12,6 +12,8 @@ module Concerns::ApplicationController::ErrorHandling
     raise exception
   end
 
+  # Add some context right away, before we do things like load the mission
+  # which could theoretically cause crashes.
   def set_initial_exception_context
     Raven.extra_context(params: params.to_unsafe_h)
   end
@@ -23,18 +25,14 @@ module Concerns::ApplicationController::ErrorHandling
 
     return unless current_user
 
+    id, name, login, email = current_user.values_at(:id, :name, :login, :email)
+
     request.env["exception_notifier.exception_data"] = {
-      user: {
-        id: current_user.id,
-        name: current_user.name,
-        email: current_user.email
-      }
+      user: {id: id, name: name, email: email}
     }
 
     # Slightly different allowable parameters.
-    Raven.user_context(id: current_user.id,
-                       username: current_user.login,
-                       email: current_user.email)
+    Raven.user_context(id: id, username: login, email: email)
   end
 
   def render_not_found
