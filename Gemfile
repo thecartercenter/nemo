@@ -157,8 +157,8 @@ group :development, :test do
   gem "webdrivers", "~> 4.0"
 
   # Debugging
-  gem "pry", "~> 0.10"
-  gem "pry-nav", "~> 0.2"
+  gem "pry", "~> 0.13"
+  gem "pry-byebug", "~> 3.9"
   gem "pry-rails", "~> 0.3"
 
   # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
