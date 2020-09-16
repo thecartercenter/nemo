@@ -17,6 +17,10 @@ module Concerns::ApplicationController::ErrorHandling
   end
 
   def prepare_exception_notifier
+    Raven.tags_context(locale: I18n.locale,
+                       mode: params[:mode],
+                       mission: current_mission&.compact_name)
+
     return unless current_user
 
     request.env["exception_notifier.exception_data"] = {
