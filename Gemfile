@@ -105,6 +105,7 @@ gem "rails-i18n", "~> 5.1"
 
 # Analytics
 gem "scout_apm", "~> 2.6"
+gem "sentry-raven", "~> 3.0"
 
 # Force Sprockets to stay on v3 for now.
 gem "sprockets", "~> 3"
