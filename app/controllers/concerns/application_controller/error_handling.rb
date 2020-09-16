@@ -12,16 +12,25 @@ module Concerns::ApplicationController::ErrorHandling
     raise exception
   end
 
+  def set_initial_exception_context
+    Raven.extra_context(params: params.to_unsafe_h)
+  end
+
   def prepare_exception_notifier
-    if current_user
-      request.env["exception_notifier.exception_data"] = {
-        user: {
-          id: current_user.id,
-          name: current_user.name,
-          email: current_user.email
-        }
+    return unless current_user
+
+    request.env["exception_notifier.exception_data"] = {
+      user: {
+        id: current_user.id,
+        name: current_user.name,
+        email: current_user.email
       }
-    end
+    }
+
+    # Slightly different allowable parameters.
+    Raven.user_context(id: current_user.id,
+                       username: current_user.login,
+                       email: current_user.email)
   end
 
   def render_not_found
