@@ -5,10 +5,8 @@ Raven.configure do |config|
   config.release = "nemo@#{configatron.system_version}"
   config.current_environment = Rails.env.to_s
 
-  if Rails.env.production?
-    # Don't block requests on synchronous error reporting.
-    config.async = lambda { |event|
-      SentryJob.perform_later(event)
-    }
-  end
+  # Don't block requests on synchronous error reporting.
+  config.async = lambda { |event|
+    SentryJob.perform_later(event)
+  }
 end
