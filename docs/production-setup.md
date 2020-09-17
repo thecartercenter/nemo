@@ -358,7 +358,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 1. The `uploads/questions/audio_prompts` directory must be renamed to `media_prompts`. If you are using cloud storage, this will need to be done via your cloud provider's console or API. If you are using local storage, this will be taken care of automatically.
 
-#### Upgrading to latest master
+#### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.
 
@@ -387,9 +387,9 @@ If you want to upgrade to a particular version of NEMO, then try:
 
     git checkout vX.Y
 
-where `X.Y` (or `X.Y.Z`) is the version number you want. Otherwise you should ensure you're on the master branch:
+where `X.Y` (or `X.Y.Z`) is the version number you want. Otherwise you should ensure you're on the `main` branch:
 
-    git checkout master
+    git checkout main
 
 If you get an error that `Your local changes to the following files would be overwritten by checkout`, you can usually
 fix it by doing `git reset --hard`. This will wipe out any local changes to the code, which shouldn't be a problem
