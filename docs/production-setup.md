@@ -358,6 +358,11 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 1. The `uploads/questions/audio_prompts` directory must be renamed to `media_prompts`. If you are using cloud storage, this will need to be done via your cloud provider's console or API. If you are using local storage, this will be taken care of automatically.
 
+#### Upgrading to v11.7
+
+1. [Sentry](https://sentry.io/for/rails/) error tracking is now enabled by default. This means NEMO will automatically send us diagnostic logs when Rails errors occur. These error reports help us fix bugs faster, but may unintentionally reveal information to us about your servers or users. Please disable Sentry in `config/application.rb` (or switch to your own personal URL) if you wish to opt out.
+    1. You can still configure the server to email you when errors occur via `config/local_config.rb`; this will not disable Sentry.
+
 #### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.
