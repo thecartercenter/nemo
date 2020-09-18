@@ -1,5 +1,6 @@
 .bundle
 .DS_Store
+.env
 db/*.sqlite3
 db/sphinx
 log

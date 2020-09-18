@@ -3,20 +3,25 @@
 upload_path = "uploads/:class/:attachment/:id_partition/:style/:filename"
 
 # We always do local storage in testing for speed and so that we don't rely on external services.
-if !Rails.env.test? && Settings.key?(:paperclip) && Settings.paperclip.storage == "cloud"
-  raise "AWS must be provided if storage set to 'cloud'" unless Settings.key?(:aws)
+storage_type = ENV["NEMO_PAPERCLIP_STORAGE_TYPE"]
+storage_type ||= Settings.key?(:paperclip) ? Settings.paperclip.storage : "local"
+
+if !Rails.env.test? && Settings.key?(:paperclip) && storage_type == "cloud"
+  unless Settings.key?(:aws) || ENV.key?("NEMO_AWS_ACCESS_KEY_ID")
+    raise "AWS settings must be provided if storage set to 'cloud'"
+  end
 
   Paperclip::Attachment.default_options.merge!(
     path: upload_path,
     storage: "fog",
     fog_credentials: {
       provider: "AWS",
-      aws_access_key_id: Settings.aws.access_key_id,
-      aws_secret_access_key: Settings.aws.secret_access_key,
-      region: Settings.aws.region,
+      aws_access_key_id: ENV["NEMO_AWS_ACCESS_KEY_ID"] || Settings.aws.access_key_id,
+      aws_secret_access_key: ENV["NEMO_AWS_SECRET_ACCESS_KEY"] || Settings.aws.secret_access_key,
+      region: ENV["NEMO_AWS_REGION"] || Settings.aws.region,
       scheme: "https"
     },
-    fog_directory: Settings.aws.bucket,
+    fog_directory: ENV["NEMO_AWS_BUCKET"] || Settings.aws.bucket,
     fog_options: {multipart_chunk_size: 10.megabytes},
     fog_host: nil,
     fog_public: false
