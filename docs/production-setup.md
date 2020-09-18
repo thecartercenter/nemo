@@ -37,6 +37,12 @@ Remove the default ruby installation so we can install our own later:
     sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger bionic main > /etc/apt/sources.list.d/passenger.list'
     sudo apt update && sudo apt install -y nginx apt-transport-https ca-certificates libnginx-mod-http-passenger
 
+### Configure memcached
+
+    sudo rm -f /etc/memcached.conf && sudo $EDITOR /etc/memcached.conf
+
+Paste the contents of [this config file](memcached.conf), then restart: `sudo systemctl restart memcached`.
+
 ### Install PostgreSQL and create database
 
     sudo apt install -y postgresql postgresql-contrib postgresql-server-dev-10

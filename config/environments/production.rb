@@ -48,7 +48,8 @@ ELMO::Application.configure do
                ""
              end
   config.cache_store = :dalli_store, memcached_server, {namespace: "elmo#{revision}",
-                                                        compress: true}
+                                                        compress: true,
+                                                        value_max_bytes: 16.megabytes}
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
