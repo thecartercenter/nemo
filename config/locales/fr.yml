@@ -680,7 +680,6 @@ fr:
         incoming_sms_numbers_str: "Entrez le ou les numéros de téléphone (y compris le code du pays, séparés par des virgules) auxquels les SMS entrants pour les formulaires SMS doivent être envoyés. Nécessaire uniquement si vous utilisez des soumissions SMS."
         incoming_sms_token: |-
             ce jeton est inclu dans l'URL utilisé par le fournisseur de SMS entrant pour eviter l'envoi des messages non autorisés.
-        theme: "Choisissez un thème pour l'application. Vous pouvez consulter  <a href='https://github.com/thecartercenter/elmo/blob/master/docs/production-setup.md#custom-theme'>les instructions pour créer un thème personnalisé</a>."
         universal_sms_token: |-
             Ce jeton est contenu dans l'URL utilisé par le fournisseur de SMS entrant pour empêcher l'envoi des messages non autorisés. Utilisez cet URL si vous voulez permettre à plusieurs missions d'envoyer des formulaires par la même adresse URL.
         using_incoming_sms_token_title: Utilisation du jeton du SMS entrant

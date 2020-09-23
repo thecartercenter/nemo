@@ -700,7 +700,6 @@ pt-BR:
             Ao gerar um novo código, por favor memorize ou registre o código antigo, se houve formulários em campo. O novo código só funcionará para formulários baixados após a atualização do código de sobreposição.
         incoming_sms_token: |-
             Este token é incluído na URL usada pelo provedor de recebimento de SMS para impedir a submissão de mensagens não autorizadas.
-        theme: "Escolha um tema para a aplicação. Você pode ver as <a href='https://github.com/thecartercenter/elmo/blob/master/docs/production-setup.md#custom-theme'>instruções para criar um tema personalizado</a>."
         external_sql: "O código SQL usado para extrair dados para uso em aplicações externas. Clique em 'Selecionar todos' e então Ctrl-C para copiar."
         timezone: "O fuso horário no qual os horários são mostrados em todo o site."
         generic_sms_config_str: "Um texto JSON para o adaptador genérico. Por exemplo:  <pre>{&quot;params&quot;:{&quot;from&quot;:&quot;num&quot;,&quot;body&quot;:&quot;msg&quot;}, &quot;response&quot;:&quot;&lt;message&gt;%{reply}&lt;/message&gt;&quot;}</pre>"
