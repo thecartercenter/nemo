@@ -9,6 +9,7 @@ gem "attribute_normalizer", "~> 1.2.0"
 gem "daemons", "~> 1.2.1"
 gem "dalli", "~> 2.7.4" # memcache
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe" # mean, median, etc.
+gem "dotenv-rails", "~> 2.7"
 gem "draper", "~> 3.0.1"
 gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
