@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 5.2"
+gem "rails", "~> 6.0.3"
 
 gem "actionpack-page_caching", "~> 1.1"
 gem "attribute_normalizer", "~> 1.2.0"
@@ -10,7 +10,7 @@ gem "daemons", "~> 1.2.1"
 gem "dalli", "~> 2.7.4" # memcache
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe" # mean, median, etc.
 gem "dotenv-rails", "~> 2.7"
-gem "draper", "~> 3.0.1"
+gem "draper", "~> 4.0"
 gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
 gem "fog-aws", "~> 3.3.0"
@@ -22,11 +22,11 @@ gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 gem "rake", "~> 12.3.3"
 gem "random_data", "~> 1.6.0" # Deprecated: Use Faker instead
 gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
-gem "responders", "~> 2.4.0"
+gem "responders", "~> 3.0"
 gem "rqrcode", "~> 0.10.1"
 gem "rubyzip", "~> 1.3"
 gem "term-ansicolor", "~> 1.3.0"
-gem "thor", "0.19.1" # Newer versions produce command line argument errors. Remove constraint when fixed.
+gem "thor", "~> 1.0"
 gem "twilio-ruby", "~> 4.1.0"
 
 # JS/CSS
@@ -102,7 +102,7 @@ gem "i18n-country-translations", "~> 1.2.3"
 gem "i18n-js", "~> 3.0.0.rc13"
 gem "i18n_country_select", "~> 1.1.7"
 gem "iso-639", "~> 0.2.5"
-gem "rails-i18n", "~> 5.1"
+gem "rails-i18n", "~> 6.0"
 
 # Analytics
 gem "scout_apm", "~> 2.6"
