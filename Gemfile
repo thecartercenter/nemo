@@ -121,6 +121,7 @@ group :development do
   gem "binding_of_caller", "~> 0.7.2"
   gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4.1"
+  gem "listen", "~> 3.0"
   gem "rails-erd", "~> 1.4.0"
   gem "spring", "~> 1.3.3"
   gem "thin", "~> 1.7.0"
