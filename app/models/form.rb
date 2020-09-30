@@ -233,8 +233,17 @@ class Form < ApplicationRecord
 
   def update_status(new_status)
     return if new_status == status
+
+    old_status = status&.to_sym
+    new_status = new_status.to_sym
+    updates = {status: new_status}
+
+    # We don't care about when status goes between live and paused since that doesn't affect
+    # what is allowed to be changed.
+    updates[:published_changed_at] = Time.current if old_status == :draft || new_status == :draft
+
     # Don't run validations in case form has become invalid due to a migration or other change.
-    update_columns(status: new_status, status_changed_at: Time.current)
+    update_columns(**updates)
 
     # Ensure the form has a version if it's becoming live.
     increment_version if live? && current_version.nil?

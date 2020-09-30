@@ -72,26 +72,39 @@ describe Form do
   end
 
   describe "status_changed_at" do
-    it "should be nil on create" do
-      expect(form.status_changed_at).to be_nil
+    context "with draft form" do
+      let(:form) { Timecop.freeze(-1.minute) { create(:form, :draft) } }
+
+      it "should be nil on create" do
+        expect(form.status_changed_at).to be_nil
+      end
+
+      it "should be updated when form goes from draft -> live" do
+        form.update_status(:live)
+        expect(form.status_changed_at).to be_within(1.second).of(Time.current)
+      end
+
+      it "should be updated when form goes from draft -> paused" do
+        form.update_status(:paused)
+        expect(form.status_changed_at).to be_within(1.second).of(Time.current)
+      end
     end
 
-    it "should be updated when form goes live" do
-      form.update_status(:live)
-      expect(form.status_changed_at).to be_within(0.1).of(Time.zone.now)
-    end
+    context "with live form" do
+      let(:form) { Timecop.freeze(-1.minute) { create(:form, :live) } }
 
-    it "should be updated when form paused" do
-      go_live_and_reset_status_changed_at(save: true)
-      form.update_status(:paused)
-      expect(form.status_changed_at).to be_within(0.1).of(Time.zone.now)
+      it "should not be updated when form goes from live -> paused or paused -> live" do
+        expect { form.update_status(:paused) }.not_to change { form.status_changed_at }
+        expect { form.update_status(:live) }.not_to change { form.status_changed_at }
+      end
+
+      it "should be updated when form goes from live -> draft" do
+        expect { form.update_status(:paused) }.not_to change { form.status_changed_at }
+      end
     end
 
     it "should not be updated when form saved otherwise" do
-      go_live_and_reset_status_changed_at
-      form.name = "Something else"
-      form.save!
-      expect(form.status_changed_at).not_to be_within(5.minutes).of(Time.zone.now)
+      expect { form.update!(name: "New Name!") }.not_to change { form.status_changed_at }
     end
   end
 
