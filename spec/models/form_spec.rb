@@ -16,7 +16,7 @@
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
-#  status_changed_at     :datetime
+#  published_changed_at     :datetime
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  mission_id            :uuid
@@ -71,22 +71,22 @@ describe Form do
     end
   end
 
-  describe "status_changed_at" do
+  describe "published_changed_at" do
     context "with draft form" do
       let(:form) { Timecop.freeze(-1.minute) { create(:form, :draft) } }
 
       it "should be nil on create" do
-        expect(form.status_changed_at).to be_nil
+        expect(form.published_changed_at).to be_nil
       end
 
       it "should be updated when form goes from draft -> live" do
         form.update_status(:live)
-        expect(form.status_changed_at).to be_within(1.second).of(Time.current)
+        expect(form.published_changed_at).to be_within(1.second).of(Time.current)
       end
 
       it "should be updated when form goes from draft -> paused" do
         form.update_status(:paused)
-        expect(form.status_changed_at).to be_within(1.second).of(Time.current)
+        expect(form.published_changed_at).to be_within(1.second).of(Time.current)
       end
     end
 
@@ -94,25 +94,25 @@ describe Form do
       let(:form) { Timecop.freeze(-1.minute) { create(:form, :live) } }
 
       it "should not be updated when form goes from live -> paused or paused -> live" do
-        expect { form.update_status(:paused) }.not_to change { form.status_changed_at }
-        expect { form.update_status(:live) }.not_to change { form.status_changed_at }
+        expect { form.update_status(:paused) }.not_to change { form.published_changed_at }
+        expect { form.update_status(:live) }.not_to change { form.published_changed_at }
       end
 
       it "should be updated when form goes from live -> draft" do
-        expect { form.update_status(:paused) }.not_to change { form.status_changed_at }
+        expect { form.update_status(:paused) }.not_to change { form.published_changed_at }
       end
     end
 
     it "should not be updated when form saved otherwise" do
-      expect { form.update!(name: "New Name!") }.not_to change { form.status_changed_at }
+      expect { form.update!(name: "New Name!") }.not_to change { form.published_changed_at }
     end
   end
 
   describe "odk_download_cache_key", :odk do
-    before { go_live_and_reset_status_changed_at }
+    before { go_live_and_reset_published_changed_at }
 
     it "should be correct" do
-      expect(form.odk_download_cache_key).to eq("odk-form/#{form.id}-#{form.status_changed_at}")
+      expect(form.odk_download_cache_key).to eq("odk-form/#{form.id}-#{form.published_changed_at}")
     end
   end
 
@@ -120,14 +120,14 @@ describe Form do
     let(:form2) { create(:form) }
 
     before do
-      go_live_and_reset_status_changed_at(save: true)
-      go_live_and_reset_status_changed_at(form: form2, diff: 30.minutes, save: true)
+      go_live_and_reset_published_changed_at(save: true)
+      go_live_and_reset_published_changed_at(form: form2, diff: 30.minutes, save: true)
     end
 
     context "for mission with forms" do
       it "should be correct" do
         expect(Form.odk_index_cache_key(mission: get_mission)).to eq(
-          "odk-form-list/mission-#{get_mission.id}/#{form2.status_changed_at.utc.to_s(:cache_datetime)}"
+          "odk-form-list/mission-#{get_mission.id}/#{form2.published_changed_at.utc.to_s(:cache_datetime)}"
         )
       end
     end
@@ -365,10 +365,10 @@ describe Form do
     end
   end
 
-  def go_live_and_reset_status_changed_at(options = {})
+  def go_live_and_reset_published_changed_at(options = {})
     f = options[:form] || form
     f.update_status(:live)
-    f.status_changed_at -= (options[:diff] || 1.hour)
+    f.published_changed_at -= (options[:diff] || 1.hour)
     f.save! if options[:save]
   end
 end
