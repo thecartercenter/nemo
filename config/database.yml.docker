@@ -1,0 +1,15 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  host: db
+  username: postgres
+  password: password
+
+test:
+  <<: *default
+  database: nemo_test
+
+development:
+  <<: *default
+  database: nemo_development
