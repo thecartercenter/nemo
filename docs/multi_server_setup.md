@@ -9,7 +9,7 @@
         1. Allow SSH from all
         2. Allow all traffic from VPC (default VPC group)
 3. Don't set up elastic IP unless it's a web instance (AWS limits number of elastic IPs)
-4. Give instance a name like `elmo-staging-db`.
+4. Give instance a name like `nemo-staging-db`.
 3. Copy public IP and add to your `~/.ssh/config` with helpful alias.
 4. If you are moving your background job processing to a different server, do
         sudo -u deploy crontab -r
@@ -29,9 +29,9 @@
         # IPv6 remote connections:
         host    all             all             ::/0                    md5
 1. `sudo systemctl restart postgresql`
-1. Set password for `deploy` user in `elmo_production` database (on database instance, privileged user):
+1. Set password for `deploy` user in `nemo_production` database (on database instance, privileged user):
         sudo su - deploy
-        psql elmo_production
+        psql nemo_production
         \password # and enter new password
         \quit
         exit
@@ -39,7 +39,7 @@
 ### Setup DB connection on web instance
 
 1. Verify connection is possible:
-        psql -h <DB_INST_PRIV_DNS> -U deploy elmo_production
+        psql -h <DB_INST_PRIV_DNS> -U deploy nemo_production
     Enter the password. Console should open successfully.
 2. Edit `config/database.yml` and make it look something like this:
         default: &default
@@ -49,7 +49,7 @@
 
         production:
           <<: *default
-          database: elmo_production
+          database: nemo_production
           host: <DB_INST_PRIV_DNS>
           user: deploy
           password: "<DB_PASSWORD>"
@@ -70,7 +70,7 @@
 
 If using capistrano for deployment, configure something like this:
 
-    set :deploy_to, "/u/apps/elmo"
+    set :deploy_to, "/u/apps/nemo"
     set :rbenv_custom_path, "/opt/rbenv"
 
     set :whenever_roles, %i[bg] # Only deploy schedule.rb jobs to crontab on bg server(s).

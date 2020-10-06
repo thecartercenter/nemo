@@ -7,8 +7,6 @@ This guide assumes:
 * Port 443 on the server is open to the world.
 * You have ssh'ed to the server as the root user or a user with sudo privileges (`root` is assumed as the username below).
 
-Note that directories still use the `elmo` name for consistency, but this guide works for both ELMO and NEMO setups.
-
 ### Create `deploy` User
 
 This will be the (unprivileged) user under which the app runs.
@@ -47,9 +45,9 @@ Paste the contents of [this config file](memcached.conf), then restart: `sudo sy
 
     sudo apt install -y postgresql postgresql-contrib postgresql-server-dev-10
     sudo -u postgres createuser -d deploy
-    sudo -u postgres createdb elmo_production -O deploy
-    sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'
-    sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'
+    sudo -u postgres createdb nemo_production -O deploy
+    sudo -u postgres psql nemo_production -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'
+    sudo -u postgres psql nemo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'
 
 Optional: Disable unattended upgrades to prevent Delayed Job from getting killed
 (security note: make sure you upgrade regularly if you're going to disable this):
@@ -126,8 +124,8 @@ To switch to the `deploy` user, do:
 
 ### Get NEMO source code and change into project directory
 
-    git clone https://github.com/thecartercenter/nemo elmo
-    cd elmo
+    git clone https://github.com/thecartercenter/nemo nemo
+    cd nemo
 
 ### Install rbenv, Ruby, and Bundler
 
@@ -182,7 +180,7 @@ Entering a functioning email server is important as NEMO relies on email to send
     yarn install --production
 
     # Setup cron jobs
-    bundle exec whenever -i elmo
+    bundle exec whenever -i nemo
 
     # Load database schema
     bundle exec rake db:schema:load
@@ -240,7 +238,7 @@ This will prevent your log files from becoming too large.
 
 Add the following lines at the bottom of that file:
 
-    /home/deploy/elmo/log/*.log {
+    /home/deploy/nemo/log/*.log {
       daily
       missingok
       rotate 7
@@ -295,10 +293,10 @@ Upgrading should be done in stages. Start with the stage closest to your current
 #### Upgrading to v6.11
 
 1. Install PostgreSQL (see above).
-1. As `deploy` user, in `elmo` directory on server, `cp config/mysql2postgres.yml.example config/mysql2postgres.yml`
+1. As `deploy` user, in `nemo` directory on server, `cp config/mysql2postgres.yml.example config/mysql2postgres.yml`
 1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
-1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
-1. Ensure you can connect to the database (e.g. using `psql elmo_production`) from the user account that runs the app. If you need a password or different host, be sure to update the mysql2postgres.yml file to reflect this.
+1. Ensure a database `nemo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
+1. Ensure you can connect to the database (e.g. using `psql nemo_production`) from the user account that runs the app. If you need a password or different host, be sure to update the mysql2postgres.yml file to reflect this.
 1. It is best to stop nginx at this point to prevent any data corruption.
 1. Run `bundle exec mysqltopostgres config/mysql2postgres.yml`.
     1. If you get the error `MysqlPR::ClientError::ServerGoneError: The MySQL server has gone away`, check your DB name, username, and password in `config/mysql2postgres.yml`.
@@ -317,7 +315,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
         rbenv install 2.4.3
         rbenv global 2.4.3
         gem install bundler
-2. As root/privileged user: `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'`
+2. As root/privileged user: `sudo -u postgres psql nemo_production -c 'CREATE EXTENSION "uuid-ossp"'`
 3. Follow the 'General Upgrade Instructions' below to upgrade to **v7.2**. Your data will be migrated to use UUIDs, and this may take awhile. Then you'll be all up to date!
 
 #### Upgrading to v8.12
@@ -358,7 +356,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 #### Upgrading to v9.13
 
-1. As the root user, run `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'` to enable a new extension.
+1. As the root user, run `sudo -u postgres psql nemo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'` to enable a new extension.
 
 #### Upgrading to v9.16
 
@@ -379,13 +377,13 @@ ssh to your server as the same root/privileged user used above. Then:
 
     sudo systemctl stop delayed-job && sudo systemctl stop nginx
     sudo su - deploy
-    cd elmo
+    cd nemo
     nvm use # v8.12 or higher only
 
 Make a backup of your database:
 
     mkdir -p tmp
-    pg_dump elmo_production > tmp/`cat VERSION`-dump.sql
+    pg_dump nemo_production > tmp/`cat VERSION`-dump.sql
     ls -l tmp
 
 Ensure that the dump file you created has non-zero size by looking in the directory listing.
@@ -409,7 +407,7 @@ unless you changed it on purpose for some reason.
 Then:
 
     bundle install --without development test --deployment
-    bundle exec whenever -i elmo
+    bundle exec whenever -i nemo
     bundle exec rake assets:precompile
     bundle exec rake db:migrate
 
@@ -428,4 +426,4 @@ Then load the site in your browser. You should see the new version number in the
 
 ### Troubleshooting
 
-If the above is not successful, contact info@getelmo.org for assistance.
+If the above is not successful, contact info@getnemo.org for assistance.

@@ -33,7 +33,7 @@ Fires the specified amount of sms messages to a certain mission. This task is de
 
 #### create_msgs_signature_file
 
-Generates a file with several valid sms parameters. Currently, it's for a determined form with 10 questions in a certain order... check [stress_sms_helper](https://github.com/thecartercenter/elmo/blob/load_test_and_optimizations/lib/task_helpers/stress_sms_helper.rb#L44). It's use is to have different random responses to be submitted to a form via the `sms_messages` task.
+Generates a file with several valid sms parameters. Currently, it's for a determined form with 10 questions in a certain order... check [stress_sms_helper](https://github.com/thecartercenter/nemo/blob/load_test_and_optimizations/lib/task_helpers/stress_sms_helper.rb#L44). It's use is to have different random responses to be submitted to a form via the `sms_messages` task.
 
 #### deploy_tasks
 

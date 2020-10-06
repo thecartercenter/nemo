@@ -40,6 +40,6 @@ env:
 addons:
   artifacts:
     paths:
-    - $(ls /home/travis/build/thecartercenter/elmo/tmp/capybara/*.png | tr "\n" ":")
+    - $(ls /home/travis/build/thecartercenter/nemo/tmp/capybara/*.png | tr "\n" ":")
   postgresql: "9.4"
   chrome: stable
