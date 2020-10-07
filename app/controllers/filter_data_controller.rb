@@ -14,7 +14,8 @@ class FilterDataController < ApplicationController
     qings = qings.filter_unique
 
     # Temporary guard clause to investigate a strange flapping spec.
-    if (weird = qings.select { |qing| qing.full_rank.empty? }).any?
+    # Only running in test mode b/c full_rank call was causing N+1 performance issues
+    if Rails.env.test? && (weird = qings.select { |qing| qing.full_rank.empty? }).any?
       pp(weird)
       raise "qing rank should always be non-empty"
     end
