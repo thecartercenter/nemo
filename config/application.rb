@@ -76,6 +76,9 @@ module ELMO
 
     config.active_record.time_zone_aware_types = [:datetime]
 
+    # Require `belongs_to` associations by default.
+    config.active_record.belongs_to_required_by_default = false
+
     ####################################
     # CUSTOM SETTINGS
     ####################################
