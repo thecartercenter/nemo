@@ -65,6 +65,10 @@ class Assignment < ApplicationRecord
     ""
   end
 
+  def enumerator?
+    role == "enumerator"
+  end
+
   private
 
   def normalize_role

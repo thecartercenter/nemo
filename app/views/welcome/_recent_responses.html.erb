@@ -1,11 +1,9 @@
 <div class="recent_responses">
   <%# cache the recent responses and use the explicit submit date instead of the age %>
-  <% cache(@cache_key + '/recent_responses') do %>
-    <% if responses.empty? %>
-      <%= t('will_paginate.response.page_entries_info.single_page_html.zero') %>
-    <% else %>
-      <%= index_table(responses, klass: Response, table_only: true) %>
-    <% end %>
+  <% if responses.empty? %>
+    <%= t('will_paginate.response.page_entries_info.single_page_html.zero') %>
+  <% else %>
+    <%= index_table(responses, klass: Response, table_only: true) %>
   <% end %>
 
   <%# outside the cache block we need to tell the list view to highlight new responses %>

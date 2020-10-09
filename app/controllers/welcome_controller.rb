@@ -41,65 +41,39 @@ class WelcomeController < ApplicationController
 
   private
 
-  def cache_key
-    @cache_key ||= [
-      # we include the locale in the cache key so the translations are correct
-      I18n.locale.to_s,
-
-      # obviously we include this
-      Response.per_mission_cache_key(current_mission),
-
-      # we include assignments in the cache key since users show up in low activity etc.
-      # if a user gets removed or added to the mission, or role changes, that should show up
-      # but we don't include user's in the cache key since users get updated every request
-      # and that would defeat the purpose
-      Assignment.per_mission_cache_key(current_mission)
-    ].join("-")
-  end
-
-  def cache_key_with_current_user
-    # User gets updated on every request, so don't include timestamp.
-    # Their role is already part of the Assignment cache in the cache_key.
-    @cache_key_with_current_user ||= "#{cache_key}-users/#{current_user.id}"
-  end
-
   def dashboard_index
-    # we need to check for a cache fragment here because some of the below fetches are not lazy
-    @cache_key = cache_key
-
-    # get a relation for accessible responses
     accessible_responses = Response.accessible_by(current_ability)
 
-    # load objects for the view
-    @responses = accessible_responses.with_basic_assoc.with_basic_answers.latest_first
-    @responses = @responses.paginate(page: 1, per_page: 20)
-
-    # total responses for this mission
-    @total_response_count = accessible_responses.count
-
-    # unreviewed response count
-    @unreviewed_response_count = accessible_responses.unreviewed.count
-
-    # do the non-lazy loads inside these blocks so they don't run if we get a cache hit
-    unless fragment_exist?(@cache_key + "/js_init")
-      location_answers = Answer.location_answers_for_mission(current_mission, current_user)
-
-      # These two SQL queries are both very expensive.
-      @location_answers, @location_answers_count =
-        Rails.cache.fetch(cache_key_with_current_user + "/location_answers") do
-          [
-            location_answers.pluck(:response_id, :latitude, :longitude),
-            location_answers.total_entries
-          ]
-        end
+    instance_variable_cache("@responses") do
+      accessible_responses.with_basic_assoc.with_basic_answers.latest_first.paginate(page: 1, per_page: 20)
     end
 
-    unless fragment_exist?(@cache_key + "/stat_blocks")
-      # responses by form (top N most popular)
-      @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
+    instance_variable_cache("@total_response_count") do
+      accessible_responses.count
+    end
 
-      # responses per user
-      @responses_per_user = User.sorted_enumerator_response_counts(current_mission, STAT_ROWS)
+    instance_variable_cache("@unreviewed_response_count") do
+      accessible_responses.unreviewed.count
+    end
+
+    location_answers = Answer.location_answers_for_mission(current_mission, current_user)
+    instance_variable_cache("@location_answers") do
+      location_answers.pluck(:response_id, :latitude, :longitude)
+    end
+    instance_variable_cache("@location_answers_count") do
+      location_answers.total_entries
+    end
+
+    instance_variable_cache("@responses_by_form") do
+      Response.per_form(accessible_responses, STAT_ROWS)
+    end
+
+    instance_variable_cache("@responses_per_user", dependencies: %i[responses assignments]) do
+      User.sorted_enumerator_response_counts(current_mission, STAT_ROWS)
+    end
+
+    instance_variable_cache("@recent_response_count", expires_in: 30.minutes) do
+      Response.recent_count(Response.accessible_by(current_ability))
     end
 
     # get list of all reports for the mission, for the dropdown
@@ -121,6 +95,29 @@ class WelcomeController < ApplicationController
     else
       render(:dashboard)
     end
+  end
+
+  # Yields to a block and caches the result and stores in an ivar with the given `name`.
+  # Computes a cache key based on given dependencies (looked up in `cache_keys`) and on `name`.
+  def instance_variable_cache(name, dependencies: %i[responses enumerator_id], **options)
+    key = dependencies.map { |d| cache_keys.fetch(d) } << name
+    instance_variable_set(name, Rails.cache.fetch(key, **options) { yield })
+  end
+
+  def cache_keys
+    @cache_keys ||= {
+      responses: Response.per_mission_cache_key(current_mission),
+
+      # We use assignments instead of users because
+      # if a user gets removed or added to the mission, or role changes, that should show up
+      # but we don't include users in the cache key since users get updated every request
+      # and that would defeat the purpose.
+      assignments: Assignment.per_mission_cache_key(current_mission),
+
+      # If the user is an enumerator, include their ID. If they are staffer, coordinator, etc.,
+      # return nil. This means all users of other roles will all hit the same cache.
+      enumerator_id: current_user.role(current_mission) == "enumerator" ? current_user.id : nil
+    }
   end
 
   def prepare_report

@@ -1,48 +1,38 @@
 <div class="report_stats">
   <div class="stat_block">
-    <h2><%= t('dashboard.summary') %></h2>
+    <h2><%= t("dashboard.summary") %></h2>
     <ul>
-      <%# expire this one in half an hour b/c it needs to be updated even if no new responses %>
-      <% cache(@cache_key + '/recent_response_count', :expires_in => 30.minutes) do %>
-        <li><%= link_to(translate_recent_responses(Response.recent_count(Response.accessible_by(current_ability))), responses_path) %></li>
-      <% end %>
-
-      <%# cache the rest of these though %>
-      <% cache(@cache_key + '/stat_block_1') do %>
-        <li><%= link_to(tmd("welcome.total_responses", :count => number_with_delimiter(@total_response_count)), responses_path) %></li>
-        <li><%= link_to(tmd("welcome.awaiting_review", :count => number_with_delimiter(@unreviewed_response_count)), responses_path(:search => "reviewed:no")) %></li>
-      <% end %>
+      <li><%= link_to(translate_recent_responses(@recent_response_count), responses_path) %></li>
+      <li><%= link_to(tmd("welcome.total_responses", count: number_with_delimiter(@total_response_count)), responses_path) %></li>
+      <li><%= link_to(tmd("welcome.awaiting_review", count: number_with_delimiter(@unreviewed_response_count)), responses_path(search: "reviewed:no")) %></li>
     </ul>
   </div>
-  <%# cache the rest of the stat blocks %>
-  <% cache(@cache_key + '/stat_blocks') do %>
+  <div class="stat_block">
+    <% unless @responses.empty? %>
+      <h2><%= t('dashboard.top_forms') %></h2>
+      <ul>
+        <% @responses_by_form.each do |row| %>
+          <li>
+            <%= link_to(content_tag(:strong, number_with_delimiter(row['count'])) + ' ' + row['form_name'],
+              responses_path(search: "form:\"#{row['form_name']}\"")) %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+  <% if current_user.role(current_mission) != 'enumerator' %>
     <div class="stat_block">
       <% unless @responses.empty? %>
-        <h2><%= t('dashboard.top_forms') %></h2>
+        <h2><%= t('dashboard.low_activity') %></h2>
         <ul>
-          <% @responses_by_form.each do |row| %>
+          <% @responses_per_user.each do |row| %>
             <li>
-              <%= link_to(content_tag(:strong, number_with_delimiter(row['count'])) + ' ' + row['form_name'],
-                responses_path(:search => "form:\"#{row['form_name']}\"")) %>
+              <%= link_to(content_tag(:strong, number_with_delimiter(row.response_count)) + ' ' + row.name,
+                responses_path(search: "submitter:\"#{row.name}\"")) %>
             </li>
-          <% end %>
+            <% end %>
         </ul>
       <% end %>
     </div>
-    <% if current_user.role(current_mission) != 'enumerator' %>
-      <div class="stat_block">
-        <% unless @responses.empty? %>
-          <h2><%= t('dashboard.low_activity') %></h2>
-          <ul>
-            <% @responses_per_user.each do |row| %>
-              <li>
-                <%= link_to(content_tag(:strong, number_with_delimiter(row.response_count)) + ' ' + row.name,
-                  responses_path(:search => "submitter:\"#{row.name}\"")) %>
-              </li>
-              <% end %>
-          </ul>
-        <% end %>
-      </div>
-    <% end %>
   <% end %>
 </div>
