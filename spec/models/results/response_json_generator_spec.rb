@@ -87,6 +87,22 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
     end
   end
 
+  context "response with missing values" do
+    let(:form) do
+      create(:form, question_types: ["text"])
+    end
+    let!(:response) do
+      create(:response, form: form, reviewed: true, answer_values: ["foo"])
+    end
+
+    it "produces correct json with defaults" do
+      create(:questioning, form: form, question: create(:question, qtype_name: "text"))
+      create(:questioning, form: form, question:
+        create(:question, qtype_name: "select_multiple", option_names: %w[one two]))
+      is_expected.to match_json(prepare_response_json_expectation("legacy_new_qings.json"))
+    end
+  end
+
   context "legacy response - repeat group that no longer repeats" do
     let(:form) do
       create(:form,
