@@ -83,7 +83,8 @@ module Results
         if child_item.is_a?(QingGroup)
           add_nil_group_answers(child_item, json)
         else
-          json[node_key(child_item)] ||= nil
+          is_collection = OData::QuestionType.odata_type_for(child_item.question.qtype_name).is_a?(Array)
+          json[node_key(child_item)] ||= is_collection ? [] : nil
         end
       end
     end
