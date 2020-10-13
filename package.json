@@ -6,7 +6,9 @@
     "lint:react": "yarn run lint:js app/javascript/",
     "lint:backbone": "yarn run lint:js app/assets/javascripts/ --ignore-pattern app/assets/javascripts/legacy/",
     "lint:legacy": "yarn run lint:js app/assets/javascripts/legacy/",
-    "lint:scss": "stylelint app/assets/stylesheets/"
+    "lint:scss": "stylelint app/assets/stylesheets/",
+    "sentry:setup": "echo \"[defaults]\nproject=nemo\norg=sassafras\" > ~/.sentryclirc && sentry-cli login",
+    "sentry:tag": "if [[ ! -f ~/.sentryclirc ]]; then echo \"Please run sentry:setup first.\"; exit; fi; echo \"Setting v`cat VERSION` on Sentry to current HEAD...\"; sentry-cli releases set-commits \"nemo@`cat VERSION`\" --auto"
   },
   "jest": {
     "roots": [
@@ -58,6 +60,7 @@
     "style-loader": "1.2.1"
   },
   "devDependencies": {
+    "@sentry/cli": "1.58.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "26.3.0",
