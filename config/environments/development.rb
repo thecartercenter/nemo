@@ -22,7 +22,7 @@ ELMO::Application.configure do
     config.cache_store = :dalli_store, nil, {namespace: "v1",
                                              compress: true,
                                              # See the dev setup guide for info on configuring memcached.
-                                             value_max_bytes: 2.megabytes,
+                                             value_max_bytes: 16.megabytes,
                                              error_when_over_max_size: true}
   else
     config.action_controller.perform_caching = false
