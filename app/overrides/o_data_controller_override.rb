@@ -81,8 +81,6 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
 
   # Add an entity type to the schema for a given form.
   def add_form_entity_type(schema, id, name)
-    name = "Responses: #{name}"
-
     # We technically should be doing an authorization scope on Responses, but it would not be
     # straightforward so we just rely on the :o_data permissions only being held by roles
     # who can see all responses in a mission.
@@ -91,8 +89,8 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     response = Response
       .where(form_id: id)
       .select("*, replace(cached_json::text, '#{old}', '#{new}')::jsonb AS cached_json")
-    entity = schema.add_entity_type(response, name: name,
-                                              url_name: "Responses-#{id}",
+    entity = schema.add_entity_type(response, name: OData.responses_name(id, name),
+                                              url_name: OData.responses_url(id, name),
                                               reflect_on_associations: false)
 
     # We don't want to double-pluralize since it already says "Responses",
