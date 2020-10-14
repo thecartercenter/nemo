@@ -89,8 +89,8 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     response = Response
       .where(form_id: form.id)
       .select("*, replace(cached_json::text, '#{old}', '#{new}')::jsonb AS cached_json")
-    entity = schema.add_entity_type(response, name: OData.responses_name(form),
-                                              url_name: OData.responses_url(form),
+    entity = schema.add_entity_type(response, name: form.decorate.odata_responses_name,
+                                              url_name: form.decorate.odata_responses_url,
                                               reflect_on_associations: false)
 
     # We don't want to double-pluralize since it already says "Responses",

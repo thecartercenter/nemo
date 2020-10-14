@@ -35,7 +35,7 @@ module OData
     def response_entities(distinct_forms)
       distinct_forms.map do |form|
         build_nested_children(parent: form,
-                              parent_name: OData.responses_name(form),
+                              parent_name: form.decorate.odata_responses_name,
                               base_type: "#{OData::NAMESPACE}.Response",
                               root_name: form.name)
       end.flatten

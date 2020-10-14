@@ -24,4 +24,21 @@ class FormDecorator < ApplicationDecorator
     possible_versions = versions.decorate.reverse
     h.options_from_collection_for_select(possible_versions, :id, :name, minimum_version_id)
   end
+
+  # User-friendly, doesn't need to be URL safe.
+  def odata_responses_name
+    return odata_responses_slug if Settings.use_data_factory_slugs.present?
+    "Responses: #{name}"
+  end
+
+  # URL safe, doesn't need to be user-friendly.
+  def odata_responses_url
+    return odata_responses_slug if Settings.use_data_factory_slugs.present?
+    "Responses-#{id}"
+  end
+
+  # Both user-friendly-ish and URL safe.
+  def odata_responses_slug
+    "Responses-#{name.gsub(/[^a-z1-9]/i, '-')}-#{id}"
+  end
 end
