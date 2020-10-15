@@ -7,7 +7,7 @@ class FormsController < ApplicationController
 
   include StandardImportable
   include BatchProcessable
-  include OdkHeaderable
+  include ODKHeaderable
   include ERB::Util
 
   # special find method before load_resource
@@ -72,9 +72,9 @@ class FormsController < ApplicationController
       format.xml do
         authorize!(:download, @form)
         @form.add_download
-        @form = Odk::DecoratorFactory.decorate(@form)
-        @questionings = Odk::DecoratorFactory.decorate_collection(@form.questionings)
-        @option_sets = Odk::DecoratorFactory.decorate_collection(@form.option_sets)
+        @form = ODK::DecoratorFactory.decorate(@form)
+        @questionings = ODK::DecoratorFactory.decorate_collection(@form.questionings)
+        @option_sets = ODK::DecoratorFactory.decorate_collection(@form.option_sets)
       end
     end
   end
@@ -98,8 +98,8 @@ class FormsController < ApplicationController
     return if fragment_exist?(@cache_key)
 
     questions = @form.enabled_questionings.map(&:question).select(&:media_prompt?)
-    @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)
-    @ifa = Odk::ItemsetsFormAttachment.new(form: @form).ensure_generated
+    @decorated_questions = ODK::QuestionDecorator.decorate_collection(questions)
+    @ifa = ODK::ItemsetsFormAttachment.new(form: @form).ensure_generated
   end
 
   # Format is always :csv

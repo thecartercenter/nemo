@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Makes decorators for various base model types.
-module Odk
+module ODK
   class DecoratorFactory
     include Singleton
 
@@ -16,15 +16,15 @@ module Odk
     def decorate(obj, context: {})
       klass =
         case obj.class.name
-        when "Form" then Odk::FormDecorator
-        when "QingGroup" then Odk::QingGroupDecorator
-        when "Odk::QingGroupFragment" then Odk::QingGroupDecorator
-        when "Question" then Odk::QuestionDecorator
-        when "OptionSet" then Odk::OptionSetDecorator
-        when "Questioning" then Odk::QingDecorator
-        when "Condition" then Odk::ConditionDecorator
-        when "Subqing" then Odk::SubqingDecorator
-        when "Forms::ConditionGroup" then Odk::ConditionGroupDecorator
+        when "Form" then ODK::FormDecorator
+        when "QingGroup" then ODK::QingGroupDecorator
+        when "ODK::QingGroupFragment" then ODK::QingGroupDecorator
+        when "Question" then ODK::QuestionDecorator
+        when "OptionSet" then ODK::OptionSetDecorator
+        when "Questioning" then ODK::QingDecorator
+        when "Condition" then ODK::ConditionDecorator
+        when "Subqing" then ODK::SubqingDecorator
+        when "Forms::ConditionGroup" then ODK::ConditionGroupDecorator
         end
       klass.nil? ? obj : klass.new(obj, context: context)
     end

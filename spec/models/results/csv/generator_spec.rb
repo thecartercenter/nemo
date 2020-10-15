@@ -2,11 +2,11 @@
 
 require "rails_helper"
 
-describe Results::Csv::Generator, :reset_factory_sequences do
+describe Results::CSV::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }
   let(:responses) { [] }
   let(:options) { {} }
-  let(:generator) { Results::Csv::Generator.new(relation, options: options) }
+  let(:generator) { Results::CSV::Generator.new(relation, options: options) }
   let(:submission_time) { Time.zone.parse("2015-11-20 12:30 UTC") }
   subject(:output) { generator.export.read }
 
@@ -305,7 +305,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     let(:form) { create(:form, question_types: %w[text long_text]) }
 
     before do
-      stub_const(Results::Csv::AnswerProcessor, "MAX_CHARACTERS", 6)
+      stub_const(Results::CSV::AnswerProcessor, "MAX_CHARACTERS", 6)
       Timecop.freeze(submission_time) do
         create_response(form: form, answer_values: ["regular text preserved", "long text truncated"])
       end

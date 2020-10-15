@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Converts condition to xpath for ODK.
   class ConditionDecorator < BaseDecorator
     delegate_all

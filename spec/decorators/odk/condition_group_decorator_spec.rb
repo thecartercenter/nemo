@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Odk
+module ODK
   describe ConditionGroupDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
     include_context "odk rendering"
 
@@ -28,9 +28,9 @@ module Odk
     context "non-nested condition group all true" do
       let(:condition_group) do
         Forms::ConditionGroup.new(true_if: "all_met", negate: false, members: [
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"),
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c")
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "a"),
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "b"),
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "c")
         ])
       end
 
@@ -42,9 +42,9 @@ module Odk
     context "non-nested condition group negated" do
       let(:condition_group) do
         Forms::ConditionGroup.new(true_if: "all_met", negate: true, members: [
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"),
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c")
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "a"),
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "b"),
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "c")
         ])
       end
 
@@ -56,9 +56,9 @@ module Odk
     context "non-nested condition group with any true" do
       let(:condition_group) do
         Forms::ConditionGroup.new(true_if: "any_met", negate: false, members: [
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"),
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c")
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "a"),
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "b"),
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "c")
         ])
       end
 
@@ -70,16 +70,16 @@ module Odk
     context "nested condition group" do
       let(:condition_group) do
         Forms::ConditionGroup.new(true_if: "any_met", negate: false, members: [
-          instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
+          instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "a"),
           Forms::ConditionGroup.new(true_if: "all_met", negate: true, members: [
-            instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"),
-            instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c"),
-            instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "d")
+            instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "b"),
+            instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "c"),
+            instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "d")
           ]),
           Forms::ConditionGroup.new(true_if: "all_met", negate: false, members: [
-            instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "e"),
-            instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "f"),
-            instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "g")
+            instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "e"),
+            instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "f"),
+            instance_double(ODK::ConditionDecorator, decorated?: true, to_odk: "g")
           ])
         ])
       end

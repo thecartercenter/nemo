@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # This class is used to represent a fragment of a QingGroup.
   # ODK has issues showing a multilevel question inside a group,
   # so we split up a group that has a multilevel question on it
@@ -9,7 +9,7 @@ module Odk
   # Instances of this hold the other questions on the group that
   # weren't a multilevel question.
   #
-  # See QingGroupOdkPartitioner for more details.
+  # See ODK::QingGroupPartitioner for more details.
   class QingGroupFragment
     include Translatable
 

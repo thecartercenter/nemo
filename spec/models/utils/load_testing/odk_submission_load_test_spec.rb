@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Utils::LoadTesting::OdkSubmissionLoadTest do
+describe Utils::LoadTesting::ODKSubmissionLoadTest do
   let(:mission) { create(:mission, name: "ODK Submission Load Test Mission") }
   let(:form) do
     create(:form, :live, mission: mission, question_types: %w[
