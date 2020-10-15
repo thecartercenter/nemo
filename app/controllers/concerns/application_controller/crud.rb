@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Concerns::ApplicationController::Crud
+module ApplicationController::Crud
   extend ActiveSupport::Concern
 
   # attempts to destroy obj and add an i18n'd success message to flash

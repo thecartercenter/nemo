@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Concerns::ApplicationController::Caching
+module ApplicationController::Caching
   extend ActiveSupport::Concern
 
   def disable_client_caching
