@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Concerns::ApplicationController::Settings
+module ApplicationController::Settings
   extend ActiveSupport::Concern
 
   # sets the locale based on the locale param (grabbed from the path by the router)

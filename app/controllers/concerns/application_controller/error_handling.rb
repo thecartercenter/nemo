@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Concerns::ApplicationController::ErrorHandling
+module ApplicationController::ErrorHandling
   extend ActiveSupport::Concern
 
   # If we handle these errors in here and then reraise them, they won't generate exception notifications.

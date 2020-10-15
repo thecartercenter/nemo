@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # ApplicationController methods related to authentication
-module Concerns::ApplicationController::Authentication
+module ApplicationController::Authentication
   extend ActiveSupport::Concern
 
   attr_reader :current_user, :current_mission
