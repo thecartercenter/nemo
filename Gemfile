@@ -6,6 +6,7 @@ gem "rails", "~> 6.0.3"
 
 gem "actionpack-page_caching", "~> 1.1"
 gem "attribute_normalizer", "~> 1.2.0"
+gem "bootsnap", "~> 1.4", require: false
 gem "daemons", "~> 1.2.1"
 gem "dalli", "~> 2.7.4" # memcache
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe" # mean, median, etc.
