@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  module Csv
+  module CSV
     # Responsible for converting DB result rows into calls to buffer.write with appropriate
     # header names. Expects the following columns in the passed rows:
     # - question_code

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Odk::FormDecorator, :odk do
+describe ODK::FormDecorator, :odk do
   include_context "odk rendering"
 
   describe "needs_manifest?" do
@@ -10,10 +10,10 @@ describe Odk::FormDecorator, :odk do
     subject(:needs_manifest?) { decorated_form.needs_manifest? }
 
     before do
-      Odk::OptionSetDecorator # Force autoload # rubocop:disable Lint/Void
+      ODK::OptionSetDecorator # Force autoload # rubocop:disable Lint/Void
       # Stub threshold constant so that multilevel opt set is rendered normally,
       # but super_multilevel opt set is rendered as external.
-      stub_const("Odk::OptionSetDecorator::EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+      stub_const("ODK::OptionSetDecorator::EXTERNAL_CSV_METHOD_THRESHOLD", 7)
     end
 
     describe "multilevel option sets" do

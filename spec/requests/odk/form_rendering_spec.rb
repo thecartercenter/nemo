@@ -392,13 +392,13 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       before do
         # Stub threshold constant so that first opt set is rendered normally,
         # second is rendered as external CSV.
-        stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+        stub_const(ODK::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
 
         # Generate the itemset file and save with the saved fixture if saving fixtures.
         # Then if we do adb push tmp/odk/forms/small_large_multilevel/. /sdcard/odk/forms
         # it will copy the form and the required itemset file for testing.
         if save_fixtures
-          ifa = Odk::ItemsetsFormAttachment.new(form: form).tap(&:ensure_generated)
+          ifa = ODK::ItemsetsFormAttachment.new(form: form).tap(&:ensure_generated)
           media_dir = File.join(saved_fixture_dir(name: fixture_name, type: :form), "#{fixture_name}-media")
           FileUtils.mkdir_p(media_dir)
           puts "Saving itemsets file to #{media_dir}/itemsets.csv"

@@ -1,4 +1,4 @@
-<% node = Odk::DecoratorFactory.decorate(node, context: {condition_computer: @condition_computer}) %>
+<% node = ODK::DecoratorFactory.decorate(node, context: {condition_computer: @condition_computer}) %>
 <% if node.is_a?(Questioning) %>
   <% node.subqings.each do |subq| %>
     <%= node.bind_tag(@form, subq, xpath_prefix: xpath_prefix) %>

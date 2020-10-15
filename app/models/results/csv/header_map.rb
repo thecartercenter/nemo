@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  module Csv
+  module CSV
     # Keeps track of what column index each named header is written to.
     class HeaderMap
       attr_accessor :common_headers, :group_headers

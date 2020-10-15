@@ -3,10 +3,10 @@
 require "rails_helper"
 require "fileutils"
 
-describe Odk::ItemsetsFormAttachment, :odk do
+describe ODK::ItemsetsFormAttachment, :odk do
   let(:form) { create(:form, question_types: question_types) }
   let(:question_types) { %w[integer] }
-  subject(:ifa) { Odk::ItemsetsFormAttachment.new(form: form) }
+  subject(:ifa) { ODK::ItemsetsFormAttachment.new(form: form) }
 
   describe "path" do
     before { allow(form).to receive(:id).and_return(42) }
@@ -80,7 +80,7 @@ describe Odk::ItemsetsFormAttachment, :odk do
 
     before do
       configatron.preferred_locales = [:en]
-      stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", external_csv_threshold)
+      stub_const(ODK::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", external_csv_threshold)
     end
 
     after do
@@ -165,7 +165,7 @@ describe Odk::ItemsetsFormAttachment, :odk do
 
   def prepare_itemset_expectation(filename, form)
     nodes = form.option_sets.map(&:preordered_option_nodes).uniq.flatten
-    option_sets = form.option_sets.map { |os| Odk::DecoratorFactory.decorate(os) }
+    option_sets = form.option_sets.map { |os| ODK::DecoratorFactory.decorate(os) }
     prepare_fixture("odk/itemsets/#{filename}",
       optsetcode: option_sets.map(&:odk_code),
       optcode: nodes.map(&:odk_code))

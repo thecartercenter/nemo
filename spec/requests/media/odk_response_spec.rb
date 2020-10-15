@@ -94,6 +94,6 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     prepare_fixture("odk/responses/#{filename}",
       form: [form.id],
       formver: [form.number],
-      itemcode: Odk::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code))
+      itemcode: ODK::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code))
   end
 end

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Odk::ResponseParser do
+describe ODK::ResponseParser do
   include_context "response tree"
   include_context "odk submissions"
   include ActionDispatch::TestProcess
@@ -27,7 +27,7 @@ describe Odk::ResponseParser do
 
         context "valid input" do
           it "should produce a simple tree from a form with three children and ignore meta tag" do
-            Odk::ResponseParser.new(response: response, files: files).populate_response
+            ODK::ResponseParser.new(response: response, files: files).populate_response
             expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
           end
         end
@@ -38,7 +38,7 @@ describe Odk::ResponseParser do
 
           it "should error" do
             expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
+              ODK::ResponseParser.new(response: response, files: files).populate_response
             end.to raise_error(FormStatusError, "form is a draft")
           end
         end
@@ -48,7 +48,7 @@ describe Odk::ResponseParser do
 
           it "should error" do
             expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
+              ODK::ResponseParser.new(response: response, files: files).populate_response
             end.to raise_error(FormStatusError, "form is paused")
           end
         end
@@ -58,7 +58,7 @@ describe Odk::ResponseParser do
 
           it "should error" do
             expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
+              ODK::ResponseParser.new(response: response, files: files).populate_response
             end.to raise_error(FormVersionError, "Form version is outdated")
           end
         end
@@ -68,7 +68,7 @@ describe Odk::ResponseParser do
 
           it "should not error" do
             expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
+              ODK::ResponseParser.new(response: response, files: files).populate_response
             end.to_not(raise_error)
           end
         end
@@ -78,7 +78,7 @@ describe Odk::ResponseParser do
 
           it "should not error" do
             expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
+              ODK::ResponseParser.new(response: response, files: files).populate_response
             end.to_not(raise_error)
           end
         end
@@ -89,7 +89,7 @@ describe Odk::ResponseParser do
 
             it "should not error" do
               expect do
-                Odk::ResponseParser.new(response: response, files: files).populate_response
+                ODK::ResponseParser.new(response: response, files: files).populate_response
               end.to_not(raise_error)
             end
           end
@@ -103,7 +103,7 @@ describe Odk::ResponseParser do
               form.versions[1].update!(minimum: true)
 
               expect do
-                Odk::ResponseParser.new(response: response, files: files).populate_response
+                ODK::ResponseParser.new(response: response, files: files).populate_response
               end.to raise_error(FormVersionError, "Form version is outdated")
             end
           end
@@ -113,7 +113,7 @@ describe Odk::ResponseParser do
 
             it "should error" do
               expect do
-                Odk::ResponseParser.new(response: response, files: files).populate_response
+                ODK::ResponseParser.new(response: response, files: files).populate_response
               end.to raise_error(FormVersionError, "Form version code not found")
             end
           end
@@ -128,7 +128,7 @@ describe Odk::ResponseParser do
 
           it "should error" do
             expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
+              ODK::ResponseParser.new(response: response, files: files).populate_response
             end.to raise_error(SubmissionError, /form not found/)
           end
         end
@@ -140,7 +140,7 @@ describe Odk::ResponseParser do
             xml # create xml before updating form.
             form.c[1].update_attribute(:form_id, other_form.id) # skip validations with update_attribute
             expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
+              ODK::ResponseParser.new(response: response, files: files).populate_response
             end.to raise_error(SubmissionError, /Submission contains group or question/)
           end
         end
@@ -153,7 +153,7 @@ describe Odk::ResponseParser do
             xml # create xml before updating form.
             form.update!(mission: other_mission)
             expect do
-              Odk::ResponseParser.new(response: response, files: files).populate_response
+              ODK::ResponseParser.new(response: response, files: files).populate_response
             end.to raise_error(SubmissionError, /unidentifiable group or question/)
           end
         end
@@ -168,7 +168,7 @@ describe Odk::ResponseParser do
           let(:expected_values) { ["Quick", "The quick brown fox", 9.6, "Cat"] }
 
           it "processes values correctly" do
-            Odk::ResponseParser.new(response: response, files: files).populate_response
+            ODK::ResponseParser.new(response: response, files: files).populate_response
             expect_built_children(response.root_node, %w[Answer] * 4, form.c.map(&:id), expected_values)
           end
         end
@@ -178,7 +178,7 @@ describe Odk::ResponseParser do
           let(:expected_values) { ["9.6", "The quick brown fox", 0.0, nil] }
 
           it "processes values correctly" do
-            Odk::ResponseParser.new(response: response, files: files).populate_response
+            ODK::ResponseParser.new(response: response, files: files).populate_response
             expect_built_children(response.root_node, %w[Answer] * 4, form.c.map(&:id), expected_values)
           end
         end
@@ -192,7 +192,7 @@ describe Odk::ResponseParser do
         let(:expected_values) { ["#{opt1.option.name};#{opt2.option.name}", nil, "A"] }
 
         it "should create the appropriate answer tree" do
-          Odk::ResponseParser.new(response: response, files: files).populate_response
+          ODK::ResponseParser.new(response: response, files: files).populate_response
           expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
         end
       end
@@ -204,7 +204,7 @@ describe Odk::ResponseParser do
         let(:expected_values) { xml_values }
 
         it "parses location answers correctly" do
-          Odk::ResponseParser.new(response: response, files: files).populate_response
+          ODK::ResponseParser.new(response: response, files: files).populate_response
           expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
         end
       end
@@ -229,7 +229,7 @@ describe Odk::ResponseParser do
               # Times without a date are 2000-01-01
               Time.zone.parse("14:30:00 UTC")
             ]
-            Odk::ResponseParser.new(response: response, files: files).populate_response
+            ODK::ResponseParser.new(response: response, files: files).populate_response
             expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
           end
         end
@@ -240,7 +240,7 @@ describe Odk::ResponseParser do
           let(:expected_values) { ["2017-07-12 16:40:12 -06", "A", "2017-07-12 16:42:43 -06"] }
 
           it "accepts data normally" do
-            Odk::ResponseParser.new(response: response, files: files).populate_response
+            ODK::ResponseParser.new(response: response, files: files).populate_response
             expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
           end
         end
@@ -259,7 +259,7 @@ describe Odk::ResponseParser do
         let(:xml_values) { ["on#{cat.id}", "on#{plant.id}", "on#{oak.id}", "on#{cat2.id} on#{dog2.id}"] }
 
         it "parses answers" do
-          Odk::ResponseParser.new(response: response, files: files).populate_response
+          ODK::ResponseParser.new(response: response, files: files).populate_response
           expect_built_children(
             response.root_node,
             %w[Answer AnswerSet Answer],
@@ -288,7 +288,7 @@ describe Odk::ResponseParser do
         let(:xml_values) { ["on#{cat.id}", "on#{plant.id}", "on#{oak.id}", "on#{cat2.id} on#{dog2.id}"] }
 
         it "parses answers" do
-          Odk::ResponseParser.new(response: response, files: files).populate_response
+          ODK::ResponseParser.new(response: response, files: files).populate_response
           expect_built_children(
             response.root_node,
             %w[AnswerGroupSet],
@@ -321,7 +321,7 @@ describe Odk::ResponseParser do
       let(:xml_values) { %w[A B C D] }
 
       it "should produce the correct tree" do
-        Odk::ResponseParser.new(response: response, files: files).populate_response
+        ODK::ResponseParser.new(response: response, files: files).populate_response
         expect_built_children(response.root_node, %w[Answer AnswerGroup Answer],
           form.c.map(&:id), ["A", nil, "D"])
         expect_built_children(response.root_node.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
@@ -334,7 +334,7 @@ describe Odk::ResponseParser do
       let(:xml_values) { %w[A B C D E] }
 
       it "should create the appropriate repeating group tree" do
-        Odk::ResponseParser.new(response: response, files: files).populate_response
+        ODK::ResponseParser.new(response: response, files: files).populate_response
         expect_built_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
         expect_built_children(response.root_node.c[1],
           %w[AnswerGroup AnswerGroup],
@@ -360,7 +360,7 @@ describe Odk::ResponseParser do
       let(:xml_values) { [*1..9] }
 
       it "should create nested tree" do
-        Odk::ResponseParser.new(response: response, files: files).populate_response
+        ODK::ResponseParser.new(response: response, files: files).populate_response
         expect_built_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), [1, nil])
         expect_built_children(response.root_node.c[1],
           %w[AnswerGroup AnswerGroup],
@@ -421,7 +421,7 @@ describe Odk::ResponseParser do
       end
 
       it "should create the appropriate multilevel answer tree" do
-        Odk::ResponseParser.new(response: response, files: files).populate_response
+        ODK::ResponseParser.new(response: response, files: files).populate_response
         expect_built_children(
           response.root_node,
           %w[Answer AnswerSet AnswerSet AnswerSet],
@@ -462,7 +462,7 @@ describe Odk::ResponseParser do
       let(:xml_values) { ["A", "B", "C", media_file_name] }
 
       it "creates response tree with media object for media answer" do
-        Odk::ResponseParser.new(response: response, files: files).populate_response
+        ODK::ResponseParser.new(response: response, files: files).populate_response
         expect(response.root_node.c[3].media_object.item_file_name).to include(media_file_name)
       end
     end
@@ -492,7 +492,7 @@ describe Odk::ResponseParser do
 
       it "creates response tree with media object for media answer and discards file with invalid type" do
         # First request
-        populated = Odk::ResponseParser.new(response: response, files: request1_files,
+        populated = ODK::ResponseParser.new(response: response, files: request1_files,
                                             awaiting_media: true).populate_response
         populated.save!
         expect(Response.count).to eq(1)
@@ -506,7 +506,7 @@ describe Odk::ResponseParser do
         # Use a different response object (response2) to simulate what would happen
         # in the controller in a separate request.
         # Note that in this case ResponseParser returns a different response object than what it receives.
-        populated = Odk::ResponseParser.new(response: response2, files: request2_files,
+        populated = ODK::ResponseParser.new(response: response2, files: request2_files,
                                             awaiting_media: false).populate_response
         populated.save!
         expect(Response.count).to eq(1)
@@ -524,7 +524,7 @@ describe Odk::ResponseParser do
     let(:expected_values) { [] }
 
     it "should mark response as incomplete" do
-      populated = Odk::ResponseParser.new(response: response, files: files).populate_response
+      populated = ODK::ResponseParser.new(response: response, files: files).populate_response
       expect(populated).to be_incomplete
     end
   end

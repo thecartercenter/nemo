@@ -2,18 +2,18 @@
 
 require "rails_helper"
 
-describe Odk::NamePatternParser do
+describe ODK::NamePatternParser do
   subject(:output) { described_class.new(pattern, src_item: form.root_group).to_odk }
 
   describe "xpath route handling" do
-    let(:q1) { Odk::QingDecorator.decorate(form.c[0]) }
-    let(:g2) { Odk::QingGroupDecorator.decorate(form.c[1]) }
-    let(:q21) { Odk::QingDecorator.decorate(form.c[1].c[0]) }
-    let(:q22) { Odk::QingDecorator.decorate(form.c[1].c[1]) }
-    let(:g3) { Odk::QingGroupDecorator.decorate(form.c[2]) }
-    let(:q31) { Odk::QingDecorator.decorate(form.c[2].c[0]) }
-    let(:q31b) { Odk::QingDecorator.decorate(form.c[2].c[0]).subqings[1] }
-    let(:q4a) { Odk::QingDecorator.decorate(form.c[3]).subqings[0] }
+    let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+    let(:g2) { ODK::QingGroupDecorator.decorate(form.c[1]) }
+    let(:q21) { ODK::QingDecorator.decorate(form.c[1].c[0]) }
+    let(:q22) { ODK::QingDecorator.decorate(form.c[1].c[1]) }
+    let(:g3) { ODK::QingGroupDecorator.decorate(form.c[2]) }
+    let(:q31) { ODK::QingDecorator.decorate(form.c[2].c[0]) }
+    let(:q31b) { ODK::QingDecorator.decorate(form.c[2].c[0]).subqings[1] }
+    let(:q4a) { ODK::QingDecorator.decorate(form.c[3]).subqings[0] }
     let(:q21path) { "/data/#{g2.odk_code}/#{q21.odk_code}" }
     let(:q22path) { "/data/#{g2.odk_code}/#{q22.odk_code}" }
     let(:q31bpath) { "/data/#{g3.odk_code}/#{q31b.odk_code}" }
@@ -60,7 +60,7 @@ describe Odk::NamePatternParser do
       end
 
       before do
-        stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+        stub_const(ODK::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
       end
 
       context "with code referencing regular select" do
@@ -91,7 +91,7 @@ describe Odk::NamePatternParser do
 
   describe "calc()" do
     let(:form) { create(:form, question_types: %w[integer integer]) }
-    let(:q1) { Odk::QingDecorator.decorate(form.c[0]) }
+    let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
     let(:q1path) { "/data/#{q1.odk_code}" }
 
     before do

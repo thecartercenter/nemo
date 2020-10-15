@@ -24,7 +24,7 @@
 # - It has any group children (in this case, we don't allow rendering the group on one screen)
 # - It doesn't have any multilevel children
 # - It is a QingGroupFragment (already meet the criteria above, by definition)
-module Odk
+module ODK
   class QingGroupPartitioner
     def fragment(group)
       return nil unless needs_partition?(group)

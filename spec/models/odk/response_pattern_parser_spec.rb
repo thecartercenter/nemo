@@ -2,18 +2,18 @@
 
 require "rails_helper"
 
-describe Odk::ResponsePatternParser do
+describe ODK::ResponsePatternParser do
   subject(:output) { described_class.new(pattern, src_item: src_item).to_odk }
 
   describe "xpath route handling" do
-    let(:q1) { Odk::QingDecorator.decorate(form.c[0]) }
-    let(:g2) { Odk::QingGroupDecorator.decorate(form.c[1]) }
-    let(:q21) { Odk::QingDecorator.decorate(form.c[1].c[0]) }
-    let(:q22) { Odk::QingDecorator.decorate(form.c[1].c[1]) }
-    let(:g3) { Odk::QingGroupDecorator.decorate(form.c[2]) }
-    let(:q31) { Odk::QingDecorator.decorate(form.c[2].c[0]) }
-    let(:q31b) { Odk::QingDecorator.decorate(form.c[2].c[0]).subqings[1] }
-    let(:q4a) { Odk::QingDecorator.decorate(form.c[3]).subqings[0] }
+    let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+    let(:g2) { ODK::QingGroupDecorator.decorate(form.c[1]) }
+    let(:q21) { ODK::QingDecorator.decorate(form.c[1].c[0]) }
+    let(:q22) { ODK::QingDecorator.decorate(form.c[1].c[1]) }
+    let(:g3) { ODK::QingGroupDecorator.decorate(form.c[2]) }
+    let(:q31) { ODK::QingDecorator.decorate(form.c[2].c[0]) }
+    let(:q31b) { ODK::QingDecorator.decorate(form.c[2].c[0]).subqings[1] }
+    let(:q4a) { ODK::QingDecorator.decorate(form.c[3]).subqings[0] }
     let(:g2path) { "/data/#{g2.odk_code}" }
     let(:q21path) { "/data/#{g2.odk_code}/#{q21.odk_code}" }
     let(:g3path) { "/data/#{g3.odk_code}" }
@@ -93,7 +93,7 @@ describe Odk::ResponsePatternParser do
       end
 
       before do
-        stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+        stub_const(ODK::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
       end
 
       context "with code referencing regular select" do
@@ -128,8 +128,8 @@ describe Odk::ResponsePatternParser do
 
   describe "numeric literal handling" do
     let(:form) { create(:form, question_types: %w[integer decimal]) }
-    let(:q1) { Odk::QingDecorator.decorate(form.c[0]) }
-    let(:q2) { Odk::QingDecorator.decorate(form.c[1]) }
+    let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+    let(:q2) { ODK::QingDecorator.decorate(form.c[1]) }
 
     context "for integer question" do
       let(:src_item) { q1 }
@@ -146,9 +146,9 @@ describe Odk::ResponsePatternParser do
 
   describe "calc()" do
     let(:form) { create(:form, question_types: %w[integer text integer]) }
-    let(:q1) { Odk::QingDecorator.decorate(form.c[0]) }
-    let(:q2) { Odk::QingDecorator.decorate(form.c[1]) }
-    let(:q3) { Odk::QingDecorator.decorate(form.c[2]) }
+    let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+    let(:q2) { ODK::QingDecorator.decorate(form.c[1]) }
+    let(:q3) { ODK::QingDecorator.decorate(form.c[2]) }
 
     before do
       q1.update!(code: "Q1")

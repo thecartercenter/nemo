@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Decorates forms for ODK views.
   class FormDecorator < BaseDecorator
     delegate_all
@@ -19,7 +19,7 @@ module Odk
 
     def default_response_name_bind_tag
       if default_response_name.present?
-        calculate = Odk::ResponsePatternParser.new(default_response_name, src_item: root_group).to_odk
+        calculate = ODK::ResponsePatternParser.new(default_response_name, src_item: root_group).to_odk
         tag(:bind, nodeset: "/data/meta/instanceName",
                    calculate: calculate,
                    readonly: "true()",

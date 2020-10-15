@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Results::Csv::Buffer do
+describe Results::CSV::Buffer do
   # Column to index mappings for fake header_map. In reality, setting these indices up is more complex, but
   # we're just stubbing them here.
   let(:indices) do
@@ -29,7 +29,7 @@ describe Results::Csv::Buffer do
     double(common_headers: %w[source form_name], count: indices.size)
   end
   let(:buffer) { described_class.new(header_map: header_map) }
-  let(:group_path) { Results::Csv::GroupPath.new }
+  let(:group_path) { Results::CSV::GroupPath.new }
   let!(:people) { create(:qing_group, group_name: "People", repeatable: true) }
   let!(:pets) { create(:qing_group, group_name: "Pets", repeatable: true) }
 

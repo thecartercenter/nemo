@@ -12,6 +12,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym("API")
   inflect.acronym("CSV")
   inflect.acronym("URL")
+  inflect.acronym("ODK")
 
   #   inflect.singular /^(ox)en/i, '\1'
   #   inflect.irregular 'person', 'people'

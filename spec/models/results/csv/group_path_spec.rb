@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Results::Csv::GroupPath do
+describe Results::CSV::GroupPath do
   let(:path) { described_class.new }
 
   # Random form item IDs to be used as the form item IDs related to nodes.
