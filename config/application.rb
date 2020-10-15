@@ -21,12 +21,18 @@ module ELMO
     # the framework and any gems in your application.
 
     # add concerns folders to autoload paths
-    config.autoload_paths += %W[
-      #{config.root}/app/controllers/concerns
-      #{config.root}/app/models/concerns
-      #{config.root}/lib
+    config.autoload_paths += Dir[
+      Rails.root.join("app/controllers/concerns"),
+      Rails.root.join("app/models/concerns")
     ]
-    Rails.autoloaders.main.ignore("#{config.root}/app/overrides")
+
+    # Overrides are manually required below.
+    Rails.autoloaders.main.ignore(Rails.root.join("app/overrides"))
+
+    config.eager_load_paths += Dir[
+      # Zeitwerk wants us to eager_load lib instead of autoloading.
+      Rails.root.join("lib")
+    ]
 
     # Zeitwerk uses absolute paths internally, and applications running in :zeitwerk mode
     # do not need require_dependency, so models, controllers, jobs, etc. do not need to be
@@ -50,7 +56,7 @@ module ELMO
     config.i18n.enforce_available_locales = false
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
+    config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -131,7 +137,7 @@ module ELMO
     # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
     config.to_prepare do
-      Dir.glob(Rails.root.join("app", "overrides", "**", "*_override.rb")).each do |override|
+      Dir.glob(Rails.root.join("app/overrides/**/*_override.rb")).each do |override|
         require_dependency override
       end
     end
