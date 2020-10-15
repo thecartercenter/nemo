@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Odk
+module ODK
   describe QingGroupPartitioner, :odk do
     let(:form) { create(:form, question_types: question_types) }
     let(:question_types) { [%w[text text multilevel_select_one integer], %w[text text text]] }

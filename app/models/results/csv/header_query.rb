@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  module Csv
+  module CSV
     # The query to get the expected headers.
     class HeaderQuery < Query
       protected

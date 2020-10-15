@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   class QuestionDecorator < ApplicationDecorator
     delegate_all
 

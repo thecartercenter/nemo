@@ -3,7 +3,7 @@
 namespace :load_test do
   desc "Generate load test plan for ODK submission"
   task odk: :environment do
-    generate_test(Utils::LoadTesting::OdkSubmissionLoadTest,
+    generate_test(Utils::LoadTesting::ODKSubmissionLoadTest,
       username: ENV["USERNAME"],
       password: ENV["PASSWORD"],
       form_id: ENV["FORM_ID"])

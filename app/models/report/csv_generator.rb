@@ -2,7 +2,7 @@
 
 module Report
   # Generates CSV for a report.
-  class CsvGenerator
+  class CSVGenerator
     include ActiveModel::Model
 
     attr_accessor :report

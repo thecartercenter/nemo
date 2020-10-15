@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   class FormItemDecorator < BaseDecorator
     delegate_all
 

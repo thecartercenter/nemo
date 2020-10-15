@@ -84,7 +84,7 @@ class QuestionsController < ApplicationController
   def media_prompt
     authorize!(:show, @question)
 
-    decorated_question = Odk::QuestionDecorator.decorate(@question)
+    decorated_question = ODK::QuestionDecorator.decorate(@question)
 
     send_attachment(decorated_question.media_prompt,
       filename: decorated_question.unique_media_prompt_filename)

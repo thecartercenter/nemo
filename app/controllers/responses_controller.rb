@@ -7,7 +7,7 @@ class ResponsesController < ApplicationController
   TMP_UPLOADS_PATH = Rails.root.join("tmp", "odk_uploads")
 
   include BatchProcessable
-  include OdkHeaderable
+  include ODKHeaderable
   include ResponseIndexable
   include OperationQueueable
   include Searchable
@@ -217,7 +217,7 @@ class ResponsesController < ApplicationController
   end
 
   def odk_response_parser
-    Odk::ResponseParser.new(
+    ODK::ResponseParser.new(
       response: @response,
       files: open_file_params,
       awaiting_media: odk_awaiting_media?
@@ -311,7 +311,7 @@ class ResponsesController < ApplicationController
     operation = Operation.new(
       creator: current_user,
       mission: current_mission,
-      job_class: ResponseCsvExportOperationJob,
+      job_class: ResponseCSVExportOperationJob,
       details: t("operation.details.response_csv_export"),
       job_params: {search: params[:search], options: options}
     )

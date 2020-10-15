@@ -57,11 +57,11 @@ module GeneralSpecHelpers
 
   # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
   def prepare_odk_fixture(name:, type:, form:, **options)
-    items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
+    items = form.preordered_items.map { |i| ODK::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten
     option_set_ids = items.map(&:option_set_id).flatten.compact.uniq
     option_sets = find_with_ids_maintaining_order(OptionSet, option_set_ids)
-    option_sets = option_sets.map { |os| Odk::DecoratorFactory.decorate(os) }
+    option_sets = option_sets.map { |os| ODK::DecoratorFactory.decorate(os) }
     xml = prepare_fixture("odk/#{type}s/#{name}.xml",
       formname: [form.name],
       form: [form.id],

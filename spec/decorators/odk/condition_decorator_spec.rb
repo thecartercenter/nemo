@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Odk::ConditionDecorator do
+describe ODK::ConditionDecorator do
   include_context "odk rendering"
 
   describe "to_odk", :odk do

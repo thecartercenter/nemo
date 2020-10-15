@@ -102,6 +102,6 @@ class QingGroupsController < ApplicationController
   end
 
   def odk_decorator
-    Odk::DecoratorFactory.decorate(@qing_group.object)
+    ODK::DecoratorFactory.decorate(@qing_group.object)
   end
 end

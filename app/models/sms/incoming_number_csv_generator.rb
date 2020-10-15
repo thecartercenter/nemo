@@ -2,7 +2,7 @@
 
 module Sms
   # Exports list of incoming SMS numbers to simple CSV.
-  class IncomingNumberCsvGenerator
+  class IncomingNumberCSVGenerator
     include ActiveModel::Model
 
     attr_accessor :numbers

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  module Csv
+  module CSV
     # The query to get all the answer data.
     class AnswerQuery < Query
       protected

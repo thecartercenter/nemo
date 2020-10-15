@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  module Csv
+  module CSV
     # Temporarily holds the next row of the CSV output while it is being populated.
     # Responsible for preparing the row to receive new answer data by copying common data
     # (response data and parent group data) from the previous row of the CSV output.

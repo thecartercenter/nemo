@@ -3,7 +3,7 @@
 require "fileutils"
 require "digest"
 
-module Odk
+module ODK
   # Models the itemsets CSV file that is used by ODK to store option sets.
   class ItemsetsFormAttachment
     include LanguageHelper
@@ -45,7 +45,7 @@ module Odk
     private
 
     def decorated_form
-      Odk::DecoratorFactory.decorate(form)
+      ODK::DecoratorFactory.decorate(form)
     end
 
     # The subdirectory where the attachment should go.
@@ -119,7 +119,7 @@ module Odk
     end
 
     def option_sets_for_external_csv
-      form.option_sets.select { |set| Odk::DecoratorFactory.decorate(set).external_csv? }
+      form.option_sets.select { |set| ODK::DecoratorFactory.decorate(set).external_csv? }
     end
 
     def option_set_code(node)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  module Csv
+  module CSV
     # Abstract class modeling a database query.
     class Query
       UUID_LENGTH = 36 # This should never change.

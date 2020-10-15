@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module OdkHeaderable
+module ODKHeaderable
   extend ActiveSupport::Concern
 
   included do
