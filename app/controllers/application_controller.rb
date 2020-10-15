@@ -5,16 +5,16 @@ class ApplicationController < ActionController::Base
   require "authlogic"
   include ActionView::Helpers::AssetTagHelper
 
-  include Concerns::ApplicationController::Authentication
-  include Concerns::ApplicationController::Authorization
-  include Concerns::ApplicationController::Caching
-  include Concerns::ApplicationController::Crud
-  include Concerns::ApplicationController::ErrorHandling
-  include Concerns::ApplicationController::LoginLogistics
-  include Concerns::ApplicationController::Monitoring
-  include Concerns::ApplicationController::Reflection
-  include Concerns::ApplicationController::Routing
-  include Concerns::ApplicationController::Settings
+  include ApplicationController::Authentication
+  include ApplicationController::Authorization
+  include ApplicationController::Caching
+  include ApplicationController::Crud
+  include ApplicationController::ErrorHandling
+  include ApplicationController::LoginLogistics
+  include ApplicationController::Monitoring
+  include ApplicationController::Reflection
+  include ApplicationController::Routing
+  include ApplicationController::Settings
 
   # Makes sure authorization is performed in each controller. (CanCan method)
   check_authorization

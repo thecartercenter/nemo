@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # ApplicationController methods related to Scout monitoring/analytics.
-module Concerns::ApplicationController::Monitoring
+module ApplicationController::Monitoring
   extend ActiveSupport::Concern
 
   def set_scout_context

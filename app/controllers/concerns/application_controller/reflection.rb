@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Concerns::ApplicationController::Reflection
+module ApplicationController::Reflection
   extend ActiveSupport::Concern
 
   # attempts to get the model class controlled by this controller

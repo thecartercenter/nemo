@@ -23,10 +23,10 @@ module ELMO
     # add concerns folders to autoload paths
     config.autoload_paths += %W[
       #{config.root}/app/controllers/concerns
-      #{config.root}/app/controllers/concerns/application_controller
       #{config.root}/app/models/concerns
       #{config.root}/lib
     ]
+    Rails.autoloaders.main.ignore("#{config.root}/app/overrides")
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.

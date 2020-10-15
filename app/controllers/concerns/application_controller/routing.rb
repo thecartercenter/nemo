@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "uri"
-module Concerns::ApplicationController::Routing
+module ApplicationController::Routing
   extend ActiveSupport::Concern
 
   def check_route
