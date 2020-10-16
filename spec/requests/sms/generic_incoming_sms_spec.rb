@@ -67,7 +67,7 @@ describe "generic incoming sms", :sms do
       it "sets correct reply body and type" do
         do_request
         expect(response.body).to eq("Sorry, we couldn't find you in the system.")
-        expect(response.content_type).to eq("text/plain")
+        expect(response.content_type).to eq("text/plain; charset=utf-8")
       end
     end
 
@@ -83,7 +83,7 @@ describe "generic incoming sms", :sms do
       it "sets correct reply body and type" do
         do_request
         expect(response.body).to eq("<msg>Sorry, we couldn&#39;t find you in the system.</msg>")
-        expect(response.content_type).to eq("text/xml")
+        expect(response.content_type).to eq("text/xml; charset=utf-8")
       end
     end
   end
