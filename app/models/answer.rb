@@ -269,9 +269,6 @@ class Answer < ResponseNode
     elsif option_node&.coordinates?
       self.latitude = option_node.latitude
       self.longitude = option_node.longitude
-    elsif (choice = choices.detect(&:coordinates?))
-      self.latitude = choice.latitude
-      self.longitude = choice.longitude
     end
     true
   end

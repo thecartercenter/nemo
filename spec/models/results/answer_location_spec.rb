@@ -96,15 +96,9 @@ describe "answer location data" do
           expect(answer.coordinates?).to be(false)
         end
 
-        it "should return true if all of the selected options have coordinates" do
+        it "should return false if some of the selected options have coordinates" do
           option_node1.option.update!(latitude: 0, longitude: 0)
-          option_node2.option.update!(latitude: 0, longitude: 0)
-          expect(answer.coordinates?).to be(true)
-        end
-
-        it "should return true if any of the selected options have coordinates" do
-          option_node1.option.update!(latitude: 0, longitude: 0)
-          expect(answer.coordinates?).to be(true)
+          expect(answer.coordinates?).to be(false)
         end
       end
     end
