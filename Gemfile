@@ -53,9 +53,9 @@ gem "draper-cancancan", "~> 1.1"
 gem "scrypt", "~> 3.0"
 
 # Spreadsheets
-gem "axlsx", "~> 2.1.1", git: "https://github.com/sassafrastech/axlsx.git", branch: "stable"
-gem "axlsx_rails", "~> 0.5.0"
-gem "roo", "~> 2.1.1"
+gem "caxlsx", "~> 3.0"
+gem "caxlsx_rails", "~> 0.6.2"
+gem "roo", "~> 2.8"
 
 # Pagination
 gem "will_paginate", "~> 3.1"
