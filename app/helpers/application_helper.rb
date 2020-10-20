@@ -173,8 +173,9 @@ module ApplicationHelper
       ttl << if options[:name_only]
                @title_args[:name]
              else
-               t(action, {scope: "page_titles.#{controller_name}", default: [:all, ""]}
-                           .merge(@title_args || {}))
+               options = {scope: "page_titles.#{controller_name}", default: [:all, ""]}
+                 .merge(@title_args || {})
+               t(action, **options)
              end
     end
   end
@@ -200,7 +201,7 @@ module ApplicationHelper
       options[k] = html_escape(options[k]).to_s unless %w[default scope].include?(k.to_s)
     end
 
-    html = BlueCloth.new(t(key, options)).to_html
+    html = BlueCloth.new(t(key, **options)).to_html
 
     # Remove surrounding <p> tags if present and requested.
     html = html[3..-5] if strip_outer_p_tags != false && html[0, 3] == "<p>" && html[-4, 4] == "</p>"
