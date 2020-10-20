@@ -54,7 +54,7 @@ class OptionNode < ApplicationRecord
   has_many :conditions, inverse_of: :option_node, dependent: :restrict_with_exception
   has_many :answers, dependent: :restrict_with_exception
   has_many :choices, dependent: :restrict_with_exception
-  has_ancestry cache_depth: true
+  has_ancestry(cache_depth: true, primary_key_format: Ancestry::ANCESTRY_PATTERN)
 
   before_validation { self.ancestry = nil if ancestry.blank? }
   after_save :update_children
