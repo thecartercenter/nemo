@@ -144,8 +144,8 @@ group :development, :test do
   # Test framework
   gem "jasmine-rails", "~> 0.10.7" # Deprecated: Barely used.
   gem "rails-controller-testing" # Deprecated: Use request or feature specs instead.
-  gem "rspec-collection_matchers", "~> 1.1.3"
-  gem "rspec-rails", "~> 3.7.2"
+  gem "rspec-collection_matchers", "~> 1.1"
+  gem "rspec-rails", "~> 3.9"
 
   # Mocking/stubbing/factories
   gem "factory_girl_rails", "~> 4.5.0"
@@ -171,7 +171,7 @@ group :development, :test do
   gem "assert_difference", "~> 1.0.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6.1"
   gem "database_cleaner", "~> 1.7.0"
-  gem "db-query-matchers", "~> 0.9"
+  gem "db-query-matchers", "~> 0.10"
   gem "rubocop", "~> 0.91.0"
   gem "rubocop-rails", "~> 2.8"
   gem "timecop", "~> 0.7.3"
