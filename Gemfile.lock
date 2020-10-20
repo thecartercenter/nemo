@@ -651,7 +651,7 @@ DEPENDENCIES
   config (~> 2.2)
   configatron (~> 4.5.0)
   daemons (~> 1.2.1)
-  dalli (~> 2.7.4)
+  dalli (~> 2.7)
   database_cleaner (~> 1.7.0)
   db-query-matchers (~> 0.9)
   delayed_job_active_record (~> 4.1.3)

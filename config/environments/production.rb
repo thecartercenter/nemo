@@ -33,19 +33,14 @@ ELMO::Application.configure do
   # We use the Capistrano REVISION as cache key so that
   # 1) we can share one memcache server on a machine with multiple instances
   # 2) cache gets expired on deploy
-  memcached_server = begin
-                       File.read("config/memcached_server").strip
-                     rescue StandardError
-                       nil
-                     end
   revision = begin
                File.read("REVISION")[0...16]
              rescue StandardError
                ""
              end
-  config.cache_store = :dalli_store, memcached_server, {namespace: "elmo#{revision}",
-                                                        compress: true,
-                                                        value_max_bytes: 16.megabytes}
+  config.cache_store = :mem_cache_store, {namespace: "elmo#{revision}",
+                                          compress: true,
+                                          value_max_bytes: 16.megabytes}
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = Uglifier.new(harmony: true)
