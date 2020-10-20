@@ -20,9 +20,10 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/closure_tree.git
-  revision: 08dcf6910d0618395cf97686847c414996c8dde9
+  revision: 531edabe1853a89f13ab595f660bb5926c895e58
+  tag: v7.2.0-noReorder-fastInsert
   specs:
-    closure_tree (7.0.0)
+    closure_tree (7.2.0)
       activerecord (>= 4.2.10)
       with_advisory_lock (>= 4.0.0)
 
@@ -118,8 +119,8 @@ GEM
       activerecord (>= 4.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    ancestry (3.0.7)
-      activerecord (>= 3.2.0)
+    ancestry (3.2.1)
+      activerecord (>= 4.2.0)
     annotate (2.7.5)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 13.0)
@@ -629,7 +630,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.9.3)
   activerecord-session_store (~> 1.1.1)
   acts_as_list
-  ancestry (~> 3.0.0)
+  ancestry (~> 3.0)
   annotate (~> 2)
   api-pagination (~> 4.1.1)
   assert_difference (~> 1.0.0)

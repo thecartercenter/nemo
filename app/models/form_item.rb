@@ -87,7 +87,7 @@ class FormItem < ApplicationRecord
   before_create :inherit_mission
   after_create :update_form
 
-  has_ancestry cache_depth: true
+  has_ancestry(cache_depth: true, primary_key_format: Ancestry::ANCESTRY_PATTERN)
 
   validate :collect_conditional_logic_errors
 
