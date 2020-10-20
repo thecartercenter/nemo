@@ -19,7 +19,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
-         <%= tmd("search.help_text.#{controller_name}", search_help_text_params) %>
+         <%= tmd("search.help_text.#{controller_name}", **search_help_text_params) %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= I18n.t("common.close") %></button>

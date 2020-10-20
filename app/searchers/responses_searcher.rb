@@ -5,8 +5,8 @@ class ResponsesSearcher < Searcher
   # Parsed search values
   attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups, :start_date, :end_date
 
-  def initialize(*args)
-    super
+  def initialize(**options)
+    super(**options)
     self.form_ids = []
     self.qings = []
     self.submitters = []
