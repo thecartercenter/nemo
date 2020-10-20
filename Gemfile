@@ -79,8 +79,8 @@ gem "config", "~> 2.2"
 gem "configatron", "~> 4.5.0" # Deprecated, prefer `config` gem
 
 # Tree modelling
-gem "ancestry", "~> 3.0.0"
-gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree.git"
+gem "ancestry", "~> 3.0"
+gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.2.0-noReorder-fastInsert"
 
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"
