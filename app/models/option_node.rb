@@ -96,12 +96,6 @@ class OptionNode < ApplicationRecord
     roots.each { |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
   end
 
-  # Overriding this to avoid error from ancestry.
-  alias _children children
-  def children
-    new_record? ? [] : _children
-  end
-
   def sorted_children
     children.order(:rank).includes(:option)
   end
