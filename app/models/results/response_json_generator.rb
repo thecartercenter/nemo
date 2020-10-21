@@ -109,7 +109,7 @@ module Results
         option_node = answer.option_node
         set[option_node.level_name] = answer.option_name if option_node
       end
-      set
+      Settings.use_data_factory.present? ? set.to_s : set
     end
 
     def value_for(answer)
@@ -121,10 +121,15 @@ module Results
       when "integer", "counter" then answer.value&.to_i
       when "decimal" then answer.value&.to_f
       when "select_one" then answer.option_name
-      when "select_multiple" then answer.choices.empty? ? [] : answer.choices.map(&:option_name).sort
+      when "select_multiple" then select_multiple_value(answer)
       when "location" then location_value(answer)
       else format_value(answer.value)
       end
+    end
+
+    def select_multiple_value(answer)
+      value = answer.choices.empty? ? [] : answer.choices.map(&:option_name).sort
+      Settings.use_data_factory.present? ? value.to_s : value
     end
 
     def media_value(answer)
@@ -140,9 +145,10 @@ module Results
     end
 
     def location_value(answer)
-      Answer::LOCATION_COLS.map do |key|
+      value = Answer::LOCATION_COLS.map do |key|
         [key.titleize, answer.attributes[key]&.to_f]
       end.to_h
+      Settings.use_data_factory.present? ? value.to_s : value
     end
 
     def format_value(value)
