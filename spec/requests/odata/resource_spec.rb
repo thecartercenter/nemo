@@ -85,6 +85,7 @@ def json_for(form, response, **answers)
     "FormName": form.name,
     "ResponseSubmitterName": response.user.name,
     "ResponseSubmitDate": response.created_at.iso8601,
-    "ResponseReviewed": false
+    "ResponseReviewed": false,
+    "LastCached": Time.zone.now.iso8601
   }.merge(answers)
 end
