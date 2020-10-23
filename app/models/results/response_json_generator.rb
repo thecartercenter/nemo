@@ -44,6 +44,7 @@ module Results
       json["ResponseSubmitterName"] = user.name
       json["ResponseSubmitDate"] = response.created_at.iso8601
       json["ResponseReviewed"] = response.reviewed?
+      json["LastCached"] = Time.zone.now.iso8601
     end
 
     # Adds data for the given Response node to the given json object.

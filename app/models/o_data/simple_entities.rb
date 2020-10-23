@@ -11,7 +11,8 @@ module OData
       ResponseID: :id,
       ResponseShortcode: :string,
       ResponseReviewed: :boolean,
-      FormName: :string
+      FormName: :string,
+      LastCached: :datetime
     }.freeze
 
     GEOGRAPHIC_PROPERTIES = Answer::LOCATION_COLS.map do |key|
