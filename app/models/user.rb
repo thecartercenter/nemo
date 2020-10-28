@@ -85,60 +85,60 @@ class User < ApplicationRecord
     c.logged_in_timeout(SESSION_TIMEOUT)
   end
 
-  after_initialize(:set_default_pref_lang)
-  before_validation(:normalize_fields)
-  before_validation(:generate_password_if_none)
-  after_create(:regenerate_api_key)
-  after_create(:regenerate_sms_auth_code)
+  after_initialize :set_default_pref_lang
+  before_validation :normalize_fields
+  before_validation :generate_password_if_none
+  after_create :regenerate_api_key
+  after_create :regenerate_sms_auth_code
   # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
-  before_destroy(:check_assoc)
-  before_save(:clear_assignments_without_roles)
+  before_destroy :check_assoc
+  before_save :clear_assignments_without_roles
 
   normalize_attribute :login, with: %i[strip downcase]
 
-  validates(:name, presence: true)
-  validates(:pref_lang, presence: true)
-  validate(:phone_length_or_empty)
-  validate(:must_have_password_on_enter)
-  validate(:password_reset_cant_be_email_if_no_email)
-  validate(:no_duplicate_assignments)
-  validates(:login, format: {with: /\A[[:word:].]+\z/}, uniqueness: true)
-  validates(:email, format: {with: /@/}, length: {maximum: 100}, allow_blank: true)
+  validates :name, presence: true
+  validates :pref_lang, presence: true
+  validate :phone_length_or_empty
+  validate :must_have_password_on_enter
+  validate :password_reset_cant_be_email_if_no_email
+  validate :no_duplicate_assignments
+  validates :login, format: {with: /\A[[:word:].]+\z/}, uniqueness: true
+  validates :email, format: {with: /@/}, length: {maximum: 100}, allow_blank: true
 
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
   # which can be an issue if they will be being re-assigned
   # validate(:must_have_assignments_if_not_admin)
-  validates(:password,
+  validates :password,
     confirmation: {if: :require_password?},
     format: {with: PASSWORD_FORMAT, if: :require_password?, message: :invalid_password},
-    length: {minimum: 8, if: :require_password?})
-  validates(:password_confirmation, length: {minimum: 8}, if: :require_password?)
+    length: {minimum: 8, if: :require_password?}
+  validates :password_confirmation, length: {minimum: 8}, if: :require_password?
 
   clone_options follow: %i[assignments user_group_assignments]
 
-  scope(:by_name, -> { order("users.name") })
+  scope :by_name, -> { order("users.name") }
   scope :assigned_to, ->(mission) { where(id: Assignment.select(:user_id).where(mission_id: mission.id)) }
   scope :with_only_one_assignment, lambda {
     count_query = Assignment.select("COUNT(*)").where("user_id = users.id").to_sql
     where("(#{count_query}) = 1")
   }
   scope :assigned_only_to, ->(mission) { assigned_to(mission).with_only_one_assignment }
-  scope(:with_assoc, lambda {
+  scope :with_assoc, lambda {
     includes(:missions, {assignments: :mission}, user_group_assignments: :user_group)
-  })
-  scope(:with_groups, -> { joins(:user_groups) })
+  }
+  scope :with_groups, -> { joins(:user_groups) }
   scope :name_matching, ->(q) { where("name ILIKE ?", "%#{q}%") }
   scope :with_roles, lambda { |m, roles|
                        includes(:missions, assignments: :mission)
                          .where(assignments: {mission: m.try(:id), role: roles})
                      }
 
-  scope(:by_phone, ->(phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
-  scope(:active, -> { where(active: true) })
-  scope(:inactive, -> { where(active: false) })
-  scope(:not_self, ->(s) { s.persisted? ? where("id != ?", s.id) : all })
+  scope :by_phone, ->(phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) }
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
+  scope :not_self, ->(s) { s.persisted? ? where("id != ?", s.id) : all }
 
   def self.random_password(size = 12)
     size = 12 if size < 12
