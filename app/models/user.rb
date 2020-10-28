@@ -88,8 +88,8 @@ class User < ApplicationRecord
   after_initialize :set_default_pref_lang
   before_validation :normalize_fields
   before_validation :generate_password_if_none
-  after_create :regenerate_api_key
-  after_create :regenerate_sms_auth_code
+  before_create :regenerate_api_key
+  before_create :regenerate_sms_auth_code
   # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
   before_destroy :check_assoc
@@ -341,15 +341,12 @@ class User < ApplicationRecord
     begin
       self.api_key = SecureRandom.hex
     end while User.exists?(api_key: api_key)
-    save(validate: false)
   end
 
-  # regenerates sms auth code
   def regenerate_sms_auth_code
     begin
       self.sms_auth_code = Random.alphanum(4)
     end while User.exists?(sms_auth_code: sms_auth_code)
-    save(validate: false)
   end
 
   # Returns the system's best guess as to which mission this user would like to see.
@@ -363,7 +360,6 @@ class User < ApplicationRecord
 
   def remember_last_mission(mission)
     self.last_mission = mission
-    save(validate: false)
   end
 
   private
