@@ -65,6 +65,8 @@ module ApplicationController::Routing
 
   # Saves the current mission (or lack thereof) to the DB.
   def remember_mission
-    current_user.remember_last_mission(current_mission) if current_user && current_mode == "mission"
+    return unless current_user && mission_mode?
+    current_user.remember_last_mission(current_mission)
+    current_user.save(validate: false)
   end
 end

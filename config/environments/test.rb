@@ -46,6 +46,10 @@ ELMO::Application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # Highlight code that triggered database queries in logs.
+  # Enable locally for debugging.
+  # config.active_record.verbose_query_logs = true
+
   # Raises error for missing translations.
   config.action_view.raise_on_missing_translations = false
 
