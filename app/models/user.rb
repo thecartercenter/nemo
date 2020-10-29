@@ -103,8 +103,11 @@ class User < ApplicationRecord
   validate :must_have_password_on_enter
   validate :password_reset_cant_be_email_if_no_email
   validate :no_duplicate_assignments
-  validates :login, format: {with: /\A[[:word:].]+\z/}, uniqueness: true
-  validates :email, format: {with: /@/}, length: {maximum: 100}, allow_blank: true
+  validates :login, format: {with: /\A[[:word:].]+\z/},
+                    uniqueness: {case_sensitive: true}
+  validates :email, format: {with: /@/},
+                    length: {maximum: 100},
+                    allow_blank: true
 
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
