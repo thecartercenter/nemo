@@ -8,11 +8,11 @@ class Report::Formatter
     value = translate(value)
     case type
     when "datetime"
-      I18n.l(value.is_a?(Time) ? value : Time.parse(value.to_s))
+      I18n.l(value.is_a?(Time) ? value : Time.zone.parse(value.to_s))
     when "date"
       I18n.l(value.is_a?(Date) ? value : Date.parse(value.to_s))
     when "time"
-      I18n.l(value.is_a?(Time) ? value : Time.parse(value.to_s), format: :time_only)
+      I18n.l(value.is_a?(Time) ? value : Time.zone.parse(value.to_s), format: :time_only)
     when "decimal"
       Kernel.format("%<value>.2f", value: value)
     when "long_text"

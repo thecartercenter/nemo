@@ -153,7 +153,7 @@ class Report::AnswerTallyReport < Report::TallyReport
     if exprs.size == 1
       exprs.first.sql
     else
-      rest = build_nested_if(exprs[1..-1], conds[1..-1])
+      rest = build_nested_if(exprs[1..], conds[1..])
       "(CASE WHEN (#{conds.first.sql}) THEN (#{exprs.first.sql}) ELSE #{rest} END)"
     end
   end

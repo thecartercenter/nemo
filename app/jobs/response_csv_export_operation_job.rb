@@ -6,8 +6,8 @@ class ResponseCsvExportOperationJob < OperationJob
     ability = Ability.new(user: operation.creator, mission: mission)
     result = generate_csv(responses(ability, search), options: options&.symbolize_keys)
     operation_succeeded(result)
-  rescue Search::ParseError => error
-    operation_failed(error.to_s)
+  rescue Search::ParseError => e
+    operation_failed(e.to_s)
   end
 
   private

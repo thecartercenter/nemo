@@ -49,7 +49,7 @@ class UserImport < TabularImport
   end
 
   def human_to_symbol_map
-    @human_to_symbol_map ||= EXPECTED_HEADERS.map { |h| [User.human_attribute_name(h).downcase, h] }.to_h
+    @human_to_symbol_map ||= EXPECTED_HEADERS.index_by { |h| User.human_attribute_name(h).downcase }
   end
 
   def parse_rows(sheet)

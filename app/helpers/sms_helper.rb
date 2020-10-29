@@ -11,7 +11,7 @@ module SmsHelper
   def format_sms_messages_field(sms, field)
     case field
     when "type" then sms.type.split("::")[1]
-    when "time" then
+    when "time"
       if sms.sent_at <= sms.created_at - 1.minute
         time_diff = time_diff(sms.sent_at, sms.created_at)
         t("sms.timestamp_with_diff_html", time: l(sms.created_at), time_diff: time_diff)
@@ -26,7 +26,7 @@ module SmsHelper
       extra_recipients = sms.recipient_count - MAX_RECIPS_TO_SHOW
       recips << (extra_recipients.positive? ? t("sms.extra_recipients_html", count: extra_recipients) : "")
       recips
-    when "from" then
+    when "from"
       user_with_phone(sms.sender, sms.from)
     when "body" then
       output = []

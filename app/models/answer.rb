@@ -60,6 +60,7 @@ class Answer < ResponseNode
   end
 
   attr_accessor :location_values_replicated
+
   alias questioning form_item
 
   belongs_to :response, inverse_of: :answers, touch: true

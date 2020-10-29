@@ -111,7 +111,7 @@ class Sms::Adapters::Adapter
 
     # return body if it's a clean success, else error
     if response.is_a?(Net::HTTPSuccess)
-      return response.body
+      response.body
     else
       raise Sms::Error, "error contacting #{service_name} (#{response.class.name})"
     end

@@ -30,7 +30,7 @@ class OptionNodePath
   end
 
   def nodes_without_root
-    nodes[1..-1]
+    nodes[1..]
   end
 
   private

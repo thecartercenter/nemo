@@ -44,7 +44,7 @@ describe Sms::Adapters::FrontlineSmsAdapter, :sms do
     expect(msg.from).to eq("+2348036801489")
     expect(msg.body).to eq("foo")
     expect(msg.adapter_name).to eq("FrontlineSms")
-    expect((msg.sent_at - Time.now).abs).to be <= 5
+    expect((msg.sent_at - Time.zone.now).abs).to be <= 5
     expect(msg.sent_at.zone).not_to eq("UTC")
     expect(msg.mission).to be_nil # This gets set in controller.
   end

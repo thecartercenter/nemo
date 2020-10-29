@@ -31,8 +31,8 @@ module Searchable
   # Applies the given Searcher, handling errors via flash.
   def apply_searcher_safely(searcher)
     searcher.apply
-  rescue Search::ParseError => error
-    flash.now[:error] = error.to_s
+  rescue Search::ParseError => e
+    flash.now[:error] = e.to_s
     flash.now[:search_error] = true
     searcher.relation
   end

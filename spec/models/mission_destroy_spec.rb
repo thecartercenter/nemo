@@ -31,7 +31,7 @@ describe "mission destroy" do
       "UserGroupAssignment": 3
     }
   end
-  let(:after_counts) { before_counts.map { |k, _| [k, 0] }.to_h }
+  let(:after_counts) { before_counts.transform_values { |_| 0 }.to_h }
 
   before do
     Setting.load_for_mission(mission)
