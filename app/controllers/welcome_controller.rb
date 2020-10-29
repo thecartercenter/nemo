@@ -4,6 +4,8 @@ class WelcomeController < ApplicationController
   include ReportEmbeddable
   include ResponseIndexable
 
+  MAX_MAP_LOCATIONS = 1000
+
   # Don't need to authorize since we manually redirect to login if no user.
   # This is because anybody is 'allowed' to see the root and letting the auth system handle things
   # leads to nasty messages and weird behavior. We merely redirect because otherwise the page would be blank
@@ -56,12 +58,15 @@ class WelcomeController < ApplicationController
       accessible_responses.unreviewed.count
     end
 
-    location_answers = Answer.location_answers_for_mission(current_mission, current_user)
-    instance_variable_cache("@location_answers") do
-      location_answers.pluck(:response_id, :latitude, :longitude)
-    end
-    instance_variable_cache("@location_answers_count") do
-      location_answers.total_entries
+    instance_variable_cache("@response_locations") do
+      # This query should be reasonably fast. Tested on a mission with >3m answers and it was running
+      # around 400ms. It's hard to do better than this without some kind of preprocessing.
+      # Tried sorting by RANDOM(), slow. Tried Postgres' table sample methods, promising, but you can't
+      # apply a where condition before the sample is taken, so you can't take a sample of just one
+      # mission's answers. Bummer!
+      # We use ResponseNode instead of Answer to avoid the unnecessary type check.
+      ResponseNode.for_mission(current_mission).with_coordinates.newest_first.limit(MAX_MAP_LOCATIONS)
+                  .pluck(:response_id, :latitude, :longitude)
     end
 
     instance_variable_cache("@responses_by_form") do
@@ -85,10 +90,7 @@ class WelcomeController < ApplicationController
     if request.xhr?
       data = {
         recent_responses: render_to_string(partial: "recent_responses"),
-        response_locations: {
-          answers: @location_answers,
-          count: @location_answers_count
-        },
+        response_locations: @response_locations,
         report_stats: render_to_string(partial: "report_stats")
       }
       render(json: data)

@@ -175,9 +175,8 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
 
   update_map(data) {
     if (this.disabled) { return; }
-    return Array.from(data.answers).map((answer) => this.add_answer(answer));
+    return Array.from(data).map((answer) => this.add_answer(answer));
   }
-  // TODO: Deal with data.count
 
   center() {
     if (this.disabled) { return null; }

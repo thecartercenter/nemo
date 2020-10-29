@@ -113,29 +113,6 @@ class Answer < ResponseNode
       }
     }
 
-  # gets all location answers for the given mission
-  # returns only the response ID and the answer value
-  def self.location_answers_for_mission(mission, user = nil, _options = {})
-    response_conditions = {mission_id: mission.try(:id)}
-
-    # if the user is not a staffer or higher privilege, only show their own responses
-    response_conditions[:user_id] = user.id if user.present? && !user.role?(:staffer, mission)
-
-    # return an AR relation
-    joins(:response)
-      .joins(%(LEFT JOIN "choices" ON "choices"."answer_id" = "answers"."id"))
-      .where(responses: response_conditions)
-      .where(%{
-        ("answers"."latitude" IS NOT NULL AND "answers"."longitude" IS NOT NULL)
-        OR ("choices"."latitude" IS NOT NULL AND "choices"."longitude" IS NOT NULL)
-      })
-      .select(:response_id,
-        %{COALESCE("answers"."latitude", "choices"."latitude") AS "latitude",
-          COALESCE("answers"."longitude", "choices"."longitude") AS "longitude"})
-      .order(%("answers"."response_id" DESC))
-      .paginate(page: 1, per_page: 1000)
-  end
-
   def option_name
     option_node&.name
   end
