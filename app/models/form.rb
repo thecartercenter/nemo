@@ -318,7 +318,6 @@ class Form < ApplicationRecord
 
   def create_root_group
     create_root_group!(mission: mission, form: self)
-    save!
   end
 
   def update_minimum
