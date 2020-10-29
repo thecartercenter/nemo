@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ResetUserPassword < ActiveRecord::Migration[4.2]
   def change
     # Standards have increased so we need to reset everyone's password.

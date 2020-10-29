@@ -6,7 +6,7 @@ module SearchesHelper
     examples = safe_join(examples, "&nbsp;&nbsp;&nbsp;".html_safe) if examples.is_a?(Array)
 
     if examples.present?
-      content_tag(:div, id: "search_examples") do
+      tag.div(id: "search_examples") do
         t("common.example", count: examples.size).html_safe << "&nbsp;&nbsp;&nbsp;".html_safe << examples
       end
     end

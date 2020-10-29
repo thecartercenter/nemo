@@ -90,7 +90,7 @@ module Results
     def merge_mission_id_for_choices(clean_params)
       return unless clean_params.key?(:choices_attributes)
 
-      clean_params[:choices_attributes].keys.each do |key|
+      clean_params[:choices_attributes].each_key do |key|
         # Include mission_id FIRST so it can immediately be used in models to validate things.
         value = clean_params[:choices_attributes][key]
         clean_params[:choices_attributes][key] = {mission_id: @response.mission_id}.merge(value)

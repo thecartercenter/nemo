@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepairCrossLinkedOptions < ActiveRecord::Migration[4.2]
   def up
     # Fixes options which had gotten linked to missions outside their own via a suggestion system bug.

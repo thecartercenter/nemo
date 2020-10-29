@@ -34,7 +34,7 @@ module UsersHelper
     when "name"
       link_to(user.name + (user.active? ? "" : " (#{t('common.inactive')})"), user.default_path)
     when "login"
-      content_tag(:span, sanitize(user.login), class: "text") <<
+      tag.span(sanitize(user.login), class: "text") <<
         render_tags(user.user_groups.all, clickable: true, link_method: :group_filter_link)
     when "email" then mail_to(user.email)
     when "latest_mission" then (lm = user.latest_mission) ? lm.name : "[#{t('common.none')}]"

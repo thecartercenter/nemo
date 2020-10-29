@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddNotNullConstraintsOnChoice < ActiveRecord::Migration[4.2]
   def change
     change_column_null :choices, :answer_id, false

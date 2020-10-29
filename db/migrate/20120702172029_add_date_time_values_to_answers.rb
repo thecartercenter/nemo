@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDateTimeValuesToAnswers < ActiveRecord::Migration[4.2]
   def change
     add_column :answers, :time_value, :time

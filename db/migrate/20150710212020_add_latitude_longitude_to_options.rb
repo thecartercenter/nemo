@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddLatitudeLongitudeToOptions < ActiveRecord::Migration[4.2]
   def change
     # -90 to 90 with six decimals

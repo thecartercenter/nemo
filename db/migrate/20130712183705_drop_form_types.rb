@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DropFormTypes < ActiveRecord::Migration[4.2]
   def up
     drop_table :form_types

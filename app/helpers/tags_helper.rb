@@ -7,12 +7,12 @@ module TagsHelper
     return "" if objects.blank?
     title = options[:clickable] ? I18n.t("tag.click_to_filter") : nil
     classes = "badge badge-custom#{options[:clickable] ? ' clickable' : ''}"
-    content_tag(:div, class: "tags") do
+    tag.div(class: "tags") do
       spans = objects.map do |obj|
         if options[:clickable] && options[:link_method]
           send(options[:link_method], obj, class: classes, title: title)
         else
-          content_tag(:span, obj.name, class: classes, title: title)
+          tag.span(obj.name, class: classes, title: title)
         end
       end
       safe_join(spans)

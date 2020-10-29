@@ -89,7 +89,7 @@ module FormsHelper
   def form_item_icon(type)
     # Use font awesome icon if defined, else use custom icon from assets dir.
     if cls = FORM_ITEM_ICON_CLASSES[type]
-      content_tag(:i, "", class: "fa #{cls} type-icon")
+      tag.i("", class: "fa #{cls} type-icon")
     else
       image_tag("form_items/#{type}.png", class: "type-icon")
     end

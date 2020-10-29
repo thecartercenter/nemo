@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveExtraNilAnswersForMultilevelQuestions < ActiveRecord::Migration[4.2]
   def up
     # Remove all nil select_one answers with > 1 rank. These never should have been created.

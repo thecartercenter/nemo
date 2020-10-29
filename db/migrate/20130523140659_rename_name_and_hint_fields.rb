@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameNameAndHintFields < ActiveRecord::Migration[4.2]
   def change
     rename_column :options, :name, :_name

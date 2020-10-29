@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveOrphanChoices < ActiveRecord::Migration[4.2]
   def up
     # Don't know where these came from, they're only an issue in staging data.

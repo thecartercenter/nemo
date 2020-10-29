@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CopyMissionToJoinClasses < ActiveRecord::Migration[4.2]
   def up
     execute("UPDATE questionings qing SET qing.mission_id = (SELECT mission_id FROM questions q WHERE qing.question_id = q.id)")

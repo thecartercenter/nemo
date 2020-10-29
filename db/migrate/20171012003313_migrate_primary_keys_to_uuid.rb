@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "active_support/core_ext/digest/uuid"
 
 class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
@@ -15,7 +17,9 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
         [:option_sets, "option_sets_original_id_fkey1"],
         [:questions, "questions_original_id_fkey1"]
       ]
-      to_remove.each { |t, n| p foreign_keys(t).map(&:name); remove_foreign_key(t, name: n) if foreign_keys(t).map(&:name).include?(n) }
+      to_remove.each do |t, n|
+        p foreign_keys(t).map(&:name); remove_foreign_key(t, name: n) if foreign_keys(t).map(&:name).include?(n)
+      end
 
       TABLES.each do |table_name, table_data|
         # Seek out and clean orphaned records
@@ -55,7 +59,9 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
         table_class.find_each do |instance|
           default = {pk_uuid: Digest::UUID.uuid_v5(table_namespace, instance.id.to_s)}
           instance_params = default.merge(populate_foreign_key_fields(instance, table_name, table_data))
-          instance_params[:ancestry] = rewrite_ancestry_field(instance, table_namespace) if table_data["ancestry"]
+          if table_data["ancestry"]
+            instance_params[:ancestry] = rewrite_ancestry_field(instance, table_namespace)
+          end
           instance.update_columns(instance_params)
         end
 
@@ -89,8 +95,8 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
     return unless table_data["foreign_keys"]
 
     # add indexes for foreign keys
-    table_data["foreign_keys"].each do |foreign_key_type, foreign_key_data|
-      foreign_key_data.each do |foreign_key_column, foreign_key_metadata|
+    table_data["foreign_keys"].each do |_foreign_key_type, foreign_key_data|
+      foreign_key_data.each do |foreign_key_column, _foreign_key_metadata|
         add_index table_name.to_sym, foreign_key_column
       end
     end
@@ -100,7 +106,7 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
     return unless table_data["indexes"]
 
     # add specified indexes
-    table_data["indexes"].each do |index, index_data|
+    table_data["indexes"].each do |_index, index_data|
       options = {}
       options[:name] = index_data["name"] if index_data["name"].present?
       options[:unique] = index_data["unique"] if index_data["unique"].present?
@@ -146,8 +152,8 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
 
   def create_new_columns(table_name, table_data)
     return unless table_data["foreign_keys"]
-    table_data["foreign_keys"].each do |foreign_key_type, foreign_key_data|
-      foreign_key_data.each do |foreign_key_column, foreign_key_metadata|
+    table_data["foreign_keys"].each do |_foreign_key_type, foreign_key_data|
+      foreign_key_data.each do |foreign_key_column, _foreign_key_metadata|
         rename_column table_name, foreign_key_column, backup_column_name(foreign_key_column)
         change_column_null table_name, backup_column_name(foreign_key_column), true
         add_column table_name, foreign_key_column, :uuid
@@ -156,7 +162,7 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
   end
 
   def rewrite_ancestry_field(instance, table_namespace)
-    return unless instance.ancestry.present?
+    return if instance.ancestry.blank?
     puts "  Rewriting ancestry for #{instance.id}"
 
     ancestor_ids = instance.ancestry.split("/")
@@ -181,12 +187,11 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
           # Get value of old id
           old_id = instance[backup_column_name(foreign_key_column).to_sym]
 
-          if old_id.present?
-            # Transform into UUID
-            uuid = Digest::UUID.uuid_v5(table_namespace, old_id.to_s)
+          next if old_id.blank?
+          # Transform into UUID
+          uuid = Digest::UUID.uuid_v5(table_namespace, old_id.to_s)
 
-            instance_params[foreign_key_column] = uuid
-          end
+          instance_params[foreign_key_column] = uuid
         end
       when "polymorphic"
         foreign_key_data.each do |foreign_key_column, polymorphic_data|
@@ -196,12 +201,11 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
           # get value of old id
           old_id = instance[backup_column_name(foreign_key_column).to_sym]
 
-          if old_id.present?
-            # Transform into UUID
-            uuid = Digest::UUID.uuid_v5(table_namespace, old_id.to_s)
+          next if old_id.blank?
+          # Transform into UUID
+          uuid = Digest::UUID.uuid_v5(table_namespace, old_id.to_s)
 
-            instance_params[foreign_key_column] = uuid
-          end
+          instance_params[foreign_key_column] = uuid
         end
       end
     end

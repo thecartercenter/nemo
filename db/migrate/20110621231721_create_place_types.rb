@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePlaceTypes < ActiveRecord::Migration[4.2]
   def self.up
     create_table :place_types do |t|

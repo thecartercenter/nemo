@@ -64,8 +64,8 @@ module ResponsesHelper
   end
 
   def export_dropdown_children(responses)
-    content_tag(:div, class: "dropdown-menu",
-                      "aria-labelledby": "export-dropdown") do
+    tag.div(class: "dropdown-menu",
+            "aria-labelledby": "export-dropdown") do
       [
         unless responses.empty?
           link_to(t("response.export.to_csv"), "#", id: "export-csv-link",

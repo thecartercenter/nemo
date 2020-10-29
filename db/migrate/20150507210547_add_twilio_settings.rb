@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTwilioSettings < ActiveRecord::Migration[4.2]
   def change
     add_column :settings, :twilio_account_sid, :string

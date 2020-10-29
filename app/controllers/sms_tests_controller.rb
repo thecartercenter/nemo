@@ -28,7 +28,7 @@ class SmsTestsController < ApplicationController
     adapter.deliver(processor.forward) if processor.forward
 
     # Render the body of the reply.
-    render(plain: processor.reply.try(:body) || content_tag(:em, t("sms_console.no_reply")))
+    render(plain: processor.reply.try(:body) || tag.em(t("sms_console.no_reply")))
   end
 
   protected

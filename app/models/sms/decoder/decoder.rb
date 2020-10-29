@@ -9,6 +9,7 @@ module Sms
       AUTH_CODE_FORMAT = /[a-z0-9]{4}/i.freeze
 
       attr_accessor :response, :decoding_succeeded
+
       alias decoding_succeeded? decoding_succeeded
 
       delegate :form, to: :response
@@ -59,7 +60,7 @@ module Sms
         tree_builder = Sms::ResponseTreeBuilder.new(response)
         answers = []
 
-        pairs = Sms::Decoder::AnswerParser.new(@tokens[1..-1])
+        pairs = Sms::Decoder::AnswerParser.new(@tokens[1..])
         pairs.each do |pair|
           next unless (qing = find_qing(pair.rank))
 
@@ -69,8 +70,8 @@ module Sms
             pair.parse.each do |attribs|
               answers << tree_builder.add_answer(parent, attribs)
             end
-          rescue Sms::Decoder::ParseError => err
-            raise_answer_error(err.type, pair.rank, pair.value, err.params)
+          rescue Sms::Decoder::ParseError => e
+            raise_answer_error(e.type, pair.rank, pair.value, e.params)
           end
         end
 
@@ -82,8 +83,8 @@ module Sms
         raise_decoding_error("no_answers") unless tree_builder.answers?
 
         self.decoding_succeeded = true
-      rescue Sms::Decoder::ParseError => err
-        raise_decoding_error(err.type, err.params)
+      rescue Sms::Decoder::ParseError => e
+        raise_decoding_error(e.type, e.params)
       end
 
       # Finalizes the decoding process by persisting the built response.

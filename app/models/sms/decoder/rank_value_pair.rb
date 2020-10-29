@@ -118,7 +118,7 @@ module Sms
             with_colon = value.gsub(/(\d{1,2})[\.,]?(\d{2})/) do
               "#{Regexp.last_match(1)}:#{Regexp.last_match(2)}"
             end
-            self.value = Time.parse(with_colon + " UTC")
+            self.value = Time.zone.parse(with_colon + " UTC")
           rescue ArgumentError
             raise_parse_error("answer_not_time", value: value)
           end

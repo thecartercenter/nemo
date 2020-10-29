@@ -72,6 +72,7 @@ class Form < ApplicationRecord
   before_destroy :destroy_items
 
   attr_writer :minimum_version_id
+
   after_save :update_minimum
 
   validates :name, presence: true, length: {maximum: 32}

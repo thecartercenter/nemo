@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCreatorIdToReportReports < ActiveRecord::Migration[4.2]
   def change
     add_column :report_reports, :creator_id, :integer

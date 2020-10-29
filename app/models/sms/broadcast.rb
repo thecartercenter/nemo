@@ -43,7 +43,7 @@
 # rubocop:enable Metrics/LineLength
 
 class Sms::Broadcast < Sms::Message
-  belongs_to :broadcast, class_name: "::Broadcast", foreign_key: "broadcast_id"
+  belongs_to :broadcast, class_name: "::Broadcast"
 
   delegate :recipient_numbers, to: :broadcast
 

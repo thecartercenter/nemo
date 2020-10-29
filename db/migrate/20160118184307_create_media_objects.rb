@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateMediaObjects < ActiveRecord::Migration[4.2]
   def change
     create_table :media_objects do |t|

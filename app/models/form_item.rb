@@ -187,7 +187,7 @@ class FormItem < ApplicationRecord
   # Uses the cached value setup by descendant_questionings if available.
   # Returns empty array if this is the root node (i.e. path is [])
   def full_rank
-    @full_rank ||= path.map(&:rank)[1..-1] || []
+    @full_rank ||= path.map(&:rank)[1..] || []
   end
 
   # Returns the full rank joined with a period separator, e.g. 2.5.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveOldCols < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key_if_exists(:conditions, :original_id)
@@ -26,8 +28,6 @@ class RemoveOldCols < ActiveRecord::Migration[4.2]
   end
 
   def remove_column_if_exists(*args)
-    if column_exists?(*args)
-      remove_column(*args)
-    end
+    remove_column(*args) if column_exists?(*args)
   end
 end

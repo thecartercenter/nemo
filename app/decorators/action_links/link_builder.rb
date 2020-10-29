@@ -16,7 +16,7 @@ module ActionLinks
 
     def to_s
       return nil if object.new_record?
-      h.content_tag(:div, class: "top-action-links d-print-none") do
+      h.tag.div(class: "top-action-links d-print-none") do
         safe_str << actions.map do |action|
           action, url, method = unpack_action(action)
           next unless url && can?(action, object)

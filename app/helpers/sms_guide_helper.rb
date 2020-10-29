@@ -24,7 +24,7 @@ module SmsGuideHelper
 
   # Returns a blank space for an answer to be written in.
   def answer_space(width: 1, content: "")
-    content_tag(:div, content, class: "answer-space width-#{width}")
+    tag.div(content, class: "answer-space width-#{width}")
   end
 
   # Returns a space glyph type thing for use in the sms guide.
@@ -34,7 +34,7 @@ module SmsGuideHelper
 
   # Returns a period glyph type thing for use in the sms guide.
   def period_glyph
-    content_tag("span", "●", class: "period-glyph")
+    tag.span("●", class: "period-glyph")
   end
 
   # converts a number into a letter e.g. 1 = a, 2 = b, 3 = c, ..., 26 = z, 27 = aa, ...
@@ -72,7 +72,7 @@ module SmsGuideHelper
 
     if content
       t("common.example_abbr", locale: @locale).html_safe <<
-        " " << content_tag(:span, content, class: "sms-example")
+        " " << tag.span(content, class: "sms-example")
     else
       ""
     end
@@ -111,7 +111,7 @@ module SmsGuideHelper
               else
                 configatron.incoming_sms_numbers.join(", ")
               end
-    content_tag("strong", numbers)
+    tag.strong(numbers)
   end
 
   def sms_guide_hint(qing, locale:)
@@ -137,8 +137,8 @@ module SmsGuideHelper
       alerts(notice: if appendix_links.size == 1
                        t(".appendix", count: 1).html_safe << " " << appendix_links.first
                      else
-                       t(".appendix", count: 2).html_safe << content_tag(:ol) do
-                         appendix_links.map { |l| content_tag(:li, l) }.reduce(:<<)
+                       t(".appendix", count: 2).html_safe << tag.ol do
+                         appendix_links.map { |l| tag.li(l) }.reduce(:<<)
                        end
                      end)
     end

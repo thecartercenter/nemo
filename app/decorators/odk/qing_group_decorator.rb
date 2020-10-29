@@ -123,7 +123,7 @@ module Odk
       else
         # Groups should get wrapped in a group tag and include the label.
         # Also a repeat tag if the group is repeatable
-        content_tag(:group, ref: xpath) do
+        tag.group(ref: xpath) do
           tag(:label, ref: "jr:itext('#{odk_code}:label')") <<
             conditional_tag(:repeat, repeatable?, nodeset: xpath, &block)
         end
@@ -150,7 +150,7 @@ module Odk
 
     def group_hint_tag(xpath)
       return if no_hint?
-      content_tag(:input, ref: "#{xpath}/header") do
+      tag.input(ref: "#{xpath}/header") do
         tag(:hint, ref: "jr:itext('#{odk_code}:hint')")
       end
     end

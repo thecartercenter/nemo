@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveReportsReferencingFormTypeAttrib < ActiveRecord::Migration[4.2]
   def up
     # this attrib was never really used so these are likely dummy reports anyway

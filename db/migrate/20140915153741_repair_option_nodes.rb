@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepairOptionNodes < ActiveRecord::Migration[4.2]
   def up
     # Delete any option nodes that have invalid ancestries.

@@ -19,9 +19,9 @@ module Forms
       def warnings_of_type(type)
         warnings = warner.warnings(type)
         return if warnings.empty?
-        h.content_tag(:div, class: "alert alert-warning integrity-warning media") do
-          h.icon_tag("warning") << h.content_tag(:div, class: "media-body") do
-            h.content_tag(:strong, t("integrity_warnings.titles.#{type}")) << list_or_single(warnings)
+        h.tag.div(class: "alert alert-warning integrity-warning media") do
+          h.icon_tag("warning") << h.tag.div(class: "media-body") do
+            h.tag.strong(t("integrity_warnings.titles.#{type}")) << list_or_single(warnings)
           end
         end
       end
@@ -33,10 +33,10 @@ module Forms
 
       def list_or_single(warnings)
         if warnings.one?
-          h.content_tag(:p, text(warnings[0]))
+          h.tag.p(text(warnings[0]))
         else
-          h.content_tag(:ul) do
-            warnings.map { |warning| h.content_tag(:li, text(warning)) }.reduce(:<<)
+          h.tag.ul do
+            warnings.map { |warning| h.tag.li(text(warning)) }.reduce(:<<)
           end
         end
       end

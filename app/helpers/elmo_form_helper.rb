@@ -49,7 +49,7 @@ module ElmoFormHelper
 
   # renders the standard 'required' symbol, which is an asterisk
   def reqd_sym
-    content_tag(:div, "*", class: "reqd-sym")
+    tag.div("*", class: "reqd-sym")
   end
 
   # Renders a hint wrapper and link that displays a popover. Note that an instance of FormHintView must exist
@@ -57,13 +57,13 @@ module ElmoFormHelper
   # Default link content is the question mark icon, but can be overridden.
   # If content is blank, returns an empty wrapper.
   def hint_popover(content, link: nil)
-    content_tag(:div, class: "hint-wrapper") do
+    tag.div(class: "hint-wrapper") do
       if content.blank?
         ""
       else
-        link ||= content_tag(:i, "", class: "hint fa fa-2x fa-info-circle")
-        content_tag(:a, link, tabindex: -1, role: "button", "data-trigger": "focus", rel: "popover",
-                              class: "hint", "data-content": content)
+        link ||= tag.i("", class: "hint fa fa-2x fa-info-circle")
+        tag.a(link, tabindex: -1, role: "button", "data-trigger": "focus", rel: "popover",
+                    class: "hint", "data-content": content)
       end
     end
   end

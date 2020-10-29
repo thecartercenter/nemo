@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UnpublishAllStandardForms < ActiveRecord::Migration[4.2]
   def up
     # standard forms are now not publishable, so they should all be unpublished

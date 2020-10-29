@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StandardizeBooleanNames < ActiveRecord::Migration[4.2]
   def self.up
     rename_column(:forms, :is_published, :published)

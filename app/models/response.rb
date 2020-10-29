@@ -200,7 +200,7 @@ class Response < ApplicationRecord
       transaction do
         Response.remove_previous_checkouts_by(user)
 
-        self.checked_out_at = Time.now
+        self.checked_out_at = Time.zone.now
         self.checked_out_by = user
         save(validate: false)
       end

@@ -1,10 +1,12 @@
-class FormItem < ActiveRecord::Base; end
+# frozen_string_literal: true
+
+class FormItem < ApplicationRecord; end
 class QingGroup < FormItem; end
 class Questioning < FormItem
   belongs_to(:form, inverse_of: :questionings)
 end
 
-class Form < ActiveRecord::Base
+class Form < ApplicationRecord
   if Rails::VERSION::MAJOR >= 4
     has_many(:questionings, -> { order(:rank) }, autosave: true, dependent: :destroy, inverse_of: :form)
   else

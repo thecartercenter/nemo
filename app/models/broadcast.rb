@@ -124,21 +124,21 @@ class Broadcast < ApplicationRecord
     return unless email_possible? && recipient_emails.present?
     BroadcastMailer.broadcast(recipient_emails, subject, body).deliver_now
     nil
-  rescue StandardError => error
-    add_send_error(I18n.t("broadcast.email_error") + ": #{error}")
+  rescue StandardError => e
+    add_send_error(I18n.t("broadcast.email_error") + ": #{e}")
     save
-    error
+    e
   end
 
   def deilver_smses_and_return_any_errors
     return unless sms_possible? && recipient_numbers.present?
     Sms::Broadcaster.deliver(self, which_phone, "[#{Settings.broadcast_tag}] #{body}")
     nil
-  rescue Sms::Error => error
+  rescue Sms::Error => e
     # one error per line
-    error.to_s.split("\n").each { |e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}") }
+    e.to_s.split("\n").each { |e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}") }
     save
-    error
+    e
   end
 
   def add_send_error(msg)

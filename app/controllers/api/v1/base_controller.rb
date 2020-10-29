@@ -21,8 +21,6 @@ class API::V1::BaseController < ApplicationController
     end
   end
 
-  protected
-
   def request_http_token_authentication(realm = "Application", _message = nil)
     headers["WWW-Authenticate"] = %(Token realm="#{realm.delete('"')}")
     render(json: {errors: ["invalid_api_token"]}, status: :unauthorized)
@@ -46,9 +44,9 @@ class API::V1::BaseController < ApplicationController
       @form = Form.where(id: params[:form_id]).includes(:whitelistings).first
 
       if @form.nil?
-        return render(json: {errors: ["form_not_found"]}, status: :not_found)
+        render(json: {errors: ["form_not_found"]}, status: :not_found)
       elsif !@form.api_user_id_can_see?(@api_user.id)
-        return render(json: {errors: ["access_denied"]}, status: :forbidden)
+        render(json: {errors: ["access_denied"]}, status: :forbidden)
       end
     end
   end

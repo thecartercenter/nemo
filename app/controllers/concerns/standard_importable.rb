@@ -14,16 +14,14 @@ module StandardImportable
     import_count = 0
     error_count = 0
     params[:objs_to_import].each do |id|
-      begin
-        obj = model_class.find(id)
-        obj.replicate(mode: :to_mission, dest_mission: current_mission)
-        import_count += 1
-      rescue StandardError
-        error_count += 1
-        logger.debug("ERROR #{$ERROR_INFO} IMPORTING #{model_class.try(:name)} ##{id} " \
-          "TO MISSION #{current_mission.try(:name)}")
-        logger.debug($ERROR_INFO.backtrace.to_a.join("\n"))
-      end
+      obj = model_class.find(id)
+      obj.replicate(mode: :to_mission, dest_mission: current_mission)
+      import_count += 1
+    rescue StandardError
+      error_count += 1
+      logger.debug("ERROR #{$ERROR_INFO} IMPORTING #{model_class.try(:name)} ##{id} " \
+        "TO MISSION #{current_mission.try(:name)}")
+      logger.debug($ERROR_INFO.backtrace.to_a.join("\n"))
     end
 
     flash_key = params[:objs_to_import].size == error_count ? :error : :success

@@ -46,7 +46,7 @@ module IconHelper
   def icon_tag(key, options = {})
     name = FONT_AWESOME_ICON_MAPPINGS[key.to_sym] || key.to_s
     options[:class] = ((options[:class] || "") + " fa fa-#{name} icon-#{key.to_s.dasherize}").strip
-    content_tag(:i, "", options)
+    tag.i("", options)
   end
 
   # Returns icon tag for standard icon if obj is standard (or boolean == true), '' otherwise.
