@@ -2,7 +2,9 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 6.0.3"
+# 6.0.3.x has a blocking regression, waiting for a fix since May 2020:
+# https://github.com/rails/rails/issues/39173
+gem "rails", "~> 6.0.2.2"
 
 gem "actionpack-page_caching", "~> 1.1"
 gem "attribute_normalizer", "~> 1.2.0"
