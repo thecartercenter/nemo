@@ -84,7 +84,7 @@ module GeneralSpecHelpers
     File.open(path, "w") { |f| f.write(xml) }
   end
 
-  def saved_fixture_dir(name:, type:)
+                    def saved_fixture_dir(name:, type:)
     Rails.root.join("tmp/odk/#{type}s/#{name}")
   end
 
