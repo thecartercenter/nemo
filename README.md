@@ -34,3 +34,5 @@ Contributors may find our auto-generated [Entity-Relationship Diagram (ERD)](doc
 
 This project is happily tested with BrowserStack!
 [![Tested with BrowserStack](https://www.browserstack.com/images/layout/browserstack-logo-600x315.png)](https://www.browserstack.com)
+
+x
