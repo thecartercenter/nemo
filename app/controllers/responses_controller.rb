@@ -4,7 +4,7 @@ class ResponsesController < ApplicationController
   PER_PAGE = 20
   REFRESH_INTERVAL = 30_000 # ms
 
-  TMP_UPLOADS_PATH = Rails.root.join("tmp", "odk_uploads")
+  TMP_UPLOADS_PATH = Rails.root.join("tmp/odk_uploads")
 
   include BatchProcessable
   include ODKHeaderable

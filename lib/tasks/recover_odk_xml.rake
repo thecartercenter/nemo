@@ -16,7 +16,7 @@ task :recover_odk_xml, ARGS => :environment do |_t, args|
     .where("created_at >= ?", start_time).where("created_at <= ?", end_time)
   puts "Found #{responses.count} responses."
 
-  xml_path = Rails.root.join("tmp", "uploads")
+  xml_path = Rails.root.join("tmp/uploads")
 
   responses.each do |response|
     puts "Response #{response.id}"

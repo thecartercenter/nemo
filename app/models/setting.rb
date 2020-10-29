@@ -120,8 +120,7 @@ class Setting < ApplicationRecord
 
   def self.theme_exists?
     # TODO: refactor to get this path from the Themeing system.
-    File.exist?(Rails.root.join("app", "assets", "stylesheets", "all",
-      "themes", "_custom_theme.scss"))
+    File.exist?(Rails.root.join("app/assets/stylesheets/all/themes/_custom_theme.scss"))
   end
 
   def self.theme_options
@@ -361,7 +360,7 @@ class Setting < ApplicationRecord
 
   # Loads theme settings from a YML file.
   def theme_settings
-    theme_settings_dir = Rails.root.join("config", "settings", "themes")
+    theme_settings_dir = Rails.root.join("config/settings/themes")
     [theme, "nemo"].each do |t|
       file = theme_settings_dir.join("#{t}.yml")
       return YAML.load_file(file) if File.exist?(file)

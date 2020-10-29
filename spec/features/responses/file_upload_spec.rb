@@ -12,10 +12,10 @@ feature "response form file upload", js: true do
 
   before { login(user) }
 
-  let(:image) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg") }
-  let(:image2) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.png") }
-  let(:video) { Rails.root.join("spec", "fixtures", "media", "video", "jupiter.mp4") }
-  let(:video2) { Rails.root.join("spec", "fixtures", "media", "video", "jupiter.avi") }
+  let(:image) { Rails.root.join("spec/fixtures/media/images/the_swing.jpg") }
+  let(:image2) { Rails.root.join("spec/fixtures/media/images/the_swing.png") }
+  let(:video) { Rails.root.join("spec/fixtures/media/video/jupiter.mp4") }
+  let(:video2) { Rails.root.join("spec/fixtures/media/video/jupiter.avi") }
 
   scenario "uploading files" do
     visit new_response_path(params)

@@ -24,7 +24,7 @@ module GeneralSpecHelpers
 
   # reads a file from spec/fixtures
   def fixture_file(filename)
-    File.read(Rails.root.join("spec", "fixtures", filename))
+    File.read(Rails.root.join("spec/fixtures", filename))
   end
 
   def media_fixture(name)
