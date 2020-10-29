@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: whitelistings
@@ -21,7 +21,7 @@
 #
 #  whitelistings_user_id_fkey  (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class Whitelisting < ApplicationRecord
   belongs_to :whitelistable, polymorphic: true

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: report_reports
@@ -43,7 +43,7 @@
 #  report_reports_form_id_fkey         (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
 #  report_reports_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class Report::AnswerTallyReport < Report::TallyReport
   # Called when related OptionSet (and OptionSetChoice) are destroyed.

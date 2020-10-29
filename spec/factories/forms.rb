@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: forms
@@ -35,7 +35,7 @@
 #  forms_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  forms_root_id_fkey     (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # TODO: Should be a way to refactor this to be part of the questioning factory.
 def create_questioning(qtype_name_or_question, form, attribs = {})

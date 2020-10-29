@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: saved_uploads
@@ -13,7 +13,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 FactoryGirl.define do
   factory :saved_upload, class: SavedTabularUpload do

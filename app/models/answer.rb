@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: answers
@@ -42,7 +42,7 @@
 #  answers_response_id_fkey     (response_id => responses.id) ON DELETE => restrict ON UPDATE => restrict
 #  fk_rails_...                 (option_node_id => option_nodes.id)
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # An Answer is a single piece of data in response to a single question or sub-question.
 # It is always a leaf in a response tree.

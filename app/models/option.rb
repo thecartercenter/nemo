@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: options
@@ -25,7 +25,7 @@
 #
 #  options_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # A single selectable option in an OptionSet for a select question.
 class Option < ApplicationRecord

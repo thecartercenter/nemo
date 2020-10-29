@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: option_sets
@@ -30,7 +30,7 @@
 #  option_sets_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  option_sets_option_node_id_fkey  (root_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 FactoryGirl.define do
   factory :option_set do

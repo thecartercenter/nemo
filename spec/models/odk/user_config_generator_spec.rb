@@ -15,7 +15,7 @@ module ODK
 
         # testing
         actual_encoding = ODK::UserConfigEncoder.new(test_username, test_pwd, site_url).encode_config
-        expected_encoding = "eJw1jTsKwzAUBO+ytbGSNAFdxghpsUOsD+9JMcHo7laKNAM7sMyJlYnidtgTxakeWQIsKrUu5QiY0JSSXOTf/vbQgx/K0mRcsdVa1Bqj9E04e88c5yyriebN9HWP2/2JPsGF+Eoj1fsFSTkqpA==" # rubocop:disable Metrics/LineLength
+        expected_encoding = "eJw1jTsKwzAUBO+ytbGSNAFdxghpsUOsD+9JMcHo7laKNAM7sMyJlYnidtgTxakeWQIsKrUu5QiY0JSSXOTf/vbQgx/K0mRcsdVa1Bqj9E04e88c5yyriebN9HWP2/2JPsGF+Eoj1fsFSTkqpA==" # rubocop:disable Layout/LineLength
         expect(actual_encoding).to eq(expected_encoding)
       end
     end

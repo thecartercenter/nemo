@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: report_option_set_choices
@@ -20,7 +20,7 @@
 #  report_option_set_choices_option_set_id_fkey     (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
 #  report_option_set_choices_report_report_id_fkey  (report_report_id => report_reports.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class Report::OptionSetChoice < ApplicationRecord
   belongs_to(:option_set, inverse_of: :report_option_set_choices)
