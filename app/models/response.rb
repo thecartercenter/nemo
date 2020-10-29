@@ -81,7 +81,7 @@ class Response < ApplicationRecord
   has_closure_tree_root :root_node, class_name: "ResponseNode"
 
   has_attached_file :odk_xml
-  validates_attachment_content_type :odk_xml, content_type: %r{\A(text|application)\/xml\z}
+  validates_attachment_content_type :odk_xml, content_type: %r{\A(text|application)/xml\z}
 
   friendly_id :shortcode
 
@@ -218,7 +218,7 @@ class Response < ApplicationRecord
   end
 
   def generate_shortcode
-    begin
+    loop do
       response_code = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
       mission_code = mission.shortcode
       # form code should never be nil, because one is generated on publish
@@ -226,7 +226,8 @@ class Response < ApplicationRecord
       form_code = form.code || "000"
 
       self.shortcode = [mission_code, form_code, response_code].join("-")
-    end while Response.exists?(shortcode: shortcode)
+      break unless Response.exists?(shortcode: shortcode)
+    end
   end
 
   private

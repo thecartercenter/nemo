@@ -86,10 +86,10 @@ module Concerns::ApplicationController::Authorization
 
   def can_redirect_to_index(exception)
     url_exists = (begin
-                    url_for(controller: controller_name, action: :index)
-                  rescue StandardError
-                    false
-                  end)
+      url_for(controller: controller_name, action: :index)
+    rescue StandardError
+      false
+    end)
     current_ability.can?(:index, exception.subject.class) && url_exists
   end
 end

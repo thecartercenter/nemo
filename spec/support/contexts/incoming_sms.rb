@@ -100,7 +100,7 @@ shared_context "incoming sms" do
       raise "Incoming adapter not recognized. Can't build test request"
     end
 
-    [params[:method], params[:url], params: req_params, headers: req_headers]
+    [params[:method], params[:url], {params: req_params, headers: req_headers}]
   end
 
   def expect_no_messages_delivered_through_adapter

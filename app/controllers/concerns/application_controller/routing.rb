@@ -58,9 +58,11 @@ module Concerns::ApplicationController::Routing
 
   # The path to which the user should be directed if exiting admin mode.
   def admin_mode_exit_path
-    current_user.best_mission ?
-      mission_root_path(mission_name: current_user.best_mission.compact_name) :
+    if current_user.best_mission
+      mission_root_path(mission_name: current_user.best_mission.compact_name)
+    else
       basic_root_path
+    end
   end
 
   # Saves the current mission (or lack thereof) to the DB.

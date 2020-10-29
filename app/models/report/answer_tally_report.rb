@@ -133,9 +133,7 @@ class Report::AnswerTallyReport < Report::TallyReport
     # apply filter
     rel = apply_filter(rel)
 
-    rel = filter_non_top_level_answers(rel)
-
-    rel
+    filter_non_top_level_answers(rel)
   end
 
   def header_title(which)

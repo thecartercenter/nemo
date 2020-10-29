@@ -9,7 +9,7 @@ module Forms
       # See Warner#warnings for more info on the expected return value here.
       def careful_with_changes
         [
-          [:in_use, i18n_params: -> { {question_list: question_list} }],
+          [:in_use, {i18n_params: -> { {question_list: question_list} }}],
           :published,
           :standard_copy
         ]

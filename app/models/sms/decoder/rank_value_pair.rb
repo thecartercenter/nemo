@@ -50,7 +50,7 @@ module Sms
 
         when "decimal"
           # for integer question, make sure the value looks like a number
-          raise_parse_error("answer_not_decimal") unless value =~ /\A[\d]+([\.,][\d]+)?\z/
+          raise_parse_error("answer_not_decimal") unless value =~ /\A\d+([.,]\d+)?\z/
 
           # add to response
           build_answer(qing, value: value)
@@ -115,7 +115,7 @@ module Sms
           begin
             # add a colon before the last two digits (if needed)
             # and add UTC so timezone doesn't mess things up
-            with_colon = value.gsub(/(\d{1,2})[\.,]?(\d{2})/) do
+            with_colon = value.gsub(/(\d{1,2})[.,]?(\d{2})/) do
               "#{Regexp.last_match(1)}:#{Regexp.last_match(2)}"
             end
             self.value = Time.zone.parse(with_colon + " UTC")
@@ -139,7 +139,7 @@ module Sms
             else
               # otherwise add a colon before the last two digits of the time (if needed) to help with parsing
               # also replace any .'s or ,'s or ;'s as they don't work so well
-              to_parse = value.gsub(/(\d{1,2})[\.,;]?(\d{2})[a-z\s]*$/) do
+              to_parse = value.gsub(/(\d{1,2})[.,;]?(\d{2})[a-z\s]*$/) do
                 "#{Regexp.last_match(1)}:#{Regexp.last_match(2)}"
               end
             end

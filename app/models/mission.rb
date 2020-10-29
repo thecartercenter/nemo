@@ -87,9 +87,10 @@ class Mission < ApplicationRecord
   end
 
   def generate_shortcode
-    begin
+    loop do
       self.shortcode = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
-    end while Mission.exists?(shortcode: shortcode)
+      break unless Mission.exists?(shortcode: shortcode)
+    end
   end
 
   # returns a string representation used for debugging

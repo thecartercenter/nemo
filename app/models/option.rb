@@ -44,7 +44,7 @@ class Option < ApplicationRecord
   after_destroy :invalidate_cache
 
   scope :with_questions_and_forms,
-    -> { includes(option_sets: [:questionings, questions: {questionings: :form}]) }
+    -> { includes(option_sets: [:questionings, {questions: {questionings: :form}}]) }
   scope :by_canonical_name, ->(name) { where("LOWER(canonical_name) = ?", name.downcase) }
 
   translates :name

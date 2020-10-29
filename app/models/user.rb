@@ -65,7 +65,7 @@ class User < ApplicationRecord
   has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
   has_many :assignments, -> { includes(:mission) }, autosave: true, dependent: :destroy,
                                                     validate: true, inverse_of: :user
-  has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
+  has_many :missions, -> { order("missions.created_at DESC") }, through: :assignments
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
   has_many :reports, inverse_of: :creator, foreign_key: :creator_id,
                      dependent: :nullify, class_name: "Report::Report"
@@ -338,17 +338,19 @@ class User < ApplicationRecord
 
   def regenerate_api_key
     # loop if necessary till unique token generated
-    begin
+    loop do
       self.api_key = SecureRandom.hex
-    end while User.exists?(api_key: api_key)
+      break unless User.exists?(api_key: api_key)
+    end
     save(validate: false)
   end
 
   # regenerates sms auth code
   def regenerate_sms_auth_code
-    begin
+    loop do
       self.sms_auth_code = Random.alphanum(4)
-    end while User.exists?(sms_auth_code: sms_auth_code)
+      break unless User.exists?(sms_auth_code: sms_auth_code)
+    end
     save(validate: false)
   end
 

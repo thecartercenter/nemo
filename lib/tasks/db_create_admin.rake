@@ -4,10 +4,10 @@ namespace :db do
   desc "Create an admin user."
   task :create_admin, [:password] => :environment do |_t, args|
     if (begin
-          configatron.webmaster_emails!
-        rescue StandardError
-          []
-        end).empty?
+      configatron.webmaster_emails!
+    rescue StandardError
+      []
+    end).empty?
       raise "Webmaster email must be configured in config/initializers/local_settings.rb " \
         "before admin can be generated."
     end

@@ -15,7 +15,7 @@ feature "response form skip logic", js: true do
   describe "with skip rules" do
     let(:form) do
       create(:form, :live, question_types:
-        ["text", "text", "text", "text", repeating: {items: ["text"]}])
+        ["text", "text", "text", "text", {repeating: {items: ["text"]}}])
     end
 
     scenario "skip to end of form" do
@@ -140,7 +140,7 @@ feature "response form skip logic", js: true do
     # Display repeat group if [2] is "ShowRepeat"
     let(:form) do
       create(:form, :live, question_types:
-        ["text", "text", "text", "text", repeating: {items: ["text"]}])
+        ["text", "text", "text", "text", {repeating: {items: ["text"]}}])
     end
 
     scenario "trigger display condition on form with skip rule" do

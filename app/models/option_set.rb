@@ -282,7 +282,7 @@ class OptionSet < ApplicationRecord
 
   def worksheet_name
     (name.size > 31 ? name.truncate(31) : name).gsub(
-      %r{[\[\]\*\\?\:\/]},
+      %r{[\[\]*\\?:/]},
       "[" => "(",
       "]" => ")",
       "*" => "∗",

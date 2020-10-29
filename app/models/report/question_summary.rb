@@ -14,8 +14,7 @@ class Report::QuestionSummary
   # the number of null answers we encountered
   attr_reader :null_count
 
-  attr_reader :display_type
-  attr_reader :overall_header
+  attr_reader :display_type, :overall_header
 
   delegate :reference, to: :questioning
 

@@ -165,8 +165,8 @@ class Setting < ApplicationRecord
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
       Sms::Adapters::Factory.instance.create(default_outgoing_sms_adapter)
-                                 rescue ArgumentError
-                                   nil
+    rescue ArgumentError
+      nil
     end
 
     Time.zone = timezone

@@ -18,7 +18,7 @@ module SmsHelper
       else
         l(sms.created_at)
       end
-    when "to" then
+    when "to"
       recips = safe_join(
         sms.recipient_hashes(max: MAX_RECIPS_TO_SHOW).map { |r| user_with_phone(r[:user], r[:phone]) },
         "<br/>".html_safe
@@ -28,7 +28,7 @@ module SmsHelper
       recips
     when "from"
       user_with_phone(sms.sender, sms.from)
-    when "body" then
+    when "body"
       output = []
       output << content_tag(:span, sms.body)
       if sms.reply_error_message

@@ -8,7 +8,7 @@ module Forms
     def initialize(form)
       self.form = form
       self.preordered_form_items = form.preordered_items(
-        eager_load: [:display_conditions, skip_rules: :conditions]
+        eager_load: [:display_conditions, {skip_rules: :conditions}]
       )
     end
 

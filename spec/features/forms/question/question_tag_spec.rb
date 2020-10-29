@@ -81,7 +81,7 @@ feature "question tags" do
     fill_in_token_input(options[:input_id], with: "drink", dont_pick: true)
     find(".token-input-dropdown-elmo li", text: "drink").click
 
-    within find("div#tag_ids li.token-input-token-elmo", text: "drink") do
+    within(find("div#tag_ids li.token-input-token-elmo", text: "drink")) do
       find("span.token-input-delete-token-elmo").click # "x" close button
     end
     expect(page).not_to have_content("drink")
@@ -96,13 +96,13 @@ feature "question tags" do
     # Tags show in questions row on index page
     # Check that index/form edit page has loaded
     expect(page).to have_selector("h1", text: (options[:qtype] == "question" ? "Questions" : /^Edit Form:/))
-    within options[:table_row_id] do
+    within(options[:table_row_id]) do
       expect(page).to have_selector("span.badge", text: "snack")
     end
 
     # On questions index page, also check that tags show at top
     if options[:qtype] == "question"
-      within "div.all-tags" do
+      within("div.all-tags") do
         expect(page).to have_selector("span.badge", text: "dairy")
         expect(page).to have_selector("span.badge", text: "snack")
       end
@@ -110,7 +110,7 @@ feature "question tags" do
 
     # Tags show on question(ing) show page
     visit(options[:show_path])
-    within "div#tag_ids" do
+    within("div#tag_ids") do
       expect(page).to have_selector("span.badge", text: "snack")
       expect(page).not_to have_selector("span.badge", text: "drink")
     end
@@ -131,7 +131,7 @@ feature "question tags" do
 
     # Tags show on question(ing) page
     visit(options[:admin_show_path])
-    within "div#tag_ids" do
+    within("div#tag_ids") do
       expect(page).to have_selector("span.badge", text: "beverage")
     end
 
