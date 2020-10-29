@@ -36,6 +36,7 @@ describe Results::Csv::Buffer do
   # Simple dummy that saves rows that get passed to it.
   class DummyCSV
     attr_accessor :rows
+
     def <<(row)
       rows << row.dup # Row may get changed again before we look at it.
     end

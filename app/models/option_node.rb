@@ -68,6 +68,7 @@ class OptionNode < ApplicationRecord
   # and the update causes their ranks to change.
   attr_accessor :ranks_changed, :options_added, :options_removed
   attr_writer :child_options
+
   alias ranks_changed? ranks_changed
   alias options_added? options_added
   alias options_removed? options_removed
@@ -270,7 +271,7 @@ class OptionNode < ApplicationRecord
 
   # Path to this node without the root.
   def path
-    ancestors[1..-1] << self
+    ancestors[1..] << self
   end
 
   # Returns the total number of options omitted from the JSON serialization.

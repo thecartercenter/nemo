@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConvertIncomingSmsNumberToNumbers < ActiveRecord::Migration[4.2]
   def change
     change_column :settings, :incoming_sms_number, :text

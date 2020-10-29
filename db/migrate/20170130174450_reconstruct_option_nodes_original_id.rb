@@ -1,23 +1,24 @@
-class OptionSet < ActiveRecord::Base
+# frozen_string_literal: true
+
+class OptionSet < ApplicationRecord
   belongs_to :original, class_name: "OptionSet"
   belongs_to :root_node, -> { where(option_id: nil) }, class_name: OptionNode, dependent: :destroy
 end
-class OptionNode < ActiveRecord::Base
+class OptionNode < ApplicationRecord
   has_ancestry cache_depth: true
   belongs_to :option
 end
-class Option < ActiveRecord::Base; end
+class Option < ApplicationRecord; end
 
 class ReconstructOptionNodesOriginalId < ActiveRecord::Migration[4.2]
   def up
     transaction do
       # Process all option sets with originals
       OptionSet.where("original_id IS NOT NULL").each do |option_set|
-        if original = option_set.original
-          puts "Processing option set #{option_set.name}"
-          option_set.root_node.update_columns(original_id: original.root_node_id)
-          check_children_for_matches(option_set.root_node, original.root_node, 1)
-        end
+        next unless original = option_set.original
+        puts "Processing option set #{option_set.name}"
+        option_set.root_node.update_columns(original_id: original.root_node_id)
+        check_children_for_matches(option_set.root_node, original.root_node, 1)
       end
     end
   end

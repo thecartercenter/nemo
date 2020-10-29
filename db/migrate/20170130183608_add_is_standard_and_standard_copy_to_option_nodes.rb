@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIsStandardAndStandardCopyToOptionNodes < ActiveRecord::Migration[4.2]
   def change
     add_column :option_nodes, :is_standard, :boolean, default: false

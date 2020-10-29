@@ -24,8 +24,8 @@ describe "answers API requests" do
     end
 
     it "should restrict by date/time" do
-      t1 = (Time.now - 7.days).iso8601
-      t2 = (Time.now - 3.days).iso8601
+      t1 = (Time.zone.now - 7.days).iso8601
+      t2 = (Time.zone.now - 3.days).iso8601
       get "/api/v1/m/mission1/answers?form_id=#{@form.id}&question_id=#{@form.questions[0].id}" \
         "&created_before=#{t2}&created_after=#{t1}", headers: headers
       expect(response).to have_http_status(:ok)

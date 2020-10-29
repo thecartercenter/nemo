@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveQuestioningsCountFromForms < ActiveRecord::Migration[4.2]
   def up
     remove_column :forms, :questionings_count

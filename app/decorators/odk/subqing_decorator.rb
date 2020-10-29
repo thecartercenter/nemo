@@ -71,10 +71,10 @@ module Odk
 
     def top_level_items
       option_set.sorted_children.map do |ch|
-        content_tag(:item) do
+        tag.item do
           code = CodeMapper.instance.code_for_item(ch)
           tag(:label, ref: "jr:itext('#{code}')") <<
-            content_tag(:value, code)
+            tag.value(code)
         end
       end.reduce(:<<)
     end
@@ -82,7 +82,7 @@ module Odk
     def itemset
       instance_id = decorated_option_set.instance_id_for_depth(rank)
       nodeset_ref = "instance('#{instance_id}')/root/item[parentId=#{path_to_prev_subqing}]"
-      content_tag(:itemset, nodeset: nodeset_ref) do
+      tag.itemset(nodeset: nodeset_ref) do
         tag(:label, ref: "jr:itext(itextId)") <<
           tag(:value, ref: "itextId")
       end

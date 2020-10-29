@@ -36,8 +36,8 @@ class TabularImport
 
   def open_sheet
     self.sheet = Roo::Spreadsheet.open(file).sheet(0)
-  rescue TypeError, ArgumentError => error
-    raise error unless /not an Excel 2007 file|Can't detect the type/.match?(error.to_s)
+  rescue TypeError, ArgumentError => e
+    raise e unless /not an Excel 2007 file|Can't detect the type/.match?(e.to_s)
     add_run_error(:wrong_type)
   end
 
@@ -55,7 +55,7 @@ class TabularImport
   end
 
   def copy_validation_errors_for_row(row_number, errors)
-    errors.keys.each do |attribute|
+    errors.each_key do |attribute|
       errors.full_messages_for(attribute).each do |error|
         add_run_error(I18n.t("operation.row_error", row: row_number, error: error))
       end

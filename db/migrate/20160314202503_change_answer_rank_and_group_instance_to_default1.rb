@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeAnswerRankAndGroupInstanceToDefault1 < ActiveRecord::Migration[4.2]
   def up
     change_column_default :answers, :group_instance, 1

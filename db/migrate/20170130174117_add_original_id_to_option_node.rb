@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddOriginalIdToOptionNode < ActiveRecord::Migration[4.2]
   def up
     unless OptionNode.column_names.include?("original_id")

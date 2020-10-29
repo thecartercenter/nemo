@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeObserverRoleToEnumerator < ActiveRecord::Migration[4.2]
   def up
     execute("UPDATE assignments SET role = 'enumerator' WHERE role = 'observer'")

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveRecentChangesFromOptions < ActiveRecord::Migration[4.2]
   def up
     remove_column :options, :recent_changes

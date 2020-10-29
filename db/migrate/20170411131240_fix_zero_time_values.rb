@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class FixZeroTimeValues < ActiveRecord::Migration[4.2]
   def up
-    tables = %w(
+    tables = %w[
       answers
       assignments
       broadcast_addressings
@@ -31,7 +33,7 @@ class FixZeroTimeValues < ActiveRecord::Migration[4.2]
       user_groups
       users
       whitelistings
-    )
+    ]
 
     tables.each do |table|
       execute("UPDATE #{table} SET created_at = '2000-01-01 00:00' WHERE created_at = '0000-00-00 00:00'")

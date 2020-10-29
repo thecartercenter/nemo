@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'benchmark'
+require "benchmark"
 
 # Major migration to create hierarchy of answer objects.
 class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]

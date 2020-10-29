@@ -125,7 +125,7 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
   def delete_extra(index, id_groups)
     id_groups.each do |ids|
       print_status_message(ids, "Deleting extra records.")
-      id_list = ids[1..-1].map { |id| "'#{id}'" }.join(",")
+      id_list = ids[1..].map { |id| "'#{id}'" }.join(",")
       execute("DELETE FROM #{index[:table]} WHERE id IN (#{id_list})")
     end
   end
@@ -137,7 +137,7 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
       rows = execute("SELECT id, role FROM #{index[:table]} WHERE id IN (#{id_list})").to_a
       rows.sort_by { |row| User::ROLES.index(row["role"]) }
       puts(+"  Roles found: " << rows.map { |row| row["role"] }.join(", "))
-      ids_to_delete = rows[1..-1].map { |row| "'#{row['id']}'" }.join(",")
+      ids_to_delete = rows[1..].map { |row| "'#{row['id']}'" }.join(",")
       puts("  Deleting ids #{ids_to_delete}".delete("'"))
       execute("DELETE FROM assignments WHERE id IN (#{ids_to_delete})")
     end
@@ -151,7 +151,7 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
       puts("  Duplicate value: #{value}")
       suffix = 2
 
-      ids[1..-1].each do |id|
+      ids[1..].each do |id|
         while execute("SELECT id FROM #{index[:table]} WHERE #{col} = '#{value}#{suffix}'").to_a.any?
           suffix += 1
         end

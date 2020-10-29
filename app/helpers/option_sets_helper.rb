@@ -18,12 +18,12 @@ module OptionSetsHelper
     case field
     when "std_icon" then std_icon(option_set)
     when "name" then link_to(option_set.name, option_set.default_path, title: t("common.view"))
-    when "options" then
+    when "options"
       # only show the first 3 options as there could be many many
       option_set.options[0...3].collect(&:name).join(", ") + (option_set.options.size > 3 ? ", ..." : "")
     when "questions" then option_set.questions_count
     when "answers" then number_with_delimiter(option_set.answer_count)
-    when "actions" then
+    when "actions"
       # add a clone link if auth'd
       if can?(:clone, option_set)
         confirm_msg = t("option_set.clone_confirm", name: option_set.name)
@@ -37,16 +37,16 @@ module OptionSetsHelper
   # TODO: These two warning should move inside the IntegrityWarning system, which should probably be
   # renamed to just Warning or FormWarning.
   def multilevel_forbidden_notice
-    content_tag(:div, class: "alert alert-warning integrity-warning media") do
-      icon_tag("warning") << content_tag(:div, class: "media-body") do
+    tag.div(class: "alert alert-warning integrity-warning media") do
+      icon_tag("warning") << tag.div(class: "media-body") do
         t("option_set.multilevel_forbidden_notice")
       end
     end
   end
 
   def huge_notice
-    content_tag(:div, class: "alert alert-warning integrity-warning media") do
-      icon_tag("warning") << content_tag(:div, class: "media-body") do
+    tag.div(class: "alert alert-warning integrity-warning media") do
+      icon_tag("warning") << tag.div(class: "media-body") do
         t("option_set.huge_notice", count: number_with_delimiter(@option_set.total_options))
       end
     end

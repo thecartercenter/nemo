@@ -9,6 +9,7 @@ module Forms
     extend ActiveModel::Naming
 
     attr_accessor :members, :true_if, :negate, :name
+
     alias negate? negate
 
     delegate :empty?, to: :members

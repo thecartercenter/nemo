@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class DropRoles < ActiveRecord::Migration[4.2]
   def up
-  	drop_table :roles
+    drop_table :roles
   end
 
   def down

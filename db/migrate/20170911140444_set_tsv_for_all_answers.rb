@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SetTsvForAllAnswers < ActiveRecord::Migration[4.2]
   def up
     # Forces trigger to run for all answers, setting up TSV stuff.

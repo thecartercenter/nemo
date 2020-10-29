@@ -68,6 +68,7 @@ class Report::Report < ApplicationRecord
   before_save :normalize_attribs
 
   attr_accessor :just_created, :populated
+
   alias populated? populated
 
   # this is overridden by StandardFormReport, and ignored elsewhere
@@ -137,7 +138,7 @@ class Report::Report < ApplicationRecord
   # It's using the update_column to avoid it updating the updated_at
   # value (which would invalidate the cache). It also skips validations.
   def record_viewing
-    update_column(:viewed_at, Time.now)
+    update_column(:viewed_at, Time.zone.now)
     update_column(:view_count, self.view_count += 1)
   end
 

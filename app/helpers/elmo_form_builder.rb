@@ -48,9 +48,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     if options[:copyable]
       text = I18n.t("layout.copy_to_clipboard")
       options[:id] ||= "copy-value-#{field_name}"
-      options[:append] = @template.content_tag(:div, text, class: "btn btn-link btn-a",
-                                                           id: "copy-btn-#{field_name}",
-                                                           "data-clipboard-target": "##{options[:id]}")
+      options[:append] = @template.tag.div(text, class: "btn btn-link btn-a",
+                                                 id: "copy-btn-#{field_name}",
+                                                 "data-clipboard-target": "##{options[:id]}")
     end
 
     # get key chunks and render partial
@@ -86,13 +86,13 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     field_id = "regenerable-fields-#{SecureRandom.hex}"
 
     options[:read_only] = true
-    options[:read_only_content] = @template.content_tag(:div, id: field_id, class: "regenerable-field") do
+    options[:read_only_content] = @template.tag.div(id: field_id, class: "regenerable-field") do
       current = @object.send(field_name)
       action = options.delete(:action) || "regenerate_#{field_name}"
       link_i18n_key = options.delete(:link_i18n_key) || (current ? "common.regenerate" : "common.generate")
 
       # Current value display
-      body = @template.content_tag(:span, current || "[#{@template.t('common.none')}]",
+      body = @template.tag.span(current || "[#{@template.t('common.none')}]",
         data: {value: current || ""})
 
       unless read_only? || options[:no_button] == true
@@ -109,7 +109,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         # Backbone view
         # rubocop:disable Rails/OutputSafety
         js = "new ELMO.Views.RegenerableFieldView({ el: $('##{field_id}') })".html_safe
-        body << @template.content_tag(:script, js)
+        body << @template.tag.script(js)
         # rubocop:enable Rails/OutputSafety
       end
 
@@ -120,7 +120,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def base_errors
-    @template.content_tag(:div, @object.errors[:base].join(" "), class: "form-errors")
+    @template.tag.div(@object.errors[:base].join(" "), class: "form-errors")
   end
 
   def read_only?
@@ -188,7 +188,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         human_val = "[#{@template.t('common.none')}]" if human_val.blank?
 
         # render a div with the human val, and embed the real val in a data attrib if it differs
-        @template.content_tag(:div, human_val, class: "ro-val", 'data-val': val != human_val ? val : nil)
+        @template.tag.div(human_val, class: "ro-val", 'data-val': val != human_val ? val : nil)
 
       else
         tag_options = options.slice(:id, :data) # Include these attribs with all tags, if given.
@@ -217,7 +217,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           text_area(field_name, tag_options)
 
         when :pre
-          @template.content_tag(:pre, val, tag_options)
+          @template.tag.pre(val, tag_options)
 
         when :password
           # add 'text' class for legacy support

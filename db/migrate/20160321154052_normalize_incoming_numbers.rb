@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NormalizeIncomingNumbers < ActiveRecord::Migration[4.2]
   def up
     Setting.find_each do |s|

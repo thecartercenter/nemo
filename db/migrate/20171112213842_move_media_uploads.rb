@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class MoveMediaUploads < ActiveRecord::Migration[4.2]
-  TABLES = [Media::Object, Media::Image, Media::Audio, Media::Video]
+  TABLES = [Media::Object, Media::Image, Media::Audio, Media::Video].freeze
 
   def up
-    TABLES.each { |table| table.reset_column_information }
+    TABLES.each(&:reset_column_information)
 
     Media::Object.find_each do |object|
       class_path = object.type.underscore.pluralize

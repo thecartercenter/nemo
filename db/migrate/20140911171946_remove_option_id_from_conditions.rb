@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveOptionIdFromConditions < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key :conditions, :option

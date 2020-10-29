@@ -34,8 +34,8 @@ module ApplicationHelper
       # Only echo valid message types
       next unless msg.present? && (css_class = bootstrap_flash_class(name))
       msg = msg.html_safe if html_safe
-      content_tag(:div, class: css_class) do
-        content_tag(:strong, t("flash_message_types.#{name}")) << ": " << msg
+      tag.div(class: css_class) do
+        tag.strong(t("flash_message_types.#{name}")) << ": " << msg
       end
     end.compact.reduce(:<<)
   end
@@ -52,14 +52,14 @@ module ApplicationHelper
 
   # renders a loading indicator image wrapped in a wrapper
   def inline_load_ind(options = {})
-    content_tag("div", class: "inline-load-ind", id: options[:id]) do
+    tag.div(class: "inline-load-ind", id: options[:id]) do
       body = image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif",
         style: "display: none",
         id: "inline_load_ind" + (options[:id] ? "_#{options[:id]}" : ""))
 
       if options[:success_failure]
-        body += content_tag("i", "", class: "success fa fa-fw fa-check-circle", style: "display: none")
-        body += content_tag("i", "", class: "failure fa fa-fw fa-minus-circle", style: "display: none")
+        body += tag.i("", class: "success fa fa-fw fa-check-circle", style: "display: none")
+        body += tag.i("", class: "failure fa fa-fw fa-minus-circle", style: "display: none")
       end
 
       body
@@ -95,7 +95,7 @@ module ApplicationHelper
   end
 
   def google_maps_key_missing?
-    !configatron.has_key?(:google_maps_api_key)
+    !configatron.key?(:google_maps_api_key)
   end
 
   def google_maps_js
@@ -180,7 +180,7 @@ module ApplicationHelper
   end
 
   def h1_title(content: "")
-    content_tag(:h1, class: "title") do
+    tag.h1(class: "title") do
       title << content
     end
   end
@@ -196,7 +196,7 @@ module ApplicationHelper
   # Escapes HTML in any arguments.
   # options[:strip_outer_p_tags] - Whether to strip outer p tags if they exist. Defaults to true for now.
   def tmd(key, strip_outer_p_tags: true, **options)
-    options.keys.each do |k|
+    options.each_key do |k|
       options[k] = html_escape(options[k]).to_s unless %w[default scope].include?(k.to_s)
     end
 
@@ -239,7 +239,7 @@ module ApplicationHelper
       next unless can?(:index, k)
       path = dynamic_path(k, action: :index)
       active = current_page?(path)
-      links << content_tag(:li, class: "nav-item" + (active ? " active" : "")) do
+      links << tag.li(class: "nav-item" + (active ? " active" : "")) do
         link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path, class: "nav-link")
       end
     end

@@ -111,7 +111,7 @@ class OptionSet < ApplicationRecord
     return nil if node.nil?
 
     # Trim the root node and map to options.
-    node.ancestors[1..-1].map(&:option) + [option]
+    node.ancestors[1..].map(&:option) + [option]
   end
 
   # Gets the OptionLevel for the given depth (1-based)

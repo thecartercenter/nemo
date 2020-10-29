@@ -77,14 +77,12 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   def send_message_for_each_recipient(message)
     errors = []
     (numbers = message.recipient_numbers).each_with_index do |number, index|
-      begin
-        send_message(number, message.body)
-      rescue Twilio::REST::RequestError => e
-        errors << e.to_s
-        # Check if creating the first 3 messages, or ALL the messages, all failed
-        if errors.size == numbers.size || errors.size == 3 && index == 2
-          raise Sms::Adapters::FatalSendError, errors.join("\n")
-        end
+      send_message(number, message.body)
+    rescue Twilio::REST::RequestError => e
+      errors << e.to_s
+      # Check if creating the first 3 messages, or ALL the messages, all failed
+      if errors.size == numbers.size || errors.size == 3 && index == 2
+        raise Sms::Adapters::FatalSendError, errors.join("\n")
       end
     end
     raise Sms::Adapters::PartialSendError, errors.join("\n") unless errors.empty?

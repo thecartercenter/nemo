@@ -11,7 +11,7 @@ module Odk
 
     def default_response_name_instance_tag
       if default_response_name.present?
-        content_tag(:meta, tag(:instanceName))
+        tag.meta(tag(:instanceName))
       else
         ""
       end

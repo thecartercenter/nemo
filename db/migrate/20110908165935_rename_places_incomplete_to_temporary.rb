@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenamePlacesIncompleteToTemporary < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :places, :incomplete, :temporary

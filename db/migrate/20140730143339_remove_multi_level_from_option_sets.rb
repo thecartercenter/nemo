@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveMultiLevelFromOptionSets < ActiveRecord::Migration[4.2]
   def up
     remove_column :option_sets, :multilevel

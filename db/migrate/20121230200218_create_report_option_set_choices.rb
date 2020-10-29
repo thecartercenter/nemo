@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateReportOptionSetChoices < ActiveRecord::Migration[4.2]
   def change
     create_table :report_option_set_choices do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeAPIAccessLevelToString < ActiveRecord::Migration[4.2]
   def up
     # First set all nulls to private/inherit
@@ -5,8 +7,8 @@ class ChangeAPIAccessLevelToString < ActiveRecord::Migration[4.2]
     execute("UPDATE questionables SET access_level = 2 WHERE access_level IS NULL")
 
     # Alter
-    change_column :forms, :access_level, :string, :null => false, :default => 'private' # private
-    change_column :questionables, :access_level, :string, :null => false, :default => 'inherit'
+    change_column :forms, :access_level, :string, null: false, default: "private" # private
+    change_column :questionables, :access_level, :string, null: false, default: "inherit"
 
     # Now convert to string values
     execute("UPDATE forms SET access_level = 'private' WHERE access_level = '1'")

@@ -6,15 +6,11 @@ class FlipOdkDisabledToHidden < ActiveRecord::Migration[5.2]
       reversible do |dir|
         dir.up do
           # Preload/calculate qings should be hidden instead of disabled (now that they're different).
-          if behind_the_scenes?(qing) && qing.disabled?
-            qing.update!(disabled: false, hidden: true)
-          end
+          qing.update!(disabled: false, hidden: true) if behind_the_scenes?(qing) && qing.disabled?
         end
 
         dir.down do
-          if behind_the_scenes?(qing) && qing.hidden?
-            qing.update!(disabled: true, hidden: false)
-          end
+          qing.update!(disabled: true, hidden: false) if behind_the_scenes?(qing) && qing.hidden?
         end
       end
     end

@@ -22,7 +22,7 @@ module Odk
     end
 
     def content_tag(*args, &block)
-      h.content_tag(*args, &block)
+      h.tag(*args, &block)
     end
 
     def decorate(obj, context: {})

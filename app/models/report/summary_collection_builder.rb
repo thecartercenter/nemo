@@ -98,7 +98,7 @@ class Report::SummaryCollectionBuilder
           when "decimal"
             stats.each { |s| stat_values[s] = stat_values[s].to_f }
           when "time"
-            stats.each { |s| stat_values[s] = I18n.l(Time.parse(stat_values[s]), format: :time_only) }
+            stats.each { |s| stat_values[s] = I18n.l(Time.zone.parse(stat_values[s]), format: :time_only) }
           when "datetime"
             # Datetime values are in UTC so we convert them to string and then parse them into our zone.
             # Sometimes the zone shown in to_s is something other than UTC but it really is UTC so we
@@ -393,7 +393,7 @@ class Report::SummaryCollectionBuilder
 
         # compute percentages
         items.each do |item|
-          item.pct = non_null_count .zero? ? 0 : item.count.to_f / non_null_count * 100
+          item.pct = non_null_count.zero? ? 0 : item.count.to_f / non_null_count * 100
         end
 
         # get null count from tallies

@@ -9,6 +9,7 @@ module Results
     class Buffer
       attr_accessor :csv, :output_rows, :header_map, :empty, :group_path,
         :applicable_rows_stack, :group_names
+
       delegate :empty?, to: :output_rows
 
       def initialize(header_map:)

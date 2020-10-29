@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixDisplayIf < ActiveRecord::Migration[4.2]
   def up
     execute("UPDATE form_items SET display_if = 'always'")

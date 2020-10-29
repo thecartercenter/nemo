@@ -306,7 +306,7 @@ class User < ApplicationRecord
 
     # if the role is nil, we can return false
     if mission_role.nil?
-      return false
+      false
     # otherwise we compare the role indices
     else
       ROLES.index(base_role.to_s) <= ROLES.index(mission_role)
@@ -318,11 +318,11 @@ class User < ApplicationRecord
   end
 
   def session_time_left
-    SESSION_TIMEOUT - (Time.now - last_request_at)
+    SESSION_TIMEOUT - (Time.zone.now - last_request_at)
   end
 
   def current_login_age
-    Time.now - current_login_at if current_login_at.present?
+    Time.zone.now - current_login_at if current_login_at.present?
   end
 
   def current_login_recent?(max_age = nil)

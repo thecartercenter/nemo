@@ -18,8 +18,8 @@ module Odk
     # Returns <text> tags for options.
     def translation_tags(lang)
       tags = nodes_for_translation_tags.map do |node|
-        content_tag(:text, id: Odk::CodeMapper.instance.code_for_item(node)) do
-          content_tag(:value) do
+        tag.text(id: Odk::CodeMapper.instance.code_for_item(node)) do
+          tag.value do
             node.option.name(lang, fallbacks: true)
           end
         end
@@ -31,8 +31,8 @@ module Odk
     # cascading behavior.
     def instances
       tags = (2..level_count).map do |depth|
-        content_tag(:instance, id: instance_id_for_depth(depth)) do
-          content_tag(:root, item_tags_for_depth(depth))
+        tag.instance(id: instance_id_for_depth(depth)) do
+          tag.root(item_tags_for_depth(depth))
         end
       end
       tags.reduce(&:<<)
@@ -53,10 +53,10 @@ module Odk
 
     def item_tags_for_depth(level)
       tags = nodes_at_depth(level).map do |node|
-        content_tag(:item) do
+        tag.item do
           # Use mapper directly here for efficiency.
-          content_tag(:itextId, CodeMapper.instance.code_for_item(node)) <<
-            content_tag(:parentId, CodeMapper.instance.code_for_item(node.parent))
+          tag.itextId(CodeMapper.instance.code_for_item(node)) <<
+            tag.parentId(CodeMapper.instance.code_for_item(node.parent))
         end
       end
       tags.reduce(&:<<)
