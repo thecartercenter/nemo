@@ -68,8 +68,9 @@ class WelcomeController < ApplicationController
       # apply a where condition before the sample is taken, so you can't take a sample of just one
       # mission's answers. Bummer!
       # We use ResponseNode instead of Answer to avoid the unnecessary type check.
-      ResponseNode.for_mission(current_mission).with_coordinates.newest_first.limit(MAX_MAP_LOCATIONS)
-                  .pluck(:response_id, :latitude, :longitude)
+      ResponseNode.for_mission(current_mission)
+        .with_coordinates.newest_first.limit(MAX_MAP_LOCATIONS)
+        .pluck(:response_id, :latitude, :longitude)
     end
 
     instance_variable_cache("@responses_by_form") do

@@ -22,7 +22,7 @@
 #  value             :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  mission_id        :uuid
+#  mission_id        :uuid             not null
 #  option_node_id    :uuid
 #  parent_id         :uuid
 #  questioning_id    :uuid             not null
@@ -42,6 +42,7 @@
 #
 #  answers_questioning_id_fkey  (questioning_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_response_id_fkey     (response_id => responses.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...                 (mission_id => missions.id)
 #  fk_rails_...                 (option_node_id => option_nodes.id)
 #
 # rubocop:enable Metrics/LineLength
