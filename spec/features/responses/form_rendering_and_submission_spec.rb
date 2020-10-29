@@ -120,7 +120,7 @@ feature "response form rendering and submission", js: true do
   end
 
   describe "form submission" do
-    let(:image) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg") }
+    let(:image) { Rails.root.join("spec/fixtures/media/images/the_swing.jpg") }
 
     scenario "submitting response" do
       visit(new_response_path(params))

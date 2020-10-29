@@ -98,9 +98,9 @@ gem "parallel", "~> 1.19"
 gem "whenever", "~> 0.9.4", require: false
 
 # I18n
+gem "i18n_country_select", "~> 1.1.7"
 gem "i18n-country-translations", "~> 1.2.3"
 gem "i18n-js", "~> 3.0.0.rc13"
-gem "i18n_country_select", "~> 1.1.7"
 gem "iso-639", "~> 0.2.5"
 gem "rails-i18n", "~> 5.1"
 
@@ -170,7 +170,7 @@ group :development, :test do
   gem "awesome_print", "~> 1.6.1"
   gem "database_cleaner", "~> 1.7.0"
   gem "db-query-matchers", "~> 0.9"
-  gem "rubocop", "~> 0.83.0"
-  gem "rubocop-rails", "~> 2.6"
+  gem "rubocop", "~> 0.91.0"
+  gem "rubocop-rails", "~> 2.8"
   gem "timecop", "~> 0.7.3"
 end

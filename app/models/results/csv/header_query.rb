@@ -7,7 +7,7 @@ module Results
       protected
 
       def select
-        <<~SQL
+        <<~SQL.squish
           SELECT DISTINCT
             questions.code,
             questions.qtype_name,
@@ -19,7 +19,7 @@ module Results
       end
 
       def from
-        <<~SQL
+        <<~SQL.squish
           FROM responses
             INNER JOIN answers ON answers.response_id = responses.id
             INNER JOIN form_items qings ON answers.questioning_id = qings.id
@@ -29,7 +29,7 @@ module Results
       end
 
       def order
-        <<~SQL
+        <<~SQL.squish
           ORDER BY LOWER(questions.code)
         SQL
       end

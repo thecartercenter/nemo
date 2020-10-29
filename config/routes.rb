@@ -19,7 +19,7 @@ ELMO::Application.routes.draw do
     get "/login", to: "user_sessions#new", as: :login
 
     # Routes requiring user.
-    match "/logout", to: "user_sessions#destroy", as: :logout, via: [:delete]
+    delete "/logout", to: "user_sessions#destroy", as: :logout
     get("/route-tests", to: "route_tests#basic_mode") if Rails.env.development? || Rails.env.test?
     get "/unauthorized", to: "welcome#unauthorized", as: :unauthorized
 
@@ -111,7 +111,6 @@ ELMO::Application.routes.draw do
   # Admin mode OR mission mode routes
   scope ":locale/:mode(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/,
                                          mission_name: /[a-z][a-z0-9]*/ do
-
     # the rest of these routes can have admin mode or not
     resources :forms, constraints: ->(req) { req.format == :html } do
       member do

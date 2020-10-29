@@ -4,7 +4,7 @@ class ResponsesController < ApplicationController
   PER_PAGE = 20
   REFRESH_INTERVAL = 30_000 # ms
 
-  TMP_UPLOADS_PATH = Rails.root.join("tmp", "odk_uploads")
+  TMP_UPLOADS_PATH = Rails.root.join("tmp/odk_uploads")
 
   include BatchProcessable
   include OdkHeaderable
@@ -227,7 +227,7 @@ class ResponsesController < ApplicationController
   # Returns a hash of param keys to open tempfiles for uploaded file parameters.
   def open_file_params
     file_params = params.select { |_k, v| v.is_a?(ActionDispatch::Http::UploadedFile) }.to_unsafe_h
-    file_params.map { |k, v| [k, v.tempfile.open] }.to_h.with_indifferent_access
+    file_params.transform_values { |v| v.tempfile.open }.with_indifferent_access
   end
 
   # Returns whether the ODK submission request params indicate that not all attachments are included.

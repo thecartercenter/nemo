@@ -15,5 +15,5 @@ end
 
 if defined? FactoryGirl
   # Some of these helpers are useful in factories.
-  FactoryGirl::SyntaxRunner.send(:include, GeneralSpecHelpers)
+  FactoryGirl::SyntaxRunner.include(GeneralSpecHelpers)
 end

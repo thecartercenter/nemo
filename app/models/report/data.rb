@@ -2,8 +2,7 @@
 
 # Models the data table that results from the report.
 class Report::Data
-  attr_accessor :rows
-  attr_accessor :truncated
+  attr_accessor :rows, :truncated
   attr_reader :totals
 
   # Initialize the data grid with the given number of rows and cols.

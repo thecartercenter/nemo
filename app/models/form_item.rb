@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: form_items
@@ -45,7 +45,7 @@
 #  form_items_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  form_items_question_id_fkey  (question_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class FormItem < ApplicationRecord
   include TreeTraverseable
@@ -187,7 +187,7 @@ class FormItem < ApplicationRecord
   # Uses the cached value setup by descendant_questionings if available.
   # Returns empty array if this is the root node (i.e. path is [])
   def full_rank
-    @full_rank ||= path.map(&:rank)[1..-1] || []
+    @full_rank ||= path.map(&:rank)[1..] || []
   end
 
   # Returns the full rank joined with a period separator, e.g. 2.5.

@@ -9,7 +9,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
   let(:user) { create(:user, role_name: "enumerator") }
   let(:form) { create(:form, :live, question_types: %w[text image]) }
   let(:mission) { form.mission }
-  let(:tmp_path) { Rails.root.join("tmp", "submission.xml") }
+  let(:tmp_path) { Rails.root.join("tmp/submission.xml") }
   let(:submission_path) { "/m/#{mission.compact_name}/submission" }
 
   context "with single part" do

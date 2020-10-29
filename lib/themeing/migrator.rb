@@ -72,7 +72,7 @@ module Themeing
     end
 
     def old_custom_scss_path
-      Rails.root.join("app", "assets", "stylesheets", "all", "variables", "_theme.scss")
+      Rails.root.join("app/assets/stylesheets/all/variables/_theme.scss")
     end
 
     def old_light_logo

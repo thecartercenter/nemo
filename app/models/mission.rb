@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: missions
@@ -18,7 +18,7 @@
 #  index_missions_on_compact_name  (compact_name) UNIQUE
 #  index_missions_on_shortcode     (shortcode) UNIQUE
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class Mission < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
@@ -87,9 +87,10 @@ class Mission < ApplicationRecord
   end
 
   def generate_shortcode
-    begin
+    loop do
       self.shortcode = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
-    end while Mission.exists?(shortcode: shortcode)
+      break unless Mission.exists?(shortcode: shortcode)
+    end
   end
 
   # returns a string representation used for debugging

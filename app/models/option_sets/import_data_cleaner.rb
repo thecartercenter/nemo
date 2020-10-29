@@ -48,7 +48,7 @@ module OptionSets
     def check_header_lengths(headers)
       headers.each do |h|
         if h.size > OptionLevel::MAX_NAME_LENGTH
-          errors << [:header_too_long, row_num: 1, limit: OptionLevel::MAX_NAME_LENGTH]
+          errors << [:header_too_long, {row_num: 1, limit: OptionLevel::MAX_NAME_LENGTH}]
         end
       end
     end
@@ -56,7 +56,7 @@ module OptionSets
     def check_option_lengths(row, row_num)
       row.each do |cell|
         if cell && cell.size > Option::MAX_NAME_LENGTH
-          errors << [:option_too_long, row_num: row_num, limit: Option::MAX_NAME_LENGTH]
+          errors << [:option_too_long, {row_num: row_num, limit: Option::MAX_NAME_LENGTH}]
           return true
         end
       end
@@ -66,7 +66,7 @@ module OptionSets
     def check_for_blank_interior_cells(row, row_num)
       # The portion of the array after the first nil should be all nils.
       return false if row.none?(&:nil?) || row[row.index(nil)..-1].all?(&:nil?)
-      errors << [:blank_interior_cell, row_num: row_num]
+      errors << [:blank_interior_cell, {row_num: row_num}]
       true
     end
 

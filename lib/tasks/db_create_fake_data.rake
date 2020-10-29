@@ -83,7 +83,7 @@ namespace :db do
           FactoryGirl.build(:media_image, item: File.open(image_path)), # signature
           FactoryGirl.build(:media_image, item: File.open(image_path)), # sketch
           FactoryGirl.build(:media_audio, item: File.open(audio_path)), # audio
-          FactoryGirl.build(:media_video, item: File.open(video_path)), # video
+          FactoryGirl.build(:media_video, item: File.open(video_path)) # video
         ]
 
         FactoryGirl.create(:response,

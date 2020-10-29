@@ -6,6 +6,7 @@ class Subqing
   include ActiveModel::Model
 
   attr_accessor :questioning, :level, :rank
+
   delegate :qtype, :multilevel?, to: :questioning
 
   def name(*args)

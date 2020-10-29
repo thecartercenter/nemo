@@ -127,6 +127,10 @@ Style/NestedTernaryOperator:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
+# Minor performance increase but doesn't work everywhere.
+Style/HashEachMethods:
+  Enabled: false
+
 Bundler:
   Enabled: true
 
@@ -143,4 +147,8 @@ Rails/SkipsModelValidations:
 
 # This is generally bad advice, defaults are often set in code.
 Rails/NotNullColumn:
+  Enabled: false
+
+# This would be lovely but it breaks our custom ODK wrapper.
+Rails/ContentTag:
   Enabled: false

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: users
@@ -46,7 +46,7 @@
 #
 #  users_last_mission_id_fkey  (last_mission_id => missions.id) ON DELETE => nullify ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class User < ApplicationRecord
   include Cacheable
@@ -65,7 +65,7 @@ class User < ApplicationRecord
   has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
   has_many :assignments, -> { includes(:mission) }, autosave: true, dependent: :destroy,
                                                     validate: true, inverse_of: :user
-  has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
+  has_many :missions, -> { order("missions.created_at DESC") }, through: :assignments
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
   has_many :reports, inverse_of: :creator, foreign_key: :creator_id,
                      dependent: :nullify, class_name: "Report::Report"
@@ -88,12 +88,12 @@ class User < ApplicationRecord
   after_initialize(:set_default_pref_lang)
   before_validation(:normalize_fields)
   before_validation(:generate_password_if_none)
+  before_save(:clear_assignments_without_roles)
   after_create(:regenerate_api_key)
   after_create(:regenerate_sms_auth_code)
   # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
   before_destroy(:check_assoc)
-  before_save(:clear_assignments_without_roles)
 
   normalize_attribute :login, with: %i[strip downcase]
 
@@ -138,7 +138,7 @@ class User < ApplicationRecord
   scope(:by_phone, ->(phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
   scope(:inactive, -> { where(active: false) })
-  scope(:not_self, ->(s) { s.persisted? ? where("id != ?", s.id) : all })
+  scope(:not_self, ->(s) { s.persisted? ? where.not(id: s.id) : all })
 
   def self.random_password(size = 12)
     size = 12 if size < 12
@@ -306,7 +306,7 @@ class User < ApplicationRecord
 
     # if the role is nil, we can return false
     if mission_role.nil?
-      return false
+      false
     # otherwise we compare the role indices
     else
       ROLES.index(base_role.to_s) <= ROLES.index(mission_role)
@@ -318,11 +318,11 @@ class User < ApplicationRecord
   end
 
   def session_time_left
-    SESSION_TIMEOUT - (Time.now - last_request_at)
+    SESSION_TIMEOUT - (Time.zone.now - last_request_at)
   end
 
   def current_login_age
-    Time.now - current_login_at if current_login_at.present?
+    Time.zone.now - current_login_at if current_login_at.present?
   end
 
   def current_login_recent?(max_age = nil)
@@ -338,17 +338,19 @@ class User < ApplicationRecord
 
   def regenerate_api_key
     # loop if necessary till unique token generated
-    begin
+    loop do
       self.api_key = SecureRandom.hex
-    end while User.exists?(api_key: api_key)
+      break unless User.exists?(api_key: api_key)
+    end
     save(validate: false)
   end
 
   # regenerates sms auth code
   def regenerate_sms_auth_code
-    begin
+    loop do
       self.sms_auth_code = Random.alphanum(4)
-    end while User.exists?(sms_auth_code: sms_auth_code)
+      break unless User.exists?(sms_auth_code: sms_auth_code)
+    end
     save(validate: false)
   end
 

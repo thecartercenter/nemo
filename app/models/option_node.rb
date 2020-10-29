@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: option_nodes
@@ -34,7 +34,7 @@
 #  option_nodes_option_id_fkey      (option_id => options.id) ON DELETE => restrict ON UPDATE => restrict
 #  option_nodes_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class OptionNode < ApplicationRecord
   include Replication::Replicable
@@ -68,6 +68,7 @@ class OptionNode < ApplicationRecord
   # and the update causes their ranks to change.
   attr_accessor :ranks_changed, :options_added, :options_removed
   attr_writer :child_options
+
   alias ranks_changed? ranks_changed
   alias options_added? options_added
   alias options_removed? options_removed
@@ -270,7 +271,7 @@ class OptionNode < ApplicationRecord
 
   # Path to this node without the root.
   def path
-    ancestors[1..-1] << self
+    ancestors[1..] << self
   end
 
   # Returns the total number of options omitted from the JSON serialization.

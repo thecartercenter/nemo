@@ -6,7 +6,7 @@ class TagsController < ApplicationController
   def suggest
     @tags = Tag.suggestions(current_mission, params[:q])
     respond_to do |format|
-      format.json { render json: @tags, root: "tags" }
+      format.json { render(json: @tags, root: "tags") }
     end
   end
 end

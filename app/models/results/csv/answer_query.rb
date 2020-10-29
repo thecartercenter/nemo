@@ -11,7 +11,7 @@ module Results
         choice_option_name = translation_query("choice_options.name_translations")
         option_level_name = translation_query("option_sets.level_names",
           arr_index: "CASE WHEN parents.type = 'AnswerSet' THEN answers.new_rank ELSE 0 END")
-        <<~SQL
+        <<~SQL.squish
           SELECT
             responses.id AS response_id,
             forms.name AS form_name,
@@ -43,7 +43,7 @@ module Results
       end
 
       def from
-        <<~SQL
+        <<~SQL.squish
           FROM responses
             INNER JOIN forms ON responses.form_id = forms.id
             INNER JOIN users ON responses.user_id = users.id
@@ -61,7 +61,7 @@ module Results
       end
 
       def order
-        <<~SQL
+        <<~SQL.squish
           ORDER BY
             responses.created_at,
             responses.id,

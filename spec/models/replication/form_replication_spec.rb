@@ -10,8 +10,8 @@ describe Form do
     context "with doubly nested questions and repeat groups" do
       let!(:std) do
         create(:form, :standard,
-          question_types: ["integer", repeating: {items: ["select_one", "integer",
-                                                          repeating: {items: %w[text text]}]}])
+          question_types: ["integer", {repeating: {items: ["select_one", "integer",
+                                                           {repeating: {items: %w[text text]}}]}}])
       end
       let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
 

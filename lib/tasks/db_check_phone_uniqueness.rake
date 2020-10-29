@@ -23,7 +23,7 @@ namespace :db do
       names = users.map(&:name).join(", ")
       # if requested to fix, fix and report
       if ENV["fix"] == "true"
-        users[1..-1].each do |u|
+        users[1..].each do |u|
           u.phone = nil if u.phone == phone
           u.phone2 = nil if u.phone2 == phone
           u.save(validate: false)

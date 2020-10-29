@@ -17,7 +17,7 @@ module Results
     # Usually the table would be `answers` but in the case of a trigger expression it needs to be `new`.
     # This is not efficient when updating many rows but fine for a trigger which operates on a single row.
     def trigger_expression
-      <<-SQL
+      <<-SQL.squish
         TO_TSVECTOR('simple', COALESCE(
           new.value,
           (SELECT STRING_AGG(opt_name_translation.value, ' ')
@@ -38,7 +38,7 @@ module Results
     end
 
     def update_answers_with_matching_node_id
-      <<-SQL
+      <<-SQL.squish
         UPDATE answers SET tsv = TO_TSVECTOR('simple', ?)
           WHERE answers.option_node_id = ?
       SQL
@@ -47,7 +47,7 @@ module Results
     # We need to first build up a subquery of TSVs with the translations of all associated options,
     # then update by using a subquery-style update.
     def update_answers_with_choices
-      <<-SQL
+      <<-SQL.squish
         UPDATE answers SET tsv = subquery.tsv
           FROM (#{ids_and_tsvectors_for_matching_answers}) AS subquery
           WHERE answers.id = subquery.answer_id
@@ -55,7 +55,7 @@ module Results
     end
 
     def ids_and_tsvectors_for_matching_answers
-      <<-SQL
+      <<-SQL.squish
         SELECT
           answers.id AS answer_id,
           TO_TSVECTOR('simple', STRING_AGG(opt_name_translation.value, ' ')) AS tsv

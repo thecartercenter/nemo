@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: skip_rules
@@ -25,7 +25,7 @@
 #  fk_rails_...  (dest_item_id => form_items.id)
 #  fk_rails_...  (source_item_id => form_items.id)
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # Models a rule directing the user to a given question if some conditions are true.
 class SkipRule < ApplicationRecord

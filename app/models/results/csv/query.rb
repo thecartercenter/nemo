@@ -28,7 +28,7 @@ module Results
       end
 
       def where
-        <<~SQL
+        <<~SQL.squish
           WHERE answers.type = 'Answer' AND #{response_id_clause}
         SQL
       end

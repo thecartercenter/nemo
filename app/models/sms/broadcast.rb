@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: sms_messages
@@ -40,10 +40,10 @@
 #  sms_messages_reply_to_id_fkey   (reply_to_id => sms_messages.id) ON DELETE => restrict ON UPDATE => restrict
 #  sms_messages_user_id_fkey       (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class Sms::Broadcast < Sms::Message
-  belongs_to :broadcast, class_name: "::Broadcast", foreign_key: "broadcast_id"
+  belongs_to :broadcast, class_name: "::Broadcast"
 
   delegate :recipient_numbers, to: :broadcast
 

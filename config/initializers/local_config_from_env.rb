@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Runs after local_config.rb and loads from ENV if ENV var is defined.
 # Designed to be used instead of local_config.rb, as a way to start phasing out the latter.
 

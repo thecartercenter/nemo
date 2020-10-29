@@ -4,7 +4,7 @@ module Odk
   # Abstract parent class for classes that parse $-style patterns for ODK.
   class DynamicPatternParser
     # Basic regex for codes like $Question7
-    CODE_REGEX = /[$][!]?[A-z]\w+/.freeze
+    CODE_REGEX = /[$]!?[A-z]\w+/.freeze
 
     # Same as above but anchored to string start and end for checking individual tokens.
     ANCHORED_CODE_REGEX = Regexp.new("\\A#{CODE_REGEX.source}\\z")
@@ -34,6 +34,7 @@ module Odk
     protected
 
     attr_accessor :pattern, :src_item, :form, :calculated, :codes_to_outputs
+
     alias calculated? calculated
 
     def process_token(_token)
@@ -85,7 +86,7 @@ module Odk
       unwrapped =
         if reserved_codes.key?(code)
           reserved_codes[code]
-        elsif (qing = form.questioning_with_code(code[1..-1]))
+        elsif (qing = form.questioning_with_code(code[1..]))
           build_output(Odk::QingDecorator.decorate(qing))
         elsif calculated?
           # We don't want to return nil in calculated expressions because it might result in

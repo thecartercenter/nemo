@@ -5,7 +5,7 @@
 # (which already has the theme setting by now) to set it to the proper value for all missions.
 class RespectThemeFlagFile < ActiveRecord::Migration[4.2]
   def up
-    path = Rails.root.join("tmp", "theme_flag")
+    path = Rails.root.join("tmp/theme_flag")
 
     # Since the old default theme was elmo, that's what we default to here,
     # even though the _column_ default is nemo.

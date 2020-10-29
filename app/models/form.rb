@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: forms
@@ -35,7 +35,7 @@
 #  forms_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  forms_root_id_fkey     (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # A survey or checklist.
 class Form < ApplicationRecord
@@ -66,12 +66,13 @@ class Form < ApplicationRecord
 
   clone_options follow: %i[form_items versions]
 
-  before_create :init_downloads
   before_validation :normalize
+  before_create :init_downloads
   after_create :create_root_group
   before_destroy :destroy_items
 
   attr_writer :minimum_version_id
+
   after_save :update_minimum
 
   validates :name, presence: true, length: {maximum: 32}
