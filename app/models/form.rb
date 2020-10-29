@@ -66,8 +66,8 @@ class Form < ApplicationRecord
 
   clone_options follow: %i[form_items versions]
 
-  before_create :init_downloads
   before_validation :normalize
+  before_create :init_downloads
   after_create :create_root_group
   before_destroy :destroy_items
 

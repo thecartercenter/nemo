@@ -88,12 +88,12 @@ class User < ApplicationRecord
   after_initialize(:set_default_pref_lang)
   before_validation(:normalize_fields)
   before_validation(:generate_password_if_none)
+  before_save(:clear_assignments_without_roles)
   after_create(:regenerate_api_key)
   after_create(:regenerate_sms_auth_code)
   # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
   before_destroy(:check_assoc)
-  before_save(:clear_assignments_without_roles)
 
   normalize_attribute :login, with: %i[strip downcase]
 
@@ -138,7 +138,7 @@ class User < ApplicationRecord
   scope(:by_phone, ->(phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
   scope(:inactive, -> { where(active: false) })
-  scope(:not_self, ->(s) { s.persisted? ? where("id != ?", s.id) : all })
+  scope(:not_self, ->(s) { s.persisted? ? where.not(id: s.id) : all })
 
   def self.random_password(size = 12)
     size = 12 if size < 12

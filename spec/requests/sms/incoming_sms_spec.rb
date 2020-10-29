@@ -275,7 +275,7 @@ describe "incoming sms", :sms do
     let(:recipients) { users + [group] }
     let(:form) { setup_form(questions: %w[integer text], forward_recipients: recipients) }
     let(:sms_forward) { Sms::Forward.first }
-    let(:actual_recipients) { sms_forward.recipient_hashes.map { |hash| hash[:user] } }
+    let(:actual_recipients) { sms_forward.recipient_hashes.pluck(:user) }
 
     shared_examples_for "sends forwards" do
       it "sends forwards" do

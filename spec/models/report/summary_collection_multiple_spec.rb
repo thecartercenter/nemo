@@ -146,7 +146,7 @@ describe "summary collection with multiple subsets" do
 
   def header_names_for_disagg_value(val)
     # the question we're interested in is always rank 1
-    subsets_by_disagg_value[val].summaries.detect { |s| s.questioning.rank == 1 }.headers.map { |h| h[:name] }
+    subsets_by_disagg_value[val].summaries.detect { |s| s.questioning.rank == 1 }.headers.pluck(:name)
   end
 
   def items_for_disagg_value(val, item_attrib)

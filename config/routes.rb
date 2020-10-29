@@ -19,7 +19,7 @@ ELMO::Application.routes.draw do
     get "/login", to: "user_sessions#new", as: :login
 
     # Routes requiring user.
-    match "/logout", to: "user_sessions#destroy", as: :logout, via: [:delete]
+    delete "/logout", to: "user_sessions#destroy", as: :logout
     get("/route-tests", to: "route_tests#basic_mode") if Rails.env.development? || Rails.env.test?
     get "/unauthorized", to: "welcome#unauthorized", as: :unauthorized
 

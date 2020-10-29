@@ -247,7 +247,7 @@ module Sms
       # Looks for identical messages within window. Raises error if found.
       def check_for_duplicate
         rel = Sms::Message.where(from: @msg.from).where(body: @msg.body)
-        rel = rel.where("id != ?", @msg.id) unless @msg.new_record?
+        rel = rel.where.not(id: @msg.id) unless @msg.new_record?
         rel = rel.where("sent_at > ?", Time.zone.now - DUPLICATE_WINDOW)
         raise_decoding_error("duplicate_submission") if rel.any?
       end

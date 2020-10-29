@@ -79,13 +79,12 @@ class Question < ApplicationRecord
 
   before_validation :normalize
   before_save :check_condition_integrity
+  after_destroy :check_condition_integrity
   after_save :update_forms
 
   # We do this instead of using dependent: :destroy because in the latter case
   # the dependent object doesn't know who destroyed it.
   before_destroy { calculations.each(&:question_destroyed) }
-
-  after_destroy :check_condition_integrity
 
   validates :code, presence: true
   validates :code, format: {with: /\A#{CODE_FORMAT}\z/}, unless: -> { code.blank? }

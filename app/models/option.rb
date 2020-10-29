@@ -40,8 +40,8 @@ class Option < ApplicationRecord
   has_many :option_sets, through: :option_nodes
 
   before_validation :normalize
-  after_save :invalidate_cache
   after_destroy :invalidate_cache
+  after_save :invalidate_cache
 
   scope :with_questions_and_forms,
     -> { includes(option_sets: [:questionings, {questions: {questionings: :form}}]) }
