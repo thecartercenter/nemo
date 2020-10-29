@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: conditions
@@ -33,7 +33,7 @@
 #  fk_rails_...                    (left_qing_id => form_items.id)
 #  fk_rails_...                    (right_qing_id => form_items.id)
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # Represents a condition in a question's display logic or skip logic.
 class Condition < ApplicationRecord
@@ -45,9 +45,9 @@ class Condition < ApplicationRecord
   acts_as_list column: :rank, scope: [:conditionable_id]
 
   belongs_to :conditionable, polymorphic: true, touch: true
-  belongs_to :left_qing, class_name: "Questioning", foreign_key: "left_qing_id",
+  belongs_to :left_qing, class_name: "Questioning",
                          inverse_of: :referring_conditions_via_left
-  belongs_to :right_qing, class_name: "Questioning", foreign_key: "right_qing_id",
+  belongs_to :right_qing, class_name: "Questioning",
                           inverse_of: :referring_conditions_via_right
   belongs_to :option_node, inverse_of: :conditions
 
@@ -95,7 +95,7 @@ class Condition < ApplicationRecord
   end
 
   def option_nodes
-    option_node.nil? ? nil : option_node.ancestors[1..-1] << option_node
+    option_node.nil? ? nil : option_node.ancestors[1..] << option_node
   end
 
   def option_node_path

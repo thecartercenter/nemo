@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: report_reports
@@ -43,7 +43,7 @@
 #  report_reports_form_id_fkey         (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
 #  report_reports_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class Report::AnswerTallyReport < Report::TallyReport
   # Called when related OptionSet (and OptionSetChoice) are destroyed.
@@ -133,9 +133,7 @@ class Report::AnswerTallyReport < Report::TallyReport
     # apply filter
     rel = apply_filter(rel)
 
-    rel = filter_non_top_level_answers(rel)
-
-    rel
+    filter_non_top_level_answers(rel)
   end
 
   def header_title(which)
@@ -153,7 +151,7 @@ class Report::AnswerTallyReport < Report::TallyReport
     if exprs.size == 1
       exprs.first.sql
     else
-      rest = build_nested_if(exprs[1..-1], conds[1..-1])
+      rest = build_nested_if(exprs[1..], conds[1..])
       "(CASE WHEN (#{conds.first.sql}) THEN (#{exprs.first.sql}) ELSE #{rest} END)"
     end
   end

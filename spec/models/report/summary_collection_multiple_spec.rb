@@ -48,8 +48,8 @@ describe "summary collection with multiple subsets" do
       "a" => %w[2012-10-26 2011-07-22 2012-10-26], "b" => %w[2013-07-22 2012-9-22 2013-07-22 2013-07-22])
 
     # check that headers are correct and in correct order
-    expect(header_names_for_disagg_value("a")).to eq(["2011-07-22", "2012-10-26"])
-    expect(header_names_for_disagg_value("b")).to eq(["2012-09-22", "2013-07-22"])
+    expect(header_names_for_disagg_value("a")).to eq(%w[2011-07-22 2012-10-26])
+    expect(header_names_for_disagg_value("b")).to eq(%w[2012-09-22 2013-07-22])
 
     # check that tallies are correct
     expect(items_for_disagg_value("a", :count)).to eq([1, 2])
@@ -146,7 +146,7 @@ describe "summary collection with multiple subsets" do
 
   def header_names_for_disagg_value(val)
     # the question we're interested in is always rank 1
-    subsets_by_disagg_value[val].summaries.detect { |s| s.questioning.rank == 1 }.headers.map { |h| h[:name] }
+    subsets_by_disagg_value[val].summaries.detect { |s| s.questioning.rank == 1 }.headers.pluck(:name)
   end
 
   def items_for_disagg_value(val, item_attrib)

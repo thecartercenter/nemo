@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: responses
@@ -53,7 +53,7 @@
 #  responses_reviewer_id_fkey        (reviewer_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #  responses_user_id_fkey            (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class Response < ApplicationRecord
   extend FriendlyId
@@ -78,7 +78,7 @@ class Response < ApplicationRecord
   has_closure_tree_root :root_node, class_name: "ResponseNode"
 
   has_attached_file :odk_xml
-  validates_attachment_content_type :odk_xml, content_type: %r{\A(text|application)\/xml\z}
+  validates_attachment_content_type :odk_xml, content_type: %r{\A(text|application)/xml\z}
 
   friendly_id :shortcode
 
@@ -187,7 +187,7 @@ class Response < ApplicationRecord
       transaction do
         Response.remove_previous_checkouts_by(user)
 
-        self.checked_out_at = Time.now
+        self.checked_out_at = Time.zone.now
         self.checked_out_by = user
         save(validate: false)
       end
@@ -205,7 +205,7 @@ class Response < ApplicationRecord
   end
 
   def generate_shortcode
-    begin
+    loop do
       response_code = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
       mission_code = mission.shortcode
       # form code should never be nil, because one is generated on publish
@@ -213,7 +213,8 @@ class Response < ApplicationRecord
       form_code = form.code || "000"
 
       self.shortcode = [mission_code, form_code, response_code].join("-")
-    end while Response.exists?(shortcode: shortcode)
+      break unless Response.exists?(shortcode: shortcode)
+    end
   end
 
   private

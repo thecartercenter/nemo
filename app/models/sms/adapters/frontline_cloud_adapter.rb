@@ -52,6 +52,6 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
 
   def convert_time(timestamp)
     timestamp = timestamp.to_i / 1000 # frontlinecloud sends unix timestamp in milliseconds
-    Time.at(timestamp)
+    Time.zone.at(timestamp)
   end
 end

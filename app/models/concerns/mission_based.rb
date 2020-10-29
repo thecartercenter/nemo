@@ -36,7 +36,7 @@ module MissionBased
     # checks if this object is unique in the mission according to the attrib given by attrib_name
     def unique_in_mission?(attrib_name)
       rel = self.class.for_mission(mission).where(attrib_name => send(attrib_name))
-      rel = rel.where("id != ?", id) unless new_record?
+      rel = rel.where.not(id: id) unless new_record?
       rel.count.zero?
     end
   end

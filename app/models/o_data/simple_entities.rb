@@ -11,7 +11,8 @@ module OData
       ResponseID: :id,
       ResponseShortcode: :string,
       ResponseReviewed: :boolean,
-      FormName: :string
+      FormName: :string,
+      LastCached: :datetime
     }.freeze
 
     GEOGRAPHIC_PROPERTIES = Answer::LOCATION_COLS.map do |key|
@@ -35,7 +36,7 @@ module OData
     def response_entities(distinct_forms)
       distinct_forms.map do |form|
         build_nested_children(parent: form,
-                              parent_name: "Responses: #{form.name}",
+                              parent_name: OData::FormDecorator.new(form).responses_name,
                               base_type: "#{OData::NAMESPACE}.Response",
                               root_name: form.name)
       end.flatten

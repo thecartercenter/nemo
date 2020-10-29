@@ -259,7 +259,7 @@ class Ability
     cannot(:destroy, OptionNode) { |n| n.data? || n.in_use? }
 
     # operations can't be destroyed while their underlying job is in progress
-    cannot :destroy, Operation do |op|
+    cannot(:destroy, Operation) do |op|
       op.provider_job_id.present? && Delayed::Job.exists?(op.provider_job_id)
     end
 

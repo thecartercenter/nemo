@@ -26,7 +26,7 @@ module ThemeHelper
   # If default is missing, raises an error.
   def main_stylesheet_tag(params = {})
     media = params[:medium] || "all"
-    style_dir = Rails.root.join("app", "assets", "stylesheets")
+    style_dir = Rails.root.join("app/assets/stylesheets")
     stylesheet_files.each do |file|
       return stylesheet_link_tag(file, media: media) if File.exist?(style_dir.join("#{file}.scss"))
     end

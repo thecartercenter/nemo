@@ -91,8 +91,7 @@ module Replication::Replicable
       raise "dest_mission only valid for to_mission mode"
     end
 
-    result = Replication::Replicator.new(options.merge(source: self)).replicate
-    result
+    Replication::Replicator.new(options.merge(source: self)).replicate
   end
 
   # convenience method for replication options

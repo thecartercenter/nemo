@@ -6,8 +6,8 @@ task :recover_odk_xml, ARGS => :environment do |_t, args|
     argstr = ARGS.map { |a| "<#{a}>" }.join(",")
     abort("Usage: rake recover_odk_xml[#{argstr}]")
   end
-  start_time = Time.parse("#{args.start_time} UTC")
-  end_time = Time.parse("#{args.end_time} UTC")
+  start_time = Time.zone.parse("#{args.start_time} UTC")
+  end_time = Time.zone.parse("#{args.end_time} UTC")
   mission = Mission.find(args.mission_id)
   Time.zone = args.timezone
   puts "Finding responses from #{start_time} to #{end_time} from mission #{mission.name}."
@@ -16,7 +16,7 @@ task :recover_odk_xml, ARGS => :environment do |_t, args|
     .where("created_at >= ?", start_time).where("created_at <= ?", end_time)
   puts "Found #{responses.count} responses."
 
-  xml_path = Rails.root.join("tmp", "uploads")
+  xml_path = Rails.root.join("tmp/uploads")
 
   responses.each do |response|
     puts "Response #{response.id}"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: settings
@@ -30,7 +30,7 @@
 #
 #  settings_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # Stores and manages settings per-mission and admin mode.
 class Setting < ApplicationRecord
@@ -120,8 +120,7 @@ class Setting < ApplicationRecord
 
   def self.theme_exists?
     # TODO: refactor to get this path from the Themeing system.
-    File.exist?(Rails.root.join("app", "assets", "stylesheets", "all",
-      "themes", "_custom_theme.scss"))
+    File.exist?(Rails.root.join("app/assets/stylesheets/all/themes/_custom_theme.scss"))
   end
 
   def self.theme_options
@@ -166,8 +165,8 @@ class Setting < ApplicationRecord
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
       Sms::Adapters::Factory.instance.create(default_outgoing_sms_adapter)
-                                 rescue ArgumentError
-                                   nil
+    rescue ArgumentError
+      nil
     end
 
     Time.zone = timezone
@@ -361,7 +360,7 @@ class Setting < ApplicationRecord
 
   # Loads theme settings from a YML file.
   def theme_settings
-    theme_settings_dir = Rails.root.join("config", "settings", "themes")
+    theme_settings_dir = Rails.root.join("config/settings/themes")
     [theme, "nemo"].each do |t|
       file = theme_settings_dir.join("#{t}.yml")
       return YAML.load_file(file) if File.exist?(file)

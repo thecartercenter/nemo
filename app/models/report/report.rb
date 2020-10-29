@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: report_reports
@@ -43,7 +43,7 @@
 #  report_reports_form_id_fkey         (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
 #  report_reports_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 class Report::Report < ApplicationRecord
   include MissionBased
@@ -68,6 +68,7 @@ class Report::Report < ApplicationRecord
   before_save :normalize_attribs
 
   attr_accessor :just_created, :populated
+
   alias populated? populated
 
   # this is overridden by StandardFormReport, and ignored elsewhere
@@ -137,7 +138,7 @@ class Report::Report < ApplicationRecord
   # It's using the update_column to avoid it updating the updated_at
   # value (which would invalidate the cache). It also skips validations.
   def record_viewing
-    update_column(:viewed_at, Time.now)
+    update_column(:viewed_at, Time.zone.now)
     update_column(:view_count, self.view_count += 1)
   end
 

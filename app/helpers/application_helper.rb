@@ -95,7 +95,7 @@ module ApplicationHelper
   end
 
   def google_maps_key_missing?
-    !configatron.has_key?(:google_maps_api_key)
+    !configatron.key?(:google_maps_api_key)
   end
 
   def google_maps_js

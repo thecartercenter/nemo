@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: answers
@@ -45,7 +45,7 @@
 #  fk_rails_...                 (mission_id => missions.id)
 #  fk_rails_...                 (option_node_id => option_nodes.id)
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # An Answer is a single piece of data in response to a single question or sub-question.
 # It is always a leaf in a response tree.
@@ -63,6 +63,7 @@ class Answer < ResponseNode
   end
 
   attr_accessor :location_values_replicated
+
   alias questioning form_item
 
   belongs_to :response, inverse_of: :answers, touch: true

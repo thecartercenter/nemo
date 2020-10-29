@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: questions
@@ -45,7 +45,7 @@
 #  questions_mission_id_fkey     (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  questions_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # A question on a form
 class Question < ApplicationRecord
@@ -79,13 +79,12 @@ class Question < ApplicationRecord
 
   before_validation :normalize
   before_save :check_condition_integrity
+  after_destroy :check_condition_integrity
   after_save :update_forms
 
   # We do this instead of using dependent: :destroy because in the latter case
   # the dependent object doesn't know who destroyed it.
   before_destroy { calculations.each(&:question_destroyed) }
-
-  after_destroy :check_condition_integrity
 
   validates :code, presence: true
   validates :code, format: {with: /\A#{CODE_FORMAT}\z/}, unless: -> { code.blank? }

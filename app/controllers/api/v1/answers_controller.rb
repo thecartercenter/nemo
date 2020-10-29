@@ -8,7 +8,7 @@ class API::V1::AnswersController < API::V1::BaseController
     unless performed?
       if params[:question_id].blank?
         return render(json: {errors: ["question_id_required"]}, status: :unprocessable_entity)
-      elsif !@form.questions.map(&:id).include?(params[:question_id])
+      elsif @form.questions.map(&:id).exclude?(params[:question_id])
         return render(json: {errors: ["question_not_found"]}, status: :unprocessable_entity)
       end
 

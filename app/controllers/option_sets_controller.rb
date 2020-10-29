@@ -158,7 +158,7 @@ class OptionSetsController < ApplicationController
       children_attribs: permit_children(params[:option_set],
         key: :children_attribs, permitted: [
           :id, {option_attribs: [:id, :latitude, :longitude, :value,
-                                 name_translations: configatron.preferred_locales]}
+                                 {name_translations: configatron.preferred_locales}]}
         ])
     )
   end

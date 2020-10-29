@@ -76,23 +76,21 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
 
   # Manually add our entity types, grouping responses by form.
   def add_entity_types(schema, distinct_forms)
-    distinct_forms.each { |form| add_form_entity_type(schema, form.id, form.name) }
+    distinct_forms.each { |form| add_form_entity_type(schema, form) }
   end
 
   # Add an entity type to the schema for a given form.
-  def add_form_entity_type(schema, id, name)
-    name = "Responses: #{name}"
-
+  def add_form_entity_type(schema, form)
     # We technically should be doing an authorization scope on Responses, but it would not be
     # straightforward so we just rely on the :o_data permissions only being held by roles
     # who can see all responses in a mission.
     old = Results::ResponseJsonGenerator::BASE_URL_PLACEHOLDER
     new = request.base_url
     response = Response
-      .where(form_id: id)
+      .where(form_id: form.id)
       .select("*, replace(cached_json::text, '#{old}', '#{new}')::jsonb AS cached_json")
-    entity = schema.add_entity_type(response, name: name,
-                                              url_name: "Responses-#{id}",
+    entity = schema.add_entity_type(response, name: OData::FormDecorator.new(form).responses_name,
+                                              url_name: OData::FormDecorator.new(form).responses_url,
                                               reflect_on_associations: false)
 
     # We don't want to double-pluralize since it already says "Responses",

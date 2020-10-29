@@ -98,7 +98,7 @@ class Report::SummaryCollectionBuilder
           when "decimal"
             stats.each { |s| stat_values[s] = stat_values[s].to_f }
           when "time"
-            stats.each { |s| stat_values[s] = I18n.l(Time.parse(stat_values[s]), format: :time_only) }
+            stats.each { |s| stat_values[s] = I18n.l(Time.zone.parse(stat_values[s]), format: :time_only) }
           when "datetime"
             # Datetime values are in UTC so we convert them to string and then parse them into our zone.
             # Sometimes the zone shown in to_s is something other than UTC but it really is UTC so we
@@ -139,7 +139,7 @@ class Report::SummaryCollectionBuilder
   def run_stat_query(stat_qs)
     qing_ids = stat_qs.map(&:id)
     queries = []
-    queries << <<-SQL
+    queries << <<-SQL.squish
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
           CAST(AVG(CAST(a.value AS BIGINT)) AS TEXT) AS mean,
@@ -154,7 +154,7 @@ class Report::SummaryCollectionBuilder
         GROUP BY #{disagg_group_by_expr} qing.id
     SQL
 
-    queries << <<-SQL
+    queries << <<-SQL.squish
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
           CAST(AVG(CAST(a.value AS DECIMAL(20,6))) AS TEXT) AS mean,
@@ -172,7 +172,7 @@ class Report::SummaryCollectionBuilder
     time_extracts = "EXTRACT(hour from a.time_value)*60*60 + " \
       "EXTRACT(minutes FROM a.time_value)*60 + " \
       "EXTRACT(seconds FROM a.time_value)"
-    queries << <<-SQL
+    queries << <<-SQL.squish
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.time_value IS NULL THEN 1 ELSE 0 END) AS null_count,
           CAST(TO_CHAR((AVG(#{time_extracts}) || ' seconds')::interval, 'HH24:MM:SS') AS TEXT) AS mean,
@@ -187,7 +187,7 @@ class Report::SummaryCollectionBuilder
         GROUP BY #{disagg_group_by_expr} qing.id
     SQL
 
-    queries << <<-SQL
+    queries << <<-SQL.squish
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.datetime_value IS NULL THEN 1 ELSE 0 END) AS null_count,
           to_timestamp(AVG(extract(epoch FROM a.datetime_value))) AS mean,
@@ -278,7 +278,7 @@ class Report::SummaryCollectionBuilder
     # build and run queries for select_one and _multiple
     # Re:  "AND (parents.type != 'AnswerSet' OR a.new_rank = 0)" - exclude answers in answer sets except
     # top level ones
-    query = <<-SQL
+    query = <<-SQL.squish
         SELECT #{disagg_select_expr} qings.id AS qing_id,
           a.option_node_id AS option_node_id, COUNT(a.id) AS answer_count
         FROM form_items qings
@@ -296,7 +296,7 @@ class Report::SummaryCollectionBuilder
 
     sel_one_res = sql_runner.run(query, qing_ids)
 
-    query = <<-SQL
+    query = <<-SQL.squish
         SELECT #{disagg_select_expr} qings.id AS qing_id,
           c.option_node_id AS option_node_id, COUNT(c.id) AS choice_count
         FROM form_items qings
@@ -334,7 +334,7 @@ class Report::SummaryCollectionBuilder
   # useful in computing percentages
   def get_sel_mult_non_null_tallies(qing_ids)
     # get the non-null answer counts for sel mult questions
-    query = <<-SQL
+    query = <<-SQL.squish
         SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id
@@ -393,7 +393,7 @@ class Report::SummaryCollectionBuilder
 
         # compute percentages
         items.each do |item|
-          item.pct = non_null_count .zero? ? 0 : item.count.to_f / non_null_count * 100
+          item.pct = non_null_count.zero? ? 0 : item.count.to_f / non_null_count * 100
         end
 
         # get null count from tallies
@@ -418,7 +418,7 @@ class Report::SummaryCollectionBuilder
     qing_ids = date_qs.map(&:id)
 
     # build and run query
-    query = <<-SQL
+    query = <<-SQL.squish
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id
@@ -521,7 +521,7 @@ class Report::SummaryCollectionBuilder
     qing_ids = raw_qs.map(&:id)
 
     # build and run query
-    query = <<-SQL
+    query = <<-SQL.squish
         SELECT #{disagg_select_expr} a.id AS id, a.questioning_id AS qing_id, a.value AS value,
           a.response_id AS response_id, a.created_at AS created_at
         FROM answers a
@@ -545,7 +545,7 @@ class Report::SummaryCollectionBuilder
     if long_qing_ids.empty?
       {}
     else
-      query = <<-SQL
+      query = <<-SQL.squish
           SELECT a.id AS answer_id, u.name AS submitter_name
           FROM answers a
             INNER JOIN responses r ON a.response_id = r.id
@@ -599,7 +599,7 @@ class Report::SummaryCollectionBuilder
   # gets the extra join clause that needs to be added to each query if we're disaggregating
   def disagg_join_clause
     return "" if disagg_qing.nil?
-    <<-SQL
+    <<-SQL.squish
         INNER JOIN responses r ON a.response_id = r.id
         LEFT OUTER JOIN answers disagg_ans ON r.id = disagg_ans.response_id
           AND disagg_ans.questioning_id = '#{disagg_qing.id}'
@@ -610,7 +610,7 @@ class Report::SummaryCollectionBuilder
   # admins and coordinators have access to all responses.
   def current_user_join_clause
     return "" unless @options && @options[:restrict_to_user]
-    <<-SQL
+    <<-SQL.squish
         INNER JOIN responses res ON a.response_id = res.id
           AND res.user_id = '#{@options[:restrict_to_user].id}'
     SQL

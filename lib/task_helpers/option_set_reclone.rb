@@ -10,7 +10,7 @@ class OptionSetReclone
     recloned = []
 
     duplicate_root_node_ids.each do |root_node_id|
-      option_sets = OptionSet.where(root_node_id: root_node_id).where("original_id IS NOT NULL")
+      option_sets = OptionSet.where(root_node_id: root_node_id).where.not(original_id: nil)
       option_sets.each do |option_set|
         Rails.logger.debug("re-cloning option set #{option_set.id} (original #{option_set.original_id})")
         copy = option_set.original.replicate(mode: :clone)
@@ -48,7 +48,7 @@ class OptionSetReclone
     conditions = Condition
       .joins(left_qing: :question)
       .where("questions.option_set_id" => old_clone_id)
-      .where("option_node_id IS NOT NULL")
+      .where.not(option_node_id: nil)
 
     conditions.each do |cond|
       new_node = OptionNode.find_by(option_set_id: new_clone_id, original_id: cond.option_node_id)

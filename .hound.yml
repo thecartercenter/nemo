@@ -2,7 +2,7 @@ fail_on_violations: true
 rubocop:
   enabled: true
   config_file: .rubocop.yml
-  version: 0.83.0
+  version: 0.91.0
 eslint:
   enabled: false
   config_file: .eslintrc.yml

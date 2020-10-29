@@ -7,6 +7,7 @@ module Sms
       include Enumerable
 
       attr_reader :pairs
+
       delegate :each, to: :pairs
 
       def initialize(tokens)

@@ -83,11 +83,11 @@ class QuestioningsController < ApplicationController
       :required, :default, :read_only, :display_if, :all_levels_required,
       {display_conditions_attributes: condition_params},
       {skip_rules_attributes: [:id, :destination, :dest_item_id, :skip_if, :_destroy,
-                               conditions_attributes: condition_params]},
+                               {conditions_attributes: condition_params}]},
       {constraints_attributes: [
         :id, :accept_if, :_destroy,
-        conditions_attributes: condition_params,
-        rejection_msg_translations: configatron.preferred_locales
+        {conditions_attributes: condition_params,
+         rejection_msg_translations: configatron.preferred_locales}
       ]},
       question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]))
   end

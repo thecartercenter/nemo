@@ -20,7 +20,7 @@ describe Notifier do
     end
 
     context "mission given" do
-      let(:args) { [user, mission: mission] }
+      let(:args) { [user, {mission: mission}] }
 
       context "mission does not have any coordinator" do
         it "should not have anyone in reply-to" do

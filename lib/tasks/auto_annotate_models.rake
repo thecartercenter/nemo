@@ -8,7 +8,7 @@
 # Need to look into this more.
 if Rails.env.development?
   require "annotate"
-  task :set_annotation_options do # rubocop:disable Metrics/BlockLength
+  task set_annotation_options: :environment do # rubocop:disable Metrics/BlockLength
     # You can override any of these by setting an environment variable of the
     # same name.
     Annotate.set_defaults(
@@ -50,8 +50,8 @@ if Rails.env.development?
       "frozen" => "false",
       "classified_sort" => "true",
       "trace" => "false",
-      "wrapper_open" => "rubocop:disable Metrics/LineLength",
-      "wrapper_close" => "rubocop:enable Metrics/LineLength",
+      "wrapper_open" => "rubocop:disable Layout/LineLength",
+      "wrapper_close" => "rubocop:enable Layout/LineLength",
       "with_comment" => "true"
     )
   end

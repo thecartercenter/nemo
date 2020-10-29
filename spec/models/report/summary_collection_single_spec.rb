@@ -172,7 +172,7 @@ describe "summary collection with single subset" do
 
     it "headers should be sorted properly" do
       prepare_form_and_collection("date", %w[20131027 20131027 20131026 20131028])
-      expect(first_summary.headers.map { |h| h[:date] })
+      expect(first_summary.headers.pluck(:date))
         .to eq(%w[20131026 20131027 20131028].map { |d| Date.parse(d) })
     end
 

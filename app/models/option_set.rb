@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: option_sets
@@ -30,10 +30,15 @@
 #  option_sets_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  option_sets_option_node_id_fkey  (root_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # A collection of options for a select one or select multiple question. May be flat or multi-level.
 class OptionSet < ApplicationRecord
+  before_validation :copy_attribs_to_root_node
+  before_validation :normalize_fields
+  # This need to be up here or they will run too late.
+  before_destroy :check_associations
+  before_destroy :nullify_root_node
   # We use this instead of autosave since autosave doesn't work right for belongs_to.
   # It is up here because it should happen early, e.g., before form version callbacks.
   after_save :save_root_node
@@ -43,10 +48,6 @@ class OptionSet < ApplicationRecord
   include MissionBased
 
   SMS_GUIDE_FORMATTING_OPTIONS = %w[auto inline appendix treat_as_text].freeze
-
-  # This need to be up here or they will run too late.
-  before_destroy :check_associations
-  before_destroy :nullify_root_node
 
   # We do this instead of using dependent: :destroy because in the latter case
   # the dependent object doesn't know who destroyed it.
@@ -58,9 +59,6 @@ class OptionSet < ApplicationRecord
   has_many :report_option_set_choices, class_name: "Report::OptionSetChoice", inverse_of: :option_set,
                                        dependent: :destroy
   belongs_to :root_node, class_name: "OptionNode", dependent: :destroy
-
-  before_validation :copy_attribs_to_root_node
-  before_validation :normalize_fields
 
   scope :by_name, -> { order("option_sets.name") }
   scope :default_order, -> { by_name }
@@ -111,7 +109,7 @@ class OptionSet < ApplicationRecord
     return nil if node.nil?
 
     # Trim the root node and map to options.
-    node.ancestors[1..-1].map(&:option) + [option]
+    node.ancestors[1..].map(&:option) + [option]
   end
 
   # Gets the OptionLevel for the given depth (1-based)
@@ -282,7 +280,7 @@ class OptionSet < ApplicationRecord
 
   def worksheet_name
     (name.size > 31 ? name.truncate(31) : name).gsub(
-      %r{[\[\]\*\\?\:\/]},
+      %r{[\[\]*\\?:/]},
       "[" => "(",
       "]" => ")",
       "*" => "∗",

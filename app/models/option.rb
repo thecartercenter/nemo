@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: options
@@ -25,7 +25,7 @@
 #
 #  options_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 # A single selectable option in an OptionSet for a select question.
 class Option < ApplicationRecord
@@ -40,11 +40,11 @@ class Option < ApplicationRecord
   has_many :option_sets, through: :option_nodes
 
   before_validation :normalize
-  after_save :invalidate_cache
   after_destroy :invalidate_cache
+  after_save :invalidate_cache
 
   scope :with_questions_and_forms,
-    -> { includes(option_sets: [:questionings, questions: {questionings: :form}]) }
+    -> { includes(option_sets: [:questionings, {questions: {questionings: :form}}]) }
   scope :by_canonical_name, ->(name) { where("LOWER(canonical_name) = ?", name.downcase) }
 
   translates :name

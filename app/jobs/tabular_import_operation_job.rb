@@ -2,7 +2,7 @@
 
 # Job for importing tabular data like users and option sets.
 class TabularImportOperationJob < OperationJob
-  def perform(_operation, name: nil, saved_upload_id:, import_class:)
+  def perform(_operation, saved_upload_id:, import_class:, name: nil)
     saved_upload = SavedTabularUpload.find(saved_upload_id)
     import = import_class.constantize.new(
       mission_id: mission&.id,

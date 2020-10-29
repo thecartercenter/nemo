@@ -5,6 +5,7 @@
   "ResponseSubmitterName": "A User 1",
   "ResponseSubmitDate": "2020-04-20T06:30:00-06:00",
   "ResponseReviewed": true,
+  "LastCached": "2020-04-20T06:30:00-06:00",
   "IntegerQ1": 1,
   "Fruit": [
     {

@@ -16,12 +16,12 @@ describe "arabic missing plurals" do
     end
 
     it "should translate properly" do
-      expect(I18n.translate("pltest", locale: :ar, count: 0)).to eq("zero")
-      expect(I18n.translate("pltest", locale: :ar, count: 1)).to eq("one")
-      expect(I18n.translate("pltest", locale: :ar, count: 2)).to eq("two")
-      expect(I18n.translate("pltest", locale: :ar, count: 3)).to eq("few")
-      expect(I18n.translate("pltest", locale: :ar, count: 99)).to eq("many")
-      expect(I18n.translate("pltest", locale: :ar, count: 100)).to eq("other")
+      expect(I18n.t("pltest", locale: :ar, count: 0)).to eq("zero")
+      expect(I18n.t("pltest", locale: :ar, count: 1)).to eq("one")
+      expect(I18n.t("pltest", locale: :ar, count: 2)).to eq("two")
+      expect(I18n.t("pltest", locale: :ar, count: 3)).to eq("few")
+      expect(I18n.t("pltest", locale: :ar, count: 99)).to eq("many")
+      expect(I18n.t("pltest", locale: :ar, count: 100)).to eq("other")
     end
   end
 
@@ -34,12 +34,12 @@ describe "arabic missing plurals" do
     end
 
     it "should translate properly" do
-      expect(I18n.translate("pltest", locale: :ar, count: 0)).to eq("other")
-      expect(I18n.translate("pltest", locale: :ar, count: 1)).to eq("one")
-      expect(I18n.translate("pltest", locale: :ar, count: 2)).to eq("other")
-      expect(I18n.translate("pltest", locale: :ar, count: 3)).to eq("other")
-      expect(I18n.translate("pltest", locale: :ar, count: 99)).to eq("other")
-      expect(I18n.translate("pltest", locale: :ar, count: 100)).to eq("other")
+      expect(I18n.t("pltest", locale: :ar, count: 0)).to eq("other")
+      expect(I18n.t("pltest", locale: :ar, count: 1)).to eq("one")
+      expect(I18n.t("pltest", locale: :ar, count: 2)).to eq("other")
+      expect(I18n.t("pltest", locale: :ar, count: 3)).to eq("other")
+      expect(I18n.t("pltest", locale: :ar, count: 99)).to eq("other")
+      expect(I18n.t("pltest", locale: :ar, count: 100)).to eq("other")
     end
   end
 
@@ -51,8 +51,8 @@ describe "arabic missing plurals" do
     end
 
     it "should raise error" do
-      expect(I18n.translate("pltest", locale: :ar, count: 1)).to eq("one")
-      expect { I18n.translate("pltest", locale: :ar, count: 2) }.to raise_error(error_class)
+      expect(I18n.t("pltest", locale: :ar, count: 1)).to eq("one")
+      expect { I18n.t("pltest", locale: :ar, count: 2) }.to raise_error(error_class)
     end
   end
 
@@ -62,12 +62,12 @@ describe "arabic missing plurals" do
     end
 
     it "should translate properly" do
-      expect(I18n.translate("pltest", locale: :ar, count: 0)).to eq("foo")
-      expect(I18n.translate("pltest", locale: :ar, count: 1)).to eq("foo")
-      expect(I18n.translate("pltest", locale: :ar, count: 2)).to eq("foo")
-      expect(I18n.translate("pltest", locale: :ar, count: 3)).to eq("foo")
-      expect(I18n.translate("pltest", locale: :ar, count: 99)).to eq("foo")
-      expect(I18n.translate("pltest", locale: :ar, count: 100)).to eq("foo")
+      expect(I18n.t("pltest", locale: :ar, count: 0)).to eq("foo")
+      expect(I18n.t("pltest", locale: :ar, count: 1)).to eq("foo")
+      expect(I18n.t("pltest", locale: :ar, count: 2)).to eq("foo")
+      expect(I18n.t("pltest", locale: :ar, count: 3)).to eq("foo")
+      expect(I18n.t("pltest", locale: :ar, count: 99)).to eq("foo")
+      expect(I18n.t("pltest", locale: :ar, count: 100)).to eq("foo")
     end
   end
 

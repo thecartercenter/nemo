@@ -5,7 +5,7 @@ class Random
   LETTERS_AND_NUMBERS = ("a".."z").to_a + ("0".."9").to_a
 
   def self.words(size = 1)
-    Random.paragraphs.split(" ")[0, size].join(" ").gsub(/[,;?\.'"\-\n]/, "").downcase
+    Random.paragraphs.split(" ")[0, size].join(" ").gsub(/[,;?.'"\-\n]/, "").downcase
   end
 
   def self.phrase(size = 3)

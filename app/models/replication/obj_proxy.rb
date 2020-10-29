@@ -3,6 +3,7 @@
 # Wraps an object in a replication operation. Not the full object, just its ID and class.
 class Replication::ObjProxy
   attr_accessor :klass, :id, :ancestry, :replicator, :replication_root
+
   alias replication_root? replication_root
 
   delegate :child_assocs, to: :klass
@@ -191,14 +192,12 @@ class Replication::ObjProxy
   def backward_assoc_col_mappings(replicator, context, second_pass: false)
     assocs = second_pass ? klass.second_pass_backward_assocs : klass.backward_assocs
     assocs.map do |assoc|
-      begin
-        [assoc.foreign_key, quote_or_null(backward_assoc_id(replicator, context, assoc))]
-      rescue Replication::BackwardAssocError
-        # If we have explicit instructions to delete the object if an association is missing,
-        # make a note of it.
-        $ERROR_INFO.ok_to_skip = assoc.skip_obj_if_missing
-        raise $ERROR_INFO # Then we send on up the chain.
-      end
+      [assoc.foreign_key, quote_or_null(backward_assoc_id(replicator, context, assoc))]
+    rescue Replication::BackwardAssocError
+      # If we have explicit instructions to delete the object if an association is missing,
+      # make a note of it.
+      $ERROR_INFO.ok_to_skip = assoc.skip_obj_if_missing
+      raise $ERROR_INFO # Then we send on up the chain.
     end
   end
 
