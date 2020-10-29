@@ -5,7 +5,7 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
   # have to fail the transaction because some ended up nil.
   disable_ddl_transaction!
 
-  FLAG_PATH = Rails.root.join("tmp", "create_missing_option_nodes").freeze
+  FLAG_PATH = Rails.root.join("tmp/create_missing_option_nodes").freeze
 
   def up
     copy_option_id_to_option_node_id

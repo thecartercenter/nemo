@@ -1,7 +1,7 @@
 require "active_support/core_ext/digest/uuid"
 
 class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
-  TABLE_SPECIFICATION_PATH = Rails.root.join("db", "resources", "tables.yml")
+  TABLE_SPECIFICATION_PATH = Rails.root.join("db/resources/tables.yml")
   TABLES = YAML.load_file(TABLE_SPECIFICATION_PATH)
   GLOBAL_NAMESPACE = Digest::UUID.uuid_v5(Digest::UUID::DNS_NAMESPACE, "sassafras.coop")
 

@@ -31,7 +31,7 @@ module Cloning
     private
 
     def export_dir
-      @export_dir ||= Rails.root.join("tmp", "exports")
+      @export_dir ||= Rails.root.join("tmp/exports")
     end
 
     def zipfile_path

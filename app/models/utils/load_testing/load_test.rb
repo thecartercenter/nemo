@@ -40,7 +40,7 @@ module Utils
 
       def path
         dir = "#{name}_#{timestamp.strftime('%Y%m%d%H%M%S')}"
-        Rails.root.join("tmp", "load_tests", dir)
+        Rails.root.join("tmp/load_tests", dir)
       end
 
       def write_file(filename, content)
