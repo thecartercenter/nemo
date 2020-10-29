@@ -22,6 +22,7 @@
 #  value             :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  mission_id        :uuid
 #  option_node_id    :uuid
 #  parent_id         :uuid
 #  questioning_id    :uuid             not null
@@ -29,6 +30,7 @@
 #
 # Indexes
 #
+#  index_answers_on_mission_id      (mission_id)
 #  index_answers_on_new_rank        (new_rank)
 #  index_answers_on_option_node_id  (option_node_id)
 #  index_answers_on_parent_id       (parent_id)
@@ -96,7 +98,6 @@ class Answer < ResponseNode
   }
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
-  scope :newest_first, -> { includes(:response).order("responses.created_at DESC") }
   scope :first_level_only, lambda { # exclude answers from answer sets that are not first level
     joins("INNER JOIN answers parents ON answers.parent_id = parents.id")
       .where("parents.type != 'AnswerSet' OR answers.new_rank = 0")
