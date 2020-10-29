@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: constraints
@@ -25,7 +25,7 @@
 #  fk_rails_...  (mission_id => missions.id)
 #  fk_rails_...  (source_item_id => form_items.id)
 #
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength
 
 FactoryGirl.define do
   factory :constraint do

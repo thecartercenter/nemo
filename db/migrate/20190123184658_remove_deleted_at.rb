@@ -47,7 +47,7 @@ class RemoveDeletedAt < ActiveRecord::Migration[5.2]
 
   private
 
-  def remove_unique_indices_dependent_on_deleted_at # rubocop:disable Style/MethodLength
+  def remove_unique_indices_dependent_on_deleted_at # rubocop:disable Metrics/MethodLength
     remove_index :assignments, %w[mission_id user_id]
     remove_index :form_items, %w[form_id question_id]
     remove_index :form_versions, ["code"]
@@ -65,7 +65,7 @@ class RemoveDeletedAt < ActiveRecord::Migration[5.2]
     remove_index :users, ["sms_auth_code"]
   end
 
-  def reinstate_unique_indices # rubocop:disable Style/MethodLength
+  def reinstate_unique_indices # rubocop:disable Metrics/MethodLength
     add_index :assignments, %w[mission_id user_id], unique: true
     add_index :form_items, %w[form_id question_id], unique: true
     add_index :form_versions, ["code"], unique: true
