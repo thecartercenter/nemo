@@ -58,6 +58,10 @@
 require "rails_helper"
 
 describe Response do
+  it "has valid factory" do
+    create(:response)
+  end
+
   it "cache key" do
     user = create(:user)
     form = create(:form, :live, question_types: %w[integer])
