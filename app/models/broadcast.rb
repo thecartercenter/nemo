@@ -136,7 +136,7 @@ class Broadcast < ApplicationRecord
     nil
   rescue Sms::Error => e
     # one error per line
-    e.to_s.split("\n").each { |e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}") }
+    e.to_s.split("\n").each { |line| add_send_error(I18n.t("broadcast.sms_error") + ": #{line}") }
     save
     e
   end
