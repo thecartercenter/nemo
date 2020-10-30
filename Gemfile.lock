@@ -126,7 +126,7 @@ GEM
       request_store (~> 1.0)
     autoprefixer-rails (10.0.1.0)
       execjs
-    awesome_print (1.6.1)
+    awesome_print (1.8.0)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
