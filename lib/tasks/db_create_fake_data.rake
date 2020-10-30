@@ -66,18 +66,18 @@ namespace :db do
         print "."
         answer_values = [
           Faker::Pokemon.name, # text
-          Faker::Hipster.paragraphs(3).join("\n\n"), # long_text
+          Faker::Hipster.paragraphs(number: 3).join("\n\n"), # long_text
           rand(1000..5000), # integer
           rand(1..100), # counter
-          Faker::Number.decimal(rand(1..3), rand(1..5)), # decimal
+          Faker::Number.decimal(l_digits: rand(1..3), r_digits: rand(1..5)), # decimal
           "#{Faker::Address.latitude} #{Faker::Address.longitude}", # location
           [rand(1..100), Faker::Hacker.say_something_smart], # integer/long text
           "Cat", # select_one
           %w[Plant Oak], # multilevel_select_one
           %w[Cat Dog], # select_multiple
-          Faker::Time.backward(365), # datetime
+          Faker::Time.backward(days: 365), # datetime
           Faker::Date.birthday, # date
-          Faker::Time.between(1.year.ago, Date.today, :evening), # time
+          Faker::Time.between(from: 1.year.ago, to: Date.today, format: :evening), # time
           Media::Image.create(item: File.open(image_path)), # image
           FactoryGirl.build(:media_image, item: File.open(image_path)), # annotated image
           FactoryGirl.build(:media_image, item: File.open(image_path)), # signature
@@ -91,7 +91,7 @@ namespace :db do
           user: user,
           mission: mission,
           answer_values: answer_values,
-          created_at: Faker::Time.backward(365))
+          created_at: Faker::Time.backward(days: 365))
       end
     end
     print "\n"

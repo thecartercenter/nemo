@@ -58,7 +58,7 @@ describe QingGroup do
   end
 
   it "should allow long hints" do
-    group = create(:qing_group, group_hint: Faker::Lorem.characters(255).to_s)
+    group = create(:qing_group, group_hint: Faker::Lorem.characters(number: 255).to_s)
     expect(group).to be_valid
   end
 

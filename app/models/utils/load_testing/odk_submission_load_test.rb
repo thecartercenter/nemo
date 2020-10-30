@@ -72,17 +72,17 @@ module Utils
         when "long_text"
           Faker::Lorem.paragraph
         when "integer", "counter"
-          Faker::Number.number(3)
+          Faker::Number.number(digits: 3)
         when "decimal"
-          Faker::Number.decimal(3)
+          Faker::Number.decimal(l_digits: 3)
         when "datetime"
-          n = Faker::Number.number(3).to_i
+          n = Faker::Number.number(digits: 3)
           n.days.ago.to_s
         when "date"
-          n = Faker::Number.number(3).to_i
+          n = Faker::Number.number(digits: 3)
           n.days.ago.to_date.to_s
         when "time"
-          n = Faker::Number.number(3).to_i
+          n = Faker::Number.number(digits: 3)
           n.days.ago.to_s.split(" ")[1]
         when "select_one", "select_multiple"
           "on#{question.options.rand.option_nodes.first.id}"
