@@ -540,7 +540,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    scout_apm (2.6.9)
+    scout_apm (2.6.10)
       parser
     scrypt (3.0.7)
       ffi-compiler (>= 1.0, < 2.0)
