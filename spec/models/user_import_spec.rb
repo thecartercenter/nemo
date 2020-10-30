@@ -28,7 +28,7 @@ describe UserImport do
         birth_year: nil, gender: nil, gender_custom: nil, email: "ch@lo.com", nationality: nil)
       expect_user_attribs(3,
         login: "flim.flo", name: "Flim Flo", phone: "+123456789", phone2: nil,
-        birth_year: 1989, email: "f@fl.com", nationality: "ZZ")
+        birth_year: 1989, email: "f@fl.com", nationality: nil)
       expect_user_attribs(4,
         login: "shobo", name: "Sho Bo", phone: nil, phone2: nil,
         gender: "specify", gender_custom: "Genderqueer", email: "d@ef.stu")
