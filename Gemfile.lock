@@ -340,7 +340,7 @@ GEM
     jwt (1.5.6)
     launchy (2.5.0)
       addressable (~> 2.7)
-    letter_opener (1.4.1)
+    letter_opener (1.7.0)
       launchy (~> 2.2)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
