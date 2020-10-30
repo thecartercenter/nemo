@@ -214,7 +214,7 @@ GEM
       activesupport (>= 5.0)
       request_store (>= 1.0)
     draper-cancancan (1.1.1)
-    dropzonejs-rails (0.7.4)
+    dropzonejs-rails (0.8.5)
       rails (> 3.1)
     dry-configurable (0.11.6)
       concurrent-ruby (~> 1.0)
