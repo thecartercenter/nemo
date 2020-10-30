@@ -272,7 +272,7 @@ class ResponsesSearcher < Searcher
     possibilities = qing[:possibilities]
     return qing unless possibilities
     possibilities = possibilities.where(form_id: form_ids) if form_ids.present?
-    qing[:id] = possibilities.filter_unique.pick(:id)
+    qing[:id] = possibilities.order(:id).pick(:id)
     qing.except(:possibilities)
   end
 
