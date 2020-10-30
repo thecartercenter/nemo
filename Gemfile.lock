@@ -448,7 +448,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rdiscount (2.1.8)
+    rdiscount (2.2.0.2)
     react-rails (2.6.1)
       babel-transpiler (>= 0.7.0)
       connection_pool
