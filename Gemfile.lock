@@ -261,7 +261,7 @@ GEM
     exception_notification (4.4.3)
       actionmailer (>= 4.0, < 7)
       activesupport (>= 4.0, < 7)
-    excon (0.76.0)
+    excon (0.78.0)
     execjs (2.7.0)
     factory_girl (4.9.0)
       activesupport (>= 3.0.0)
@@ -278,7 +278,7 @@ GEM
       rake
     fix-db-schema-conflicts (3.0.3)
       rubocop (>= 0.38.0)
-    fog-aws (3.3.0)
+    fog-aws (3.6.7)
       fog-core (~> 2.1)
       fog-json (~> 1.1)
       fog-xml (~> 0.1)
