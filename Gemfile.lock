@@ -134,7 +134,7 @@ GEM
     binding_of_caller (0.7.3)
       debug_inspector (>= 0.0.1)
     bluecloth (2.2.0)
-    bootsnap (1.4.8)
+    bootsnap (1.4.9)
       msgpack (~> 1.0)
     bootstrap (4.3.1)
       autoprefixer-rails (>= 9.1.0)
