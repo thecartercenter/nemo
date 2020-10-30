@@ -4,6 +4,7 @@
 class ApplicationController < ActionController::Base
   require "authlogic"
   include ActionView::Helpers::AssetTagHelper
+  include Rails::Pagination
 
   include ApplicationController::Authentication
   include ApplicationController::Authorization

@@ -114,7 +114,7 @@ GEM
     annotate (2.7.5)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 13.0)
-    api-pagination (4.1.1)
+    api-pagination (4.8.2)
     assert_difference (1.0.0)
       activesupport (>= 3.0.0)
     ast (2.4.1)
