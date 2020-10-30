@@ -6,20 +6,14 @@ source "http://rubygems.org"
 # https://github.com/rails/rails/issues/39173
 gem "rails", "~> 6.0.2.2"
 
-gem "actionpack-page_caching", "~> 1.1"
+# Misc
 gem "attribute_normalizer", "~> 1.2.0"
-gem "bootsnap", "~> 1.4", require: false
 gem "daemons", "~> 1.2.1"
-gem "dalli", "~> 2.7" # memcache
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe" # mean, median, etc.
-gem "dotenv-rails", "~> 2.7"
 gem "draper", "~> 4.0"
 gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
-gem "fog-aws", "~> 3.3.0"
 gem "friendly_id", "~> 5.1.0"
-gem "immigrant", "~> 0.3.1" # foreign key maintenance
-gem "paperclip", "~> 6.0"
 gem "phony", "~> 2.15"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 gem "rake", "~> 12.3.3"
@@ -68,6 +62,10 @@ gem "bluecloth", "~> 2.2.0"
 gem "rdiscount", "~> 2.1.8"
 gem "reverse_markdown", "~> 1.0.3"
 
+# Storage
+gem "fog-aws", "~> 3.3.0"
+gem "paperclip", "~> 6.0"
+
 # API
 gem "active_model_serializers", "~> 0.9.3"
 gem "api-pagination", "~> 4.1.1"
@@ -79,6 +77,7 @@ gem "odata_server", github: "sassafrastech/odata_server", branch: "sassafras"
 # Configuration
 gem "config", "~> 2.2"
 gem "configatron", "~> 4.5.0" # Deprecated, prefer `config` gem
+gem "dotenv-rails", "~> 2.7"
 
 # Tree modelling
 gem "ancestry", "~> 3.0"
@@ -87,8 +86,14 @@ gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.2.0-noReorder
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"
 
+# Caching
+gem "actionpack-page_caching", "~> 1.1"
+gem "bootsnap", "~> 1.4", require: false
+gem "dalli", "~> 2.7"
+
 # DB
 gem "hairtrigger", "~> 0.2.20"
+gem "immigrant", "~> 0.3.1" # foreign key maintenance
 gem "pg", "~> 0.20"
 gem "pg_search", "~> 2.1"
 gem "postgres-copy", "~> 1.0"
