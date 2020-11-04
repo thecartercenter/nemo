@@ -104,7 +104,9 @@ feature "response form read only mode", js: true do
 
     it "renders map properly" do
       visit(response_path(response, params))
-      expect(page).to have_css(".gm-style", count: 3) # Should be inserted by GMaps on successful render.
+      # Should be inserted by GMaps on successful render.
+      # select_multiples don't have answer maps
+      expect(page).to have_css(".gm-style", count: 2)
     end
   end
 end

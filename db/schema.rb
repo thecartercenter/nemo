@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_17_185105) do
+ActiveRecord::Schema.define(version: 2020_10_19_195418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2020_08_17_185105) do
     t.datetime "datetime_value"
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
+    t.uuid "mission_id", null: false
     t.integer "new_rank", default: 0, null: false
     t.integer "old_inst_num", default: 1, null: false
     t.integer "old_rank", default: 1, null: false
@@ -46,6 +47,7 @@ ActiveRecord::Schema.define(version: 2020_08_17_185105) do
     t.string "type", default: "Answer", null: false
     t.datetime "updated_at", null: false
     t.text "value"
+    t.index ["mission_id"], name: "index_answers_on_mission_id"
     t.index ["new_rank"], name: "index_answers_on_new_rank"
     t.index ["option_node_id"], name: "index_answers_on_option_node_id"
     t.index ["parent_id"], name: "index_answers_on_parent_id"
@@ -607,6 +609,7 @@ ActiveRecord::Schema.define(version: 2020_08_17_185105) do
   end
 
   add_foreign_key "answers", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "answers", "missions"
   add_foreign_key "answers", "option_nodes"
   add_foreign_key "answers", "responses", name: "answers_response_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "assignments", "missions", name: "assignments_mission_id_fkey", on_update: :restrict, on_delete: :restrict

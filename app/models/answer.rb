@@ -22,6 +22,7 @@
 #  value             :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  mission_id        :uuid             not null
 #  option_node_id    :uuid
 #  parent_id         :uuid
 #  questioning_id    :uuid             not null
@@ -29,6 +30,7 @@
 #
 # Indexes
 #
+#  index_answers_on_mission_id      (mission_id)
 #  index_answers_on_new_rank        (new_rank)
 #  index_answers_on_option_node_id  (option_node_id)
 #  index_answers_on_parent_id       (parent_id)
@@ -40,6 +42,7 @@
 #
 #  answers_questioning_id_fkey  (questioning_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_response_id_fkey     (response_id => responses.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...                 (mission_id => missions.id)
 #  fk_rails_...                 (option_node_id => option_nodes.id)
 #
 # rubocop:enable Layout/LineLength
@@ -97,7 +100,6 @@ class Answer < ResponseNode
   }
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
-  scope :newest_first, -> { includes(:response).order("responses.created_at DESC") }
   scope :first_level_only, lambda { # exclude answers from answer sets that are not first level
     joins("INNER JOIN answers parents ON answers.parent_id = parents.id")
       .where("parents.type != 'AnswerSet' OR answers.new_rank = 0")
@@ -112,29 +114,6 @@ class Answer < ResponseNode
         negation: true
       }
     }
-
-  # gets all location answers for the given mission
-  # returns only the response ID and the answer value
-  def self.location_answers_for_mission(mission, user = nil, _options = {})
-    response_conditions = {mission_id: mission.try(:id)}
-
-    # if the user is not a staffer or higher privilege, only show their own responses
-    response_conditions[:user_id] = user.id if user.present? && !user.role?(:staffer, mission)
-
-    # return an AR relation
-    joins(:response)
-      .joins(%(LEFT JOIN "choices" ON "choices"."answer_id" = "answers"."id"))
-      .where(responses: response_conditions)
-      .where(%{
-        ("answers"."latitude" IS NOT NULL AND "answers"."longitude" IS NOT NULL)
-        OR ("choices"."latitude" IS NOT NULL AND "choices"."longitude" IS NOT NULL)
-      })
-      .select(:response_id,
-        %{COALESCE("answers"."latitude", "choices"."latitude") AS "latitude",
-          COALESCE("answers"."longitude", "choices"."longitude") AS "longitude"})
-      .order(%("answers"."response_id" DESC))
-      .paginate(page: 1, per_page: 1000)
-  end
 
   def option_name
     option_node&.name
@@ -270,9 +249,6 @@ class Answer < ResponseNode
     elsif option_node&.coordinates?
       self.latitude = option_node.latitude
       self.longitude = option_node.longitude
-    elsif (choice = choices.detect(&:coordinates?))
-      self.latitude = choice.latitude
-      self.longitude = choice.longitude
     end
     true
   end

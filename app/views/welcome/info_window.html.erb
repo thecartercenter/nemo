@@ -1,18 +1,18 @@
-<div class="info_window">
-  <h3><%= translate_model(Response) %> #<%= @response.id %></h3>
+<div class="info-window">
+  <h3><%= translate_model(Response) %> #<%= @response.shortcode.upcase %></h3>
   <table>
     <tr>
       <td><%= translate_model(Form) %></td>
-      <td><%= @response.form.try(:name) %></td>
+      <td><%= @response.form&.name %></td>
     </tr>
     <tr>
-      <td><%= t('activerecord.attributes.response.user_id') %></td>
-      <td><%= @response.user.try(:name) %></td>
+      <td><%= t("activerecord.attributes.response.user_id") %></td>
+      <td><%= @response.user&.name %></td>
     </tr>
     <tr>
-      <td><%= t('activerecord.attributes.response.created_at') %></td>
+      <td><%= t("activerecord.attributes.response.created_at") %></td>
       <td><%= l(@response.created_at) %></td>
     </tr>
   </table>
-  <%= link_to(t('response.view_response'), @response) %>
+  <%= link_to(t("response.view_response"), @response) %>
 </div>

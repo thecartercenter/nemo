@@ -117,7 +117,7 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
 
     // open the window and show the loading message
     this.info_window = new google.maps.InfoWindow({
-      content: `<div class="info_window"><h3>${I18n.t('response.loading')}</h3></div>`,
+      content: `<div class="info-window"><h3>${I18n.t('response.loading')}</h3></div>`,
     });
     this.info_window.open(this.map, marker);
 
@@ -129,11 +129,11 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
         method: 'get',
         data: { response_id: marker.r_id },
         success(data) {
-          $('div.info_window').replaceWith(data);
+          $('div.info-window').replaceWith(data);
         },
         error() {
           if (ELMO.unloading) return;
-          $('div.info_window').html(I18n.t('layout.server_contact_error'));
+          $('div.info-window').html(I18n.t('layout.server_contact_error'));
         },
       });
     });
@@ -175,9 +175,8 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
 
   update_map(data) {
     if (this.disabled) { return; }
-    return Array.from(data.answers).map((answer) => this.add_answer(answer));
+    return Array.from(data).map((answer) => this.add_answer(answer));
   }
-  // TODO: Deal with data.count
 
   center() {
     if (this.disabled) { return null; }

@@ -22,6 +22,7 @@
 #  value             :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  mission_id        :uuid             not null
 #  option_node_id    :uuid
 #  parent_id         :uuid
 #  questioning_id    :uuid             not null
@@ -29,6 +30,7 @@
 #
 # Indexes
 #
+#  index_answers_on_mission_id      (mission_id)
 #  index_answers_on_new_rank        (new_rank)
 #  index_answers_on_option_node_id  (option_node_id)
 #  index_answers_on_parent_id       (parent_id)
@@ -40,12 +42,15 @@
 #
 #  answers_questioning_id_fkey  (questioning_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_response_id_fkey     (response_id => responses.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...                 (mission_id => missions.id)
 #  fk_rails_...                 (option_node_id => option_nodes.id)
 #
 # rubocop:enable Layout/LineLength
 
 # Parent class for nodes in the response tree
 class ResponseNode < ApplicationRecord
+  include MissionBased
+
   self.table_name = "answers"
 
   attr_accessor :relevant
@@ -63,11 +68,12 @@ class ResponseNode < ApplicationRecord
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true,
                    with_advisory_lock: false, dependent: :destroy
 
-  before_save do
-    destroy_obsolete_children
-    propogate_response_id
-  end
+  scope :with_coordinates, -> { where.not(latitude: nil) }
+  scope :newest_first, -> { order(created_at: :desc) }
 
+  before_save :copy_mission_id
+  before_save :destroy_obsolete_children
+  before_save :propagate_response_id
   after_update { children.each(&:save) }
 
   validates_associated :children
@@ -121,7 +127,17 @@ class ResponseNode < ApplicationRecord
     @destroy = val.is_a?(String) ? val == "true" : val
   end
 
-  def propogate_response_id
+  def irrelevant_or_marked_destroy?
+    !relevant? || _destroy
+  end
+
+  private
+
+  def copy_mission_id
+    self.mission_id ||= response.mission_id
+  end
+
+  def propagate_response_id
     children.reject(&:destroyed?).each do |c|
       c.response_id = response_id
     end
@@ -129,9 +145,5 @@ class ResponseNode < ApplicationRecord
 
   def destroy_obsolete_children
     children.destroy(children.select(&:irrelevant_or_marked_destroy?))
-  end
-
-  def irrelevant_or_marked_destroy?
-    !relevant? || _destroy
   end
 end

@@ -74,9 +74,6 @@ class Response < ApplicationRecord
 
   has_many :answers, -> { order(:new_rank) },
     autosave: true, dependent: :destroy, inverse_of: :response
-  has_many :location_answers, lambda {
-    where("questions.qtype_name = 'location'").order("form_items.rank").includes(questioning: :question)
-  }, class_name: "Answer"
 
   has_closure_tree_root :root_node, class_name: "ResponseNode"
 
@@ -111,9 +108,6 @@ class Response < ApplicationRecord
 
   # loads only some answer info
   scope :with_basic_answers, -> { includes(answers: {form_item: :question}) }
-
-  # loads only answers with location info
-  scope :with_location_answers, -> { includes(:location_answers) }
 
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
@@ -174,13 +168,6 @@ class Response < ApplicationRecord
   def validate_answers?
     # ODK and SMS do their own validation
     %w[odk web].include?(modifier)
-  end
-
-  # if this response contains location questions, returns the gps location (as a 2 element array)
-  # of the first such question on the form, else returns nil
-  def location
-    ans = location_answers.first
-    ans ? ans.location : nil
   end
 
   def check_out_valid?

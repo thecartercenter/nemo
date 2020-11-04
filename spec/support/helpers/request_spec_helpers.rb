@@ -4,7 +4,7 @@ module RequestSpecHelpers
   # Currently duplicated in test/test_helper until it becomes obvious how to refactor.
   def login(user)
     login_without_redirect(user)
-    follow_redirect!
+    follow_redirect! while response.redirect? # There may be several redirects.
     assert_response(:success)
     user.reload # Some stuff may have changed in database during login process
   end

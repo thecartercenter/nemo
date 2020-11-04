@@ -7,31 +7,6 @@ describe "answer location data" do
   let(:response) { create(:response, form: form, answer_values: [answer_value]) }
   let(:answer) { response.root_node.c[0] } # works when form has one question
 
-  describe ".location_answers_for_mission" do
-    let(:question_types) { %w[location select_one select_multiple text integer] }
-
-    before do
-      # Configure select one question to be geographic
-      form.c[1].option_set.update!(geographic: true, allow_coordinates: true)
-      form.c[1].first_level_option_nodes[0].option.update!(latitude: 0, longitude: 0)
-
-      # Configure select multiple question to be geographic
-      option1 = form.c[2].first_level_option_nodes[0].option
-      option2 = form.c[2].first_level_option_nodes[1].option
-      form.c[2].option_set.update!(geographic: true, allow_coordinates: true)
-      option1.update!(latitude: 0, longitude: 0)
-      option2.update!(latitude: 0, longitude: 0)
-
-      create(:response, form: form, answer_values:
-        ["12.34 -56.78", form.c[1].options[0].name, [option1.name, option2.name], "Non geo answer", 12])
-    end
-
-    it "returns all answers for locations on a certain mission" do
-      location_answers = Answer.location_answers_for_mission(get_mission)
-      expect(location_answers.length).to eq(4)
-    end
-  end
-
   describe "#location_type_with_value?" do
     let(:answer_value) { "12.34 -56.78" }
 
@@ -96,15 +71,9 @@ describe "answer location data" do
           expect(answer.coordinates?).to be(false)
         end
 
-        it "should return true if all of the selected options have coordinates" do
+        it "should return false if some of the selected options have coordinates" do
           option_node1.option.update!(latitude: 0, longitude: 0)
-          option_node2.option.update!(latitude: 0, longitude: 0)
-          expect(answer.coordinates?).to be(true)
-        end
-
-        it "should return true if any of the selected options have coordinates" do
-          option_node1.option.update!(latitude: 0, longitude: 0)
-          expect(answer.coordinates?).to be(true)
+          expect(answer.coordinates?).to be(false)
         end
       end
     end

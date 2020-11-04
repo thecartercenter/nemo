@@ -1255,7 +1255,7 @@ en:
     recent_responses: "Latest Responses"
     shrink_map: "Shrink Map"
     response_locations: "Response Locations"
-    response_locations_truncated: "Showing the most recent %{shown} of %{total} responses"
+    response_locations_truncated: "Only the most recent %{max} locations are shown."
     summary: "Summary"
     top_forms: "Top Forms"
 

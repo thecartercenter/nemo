@@ -22,6 +22,7 @@
 #  value             :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  mission_id        :uuid             not null
 #  option_node_id    :uuid
 #  parent_id         :uuid
 #  questioning_id    :uuid             not null
@@ -29,6 +30,7 @@
 #
 # Indexes
 #
+#  index_answers_on_mission_id      (mission_id)
 #  index_answers_on_new_rank        (new_rank)
 #  index_answers_on_option_node_id  (option_node_id)
 #  index_answers_on_parent_id       (parent_id)
@@ -40,6 +42,7 @@
 #
 #  answers_questioning_id_fkey  (questioning_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_response_id_fkey     (response_id => responses.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...                 (mission_id => missions.id)
 #  fk_rails_...                 (option_node_id => option_nodes.id)
 #
 # rubocop:enable Layout/LineLength

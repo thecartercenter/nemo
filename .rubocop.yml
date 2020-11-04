@@ -152,3 +152,7 @@ Rails/NotNullColumn:
 # This would be lovely but it breaks our custom ODK wrapper.
 Rails/ContentTag:
   Enabled: false
+
+# This seems unnecessary to me and kind of ugly.
+Rails/SquishedSQLHeredocs:
+  Enabled: false
