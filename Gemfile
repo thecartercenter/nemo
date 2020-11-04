@@ -2,31 +2,28 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 5.2"
+# 6.0.3.x has a blocking regression, waiting for a fix since May 2020:
+# https://github.com/rails/rails/issues/39173
+gem "rails", "~> 6.0.2.2"
 
-gem "actionpack-page_caching", "~> 1.1"
+# Misc
 gem "attribute_normalizer", "~> 1.2.0"
 gem "daemons", "~> 1.2.1"
-gem "dalli", "~> 2.7.4" # memcache
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe" # mean, median, etc.
-gem "dotenv-rails", "~> 2.7"
-gem "draper", "~> 3.0.1"
+gem "draper", "~> 4.0"
 gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
-gem "fog-aws", "~> 3.3.0"
 gem "friendly_id", "~> 5.1.0"
-gem "immigrant", "~> 0.3.1" # foreign key maintenance
-gem "paperclip", "~> 6.0"
 gem "phony", "~> 2.15"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 gem "rake", "~> 12.3.3"
 gem "random_data", "~> 1.6.0" # Deprecated: Use Faker instead
 gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
-gem "responders", "~> 2.4.0"
+gem "responders", "~> 3.0"
 gem "rqrcode", "~> 0.10.1"
 gem "rubyzip", "~> 1.3"
 gem "term-ansicolor", "~> 1.3.0"
-gem "thor", "0.19.1" # Newer versions produce command line argument errors. Remove constraint when fixed.
+gem "thor", "~> 1.0"
 gem "twilio-ruby", "~> 4.1.0"
 
 # JS/CSS
@@ -47,23 +44,27 @@ gem "webpacker", "~> 4.2"
 # Authz and Authn
 gem "activerecord-session_store", "~> 1.1.1"
 gem "authlogic", "~> 6.1"
-gem "cancancan", "~> 2.3.0"
+gem "cancancan", "~> 3.1"
 gem "draper-cancancan", "~> 1.1"
 gem "scrypt", "~> 3.0"
 
 # Spreadsheets
-gem "axlsx", "~> 2.1.1", git: "https://github.com/sassafrastech/axlsx.git", branch: "stable"
-gem "axlsx_rails", "~> 0.5.0"
-gem "roo", "~> 2.1.1"
+gem "caxlsx", "~> 3.0"
+gem "caxlsx_rails", "~> 0.6.2"
+gem "roo", "~> 2.8"
 
 # Pagination
-gem "will_paginate", "~> 3.1.7"
+gem "will_paginate", "~> 3.1"
 gem "will_paginate-bootstrap4", "~> 0.2.2"
 
 # Markdown
 gem "bluecloth", "~> 2.2.0"
 gem "rdiscount", "~> 2.1.8"
 gem "reverse_markdown", "~> 1.0.3"
+
+# Storage
+gem "fog-aws", "~> 3.3.0"
+gem "paperclip", "~> 6.0"
 
 # API
 gem "active_model_serializers", "~> 0.9.3"
@@ -76,16 +77,23 @@ gem "odata_server", github: "sassafrastech/odata_server", branch: "sassafras"
 # Configuration
 gem "config", "~> 2.2"
 gem "configatron", "~> 4.5.0" # Deprecated, prefer `config` gem
+gem "dotenv-rails", "~> 2.7"
 
 # Tree modelling
-gem "ancestry", "~> 3.0.0"
-gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree.git"
+gem "ancestry", "~> 3.0"
+gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.2.0-noReorder-fastInsert"
 
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"
 
+# Caching
+gem "actionpack-page_caching", "~> 1.1"
+gem "bootsnap", "~> 1.4", require: false
+gem "dalli", "~> 2.7"
+
 # DB
 gem "hairtrigger", "~> 0.2.20"
+gem "immigrant", "~> 0.3.1" # foreign key maintenance
 gem "pg", "~> 0.20"
 gem "pg_search", "~> 2.1"
 gem "postgres-copy", "~> 1.0"
@@ -102,7 +110,7 @@ gem "i18n_country_select", "~> 1.1.7"
 gem "i18n-country-translations", "~> 1.2.3"
 gem "i18n-js", "~> 3.0.0.rc13"
 gem "iso-639", "~> 0.2.5"
-gem "rails-i18n", "~> 5.1"
+gem "rails-i18n", "~> 6.0"
 
 # Analytics
 gem "scout_apm", "~> 2.6"
@@ -121,6 +129,7 @@ group :development do
   gem "binding_of_caller", "~> 0.7.2"
   gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4.1"
+  gem "listen", "~> 3.0"
   gem "rails-erd", "~> 1.4.0"
   gem "spring", "~> 1.3.3"
   gem "thin", "~> 1.7.0"
@@ -142,8 +151,8 @@ group :development, :test do
   # Test framework
   gem "jasmine-rails", "~> 0.10.7" # Deprecated: Barely used.
   gem "rails-controller-testing" # Deprecated: Use request or feature specs instead.
-  gem "rspec-collection_matchers", "~> 1.1.3"
-  gem "rspec-rails", "~> 3.7.2"
+  gem "rspec-collection_matchers", "~> 1.1"
+  gem "rspec-rails", "~> 3.9"
 
   # Mocking/stubbing/factories
   gem "factory_girl_rails", "~> 4.5.0"
@@ -169,7 +178,7 @@ group :development, :test do
   gem "assert_difference", "~> 1.0.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6.1"
   gem "database_cleaner", "~> 1.7.0"
-  gem "db-query-matchers", "~> 0.9"
+  gem "db-query-matchers", "~> 0.10"
   gem "rubocop", "~> 0.91.0"
   gem "rubocop-rails", "~> 2.8"
   gem "timecop", "~> 0.7.3"

@@ -18,7 +18,7 @@ class Replication::UniqueFieldGenerator
   # (e.g. My Form 2, My Form 3, etc.) for the given name (e.g. My Form)
   def generate
     # Get existing value
-    cur_val = klass.where(id: orig_id).pluck(field).first
+    cur_val = klass.where(id: orig_id).pick(field)
 
     # extract any numeric suffix from existing value
     prefix = if style == :sep_words

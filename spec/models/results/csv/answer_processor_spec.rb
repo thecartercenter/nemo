@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Results::Csv::AnswerProcessor do
+describe Results::CSV::AnswerProcessor do
   let(:buffer) { double }
   let(:processor) { described_class.new(buffer) }
 
@@ -128,8 +128,8 @@ describe Results::Csv::AnswerProcessor do
 
   context "long_text_behavior" do
     before do
-      stub_const(Results::Csv::AnswerProcessor, "MAX_NEWLINES", 1)
-      stub_const(Results::Csv::AnswerProcessor, "MAX_CHARACTERS", 12)
+      stub_const(Results::CSV::AnswerProcessor, "MAX_NEWLINES", 1)
+      stub_const(Results::CSV::AnswerProcessor, "MAX_CHARACTERS", 12)
     end
 
     it "excludes long text" do

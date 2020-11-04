@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   class ConditionGroupDecorator < BaseDecorator
     # Returns nil if there are no members and negate is false. nil means 'true'.
     def to_odk
@@ -17,7 +17,7 @@ module Odk
 
     def decorated_members
       # Don't use draper decorate_collection so we can mock in tests
-      members.map { |m| Odk::DecoratorFactory.decorate(m) }
+      members.map { |m| ODK::DecoratorFactory.decorate(m) }
     end
   end
 end

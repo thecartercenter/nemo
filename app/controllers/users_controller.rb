@@ -126,11 +126,13 @@ class UsersController < ApplicationController
 
   def regenerate_api_key
     @user.regenerate_api_key
+    @user.save(validate: false)
     render(json: {value: @user.api_key})
   end
 
   def regenerate_sms_auth_code
     @user.regenerate_sms_auth_code
+    @user.save(validate: false)
     render(json: {value: @user.sms_auth_code})
   end
 

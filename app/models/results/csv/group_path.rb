@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  module Csv
+  module CSV
     # Tracks the current group path as we traverse the list of answer rows.
     # The group path is defined as the response ID plus pairs of [group rank, group item num] for each
     # parent group of a given answer. So a path of: [R1,[2,1],[4,2]] means the current answer is in:

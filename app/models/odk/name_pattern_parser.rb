@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Parses $-style patterns resulting in `output` tags.  Currently these are only used in:
   # - QingGroup > Repeat Item Name
   class NamePatternParser < DynamicPatternParser

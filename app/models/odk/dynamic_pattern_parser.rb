@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Abstract parent class for classes that parse $-style patterns for ODK.
   class DynamicPatternParser
     # Basic regex for codes like $Question7
@@ -20,7 +20,7 @@ module Odk
     def initialize(pattern, src_item:)
       self.pattern = pattern
       self.form = src_item.form
-      self.src_item = Odk::DecoratorFactory.decorate(src_item)
+      self.src_item = ODK::DecoratorFactory.decorate(src_item)
       self.calculated = false
       self.codes_to_outputs = {}
       process_calc_wrapper
@@ -87,7 +87,7 @@ module Odk
         if reserved_codes.key?(code)
           reserved_codes[code]
         elsif (qing = form.questioning_with_code(code[1..]))
-          build_output(Odk::QingDecorator.decorate(qing))
+          build_output(ODK::QingDecorator.decorate(qing))
         elsif calculated?
           # We don't want to return nil in calculated expressions because it might result in
           # invalid XPath. Better to return an empty string and hope that it doesn't break the form.

@@ -53,7 +53,7 @@ class Question < ApplicationRecord
   include Replication::Replicable
   include Replication::Standardizable
   include MissionBased
-  include Odk::Mediable
+  include ODK::Mediable
   include Wisper.model
 
   # Note that the maximum allowable length is 22 chars (1 letter plus 21 letters/numbers)

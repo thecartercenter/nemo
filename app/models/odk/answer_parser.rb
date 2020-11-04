@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Fills answer value
   class AnswerParser
     attr_accessor :response, :files

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Decorates Questionings for ODK views.
   class QingDecorator < FormItemDecorator
     delegate_all
@@ -65,7 +65,7 @@ module Odk
     end
 
     def calculate
-      @calculate ||= default_answer? ? Odk::ResponsePatternParser.new(default, src_item: self).to_odk : nil
+      @calculate ||= default_answer? ? ODK::ResponsePatternParser.new(default, src_item: self).to_odk : nil
     end
 
     def constraint

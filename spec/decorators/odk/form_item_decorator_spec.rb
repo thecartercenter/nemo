@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Odk
+module ODK
   describe FormItemDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
     include_context "odk rendering"
 

@@ -21,9 +21,6 @@ class UsersSearcher < Searcher
 
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
-    # because assignments association is often added by the controller, only add if not already in relation
-    search.associations.delete(:assignments) if relation.to_sql.match?(/JOIN "assignments" ON/)
-
     self.relation = relation.joins(search.associations).where(search.sql)
 
     # If scoped by mission, remove rows from other missions

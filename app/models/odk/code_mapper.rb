@@ -2,7 +2,7 @@
 
 require "singleton"
 
-module Odk
+module ODK
   # CodeMapper maps between odk codes and form item. Used by odk decorators and odk response parser
   class CodeMapper
     include Singleton
@@ -13,7 +13,7 @@ module Odk
       return "/data" if item.is_a?(FormItem) && item.is_root?
       case item
       when Questioning then "qing#{item.id}"
-      when QingGroup, Odk::QingGroupFragment then "grp#{item.id}"
+      when QingGroup, ODK::QingGroupFragment then "grp#{item.id}"
       when Subqing
         base = code_for_item(item.questioning)
         if item.multilevel?

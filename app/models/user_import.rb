@@ -83,7 +83,7 @@ class UserImport < TabularImport
   # Takes a happy, uncoerced gender and stuffs it into a recognized box
   def coerce_gender(gender_string)
     return nil if gender_string.blank?
-    gender_options = User::GENDER_OPTIONS.map { |g| [g, I18n.t("user.gender_options.#{g}")] }.to_h
+    gender_options = User::GENDER_OPTIONS.index_with { |g| I18n.t("user.gender_options.#{g}") }
     gender = gender_options.find { |_, v| gender_string == v }&.first || :specify
     gender_custom = gender == :specify ? gender_string : nil
     [gender, gender_custom]

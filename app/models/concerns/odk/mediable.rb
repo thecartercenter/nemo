@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Code related to storing media files that are intended to be sent to and viewed in ODK Collect.
   module Mediable
     extend ActiveSupport::Concern

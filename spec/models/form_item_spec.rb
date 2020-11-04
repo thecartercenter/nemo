@@ -167,7 +167,7 @@ describe FormItem do
   describe "normalization" do
     let(:form_item) { create(:qing_group, submitted.merge(display_conditions_attributes: cond_attrs)) }
     let(:left_qing) { create(:questioning) }
-    subject { submitted.keys.map { |k| [k, form_item.send(k)] }.to_h }
+    subject { submitted.keys.index_with { |k| form_item.send(k) }.to_h }
 
     describe "display_conditions and display_if" do
       context "with no conditions" do

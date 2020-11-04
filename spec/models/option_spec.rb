@@ -36,7 +36,7 @@ describe Option do
 
   describe "normalization" do
     let(:option) { build(:option, submitted) }
-    subject { submitted.keys.map { |k| [k, option.send(k)] }.to_h }
+    subject { submitted.keys.index_with { |k| option.send(k) }.to_h }
 
     before { option.valid? } # Trigger normalization.
 

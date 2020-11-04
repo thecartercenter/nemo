@@ -72,7 +72,7 @@ describe Question do
 
   describe "normalization" do
     let(:question) { create(:question, submitted) }
-    subject { submitted.keys.map { |k| [k, question.send(k)] }.to_h }
+    subject { submitted.keys.index_with { |k| question.send(k) }.to_h }
 
     describe "min max constraints" do
       shared_examples_for "minmax" do |prefix|

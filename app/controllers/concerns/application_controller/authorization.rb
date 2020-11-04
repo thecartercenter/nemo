@@ -2,7 +2,7 @@
 
 require "resolv"
 
-module Concerns::ApplicationController::Authorization
+module ApplicationController::Authorization
   extend ActiveSupport::Concern
 
   # makes sure admin_mode is not true if user is not admin

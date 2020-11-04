@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Decorates a QingGroup OR a QingGroupFragment for ODK purposes.
   class QingGroupDecorator < FormItemDecorator
     delegate_all
@@ -59,8 +59,8 @@ module Odk
 
       xpath = "#{xpath_prefix}/#{odk_code}"
       body_wrapper_tag(xpath) do
-        if (fragments = Odk::QingGroupPartitioner.new.fragment(self))
-          fragments = Odk::DecoratorFactory.decorate_collection(fragments)
+        if (fragments = ODK::QingGroupPartitioner.new.fragment(self))
+          fragments = ODK::DecoratorFactory.decorate_collection(fragments)
           fragments.map { |f| f.body_tags(xpath_prefix: xpath_prefix) }.reduce(:<<)
         else
           inner_group_tag do

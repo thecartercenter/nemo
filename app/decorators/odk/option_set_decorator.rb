@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Decorates OptionSets for ODK rendering.
   class OptionSetDecorator < BaseDecorator
     delegate_all
@@ -18,7 +18,7 @@ module Odk
     # Returns <text> tags for options.
     def translation_tags(lang)
       tags = nodes_for_translation_tags.map do |node|
-        content_tag(:text, id: Odk::CodeMapper.instance.code_for_item(node)) do
+        content_tag(:text, id: ODK::CodeMapper.instance.code_for_item(node)) do
           content_tag(:value) do
             node.option.name(lang, fallbacks: true)
           end

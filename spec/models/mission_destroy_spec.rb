@@ -73,6 +73,6 @@ describe "mission destroy" do
   end
 
   def actual_counts
-    before_counts.keys.map { |k| [k, k.to_s.constantize.count] }.to_h
+    before_counts.keys.index_with { |k| k.to_s.constantize.count }
   end
 end

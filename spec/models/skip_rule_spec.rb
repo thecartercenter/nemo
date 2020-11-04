@@ -38,7 +38,7 @@ describe SkipRule do
         create(:skip_rule, submitted.merge(destination: "end", conditions_attributes: cond_attrs))
       end
       let(:left_qing) { create(:questioning) }
-      subject { submitted.keys.map { |k| [k, skip_rule.send(k)] }.to_h }
+      subject { submitted.keys.index_with { |k| skip_rule.send(k) }.to_h }
 
       context "with no conditions" do
         let(:cond_attrs) { [] }
