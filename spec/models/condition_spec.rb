@@ -42,7 +42,7 @@ describe Condition do
     let(:form) { create(:form, question_types: %w[integer select_one]) }
     let(:condition) { build(:condition, submitted).tap(&:validate) }
     let(:opt_node) { form.c[1].option_set.c[0] }
-    subject(:normalized) { submitted.keys.map { |k| [k, condition.send(k)] }.to_h }
+    subject(:normalized) { submitted.keys.index_with { |k| condition.send(k) }.to_h }
 
     describe "effects of right_side_type" do
       context "extraneous value due to right_side_type=qing" do

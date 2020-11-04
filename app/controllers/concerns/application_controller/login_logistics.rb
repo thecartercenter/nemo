@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Concerns::ApplicationController::LoginLogistics
+module ApplicationController::LoginLogistics
   extend ActiveSupport::Concern
 
   # logs out user if not already logged out

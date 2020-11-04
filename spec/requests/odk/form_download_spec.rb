@@ -21,7 +21,7 @@ describe FormsController, :odk, type: :request do
   before do
     # Stub threshold constant so that multilevel opt set is rendered normally,
     # but super_multilevel opt set is rendered as external.
-    stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+    stub_const(ODK::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
   end
 
   context "for regular mission" do
@@ -81,7 +81,7 @@ describe FormsController, :odk, type: :request do
       end
 
       context "for form with small and large multilevel option sets" do
-        let(:ifa) { Odk::ItemsetsFormAttachment.new(form: form_both_multi) }
+        let(:ifa) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         it "should render regular manifest tag" do
           get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: auth_header)
@@ -164,7 +164,7 @@ describe FormsController, :odk, type: :request do
 
     describe "getting itemsets file" do
       context "for form with option sets" do
-        let(:ifa) { Odk::ItemsetsFormAttachment.new(form: form_both_multi) }
+        let(:ifa) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         before do
           ifa.ensure_generated

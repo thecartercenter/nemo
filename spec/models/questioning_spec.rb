@@ -60,7 +60,7 @@ describe Questioning do
     let(:q_attrs) { {} }
     let(:question) { create(:question, q_attrs) }
     let(:qing) { build(:questioning, submitted.merge(question: question)).tap(&:valid?) }
-    subject { submitted.keys.map { |k| [k, qing.send(k)] }.to_h }
+    subject { submitted.keys.index_with { |k| qing.send(k) }.to_h }
 
     describe "hidden/disabled/required/read_only" do
       context do

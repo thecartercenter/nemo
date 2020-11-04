@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Parses $-style patterns involving resulting in XPath expressions. Currently these can be in:
   # - Questioning > Default Answer
   # - Form > Default Response Name

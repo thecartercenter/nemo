@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# Load the rails application
-require File.expand_path("application", __dir__)
+# Load the Rails application.
+require_relative("application")
 
-# Initialize the rails application
+# Initialize the Rails application.
 ELMO::Application.initialize!
 
 # Standard date-time format

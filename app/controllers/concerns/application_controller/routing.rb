@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "uri"
-module Concerns::ApplicationController::Routing
+module ApplicationController::Routing
   extend ActiveSupport::Concern
 
   def check_route
@@ -67,6 +67,8 @@ module Concerns::ApplicationController::Routing
 
   # Saves the current mission (or lack thereof) to the DB.
   def remember_mission
-    current_user.remember_last_mission(current_mission) if current_user && current_mode == "mission"
+    return unless current_user && mission_mode?
+    current_user.remember_last_mission(current_mission)
+    current_user.save(validate: false)
   end
 end

@@ -36,7 +36,7 @@ class Replication::ObjProxy
   def children(assoc)
     # Retrieve the id (and ancestry, if applicable) of the orig children objects.
     if assoc.belongs_to?
-      fk_id = klass.where(id: id).pluck(assoc.foreign_key).first
+      fk_id = klass.where(id: id).pick(assoc.foreign_key)
       fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
     elsif assoc.ancestry?
       child_ancestry = [ancestry, id].compact.join("/")
@@ -202,7 +202,7 @@ class Replication::ObjProxy
   end
 
   def backward_assoc_id(replicator, context, assoc)
-    orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
+    orig_foreign_id = klass.where(id: id).pick(assoc.foreign_key)
     if orig_foreign_id.nil?
       replicator.log("Original foreign ID for backward assoc #{assoc.name} is NULL, skipping")
       return nil
@@ -225,7 +225,7 @@ class Replication::ObjProxy
       end
     else
       target_class = if assoc.polymorphic?
-                       klass.where(id: id).pluck(assoc.foreign_type).first.constantize
+                       klass.where(id: id).pick(assoc.foreign_type).constantize
                      else
                        assoc.target_class
                      end
@@ -250,7 +250,7 @@ class Replication::ObjProxy
 
     # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
     elsif (reuse_col = target_class.replicable_opts[:reuse_if_match])
-      orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
+      orig_reuse_val = target_class.where(id: orig_id).pick(reuse_col)
       target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
 
     # Else try looking up original_id if available

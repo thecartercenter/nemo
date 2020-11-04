@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Odk
+module ODK
   # Takes a response and odk data. Parses odk data into answer tree for response.
   # Returns the response because in the case of multimedia, the parser may replace
   # the response object the controller passes in with an
@@ -45,7 +45,7 @@ module Odk
     end
 
     def answer_parser
-      @answer_parser ||= Odk::AnswerParser.new(response, files)
+      @answer_parser ||= ODK::AnswerParser.new(response, files)
     end
 
     def build_answer_tree(data)
@@ -85,7 +85,7 @@ module Odk
     end
 
     def node_is_ir_question?(node)
-      node.name == Odk::FormDecorator::IR_QUESTION
+      node.name == ODK::FormDecorator::IR_QUESTION
     end
 
     def node_is_odk_header?(node)
@@ -163,7 +163,7 @@ module Odk
     end
 
     def form_item_id_from_tag(tag)
-      Odk::CodeMapper.instance.item_id_for_code(tag)
+      ODK::CodeMapper.instance.item_id_for_code(tag)
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct

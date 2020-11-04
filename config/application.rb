@@ -1,30 +1,44 @@
 # frozen_string_literal: true
 
-require File.expand_path("boot", __dir__)
+require_relative("boot")
 
 require "rails/all"
 require "coffee_script"
 
-# This may be required on Mac with Homebrew.
-# https://github.com/oneclick/rubyinstaller2/issues/96#issuecomment-548249647
-require "em/pure_ruby" unless defined?(EventMachine)
-
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module ELMO
   # Application-wide settings and setup.
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults(6.0)
+
     # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # Application configuration can go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded after loading
+    # the framework and any gems in your application.
 
     # add concerns folders to autoload paths
-    config.autoload_paths += [
-      "#{config.root}/app/controllers/concerns",
-      "#{config.root}/app/controllers/concerns/application_controller",
-      "#{config.root}/app/models/concerns",
-      "#{config.root}/lib"
+    config.autoload_paths += Dir[
+      Rails.root.join("app/controllers/concerns"),
+      Rails.root.join("app/models/concerns")
     ]
+
+    # Overrides are manually required below.
+    Rails.autoloaders.main.ignore(Rails.root.join("app/overrides"))
+
+    config.eager_load_paths += Dir[
+      # Zeitwerk wants us to eager_load lib instead of autoloading.
+      Rails.root.join("lib")
+    ]
+
+    # Zeitwerk uses absolute paths internally, and applications running in :zeitwerk mode
+    # do not need require_dependency, so models, controllers, jobs, etc. do not need to be
+    # in $LOAD_PATH. Setting this to false saves Ruby from checking these directories when
+    # resolving require calls with relative paths.
+    config.add_autoload_paths_to_load_path = false
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -42,7 +56,7 @@ module ELMO
     config.i18n.enforce_available_locales = false
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
+    config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -75,6 +89,9 @@ module ELMO
     end
 
     config.active_record.time_zone_aware_types = [:datetime]
+
+    # Require `belongs_to` associations by default.
+    config.active_record.belongs_to_required_by_default = false
 
     ####################################
     # CUSTOM SETTINGS
@@ -120,7 +137,7 @@ module ELMO
     # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
     config.to_prepare do
-      Dir.glob(Rails.root.join("app", "overrides", "**", "*_override.rb")).each do |override|
+      Dir.glob(Rails.root.join("app/overrides/**/*_override.rb")).each do |override|
         require_dependency override
       end
     end

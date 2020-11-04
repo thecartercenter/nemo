@@ -327,7 +327,7 @@ describe ResponsesSearcher do
     match do |actual|
       expected[:advanced_text] ||= ""
       actual.apply
-      @actual = expected.keys.map { |k| [k, actual.send(k)] }.to_h
+      @actual = expected.keys.index_with { |k| actual.send(k) }
       @actual = @actual.values.map(&method(:safe_sort))
       expected = expected.values.map(&method(:safe_sort))
       @actual == expected

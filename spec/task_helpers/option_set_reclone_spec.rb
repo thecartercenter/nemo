@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "./lib/task_helpers/option_set_reclone"
 
-describe OptionSetReclone do
+describe TaskHelpers::OptionSetReclone do
   let!(:orig) { create(:option_set, option_names: :multilevel) }
   let!(:clone) { orig.replicate(mode: :clone) }
   let!(:form) { create(:form, question_types: %w[select_one integer]) }

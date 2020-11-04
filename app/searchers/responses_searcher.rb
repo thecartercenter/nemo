@@ -5,8 +5,8 @@ class ResponsesSearcher < Searcher
   # Parsed search values
   attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups, :start_date, :end_date
 
-  def initialize(*args)
-    super
+  def initialize(**options)
+    super(**options)
     self.form_ids = []
     self.qings = []
     self.submitters = []
@@ -264,7 +264,7 @@ class ResponsesSearcher < Searcher
       results = results.or(possibilities.where("LOWER(options.name_translations ->> ?) = ?", locale, value))
     end
 
-    results.pluck(:id).first
+    results.pick(:id)
   end
 
   # Map possibilities to a single id based on any active form filters.
@@ -272,7 +272,7 @@ class ResponsesSearcher < Searcher
     possibilities = qing[:possibilities]
     return qing unless possibilities
     possibilities = possibilities.where(form_id: form_ids) if form_ids.present?
-    qing[:id] = possibilities.filter_unique.pluck(:id).first
+    qing[:id] = possibilities.order(:id).pick(:id)
     qing.except(:possibilities)
   end
 

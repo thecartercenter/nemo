@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe ResponseCsvExportOperationJob do
+describe ResponseCSVExportOperationJob do
   let(:user) { create(:user, role_name: "coordinator") }
   let(:operation) { create(:operation, creator: user) }
   let(:csv) { File.read(operation.attachment.path) }

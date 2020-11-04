@@ -54,7 +54,7 @@ class OptionNode < ApplicationRecord
   has_many :conditions, inverse_of: :option_node, dependent: :restrict_with_exception
   has_many :answers, dependent: :restrict_with_exception
   has_many :choices, dependent: :restrict_with_exception
-  has_ancestry cache_depth: true
+  has_ancestry(cache_depth: true, primary_key_format: Ancestry::ANCESTRY_PATTERN)
 
   before_validation { self.ancestry = nil if ancestry.blank? }
   after_save :update_children
@@ -94,12 +94,6 @@ class OptionNode < ApplicationRecord
       .order("rank")
       .group_by(&:ancestry)
     roots.each { |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
-  end
-
-  # Overriding this to avoid error from ancestry.
-  alias _children children
-  def children
-    new_record? ? [] : _children
   end
 
   def sorted_children
@@ -166,12 +160,12 @@ class OptionNode < ApplicationRecord
 
   # an odk-friendly unique code
   def odk_code
-    Odk::CodeMapper.instance.code_for_item(self)
+    ODK::CodeMapper.instance.code_for_item(self)
   end
 
   # an odk-friendly unique code for this node's parent
   def parent_odk_code
-    Odk::CodeMapper.instance.code_for_item(parent)
+    ODK::CodeMapper.instance.code_for_item(parent)
   end
 
   # Serializes all descendants. Meant to be called on root.

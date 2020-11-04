@@ -2,9 +2,9 @@
 
 require "rails_helper"
 
-describe Odk::CodeMapper do
+describe ODK::CodeMapper do
   let(:form) { create(:form, question_types: ["text", %w[text text], "multilevel_select_one"]) }
-  let(:mapper) { Odk::CodeMapper.instance }
+  let(:mapper) { ODK::CodeMapper.instance }
 
   context "item_id_for_code" do
     it "retrieves group for group code" do

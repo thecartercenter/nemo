@@ -10,7 +10,7 @@ module Utils
     #
     # The actual JMeter test will be run on a different server that does not have NEMO installed.
     # It will just know how to make a bunch of HTTP requests based on the options and data we give it.
-    class OdkSubmissionLoadTest < LoadTest
+    class ODKSubmissionLoadTest < LoadTest
       # Required `options`:
       #   username: User doing the submitting
       #   password: User's password
@@ -105,7 +105,7 @@ module Utils
       end
 
       def form_items
-        @form_items ||= form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
+        @form_items ||= form.preordered_items.map { |i| ODK::DecoratorFactory.decorate(i) }
       end
 
       def form_code

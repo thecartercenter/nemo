@@ -51,7 +51,7 @@
 # It is always a leaf in a response tree.
 class Answer < ResponseNode
   include ActionView::Helpers::NumberHelper
-  include PgSearch
+  include PgSearch::Model
   include Wisper.model
 
   LOCATION_ATTRIBS = %i[latitude longitude altitude accuracy].freeze

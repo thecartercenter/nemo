@@ -8,7 +8,7 @@ class String
   end
 
   def normalize
-    mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n, "")
+    unicode_normalize(:nfkd).gsub(/[^\x00-\x7F]/n, "")
   end
 
   # Temporary method to rid a string of pesky characters that might annoy Power BI.

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  module Csv
+  module CSV
     # Generates CSV from responses in an efficient way. Built to handle millions of Answers.
     class Generator
       attr_accessor :buffer, :answer_processor, :header_map, :response_scope, :options

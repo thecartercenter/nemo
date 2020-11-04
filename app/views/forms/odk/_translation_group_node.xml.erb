@@ -1,5 +1,5 @@
 <% if node.is_a?(QingGroup) %>
-  <% node = Odk::DecoratorFactory.decorate(node) %>
+  <% node = ODK::DecoratorFactory.decorate(node) %>
   <% unless node.root? %>
     <text id="<%= node.odk_code %>:label">
       <value><%= node.group_name(lang, fallbacks: true) %></value>
@@ -9,7 +9,7 @@
     </text>
     <% if node.group_item_name.present? %>
       <text id="<%= node.odk_code %>:itemname">
-        <value><%= Odk::NamePatternParser.new(node.group_item_name(lang, fallbacks: true), src_item: node).to_odk.html_safe %></value>
+        <value><%= ODK::NamePatternParser.new(node.group_item_name(lang, fallbacks: true), src_item: node).to_odk.html_safe %></value>
       </text>
     <% end %>
   <% end %>
