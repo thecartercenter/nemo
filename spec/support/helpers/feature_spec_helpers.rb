@@ -5,7 +5,7 @@ module FeatureSpecHelpers
     ENV["TEST_LOGGED_IN_USER_ID"] = user.id
   end
 
-  def real_login(user, password = "Password1")
+  def real_login(user, password = test_password)
     visit(login_path(locale: "en"))
     fill_in("Username", with: user.login)
     fill_in("Password", with: password)
@@ -117,6 +117,16 @@ module FeatureSpecHelpers
     # Should show, then hide the global loading indicator.
     wait_for_load_start
     wait_for_load_stop
+  end
+
+  def logout
+    find("#logout_button").click
+    expect(page).to have_content("Logged Out")
+  end
+
+  def be_logged_in
+    # Operations Panel only shows in header when logged in
+    have_content("Operations Panel")
   end
 
   def select2(value, options = {})
