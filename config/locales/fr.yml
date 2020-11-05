@@ -1204,7 +1204,6 @@ fr:
     recent_responses: "Dernières réponses"
     shrink_map: "Réduire la carte"
     response_locations: "Lieu de soumission des réponses"
-    response_locations_truncated: "afficher les %{shown} de %{total} réponses les plus rescentes"
     summary: "Résumé"
     top_forms: "Formulaires les plus Actifs"
   filter:

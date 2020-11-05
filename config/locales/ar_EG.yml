@@ -1252,7 +1252,6 @@ ar:
     recent_responses: "آخر الردود"
     shrink_map: "تقليص الخريطة"
     response_locations: "مواقع الردود"
-    response_locations_truncated: "عرض أحدث %{shown} من %{total} الردود"
     summary: "خلاصة"
     top_forms: "أفضل الإستمارات"
   filter:

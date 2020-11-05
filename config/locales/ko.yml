@@ -946,7 +946,6 @@ ko:
     recent_responses: "최근 응답지"
     shrink_map: "지도 축소"
     response_locations: "응답 지역"
-    response_locations_truncated: "%{total} 중 %{shown}개의 최근 응답지를 보여줍니다."
     summary: "요약"
     top_forms: "가장 많이 다운받은 질문지"
   form:

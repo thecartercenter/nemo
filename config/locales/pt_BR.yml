@@ -1213,7 +1213,6 @@ pt-BR:
     recent_responses: "Últimas submissões"
     shrink_map: "Reduzir o mapa"
     response_locations: "Localizações das submissões"
-    response_locations_truncated: "Exibindo as %{shown} submissões mais recentes de um total de %{total} "
     summary: "Sumário"
     top_forms: "Formulários principais"
   filter:
