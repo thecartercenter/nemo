@@ -110,7 +110,7 @@ module Results
         option_node = answer.option_node
         set[option_node.level_name] = answer.option_name if option_node
       end
-      Settings.use_data_factory.present? ? set.to_s : set
+      ENV["NEMO_USE_DATA_FACTORY"].present? ? set.to_s : set
     end
 
     def value_for(answer)
@@ -130,7 +130,7 @@ module Results
 
     def select_multiple_value(answer)
       value = answer.choices.empty? ? [] : answer.choices.map(&:option_name).sort
-      Settings.use_data_factory.present? ? value.to_s : value
+      ENV["NEMO_USE_DATA_FACTORY"].present? ? value.to_s : value
     end
 
     def media_value(answer)
@@ -149,7 +149,7 @@ module Results
       value = Answer::LOCATION_COLS.map do |key|
         [key.titleize, answer.attributes[key]&.to_f]
       end.to_h
-      Settings.use_data_factory.present? ? value.to_s : value
+      ENV["NEMO_USE_DATA_FACTORY"].present? ? value.to_s : value
     end
 
     def format_value(value)
