@@ -45,16 +45,18 @@ class PasswordResetsController < ApplicationController
     @user.password = params[:user][:password]
     @user.password_confirmation = params[:user][:password_confirmation]
 
-    # Don't log in automatically. This was causing an occasional bug in which
-    # the automatic login wasn't working.
+    # Don't log in automatically. This can create hard-to-find bugs if automatic login isn't working.
     if @user.save_without_session_maintenance
       User.ignore_blank_passwords = true
-
-      # Log in the user explicitly
-      UserSession.create!(login: @user.login, password: @user.password)
-      post_login_housekeeping
-
-      flash[:success] = t("password_reset.success")
+      if !@user.active?
+        flash[:error] = t("password_reset.success_but_inactive")
+        redirect_to(login_url)
+      else
+        # Log in the user explicitly
+        UserSession.create!(login: @user.login, password: @user.password)
+        post_login_housekeeping
+        flash[:success] = t("password_reset.success")
+      end
     else
       @user.password = nil
       @user.password_confirmation = nil

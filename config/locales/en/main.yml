@@ -1502,6 +1502,7 @@ en:
     multiple_accounts: "There are multiple accounts associated with that email address. Please try entering your username, or contact an administrator."
     no_associated_email: "There is no email address associated with that account. Please contact an administrator to have your password changed."
     success: "Password updated successfully."
+    success_but_inactive: "Password updated successfully, but your account is not active, so you cannot log in."
     token_not_found: |-
       We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL
       from your email into your browser or restarting the reset password process.
