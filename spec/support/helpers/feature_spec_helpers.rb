@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 module FeatureSpecHelpers
+  ALERT_CLASSES = {
+    notice: "alert-info",
+    success: "alert-success",
+    error: "alert-danger",
+    alert: "alert-warning"
+  }.freeze
+
   def login(user)
     ENV["TEST_LOGGED_IN_USER_ID"] = user.id
   end
@@ -127,6 +134,31 @@ module FeatureSpecHelpers
   def be_logged_in
     # Operations Panel only shows in header when logged in
     have_content("Operations Panel")
+  end
+
+  def have_title(title)
+    have_css("h1.title", text: title)
+  end
+
+  def have_flash(content, type: nil)
+    type_class = type.nil? ? "" : ".#{ALERT_CLASSES[type]}"
+    have_css("div.alert#{type_class}", text: content)
+  end
+
+  def have_flash_error(content)
+    have_flash(content, type: :error)
+  end
+
+  def have_flash_warning(content)
+    have_flash(content, type: :warning)
+  end
+
+  def have_flash_info(content)
+    have_flash(content, type: :info)
+  end
+
+  def have_flash_success(content)
+    have_flash(content, type: :success)
   end
 
   def select2(value, options = {})

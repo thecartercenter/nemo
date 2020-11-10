@@ -91,14 +91,19 @@ feature "password reset" do
         end
       end
 
-      context "with existing password" do
-        it "should log in user" do
+      context "with inactive account" do
+        before do
+          user.activate!(false)
+        end
+
+        it "should redirect to login page after reset with flash" do
           visit("/en/password-resets/#{user.perishable_token}/edit")
-          expect(page).to have_content("please enter a new password for your account")
           fill_in("Password", with: test_password)
           fill_in("Retype Password", with: test_password)
           click_on("Send")
-          expect(page).to be_logged_in
+          expect(page).not_to be_logged_in
+          expect(page).to have_title("Login")
+          expect(page).to have_flash_error("Password updated successfully, but your account is not active,")
         end
       end
     end
