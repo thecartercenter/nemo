@@ -258,6 +258,35 @@ describe User do
     expect(user.login).to eq("alpha")
   end
 
+  describe "destruction" do
+    let!(:user) { create(:user) }
+
+    context "with submitted response" do
+      let!(:response) { create(:response, user: user) }
+
+      it "raises DeletionError" do
+        expect { user.destroy }.to raise_error(DeletionError)
+      end
+    end
+
+    context "with reviewed response" do
+      let!(:response) { create(:response, reviewer: user) }
+
+      it "raises DeletionError" do
+        expect { user.destroy }.to raise_error(DeletionError)
+      end
+    end
+
+    context "with checked out response" do
+      let!(:response) { create(:response, checked_out_by: user) }
+
+      it "nullifies" do
+        user.destroy
+        expect(response.reload.checked_out_by).to be_nil
+      end
+    end
+  end
+
   private
 
   def assert_phone_uniqueness_error(user)

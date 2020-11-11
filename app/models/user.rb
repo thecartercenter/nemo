@@ -61,6 +61,10 @@ class User < ApplicationRecord
   attr_accessor(:password_confirmation)
 
   has_many :responses, inverse_of: :user
+  has_many :reviewed_responses, class_name: "Response", foreign_key: :reviewer_id,
+                                inverse_of: :reviewer
+  has_many :checked_out_responses, class_name: "Response", foreign_key: :checked_out_by_id,
+                                   inverse_of: :checked_out_by, dependent: :nullify
   has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
   has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
   has_many :assignments, -> { includes(:mission) }, autosave: true, dependent: :destroy,
@@ -382,10 +386,7 @@ class User < ApplicationRecord
   end
 
   def check_assoc
-    # can't delete users with related responses.
-    raise DeletionError, :cant_delete_if_responses unless responses.empty?
-
-    # can't delete users with related sms messages.
+    raise DeletionError, :cant_delete_if_responses unless responses.empty? && reviewed_responses.empty?
     raise DeletionError, :cant_delete_if_sms_messages unless Sms::Message.where(user_id: id).empty?
   end
 
