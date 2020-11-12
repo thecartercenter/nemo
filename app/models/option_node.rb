@@ -209,8 +209,9 @@ class OptionNode < ApplicationRecord
         # is too expensive to check for option sets with lots of questions and answers
         # (e.g. the 'Yes/No' set). Once we change answers to point directly to option_nodes, this will
         # be much cheaper to check given that we can use indices.
-        # Until then, if someone tries to delete a node that has answers, the DeletionError check below
-        # should catch it and display an error. This could still cause crashes of the type that motivated
+        # Until then, if someone tries to delete a node that has answers, the restrict_with_exception
+        # checks on the associations should catch it and display an error.
+        # This could still cause crashes of the type that motivated
         # this fix, but they should be much rarer because folks likely won't be trying to delete an option
         # that has so many answers.
         branch[:removable] = true

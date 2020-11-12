@@ -261,19 +261,33 @@ describe User do
   describe "destruction" do
     let!(:user) { create(:user) }
 
+    context "without associations" do
+      it "destroys cleanly" do
+        user.destroy
+      end
+    end
+
     context "with submitted response" do
       let!(:response) { create(:response, user: user) }
 
-      it "raises DeletionError" do
-        expect { user.destroy }.to raise_error(DeletionError)
+      it "raises DeleteRestrictionError" do
+        expect { user.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError) do |e|
+          # We test the exact wording of the error because the last word is sometimes used to
+          # lookup i18n strings.
+          expect(e.to_s).to eq("Cannot delete record because of dependent responses")
+        end
       end
     end
 
     context "with reviewed response" do
       let!(:response) { create(:response, reviewer: user) }
 
-      it "raises DeletionError" do
-        expect { user.destroy }.to raise_error(DeletionError)
+      it "raises DeleteRestrictionError" do
+        expect { user.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError) do |e|
+          # We test the exact wording of the error because the last word is sometimes used to
+          # lookup i18n strings.
+          expect(e.to_s).to eq("Cannot delete record because of dependent reviewed_responses")
+        end
       end
     end
 
@@ -283,6 +297,18 @@ describe User do
       it "nullifies" do
         user.destroy
         expect(response.reload.checked_out_by).to be_nil
+      end
+    end
+
+    context "with SMS message" do
+      let!(:message) { create(:sms_reply, user: user) }
+
+      it "raises DeleteRestrictionError" do
+        expect { user.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError) do |e|
+          # We test the exact wording of the error because the last word is sometimes used to
+          # lookup i18n strings.
+          expect(e.to_s).to eq("Cannot delete record because of dependent sms_messages")
+        end
       end
     end
   end

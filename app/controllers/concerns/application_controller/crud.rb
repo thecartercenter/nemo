@@ -9,10 +9,15 @@ module ApplicationController::Crud
     obj.send(options[:but_first]) if options[:but_first]
     obj.destroy
     flash[:success] = "#{obj.class.model_name.human} #{t('errors.messages.deleted_successfully')}"
-  rescue DeletionError
+  rescue DeletionError # Deprecated
     flash[:error] =
       t($ERROR_INFO.to_s, scope: [:activerecord, :errors, :models, obj.class.model_name.i18n_key],
                           default: t("errors.messages.generic_delete_error"))
+  rescue ActiveRecord::DeleteRestrictionError => error # Preferred method
+    assn_name = error.to_s.split(" ")[-1]
+    model = obj.class.model_name.i18n_key
+    key = "activerecord.errors.models.#{model}.cant_delete_if_has_#{assn_name}"
+    flash[:error] = t(key, default: t("errors.messages.generic_delete_error"))
   end
 
   # Handles ParamaterMissing errors

@@ -10,10 +10,11 @@ class EnumeratingDestroyer < ApplicationDestroyer
     scope.each do |object|
       next if handle_explicit_skip(object)
       begin
-        raise DeletionError unless ability.can?(:destroy, object)
+        raise ActiveRecord::DeleteRestrictionError unless ability.can?(:destroy, object)
         object.destroy
         counts[:destroyed] += 1
-      rescue DeletionError
+      # The former is deprecated, and we are moving toward the latter.
+      rescue DeletionError, ActiveRecord::DeleteRestrictionError
         handle_error(object)
       end
     end

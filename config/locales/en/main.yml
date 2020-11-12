@@ -857,7 +857,9 @@ en:
               blank_unless_goto_end: "This field is required unless you choose 'skip to end of form'."
         user:
           at_least_digits: "Please enter at least %{num} digits."
-          cant_delete_if_responses: "You can't delete this user because they have associated responses."
+          cant_delete_if_has_responses: "You can't delete this user because they have associated responses."
+          cant_delete_if_has_reviewed_responses: "You can't delete this user because they have reviewed responses."
+          cant_delete_if_has_sms_messages: "You can't delete this user because they have associated SMS messages."
           duplicate_assignments: "There are duplicate assignments."
           no_missions: "You are not assigned to any missions."
           phone_assigned_to_other: "This number has already been assigned to another user."
