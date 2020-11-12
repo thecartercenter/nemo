@@ -369,7 +369,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 #### Upgrading to v11.11
 
-1. Move any relevant configs from `config/settings.local.yml` to `.env`
+1. Migrate any configs from `config/settings.local.yml` to `.env` (see `.env.development` for what the new keys should be named)
 
 #### Upgrading to latest
 
