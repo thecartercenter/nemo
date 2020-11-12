@@ -45,7 +45,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   def transform_json_for_entry(json)
     cached_json = json["CachedJson"]
     # Lazy-cache the JSON if it hasn't been cached yet.
-    if cached_json.blank? || Settings.force_fresh_odata.present?
+    if cached_json.blank? || ENV["NEMO_FORCE_FRESH_ODATA"].present?
       response = Response.find(json["Id"])
       cached_json = CacheODataJob.cache_response(response)
       # Normally this replacement happens in SQL when querying the data.
