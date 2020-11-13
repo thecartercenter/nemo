@@ -24,7 +24,7 @@ gem "rqrcode", "~> 0.10.1"
 gem "rubyzip", "~> 1.3"
 gem "term-ansicolor", "~> 1.3"
 gem "thor", "~> 1.0"
-gem "twilio-ruby", "~> 4.1.0" # Does not use semver, watch out!
+gem "twilio-ruby", "~> 4.2" # Does not use semver after v5, watch out!
 
 # JS/CSS
 gem "bootstrap", "~> 4.3"
