@@ -181,5 +181,6 @@ group :development, :test do
   gem "db-query-matchers", "~> 0.10"
   gem "rubocop", "~> 0.91.0" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
   gem "rubocop-rails", "~> 2.8"
+  gem "rubocop-rspec", "~> 1.44"
   gem "timecop", ">= 0"
 end
