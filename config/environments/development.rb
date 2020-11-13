@@ -74,6 +74,9 @@ ELMO::Application.configure do
 
   config.action_view.logger = nil
 
+  # Uncomment to enable stack traces for deprecation warnings.
+  # ActiveSupport::Deprecation.debug = true
+
   config.to_prepare do
     # # [Performance] Uncomment to profile specific methods.
     # Rack::MiniProfiler.profile_method(User, :foo) { "executing foo" }
