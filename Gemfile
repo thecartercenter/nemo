@@ -16,12 +16,12 @@ gem "exception_notification", "~> 4.2"
 gem "friendly_id", "~> 5.1"
 gem "phony", "~> 2.15"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
-gem "rake", ">= 0"
+gem "rake", "~> 13.0"
 gem "random_data", "~> 1.6" # Deprecated: Use Faker instead
 gem "recaptcha", "~> 3.4", require: "recaptcha/rails" # Small breaking change in v4, we should upgrade eventually.
 gem "responders", "~> 3.0"
-gem "rqrcode", ">= 0"
-gem "rubyzip", ">= 0"
+gem "rqrcode", "~> 1.1"
+gem "rubyzip", "~> 2.3"
 gem "term-ansicolor", "~> 1.3"
 gem "thor", "~> 1.0"
 gem "twilio-ruby", "~> 4.2" # Does not use semver after v5, watch out!
@@ -29,9 +29,9 @@ gem "twilio-ruby", "~> 4.2" # Does not use semver after v5, watch out!
 # JS/CSS
 gem "bootstrap", "~> 4.3"
 gem "clipboard-rails", "~> 1.7"
-gem "dropzonejs-rails", ">= 0"
+gem "dropzonejs-rails", "~> 0.8.5"
 gem "font-awesome-rails", "~> 4.7"
-gem "jquery-fileupload-rails", ">= 0"
+gem "jquery-fileupload-rails", "~> 1.0"
 gem "jquery-rails", "~> 4.3"
 gem "popper_js", "~> 1.14"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
@@ -60,7 +60,7 @@ gem "will_paginate-bootstrap4", "~> 0.2.2"
 # Markdown
 gem "bluecloth", "~> 2.2"
 gem "rdiscount", "~> 2.1"
-gem "reverse_markdown", ">= 0"
+gem "reverse_markdown", "~> 2.0"
 
 # Storage
 gem "fog-aws", "~> 3.3"
@@ -69,7 +69,7 @@ gem "paperclip", "~> 6.0"
 # API
 gem "active_model_serializers", "~> 0.9.3" # Major breaking changes in v0.10.
 gem "api-pagination", "~> 4.1"
-gem "versionist", ">= 0"
+gem "versionist", "~> 2.0"
 # To use local clone: bundle config local.odata_server ../odata_server
 # To stop using local clone: bundle config --delete local.odata_server
 gem "odata_server", github: "sassafrastech/odata_server", branch: "sassafras"
@@ -94,7 +94,7 @@ gem "dalli", "~> 2.7"
 # DB
 gem "hairtrigger", "~> 0.2.20"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
-gem "pg", ">= 0"
+gem "pg", "~> 1.2"
 gem "pg_search", "~> 2.1"
 gem "postgres-copy", "~> 1.0"
 gem "wisper", "~> 2.0"
@@ -103,13 +103,13 @@ gem "wisper-activerecord", "~> 1.0"
 # Background/async
 gem "delayed_job_active_record", "~> 4.1"
 gem "parallel", "~> 1.19"
-gem "whenever", ">= 0", require: false
+gem "whenever", "~> 1.0", require: false
 
 # I18n
-gem "i18n_country_select", "~> 1.1"
-gem "i18n-country-translations", "~> 1.2"
+gem "i18n_country_select", "~> 1.0"
+gem "i18n-country-translations", "~> 1.0"
 gem "i18n-js", "~> 3.0"
-gem "iso-639", ">= 0"
+gem "iso-639", "~> 0.3.5"
 gem "rails-i18n", "~> 6.0"
 
 # Analytics
@@ -122,11 +122,11 @@ gem "sprockets", "~> 3"
 # The below are used for building load test plans.
 # Needed in prod because test plans are built on prod instances.
 # Faker is also used in specs.
-gem "faker", ">= 0"
-gem "ruby-jmeter", ">= 0"
+gem "faker", "~> 2.2"
+gem "ruby-jmeter", "~> 3.1"
 
 group :development do
-  gem "binding_of_caller", ">= 0"
+  gem "binding_of_caller", "~> 0.8.0"
   gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4"
   gem "listen", "~> 3.0"
@@ -149,7 +149,7 @@ end
 
 group :development, :test do
   # Test framework
-  gem "jasmine-rails", ">= 0" # Deprecated: Barely used.
+  gem "jasmine-rails", "~> 0.15.0" # Deprecated: Barely used.
   gem "rails-controller-testing", "~> 1.0" # Deprecated: Use request or feature specs instead.
   gem "rspec-collection_matchers", "~> 1.1"
   gem "rspec-rails", "~> 3.9"
@@ -162,7 +162,7 @@ group :development, :test do
   gem "capybara", "~> 3.30"
   gem "capybara-screenshot", "~> 1.0"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
-  gem "puma", ">= 0"
+  gem "puma", "~> 5.0"
   gem "selenium-webdriver", "~> 3.9"
   gem "webdrivers", "~> 4.0"
 
@@ -174,7 +174,7 @@ group :development, :test do
   # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
 
   # Misc
-  gem "annotate", ">= 0"
+  gem "annotate", "~> 3.1"
   gem "assert_difference", "~> 1.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6"
   gem "database_cleaner", "~> 1.7"
@@ -182,5 +182,5 @@ group :development, :test do
   gem "rubocop", "~> 0.91.0" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
   gem "rubocop-rails", "~> 2.8"
   gem "rubocop-rspec", "~> 1.44"
-  gem "timecop", ">= 0"
+  gem "timecop", "~> 0.9.2"
 end
