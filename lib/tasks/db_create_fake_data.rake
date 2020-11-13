@@ -35,7 +35,7 @@ namespace :db do
       "video"
     ])
 
-    FactoryGirl.create(:form,
+    FactoryBot.create(:form,
       name: "SMS Form",
       smsable: true,
       mission: mission,
@@ -44,10 +44,10 @@ namespace :db do
     puts "Creating users"
     # Create users and groups
     25.times do
-      FactoryGirl.create(:user, mission: mission, role_name: User::ROLES.sample)
+      FactoryBot.create(:user, mission: mission, role_name: User::ROLES.sample)
     end
 
-    FactoryGirl.create_list(:user_group, 5, mission: mission)
+    FactoryBot.create_list(:user_group, 5, mission: mission)
 
     50.times do
       uga = UserGroupAssignment.new(user_group: UserGroup.all.sample, user: User.all.sample)
@@ -79,14 +79,14 @@ namespace :db do
           Faker::Date.birthday, # date
           Faker::Time.between(from: 1.year.ago, to: Date.today, format: :evening), # time
           Media::Image.create(item: File.open(image_path)), # image
-          FactoryGirl.build(:media_image, item: File.open(image_path)), # annotated image
-          FactoryGirl.build(:media_image, item: File.open(image_path)), # signature
-          FactoryGirl.build(:media_image, item: File.open(image_path)), # sketch
-          FactoryGirl.build(:media_audio, item: File.open(audio_path)), # audio
-          FactoryGirl.build(:media_video, item: File.open(video_path)) # video
+          FactoryBot.build(:media_image, item: File.open(image_path)), # annotated image
+          FactoryBot.build(:media_image, item: File.open(image_path)), # signature
+          FactoryBot.build(:media_image, item: File.open(image_path)), # sketch
+          FactoryBot.build(:media_audio, item: File.open(audio_path)), # audio
+          FactoryBot.build(:media_video, item: File.open(video_path)) # video
         ]
 
-        FactoryGirl.create(:response,
+        FactoryBot.create(:response,
           form: sample_form,
           user: user,
           mission: mission,

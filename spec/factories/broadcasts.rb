@@ -28,7 +28,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :broadcast do
     mission { get_mission }
     medium "email"

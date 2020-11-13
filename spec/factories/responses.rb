@@ -210,7 +210,7 @@ module ResponseFactoryHelper
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :response do
     transient do
       answer_values []

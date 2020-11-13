@@ -6,9 +6,9 @@ require "rails_helper"
 #   Please move at the next opportunity.
 describe "sms auth code field", :sms, database_cleaner: :all do
   before do
-    @user = FactoryGirl.create(:user)
-    @staffer = FactoryGirl.create(:user, role_name: :staffer)
-    @enumerator = FactoryGirl.create(:user, role_name: :enumerator)
+    @user = FactoryBot.create(:user)
+    @staffer = FactoryBot.create(:user, role_name: :staffer)
+    @enumerator = FactoryBot.create(:user, role_name: :enumerator)
   end
 
   context "in show mode for staffer" do

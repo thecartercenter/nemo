@@ -22,7 +22,7 @@ describe "abilities" do
   end
 
   def create_user_and_ability(options)
-    @user = FactoryGirl.create(:user, role_name: options[:role])
+    @user = FactoryBot.create(:user, role_name: options[:role])
     @ability = Ability.new(user: @user, mission: get_mission)
   end
 end

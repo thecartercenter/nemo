@@ -4,8 +4,8 @@ require "rails_helper"
 
 describe "path helpers" do
   before do
-    @user = FactoryGirl.create(:user, admin: true)
-    @mission = FactoryGirl.create(:mission, name: "Foo")
+    @user = FactoryBot.create(:user, admin: true)
+    @mission = FactoryBot.create(:mission, name: "Foo")
     login(@user)
   end
 

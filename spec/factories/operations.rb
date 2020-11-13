@@ -40,7 +40,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :operation do
     creator factory: :user
     sequence(:details) { |n| "Operation ##{n}" }

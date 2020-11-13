@@ -47,7 +47,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :question do
     transient do
       use_geo_option_set false

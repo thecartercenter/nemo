@@ -35,7 +35,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :condition do
     op "eq"
     left_qing { build(:questioning) }
