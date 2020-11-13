@@ -13,8 +13,8 @@ module ApplicationController::Crud
     flash[:error] =
       t($ERROR_INFO.to_s, scope: [:activerecord, :errors, :models, obj.class.model_name.i18n_key],
                           default: t("errors.messages.generic_delete_error"))
-  rescue ActiveRecord::DeleteRestrictionError => error # Preferred method
-    assn_name = error.to_s.split(" ")[-1]
+  rescue ActiveRecord::DeleteRestrictionError => e # Preferred method
+    assn_name = e.to_s.split(" ")[-1]
     model = obj.class.model_name.i18n_key
     key = "activerecord.errors.models.#{model}.cant_delete_if_has_#{assn_name}"
     flash[:error] = t(key, default: t("errors.messages.generic_delete_error"))
