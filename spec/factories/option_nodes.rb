@@ -36,7 +36,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :option_node do
     transient do
       option_names %w[Cat Dog]

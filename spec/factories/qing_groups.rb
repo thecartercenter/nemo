@@ -47,7 +47,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :qing_group do
     form
     parent { form.root_group }

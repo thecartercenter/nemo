@@ -32,7 +32,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :setting do
     timezone "Saskatchewan" # No DST!
     preferred_locales_str "en"

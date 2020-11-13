@@ -47,7 +47,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :answer do
     value 1
     association :form_item, factory: :questioning

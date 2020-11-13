@@ -42,7 +42,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :sms_message, class: "Sms::Message" do
     to { "+1709#{rand(1_000_000..9_999_999)}" }
     from { "+1709#{rand(1_000_000..9_999_999)}" }

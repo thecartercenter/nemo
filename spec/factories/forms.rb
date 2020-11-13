@@ -120,7 +120,7 @@ def build_item(item, form, parent, evaluator)
 end
 
 # Only works with create
-FactoryGirl.define do
+FactoryBot.define do
   factory :form do
     transient do
       # Can specify questions or question_types. questions takes precedence.

@@ -49,7 +49,7 @@
 # rubocop:enable Layout/LineLength
 
 def get_user
-  u = FactoryGirl.create(:user)
+  u = FactoryBot.create(:user)
 
   # set the mission to get_mission so that ability stuff will work
   u.save(validate: false)
@@ -61,7 +61,7 @@ def test_password
   "Password1"
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     transient do
       role_name :coordinator

@@ -15,7 +15,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :saved_upload, class: SavedTabularUpload do
     transient { filename nil }
     file { user_import_fixture(filename) }

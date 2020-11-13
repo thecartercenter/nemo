@@ -25,7 +25,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :assignment do
     mission
     role "enumerator"

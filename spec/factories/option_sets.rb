@@ -32,7 +32,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :option_set do
     transient do
       # First level option names. Can also be a symbol which refers to a set in OptionNodeSupport.

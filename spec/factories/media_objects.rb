@@ -25,7 +25,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :media_object, class: "Media::Object" do
     item { media_fixture("images/the_swing.jpg") }
 

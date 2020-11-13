@@ -155,7 +155,7 @@ group :development, :test do
   gem "rspec-rails", "~> 3.9"
 
   # Mocking/stubbing/factories
-  gem "factory_girl_rails", "~> 4.5"
+  gem "factory_bot_rails", "~> 4.11"
   gem "mocha", "~> 1.1"
 
   # Feature specs
