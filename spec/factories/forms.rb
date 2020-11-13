@@ -124,15 +124,15 @@ FactoryBot.define do
   factory :form do
     transient do
       # Can specify questions or question_types. questions takes precedence.
-      questions []
-      question_types []
+      questions { [] }
+      question_types { [] }
 
       # Args to forward to question factory.
-      option_set nil
-      option_names nil
+      option_set { nil }
+      option_names { nil }
     end
 
-    authenticate_sms false
+    authenticate_sms { false }
     mission { get_mission }
     sequence(:name) { |n| "Sample Form #{n}" }
 

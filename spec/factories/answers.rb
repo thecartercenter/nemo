@@ -49,7 +49,7 @@
 
 FactoryBot.define do
   factory :answer do
-    value 1
+    value { 1 }
     association :form_item, factory: :questioning
   end
 end

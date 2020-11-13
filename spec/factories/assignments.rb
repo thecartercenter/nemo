@@ -28,6 +28,6 @@
 FactoryBot.define do
   factory :assignment do
     mission
-    role "enumerator"
+    role { "enumerator" }
   end
 end

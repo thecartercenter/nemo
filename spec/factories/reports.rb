@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :report, class: "Report::Report" do
     transient do
-      run false
+      run { false }
     end
 
     mission { get_mission }
@@ -17,7 +17,7 @@ FactoryBot.define do
     factory :gridable_report do
       transient do
         # This should be a list of either strings (for attrib names) or questions.
-        _calculations []
+        _calculations { [] }
       end
 
       calculations_attributes do
@@ -41,7 +41,7 @@ FactoryBot.define do
 
     factory :standard_form_report, class: "Report::StandardFormReport" do
       form
-      group_by_tag false
+      group_by_tag { false }
     end
   end
 end

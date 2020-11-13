@@ -29,8 +29,8 @@ FactoryBot.define do
 
   factory :mission do
     transient do
-      with_user nil
-      role_name :coordinator
+      with_user { nil }
+      role_name { :coordinator }
     end
 
     name

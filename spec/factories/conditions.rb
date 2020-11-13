@@ -37,7 +37,7 @@
 
 FactoryBot.define do
   factory :condition do
-    op "eq"
+    op { "eq" }
     left_qing { build(:questioning) }
     value { left_qing.present? && !left_qing.has_options? ? "1" : nil }
     option_node { left_qing&.has_options? ? left_qing.option_set.c[0] : nil }
