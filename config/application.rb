@@ -93,6 +93,11 @@ module ELMO
     # Require `belongs_to` associations by default.
     config.active_record.belongs_to_required_by_default = false
 
+    # This should be enabled eventually when our code supports it. But for now, enabling this breaks
+    # things because some code expects model cache keys to have updated timestamps, which go away
+    # when cache versioning is enabled.
+    config.active_record.cache_versioning = false
+
     ####################################
     # CUSTOM SETTINGS
     ####################################
