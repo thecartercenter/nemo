@@ -77,7 +77,7 @@ namespace :db do
           %w[Cat Dog], # select_multiple
           Faker::Time.backward(days: 365), # datetime
           Faker::Date.birthday, # date
-          Faker::Time.between(from: 1.year.ago, to: Date.today, format: :evening), # time
+          Faker::Time.between(from: 1.year.ago, to: Time.zone.today, format: :evening), # time
           Media::Image.create(item: File.open(image_path)), # image
           FactoryBot.build(:media_image, item: File.open(image_path)), # annotated image
           FactoryBot.build(:media_image, item: File.open(image_path)), # signature
