@@ -36,12 +36,25 @@ shared_context "odata" do
 end
 
 shared_context "odata with basic forms" do
-  let!(:form) { create(:form, :live, mission: mission, question_types: %w[integer select_one text]) }
-  let!(:form_with_no_responses) { create(:form, :live, mission: mission, question_types: %w[text]) }
-  let(:paused_form) { create(:form, :paused, mission: mission, question_types: %w[text]) }
-  let(:draft_form) { create(:form, :draft, mission: mission, question_types: %w[text]) }
+  # We have to explicitly name these forms so we can be sure of their lexical ordering.
+  # If we let the factory assign names with a counter, we may get 8, 9, 10, which are
+  # lexically ordered 10, 8, 9, which causes issues.
+  let!(:form) do
+    create(:form, :live, name: "Form 1", mission: mission, question_types: %w[integer select_one text])
+  end
+  let!(:form_with_no_responses) do
+    create(:form, :live, name: "Form 2", mission: mission, question_types: %w[text])
+  end
+  let(:paused_form) do
+    create(:form, :paused, name: "Form 3", mission: mission, question_types: %w[text])
+  end
+  let(:draft_form) do
+    create(:form, :draft, name: "Form 4", mission: mission, question_types: %w[text])
+  end
   let(:other_mission) { create(:mission) }
-  let(:other_form) { create(:form, :live, mission: other_mission, question_types: %w[text]) }
+  let(:other_form) do
+    create(:form, :live, name: "Form 5", mission: other_mission, question_types: %w[text])
+  end
 
   before do
     Timecop.freeze(Time.now.utc - 10.days) do
