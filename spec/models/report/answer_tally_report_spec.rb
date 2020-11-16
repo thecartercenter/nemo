@@ -165,8 +165,8 @@ describe Report::AnswerTallyReport do
     end
 
     it "counts of options for specific questions across two option sets", :investigate do
-      yes_no = create(:option_set, option_names: %w[Yes No])
-      high_low = create(:option_set, option_names: %w[High Low])
+      yes_no = create(:option_set, name: "Alpha", option_names: %w[Yes No])
+      high_low = create(:option_set, name: "Bravo", option_names: %w[High Low])
       questions = []
       2.times do |i|
         questions << create(:question, code: "yn#{i}", qtype_name: "select_one", option_set: yes_no)
@@ -208,8 +208,8 @@ describe Report::AnswerTallyReport do
 
     it "counts of options across a select one question and select multiple question", :investigate do
       # create several questions and responses for them
-      yes_no = create(:option_set, option_names: %w[Yes No])
-      rgb = create(:option_set, option_names: %w[Red Blue Green])
+      yes_no = create(:option_set, name: "Alpha", option_names: %w[Yes No])
+      rgb = create(:option_set, name: "Bravo", option_names: %w[Red Blue Green])
       questions = []
       questions << create(:question, code: "yn", qtype_name: "select_one", option_set: yes_no)
       questions << create(:question, code: "rgb", qtype_name: "select_multiple", option_set: rgb)
