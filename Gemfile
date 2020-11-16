@@ -18,7 +18,7 @@ gem "phony", "~> 2.15"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 gem "rake", "~> 13.0"
 gem "random_data", "~> 1.6" # Deprecated: Use Faker instead
-gem "recaptcha", "~> 3.4", require: "recaptcha/rails" # Small breaking change in v4, we should upgrade eventually.
+gem "recaptcha", "~> 3.4", require: "recaptcha/rails" # Small change in v4, we should upgrade eventually.
 gem "responders", "~> 3.0"
 gem "rqrcode", "~> 1.1"
 gem "rubyzip", "~> 2.3"
