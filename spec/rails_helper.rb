@@ -12,6 +12,7 @@ require "capybara-screenshot/rspec"
 require "paperclip/matchers"
 require "cancan/matchers"
 require "fileutils"
+require "vcr"
 
 # Automatically downloads chromedriver, which is used use for JS feature specs
 require "webdrivers/chromedriver"
@@ -120,4 +121,21 @@ RSpec.configure do |config|
   configatron.url.protocol = "http"
   configatron.url.port = nil
   ActionMailer::Base.default_url_options = configatron.url.to_h.slice(:host, :port, :protocol)
+
+  VCR.configure do |c|
+    c.cassette_library_dir = "spec/cassettes"
+    c.hook_into(:webmock)
+    c.default_cassette_options = {
+      match_requests_on: %i[method uri host path body],
+      allow_unused_http_interactions: false
+    }
+
+    # We have to ignore 127.0.0.1 b/c capybara makes all sorts of requests to it.
+    c.ignore_hosts("127.0.0.1")
+
+    # Make VCR ignore download of chromedriver by webdrivers gem.
+    c.ignore_hosts("chromedriver.storage.googleapis.com")
+
+    c.configure_rspec_metadata!
+  end
 end

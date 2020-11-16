@@ -2,17 +2,23 @@
 
 require "rails_helper"
 require "json"
+require "open-uri"
 
 describe SentryJob do
-  before do
-    Raven.configure do |config|
-      config.dsn = "https://fake@fake.ingest.sentry.io/fake"
-    end
+  around do |example|
+    Raven.configure { |c| c.dsn = "http://public@example.com/project-id" }
+    example.run
+    Raven.configure { |c| c.dsn = nil }
   end
 
   it "gets created automatically" do
-    expect(Delayed::Job.count).to eq(0)
-    Raven.capture_message("Test")
-    expect(Delayed::Job.count).to eq(1)
+    VCR.use_cassette("sentry", match_requests_on: %i[method uri host path]) do
+      begin
+        1 / 0
+      rescue ZeroDivisionError => e
+        Raven.capture_exception(e)
+      end
+      Delayed::Worker.new.work_off
+    end
   end
 end

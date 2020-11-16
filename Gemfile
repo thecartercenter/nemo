@@ -171,6 +171,10 @@ group :development, :test do
   gem "pry-byebug", "~> 3.9"
   gem "pry-rails", "~> 0.3"
 
+  # External request capture
+  gem "vcr", "~> 6.0"
+  gem "webmock", "~> 3.10"
+
   # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
 
   # Misc
