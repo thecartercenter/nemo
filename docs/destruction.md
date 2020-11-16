@@ -37,3 +37,12 @@ behavior of 'select all' ('this page' vs. 'all pages') resulted in the destructi
 As a result of this, we now have careful feature spec coverage for the users controller. Since
 all batch destruction shares the same code, this should be sufficient to test all various combinations.
 Other feature specs, such as responses and questions, cover batch destruction in a more cursory fashion.
+
+## I18n
+
+When we add `dependent: :restrict_with_exception` to an association, we need to remember to add
+a new i18n key:
+
+    activerecord.errors.models.#{model}.cant_delete_if_has_#{assn_name}
+
+where `assn_name` is the name of the association on the model. See existing keys for an example.
