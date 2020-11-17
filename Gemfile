@@ -67,8 +67,8 @@ gem "fog-aws", "~> 3.3"
 gem "paperclip", "~> 6.0"
 
 # API
-gem "active_model_serializers", "~> 0.9.3" # Major breaking changes in v0.10.
 gem "api-pagination", "~> 4.1"
+gem "blueprinter", "~> 0.25.1"
 gem "versionist", "~> 2.0"
 # To use local clone: bundle config local.odata_server ../odata_server
 # To stop using local clone: bundle config --delete local.odata_server

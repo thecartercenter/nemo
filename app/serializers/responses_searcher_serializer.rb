@@ -2,26 +2,25 @@
 
 # Serializes a ResponsesSearcher for search filters.
 class ResponsesSearcherSerializer < SearcherSerializer
-  attributes :all_forms, :selected_form_ids, :selected_qings, :is_reviewed,
-    :selected_users, :selected_groups, :start_date, :end_date
+  fields :all_forms, :is_reviewed, :start_date, :end_date
 
-  def selected_form_ids
+  field :selected_form_ids do |object|
     object.form_ids || []
   end
 
-  def selected_qings
+  field :selected_qings do |object|
     object.qings || []
   end
 
-  def selected_users
+  field :selected_users do |object|
     object.submitters || []
   end
 
-  def selected_groups
+  field :selected_groups do |object|
     object.groups || []
   end
 
-  def advanced_search_text
+  field :advanced_search_text do |object|
     object.advanced_text || ""
   end
 end

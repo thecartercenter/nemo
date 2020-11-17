@@ -1,5 +1,5 @@
 <form class="search-form form-inline">
-  <%= react_component("Filters", @searcher_serializer.as_json.merge({
+  <%= react_component("Filters", @searcher_serializer.render_as_json(@searcher).merge({
     controllerName: controller_name.to_json,
   })) %>
   <% unless controller.is_a?(ResponsesController) %>
