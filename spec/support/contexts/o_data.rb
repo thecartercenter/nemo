@@ -55,43 +55,49 @@ shared_context "odata with basic forms" do
   let(:other_form) do
     create(:form, :live, name: "Form 5", mission: other_mission, question_types: %w[text])
   end
-
-  before do
-    Timecop.freeze(Time.now.utc - 10.days) do
-      create(:response, mission: mission, form: form, answer_values: [1, "Dog", "Foo"])
-    end
-    Timecop.freeze(Time.now.utc - 5.days) do
-      create(:response, mission: mission, form: form, answer_values: [2, "Cat", "Bar"])
-    end
-    create(:response, mission: mission, form: form, answer_values: [3, "Dog", "Baz"])
-    create(:response, mission: mission, form: paused_form, answer_values: ["X"])
-    create(:response, mission: mission, form: draft_form, answer_values: ["X"])
-    create(:response, mission: other_mission, form: other_form, answer_values: ["X"])
+  let!(:responses) do
+    [
+      Timecop.freeze(Time.now.utc - 10.days) do
+        create(:response, mission: mission, form: form, answer_values: [1, "Dog", "Foo"])
+      end,
+      Timecop.freeze(Time.now.utc - 5.days) do
+        create(:response, mission: mission, form: form, answer_values: [2, "Cat", "Bar"])
+      end,
+      create(:response, mission: mission, form: form, answer_values: [3, "Dog", "Baz"]),
+      create(:response, mission: mission, form: paused_form, answer_values: ["X"]),
+      create(:response, mission: mission, form: draft_form, answer_values: ["X"]),
+      create(:response, mission: other_mission, form: other_form, answer_values: ["X"])
+    ]
   end
 end
 
 shared_context "odata with multilingual forms" do
   let(:form) { create(:form, :live, mission: mission, question_types: %w[select_one]) }
+  let!(:responses) do
+    [
+      # Submitted as "Cat" but should be rendered as "Chat".
+      create(:response, mission: mission, form: form, answer_values: ["Cat"])
+    ]
+  end
 
   before do
     mission.setting.update!(preferred_locales: %i[fr en])
     node = form.c[0].question.option_set.c[0]
     node.option.update!(name_fr: "Chat")
-
-    # Submitted as "Cat" but should be rendered as "Chat".
-    create(:response, mission: mission, form: form, answer_values: ["Cat"])
   end
 end
 
 shared_context "odata with nested groups" do
   let!(:form) { create(:form, :live, question_types: ["text", %w[text integer], ["text", %w[integer text]]]) }
-
-  before do
-    Timecop.freeze(Time.now.utc - 10.days) do
-      create(:response, mission: mission, form: form, answer_values: [%w[A B], ["C", 10], ["D", [21, "E1"]]])
-    end
-    Timecop.freeze(Time.now.utc - 5.days) do
-      create(:response, mission: mission, form: form, answer_values: [])
-    end
+  let!(:responses) do
+    [
+      Timecop.freeze(Time.now.utc - 10.days) do
+        create(:response, mission: mission, form: form,
+                          answer_values: [%w[A B], ["C", 10], ["D", [21, "E1"]]])
+      end,
+      Timecop.freeze(Time.now.utc - 5.days) do
+        create(:response, mission: mission, form: form, answer_values: [])
+      end
+    ]
   end
 end

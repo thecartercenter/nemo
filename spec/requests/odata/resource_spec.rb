@@ -33,27 +33,27 @@ describe "OData resource" do
         "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
           "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
         value: [
-          json_for(form, form.responses[0], "IntegerQ1": 3,
-                                            "SelectOneQ2": "Dog",
-                                            "TextQ3": "Baz"),
-          json_for(form, form.responses[1], "IntegerQ1": 2,
-                                            "SelectOneQ2": "Cat",
-                                            "TextQ3": "Bar"),
-          json_for(form, form.responses[2], "IntegerQ1": 1,
-                                            "SelectOneQ2": "Dog",
-                                            "TextQ3": "Foo")
+          json_for(form, responses[2], "IntegerQ1": 3,
+                                       "SelectOneQ2": "Dog",
+                                       "TextQ3": "Baz"),
+          json_for(form, responses[1], "IntegerQ1": 2,
+                                       "SelectOneQ2": "Cat",
+                                       "TextQ3": "Bar"),
+          json_for(form, responses[0], "IntegerQ1": 1,
+                                       "SelectOneQ2": "Dog",
+                                       "TextQ3": "Foo")
         ]
       )
     end
 
     context "navigating to an Entry" do
-      let(:path) { "#{mission_api_route}/Responses-#{form.id}(#{form.responses[0].id})" }
+      let(:path) { "#{mission_api_route}/Responses-#{form.id}(#{responses[0].id})" }
 
       it "renders as expected" do
         expect_json(
-          json_for(form, form.responses[0], "IntegerQ1": 3,
-                                            "SelectOneQ2": "Dog",
-                                            "TextQ3": "Baz")
+          json_for(form, responses[0], "IntegerQ1": 1,
+                                       "SelectOneQ2": "Dog",
+                                       "TextQ3": "Foo")
             .merge("@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
               "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}/$entity")
         )
@@ -71,7 +71,7 @@ describe "OData resource" do
         "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
           "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
         value: [
-          json_for(form, form.responses[0], "SelectOneQ1": "Chat")
+          json_for(form, responses[0], "SelectOneQ1": "Chat")
         ]
       )
     end

@@ -88,6 +88,7 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     new = request.base_url
     response = Response
       .where(form_id: form.id)
+      .order(created_at: :desc)
       .select("*, replace(cached_json::text, '#{old}', '#{new}')::jsonb AS cached_json")
     entity = schema.add_entity_type(response, name: OData::FormDecorator.new(form).responses_name,
                                               url_name: OData::FormDecorator.new(form).responses_url,
