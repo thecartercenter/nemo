@@ -100,8 +100,23 @@ describe User do
           expect(user).to be_valid
         end
 
+        it "updates cleanly when password nil" do
+          user.update(phone: "+1234567890", password: nil)
+          expect(user).to be_valid
+        end
+
         it "updates cleanly when password empty string" do
           user.update(phone: "+1234567890", password: "")
+          expect(user).to be_valid
+        end
+
+        it "updates cleanly when password and confirmation nil" do
+          user.update(phone: "+1234567890", password: nil, password_confirmation: nil)
+          expect(user).to be_valid
+        end
+
+        it "updates cleanly when password and confirmation empty string" do
+          user.update(phone: "+1234567890", password: "", password_confirmation: "")
           expect(user).to be_valid
         end
 
