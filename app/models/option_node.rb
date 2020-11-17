@@ -58,7 +58,7 @@ class OptionNode < ApplicationRecord
 
   before_validation { self.ancestry = nil if ancestry.blank? }
   after_save :update_children
-  after_save :update_answer_search_vectors
+  after_update :update_answer_search_vectors
 
   attr_accessor :children_attribs
   attr_reader :option_attribs
