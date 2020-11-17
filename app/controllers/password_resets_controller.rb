@@ -47,7 +47,6 @@ class PasswordResetsController < ApplicationController
 
     # Don't log in automatically. This can create hard-to-find bugs if automatic login isn't working.
     if @user.save_without_session_maintenance
-      User.ignore_blank_passwords = true
       if !@user.active?
         flash[:error] = t("password_reset.success_but_inactive")
         redirect_to(login_url)
@@ -62,6 +61,8 @@ class PasswordResetsController < ApplicationController
       @user.password_confirmation = nil
       render(action: :edit)
     end
+  ensure
+    User.ignore_blank_passwords = true
   end
 
   private

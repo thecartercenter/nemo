@@ -137,4 +137,40 @@ describe OptionSet do
       end
     end
   end
+
+  describe "destruction" do
+    let!(:option_set) { create(:option_set) }
+
+    context "without associations" do
+      it "destroys cleanly" do
+        option_set.destroy
+      end
+    end
+
+    context "with question" do
+      let!(:question) { create(:question, option_set: option_set) }
+
+      it "raises DeleteRestrictionError" do
+        expect { option_set.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError) do |e|
+          # We test the exact wording of the error because the last word is sometimes used to
+          # lookup i18n strings.
+          expect(e.to_s).to eq("Cannot delete record because of dependent questions")
+        end
+      end
+    end
+
+    context "with data" do
+      let!(:form) { create(:form, question_types: %w[select_one]) }
+      let(:option_set) { form.c[0].option_set }
+      let!(:response) { create(:response, form: form, answer_values: %w[Cat]) }
+
+      it "raises DeleteRestrictionError" do
+        expect { option_set.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError) do |e|
+          # We test the exact wording of the error because the last word is sometimes used to
+          # lookup i18n strings.
+          expect(e.to_s).to eq("Cannot delete record because of dependent answers")
+        end
+      end
+    end
+  end
 end

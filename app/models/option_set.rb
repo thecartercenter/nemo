@@ -53,7 +53,7 @@ class OptionSet < ApplicationRecord
   # the dependent object doesn't know who destroyed it.
   before_destroy { report_option_set_choices.each(&:option_set_destroyed) }
 
-  has_many :questions, inverse_of: :option_set, dependent: :nullify
+  has_many :questions, inverse_of: :option_set, dependent: :restrict_with_exception
   has_many :questionings, through: :questions
   has_many :option_nodes, -> { order(:rank) }, dependent: :destroy, inverse_of: :option_set
   has_many :report_option_set_choices, class_name: "Report::OptionSetChoice", inverse_of: :option_set,
@@ -343,11 +343,8 @@ class OptionSet < ApplicationRecord
   end
 
   def check_associations
-    # make sure not associated with any questions
-    raise DeletionError, :cant_delete_if_has_questions if in_use?
-
-    # make sure not associated with any answers
-    raise DeletionError, :cant_delete_if_has_answers if data?
+    return unless data?
+    raise ActiveRecord::DeleteRestrictionError, "answers"
   end
 
   def normalize_fields

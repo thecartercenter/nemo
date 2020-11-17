@@ -60,7 +60,11 @@ class User < ApplicationRecord
   attr_writer(:reset_password_method)
   attr_accessor(:password_confirmation)
 
-  has_many :responses, inverse_of: :user
+  has_many :responses, inverse_of: :user, dependent: :restrict_with_exception
+  has_many :reviewed_responses, class_name: "Response", foreign_key: :reviewer_id,
+                                inverse_of: :reviewer, dependent: :restrict_with_exception
+  has_many :checked_out_responses, class_name: "Response", foreign_key: :checked_out_by_id,
+                                   inverse_of: :checked_out_by, dependent: :nullify
   has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
   has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
   has_many :assignments, -> { includes(:mission) }, autosave: true, dependent: :destroy,
@@ -69,6 +73,7 @@ class User < ApplicationRecord
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
   has_many :reports, inverse_of: :creator, foreign_key: :creator_id,
                      dependent: :nullify, class_name: "Report::Report"
+  has_many :sms_messages, class_name: "Sms::Message", inverse_of: :user, dependent: :restrict_with_exception
   has_many :user_group_assignments, dependent: :destroy
   has_many :user_groups, through: :user_group_assignments
   belongs_to :last_mission, class_name: "Mission"
@@ -93,7 +98,6 @@ class User < ApplicationRecord
   before_create :regenerate_sms_auth_code
   # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
-  before_destroy :check_assoc
 
   normalize_attribute :login, with: %i[strip downcase]
 
@@ -379,14 +383,6 @@ class User < ApplicationRecord
   def phone_length_or_empty
     errors.add(:phone, :at_least_digits, num: 9) unless phone.blank? || phone.size >= 10
     errors.add(:phone2, :at_least_digits, num: 9) unless phone2.blank? || phone2.size >= 10
-  end
-
-  def check_assoc
-    # can't delete users with related responses.
-    raise DeletionError, :cant_delete_if_responses unless responses.empty?
-
-    # can't delete users with related sms messages.
-    raise DeletionError, :cant_delete_if_sms_messages unless Sms::Message.where(user_id: id).empty?
   end
 
   def must_have_password_on_enter

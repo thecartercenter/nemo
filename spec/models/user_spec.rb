@@ -100,9 +100,20 @@ describe User do
           expect(user).to be_valid
         end
 
+        it "updates cleanly when password nil" do
+          user.update!(phone: "+1234567890", password: nil)
+        end
+
         it "updates cleanly when password empty string" do
-          user.update(phone: "+1234567890", password: "")
-          expect(user).to be_valid
+          user.update!(phone: "+1234567890", password: "")
+        end
+
+        it "updates cleanly when password and confirmation nil" do
+          user.update!(phone: "+1234567890", password: nil, password_confirmation: nil)
+        end
+
+        it "updates cleanly when password and confirmation empty string" do
+          user.update!(phone: "+1234567890", password: "", password_confirmation: "")
         end
 
         it "errors when password changed and invalid" do
@@ -256,6 +267,61 @@ describe User do
                         assignments: [Assignment.new(mission: mission, role: User::ROLES.first)])
     expect(user.pref_lang).to eq("en")
     expect(user.login).to eq("alpha")
+  end
+
+  describe "destruction" do
+    let!(:user) { create(:user) }
+
+    context "without associations" do
+      it "destroys cleanly" do
+        user.destroy
+      end
+    end
+
+    context "with submitted response" do
+      let!(:response) { create(:response, user: user) }
+
+      it "raises DeleteRestrictionError" do
+        expect { user.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError) do |e|
+          # We test the exact wording of the error because the last word is sometimes used to
+          # lookup i18n strings.
+          expect(e.to_s).to eq("Cannot delete record because of dependent responses")
+        end
+      end
+    end
+
+    context "with reviewed response" do
+      let!(:response) { create(:response, reviewer: user) }
+
+      it "raises DeleteRestrictionError" do
+        expect { user.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError) do |e|
+          # We test the exact wording of the error because the last word is sometimes used to
+          # lookup i18n strings.
+          expect(e.to_s).to eq("Cannot delete record because of dependent reviewed_responses")
+        end
+      end
+    end
+
+    context "with checked out response" do
+      let!(:response) { create(:response, checked_out_by: user) }
+
+      it "nullifies" do
+        user.destroy
+        expect(response.reload.checked_out_by).to be_nil
+      end
+    end
+
+    context "with SMS message" do
+      let!(:message) { create(:sms_reply, user: user) }
+
+      it "raises DeleteRestrictionError" do
+        expect { user.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError) do |e|
+          # We test the exact wording of the error because the last word is sometimes used to
+          # lookup i18n strings.
+          expect(e.to_s).to eq("Cannot delete record because of dependent sms_messages")
+        end
+      end
+    end
   end
 
   private
