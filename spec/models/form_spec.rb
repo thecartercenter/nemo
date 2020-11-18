@@ -94,17 +94,17 @@ describe Form do
       let(:form) { Timecop.freeze(-1.minute) { create(:form, :live) } }
 
       it "should not be updated when form goes from live -> paused or paused -> live" do
-        expect { form.update_status(:paused) }.not_to change { form.published_changed_at }
-        expect { form.update_status(:live) }.not_to change { form.published_changed_at }
+        expect { form.update_status(:paused) }.not_to(change { form.published_changed_at })
+        expect { form.update_status(:live) }.not_to(change { form.published_changed_at })
       end
 
       it "should be updated when form goes from live -> draft" do
-        expect { form.update_status(:paused) }.not_to change { form.published_changed_at }
+        expect { form.update_status(:paused) }.not_to(change { form.published_changed_at })
       end
     end
 
     it "should not be updated when form saved otherwise" do
-      expect { form.update!(name: "New Name!") }.not_to change { form.published_changed_at }
+      expect { form.update!(name: "New Name!") }.not_to(change { form.published_changed_at })
     end
   end
 
