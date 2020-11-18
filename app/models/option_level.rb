@@ -2,7 +2,8 @@
 
 # Represents the name of one level of an option set (e.g. 'Country', 'State', or 'City')
 class OptionLevel
-  include ActiveModel::Serializers::JSON
+  # TODO
+  # include ActiveModel::Serializers::JSON
   include ActiveModel::Model
   include Translatable
 

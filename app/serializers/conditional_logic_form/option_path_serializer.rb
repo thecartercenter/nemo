@@ -3,9 +3,7 @@
 module ConditionalLogicForm
   # Serializes an OptionNode for use in the Condition form.
   class OptionPathSerializer < ApplicationSerializer
-    attributes :levels
-
-    def levels
+    field :levels do |object|
       path = OptionNodePath.new(option_set: object.option_set, target_node: object)
       path.nodes_without_root.each_with_index.map do |_, i|
         {

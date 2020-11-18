@@ -13,5 +13,5 @@
   <% end %>
 <% else %>
   <%= react_component("conditions/SkipLogicFormField",
-        ConditionalLogicForm::FormItemSerializer.new(form_item)) %>
+        ConditionalLogicForm::FormItemSerializer.render_as_json(form_item)) %>
 <% end %>

@@ -129,7 +129,7 @@ class ResponsesController < ApplicationController
       .paginate(page: params[:page], per_page: 20)
 
     render(json: {
-      possible_users: ActiveModel::ArraySerializer.new(possible_users),
+      possible_users: UserSerializer.render_as_json(possible_users),
       more: possible_users.next_page.present?
     })
   end

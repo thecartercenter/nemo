@@ -21,5 +21,5 @@
 # rubocop:enable Layout/LineLength
 
 class MissionSerializer < ApplicationSerializer
-  attributes :id, :name
+  fields :id, :name
 end

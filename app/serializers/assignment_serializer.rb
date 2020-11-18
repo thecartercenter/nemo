@@ -27,13 +27,7 @@
 
 # Serializes user assignments
 class AssignmentSerializer < ApplicationSerializer
-  attributes :id, :mission_id, :mission_name, :role, :new_record, :destroy
-
-  def new_record
-    object.new_record?
-  end
-
-  def destroy
-    object._destroy
-  end
+  fields :id, :mission_id, :mission_name, :role
+  field :new_record?, name: :new_record
+  field :_destroy, name: :destroy
 end

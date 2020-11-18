@@ -15,5 +15,5 @@
   <% end %>
 <% else %>
   <%= react_component("conditions/DisplayLogicFormField",
-        ConditionalLogicForm::FormItemSerializer.new(form_item)) %>
+        ConditionalLogicForm::FormItemSerializer.render_as_json(form_item)) %>
 <% end %>

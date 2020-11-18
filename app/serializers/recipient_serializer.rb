@@ -2,9 +2,6 @@
 
 # Serializes possible recipients for a Broadcast.
 class RecipientSerializer < ApplicationSerializer
-  attributes :id, :text
-
-  def text
-    object.name
-  end
+  fields :id
+  field :name, name: :text
 end

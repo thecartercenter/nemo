@@ -24,5 +24,5 @@
 
 # Serializes UserGroups for multiple purposes.
 class UserGroupSerializer < ApplicationSerializer
-  attributes :id, :name
+  fields :id, :name
 end

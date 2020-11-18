@@ -3,10 +3,8 @@
 module ResponseFormConditionalLogic
   # Serializes condition for response web form display logic
   class ConditionSerializer < ApplicationSerializer
-    attributes :left_qing_id, :op, :value, :option_node_id, :right_side_is_qing, :right_qing_id
-
-    def right_side_is_qing
-      object.right_side_is_qing?
-    end
+    fields :left_qing_id, :op, :value, :option_node_id
+    field :right_side_is_qing?, name: :right_side_is_qing
+    field :right_qing_id
   end
 end

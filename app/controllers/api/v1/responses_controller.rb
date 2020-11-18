@@ -7,7 +7,7 @@ class API::V1::ResponsesController < API::V1::BaseController
     unless performed?
       responses = @form.responses
       responses = add_date_filter(responses)
-      paginate(json: responses, each_serializer: API::V1::ResponseSerializer)
+      paginate(json: API::V1::ResponseSerializer.render_as_json(responses))
     end
   end
 end

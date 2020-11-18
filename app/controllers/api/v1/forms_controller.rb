@@ -8,7 +8,7 @@ class API::V1::FormsController < API::V1::BaseController
     forms = current_mission.forms.where("access_level = 'public' OR access_level = 'protected' AND
       EXISTS (SELECT * FROM whitelistings WHERE whitelistable_id = forms.id AND user_id = ?)", @api_user.id)
       .with_responses_counts.order(:name)
-    paginate(json: forms, each_serializer: API::V1::FormSerializer)
+    paginate(json: API::V1::FormSerializer.render_as_json(forms))
   end
 
   def show
@@ -21,7 +21,7 @@ class API::V1::FormsController < API::V1::BaseController
       render(json: {errors: ["access_denied"]}, status: :forbidden)
 
     else
-      render(json: @form, serializer: API::V1::FormSerializer)
+      render(json: API::V1::FormSerializer.render_as_json(@form, view: :show))
     end
   end
 end
