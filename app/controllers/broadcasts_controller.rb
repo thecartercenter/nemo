@@ -95,7 +95,7 @@ class BroadcastsController < ApplicationController
     end
 
     render(json: {
-      results: ActiveModel::ArraySerializer.new(@recipients, each_serializer: RecipientSerializer),
+      results: RecipientSerializer.render_as_json(@recipients),
       more: (users_fetched || groups_fetched)
     })
   end

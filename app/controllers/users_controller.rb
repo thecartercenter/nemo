@@ -162,8 +162,8 @@ class UsersController < ApplicationController
   # prepares objects and renders the form template
   def prepare_and_render_form
     if admin_mode?
-      @assignment_data = {missions: accessible_missions.map { |m| MissionSerializer.new(m) },
-                          assignments: @user.assignments.map { |a| AssignmentSerializer.new(a) },
+      @assignment_data = {missions: accessible_missions.map { |m| MissionSerializer.render_as_hash(m) },
+                          assignments: @user.assignments.map { |a| AssignmentSerializer.render_as_hash(a) },
                           roles: Ability.assignable_roles(current_user)}
     else
       @current_assignment = @user.assignments_by_mission[current_mission] ||

@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
-class API::V1::ResponseSerializer < ActiveModel::Serializer
-  attributes :id, :submitter, :created_at, :updated_at
-  format_keys :underscore
+class API::V1::ResponseSerializer < ApplicationSerializer
+  transform UnderscoreTransformer
 
-  has_many :answers, serializer: API::V1::AnswerSerializer
+  fields :id
 
-  def submitter
+  field :submitter do |object|
     object.user.name
   end
 
-  def answers
+  fields :created_at, :updated_at
+
+  association :answers, blueprint: API::V1::AnswerSerializer, options: {view: :api} do |object|
     object.answers.public_access
   end
 end

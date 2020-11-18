@@ -3,7 +3,7 @@
 module ConditionalLogicForm
   # Serializes Constraints for use in constraint form.
   class ConstraintSerializer < ApplicationSerializer
-    attributes :id, :accept_if, :rank, :rejection_msg_translations
-    has_many :conditions, serializer: ConditionSerializer
+    fields :id, :accept_if, :rank, :rejection_msg_translations
+    association :conditions, blueprint: ConditionSerializer
   end
 end

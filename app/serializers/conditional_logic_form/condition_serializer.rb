@@ -3,17 +3,16 @@
 module ConditionalLogicForm
   # Serializes Condition for use in condition form.
   class ConditionSerializer < ApplicationSerializer
-    attributes :id, :left_qing_id, :right_qing_id, :right_side_type, :op, :value,
-      :option_node_id, :option_set_id, :form_id, :conditionable_id, :conditionable_type, :operator_options
+    fields :id, :left_qing_id, :right_qing_id, :right_side_type, :op, :value, :option_node_id
 
-    delegate :id, :conditionable_id, :value, to: :object
-
-    def operator_options
-      object.applicable_operator_names.map { |n| {name: I18n.t("condition.operators.select.#{n}"), id: n} }
+    field :option_set_id do |object|
+      object.left_qing&.option_set_id
     end
 
-    def option_set_id
-      object.left_qing&.option_set_id
+    fields :form_id, :conditionable_id, :conditionable_type
+
+    field :operator_options do |object|
+      object.applicable_operator_names.map { |n| {name: I18n.t("condition.operators.select.#{n}"), id: n} }
     end
   end
 end

@@ -3,6 +3,6 @@
 module ConditionalLogicForm
   # Serializes FormItems for cases where they are targets of conditional logic, like dest_item.
   class TargetFormItemSerializer < ApplicationSerializer
-    attributes :id, :code, :rank, :full_dotted_rank
+    fields :id, :code, :rank, :full_dotted_rank
   end
 end

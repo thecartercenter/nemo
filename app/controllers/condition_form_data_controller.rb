@@ -10,7 +10,7 @@ class ConditionFormDataController < ApplicationController
     authorize!(:condition_form, @conditionable)
     @condition = find_or_build_condition
     @condition.left_qing_id = params[:left_qing_id]
-    render(json: ConditionalLogicForm::ConditionSerializer.new(@condition), status: :ok)
+    render(json: ConditionalLogicForm::ConditionSerializer.render_as_json(@condition), status: :ok)
   end
 
   # Returns path information about:
@@ -20,7 +20,7 @@ class ConditionFormDataController < ApplicationController
     option_node = OptionNode.find_by(id: params[:node_id]) # null if not found instead of throwing exception
     option_node ||= OptionSet.find(params[:option_set_id]).root_node
     authorize!(:show, option_node.option_set)
-    render(json: ConditionalLogicForm::OptionPathSerializer.new(option_node))
+    render(json: ConditionalLogicForm::OptionPathSerializer.render_as_json(option_node))
   end
 
   private
