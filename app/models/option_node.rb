@@ -344,6 +344,7 @@ class OptionNode < ApplicationRecord
     self.options_removed = false
 
     # Index all children by ID for better performance
+    # Note: "scoping" deprecation warnings are waiting on https://github.com/stefankroes/ancestry/issues/485.
     children_by_id = children.index_by(&:id)
 
     # Loop over all children attributes.
@@ -369,6 +370,7 @@ class OptionNode < ApplicationRecord
         self.options_added = true
 
         # We need to strip ID in case it's present due to a node changing parents.
+        # Note: "scoping" deprecation warnings are waiting on https://github.com/stefankroes/ancestry/issues/485.
         children.create!(attribs.except(:id).merge(rank: i + 1).merge(sequence: max_sequence + 1))
       end
     end
