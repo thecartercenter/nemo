@@ -106,7 +106,7 @@ gem "parallel", "~> 1.19"
 gem "whenever", "~> 1.0", require: false
 
 # I18n
-gem "i18n_country_select", "~> 1.0"
+gem "i18n_country_select", "~> 1.2"
 gem "i18n-country-translations", "~> 1.0"
 gem "i18n-js", "~> 3.0"
 gem "iso-639", "~> 0.3.5"
