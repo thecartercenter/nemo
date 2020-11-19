@@ -7,8 +7,6 @@ class API::V1::BaseController < ApplicationController
 
   before_action :authenticate
 
-  serialization_scope :view_context
-
   protected
 
   def authenticate

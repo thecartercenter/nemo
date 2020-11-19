@@ -24,13 +24,13 @@ def get_mission
   Mission.order(:created_at).first || create(:mission)
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:name) { |n| "Mission #{n}" }
 
   factory :mission do
     transient do
-      with_user nil
-      role_name :coordinator
+      with_user { nil }
+      role_name { :coordinator }
     end
 
     name

@@ -31,7 +31,7 @@
       <%= javascript_doc_ready do %>
         new ELMO.Views.ResponseConditionManager(<%=json(
           el: "[data-path='#{new_context.path_str}']",
-          item: ResponseFormConditionalLogic::FormItemSerializer.new(
+          item: ResponseFormConditionalLogic::FormItemSerializer.render_as_json(
             node.form_item,
             response_condition_group: response_condition_group),
         ) %>);

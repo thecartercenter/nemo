@@ -20,7 +20,6 @@ class FilterDataController < ApplicationController
       raise "qing rank should always be non-empty"
     end
 
-    render(json: ActiveModel::ArraySerializer.new(qings,
-      each_serializer: ConditionalLogicForm::TargetQuestioningSerializer))
+    render(json: ConditionalLogicForm::TargetQuestioningSerializer.render_as_json(qings))
   end
 end

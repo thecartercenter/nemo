@@ -82,17 +82,17 @@ module Utils
         when "text", "long_text"
           Faker::Lorem.sentence
         when "integer", "counter"
-          Faker::Number.number(3)
+          Faker::Number.number(digits: 3)
         when "decimal"
-          Faker::Number.decimal(3)
+          Faker::Number.decimal(l_digits: 3)
         when "datetime"
-          n = Faker::Number.number(3).to_i
+          n = Faker::Number.number(digits: 3)
           n.days.ago.strftime("%Y%m%d %H%M")
         when "date"
-          n = Faker::Number.number(3).to_i
+          n = Faker::Number.number(digits: 3)
           n.days.ago.strftime("%Y%m%d")
         when "time"
-          n = Faker::Number.number(3).to_i
+          n = Faker::Number.number(digits: 3)
           n.days.ago.strftime("%H%M")
         when "select_one", "select_multiple"
           n = question.options.length

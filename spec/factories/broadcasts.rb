@@ -28,14 +28,14 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :broadcast do
     mission { get_mission }
-    medium "email"
-    recipient_selection "specific"
-    subject "test broadcast"
-    which_phone "main_only"
-    body "This is the Body of a Broadcast"
+    medium { "email" }
+    recipient_selection { "specific" }
+    subject { "test broadcast" }
+    which_phone { "main_only" }
+    body { "This is the Body of a Broadcast" }
 
     trait :with_recipient_users do
       recipients { [create(:user), create(:user)] }

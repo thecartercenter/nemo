@@ -47,19 +47,19 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :question do
     transient do
-      use_geo_option_set false
-      multilingual false
-      with_user_locale false
-      add_to_form false
+      use_geo_option_set { false }
+      multilingual { false }
+      with_user_locale { false }
+      add_to_form { false }
 
       # Optionally specifies the options for the option set.
-      option_names nil
+      option_names { nil }
     end
 
-    qtype_name "integer"
+    qtype_name { "integer" }
     sequence(:code) { |n| "#{qtype_name.camelize}Q#{n}" }
 
     sequence(:name_translations) do |n|

@@ -50,5 +50,5 @@
 
 # Serializes Users for multiple purposes.
 class UserSerializer < ApplicationSerializer
-  attributes :id, :name
+  fields :id, :name
 end

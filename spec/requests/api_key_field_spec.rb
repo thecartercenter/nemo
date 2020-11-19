@@ -6,8 +6,8 @@ require "rails_helper"
 #   Please move at the next opportunity.
 describe "api key form field", database_cleaner: :all do
   before do
-    @user = FactoryGirl.create(:user)
-    @user2 = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
+    @user2 = FactoryBot.create(:user)
     login(@user)
   end
 

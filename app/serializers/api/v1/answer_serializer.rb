@@ -1,22 +1,25 @@
 # frozen_string_literal: true
 
-class API::V1::AnswerSerializer < ActiveModel::Serializer
-  attributes :id, :code, :question, :value
-  format_keys :underscore
+class API::V1::AnswerSerializer < ApplicationSerializer
+  transform UnderscoreTransformer
 
-  def filter(keys)
-    keys - (scope.params[:controller] == "api/v1/answers" ? %i[code question] : [])
-  end
+  fields :id
 
-  def code
+  field :code do |object|
     object.question.code
   end
 
-  def question
+  field :question do |object|
     object.question.name
   end
 
-  def value
-    object.casted_value
+  field :casted_value, name: :value
+
+  view :api do
+    # Workaround: Blueprinter views should inherit transformers but they don't.
+    transform UnderscoreTransformer
+
+    exclude :code
+    exclude :question
   end
 end

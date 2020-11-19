@@ -73,7 +73,7 @@ class UserGroupsController < ApplicationController
       .paginate(page: params[:page], per_page: 20)
 
     render(json: {
-      possible_groups: ActiveModel::ArraySerializer.new(@user_groups),
+      possible_groups: UserGroupSerializer.render_as_json(@user_groups),
       more: @user_groups.next_page.present?
     })
   end

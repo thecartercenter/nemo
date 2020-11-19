@@ -10,7 +10,7 @@ describe Response do
   end
 
   let(:form) do
-    FactoryGirl.create(:form,
+    FactoryBot.create(:form,
       name: "SMS Form", smsable: true, mission: get_mission, question_types: %w[integer text])
   end
   let(:form_answers) { [1, "Lorem ipsum try me again"] }

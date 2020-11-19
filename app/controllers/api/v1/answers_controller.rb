@@ -27,7 +27,7 @@ class API::V1::AnswersController < API::V1::BaseController
 
       answers = add_date_filter(answers)
 
-      paginate(json: answers, each_serializer: API::V1::AnswerSerializer)
+      paginate(json: API::V1::AnswerSerializer.render_as_json(answers, view: :api))
     end
   end
 end

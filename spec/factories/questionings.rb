@@ -47,12 +47,12 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :questioning do
     question
     form
     parent { form.root_group }
-    type "Questioning"
+    type { "Questioning" }
     mission { form.mission }
   end
 end

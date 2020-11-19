@@ -27,7 +27,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :constraint do
     transient do
       no_conditions { false }

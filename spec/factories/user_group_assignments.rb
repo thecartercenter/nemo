@@ -24,7 +24,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user_group_assignment do
     user
     user_group

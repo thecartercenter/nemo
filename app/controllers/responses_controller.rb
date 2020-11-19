@@ -40,7 +40,8 @@ class ResponsesController < ApplicationController
 
         searcher = build_searcher(@responses)
         @responses = apply_searcher_safely(searcher)
-        @searcher_serializer = ResponsesSearcherSerializer.new(searcher)
+        @searcher_serializer = ResponsesSearcherSerializer
+        @searcher = searcher
 
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
@@ -128,7 +129,7 @@ class ResponsesController < ApplicationController
       .paginate(page: params[:page], per_page: 20)
 
     render(json: {
-      possible_users: ActiveModel::ArraySerializer.new(possible_users),
+      possible_users: UserSerializer.render_as_json(possible_users),
       more: possible_users.next_page.present?
     })
   end

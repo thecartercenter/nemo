@@ -210,22 +210,22 @@ module ResponseFactoryHelper
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :response do
     transient do
-      answer_values []
+      answer_values { [] }
     end
 
     user
     mission { get_mission }
     form { create(:form, :live, mission: mission) }
-    source "web"
+    source { "web" }
 
     trait :is_reviewed do
       transient do
-        reviewer_name "Default"
+        reviewer_name { "Default" }
       end
-      reviewed true
+      reviewed { true }
       reviewer_notes { Faker::Lorem.paragraphs }
       reviewer { create(:user, name: reviewer_name) }
     end

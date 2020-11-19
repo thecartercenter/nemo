@@ -47,14 +47,14 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :qing_group do
     form
     parent { form.root_group }
-    type "QingGroup"
+    type { "QingGroup" }
     mission { form.mission }
     sequence(:group_name) { |i| "Group #{i}" }
     sequence(:group_hint) { |i| "Group Hint #{i}" }
-    one_screen true
+    one_screen { true }
   end
 end

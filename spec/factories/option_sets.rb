@@ -32,14 +32,14 @@
 #
 # rubocop:enable Layout/LineLength
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :option_set do
     transient do
       # First level option names. Can also be a symbol which refers to a set in OptionNodeSupport.
-      option_names %w[Cat Dog]
+      option_names { %w[Cat Dog] }
 
       # First level option values. Only works with default or manually specified option names.
-      option_values []
+      option_values { [] }
     end
 
     sequence(:name) { |n| "Option Set #{n}" }
@@ -64,7 +64,7 @@ FactoryGirl.define do
     end
 
     factory :empty_option_set do
-      children_attribs []
+      children_attribs { [] }
     end
 
     trait :standard do

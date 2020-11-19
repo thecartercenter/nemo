@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-class API::V1::FormSerializer < ActiveModel::Serializer
-  attributes :id, :name, :responses_count, :questions
-  format_keys :underscore
+class API::V1::FormSerializer < ApplicationSerializer
+  fields :id, :name, :responses_count
+  transform UnderscoreTransformer
 
-  def filter(keys)
-    # Only show questions if show action.
-    keys - (scope.params[:action] == "show" ? [] : [:questions])
-  end
+  view :show do
+    # Workaround: Blueprinter views should inherit transformers but they don't.
+    transform UnderscoreTransformer
 
-  def questions
-    object.api_visible_questions.as_json(only: %i[id code], methods: :name)
+    field :questions do |object|
+      object.api_visible_questions.as_json(only: %i[id code], methods: :name)
+    end
   end
 end
