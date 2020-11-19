@@ -850,7 +850,6 @@ pt-BR:
               blank_unless_goto_end: "Este campo é obrigatório, a não ser que você escolha a opção \"pular para o final do formulário\"."
         user:
           at_least_digits: "Por favor, insira pelo menos %{num} dígitos."
-          cant_delete_if_responses: "Você não pode remover esta/e usuária/o por ela/e ter submissões associadas."
           duplicate_assignments: "Há atribuições duplicadas."
           no_missions: "Você não faz parte de nenhuma missão."
           phone_assigned_to_other: "Este número já foi atribuído a outra/o usuária/o."

@@ -644,7 +644,6 @@ ko:
           general: "설정이 유효하지 않습니다. (아래의 항목을 체크해주십시오.)"
         user:
           at_least_digits: "적어도 %{num}자리 이상의 숫자를 입력해주십시오."
-          cant_delete_if_responses: "이미 응답을 제출한 사용자는 삭제할 수 없습니다."
           duplicate_assignments: "중복된 배정입니다."
           no_missions: "배정된 미션이 없습니다."
           phone_assigned_to_other: "이 번호는 이미 다른 사용자로 등록된 번호입니다."

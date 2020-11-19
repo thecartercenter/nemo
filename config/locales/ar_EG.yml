@@ -879,7 +879,6 @@ ar:
               blank_unless_goto_end: "هذا الحقل مطلوب ما لم تقم باختيار 'انتقل إلى نهاية النموذج'."
         user:
           at_least_digits: "الرجاء إدخال ما لا يقل عن %{num} أرقام."
-          cant_delete_if_responses: "لا يمكنك حذف هذا المستخدم لأنه مرتبط بردود."
           duplicate_assignments: "هناك واجبات مكررة."
           no_missions: "لست جزء من اي مهمة."
           phone_assigned_to_other: "هذا الرقم قد تم تخصيصه لمستخدم اخر."

@@ -843,7 +843,6 @@ fr:
               blank_unless_goto_end: "Ce champ est obligatoire à moins que vous ne choisissiez 'passer à la fin du formulaire'."
         user:
           at_least_digits: "Entrez au moins %{num} chiffres"
-          cant_delete_if_responses: "Vous ne pouvez pas supprimer cet utilisateur car il a des réponses associées."
           duplicate_assignments: "Il y a des tâches en double."
           no_missions: "Vous n'êtes pas affecté à des missions."
           phone_assigned_to_other: "A déjà été attribué à un autre utilisateur"

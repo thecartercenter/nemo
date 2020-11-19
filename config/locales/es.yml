@@ -465,7 +465,6 @@ es:
           general: "Los parámetros no son válidos (vea a continuación)."
         user:
           at_least_digits: "Por favor ponga al menos %{num} dígitos."
-          cant_delete_if_responses: "No se puede eliminar este usuario porque tiene respuestas asociadas."
           duplicate_assignments: "Hay tareas duplicadas."
           no_missions: "Usted no esta asignado a ninguna misión."
           phone_assigned_to_other: "Este número ya ha sido asignada a otro usuario."
