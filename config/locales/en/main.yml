@@ -1334,6 +1334,7 @@ en:
       header: "SMS Composition Guide"
       auth_code: "User authorization code (required)"
       header: "SMS Guide"
+      draft_error: "You can't view the SMS guide for the form '%{form_name}' because it is currentlly a draft. Make the form live or paused to view the SMS guide."
       for_paper_record: "For paper record only"
       form_code: "Unique form code (required)"
       multiple_sms_numbers: "Multiple SMS submission numbers"

@@ -10,14 +10,28 @@ feature "SMS Guide", js: true do
     login(user)
   end
 
-  context "with SMSable form" do
-    let!(:form) do
-      create(:form, :live, name: "SMS Form", smsable: true, question_types: %w[text])
+  context "with smsable form" do
+    context "when form is live" do
+      let!(:form) do
+        create(:form, :live, name: "SMS Form", smsable: true, question_types: %w[text])
+      end
+
+      scenario "happy path" do
+        visit(sms_guide_form_path(form, mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+        expect(page).to have_content("Text Question Title")
+      end
     end
 
-    scenario "happy path" do
-      visit(sms_guide_form_path(form, mode: "m", mission_name: get_mission.compact_name, locale: "en"))
-      expect(page).to have_content("Text Question Title")
+    context "when form is draft" do
+      let!(:form) do
+        create(:form, :draft, name: "SMS Form", smsable: true, question_types: %w[text])
+      end
+
+      scenario "shows error" do
+        visit(sms_guide_form_path(form, mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+        expect(page).to have_flash_error("You can't view the SMS guide for the form 'SMS Form'")
+        expect(page).not_to have_content("Text Question Title")
+      end
     end
   end
 
