@@ -17,6 +17,27 @@ ActiveRecord::Schema.define(version: 2020_12_09_194945) do
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
   create_table "answer_hierarchies", id: false, force: :cascade do |t|
     t.uuid "ancestor_id", null: false
     t.uuid "descendant_id", null: false
@@ -609,6 +630,7 @@ ActiveRecord::Schema.define(version: 2020_12_09_194945) do
     t.index ["whitelistable_id"], name: "index_whitelistings_on_whitelistable_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answer_hierarchies", "answers", column: "ancestor_id"
   add_foreign_key "answer_hierarchies", "answers", column: "descendant_id"
   add_foreign_key "answers", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
