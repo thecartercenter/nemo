@@ -16,7 +16,7 @@
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
-#  status_changed_at     :datetime
+#  published_changed_at     :datetime
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  mission_id            :uuid
@@ -100,7 +100,7 @@ class Form < ApplicationRecord
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-             dont_copy: %i[status status_changed_at downloads
+             dont_copy: %i[status published_changed_at downloads
                            smsable allow_incomplete access_level]
 
   # remove heirarchy of objects
@@ -109,17 +109,17 @@ class Form < ApplicationRecord
     FormVersion.where(form_id: form_ids).delete_all
   end
 
-  # Gets a cache key based on the mission and the max (latest) status_changed_at value.
+  # Gets a cache key based on the mission and the max (latest) published_changed_at value.
   def self.odk_index_cache_key(options)
     # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load,
     # which is fine as long as it's consistent.
-    max_status_changed_at =
+    max_published_changed_at =
       if for_mission(options[:mission]).live.any?
-        for_mission(options[:mission]).maximum(:status_changed_at).utc.to_s(:cache_datetime)
+        for_mission(options[:mission]).maximum(:published_changed_at).utc.to_s(:cache_datetime)
       else
         "no-pubd-forms"
       end
-    "odk-form-list/mission-#{options[:mission].id}/#{max_status_changed_at}"
+    "odk-form-list/mission-#{options[:mission].id}/#{max_published_changed_at}"
   end
 
   def condition_computer
@@ -145,7 +145,7 @@ class Form < ApplicationRecord
   end
 
   def odk_download_cache_key
-    "odk-form/#{id}-#{status_changed_at}"
+    "odk-form/#{id}-#{published_changed_at}"
   end
 
   def api_user_id_can_see?(api_user_id)
@@ -233,8 +233,17 @@ class Form < ApplicationRecord
 
   def update_status(new_status)
     return if new_status == status
+
+    old_status = status&.to_sym
+    new_status = new_status.to_sym
+    updates = {status: new_status}
+
+    # We don't care about when status goes between live and paused since that doesn't affect
+    # what is allowed to be changed.
+    updates[:published_changed_at] = Time.current if old_status == :draft || new_status == :draft
+
     # Don't run validations in case form has become invalid due to a migration or other change.
-    update_columns(status: new_status, status_changed_at: Time.current)
+    update_columns(**updates)
 
     # Ensure the form has a version if it's becoming live.
     increment_version if live? && current_version.nil?
@@ -288,7 +297,7 @@ class Form < ApplicationRecord
 
     # Reset downloads since we are only interested in downloads of present version.
     # Touch last changed so the cache key gets bumped.
-    update_columns(downloads: 0, status_changed_at: Time.current)
+    update_columns(downloads: 0, published_changed_at: Time.current)
   end
 
   # efficiently gets the number of answers for the given questioning on this form

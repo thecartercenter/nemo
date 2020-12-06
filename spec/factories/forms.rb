@@ -16,7 +16,7 @@
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
-#  status_changed_at     :datetime
+#  published_changed_at     :datetime
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  mission_id            :uuid

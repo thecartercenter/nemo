@@ -216,12 +216,12 @@ ActiveRecord::Schema.define(version: 2020_10_19_195418) do
     t.uuid "mission_id"
     t.string "name", limit: 255, null: false
     t.uuid "original_id"
+    t.datetime "published_changed_at"
     t.uuid "root_id"
     t.boolean "sms_relay", default: false, null: false
     t.boolean "smsable", default: false, null: false
     t.boolean "standard_copy", default: false, null: false
     t.string "status", default: "draft", null: false
-    t.datetime "status_changed_at"
     t.datetime "updated_at", null: false
     t.index ["mission_id"], name: "index_forms_on_mission_id"
     t.index ["original_id"], name: "index_forms_on_original_id"

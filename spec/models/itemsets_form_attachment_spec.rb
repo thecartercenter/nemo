@@ -14,10 +14,10 @@ describe ODK::ItemsetsFormAttachment, :odk do
     context "for live form" do
       before do
         allow(form).to receive(:draft?).and_return(false)
-        allow(form).to receive(:status_changed_at).and_return(Time.zone.parse("2014-01-01 12:00:00 UTC"))
+        allow(form).to receive(:published_changed_at).and_return(Time.zone.parse("2014-01-01 12:00:00 UTC"))
       end
 
-      it "should be based on status_changed_at" do
+      it "should be based on published_changed_at" do
         expect(ifa.path).to eq("form-attachments/test/000042/itemsets-20140101_120000.csv")
       end
     end
