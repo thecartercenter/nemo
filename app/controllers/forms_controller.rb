@@ -80,6 +80,8 @@ class FormsController < ApplicationController
   end
 
   def sms_guide
+    return (flash.now[:error] = I18n.t("forms.sms_guide.draft_error", form_name: @form.name)) if @form.draft?
+
     # determine the most appropriate language to show the form in
     # if params[:lang] is set, use that
     # otherwise try to use the current locale set
