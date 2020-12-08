@@ -765,7 +765,7 @@ en:
           attributes:
             code:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
-            media_prompt_file_name:
+            media_prompt:
               invalid_type: "The file type is invalid."
             media_prompt_content_type:
               invalid_type: "The file type is invalid."
