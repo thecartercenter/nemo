@@ -31,8 +31,14 @@ module Media
   class ::Media::Object < ApplicationRecord
     belongs_to :answer
 
-    has_attached_file :item
-    validates_attachment_presence :item
+    # A note on validation for subclasses:
+    # We no longer validate file extensions because we can't anticipate what extensions folks
+    # will be sending from ODK Collect (since the platform changes over time)
+    # and there is no easy way to allow the user to correct behavior on validation fail-we just have to
+    # discard the file. So for that we reason we limit to mime type validation only since that still
+    # provides some security but is less restrictive and less superficial.
+    has_one_attached :item
+    validates :item, attached: true
 
     delegate :mission, to: :answer
 

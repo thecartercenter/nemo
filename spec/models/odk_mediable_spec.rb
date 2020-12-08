@@ -4,7 +4,11 @@ require "rails_helper"
 
 describe "media_prompt content types and filenames" do
   describe "validations" do
-    subject(:question) { build(:question, media_prompt: media_file) }
+    subject(:question) { build(:question) }
+
+    before do
+      question.media_prompt.attach(io: media_file, filename: File.basename(media_file))
+    end
 
     describe "acceptable types" do
       context "ogg audio" do
