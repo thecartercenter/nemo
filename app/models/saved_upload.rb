@@ -17,9 +17,8 @@
 
 # A model for a generic file upload, managed by Paperclip
 class SavedUpload < ApplicationRecord
-  has_attached_file :file
-  validates_attachment_presence :file
-  do_not_validate_attachment_file_type :file
+  has_one_attached :file
+  validates :file, attached: true
 
   scope :old, -> { where("created_at < ?", 30.days.ago) }
 

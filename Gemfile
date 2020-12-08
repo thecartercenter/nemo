@@ -58,6 +58,7 @@ gem "rdiscount", "~> 2.1"
 gem "reverse_markdown", "~> 2.0"
 
 # Storage
+gem "active_storage_validations", "~> 0.9.0"
 gem "aws-sdk-s3", "~> 1.86", require: false
 gem "fog-aws", "~> 3.3"
 gem "paperclip", "~> 6.0"
