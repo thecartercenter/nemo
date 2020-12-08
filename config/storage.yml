@@ -7,8 +7,8 @@ local:
   root: <%= Rails.root.join("storage") %>
 
 amazon:
+  access_key_id: <%= ENV["NEMO_AWS_ACCESS_KEY_ID"] %>
   service: S3
-  access_key_id: <%= ENV['NEMO_AWS_ACCESS_KEY_ID'] || Settings.aws.access_key_id %>
-  secret_access_key: <%= ENV['NEMO_AWS_SECRET_ACCESS_KEY'] || Settings.aws.secret_access_key %>
-  region: us-east-1
-  bucket: <%= ENV['NEMO_AWS_BUCKET'] || Settings.aws.bucket %>
+  secret_access_key: <%= ENV["NEMO_AWS_SECRET_ACCESS_KEY"] %>
+  region: <%= ENV["NEMO_AWS_REGION"] %>
+  bucket: <%= ENV["NEMO_AWS_BUCKET"] %>
