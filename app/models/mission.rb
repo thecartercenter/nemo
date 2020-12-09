@@ -76,8 +76,9 @@ class Mission < ApplicationRecord
   def destroy
     transaction do
       # The order of deletion is also important to avoid foreign key constraints
-      relationships_to_delete = [Setting, Report::Report, Response,
-                                 Condition, FormItem, Question, OptionSet, Option,
+      [Setting, Report::Report].each { |r| r.mission_pre_delete(self) }
+      ResponseDestroyer.new(scope: Response.where(mission: self)).destroy!
+      relationships_to_delete = [Condition, FormItem, Question, OptionSet, Option,
                                  Form, Broadcast, Assignment, Sms::Message, UserGroup, Operation]
       relationships_to_delete.each { |r| r.mission_pre_delete(self) }
       reload
