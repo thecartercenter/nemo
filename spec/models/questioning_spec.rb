@@ -94,6 +94,18 @@ describe Questioning do
       end
     end
 
+    describe "preload_last_saved and default" do
+      context do
+        let(:submitted) { {preload_last_saved: false, default: "foo"} }
+        it { is_expected.to eq(preload_last_saved: false, default: "foo") }
+      end
+
+      context do
+        let(:submitted) { {preload_last_saved: true, default: "foo"} }
+        it { is_expected.to eq(preload_last_saved: true, default: nil) }
+      end
+    end
+
     describe "question metadata and hidden/disabled/required" do
       context do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }

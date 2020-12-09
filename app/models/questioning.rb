@@ -163,5 +163,6 @@ class Questioning < FormItem
     # If `disabled`, don't normalize `required` in case the user wants to re-enable later.
     self.required = false if hidden? || read_only?
     self.all_levels_required = false unless multilevel? && required?
+    self.default = nil if preload_last_saved?
   end
 end
