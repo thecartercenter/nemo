@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_19_195418) do
+ActiveRecord::Schema.define(version: 2020_12_09_194945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -178,6 +178,7 @@ ActiveRecord::Schema.define(version: 2020_10_19_195418) do
     t.uuid "mission_id"
     t.integer "old_id"
     t.boolean "one_screen"
+    t.boolean "preload_last_saved", default: false, null: false
     t.uuid "question_id"
     t.integer "question_old_id"
     t.integer "rank", null: false

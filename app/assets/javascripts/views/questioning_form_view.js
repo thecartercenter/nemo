@@ -10,6 +10,7 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
       'change select[id$="_qtype_name"]': 'toggleFields',
       'change select[id$="_option_set_id"]': 'toggleFields',
       'change select[id$="_metadata_type"]': 'toggleFields',
+      'click #questioning_preload_last_saved': 'toggleFields',
       'click #questioning_read_only': 'toggleFields',
       'click #questioning_required': 'toggleFields',
       'click #questioning_hidden': 'toggleFields',
@@ -20,11 +21,13 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
 
   initialize(options) {
     this.defaultableTypes = options.defaultableTypes;
+    this.lastpreloadableTypes = options.lastpreloadableTypes;
     return this.toggleFields();
   }
 
   toggleFields() {
     super.toggleFields();
+    this.showField('preload_last_saved', this.showPreloadLastSaved());
     this.showField('default', this.showDefault());
     this.showField('read_only', this.showReadOnly());
     this.showField('required', this.showRequired());
@@ -35,8 +38,13 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
     return this.showField('skip_logic', this.showSkipLogic());
   }
 
+  showPreloadLastSaved() {
+    return this.lastpreloadableTypes.indexOf(this.fieldValue('qtype_name')) !== -1;
+  }
+
   showDefault() {
-    return this.defaultableTypes.indexOf(this.fieldValue('qtype_name')) !== -1;
+    return this.defaultableTypes.indexOf(this.fieldValue('qtype_name')) !== -1
+      && !this.fieldValue('preload_last_saved');
   }
 
   showReadOnly() {

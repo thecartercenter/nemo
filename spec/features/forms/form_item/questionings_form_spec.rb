@@ -80,6 +80,16 @@ describe "questionings form", js: true  do
           expect_field_visibility("default", :hidden)
         end
 
+        it "should display preload_last_saved only if question type is lastpreloadable" do
+          visit(edit_qing_path)
+          select("Image", from: "questioning_question_attributes_qtype_name")
+          expect_field_visibility("preload_last_saved", :hidden)
+          select("Text", from: "Type") # Text is lastpreloadable
+          expect_field_visibility("preload_last_saved", :editable)
+          select("Image", from: "Type")
+          expect_field_visibility("preload_last_saved", :hidden)
+        end
+
         it "should display readonly only if default is not empty" do
           visit(edit_qing_path)
           select("Text", from: "Type") # Text is defaultable
@@ -116,6 +126,13 @@ describe "questionings form", js: true  do
           # we can still see the media prompt file
           visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
           expect(page).to have_content("powerup.mp3")
+        end
+
+        it "should hide default field when if preload_last_saved is checked" do
+          visit(edit_qing_path)
+          expect_field_visibility("default", :editable)
+          check("Preload Last Answer?")
+          expect_field_visibility("default", :hidden)
         end
       end
 
