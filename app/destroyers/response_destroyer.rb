@@ -6,7 +6,8 @@ class ResponseDestroyer < ApplicationDestroyer
 
   def do_destroy
     # The destroyer is responsible for checking destroy permissions so we do so here by scoping.
-    ids = scope.accessible_by(ability, :destroy).pluck(:id)
+    self.scope = scope.accessible_by(ability, :destroy) if ability.present?
+    ids = scope.pluck(:id)
     return if ids.empty?
 
     Media::Object.joins(:answer).where(answers: {response_id: ids}).delete_all

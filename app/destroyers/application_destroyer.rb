@@ -4,9 +4,9 @@
 # Responsible for checking permissions for destruction (based on given Ability) and
 # handling any DeletionErrors raised during deletion.
 class ApplicationDestroyer
-  def initialize(params)
-    self.scope = params[:scope]
-    self.ability = params[:ability]
+  def initialize(scope:, ability: nil)
+    self.scope = scope
+    self.ability = ability
     self.counts = {destroyed: 0, skipped: 0, deactivated: 0}
   end
 
