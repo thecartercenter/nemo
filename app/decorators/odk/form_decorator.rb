@@ -55,5 +55,9 @@ module ODK
     def needs_external_csv?
       enabled_questionings.any? { |q| decorate(q).select_one_with_external_csv? }
     end
+
+    def needs_last_saved_instance?
+      enabled_questionings.any?(&:preload_last_saved?)
+    end
   end
 end

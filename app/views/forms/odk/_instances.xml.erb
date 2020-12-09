@@ -15,3 +15,7 @@
 <% @option_sets.reject(&:external_csv?).each do |option_set| %>
   <%= option_set.instances %>
 <% end %>
+
+<% if @form.needs_last_saved_instance? %>
+  <instance id="last-saved" src="jr://instance/last-saved"/>
+<% end %>

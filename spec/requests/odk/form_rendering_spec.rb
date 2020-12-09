@@ -464,6 +464,22 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
+  describe "preload_last_saved" do
+    let(:form) do
+      create(:form, :live,
+        name: "Preload Last Saved",
+        question_types: %w[text text text])
+    end
+
+    before do
+      form.c[1].update!(preload_last_saved: true)
+    end
+
+    it "should render proper xml" do
+      expect_xml(form, "preload_last_saved")
+    end
+  end
+
   describe "media" do
     context "media questions" do
       let(:form) do

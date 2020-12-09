@@ -6,7 +6,7 @@ module ODK
     delegate_all
 
     def bind_tag(form, subq, xpath_prefix: "/data")
-      tag(:bind, nodeset: [xpath_prefix, subq&.odk_code].compact.join("/"),
+      tag(:bind, nodeset: nodeset(subq, xpath_prefix),
                  type: binding_type_attrib(subq),
                  required: subq.required? ? required_value(form) : nil,
                  readonly: default_answer? && read_only? ? "true()" : nil,
@@ -16,6 +16,11 @@ module ODK
                  calculate: calculate,
                  "jr:preload": jr_preload,
                  "jr:preloadParams": jr_preload_params)
+    end
+
+    def last_saved_setvalue_tag(subq, xpath_prefix: "/data")
+      ref = nodeset(subq, xpath_prefix)
+      tag(:setvalue, event: "odk-instance-first-load", ref: ref, value: "instance('last-saved')#{ref}")
     end
 
     def body_tags(xpath_prefix:, group: nil, render_mode: nil)
@@ -72,6 +77,10 @@ module ODK
       exprs = [odk_constraint] # Old min/max style, going away later.
       constraints.each { |c| exprs << "(#{ConditionGroupDecorator.decorate(c.condition_group).to_odk})" }
       exprs.compact.join(" and ").presence
+    end
+
+    def nodeset(subq, xpath_prefix)
+      [xpath_prefix, subq&.odk_code].compact.join("/")
     end
 
     def jr_preload

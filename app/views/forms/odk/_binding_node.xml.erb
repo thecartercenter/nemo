@@ -2,6 +2,7 @@
 <% if node.is_a?(Questioning) %>
   <% node.subqings.each do |subq| %>
     <%= node.bind_tag(@form, subq, xpath_prefix: xpath_prefix) %>
+    <%= node.last_saved_setvalue_tag(subq, xpath_prefix: xpath_prefix) if node.preload_last_saved? %>
   <% end %>
 <% else %>
   <%= node.bind_tag(xpath_prefix: xpath_prefix) %>
