@@ -142,8 +142,12 @@ $answer-box-border: 2px dashed #222;
   }
 
   @media screen {
-    .sms_guide {
+    .sms-guide {
       max-width: 900px;
+
+      .logo {
+        display: none;
+      }
     }
 
     #body {
@@ -153,6 +157,25 @@ $answer-box-border: 2px dashed #222;
   }
 
   @media print {
+    .sms-guide .logo-title {
+      margin-bottom: 1em;
+
+      .logo,
+      .title {
+        display: inline-block;
+      }
+
+      .logo {
+        height: 3em;
+        margin-#{$right}: 1em;
+      }
+
+      .title {
+        margin-bottom: 0;
+        vertical-align: bottom;
+      }
+    }
+
     .alert,
     div.controls {
       display: none;
