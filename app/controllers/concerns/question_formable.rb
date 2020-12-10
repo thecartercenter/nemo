@@ -26,6 +26,7 @@ module QuestionFormable
   def setup_question_form_support_objs
     @question_types = QuestionType.all
     @defaultable_types = QuestionType.with_property(:defaultable)
+    @lastpreloadable_types = QuestionType.with_property(:lastpreloadable)
     @option_sets = OptionSet.accessible_by(current_ability).default_order
   end
 
