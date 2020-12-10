@@ -3,7 +3,7 @@
 <% if @form.not_draft? %>
   <% content_for(:alerts) { appendix_alert } %>
 
-  <div class="sms_guide">
+  <div class="sms-guide">
     <div class="controls">
       <form>
         <input type="hidden" name="sms_guide" value="1">
@@ -16,7 +16,10 @@
 
     <div id="body">
       <div class="header"><%= t(".header", locale: @locale) %></div>
-      <h1 class="title inner"><%= title %></h1>
+      <div class="logo-title">
+        <%= logo_image(style: :dark, class: "logo") %>
+        <h1 class="title inner"><%= title %></h1>
+      </div>
 
       <div id="instructions">
         <p><%= t(".instructions.intro", locale: @locale) %></p>
