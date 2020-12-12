@@ -63,7 +63,7 @@ module Media
     end
 
     def media_filename
-      extension = File.extname(@media_object.item_file_name)
+      extension = File.extname(@media_object.item.filename.to_s)
       if @response && @answer
         "elmo-#{@response.shortcode}-#{@answer.id}#{extension}"
       else
