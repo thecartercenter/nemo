@@ -28,9 +28,11 @@
 module Media
   # Image-type Answer attachment.
   class Image < ::Media::Object
+    # Thumbnail is 100px height with relative width (doubled to 200 to support retina screens).
+    SIZE_THUMB = ">x200"
+
     # The list of types here is those we expect to be captured by an Android phone.
     # See parent class comments for more info.
-    # TODO: styles: {normal: "720x720>", thumb: "100x100"}
     validates :item, content_type: %r{\Aimage/.*\z}
 
     def dynamic_thumb?

@@ -61,6 +61,7 @@ gem "reverse_markdown", "~> 2.0"
 gem "active_storage_validations", "~> 0.9.0"
 gem "aws-sdk-s3", "~> 1.86", require: false
 gem "fog-aws", "~> 3.3"
+gem "image_processing", "~> 1.12"
 gem "paperclip", "~> 6.0"
 
 # API
