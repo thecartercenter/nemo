@@ -45,7 +45,7 @@ class TabularImportsController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.#{tabular_type_symbol}", file: saved_upload.file.original_filename),
+      details: t("operation.details.#{tabular_type_symbol}", file: saved_upload.file.filename.to_s),
       job_params: send("#{tabular_type_symbol}_params").to_h.symbolize_keys.merge(
         saved_upload_id: saved_upload.id,
         import_class: tabular_class.to_s

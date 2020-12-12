@@ -98,6 +98,9 @@ module ELMO
     # when cache versioning is enabled.
     config.active_record.cache_versioning = false
 
+    # Default expiry for attachments.
+    config.active_storage.service_urls_expire_in = 1.hour
+
     ####################################
     # CUSTOM SETTINGS
     ####################################

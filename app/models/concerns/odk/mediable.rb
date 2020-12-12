@@ -44,7 +44,8 @@ module ODK
           private
 
           def extension_works_on_android
-            extension = File.extname(#{col_name}.filename.to_s)
+            return if #{col_name}.attachment.nil?
+            extension = File.extname(#{col_name}.attachment.filename.to_s)
             errors.add(:#{col_name}, :invalid_type) unless ODK_EXTS_REGEX.match?(extension)
           end
         RUBY
