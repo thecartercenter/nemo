@@ -18,8 +18,10 @@
   klass.prototype.hookup_report_chooser = function () {
     const self = this;
     $('.report_pane').on('change', 'form.report_chooser', (e) => {
-      const report_id = $(e.target).val();
-      if (report_id) self.change_report(report_id);
+      const id = $(e.target).val();
+      if (id) {
+        self.change_report(id);
+      }
     });
   };
 

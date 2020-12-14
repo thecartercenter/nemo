@@ -124,7 +124,9 @@
       url: ELMO.app.url_builder.build('/'),
       method: 'GET',
       data: {
-        report_id: self.report_view.current_report_id,
+        // Even though report ID is remembered in session, send explicitly in case of race condition
+        // when report dropdown is clicked right when refresh happens.
+        rpid: self.report_view.current_report_id,
         latest_response_id: self.list_view.latest_response_id(),
         auto,
       },
@@ -147,11 +149,8 @@
 
   // Reloads the page via full refresh to avoid memory issues.
   klass.prototype.reload_page = function () {
-    const self = this;
-    let id;
-    window.location.href = `${ELMO.app.url_builder.build('')
-    }?r=${Math.floor((Math.random() * 1000000) + 1)
-    }${(id = self.report_view.current_report_id) ? `&report_id=${id}` : ''}`;
+    const nonce = Math.floor(Math.random() * 1000000 + 1);
+    window.location.href = `${ELMO.app.url_builder.build('')}?r=${nonce}`;
   };
 
   // Enables/disables full screen mode. Uses stored setting if no param given.
