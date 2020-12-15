@@ -40,7 +40,7 @@
   };
 
   klass.prototype.show_edit_view = function (idx) {
-    $('.report_links, .report_main').hide();
+    $('.report_links, .report-main').hide();
     this.edit_view.show(this.report_last_run.clone(), idx);
   };
 
@@ -142,7 +142,7 @@
     if (this.edit_view) this.edit_view.hide();
 
     // show links and body
-    $('.report_links, .report_main').show();
+    $('.report_links, .report-main').show();
   };
 
   // refreshes the report view
