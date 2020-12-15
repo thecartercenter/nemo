@@ -1,9 +1,9 @@
 // ELMO.Views.DashboardReport
 //
 // View model for the dashboard report
-(function (ns, klass) {
+(function(ns, klass) {
   // constructor
-  ns.DashboardReport = klass = function (dashboard, params) {
+  ns.DashboardReport = klass = function(dashboard, params) {
     const self = this;
     self.dashboard = dashboard;
     self.params = params;
@@ -15,7 +15,7 @@
     self.hookup_report_chooser();
   };
 
-  klass.prototype.hookup_report_chooser = function () {
+  klass.prototype.hookup_report_chooser = function() {
     const self = this;
     $('.report-pane').on('change', 'form.report-chooser', (e) => {
       const id = $(e.target).val();
@@ -25,44 +25,34 @@
     });
   };
 
-  klass.prototype.refresh = function () {
+  klass.prototype.refresh = function() {
     if (!ELMO.app.report_controller) return;
     const self = this;
-    ELMO.app.report_controller.run_report().then(() => {
-      $('.report-pane h2').html(self.report().attribs.name);
-      self.set_edit_link();
-    });
+    $('.report-pane .inline-load-ind img').show();
+    ELMO.app.report_controller.run_report().then(() => self.display_report());
   };
 
-  klass.prototype.change_report = function (id) {
+  klass.prototype.change_report = function(id) {
     const self = this;
     self.current_report_id = id;
 
-    // show loading message
-    $('.report-pane h2').html(I18n.t('report/report.loading_report'));
-
-    // remove the old content and replace with new stuff
+    $('.report-pane .report-title-text').html(I18n.t('report/report.loading_report'));
+    $('.report-pane .inline-load-ind img').show();
     $('.report-main').empty();
-    $('.report-main').load(ELMO.app.url_builder.build('reports', id),
-      () => {
-        $('.report-pane h2').html(self.report().attribs.name);
-        self.set_edit_link();
-        $('.report-chooser').show();
-      });
-
-    // clear the dropdown for the next choice
+    $('.report-main').load(ELMO.app.url_builder.build('reports', id), () => self.display_report());
     $('.report-chooser select').val('');
-
     $('.report-edit-link-container').hide();
   };
 
-  klass.prototype.reset_title_pane_text = function (title) {
-    $('.report-title-text').text(title);
-  };
+  klass.prototype.display_report = function() {
+    $('.report-pane .report-title-text').html(this.report().attribs.name);
+    this.set_edit_link();
+    $('.report-pane .inline-load-ind img').hide();
+  }
 
-  klass.prototype.set_edit_link = function (data) {
+  klass.prototype.set_edit_link = function(data) {
     if (this.report().attribs.user_can_edit) {
-      report_url = `${ELMO.app.url_builder.build('reports', this.report().attribs.id)}/edit`;
+      const report_url = `${ELMO.app.url_builder.build('reports', this.report().attribs.id)}/edit`;
 
       $('.report-edit-link-container').show();
       $('.report-edit-link-container a').attr('href', report_url);
@@ -72,7 +62,7 @@
     }
   };
 
-  klass.prototype.report = function () {
+  klass.prototype.report = function() {
     return ELMO.app.report_controller.report_last_run;
   };
 }(ELMO.Views));

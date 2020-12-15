@@ -194,15 +194,12 @@ body.welcome {
       white-space: nowrap;
     }
 
-    /* Don't show report edit link at the beginning.*/
     .report-edit-link-container {
       display: none;
     }
 
     a.action-link-edit {
       color: #888;
-      margin-top: 15px;
-      vertical-align: top;
     }
 
     .report-main {

@@ -135,7 +135,7 @@
         $('.report_stats').replaceWith(data.report_stats);
         self.list_view.adjust_columns();
         self.map_view.update_map(data.response_locations);
-        self.report_view.refresh();
+        self.run_report();
         self.adjust_pane_sizes();
 
         self.reload_timer = setTimeout(() => { self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
