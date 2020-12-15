@@ -20,7 +20,7 @@
     $('.report-pane').on('change', 'form.report-chooser', (e) => {
       const id = $(e.target).val();
       if (id) {
-        self.change_report(id);
+        self.change_report(id, $(e.target).find('option:selected').text());
       }
     });
   };
@@ -32,22 +32,22 @@
     ELMO.app.report_controller.run_report().then(() => self.display_report());
   };
 
-  klass.prototype.change_report = function(id) {
+  klass.prototype.change_report = function(id, name) {
     const self = this;
     self.current_report_id = id;
 
-    $('.report-pane .report-title-text').html(I18n.t('report/report.loading_report'));
+    $('.report-pane .report-title-text').html(name);
     $('.report-pane .inline-load-ind img').show();
     $('.report-main').empty();
-    $('.report-main').load(ELMO.app.url_builder.build('reports', id), () => self.display_report());
     $('.report-chooser select').val('');
     $('.report-edit-link-container').hide();
+    $('.report-main').load(ELMO.app.url_builder.build('reports', id), () => self.display_report());
   };
 
   klass.prototype.display_report = function() {
     $('.report-pane .report-title-text').html(this.report().attribs.name);
-    this.set_edit_link();
     $('.report-pane .inline-load-ind img').hide();
+    this.set_edit_link();
   }
 
   klass.prototype.set_edit_link = function(data) {
