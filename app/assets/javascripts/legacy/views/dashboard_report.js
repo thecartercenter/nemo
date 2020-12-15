@@ -27,18 +27,15 @@
 
   klass.prototype.refresh = function () {
     if (!ELMO.app.report_controller) return;
-
     const self = this;
     ELMO.app.report_controller.run_report().then(() => {
       $('.report-pane h2').html(self.report().attribs.name);
       self.set_edit_link();
-      $('.report-chooser').show();
     });
   };
 
   klass.prototype.change_report = function (id) {
     const self = this;
-    // save the ID
     self.current_report_id = id;
 
     // show loading message
@@ -56,24 +53,22 @@
     // clear the dropdown for the next choice
     $('.report-chooser select').val('');
 
-    // Hide edit link and chooser until reload is finished
-    $('.report_edit_link_container').hide();
-    $('.report-chooser').hide();
+    $('.report-edit-link-container').hide();
   };
 
   klass.prototype.reset_title_pane_text = function (title) {
-    $('.report_title_text').text(title);
+    $('.report-title-text').text(title);
   };
 
   klass.prototype.set_edit_link = function (data) {
     if (this.report().attribs.user_can_edit) {
       report_url = `${ELMO.app.url_builder.build('reports', this.report().attribs.id)}/edit`;
 
-      $('.report_edit_link_container').show();
-      $('.report_edit_link_container a').attr('href', report_url);
+      $('.report-edit-link-container').show();
+      $('.report-edit-link-container a').attr('href', report_url);
     } else {
-      $('.report_edit_link_container').hide();
-      $('.report_edit_link_container a').attr('href', '');
+      $('.report-edit-link-container').hide();
+      $('.report-edit-link-container a').attr('href', '');
     }
   };
 
