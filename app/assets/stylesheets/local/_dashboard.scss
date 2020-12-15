@@ -177,8 +177,7 @@ body.welcome {
 
   /* report */
 
-  form.report-chooser {
-    display: none;
+  .report-chooser {
     float: right;
     margin-top: 15px;
 
@@ -196,7 +195,7 @@ body.welcome {
     }
 
     /* Don't show report edit link at the beginning.*/
-    .report_edit_link_container {
+    .report-edit-link-container {
       display: none;
     }
 
