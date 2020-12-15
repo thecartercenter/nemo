@@ -17,7 +17,7 @@
 
   klass.prototype.hookup_report_chooser = function () {
     const self = this;
-    $('.report_pane').on('change', 'form.report_chooser', (e) => {
+    $('.report-pane').on('change', 'form.report-chooser', (e) => {
       const id = $(e.target).val();
       if (id) {
         self.change_report(id);
@@ -30,9 +30,9 @@
 
     const self = this;
     ELMO.app.report_controller.run_report().then(() => {
-      $('.report_pane h2').html(self.report().attribs.name);
+      $('.report-pane h2').html(self.report().attribs.name);
       self.set_edit_link();
-      $('.report_chooser').show();
+      $('.report-chooser').show();
     });
   };
 
@@ -42,23 +42,23 @@
     self.current_report_id = id;
 
     // show loading message
-    $('.report_pane h2').html(I18n.t('report/report.loading_report'));
+    $('.report-pane h2').html(I18n.t('report/report.loading_report'));
 
     // remove the old content and replace with new stuff
-    $('.report_main').empty();
-    $('.report_main').load(ELMO.app.url_builder.build('reports', id),
+    $('.report-main').empty();
+    $('.report-main').load(ELMO.app.url_builder.build('reports', id),
       () => {
-        $('.report_pane h2').html(self.report().attribs.name);
+        $('.report-pane h2').html(self.report().attribs.name);
         self.set_edit_link();
-        $('.report_chooser').show();
+        $('.report-chooser').show();
       });
 
     // clear the dropdown for the next choice
-    $('.report_chooser select').val('');
+    $('.report-chooser select').val('');
 
     // Hide edit link and chooser until reload is finished
     $('.report_edit_link_container').hide();
-    $('.report_chooser').hide();
+    $('.report-chooser').hide();
   };
 
   klass.prototype.reset_title_pane_text = function (title) {

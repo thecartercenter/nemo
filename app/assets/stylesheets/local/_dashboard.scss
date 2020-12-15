@@ -177,7 +177,7 @@ body.welcome {
 
   /* report */
 
-  form.report_chooser {
+  form.report-chooser {
     display: none;
     float: right;
     margin-top: 15px;
@@ -187,7 +187,7 @@ body.welcome {
     }
   }
 
-  .report_pane {
+  .report-pane {
     h2 {
       display: inline-block;
       height: 20px;
@@ -206,7 +206,7 @@ body.welcome {
       vertical-align: top;
     }
 
-    .report_main {
+    .report-main {
       overflow: auto;
 
       div.tip {

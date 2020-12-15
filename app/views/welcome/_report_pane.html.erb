@@ -1,24 +1,24 @@
-<div class="report_pane">
-<% if @reports.empty? %>
-  <h2 class="interior"><%= translate_model(Report::Report) %></h2>
-  <div class="report_main">
-    <%= t('dashboard.no_reports') %>
-  </div>
-<% else %>
-  <div>
-    <form class="report-chooser">
-      <%= select_tag("report_id", options_from_collection_for_select(@reports, "id", "name"),
-                     prompt: I18n.t("report/report.choose_report"),
-                     class: "custom-select custom-select-sm") %>
-    </form>
-
-    <div class="report_title">
-      <%= render('report_pane_title') %>
+<div class="report-pane">
+  <% if @reports.empty? %>
+    <h2 class="interior"><%= translate_model(Report::Report) %></h2>
+    <div class="report-main">
+      <%= t("dashboard.no_reports") %>
     </div>
-  </div>
+  <% else %>
+    <div>
+      <form class="report-chooser">
+        <%= select_tag("report_id", options_from_collection_for_select(@reports, "id", "name"),
+                       prompt: I18n.t("report/report.choose_report"),
+                       class: "custom-select custom-select-sm") %>
+      </form>
 
-  <div class="report_main">
-    <%= render('reports/main') %>
-  </div>
-<% end %>
+      <div class="report-title">
+        <%= render("report_pane_title") %>
+      </div>
+    </div>
+
+    <div class="report-main">
+      <%= render("reports/main") %>
+    </div>
+  <% end %>
 </div>
