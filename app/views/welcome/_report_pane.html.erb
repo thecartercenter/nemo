@@ -16,10 +16,11 @@
           <span class="report-title-text">
             <%= @report ? @report.name : t("common.report") %>
           </span>
+          <span class="report-edit-link-container">
+            <%= action_link(:edit, "#", label: false) %>
+          </span>
+          <%= inline_load_ind %>
         </h2>
-        <span class="report-edit-link-container">
-          &nbsp;&nbsp;<%= action_link(:edit, "#", label: false) %>
-        </span>
       </div>
     </div>
 
