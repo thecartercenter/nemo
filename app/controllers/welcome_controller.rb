@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class WelcomeController < ApplicationController
-  include ReportEmbeddable
   include ResponseIndexable
+  include ReportEmbeddable
 
   STAT_ROWS = 3
   MAX_MAP_LOCATIONS = 1000
@@ -91,12 +91,19 @@ class WelcomeController < ApplicationController
     @report_id = params[:rpid].presence || session.dig(:rpid, current_mission.shortcode)
     (session[:rpid] ||= {})[current_mission.shortcode] = @report_id
 
+    if @report_id
+      @report = Report::Report.find(@report_id)
+      run_or_fetch_and_handle_errors
+      prepare_frontend_data(embedded_mode: true)
+    end
+
     # render JSON if ajax request
     if request.xhr?
       data = {
         recent_responses: render_to_string(partial: "recent_responses"),
         response_locations: @response_locations,
-        report_stats: render_to_string(partial: "report_stats")
+        report_stats: render_to_string(partial: "report_stats"),
+        report: @report && render_to_string(partial: "reports/output_and_modal")
       }
       render(json: data)
     else

@@ -30,12 +30,7 @@
       // clear this timeout in case this is another resize event before it ran out
       clearTimeout(self.resize_done_timeout);
 
-      // set a timeout to refresh the report
-      if (ELMO.app.report_controller) {
-        self.resize_done_timeout = setTimeout(() => {
-          ELMO.app.report_controller.refresh_view();
-        }, 1000);
-      }
+      self.resize_done_timeout = setTimeout(() => { self.dashboard_report.render(); }, 1000);
     });
 
     // Setup ajax reload timer and test link.
@@ -54,15 +49,11 @@
     // create classes for screen components
     self.list_view = new ELMO.Views.DashboardResponseList();
     self.map_view = new ELMO.Views.DashboardMapView(self.params.map);
-    self.report_view = new ELMO.Views.DashboardReport(self, self.params.report);
+    self.dashboard_report = new ELMO.Views.DashboardReport();
 
     // Adjust sizes for the initial load
     self.adjust_pane_sizes();
     self.list_view.adjust_columns();
-  };
-
-  klass.prototype.run_report = function () {
-    this.report_view.refresh();
   };
 
   klass.prototype.adjust_pane_sizes = function () {
@@ -124,18 +115,15 @@
       url: ELMO.app.url_builder.build('/'),
       method: 'GET',
       data: {
-        // Even though report ID is remembered in session, send explicitly in case of race condition
-        // when report dropdown is clicked right when refresh happens.
-        rpid: self.report_view.current_report_id,
         latest_response_id: self.list_view.latest_response_id(),
         auto,
       },
       success(data) {
         $('.recent_responses').replaceWith(data.recent_responses);
         $('.report_stats').replaceWith(data.report_stats);
+        $('.report-output-and-modal').html(data.report);
         self.list_view.adjust_columns();
         self.map_view.update_map(data.response_locations);
-        self.run_report();
         self.adjust_pane_sizes();
 
         self.reload_timer = setTimeout(() => { self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
