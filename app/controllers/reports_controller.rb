@@ -17,13 +17,8 @@ class ReportsController < ApplicationController
   end
 
   def new
-    # make a default name in case the user wants to be lazy
     @report.generate_default_name
-
-    # setup data to be used on client side
-    # set edit mode if it was passed in the flash
     build_report_data(edit_mode: flash[:edit_mode])
-
     render(:show)
   end
 
@@ -35,20 +30,14 @@ class ReportsController < ApplicationController
   end
 
   def show
-    # handle different formats
     respond_to do |format|
-      # for html, use the render_show function below
       format.html do
-        # If ajax, we run report now, since no point in doing another ajax request
-        run_or_fetch_and_handle_errors if request.xhr?
-        build_report_data(edit_mode: !!flash[:edit_mode],
-                          read_only: !!request.xhr?,
-                          embedded_mode: !!request.xhr?)
-
+        run_or_fetch_and_handle_errors
+        build_report_data(edit_mode: flash[:edit_mode], read_only: request.xhr?, embedded_mode: request.xhr?)
         if request.xhr?
           render(partial: "reports/main")
         else
-          show_report
+          @report.record_viewing
         end
       end
 
@@ -98,15 +87,6 @@ class ReportsController < ApplicationController
     render(json: @report_data.to_json)
   end
 
-  # Executed via ajax. It just runs the report and returns the report_data json.
-  def data
-    authorize!(:read, @report)
-    @report = Report::Report.find(params[:id])
-    run_or_fetch_and_handle_errors
-    build_report_data(read_only: true)
-    render(json: @report_data.to_json)
-  end
-
   # specify the class the this controller controls, since it's not easily guessed
   def model_class
     Report::Report
@@ -130,12 +110,61 @@ class ReportsController < ApplicationController
     ))
   end
 
-  def show_report
-    # record viewing of report
-    @report.record_viewing
+  # sets up the @report_data structure which will be converted to json
+  def build_report_data(options = {})
+    @report_data = {report: @report.as_json(methods: :errors)}.merge!(options)
 
-    # The data will be loaded via ajax
-    render(:show)
+    unless options[:read_only]
+      @report_data[:options] = {
+        attribs: Report::AttribField.all,
+        forms: Form.for_mission(current_mission).by_name.as_json(only: %i[id name]),
+        calculation_types: Report::Calculation::TYPES,
+        questions: Question.for_mission(current_mission).with_type_property(:reportable)
+          .includes(:forms, :option_set).by_code.as_json(
+            only: %i[id code qtype_name],
+            methods: %i[form_ids geographic?]
+          ),
+        option_sets: OptionSet.for_mission(current_mission).by_name.as_json(only: %i[id name]),
+        percent_types: Report::Report::PERCENT_TYPES,
+
+        # the names of qtypes that can be used in headers
+        headerable_qtype_names: QuestionType.all.select(&:headerable?).map(&:name)
+      }
+    end
+
+    @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
+    @report_data[:report][:user_can_edit] = can?(:update, @report)
+    @form_type = @report.model_name.singular_route_key.remove(/^report_/)
+    return unless @report.type == "Report::StandardFormReport"
+    @report_data[:report][:html] = render_to_string(partial: "reports/#{@form_type}/display")
+  end
+
+  # Looks for a cached, populated report object matching @report.
+  # If one is found, stores it in @report. If not found,
+  # calls run on the existing @report
+  #
+  # returns true if no errors, false otherwise
+  def run_or_fetch_and_handle_errors(options = {})
+    @report = Rails.cache.fetch(cache_key_with_responses) do
+      @report.run(current_ability, options)
+      @report
+    end
+    true
+  rescue Report::ReportError, Search::ParseError
+    flash.now[:error] = $ERROR_INFO.to_s
+    false
+  end
+
+  def cache_key_with_responses
+    [
+      I18n.locale.to_s,
+
+      # Need to include this because enumerators see only own data
+      current_user.role(current_mission) == "enumerator" ? "enumerator-#{current_user.id}" : nil,
+
+      Response.per_mission_cache_key(current_mission),
+      @report.cache_key
+    ].compact.join("-")
   end
 
   def report_params
