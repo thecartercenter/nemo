@@ -36,7 +36,7 @@
     // if in edit mode, show edit dialog second page, since report type is not editable
     if (init_data.edit_mode) this.show_edit_view(1);
 
-    if (this.report_last_run.populated) this.display_report(this.report_last_run);
+    this.display_report(this.report_last_run);
   };
 
   klass.prototype.show_edit_view = function (idx) {
@@ -44,30 +44,8 @@
     this.edit_view.show(this.report_last_run.clone(), idx);
   };
 
-  // Does not update, just runs.
-  klass.prototype.run_report = function () {
-    if (!this.embedded_mode) ELMO.app.loading(true);
-
-    const promise = $.Deferred();
-
-    const url = ELMO.app.url_builder.build('reports', this.report_in_db.attribs.id, 'data');
-    (function (_this) {
-      $.ajax({
-        type: 'GET',
-        url,
-        success(d, s, j) {
-          promise.resolve();
-          _this.run_success(d, s, j);
-        },
-        error(j, s, e) { _this.run_error(j, s, e); },
-      });
-    }(this));
-
-    return promise;
-  };
-
   // Updates the report and runs it.
-  klass.prototype.update_and_run_report = function (report) {
+  klass.prototype.update_report = function (report) {
     ELMO.app.loading(true);
 
     // get hash from report
@@ -79,19 +57,16 @@
     to_serialize._method = report.attribs.new_record ? 'post' : 'put';
     const url = ELMO.app.url_builder.build('reports', report.attribs.new_record ? '' : report.attribs.id);
 
-    // send ajax (use currying for event handlers)
-    (function (_this) {
-      $.ajax({
-        type: 'POST',
-        url,
-        data: $.param(to_serialize),
-        success(d, s, j) { _this.run_success(d, s, j); },
-        error(j, s, e) { _this.run_error(j, s, e); },
-      });
-    }(this));
+    $.ajax({
+      type: 'POST',
+      url,
+      data: $.param(to_serialize),
+      success: this.run_success.bind(this),
+      error: this.run_error.bind(this),
+    });
   };
 
-  klass.prototype.run_success = function (data, status, jqxhr) {
+  klass.prototype.run_success = function (data) {
     // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
     if (data.report.just_created) {
       ELMO.app.loading(true);
@@ -119,11 +94,6 @@
     if (this.report_in_db.new_record) {
       ELMO.app.loading(true);
       window.location.href = ELMO.app.url_builder.build('reports');
-    // else restore the view
-    } else if (!this.report_last_run.populated) {
-      const self = this;
-      if (this.edit_view) this.edit_view.hide();
-      this.run_report().then(() => { self.restore_view(); });
     } else this.restore_view();
   };
 

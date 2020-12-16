@@ -88,7 +88,8 @@ class WelcomeController < ApplicationController
     # get list of all reports for the mission, for the dropdown
     @reports = Report::Report.accessible_by(current_ability).by_name
 
-    prepare_report
+    @report_id = params[:rpid].presence || session.dig(:rpid, current_mission.shortcode)
+    (session[:rpid] ||= {})[current_mission.shortcode] = @report_id
 
     # render JSON if ajax request
     if request.xhr?
@@ -124,15 +125,5 @@ class WelcomeController < ApplicationController
       # return nil. This means all users of other roles will all hit the same cache.
       enumerator_id: current_user.role(current_mission) == "enumerator" ? current_user.id : nil
     }
-  end
-
-  def prepare_report
-    @report_id = params[:rpid].presence || session.dig(:rpid, current_mission.shortcode)
-    (session[:rpid] ||= {})[current_mission.shortcode] = @report_id
-    return unless @report_id && (@report = Report::Report.find(@report_id))
-    authorize!(:read, @report)
-
-    # We don't run the report, that will happen on an ajax call.
-    build_report_data(read_only: true, embedded_mode: true)
   end
 end
