@@ -45,7 +45,7 @@
   };
 
   // Updates the report and runs it.
-  klass.prototype.update_report = function (report) {
+  klass.prototype.submit_report = function (report) {
     ELMO.app.loading(true);
 
     // get hash from report
@@ -68,9 +68,9 @@
 
   klass.prototype.run_success = function (data) {
     // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
-    if (data.report.just_created) {
+    if (data.redirect_url) {
       ELMO.app.loading(true);
-      window.location.href = ELMO.app.url_builder.build('reports', data.report.id);
+      window.location.href = data.redirect_url;
 
     // otherwise we can process the updated report object
     } else {
