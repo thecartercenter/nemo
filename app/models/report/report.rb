@@ -67,9 +67,7 @@ class Report::Report < ApplicationRecord
 
   before_save :normalize_attribs
 
-  attr_accessor :just_created, :populated
-
-  alias populated? populated
+  attr_accessor :just_created
 
   # this is overridden by StandardFormReport, and ignored elsewhere
   attr_accessor :disagg_question_id
@@ -149,7 +147,6 @@ class Report::Report < ApplicationRecord
     h[:type] = type
     h[:filter] = filter
     h[:empty] = empty?
-    h[:populated] = populated?
     h
   end
 

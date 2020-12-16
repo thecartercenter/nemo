@@ -139,7 +139,7 @@ class ReportsController < ApplicationController
     @report_data[:report][:html] = render_to_string(partial: "reports/#{@form_type}/display")
   end
 
-  # Looks for a cached, populated report object matching @report.
+  # Looks for a cached report object matching @report.
   # If one is found, stores it in @report. If not found,
   # calls run on the existing @report
   #
