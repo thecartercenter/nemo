@@ -11,39 +11,42 @@ feature "report generation", js: true do
   let!(:qs) { form.questions }
 
   # Flakey test due to JS in create modal
-  # describe "list report" do
-  #   scenario "should work" do
-  #     # Generate list report with two cols.
-  #     login(user)
-  #     visit(new_report_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
-  #     click_radio_button("report_type", "Report::ListReport")
-  #     click_button("Next")
-  #
-  #     # Advance though next two screens with expects to ensure we don't go too fast.
-  #     expect(page).to have_content("New Report: Options")
-  #     click_button("Next")
-  #     expect(page).to have_content("New Report: Select Forms")
-  #     click_button("Next")
-  #     expect(page).to have_content("New Report: Fields")
-  #
-  #     click_link("Add Column")
-  #     all("select.field")[0].select("Submitter Name")
-  #     click_link("Add Column")
-  #     all("select.field")[1].select(qs[0].code)
-  #     run_report_and_wait
-  #     expect_cols(2)
-  #
-  #     # Remove last col and add new one.)
-  #     edit_report
-  #     2.times { click_button("Next") }
-  #     expect(page).to have_selector(".report_form .fa-trash-o")
-  #     all(".report_form a.remove").last.click
-  #     click_link("Add Column")
-  #     all("select.field")[1].select(qs[1].code)
-  #     run_report_and_wait
-  #     expect_cols(2)
-  #   end
-  # end
+  describe "list report" do
+    scenario "should work" do
+      # Generate list report with two cols.
+      login(user)
+      visit(new_report_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+      choose("List Report")
+      click_button("Next")
+
+      # Advance though next two screens with expects to ensure we don't go too fast.
+      expect(page).to have_content("New Report: Options")
+      click_button("Next")
+      expect(page).to have_content("New Report: Select Forms")
+      click_button("Next")
+      expect(page).to have_content("New Report: Fields")
+
+      click_link("Add Column")
+      all("select.field")[0].select("Submitter Name")
+      click_link("Add Column")
+      all("select.field")[1].select(qs[0].code)
+      run_report_and_wait
+      expect_cols(2)
+      expect(page).to have_content(qs[0].name)
+
+      # Remove last col and add new one.)
+      edit_report
+      2.times { click_button("Next") }
+      expect(page).to have_selector(".report_form .fa-trash-o")
+      all(".report_form a.remove").last.click
+      click_link("Add Column")
+      all("select.field")[1].select(qs[1].code)
+      run_report_and_wait
+      expect_cols(2)
+      expect(page).not_to have_content(qs[0].name)
+      expect(page).to have_content(qs[1].name)
+    end
+  end
 
   describe "standard form report" do
     let(:tag1) { build(:tag) }
