@@ -27,11 +27,12 @@ class ReportsController < ApplicationController
     redirect_to(report_path(@report))
   end
 
+  # Only called via AJAX for the dashboard.
   def show
     respond_to do |format|
       format.html do
         run_or_fetch_and_handle_errors
-        build_report_data(edit_mode: flash[:edit_mode], read_only: request.xhr?, embedded_mode: request.xhr?)
+        build_report_data(edit_mode: flash[:edit_mode], embedded_mode: request.xhr?)
         if request.xhr?
           render(partial: "reports/output_and_modal")
         else
@@ -54,12 +55,12 @@ class ReportsController < ApplicationController
     redirect_to(action: :index)
   end
 
-  # this method only reached through ajax
+  # Always reached through ajax
   def create
     render(json: {redirect_url: report_path(@report)})
   end
 
-  # this method only reached through ajax
+  # Always reached through ajax
   def update
     @report.update!(report_params)
 
@@ -95,32 +96,30 @@ class ReportsController < ApplicationController
   end
 
   # sets up the @report_data structure which will be converted to json
-  def build_report_data(options = {})
+  def build_report_data(**options)
     @report_data = {report: @report.as_json(methods: :errors)}.merge!(options)
-
-    unless options[:read_only]
-      @report_data[:options] = {
-        attribs: Report::AttribField.all,
-        forms: Form.for_mission(current_mission).by_name.as_json(only: %i[id name]),
-        calculation_types: Report::Calculation::TYPES,
-        questions: Question.for_mission(current_mission).with_type_property(:reportable)
-          .includes(:forms, :option_set).by_code.as_json(
-            only: %i[id code qtype_name],
-            methods: %i[form_ids geographic?]
-          ),
-        option_sets: OptionSet.for_mission(current_mission).by_name.as_json(only: %i[id name]),
-        percent_types: Report::Report::PERCENT_TYPES,
-
-        # the names of qtypes that can be used in headers
-        headerable_qtype_names: QuestionType.all.select(&:headerable?).map(&:name)
-      }
-    end
-
+    @report_data[:options] = prepare_form_options unless options[:embedded_mode]
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
     @report_data[:report][:user_can_edit] = can?(:update, @report)
     @form_type = @report.model_name.singular_route_key.remove(/^report_/)
     return unless @report.type == "Report::StandardFormReport"
     @report_data[:report][:html] = render_to_string(partial: "reports/#{@form_type}/display")
+  end
+
+  def prepare_form_options
+    {
+      attribs: Report::AttribField.all,
+      forms: Form.for_mission(current_mission).by_name.as_json(only: %i[id name]),
+      calculation_types: Report::Calculation::TYPES,
+      questions: Question.for_mission(current_mission).with_type_property(:reportable)
+        .includes(:forms, :option_set).by_code.as_json(only: %i[id code qtype_name],
+                                                       methods: %i[form_ids geographic?]),
+      option_sets: OptionSet.for_mission(current_mission).by_name.as_json(only: %i[id name]),
+      percent_types: Report::Report::PERCENT_TYPES,
+
+      # the names of qtypes that can be used in headers
+      headerable_qtype_names: QuestionType.all.select(&:headerable?).map(&:name)
+    }
   end
 
   # Looks for a cached report object matching @report.
