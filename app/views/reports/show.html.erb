@@ -1,8 +1,15 @@
 <% content_for(:per_page_js, report_chart_js) %>
 
-<div class="report-links">
-  <%= ActionLinks::ReportLinkBuilder.new(@report) %>
-</div>
-<div class="report-output-and-modal">
-  <%= render("output_and_modal") %>
+<%# This has to be before the partial so that it is ready to catch the initial report:load event. %>
+<%= javascript_doc_ready do %>
+  new ELMO.Views.ReportPageView();
+<% end %>
+
+<div class="report-page">
+  <div class="report-links">
+    <%= ActionLinks::ReportLinkBuilder.new(@report) %>
+  </div>
+  <div class="report-output-and-modal">
+    <%= render("output_and_modal") %>
+  </div>
 </div>

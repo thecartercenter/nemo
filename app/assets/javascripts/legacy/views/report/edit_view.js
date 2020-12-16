@@ -131,7 +131,7 @@
 
     // send to controller if valid
     if (is_valid) {
-      this.controller.submit_report(this.report);
+      this.controller.saveAndRedisplay(this.report);
       this.hide();
 
     // else show the first pane that has errors
@@ -150,7 +150,7 @@
     $(document).unbind('keyup', this.esc_handler);
 
     // notify controller
-    this.controller.edit_cancelled();
+    this.controller.handleEditCancelled();
   };
 
   klass.prototype.hide = function () {
