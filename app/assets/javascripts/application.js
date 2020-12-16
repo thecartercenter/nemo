@@ -46,7 +46,6 @@
 
 // Superclasses that need to come first due to inheritance
 //= require legacy/views/control/control
-//= require legacy/controllers/report/report_controller
 //= require legacy/models/report/object_menu
 //= require legacy/views/report/display
 //= require legacy/views/report/edit_pane

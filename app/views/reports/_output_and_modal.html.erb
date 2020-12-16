@@ -6,5 +6,5 @@
 <%= render("modal") unless @report_data[:embedded_mode] %>
 
 <%= javascript_doc_ready do %>
-  new ELMO.Report.ReportController(<%=json @report_data %>);
+  new ELMO.Views.ReportView(<%=json @report_data %>);
 <% end %>

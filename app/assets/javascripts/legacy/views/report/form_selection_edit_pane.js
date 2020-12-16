@@ -35,8 +35,6 @@
     // store report reference
     this.report = report;
 
-    console.log(this.report.attribs.form_ids);
-
     // update controls
     // get selected IDs from model
     if (this.report.attribs.form_ids == 'ALL') this.form_chooser.set_all(true);
