@@ -92,7 +92,7 @@
       const left_w = (cont_w - spacing) * 0.9 / 2;
       $('.recent_responses, .response_locations').width(left_w);
       const right_w = cont_w - spacing - left_w - 15;
-      $('.report-main').width(right_w);
+      $('.report-output').width(right_w);
 
       // must control width of stat block li's
       $('.report_stats .stat_block li').css('maxWidth', (right_w / 3) - 25);
@@ -104,7 +104,7 @@
       $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
 
       // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
-      $('.report-main').height(cont_h - title_h - 2 * spacing - stats_h);
+      $('.report-output').height(cont_h - title_h - 2 * spacing - stats_h);
     }
 
     this.map_view.resized(map_center);

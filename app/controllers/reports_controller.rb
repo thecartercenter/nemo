@@ -33,7 +33,7 @@ class ReportsController < ApplicationController
         run_or_fetch_and_handle_errors
         build_report_data(edit_mode: flash[:edit_mode], read_only: request.xhr?, embedded_mode: request.xhr?)
         if request.xhr?
-          render(partial: "reports/main")
+          render(partial: "reports/output_and_modal")
         else
           @report.record_viewing
         end
@@ -68,7 +68,7 @@ class ReportsController < ApplicationController
 
     run_or_fetch_and_handle_errors
     build_report_data
-    render(partial: "reports/main")
+    render(partial: "reports/output_and_modal")
   end
 
   # specify the class the this controller controls, since it's not easily guessed

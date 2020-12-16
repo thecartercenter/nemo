@@ -59,7 +59,7 @@
     const legend_space = 150;
 
     const cont_height = Math.max(300, headers.row.cells.length * (stacked ? 20 : headers.col.cells.length * 15) + haxis_space);
-    const cont_width = $('.report-main').width() - 20;
+    const cont_width = $('.report-output').width() - 20;
     const options = {
       width: cont_width,
       height: cont_height,

@@ -40,7 +40,7 @@
   };
 
   klass.prototype.show_edit_view = function (idx) {
-    $('.report_links, .report-main').hide();
+    $('.report-links, .report-output').hide();
     this.edit_view.show(this.report_last_run.clone(), idx);
   };
 
@@ -74,7 +74,7 @@
 
   klass.prototype.update_success = function(data) {
     this.restore_view();
-    $('.report_view').html(data);
+    $('.report-output-and-modal').html(data);
     ELMO.app.loading(false);
   }
 
@@ -109,7 +109,7 @@
     if (this.edit_view) this.edit_view.hide();
 
     // show links and body
-    $('.report_links, .report-main').show();
+    $('.report-links, .report-output').show();
   };
 
   // refreshes the report view
