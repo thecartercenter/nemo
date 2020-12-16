@@ -20,9 +20,6 @@
       locations: @response_locations,
       info_window_url: dashboard_info_window_url,
       small_marker_url: image_url("markers/small.png")
-    },
-    report: {
-      id: @report_id
     }
   )%>);
 <% end %>
@@ -64,9 +61,6 @@
   <%# Hides/displays appropriate full screen elements if necessary %>
   ELMO.app.dashboard.set_full_screen();
   ELMO.app.dashboard.set_expanded_map();
-
-  <%# Runs report %>
-  ELMO.app.dashboard.run_report();
 <% end %>
 
 <div class="dashboard-footer">

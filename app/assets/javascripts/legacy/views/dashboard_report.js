@@ -3,13 +3,8 @@
 // View model for the dashboard report
 (function(ns, klass) {
   // constructor
-  ns.DashboardReport = klass = function(dashboard, params) {
+  ns.DashboardReport = klass = function() {
     const self = this;
-    self.dashboard = dashboard;
-    self.params = params;
-
-    // save the report id
-    if (params) self.current_report_id = self.params.id;
 
     // hookup the form change event
     self.hookup_report_chooser();
@@ -25,27 +20,18 @@
     });
   };
 
-  klass.prototype.refresh = function() {
-    if (!ELMO.app.report_controller) return;
-    const self = this;
-    $('.report-pane .inline-load-ind img').show();
-    ELMO.app.report_controller.run_report().then(() => self.display_report());
-  };
-
   klass.prototype.change_report = function(id, name) {
     const self = this;
-    self.current_report_id = id;
 
     $('.report-pane .report-title-text').html(name);
     $('.report-pane .inline-load-ind img').show();
     $('.report-output').empty();
     $('.report-chooser select').val('');
     $('.report-edit-link-container').hide();
-    $('.report-output').load(ELMO.app.url_builder.build('reports', id), () => self.display_report());
+    $('.report-output-and-modal').load(ELMO.app.url_builder.build('reports', id), () => self.display_report());
   };
 
   klass.prototype.display_report = function() {
-    $('.report-pane .report-title-text').html(this.report().attribs.name);
     $('.report-pane .inline-load-ind img').hide();
     this.set_edit_link();
   }
