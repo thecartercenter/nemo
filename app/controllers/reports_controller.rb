@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class ReportsController < ApplicationController
-  include ReportEmbeddable
-
   # need to do special load for new/create/update because CanCan won't work with the STI hack in report.rb
-  before_action :custom_load, only: [:create]
+  before_action :create_report, only: [:create]
 
   # authorization via cancan
   load_and_authorize_resource class: "Report::Report"
@@ -18,7 +16,7 @@ class ReportsController < ApplicationController
 
   def new
     @report.generate_default_name
-    build_report_data(edit_mode: flash[:edit_mode])
+    build_report_data
     render(:show)
   end
 
@@ -58,12 +56,7 @@ class ReportsController < ApplicationController
 
   # this method only reached through ajax
   def create
-    # if report is valid, save it and set flag (no need to run it b/c it will be redirected)
-    @report.just_created = true if @report.errors.empty?
-
-    # return data in json format
-    build_report_data(read_only: true)
-    render(json: @report_data.to_json)
+    render(json: {redirect_url: report_path(@report)})
   end
 
   # this method only reached through ajax
@@ -101,10 +94,10 @@ class ReportsController < ApplicationController
   helper_method :reports
 
   # custom load method because CanCan won't work with STI hack in report.rb
-  def custom_load
+  def create_report
     # current_user or current_mission may be nil since this method runs before authorization.
     return unless current_user && current_mission
-    @report = Report::Report.create(report_params.merge(
+    @report = Report::Report.create!(report_params.merge(
       mission_id: current_mission.id,
       creator_id: current_user.id
     ))

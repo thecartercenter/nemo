@@ -131,7 +131,7 @@
 
     // send to controller if valid
     if (is_valid) {
-      this.controller.update_report(this.report);
+      this.controller.submit_report(this.report);
       this.hide();
 
     // else show the first pane that has errors
