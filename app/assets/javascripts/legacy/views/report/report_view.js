@@ -20,9 +20,9 @@
     this.show_title();
 
     // if there was a handled error with the report model, display it
-    if (this.report.attribs.errors && this.report.attribs.errors.base) this.show_error(`Error: ${this.report.attribs.errors.base.join(', ')}`);
-    // else, the run must have been successful, so render it!
-    else {
+    if (this.report.attribs.error) {
+      this.show_error(this.report.attribs.error);
+    } else {
       ELMO.app.clear_alerts({ tag: 'report' });
       this.render();
     }
@@ -56,7 +56,7 @@
   };
 
   klass.prototype.show_error = function (msg) {
-    ELMO.app.show_alert({ tag: 'report', type: 'error', msg });
+    $('.report_info').text(`${I18n.t('common.error.one')}: ${msg}`);
   };
 
   // hookup link events
