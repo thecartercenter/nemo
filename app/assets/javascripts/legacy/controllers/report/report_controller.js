@@ -2,6 +2,9 @@
 (function (ns, klass) {
   // constructor
   ns.ReportController = klass = function (init_data) {
+    var self = this;
+    $('.top-action-links a.edit-link').click(() => { self.show_edit_view(1); return false; });
+
     this.embedded_mode = init_data.embedded_mode;
     this.init_data = init_data;
 
@@ -17,31 +20,27 @@
       };
     }
 
-    this.report_in_db = new ns.Report(init_data.report, this.menus);
+    this.report = new ns.Report(init_data.report, this.menus);
 
-    if (!init_data.embedded_mode) this.report_in_db.prepare();
+    if (!init_data.embedded_mode) this.report.prepare();
 
-    // create copy of report to be referenced each run
-    this.report_last_run = this.report_in_db.clone();
-
-    // create report view
-    this.report_view = new ns.ReportView(this, this.report_in_db);
-
-    // create edit view if applicable
-    if (!init_data.embedded_mode) this.edit_view = new ns.EditView(this.menus, this.options, this);
+    if (!init_data.embedded_mode) {
+      this.edit_view = new ns.EditView(this.menus, this.options, this);
+    }
 
     // if is new record, show dialog first page
-    if (this.report_in_db.new_record) this.show_edit_view(0);
+    if (this.report.new_record) {
+      this.show_edit_view(0);
+    } else if (init_data.edit_mode) {
+      this.show_edit_view(1);
+    }
 
-    // if in edit mode, show edit dialog second page, since report type is not editable
-    if (init_data.edit_mode) this.show_edit_view(1);
-
-    this.display_report(this.report_last_run);
+    this.display_report(this.report);
   };
 
   klass.prototype.show_edit_view = function (idx) {
     $('.report-links, .report-output').hide();
-    this.edit_view.show(this.report_last_run.clone(), idx);
+    this.edit_view.show(this.report.clone(), idx);
   };
 
   // Updates the report and runs it.
@@ -82,23 +81,28 @@
     if (ELMO.unloading) return;
     this.restore_view();
     const msg = I18n.t(`layout.${error == '' ? 'server_contact_error' : 'system_error'}`);
-    this.report_view.show_error(msg);
+    this.show_error(msg);
   };
 
   klass.prototype.edit_cancelled = function () {
     // if report is new, go back to report index
-    if (this.report_in_db.new_record) {
+    if (this.report.new_record) {
       ELMO.app.loading(true);
       window.location.href = ELMO.app.url_builder.build('reports');
     } else this.restore_view();
   };
 
-  klass.prototype.display_report = function (report) {
-    // update the report view
-    this.report_view.update(report);
+  klass.prototype.display_report = function () {
+    this.show_title();
+
+    if (this.report.attribs.error) {
+      this.show_error(this.report.attribs.error);
+    } else {
+      this.render();
+    }
 
     // show/hide the export link if there is no data or an error
-    $('a.export-link')[report.has_errors() || report.attribs.empty ? 'hide' : 'show']();
+    $('a.export-link')[this.report.has_errors() || this.report.attribs.empty ? 'hide' : 'show']();
   };
 
   klass.prototype.restore_view = function () {
@@ -113,6 +117,37 @@
 
   // refreshes the report view
   klass.prototype.refresh_view = function () {
-    this.display_report(this.report_last_run);
+    this.display_report(this.report);
+  };
+
+  klass.prototype.render = function () {
+    // clear out info bar
+    $('.report_info').empty();
+
+    // if no matching data, show message
+    if (this.report.attribs.empty) {
+      $('.report_body').html(I18n.t('report/report.no_match'));
+    } else {
+      // add the generated date/time to info bar
+      $('<div>').append(`${I18n.t('report/report.generated_at')} ${this.report.attribs.generated_at}`).appendTo($('.report_info'));
+
+      // create an appropriate Display class based on the display_type
+      if (this.report.attribs.type == 'Report::StandardFormReport') this.display = new ns.FormSummaryDisplay(this.report);
+
+      else if (this.report.attribs.display_type == 'bar_chart') this.display = new ns.BarChartDisplay(this.report);
+
+      else this.display = new ns.TableDisplay(this.report);
+
+      this.display.render();
+    }
+  };
+
+  // sets page title unless in dashboard
+  klass.prototype.show_title = function () {
+    if (!this.embedded_mode) ELMO.app.set_title(`${I18n.t('activerecord.models.report/report.one')}: ${this.report.attribs.name}`);
+  };
+
+  klass.prototype.show_error = function (msg) {
+    $('.report_info').text(`${I18n.t('common.error.one')}: ${msg}`);
   };
 }(ELMO.Report));
