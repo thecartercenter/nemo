@@ -6,7 +6,7 @@
     this.init_data = init_data;
 
     // create supporting models unless in read only mode
-    if (!init_data.read_only) {
+    if (!init_data.embedded_mode) {
       this.options = init_data.options;
       this.menus = {
         attrib: new ns.AttribMenu(this.options.attribs),
@@ -19,7 +19,7 @@
 
     this.report_in_db = new ns.Report(init_data.report, this.menus);
 
-    if (!init_data.read_only) this.report_in_db.prepare();
+    if (!init_data.embedded_mode) this.report_in_db.prepare();
 
     // create copy of report to be referenced each run
     this.report_last_run = this.report_in_db.clone();
@@ -28,7 +28,7 @@
     this.report_view = new ns.ReportView(this, this.report_in_db);
 
     // create edit view if applicable
-    if (!init_data.read_only) this.edit_view = new ns.EditView(this.menus, this.options, this);
+    if (!init_data.embedded_mode) this.edit_view = new ns.EditView(this.menus, this.options, this);
 
     // if is new record, show dialog first page
     if (this.report_in_db.new_record) this.show_edit_view(0);
