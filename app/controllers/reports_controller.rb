@@ -61,23 +61,14 @@ class ReportsController < ApplicationController
 
   # this method only reached through ajax
   def update
-    # update the attribs
-    @report.assign_attributes(report_params)
+    @report.update!(report_params)
 
-    # if report is not valid, can't run it
-    if @report.valid?
-      @report.save
+    # Without this, if you add a calculation and remove another on the same edit, the new one doesn't show.
+    @report.reload
 
-      # Without this, if you add a calculation and remove another on the same edit, the new one doesn't show.
-      @report.reload
-
-      # re-run the report, handling errors
-      run_or_fetch_and_handle_errors
-    end
-
-    # return data in json format
-    build_report_data(read_only: true)
-    render(json: @report_data.to_json)
+    run_or_fetch_and_handle_errors
+    build_report_data
+    render(partial: "reports/main")
   end
 
   # specify the class the this controller controls, since it's not easily guessed

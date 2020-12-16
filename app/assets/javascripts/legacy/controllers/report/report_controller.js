@@ -61,25 +61,22 @@
       type: 'POST',
       url,
       data: $.param(to_serialize),
-      success: this.run_success.bind(this),
+      success: (report.attribs.new_record ? this.create_success : this.update_success).bind(this),
       error: this.run_error.bind(this),
     });
   };
 
-  klass.prototype.run_success = function (data) {
-    // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
-    if (data.redirect_url) {
-      ELMO.app.loading(true);
-      window.location.href = data.redirect_url;
+  klass.prototype.create_success = function(data) {
+    // redirect to the show action so that links, etc., will work
+    ELMO.app.loading(true);
+    window.location.href = data.redirect_url;
+  }
 
-    // otherwise we can process the updated report object
-    } else {
-      this.restore_view();
-      this.report_last_run = new ns.Report(data.report, this.menus);
-      if (!this.init_data.read_only) this.report_last_run.prepare();
-      this.display_report(this.report_last_run);
-    }
-  };
+  klass.prototype.update_success = function(data) {
+    this.restore_view();
+    $('.report_view').html(data);
+    ELMO.app.loading(false);
+  }
 
   klass.prototype.run_error = function (jqxhr, status, error) {
     if (ELMO.unloading) return;
