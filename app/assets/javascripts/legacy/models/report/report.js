@@ -5,7 +5,6 @@
     this.attribs = attribs;
     this.menus = menus;
     this.new_record = attribs.new_record;
-    this.populated = attribs.populated;
   };
 
   // called when data first received

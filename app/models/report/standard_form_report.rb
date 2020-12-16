@@ -148,8 +148,6 @@ class Report::StandardFormReport < Report::Report
       s.build_tag_groups(question_order: question_order || "number", group_by_tag: group_by_tag)
     end
 
-    self.populated = true
-
     @summary_collection
   end
 
