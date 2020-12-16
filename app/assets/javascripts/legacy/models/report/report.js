@@ -28,10 +28,8 @@
     return new klass(new_attribs, this.menus);
   };
 
-  // checks if the report has errors or not
   klass.prototype.has_errors = function () {
-    // Rails errors converts to json as {} if no errors
-    return !this.attribs.errors || Object.keys(this.attribs.errors).length > 0;
+    return !!this.attribs.error;
   };
 
   // scans through all calculations and returns an array of question ids
