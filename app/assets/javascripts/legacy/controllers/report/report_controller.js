@@ -81,7 +81,6 @@
   klass.prototype.run_error = function (jqxhr, status, error) {
     if (ELMO.unloading) return;
     this.restore_view();
-    // show error
     const msg = I18n.t(`layout.${error == '' ? 'server_contact_error' : 'system_error'}`);
     this.report_view.show_error(msg);
   };

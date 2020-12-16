@@ -16,7 +16,7 @@ class ReportsController < ApplicationController
 
   def new
     @report.generate_default_name
-    build_report_data
+    prepare_frontend_data
     render(:show)
   end
 
@@ -32,7 +32,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html do
         run_or_fetch_and_handle_errors
-        build_report_data(edit_mode: flash[:edit_mode], embedded_mode: request.xhr?)
+        prepare_frontend_data(edit_mode: flash[:edit_mode], embedded_mode: request.xhr?)
         if request.xhr?
           render(partial: "reports/output_and_modal")
         else
@@ -43,7 +43,7 @@ class ReportsController < ApplicationController
       format.csv do
         authorize!(:export, @report)
         # run the report
-        run_or_fetch_and_handle_errors(prefer_values: true)
+        run_or_fetch_and_handle_errors(prefer_values: true, raise_errors: true)
         raise "reports of this type are not exportable" unless @report.exportable?
         render(csv: Report::CSVGenerator.new(report: @report), filename: @report.name.downcase)
       end
@@ -68,7 +68,7 @@ class ReportsController < ApplicationController
     @report.reload
 
     run_or_fetch_and_handle_errors
-    build_report_data
+    prepare_frontend_data
     render(partial: "reports/output_and_modal")
   end
 
@@ -96,14 +96,19 @@ class ReportsController < ApplicationController
   end
 
   # sets up the @report_data structure which will be converted to json
-  def build_report_data(**options)
+  def prepare_frontend_data(**options)
     @report_data = {report: @report.as_json(methods: :errors)}.merge!(options)
     @report_data[:options] = prepare_form_options unless options[:embedded_mode]
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
     @report_data[:report][:user_can_edit] = can?(:update, @report)
-    @form_type = @report.model_name.singular_route_key.remove(/^report_/)
-    return unless @report.type == "Report::StandardFormReport"
-    @report_data[:report][:html] = render_to_string(partial: "reports/#{@form_type}/display")
+    @report_data[:report][:html] = report_html
+    @report_data[:report][:error] = @run_error if @run_error
+  end
+
+  def report_html
+    return nil if @run_error || @report.type != "Report::StandardFormReport"
+    form_type = @report.model_name.singular_route_key.remove(/^report_/)
+    render_to_string(partial: "reports/#{form_type}/display")
   end
 
   def prepare_form_options
@@ -125,17 +130,13 @@ class ReportsController < ApplicationController
   # Looks for a cached report object matching @report.
   # If one is found, stores it in @report. If not found,
   # calls run on the existing @report
-  #
-  # returns true if no errors, false otherwise
-  def run_or_fetch_and_handle_errors(options = {})
+  def run_or_fetch_and_handle_errors(prefer_values: false, raise_errors: false)
     @report = Rails.cache.fetch(cache_key_with_responses) do
-      @report.run(current_ability, options)
+      @report.run(current_ability, prefer_values: prefer_values)
       @report
     end
-    true
-  rescue Report::ReportError, Search::ParseError
-    flash.now[:error] = $ERROR_INFO.to_s
-    false
+  rescue Report::ReportError, Search::ParseError => e
+    raise_errors ? (raise e) : (@run_error = $ERROR_INFO.to_s)
   end
 
   def cache_key_with_responses

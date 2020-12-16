@@ -904,7 +904,7 @@ en:
     no_selection: "You haven't selected anything."
     reqd_sym_definition: "Required fields are marked with a %{reqd_sym}."
     select_all: "Select All"
-    server_contact_error: "Error contacting server"
+    server_contact_error: "Couldn't contact server."
     system_error: "System error. Administrator has been notified."
     system_version: "System Version"
     time_ago: "%{time} ago"
