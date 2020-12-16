@@ -1,7 +1,7 @@
 <div class="report-pane">
   <% if @reports.empty? %>
     <h2 class="interior"><%= translate_model(Report::Report) %></h2>
-    <div class="report-main">
+    <div class="report-output">
       <%= t("dashboard.no_reports") %>
     </div>
   <% else %>
@@ -24,8 +24,8 @@
       </div>
     </div>
 
-    <div class="report-main">
-      <%= render("reports/main") %>
+    <div class="report-output">
+      <%= render("reports/output_and_modal") %>
     </div>
   <% end %>
 </div>

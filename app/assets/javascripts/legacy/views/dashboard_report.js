@@ -38,10 +38,10 @@
 
     $('.report-pane .report-title-text').html(name);
     $('.report-pane .inline-load-ind img').show();
-    $('.report-main').empty();
+    $('.report-output').empty();
     $('.report-chooser select').val('');
     $('.report-edit-link-container').hide();
-    $('.report-main').load(ELMO.app.url_builder.build('reports', id), () => self.display_report());
+    $('.report-output').load(ELMO.app.url_builder.build('reports', id), () => self.display_report());
   };
 
   klass.prototype.display_report = function() {

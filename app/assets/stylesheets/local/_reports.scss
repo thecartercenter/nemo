@@ -2,6 +2,17 @@
 .reports_index .name_col { min-width: 300px; }
 
 /* report info & body */
+body.reports {
+  div.report-output-and-modal {
+    display: table-row;
+  }
+
+  div.report-output {
+    display: table-cell;
+    vertical-align: top;
+  }
+}
+
 div.report_info div { display: inline-block;
   padding: 0 10px;
   border-#{$left}: 1px solid #ccc; }

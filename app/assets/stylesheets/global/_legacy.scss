@@ -92,14 +92,3 @@ textarea#broadcast_body { height: 170px; }
 .users_edit .ro-val {
   font-family: monospace;
 }
-
-body.reports {
-  div.report_view {
-    display: table-row;
-  }
-
-  div.report-main {
-    display: table-cell;
-    vertical-align: top;
-  }
-}

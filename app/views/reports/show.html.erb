@@ -1,8 +1,8 @@
 <% content_for(:per_page_js, report_chart_js) %>
 
-<div class="report_links">
+<div class="report-links">
   <%= ActionLinks::ReportLinkBuilder.new(@report) %>
 </div>
-<div class="report_view">
-  <%= render("main") %>
+<div class="report-output-and-modal">
+  <%= render("output_and_modal") %>
 </div>
