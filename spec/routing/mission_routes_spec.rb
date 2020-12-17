@@ -29,14 +29,14 @@ describe "router" do
 
   it "routes special info-window route" do
     expect(get: "/en/m/mission123/info-window").to route_to(
-      controller: "welcome", action: "info_window", locale: "en", mode: "m", mission_name: "mission123"
+      controller: "dashboard", action: "info_window", locale: "en", mode: "m", mission_name: "mission123"
     )
   end
 
   it "routes mission root" do
     # Note this will also route a mistaken URL like /en/m/broadcasts, but that's the expected behavior
     expect(get: "/en/m/mission123").to route_to(
-      controller: "welcome", action: "index", locale: "en", mode: "m", mission_name: "mission123"
+      controller: "dashboard", action: "index", locale: "en", mode: "m", mission_name: "mission123"
     )
   end
 

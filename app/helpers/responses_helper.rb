@@ -3,7 +3,7 @@
 # DEPRECATED: Model-related display logic should move to a decorator.
 module ResponsesHelper
   def responses_index_fields
-    if params[:controller] == "welcome" # Dashboard mode
+    if params[:controller] == "dashboard" # Dashboard mode
       %w[form_id user_id] + key_question_hashes(2) + %w[created_at reviewed]
     else
       %w[shortcode form_id user_id] + key_question_hashes(2) +
