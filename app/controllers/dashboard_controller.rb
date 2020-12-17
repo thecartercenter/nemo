@@ -54,8 +54,8 @@ class DashboardController < ApplicationController
     # get list of all reports for the mission, for the dropdown
     @reports = Report::Report.accessible_by(current_ability).by_name
 
-    @report_id = params[:rpid].presence || session.dig(:rpid, current_mission.shortcode)
-    (session[:rpid] ||= {})[current_mission.shortcode] = @report_id
+    @report_id = load_report_id_from_params_or_session
+    save_report_id_in_session(@report_id)
 
     if @report_id
       @report = Report::Report.find(@report_id)

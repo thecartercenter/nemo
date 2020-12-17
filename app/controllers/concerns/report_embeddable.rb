@@ -28,6 +28,14 @@ module ReportEmbeddable
     ].compact.join("-")
   end
 
+  def load_report_id_from_params_or_session
+    params[:rpid].presence || session.dig(:rpid, current_mission.shortcode)
+  end
+
+  def save_report_id_in_session(report_id)
+    (session[:rpid] ||= {})[current_mission.shortcode] = report_id
+  end
+
   # sets up the @report_data structure which will be converted to json
   def prepare_frontend_data(**options)
     @report_data = {report: @report.as_json(methods: :errors)}.merge!(options)
