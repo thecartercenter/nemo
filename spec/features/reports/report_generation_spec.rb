@@ -37,8 +37,8 @@ feature "report generation", js: true do
       # Remove last col and add new one.)
       edit_report
       2.times { click_button("Next") }
-      expect(page).to have_selector(".report_form .fa-trash-o")
-      all(".report_form a.remove").last.click
+      expect(page).to have_selector(".report-form .fa-trash-o")
+      all(".report-form a.remove").last.click
       click_link("Add Column")
       all("select.field")[1].select(qs[1].code)
       run_report_and_wait
@@ -80,7 +80,7 @@ feature "report generation", js: true do
 
   def run_report_and_wait
     click_button("Run")
-    expect(page).to have_selector(".report_body tr td")
+    expect(page).to have_selector(".report-body tr td")
   end
 
   def edit_report
@@ -89,6 +89,6 @@ feature "report generation", js: true do
   end
 
   def expect_cols(num)
-    expect(all(".report_body tr:first-child th").size).to eq(num)
+    expect(all(".report-body tr:first-child th").size).to eq(num)
   end
 end
