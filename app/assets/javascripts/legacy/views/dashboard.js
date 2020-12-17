@@ -71,28 +71,28 @@
     const map_center = this.map_view.center();
 
     if (view_setting('expanded-map')) {
-      $('.response_locations').width('100%').height(cont_h);
+      $('.response-locations').width('100%').height(cont_h);
     } else {
       // height of the h2 elements
       const title_h = $('#content h2').height();
 
       // height of the stats pane
-      const stats_h = $('.report_stats').height();
+      const stats_h = $('.stats').height();
 
       // left col is slightly narrower than right col
       const left_w = (cont_w - spacing) * 0.9 / 2;
-      $('.recent_responses, .response_locations').width(left_w);
+      $('.recent-responses, .response-locations').width(left_w);
       const right_w = cont_w - spacing - left_w - 15;
       $('.report-output').width(right_w);
 
       // must control width of stat block li's
-      $('.report_stats .stat_block li').css('maxWidth', (right_w / 3) - 25);
+      $('.stats .stat-block li').css('maxWidth', (right_w / 3) - 25);
 
       // must control report title width or we get weird wrapping
       $('.report-pane h2').css('maxWidth', right_w - 200);
 
       // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
-      $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
+      $('.recent-responses, .response-locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
 
       // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
       $('.report-output').height(cont_h - title_h - 2 * spacing - stats_h);
@@ -119,8 +119,8 @@
         auto,
       },
       success(data) {
-        $('.recent_responses').replaceWith(data.recent_responses);
-        $('.report_stats').replaceWith(data.report_stats);
+        $('.recent-responses').replaceWith(data.recent_responses);
+        $('.stats').replaceWith(data.stats);
         $('.report-output-and-modal').html(data.report);
         self.list_view.adjust_columns();
         self.map_view.update_map(data.response_locations);

@@ -102,7 +102,7 @@ class WelcomeController < ApplicationController
       data = {
         recent_responses: render_to_string(partial: "recent_responses"),
         response_locations: @response_locations,
-        report_stats: render_to_string(partial: "report_stats"),
+        stats: render_to_string(partial: "stats"),
         report: @report && render_to_string(partial: "reports/output_and_modal")
       }
       render(json: data)

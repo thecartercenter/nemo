@@ -1,11 +1,11 @@
 <%# no need to cache this bit either because there's nothing here (done by JS) %>
-<div class="response_locations"></div>
+<div class="response-locations"></div>
 <div class="response-locations-disabled response-locations-offline" style="display: none">
   <%= t("dashboard.no_map_offline") %>
 </div>
 <div class="response-locations-disabled response-locations-no-key" style="display: none">
   <%= t("dashboard.no_map_key") %>
 </div>
-<div class="response_locations_truncated">
+<div class="response-locations-truncated">
   <%= t('dashboard.response_locations_truncated', max: WelcomeController::MAX_MAP_LOCATIONS) %>
 </div>

@@ -25,7 +25,7 @@
 <% end %>
 
 <div class="row">
-  <div class="col-md left_col">
+  <div class="col-md left-col">
     <h2>
       <%= current_user.role(current_mission) == "enumerator" ? t("dashboard.my_responses") : t("dashboard.recent_responses") %>
     </h2>
@@ -43,7 +43,7 @@
     </div>
   </div>
 
-  <div class="col-md right_col">
+  <div class="col-md right-col">
     <%= render(partial: "report_stats") %>
     <%= render(partial: "report_pane") %>
   </div>

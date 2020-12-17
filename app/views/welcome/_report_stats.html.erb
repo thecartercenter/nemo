@@ -1,5 +1,5 @@
-<div class="report_stats">
-  <div class="stat_block">
+<div class="stats">
+  <div class="stat-block">
     <h2><%= t("dashboard.summary") %></h2>
     <ul>
       <li><%= link_to(translate_recent_responses(@recent_response_count), responses_path) %></li>
@@ -7,7 +7,7 @@
       <li><%= link_to(tmd("welcome.awaiting_review", count: number_with_delimiter(@unreviewed_response_count)), responses_path(search: "reviewed:no")) %></li>
     </ul>
   </div>
-  <div class="stat_block">
+  <div class="stat-block">
     <% unless @responses.empty? %>
       <h2><%= t('dashboard.top_forms') %></h2>
       <ul>
@@ -21,7 +21,7 @@
     <% end %>
   </div>
   <% if current_user.role(current_mission) != 'enumerator' %>
-    <div class="stat_block">
+    <div class="stat-block">
       <% unless @responses.empty? %>
         <h2><%= t('dashboard.low_activity') %></h2>
         <ul>

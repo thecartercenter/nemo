@@ -17,8 +17,8 @@
     const small_w = 75;
 
     // the rest are computed based on size of pane and number of cols
-    const num_cols = $('.recent_responses tbody tr:first-child td').length;
-    const pane_w = $('.recent_responses').width();
+    const num_cols = $('.recent-responses tbody tr:first-child td').length;
+    const pane_w = $('.recent-responses').width();
 
     // this is a guess. we set overflow-x to hidden just in case it's a bit off
     const scrollbar_w = 12;
@@ -33,7 +33,7 @@
   // gets the ID of the latest response in the list, or empty string if no responses
   klass.prototype.latest_response_id = function (args) {
     const self = this;
-    const dom_id = $('.recent_responses tbody tr:first-child').attr('id');
+    const dom_id = $('.recent-responses tbody tr:first-child').attr('id');
     return dom_id ? dom_id.replace(/^response_/, '') : '';
   };
 
@@ -46,7 +46,7 @@
 
       // loop through the response rows, highlighting, until we reach the one with the given ID
       // also play a sound if we find a new response
-      $('.recent_responses tbody tr').each(function () {
+      $('.recent-responses tbody tr').each(function () {
         if (this.id == `response_${id}`) return false;
         $(this).effect('highlight', {}, 4000);
 
@@ -63,10 +63,10 @@
     const self = this;
     if (!cls) cls = '';
 
-    $(`.recent_responses td${cls}`).width(width);
+    $(`.recent-responses td${cls}`).width(width);
 
     // set inner divs to small width due to padding
     // we use an inner div to handle overflow and prevent wrapping
-    $(`.recent_responses td${cls} > div`).width(width - CELL_H_PADDING);
+    $(`.recent-responses td${cls} > div`).width(width - CELL_H_PADDING);
   }
 }(ELMO.Views));

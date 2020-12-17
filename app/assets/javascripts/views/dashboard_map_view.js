@@ -20,7 +20,7 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
   }
 
   show_disabled_notice() {
-    $('.response_locations').remove();
+    $('.response-locations').remove();
     if (this.params.offline) {
       $('.response-locations-offline').show();
     } else if (!this.params.key_present) {
@@ -30,7 +30,7 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
 
   setup_map() {
     // create the map
-    this.map = new google.maps.Map($('div.response_locations')[0], {
+    this.map = new google.maps.Map($('div.response-locations')[0], {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       // This default zoom level shows most of the world on a big screen, but avoids grey bars at top/bottom.
       zoom: 3,
