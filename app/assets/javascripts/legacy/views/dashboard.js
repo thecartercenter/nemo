@@ -22,17 +22,6 @@
       return false;
     });
 
-    // readjust stuff on window resize
-    $(window).on('resize', () => {
-      self.adjust_pane_sizes();
-      self.list_view.adjust_columns();
-
-      // clear this timeout in case this is another resize event before it ran out
-      clearTimeout(self.resize_done_timeout);
-
-      self.resize_done_timeout = setTimeout(() => { self.dashboard_report.render(); }, 1000);
-    });
-
     // Setup ajax reload timer and test link.
     self.reload_timer = setTimeout(() => { self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
     $('a.reload-ajax').on('click', () => { self.reload_ajax(); });
@@ -50,55 +39,6 @@
     self.list_view = new ELMO.Views.DashboardResponseList();
     self.map_view = new ELMO.Views.DashboardMapView(self.params.map);
     self.dashboard_report = new ELMO.Views.DashboardReport();
-
-    // Adjust sizes for the initial load
-    self.adjust_pane_sizes();
-    self.list_view.adjust_columns();
-  };
-
-  klass.prototype.adjust_pane_sizes = function () {
-    const self = this;
-    // set 3 pane widths/heights depending on container size
-
-    // the content window padding and space between columns
-    const spacing = 15;
-
-    // content window inner dimensions
-    const cont_w = $('#content').width() - 4;
-    const cont_h = $(window).height() - $('#logo').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
-
-    // Save map center so we can recenter after resize.
-    const map_center = this.map_view.center();
-
-    if (view_setting('expanded-map')) {
-      $('.response-locations').width('100%').height(cont_h);
-    } else {
-      // height of the h2 elements
-      const title_h = $('#content h2').height();
-
-      // height of the stats pane
-      const stats_h = $('.stats').height();
-
-      // left col is slightly narrower than right col
-      const left_w = (cont_w - spacing) * 0.9 / 2;
-      $('.recent-responses, .response-locations').width(left_w);
-      const right_w = cont_w - spacing - left_w - 15;
-      $('.report-output').width(right_w);
-
-      // must control width of stat block li's
-      $('.stats .stat-block li').css('maxWidth', (right_w / 3) - 25);
-
-      // must control report title width or we get weird wrapping
-      $('.report-pane h2').css('maxWidth', right_w - 200);
-
-      // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
-      $('.recent-responses, .response-locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
-
-      // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
-      $('.report-output').height(cont_h - title_h - 2 * spacing - stats_h);
-    }
-
-    this.map_view.resized(map_center);
   };
 
   // Reloads the page via AJAX, passing the current report id
@@ -122,9 +62,7 @@
         $('.recent-responses').replaceWith(data.recent_responses);
         $('.stats').replaceWith(data.stats);
         $('.report-output-and-modal').html(data.report);
-        self.list_view.adjust_columns();
         self.map_view.update_map(data.response_locations);
-        self.adjust_pane_sizes();
 
         self.reload_timer = setTimeout(() => { self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
       },
@@ -183,7 +121,6 @@
 
       $('#content').removeClass('expanded-map');
     }
-    this.adjust_pane_sizes();
   };
 
   function view_setting(setting_name, value) {

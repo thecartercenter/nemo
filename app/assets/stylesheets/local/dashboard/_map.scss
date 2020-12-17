@@ -1,0 +1,41 @@
+body.welcome {
+  .response-locations-disabled {
+    color: $light-gray;
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  .expanded-map-links {
+    display: none;
+  }
+
+  // If .expand-map class is on #content, we have to kill the padding and all the content except map.
+  div#content.expanded-map {
+    padding: 0;
+
+    div.right-col,
+    h2,
+    div.recent-responses,
+    div.dashboard-footer,
+    a.expand-map {
+      display: none;
+    }
+
+    .left-col {
+      padding: 0;
+      width: 100%;
+    }
+
+    // Links for collapsing map/fullscreen
+    .expanded-map-links {
+      display: block;
+      position: absolute;
+      right: 10px;
+      top: 50px;
+
+      a {
+        color: white;
+      }
+    }
+  }
+}
