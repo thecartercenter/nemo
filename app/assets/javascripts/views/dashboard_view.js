@@ -46,7 +46,7 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
 
   // Reloads the page via AJAX, passing the current report id
   reloadAjax() {
-    const self = this;
+    this.dashboard_report.toggleLoader(true);
 
     // We only set the 'auto' parameter on this request if NOT in full screen mode.
     // The auto param prevents the AJAX request from resetting the auto-logout timer.
@@ -54,6 +54,7 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
     // sense to let the session expire.
     const auto = this.viewSetting('full-screen') ? undefined : 1;
 
+    const self = this;
     $.ajax({
       url: ELMO.app.url_builder.build('/'),
       method: 'GET',
@@ -65,6 +66,7 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
         $('.recent-responses').replaceWith(data.recent_responses);
         $('.stats').replaceWith(data.stats);
         $('.report-output-and-modal').html(data.report);
+        self.dashboard_report.toggleLoader(false);
         self.map_view.update_map(data.response_locations);
         self.reload_timer = setTimeout(() => { self.reloadAjax(); }, AJAX_RELOAD_INTERVAL * 1000);
       },
@@ -77,6 +79,7 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
 
   // Reloads the page via full refresh to avoid memory issues.
   reloadPage() {
+    this.dashboard_report.showLoader();
     const nonce = Math.floor(Math.random() * 1000000 + 1);
     window.location.href = `${ELMO.app.url_builder.build('')}?r=${nonce}`;
   }
