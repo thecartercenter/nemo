@@ -28,16 +28,18 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
   changeReport(id, name) {
     const self = this;
 
+    this.toggleLoader(true);
     $('.report-title-text').html(name);
-    $('.report-pane-header .inline-load-ind img').show();
     $('.report-output').empty();
     $('.report-chooser select').val('');
     $('.report-edit-link-container').hide();
-    $('.report-output-and-modal').load(ELMO.app.url_builder.build('reports', id), () => self.displayReport());
+    $('.report-output-and-modal').load(ELMO.app.url_builder.build('reports', id), () => {
+      self.toggleLoader(false)
+    });
   }
 
-  displayReport() {
-    $('.report-pane-header .inline-load-ind img').hide();
+  toggleLoader(bool) {
+    $('.report-pane-header .inline-load-ind img').toggle(bool);
   }
 
   updateEditLink(report) {
