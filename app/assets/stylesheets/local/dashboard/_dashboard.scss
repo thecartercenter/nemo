@@ -1,0 +1,46 @@
+body.welcome {
+  .title {
+    float: none;
+  }
+
+  div#content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panes {
+    display: flex;
+    flex: 1 0 auto;
+    justify-content: space-between;
+  }
+
+  .left-col, .right-col {
+    display: flex;
+    flex-direction: column;
+    width: calc(50% - 10px);
+
+    .recent-responses, .map-canvas, .report-pane {
+      flex: 1 0 0;
+    }
+  }
+
+  a.expand-map {
+    float: right;
+    margin-top: 20px;
+  }
+
+  h2 {
+    color: #888;
+    font-size: 18px;
+    margin: 0 0 15px;
+    text-transform: uppercase;
+  }
+
+  h2.interior {
+    margin-top: 15px;
+  }
+
+  .dashboard-footer {
+    margin-top: 10px;
+  }
+}

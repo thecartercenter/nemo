@@ -1,0 +1,24 @@
+body.welcome {
+  div.info-window {
+    height: 130px;
+    width: 275px;
+
+    h3 {
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+
+      td:first-child {
+        font-size: 11px;
+        height: 20px;
+        padding-right: 10px;
+      }
+
+      td:last-child {
+        font-weight: bold;
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+body.welcome {
+  .recent-responses {
+    overflow-x: hidden;
+
+    table.index_table {
+      width: 100%;
+      
+      td > div {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+}

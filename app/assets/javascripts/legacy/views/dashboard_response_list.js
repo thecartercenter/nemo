@@ -10,26 +10,6 @@
     const self = this;
   };
 
-  // adjusts column widths depending on how many there are
-  klass.prototype.adjust_columns = function () {
-    const self = this;
-    // reviewed column gets fixed width
-    const small_w = 75;
-
-    // the rest are computed based on size of pane and number of cols
-    const num_cols = $('.recent-responses tbody tr:first-child td').length;
-    const pane_w = $('.recent-responses').width();
-
-    // this is a guess. we set overflow-x to hidden just in case it's a bit off
-    const scrollbar_w = 12;
-
-    // first set all of them to the wider width, also allow for scrollbar
-    set_col_width((pane_w - small_w) / (num_cols - 1) - scrollbar_w);
-
-    // then set the two smaller ones
-    set_col_width(small_w, '.reviewed_col');
-  };
-
   // gets the ID of the latest response in the list, or empty string if no responses
   klass.prototype.latest_response_id = function (args) {
     const self = this;

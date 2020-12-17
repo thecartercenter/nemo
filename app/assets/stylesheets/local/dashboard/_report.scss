@@ -1,0 +1,45 @@
+body.welcome {
+  .report-pane-header {
+    h2 {
+      display: inline-block;
+      height: 20px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .report-chooser {
+      float: right;
+      margin-top: 15px;
+
+      select {
+        width: 150px;
+      }
+    }
+
+    .inline-load-ind {
+      margin: 0 0.5em;
+    }
+
+    .report-edit-link-container {
+      display: none;
+      margin: 0 0.5em;
+    }
+
+    a.action-link-edit {
+      color: #888;
+    }
+  }
+
+  .report-pane {
+    overflow: auto;
+  }
+
+  .report-output {
+    overflow: auto;
+
+    div.tip {
+      /* have to cancel the 800px width as it messes with the dashboard sizing */
+      width: inherit;
+    }
+  }
+}

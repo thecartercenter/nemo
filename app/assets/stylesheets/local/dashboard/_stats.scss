@@ -1,0 +1,35 @@
+body.welcome {
+  div.stats {
+    overflow-x: auto;
+    /* ensure stat blocks don't wrap */
+    white-space: nowrap;
+  }
+
+  div.stat-block {
+    display: inline-block;
+    margin-right: 25px;
+    vertical-align: top;
+
+    h2 {
+      max-width: 200px;
+      white-space: normal;
+    }
+
+    ul {
+      font-size: 16px;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      a {
+        color: $darker-accent-color;
+        text-decoration: none;
+      }
+    }
+  }
+}

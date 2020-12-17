@@ -12,7 +12,7 @@
 
   klass.prototype.hookup_report_chooser = function() {
     const self = this;
-    $('.report-pane').on('change', 'form.report-chooser', (e) => {
+    $('.report-chooser').on('change', (e) => {
       const id = $(e.target).val();
       if (id) {
         self.change_report(id, $(e.target).find('option:selected').text());
@@ -23,8 +23,8 @@
   klass.prototype.change_report = function(id, name) {
     const self = this;
 
-    $('.report-pane .report-title-text').html(name);
-    $('.report-pane .inline-load-ind img').show();
+    $('.report-title-text').html(name);
+    $('.report-pane-header .inline-load-ind img').show();
     $('.report-output').empty();
     $('.report-chooser select').val('');
     $('.report-edit-link-container').hide();
@@ -32,7 +32,7 @@
   };
 
   klass.prototype.display_report = function() {
-    $('.report-pane .inline-load-ind img').hide();
+    $('.report-pane-header .inline-load-ind img').hide();
     this.set_edit_link();
   }
 

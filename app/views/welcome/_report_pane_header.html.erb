@@ -1,0 +1,22 @@
+<div class="report-pane-header">
+  <% if @reports.empty? %>
+    <h2 class="interior"><%= translate_model(Report::Report) %></h2>
+  <% else %>
+    <form class="report-chooser">
+      <%= select_tag("rpid", options_from_collection_for_select(@reports, "id", "name"),
+                     prompt: I18n.t("report/report.choose_report"),
+                     class: "custom-select custom-select-sm") %>
+    </form>
+    <div class="report-title">
+      <h2 class="interior">
+        <span class="report-title-text">
+          <%= @report ? @report.name : t("common.report") %>
+        </span>
+        <span class="report-edit-link-container">
+          <%= action_link(:edit, "#", label: false) %>
+        </span>
+        <%= inline_load_ind %>
+      </h2>
+    </div>
+  <% end %>
+</div>

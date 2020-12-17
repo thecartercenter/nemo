@@ -1,9 +1,16 @@
-header {
-  background-color: $header-background-color;
+html {
+  height: 100%;
 }
 
 body {
   text-align: $left;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: $header-background-color;
 }
 
 #userinfo {
@@ -155,17 +162,16 @@ body {
 
 #content {
   background-color: $white;
-  min-height: 400px;
-  padding: 20px 25px 30px;
+  padding: 20px;
+  flex: 1 0 auto;
 }
 
 #footer {
   background-color: $footer-background-color;
   color: $footer-text-color;
-  height: 300px;
-  padding-top: 108px;
+  padding: 20px;
   text-align: center;
-  vertical-align: middle;
+  flex-shrink: 0;
 
   a {
     color: $accent-color;
