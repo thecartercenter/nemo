@@ -32,9 +32,11 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
                                      "time",                       # 13
                                      "image"])                     # 14
     end
+
     let(:image) do
-      Media::Image.create(item: File.open(Rails.root.join("spec/fixtures/media/images/the_swing.jpg")))
+      create(:media_image)
     end
+
     let(:response) do
       create(:response, form: form,
                         answer_values: ["foo✓", %w[Canada Calgary],
