@@ -2,7 +2,7 @@ const AJAX_RELOAD_INTERVAL = 30; // seconds
 const PAGE_RELOAD_INTERVAL = 30; // minutes
 
 ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationView {
-  get el() { return 'body.welcome'; }
+  get el() { return 'body.dashboard'; }
 
   get events() {
     return {
