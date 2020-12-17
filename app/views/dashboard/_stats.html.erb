@@ -20,19 +20,4 @@
       </ul>
     <% end %>
   </div>
-  <% if current_user.role(current_mission) != 'enumerator' %>
-    <div class="stat-block">
-      <% unless @responses.empty? %>
-        <h2><%= t('dashboard.low_activity') %></h2>
-        <ul>
-          <% @responses_per_user.each do |row| %>
-            <li>
-              <%= link_to(content_tag(:strong, number_with_delimiter(row.response_count)) + ' ' + row.name,
-                responses_path(search: "submitter:\"#{row.name}\"")) %>
-            </li>
-            <% end %>
-        </ul>
-      <% end %>
-    </div>
-  <% end %>
 </div>
