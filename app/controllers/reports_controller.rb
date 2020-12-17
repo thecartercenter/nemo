@@ -40,6 +40,7 @@ class ReportsController < ApplicationController
 
         if request.xhr?
           render(partial: "reports/output_and_modal")
+          save_report_id_in_session(@report.id)
         else
           @report.record_viewing
         end
