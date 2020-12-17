@@ -174,18 +174,18 @@
     }
 
     // add a row count
-    $('.report_info').append($('<div>').attr('id', 'row_count')
+    $('.report-info').append($('<div>').attr('id', 'row_count')
       .text(this.i18n_total_rows_label(data)));
 
     // add the table
-    $('.report_body').empty().append(tbl);
+    $('.report-body').empty().append(tbl);
 
     this.equalize_col_widths();
   };
 
   klass.prototype.equalize_col_widths = function () {
     // get the available extra space
-    const extra_spc = $('.report_body').position().left + $('.report_body').width() - this.tbl.position().left - this.tbl.width();
+    const extra_spc = $('.report-body').position().left + $('.report-body').width() - this.tbl.position().left - this.tbl.width();
 
     // get the current column widths
     const cur_widths = [];

@@ -8,7 +8,7 @@
   <% if cluster.display_type == :flow || summary.items.empty? %>
     <td colspan="<%= result_cols %>">
       <% if summary.items.length == 0 %>
-        <em class="no_match"><%= t("report/report.no_match") %></em>
+        <em class="no-match"><%= t("report/report.no_match") %></em>
       <% end %>
 
       <%= summary.items.map { |item| "#{item.text}" }.join(", ") %>

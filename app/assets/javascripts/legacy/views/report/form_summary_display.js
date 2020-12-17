@@ -12,6 +12,6 @@
 
   klass.prototype.render = function () {
     const self = this;
-    $('.report_body').empty().append(this.report.attribs.html);
+    $('.report-body').empty().append(this.report.attribs.html);
   };
 }(ELMO.Report));

@@ -73,7 +73,7 @@
       tooltip: { isHtml: true, textStyle: { fontSize: 11 } },
     };
 
-    const chart = new google.visualization.BarChart($('.report_body')[0]);
+    const chart = new google.visualization.BarChart($('.report-body')[0]);
     chart.draw(g_data, options);
   };
 

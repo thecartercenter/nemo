@@ -48,15 +48,15 @@ ELMO.Views.ReportView = class ReportView extends ELMO.Views.ApplicationView {
   }
 
   render() {
-    $('.report_info').empty();
+    $('.report-info').empty();
 
     if (this.report.attribs.error) {
       this.showError(this.report.attribs.error);
     } else if (this.report.attribs.empty) {
-      $('.report_body').html(I18n.t('report/report.no_match'));
+      $('.report-body').html(I18n.t('report/report.no_match'));
     } else {
       $('<div>').append(`${I18n.t('report/report.generated_at')} ${this.report.attribs.generated_at}`)
-        .appendTo($('.report_info'));
+        .appendTo($('.report-info'));
 
       if (this.report.attribs.type === 'Report::StandardFormReport') {
         this.display = new ELMO.Report.FormSummaryDisplay(this.report);
@@ -133,6 +133,6 @@ ELMO.Views.ReportView = class ReportView extends ELMO.Views.ApplicationView {
   }
 
   showError(msg) {
-    $('.report_info').text(`${I18n.t('common.error.one')}: ${msg}`);
+    $('.report-info').text(`${I18n.t('common.error.one')}: ${msg}`);
   }
 };

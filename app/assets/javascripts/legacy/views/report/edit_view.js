@@ -14,7 +14,7 @@
     this.cont = $('div.report_edit_dialog');
 
     // create the form and disable submit
-    this.form = $('form.report_form');
+    this.form = $('form.report-form');
     this.form.submit(() => { return false; });
 
     // create the panes
