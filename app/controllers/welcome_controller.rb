@@ -24,6 +24,4 @@ class WelcomeController < ApplicationController
 
   def unauthorized
   end
-
-  private
 end
