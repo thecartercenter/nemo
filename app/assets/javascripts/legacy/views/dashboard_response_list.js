@@ -1,52 +1,30 @@
-// ELMO.Views.DashboardResponseList
-//
-// View model for the Dashboard response listing
-(function (ns, klass) {
-  // horizontal cell padding
-  const CELL_H_PADDING = 13;
-
-  // constructor
-  ns.DashboardResponseList = klass = function () {
-    const self = this;
-  };
-
+ELMO.Views.DashboardResponseList = class DashboardResponseList extends ELMO.Views.ApplicationView {
   // gets the ID of the latest response in the list, or empty string if no responses
-  klass.prototype.latest_response_id = function (args) {
-    const self = this;
-    const dom_id = $('.recent-responses tbody tr:first-child').attr('id');
-    return dom_id ? dom_id.replace(/^response_/, '') : '';
-  };
+  latestResponseId() {
+    const domId = $('.recent-responses tbody tr:first-child').attr('id');
+    return domId ? domId.replace(/^response_/, '') : '';
+  }
 
   // highlights all responses after (higher in the list than) the response with the given id
   // id may be null, in which case we do nothing
-  klass.prototype.highlight_responses_after = function (id) {
-    const self = this;
+  highlightResponsesAfter(id) {
     if (id) {
-      let sound_played = false;
+      let soundPlayed = false;
 
       // loop through the response rows, highlighting, until we reach the one with the given ID
       // also play a sound if we find a new response
-      $('.recent-responses tbody tr').each(function () {
-        if (this.id == `response_${id}`) return false;
-        $(this).effect('highlight', {}, 4000);
-
-        if (!sound_played) {
-          $('#new_arrival_sound')[0].play();
-          sound_played = true;
+      $('.recent-responses tbody tr').each((idx, tr) => {
+        if (tr.id === `response_${id}`) {
+          return false;
         }
+        $(tr).effect('highlight', {}, 4000);
+
+        if (!soundPlayed) {
+          $('#new-arrival-sound')[0].play();
+          soundPlayed = true;
+        }
+        return true;
       });
     }
-  };
-
-  // sets the width of the table columns. if cls is given, it's added as a suffix to the td selector.
-  function set_col_width(width, cls) {
-    const self = this;
-    if (!cls) cls = '';
-
-    $(`.recent-responses td${cls}`).width(width);
-
-    // set inner divs to small width due to padding
-    // we use an inner div to handle overflow and prevent wrapping
-    $(`.recent-responses td${cls} > div`).width(width - CELL_H_PADDING);
   }
-}(ELMO.Views));
+};

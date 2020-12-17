@@ -1,26 +1,23 @@
 // ELMO.Views.DashboardReport
 //
 // View model for the dashboard report
-(function(ns, klass) {
-  // constructor
-  ns.DashboardReport = klass = function() {
-    const self = this;
+ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.ApplicationView {
+  get el() {
+    return '.report';
+  }
 
-    // hookup the form change event
-    self.hookup_report_chooser();
-  };
+  get events() {
+    return { 'change .report-chooser': 'handleReportChange' };
+  }
 
-  klass.prototype.hookup_report_chooser = function() {
-    const self = this;
-    $('.report-chooser').on('change', (e) => {
-      const id = $(e.target).val();
-      if (id) {
-        self.change_report(id, $(e.target).find('option:selected').text());
-      }
-    });
-  };
+  handleReportChange(e) {
+    const id = $(e.target).val();
+    if (id) {
+      this.changeReport(id, $(e.target).find('option:selected').text());
+    }
+  }
 
-  klass.prototype.change_report = function(id, name) {
+  changeReport(id, name) {
     const self = this;
 
     $('.report-title-text').html(name);
@@ -28,27 +25,27 @@
     $('.report-output').empty();
     $('.report-chooser select').val('');
     $('.report-edit-link-container').hide();
-    $('.report-output-and-modal').load(ELMO.app.url_builder.build('reports', id), () => self.display_report());
-  };
-
-  klass.prototype.display_report = function() {
-    $('.report-pane-header .inline-load-ind img').hide();
-    this.set_edit_link();
+    $('.report-output-and-modal').load(ELMO.app.url_builder.build('reports', id), () => self.displayReport());
   }
 
-  klass.prototype.set_edit_link = function(data) {
+  displayReport() {
+    $('.report-pane-header .inline-load-ind img').hide();
+    this.updateEditLink();
+  }
+
+  updateEditLink() {
     if (this.report().attribs.user_can_edit) {
-      const report_url = `${ELMO.app.url_builder.build('reports', this.report().attribs.id)}/edit`;
+      const reportUrl = `${ELMO.app.url_builder.build('reports', this.report().attribs.id)}/edit`;
 
       $('.report-edit-link-container').show();
-      $('.report-edit-link-container a').attr('href', report_url);
+      $('.report-edit-link-container a').attr('href', reportUrl);
     } else {
       $('.report-edit-link-container').hide();
       $('.report-edit-link-container a').attr('href', '');
     }
-  };
+  }
 
-  klass.prototype.report = function() {
+  report() {
     return ELMO.app.report_controller.report_last_run;
-  };
-}(ELMO.Views));
+  }
+};

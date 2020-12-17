@@ -8,6 +8,6 @@
 
   <%# outside the cache block we need to tell the list view to highlight new responses %>
   <%= javascript_doc_ready do %>
-    ELMO.app.dashboard.list_view.highlight_responses_after(<%=json params[:latest_response_id] %>)
+    ELMO.app.dashboard.list_view.highlightResponsesAfter(<%=json params[:latest_response_id] %>)
   <% end %>
 </div>
