@@ -7,7 +7,10 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
   }
 
   get events() {
-    return { 'change .report-chooser': 'handleReportChange' };
+    return {
+      'change .report-chooser': 'handleReportChange',
+      'report:load': 'handleReportLoad',
+    };
   }
 
   handleReportChange(e) {
@@ -15,6 +18,11 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
     if (id) {
       this.changeReport(id, $(e.target).find('option:selected').text());
     }
+  }
+
+  handleReportLoad(e, reportView) {
+    this.reportView = reportView;
+    this.updateEditLink(reportView.report);
   }
 
   changeReport(id, name) {
@@ -30,22 +38,16 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
 
   displayReport() {
     $('.report-pane-header .inline-load-ind img').hide();
-    this.updateEditLink();
   }
 
-  updateEditLink() {
-    if (this.report().attribs.user_can_edit) {
-      const reportUrl = `${ELMO.app.url_builder.build('reports', this.report().attribs.id)}/edit`;
-
-      $('.report-edit-link-container').show();
+  updateEditLink(report) {
+    if (report.attribs.user_can_edit) {
+      const reportUrl = `${ELMO.app.url_builder.build('reports', report.attribs.id)}/edit`;
+      $('.report-edit-link-container').css('display', 'inline-block');
       $('.report-edit-link-container a').attr('href', reportUrl);
     } else {
       $('.report-edit-link-container').hide();
       $('.report-edit-link-container a').attr('href', '');
     }
-  }
-
-  report() {
-    return ELMO.app.report_controller.report_last_run;
   }
 };
