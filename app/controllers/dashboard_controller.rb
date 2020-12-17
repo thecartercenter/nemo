@@ -43,10 +43,6 @@ class DashboardController < ApplicationController
       Response.per_form(accessible_responses, STAT_ROWS)
     end
 
-    instance_variable_cache("@responses_per_user", dependencies: %i[responses assignments]) do
-      User.sorted_enumerator_response_counts(current_mission, STAT_ROWS)
-    end
-
     instance_variable_cache("@recent_response_count", expires_in: 30.minutes) do
       Response.recent_count(Response.accessible_by(current_ability))
     end
