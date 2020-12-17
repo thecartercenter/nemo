@@ -3,7 +3,7 @@
   <%# this path is hard coded because the audio_tag/path helpers are not working and i can't figure out why %>
   <%# they produce /audios/ship-bell.mp3 instead of the correct /assets/ship-bell.mp3 %>
   <%# so i moved the whole audios directory to /public for now %>
-  <audio id="new_arrival_sound" src="/audios/ship-bell.mp3"></audio>
+  <audio id="new-arrival-sound" src="/audios/ship-bell.mp3"></audio>
 <% end %>
 
 <%# placing this up here so it's the first call to document.ready, so that the pane sizing happens before report drawing %>
@@ -11,7 +11,7 @@
   // delete any previous instance
   delete ELMO.app.dashboard;
 
-  ELMO.app.dashboard = new ELMO.Views.Dashboard(<%=json(
+  ELMO.app.dashboard = new ELMO.Views.DashboardView(<%=json(
     # needed for storing the map bounds between refreshes
     mission_id: current_mission.id,
     map: {
@@ -31,11 +31,12 @@
     <%= render(partial: "response_locations_header") %>
     <%= render(partial: "response_locations") %>
   </div>
-
   <div class="right-col">
     <%= render(partial: "stats") %>
-    <%= render(partial: "report_pane_header") %>
-    <%= render(partial: "report_pane") %>
+    <div class="report">
+      <%= render(partial: "report_pane_header") %>
+      <%= render(partial: "report_pane") %>
+    </div>
   </div>
 </div>
 
@@ -49,8 +50,8 @@
 
 <%= javascript_doc_ready do %>
   <%# Hides/displays appropriate full screen elements if necessary %>
-  ELMO.app.dashboard.set_full_screen();
-  ELMO.app.dashboard.set_expanded_map();
+  ELMO.app.dashboard.setFullScreen();
+  ELMO.app.dashboard.setExpandedMap();
 <% end %>
 
 <div class="dashboard-footer">
