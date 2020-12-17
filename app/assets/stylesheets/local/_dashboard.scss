@@ -27,20 +27,20 @@ body.welcome {
     &.expanded-map {
       padding: 0;
 
-      div.right_col,
+      div.right-col,
       h2,
-      div.recent_responses,
+      div.recent-responses,
       div.dashboard-footer,
       a.expand-map {
         display: none;
       }
 
-      .left_col {
+      .left-col {
         padding: 0;
         width: 100%;
       }
 
-      .response_locations {
+      .response-locations {
         display: block !important;
         width: 100%;
       }
@@ -88,12 +88,12 @@ body.welcome {
     display: inline-block;
     vertical-align: top;
 
-    &.left_col {
+    &.left-col {
       padding-left: 0;
       padding-right: 15px;
     }
 
-    &.right_col {
+    &.right-col {
     }
   }
 
@@ -104,7 +104,7 @@ body.welcome {
   }
 
   /* responses index table */
-  div.recent_responses {
+  div.recent-responses {
     overflow-x: hidden;
 
     table.index_table {
@@ -141,13 +141,13 @@ body.welcome {
 
   /* stats */
 
-  div.report_stats {
+  div.stats {
     overflow-x: auto;
     /* ensure stat blocks don't wrap */
     white-space: nowrap;
   }
 
-  div.stat_block {
+  div.stat-block {
     display: inline-block;
     margin-right: 25px;
     vertical-align: top;
