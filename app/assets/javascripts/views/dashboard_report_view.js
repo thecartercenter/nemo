@@ -3,7 +3,7 @@
 // View model for the dashboard report
 ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.ApplicationView {
   get el() {
-    return '.report';
+    return '.right-col';
   }
 
   get events() {
