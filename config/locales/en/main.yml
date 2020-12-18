@@ -571,6 +571,7 @@ en:
     action_links:
       show: "View"
       edit: "Edit"
+      close: "Close"
       destroy: "Delete"
       index: "List"
       clone: "Clone"
@@ -914,6 +915,7 @@ en:
 
   actions:
     clone: "Clone"
+    close: "Close"
     edit: "Edit"
     go_live: "Go Live"
     pause: "Pause"
@@ -1254,11 +1256,14 @@ en:
     my_responses: "My Responses"
     no_map_offline: "The map is disabled because the server has no internet connection."
     no_map_key: "The map is disabled because no Google Maps key has been specified in the settings."
-    no_reports: "No Reports have been created for this mission yet."
+    no_reports: "No reports have been created for this mission yet."
+    create_report: "You can create one."
+    create_report_also: "You can also create a new one."
     recent_responses: "Latest Responses"
     shrink_map: "Shrink Map"
     response_locations: "Response Locations"
     response_locations_truncated: "Only the most recent %{max} locations are shown."
+    report_placeholder: "Select a report above to explore your data. Reports auto-refresh every 30 seconds."
     summary: "Summary"
     top_forms: "Top Forms"
 
