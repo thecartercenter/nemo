@@ -1,0 +1,19 @@
+<% if @report.nil? %>
+  <div class="report-placeholder">
+    <%= icon_tag("bar-chart") %>
+    <p>
+      <% if @reports.empty? %>
+        <%= t("dashboard.no_reports") %>
+        <%= link_to(t("dashboard.create_report"), new_report_path) if can?(:create, Report::Report) %>
+      <% else %>
+        <%= t("dashboard.report_placeholder") %>
+        <%= link_to(t("dashboard.create_report_also"), new_report_path) if can?(:create, Report::Report) %>
+      <% end %>
+    </p>
+  </div>
+<% else %>
+  <%# We don't use the modal but we have to use the partial with the modal for legacy reasons. %>
+  <div class="report-output-and-modal">
+    <%= render("reports/output_and_modal") %>
+  </div>
+<% end %>

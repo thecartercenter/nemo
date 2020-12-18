@@ -4,7 +4,7 @@ body.dashboard {
     flex-direction: column;
   }
 
-  .report-pane-header {
+  .report-header {
     h2 {
       display: inline-block;
       height: 20px;
@@ -35,7 +35,7 @@ body.dashboard {
     }
   }
 
-  .report-pane {
+  .report-content {
     flex: 1 0 0;
     overflow: auto;
     display: flex;
