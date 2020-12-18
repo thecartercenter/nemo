@@ -1,10 +1,16 @@
 body.dashboard {
   .recent-responses {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .recent-responses-table {
+    flex: 1 0 0;
     overflow-x: hidden;
 
     table.index_table {
       width: 100%;
-      
+
       td > div {
         overflow: hidden;
         white-space: nowrap;
