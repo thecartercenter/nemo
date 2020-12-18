@@ -102,8 +102,9 @@ ELMO::Application.routes.draw do
     resources :standard_form_reports, controller: "reports"
 
     # special dashboard routes
-    get "/info-window", to: "dashboard#info_window", as: :dashboard_info_window
-    get("/route-tests", to: "route_tests#mission_mode") if Rails.env.development? || Rails.env.test?
+    get "/dashboard/report", to: "dashboard#report", as: :dashboard_report
+    get "/dashboard/info-window", to: "dashboard#info_window", as: :dashboard_info_window
+    get "/route-tests", to: "route_tests#mission_mode" if Rails.env.development? || Rails.env.test?
 
     # for /en/m/mission123
     root to: "dashboard#index", as: :mission_root

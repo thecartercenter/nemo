@@ -28,7 +28,7 @@ describe "router" do
   end
 
   it "routes special info-window route" do
-    expect(get: "/en/m/mission123/info-window").to route_to(
+    expect(get: "/en/m/mission123/dashboard/info-window").to route_to(
       controller: "dashboard", action: "info_window", locale: "en", mode: "m", mission_name: "mission123"
     )
   end
