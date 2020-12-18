@@ -27,3 +27,16 @@
     vertical-align: middle;
   }
 }
+
+@mixin reviewed-response-col {
+  td.reviewed_col {
+    a {
+      color: $main-text-color;
+    }
+
+    i.fa {
+      color: $success-green;
+      margin-right: 5px;
+    }
+  }
+}
