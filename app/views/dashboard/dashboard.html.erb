@@ -40,6 +40,12 @@
     <div class="report">
       <%= render(partial: "report") %>
     </div>
+    <div class="links">
+      <a href="#" class="full-screen">
+        <%= icon_tag("expand") %>
+        <span><%= I18n.t("dashboard.enter_full_screen") %></span>
+      </a>
+    </div>
   </div>
 </div>
 
@@ -51,17 +57,14 @@
   </a>
 </div>
 
+<%# These links are for testing purposes %>
+<% if Rails.env.test? %>
+  <a href="#" class="reload-ajax">Reload via AJAX</a>
+  <a href="#" class="reload-page">Reload Page</a>
+<% end %>
+
 <%= javascript_doc_ready do %>
   <%# Hides/displays appropriate full screen elements if necessary %>
   ELMO.app.dashboard.setFullScreen();
   ELMO.app.dashboard.setExpandedMap();
 <% end %>
-
-<div class="dashboard-footer">
-  <%# These links are for testing purposes %>
-  <% if Rails.env.test? %>
-    <a href="#" class="reload-ajax">Reload via AJAX</a>
-    <a href="#" class="reload-page">Reload Page</a>
-  <% end %>
-  <a href="#" class="full-screen"><i class="fa fa-expand"></i> <span><%= I18n.t("dashboard.enter_full_screen") %></span></a>
-</div>
