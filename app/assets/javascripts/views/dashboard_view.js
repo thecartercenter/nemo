@@ -46,7 +46,9 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
 
   // Reloads the page via AJAX, passing the current report id
   reloadAjax() {
-    this.dashboard_report.toggleLoader(true);
+    if (!this.dashboard_report.isEmpty()) {
+      this.dashboard_report.toggleLoader(true);
+    }
 
     // We only set the 'auto' parameter on this request if NOT in full screen mode.
     // The auto param prevents the AJAX request from resetting the auto-logout timer.
