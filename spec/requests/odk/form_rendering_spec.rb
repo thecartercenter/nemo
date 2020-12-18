@@ -497,9 +497,9 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       let(:form) { create(:form, :live, name: "Media Prompts", question_types: %w[text text text]) }
 
       before do
-        form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
-        form.c[1].question.update!(media_prompt: video_fixture("jupiter.mp4"))
-        form.c[2].question.update!(media_prompt: image_fixture("the_swing.png"))
+        form.c[0].question.media_prompt.attach(**attachment_args(audio_fixture("powerup.mp3")))
+        form.c[1].question.media_prompt.attach(**attachment_args(video_fixture("jupiter.mp4")))
+        form.c[2].question.media_prompt.attach(**attachment_args(image_fixture("the_swing.png")))
       end
 
       it "should render proper xml" do

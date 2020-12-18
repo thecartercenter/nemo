@@ -30,12 +30,12 @@ module ODK
           validate :#{col_name}, :extension_works_on_android
 
           def #{col_name}?
-            #{col_name}_file_name.present?
+            #{col_name}.attached?
           end
 
           def #{col_name}_type
             return nil unless #{col_name}?
-            extension = File.extname(#{col_name}_file_name)[1..-1]
+            extension = File.extname(#{col_name}.filename.to_s)[1..-1]
             @#{col_name}_media_type ||= ODK_MEDIA_EXTS.map do |type, exts|
               type if exts.include?(extension)
             end.compact.first
@@ -44,8 +44,8 @@ module ODK
           private
 
           def extension_works_on_android
-            return if #{col_name}.attachment.nil?
-            extension = File.extname(#{col_name}.attachment.filename.to_s)
+            return unless #{col_name}?
+            extension = File.extname(#{col_name}.filename.to_s)
             errors.add(:#{col_name}, :invalid_type) unless ODK_EXTS_REGEX.match?(extension)
           end
         RUBY
