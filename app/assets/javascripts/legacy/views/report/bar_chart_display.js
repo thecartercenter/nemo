@@ -15,6 +15,14 @@
   klass.prototype.parent = ns.Display.prototype;
 
   klass.prototype.render = function () {
+    if (google.visualization) {
+      this.finish_render();
+    } else {
+      google.charts.setOnLoadCallback(this.finish_render.bind(this));
+    }
+  }
+
+  klass.prototype.finish_render = function () {
     const _this = this;
     const { data } = this.report.attribs;
     const { headers } = this.report.attribs;
