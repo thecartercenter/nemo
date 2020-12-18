@@ -65,7 +65,7 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
       success(data) {
         $('.recent-responses').replaceWith(data.recent_responses);
         $('.stats').replaceWith(data.stats);
-        $('.report-output-and-modal').html(data.report);
+        $('.report').html(data.report);
         self.dashboard_report.toggleLoader(false);
         self.map_view.update_map(data.response_locations);
         self.reload_timer = setTimeout(() => { self.reloadAjax(); }, AJAX_RELOAD_INTERVAL * 1000);

@@ -29,21 +29,12 @@ class ReportsController < ApplicationController
     redirect_to(report_path(@report))
   end
 
-  # Only called via AJAX for the dashboard.
   def show
     respond_to do |format|
       format.html do
         run_or_fetch_and_handle_errors
-
-        # request.xhr? returns an Object or nil. We test for !nil? to convert to boolean for JSON.
-        prepare_frontend_data(edit_mode: flash[:edit_mode], embedded_mode: !request.xhr?.nil?)
-
-        if request.xhr?
-          render(partial: "reports/output_and_modal")
-          save_report_id_in_session(@report.id)
-        else
-          @report.record_viewing
-        end
+        prepare_frontend_data(edit_mode: flash[:edit_mode])
+        @report.record_viewing
       end
 
       format.csv do

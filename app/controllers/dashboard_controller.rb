@@ -8,7 +8,7 @@ class DashboardController < ApplicationController
   MAX_MAP_LOCATIONS = 1000
 
   # Manually checking this for now.
-  skip_authorization_check only: %i[index]
+  skip_authorization_check only: %i[index report]
 
   def index
     return redirect_to(responses_path) unless can?(:view, :dashboard)
@@ -47,17 +47,7 @@ class DashboardController < ApplicationController
       Response.recent_count(Response.accessible_by(current_ability))
     end
 
-    # get list of all reports for the mission, for the dropdown
-    @reports = Report::Report.accessible_by(current_ability).by_name
-
-    @report_id = load_report_id_from_params_or_session
-    save_report_id_in_session(@report_id)
-
-    if @report_id
-      @report = Report::Report.find(@report_id)
-      run_or_fetch_and_handle_errors
-      prepare_frontend_data(embedded_mode: true)
-    end
+    prep_report_data(load_report_id_from_params_or_session)
 
     # render JSON if ajax request
     if request.xhr?
@@ -65,12 +55,19 @@ class DashboardController < ApplicationController
         recent_responses: render_to_string(partial: "recent_responses"),
         response_locations: @response_locations,
         stats: render_to_string(partial: "stats"),
-        report: @report && render_to_string(partial: "reports/output_and_modal")
+        report: @report && render_to_string(partial: "report")
       }
       render(json: data)
     else
       render(:dashboard)
     end
+  end
+
+  # Called via AJAX when the a new report is chosen.
+  def report
+    prep_report_data(params[:id])
+    authorize!(:show, @report)
+    render(partial: "report")
   end
 
   def info_window
@@ -83,6 +80,17 @@ class DashboardController < ApplicationController
   end
 
   private
+
+  def prep_report_data(report_id)
+    # get list of all reports for the mission, for the dropdown
+    @reports = Report::Report.accessible_by(current_ability).by_name
+
+    return unless report_id
+    save_report_id_in_session(report_id)
+    @report = Report::Report.find(report_id)
+    run_or_fetch_and_handle_errors
+    prepare_frontend_data(embedded_mode: true)
+  end
 
   # Yields to a block and caches the result and stores in an ivar with the given `name`.
   # Computes a cache key based on given dependencies (looked up in `cache_keys`) and on `name`.
