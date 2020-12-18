@@ -5,15 +5,12 @@ body.dashboard {
   }
 
   .report-header {
-    h2 {
-      display: inline-block;
-      height: 20px;
-      overflow: hidden;
-      white-space: nowrap;
+    .report-title {
+      display: flex;
+      justify-content: space-between;
     }
 
     .report-chooser {
-      float: right;
       margin-top: 15px;
 
       select {
@@ -21,13 +18,8 @@ body.dashboard {
       }
     }
 
-    .report-title-text {
-      display: inline-block;
-      margin-#{$right}: 0.5em;
-    }
-
     .inline-load-ind, .action-link {
-      margin-#{$right}: 0 0.5em;
+      display: inline;
     }
 
     .action-link {
