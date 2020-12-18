@@ -1,12 +1,10 @@
 body.dashboard {
   div.stats {
     overflow-x: auto;
-    /* ensure stat blocks don't wrap */
-    white-space: nowrap;
+    display: flex;
   }
 
   div.stat-block {
-    display: inline-block;
     margin-right: 25px;
     vertical-align: top;
 
