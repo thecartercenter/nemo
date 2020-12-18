@@ -1,16 +1,8 @@
 /* report index */
 .reports_index .name_col { min-width: 300px; }
 
-/* report info & body */
-body.reports {
-  div.report-output-and-modal {
-    display: table-row;
-  }
-
-  div.report-output {
-    display: table-cell;
-    vertical-align: top;
-  }
+div.report-output-and-modal {
+  width: 100%;
 }
 
 div.report-info div { display: inline-block;
