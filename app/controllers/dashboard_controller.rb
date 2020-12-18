@@ -55,7 +55,7 @@ class DashboardController < ApplicationController
         recent_responses: render_to_string(partial: "recent_responses"),
         response_locations: @response_locations,
         stats: render_to_string(partial: "stats"),
-        report: render_to_string(partial: "report")
+        report_content: render_to_string(partial: "report_content")
       }
       render(json: data)
     else

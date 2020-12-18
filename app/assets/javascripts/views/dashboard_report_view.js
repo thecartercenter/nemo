@@ -40,10 +40,11 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
 
   handleReportLoaded(html) {
     this.request = null;
+    this.toggleLoader(false);
     this.$el.html(html);
   }
 
   toggleLoader(bool) {
-    $('.report-pane-header .inline-load-ind img').toggle(bool);
+    $('.report-header .inline-load-ind img').toggle(bool);
   }
 };
