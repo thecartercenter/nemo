@@ -17,6 +17,8 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
     const id = $(e.target).val();
     if (id) {
       this.changeReport(id, $(e.target).find('option:selected').text());
+      e.stopPropagation();
+      this.$el.trigger('report:loading');
     }
   }
 

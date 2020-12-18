@@ -1,5 +1,4 @@
-const AJAX_RELOAD_INTERVAL = 30; // seconds
-const PAGE_RELOAD_INTERVAL = 30; // minutes
+const MAX_RELOAD_COUNT = 120;
 
 ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationView {
   get el() { return 'body.dashboard'; }
@@ -8,30 +7,20 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
     return {
       'click a.full-screen': 'handleFullScreen',
       'click a.toggle-map': 'handleExpandMap',
+      'report:loading': 'handleReportLoading',
+      'report:load': 'handleReportLoad',
+      'click a.reload-ajax': 'reloadAjax', // For testing
     };
   }
 
   initialize(params) {
-    const self = this;
     this.params = params;
-
-    // Setup ajax reload timer and test link.
-    this.reload_timer = setTimeout(() => { self.reloadAjax(); }, AJAX_RELOAD_INTERVAL * 1000);
-    $('a.reload-ajax').on('click', () => { self.reloadAjax(); });
-
-    // Setup long-running page reload timer, unless it already exists.
-    // This timer ensures that we don't have memory issues due to a long running page.
-    if (!ELMO.app.dashboard_reload_timer) {
-      ELMO.app.dashboard_reload_timer = setTimeout(() => { self.reloadPage(); }, PAGE_RELOAD_INTERVAL * 60000);
-      $('a.reload-page').on('click', () => { self.reloadPage(); });
-    }
-    // save mission_id as map serialization key
+    this.reloadCount = 0;
+    this.resetReloadTimer();
     this.params.map.serialization_key = this.params.mission_id;
-
-    // create classes for screen components
-    this.list_view = new ELMO.Views.DashboardResponseList();
-    this.map_view = new ELMO.Views.DashboardMapView(this.params.map);
-    this.dashboard_report = new ELMO.Views.DashboardReportView();
+    this.listView = new ELMO.Views.DashboardResponseList();
+    this.mapView = new ELMO.Views.DashboardMapView(this.params.map);
+    this.dashboardReport = new ELMO.Views.DashboardReportView();
   }
 
   handleFullScreen(e) {
@@ -44,10 +33,39 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
     this.setExpandedMap('toggle');
   }
 
-  // Reloads the page via AJAX, passing the current report id
+  handleReportLoading() {
+    // We don't want to reload the dashboard while the report is loading.
+    // Once it's finished we'll start a new timer.
+    this.cancelReloadTimer();
+
+    // We also don't want to allow a slow-running report generation during a reload to override
+    // a freshly requested report in the report view.
+    this.cancelReload();
+  }
+
+  handleReportLoad() {
+    this.resetReloadTimer();
+  }
+
+  resetReloadTimer() {
+    this.cancelReloadTimer();
+    this.reloadTimer = setTimeout(this.reloadAjax.bind(this), this.params.reloadInterval * 1000);
+  }
+
+  cancelReloadTimer() {
+    if (this.reloadTimer) {
+      clearTimeout(this.reloadTimer);
+    }
+  }
+
   reloadAjax() {
-    if (!this.dashboard_report.isEmpty()) {
-      this.dashboard_report.toggleLoader(true);
+    this.reloadCount += 1;
+    if (this.reloadCount > MAX_RELOAD_COUNT) {
+      this.reloadPage();
+    }
+
+    if (!this.dashboardReport.isEmpty()) {
+      this.dashboardReport.toggleLoader(true);
     }
 
     // We only set the 'auto' parameter on this request if NOT in full screen mode.
@@ -56,32 +74,36 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
     // sense to let the session expire.
     const auto = this.viewSetting('full-screen') ? undefined : 1;
 
-    const self = this;
-    $.ajax({
+    this.reloadRequest = $.ajax({
       url: ELMO.app.url_builder.build('/'),
       method: 'GET',
       data: {
-        latest_response_id: this.list_view.latestResponseId(),
+        latest_response_id: this.listView.latestResponseId(),
         auto,
       },
-      success(data) {
-        $('.recent-responses').html(data.recent_responses);
-        $('.stats').html(data.stats);
-        $('.report-content').html(data.report_content);
-        self.dashboard_report.toggleLoader(false);
-        self.map_view.update_map(data.response_locations);
-        self.reload_timer = setTimeout(() => { self.reloadAjax(); }, AJAX_RELOAD_INTERVAL * 1000);
-      },
-      error() {
-        if (ELMO.unloading) return;
-        $('#content').html(I18n.t('layout.server_contact_error'));
-      },
+      success: this.handleReloadSuccess.bind(this),
     });
+  }
+
+  handleReloadSuccess(data) {
+    $('.recent-responses').html(data.recent_responses);
+    $('.stats').html(data.stats);
+    $('.report-content').html(data.report_content);
+    this.dashboardReport.toggleLoader(false);
+    this.mapView.update_map(data.response_locations);
+    this.resetReloadTimer();
+    this.reloadRequest = null;
+  }
+
+  cancelReload() {
+    if (this.reloadRequest) {
+      this.reloadRequest.abort();
+    }
   }
 
   // Reloads the page via full refresh to avoid memory issues.
   reloadPage() {
-    this.dashboard_report.showLoader();
+    this.dashboardReport.showLoader();
     const nonce = Math.floor(Math.random() * 1000000 + 1);
     window.location.href = `${ELMO.app.url_builder.build('')}?r=${nonce}`;
   }
