@@ -19,7 +19,7 @@ body.dashboard {
   }
 
   // If .expand-map class is on #content, we have to kill the padding and all the content except map.
-  div#content.expanded-map {
+  #content.expanded-map {
     padding: 0;
 
     div.right-col,
@@ -43,7 +43,7 @@ body.dashboard {
       top: 50px;
 
       a {
-        color: white;
+        color: $white;
       }
     }
   }

@@ -3,7 +3,7 @@ body.dashboard {
     float: none;
   }
 
-  div#content {
+  #content {
     display: flex;
     flex-direction: column;
   }
@@ -18,7 +18,8 @@ body.dashboard {
     text-align: $right;
   }
 
-  .left-col, .right-col {
+  .left-col,
+  .right-col {
     display: flex;
     flex-direction: column;
     width: calc(50% - 10px);
@@ -42,13 +43,13 @@ body.dashboard {
   }
 
   h2 {
-    color: #888;
+    color: $gray-text;
     font-size: 18px;
     margin: 0 0 15px;
     text-transform: uppercase;
-  }
 
-  h2.interior {
-    margin-top: 15px;
+    &.interior {
+      margin-top: 15px;
+    }
   }
 }

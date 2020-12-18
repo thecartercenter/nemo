@@ -18,7 +18,8 @@ body.dashboard {
       }
     }
 
-    .inline-load-ind, .action-link {
+    .inline-load-ind,
+    .action-link {
       display: inline;
     }
 
@@ -28,27 +29,26 @@ body.dashboard {
   }
 
   .report-content {
+    display: flex;
     flex: 1 0 0;
     overflow: auto;
-    display: flex;
   }
 
   .report-output {
     overflow: auto;
 
     div.tip {
-      /* have to cancel the 800px width as it messes with the dashboard sizing */
+      // have to cancel the 800px width as it messes with the dashboard sizing
       width: inherit;
     }
   }
 
   .report-placeholder {
-    flex: 1 0 0;
-    text-align: center;
-    // background-color: $even-lighter-gray;
-    font-size: 16px;
-    padding: 40px 40px 20px 40px;
     color: $grayer-text;
+    font-size: 16px;
+    flex: 1 0 0;
+    padding: 40px 40px 20px;
+    text-align: center;
 
     a {
       color: $grayer-text;

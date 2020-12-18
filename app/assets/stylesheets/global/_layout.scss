@@ -162,16 +162,16 @@ header {
 
 #content {
   background-color: $white;
-  padding: 20px;
   flex: 1 0 auto;
+  padding: 20px;
 }
 
 #footer {
   background-color: $footer-background-color;
   color: $footer-text-color;
+  flex-shrink: 0;
   padding: 20px;
   text-align: center;
-  flex-shrink: 0;
 
   a {
     color: $accent-color;
