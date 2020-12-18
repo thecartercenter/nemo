@@ -26,12 +26,21 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
   }
 
   changeReport(id, name) {
+    if (this.request) {
+      this.request.abort();
+    }
     this.toggleLoader(true);
     this.$('.report-title-text').html(name);
     this.$('.report-chooser').find('option').attr('selected', false);
     this.$('.report-output-and-modal').empty();
     this.$('.action-link').hide();
-    this.$el.load(ELMO.app.url_builder.build(`dashboard/report?id=${id || ''}`));
+    const url = ELMO.app.url_builder.build(`dashboard/report?id=${id || ''}`);
+    this.request = $.get(url, this.handleReportLoaded.bind(this));
+  }
+
+  handleReportLoaded(html) {
+    this.request = null;
+    this.$el.html(html);
   }
 
   toggleLoader(bool) {
