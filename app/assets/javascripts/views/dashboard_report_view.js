@@ -9,6 +9,7 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
   get events() {
     return {
       'change .report-chooser': 'handleReportChange',
+      'click .action-link-close': 'handleReportClose',
     };
   }
 
@@ -19,16 +20,18 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
     }
   }
 
-  changeReport(id, name) {
-    const self = this;
+  handleReportClose(e) {
+    e.preventDefault();
+    this.changeReport(null, I18n.t('activerecord.models.report/report.one'));
+  }
 
+  changeReport(id, name) {
     this.toggleLoader(true);
     this.$('.report-title-text').html(name);
+    this.$('.report-chooser').find('option').attr('selected', false);
     this.$('.report-output-and-modal').empty();
-    this.$('.report-edit-link-container').hide();
-    this.$el.load(ELMO.app.url_builder.build(`dashboard/report?id=${id}`), () => {
-      self.toggleLoader(false);
-    });
+    this.$('.action-link').hide();
+    this.$el.load(ELMO.app.url_builder.build(`dashboard/report?id=${id || ''}`));
   }
 
   toggleLoader(bool) {

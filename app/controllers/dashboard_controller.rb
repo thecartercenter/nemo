@@ -8,7 +8,7 @@ class DashboardController < ApplicationController
   MAX_MAP_LOCATIONS = 1000
 
   # Manually checking this for now.
-  skip_authorization_check only: %i[index report]
+  skip_authorization_check only: %i[index]
 
   def index
     return redirect_to(responses_path) unless can?(:view, :dashboard)
@@ -55,7 +55,7 @@ class DashboardController < ApplicationController
         recent_responses: render_to_string(partial: "recent_responses"),
         response_locations: @response_locations,
         stats: render_to_string(partial: "stats"),
-        report: @report && render_to_string(partial: "report")
+        report: render_to_string(partial: "report")
       }
       render(json: data)
     else
@@ -66,7 +66,7 @@ class DashboardController < ApplicationController
   # Called via AJAX when the a new report is chosen.
   def report
     prep_report_data(params[:id])
-    authorize!(:show, @report)
+    @report ? authorize!(:show, @report) : authorize!(:view, :dashboard)
     render(partial: "report")
   end
 
@@ -84,12 +84,22 @@ class DashboardController < ApplicationController
   def prep_report_data(report_id)
     # get list of all reports for the mission, for the dropdown
     @reports = Report::Report.accessible_by(current_ability).by_name
-
-    return unless report_id
     save_report_id_in_session(report_id)
+
+    return if report_id.blank?
     @report = Report::Report.find(report_id)
     run_or_fetch_and_handle_errors
     prepare_frontend_data(embedded_mode: true)
+  end
+
+  def load_report_id_from_params_or_session
+    # params[:rpid] may be empty string, and that is a valid value (no report) and should be returned
+    params[:rpid] || session.dig(:rpid, current_mission.shortcode)
+  end
+
+  # report_id may be empty string, and that is a valid value and should still be saved.
+  def save_report_id_in_session(report_id)
+    (session[:rpid] ||= {})[current_mission.shortcode] = report_id
   end
 
   # Yields to a block and caches the result and stores in an ivar with the given `name`.

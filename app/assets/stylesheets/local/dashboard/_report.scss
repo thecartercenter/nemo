@@ -21,22 +21,24 @@ body.dashboard {
       }
     }
 
-    .inline-load-ind {
-      margin: 0 0.5em;
+    .report-title-text {
+      display: inline-block;
+      margin-#{$right}: 0.5em;
     }
 
-    .report-edit-link-container {
-      margin: 0 0.5em;
+    .inline-load-ind, .action-link {
+      margin-#{$right}: 0 0.5em;
     }
 
-    a.action-link-edit {
-      color: #888;
+    .action-link {
+      color: $mid-gray;
     }
   }
 
   .report-pane {
     flex: 1 0 0;
     overflow: auto;
+    display: flex;
   }
 
   .report-output {
@@ -45,6 +47,25 @@ body.dashboard {
     div.tip {
       /* have to cancel the 800px width as it messes with the dashboard sizing */
       width: inherit;
+    }
+  }
+
+  .report-placeholder {
+    flex: 1 0 0;
+    text-align: center;
+    // background-color: $even-lighter-gray;
+    font-size: 16px;
+    padding: 40px 40px 20px 40px;
+    color: $grayer-text;
+
+    a {
+      color: $grayer-text;
+      text-decoration: underline;
+    }
+
+    i {
+      font-size: 32px;
+      margin-bottom: 20px;
     }
   }
 }
