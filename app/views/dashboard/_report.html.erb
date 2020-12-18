@@ -15,8 +15,8 @@
         <% if @report %>
           <% if can?(:update, @report) %>
             <%= action_link(:edit, edit_report_path(@report), label: false) %>
-            <%= action_link(:close, "#", label: false) %>
           <% end %>
+          <%= action_link(:close, "#", label: false) %>
         <% end %>
         <%= inline_load_ind %>
       </h2>
