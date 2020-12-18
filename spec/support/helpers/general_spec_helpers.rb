@@ -55,6 +55,11 @@ module GeneralSpecHelpers
     fixture("user_imports", name)
   end
 
+  # Given a File fixture, return args to pass to ActiveStorage attach().
+  def attachment_args(fixture)
+    {io: fixture, filename: File.basename(fixture)}
+  end
+
   # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
   def prepare_odk_fixture(name:, type:, form:, **options)
     items = form.preordered_items.map { |i| ODK::DecoratorFactory.decorate(i) }
