@@ -1,21 +1,12 @@
 .responses_index .index_table {
+  @include reviewed-response-col;
+
   td.form_id_col {
     width: 200px;
   }
 
   td.user_id_col {
     width: 150px;
-  }
-
-  td.reviewed_col {
-    a {
-      color: $main-text-color;
-    }
-
-    i.fa {
-      color: $success-green;
-      margin-right: 5px;
-    }
   }
 
   // Search excerpt

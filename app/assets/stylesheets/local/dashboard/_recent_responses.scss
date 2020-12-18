@@ -8,6 +8,8 @@ body.dashboard {
     flex: 1 0 0;
     overflow-x: hidden;
 
+    @include reviewed-response-col;
+
     table.index_table {
       width: 100%;
 
