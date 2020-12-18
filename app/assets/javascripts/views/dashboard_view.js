@@ -63,8 +63,8 @@ ELMO.Views.DashboardView = class DashboardView extends ELMO.Views.ApplicationVie
         auto,
       },
       success(data) {
-        $('.recent-responses').replaceWith(data.recent_responses);
-        $('.stats').replaceWith(data.stats);
+        $('.recent-responses').html(data.recent_responses);
+        $('.stats').html(data.stats);
         $('.report').html(data.report);
         self.dashboard_report.toggleLoader(false);
         self.map_view.update_map(data.response_locations);

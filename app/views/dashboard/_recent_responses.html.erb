@@ -1,4 +1,8 @@
-<div class="recent-responses">
+<h2>
+  <%= current_user.role(current_mission) == "enumerator" ?
+    t("dashboard.my_responses") : t("dashboard.recent_responses") %>
+</h2>
+<div class="recent-responses-table">
   <%# cache the recent responses and use the explicit submit date instead of the age %>
   <% if responses.empty? %>
     <%= t('will_paginate.response.page_entries_info.single_page_html.zero') %>

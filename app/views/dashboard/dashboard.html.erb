@@ -26,13 +26,17 @@
 
 <div class="panes">
   <div class="left-col">
-    <%= render(partial: "recent_responses_header") %>
-    <%= render(partial: "recent_responses") %>
-    <%= render(partial: "response_locations_header") %>
-    <%= render(partial: "response_locations") %>
+    <div class="recent-responses">
+      <%= render(partial: "recent_responses") %>
+    </div>
+    <div class="response-locations">
+      <%= render(partial: "response_locations") %>
+    </div>
   </div>
   <div class="right-col">
-    <%= render(partial: "stats") %>
+    <div class="stats">
+      <%= render(partial: "stats") %>
+    </div>
     <div class="report">
       <%= render(partial: "report") %>
     </div>

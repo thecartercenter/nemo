@@ -1,4 +1,13 @@
 body.dashboard {
+  .response-locations {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .map-canvas {
+    flex: 1 0 0;
+  }
+
   .response-locations-disabled {
     color: $light-gray;
     margin-top: 30px;

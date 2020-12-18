@@ -19,7 +19,15 @@ body.dashboard {
     flex-direction: column;
     width: calc(50% - 10px);
 
-    .recent-responses, .map-canvas, .report-pane {
+    .recent-responses {
+      flex: 3 0 0;
+    }
+
+    .response-locations {
+      flex: 4 0 0; // Map slightly bigger than responses
+    }
+
+    .report { // Report takes up max space, stats don't grow
       flex: 1 0 0;
     }
   }
