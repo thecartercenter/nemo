@@ -13,7 +13,7 @@ module UsersHelper
                              path: export_users_path(format: :vcf))
     end
     if can?(:bulk_destroy, User)
-      links << batch_op_link(name: t("action_links.delete_selected"), path: bulk_destroy_users_path,
+      links << batch_op_link(name: t("action_links.destroy"), path: bulk_destroy_users_path,
                              confirm: "user.bulk_destroy_confirm")
     end
     links << create_link(User) if can?(:create, User)

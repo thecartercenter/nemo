@@ -22,7 +22,7 @@ module QuestionsHelper
       links << create_link(Question) if can?(:create, Question)
 
       links << batch_op_link(
-        name: t("action_links.delete_selected"),
+        name: t("action_links.destroy"),
         path: bulk_destroy_questions_path,
         confirm: "question.bulk_destroy_confirm"
       )

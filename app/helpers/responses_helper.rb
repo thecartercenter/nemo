@@ -41,7 +41,7 @@ module ResponsesHelper
     links = []
 
     links << batch_op_link(
-      name: t("action_links.delete_selected"),
+      name: t("action_links.destroy"),
       path: bulk_destroy_responses_path(search: params[:search]),
       confirm: "response.bulk_destroy_confirm"
     )

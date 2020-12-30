@@ -893,7 +893,6 @@ en:
     index: "List"
     clone: "Clone"
     import_standard: "Import Standard"
-    delete_selected: "Delete Selected"
     import_from_csv: "Import from CSV"
     export: "Export"
     models:
@@ -917,15 +916,15 @@ en:
         new: "Import from CSV"
       question:
         new: "Create Question"
-        add_to_form: "Add Selected to Form"
+        add_to_form: "Add to Form"
       report/report:
         new: "Create Report"
         export: "Export to CSV"
       user:
         new: "Create User"
         export_to_vcard: "Export to vCard"
-        add_to_group: "Add Selected to Group"
-        remove_from_group: "Remove Selected from Group"
+        add_to_group: "Add to Group"
+        remove_from_group: "Remove from Group"
         send_broadcast: "Send Broadcast"
       user_group:
         new: "New Group"
