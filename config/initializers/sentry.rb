@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-Raven.configure do |config|
-  config.sanitize_fields = Rails.application.config.filter_parameters.map(&:to_s)
-  config.release = "nemo@#{configatron.system_version}"
-  config.current_environment = Rails.env.to_s
+Sentry.init do |config|
+  next if Rails.env.test?
 
-  # Don't block requests on synchronous error reporting.
-  config.async = lambda { |event|
-    SentryJob.perform_later(event)
-  }
+  config.dsn = "https://a81af08ff85042f3ae314e6c685853a3@o448595.ingest.sentry.io/5430181"
+  config.breadcrumbs_logger = [:active_support_logger]
+  config.release = "nemo@#{configatron.system_version}"
 end

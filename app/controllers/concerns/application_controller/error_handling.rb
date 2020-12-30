@@ -15,13 +15,13 @@ module ApplicationController::ErrorHandling
   # Add some context right away, before we do things like load the mission
   # which could theoretically cause crashes.
   def set_initial_exception_context
-    Raven.extra_context(params: params.to_unsafe_h)
+    Sentry.set_extras(params: params.to_unsafe_h)
   end
 
   def prepare_exception_notifier
-    Raven.tags_context(locale: I18n.locale,
-                       mode: params[:mode],
-                       mission: current_mission&.compact_name)
+    Sentry.set_tags(locale: I18n.locale,
+                    mode: params[:mode],
+                    mission: current_mission&.compact_name)
 
     return unless current_user
 
@@ -32,7 +32,7 @@ module ApplicationController::ErrorHandling
     }
 
     # Slightly different allowable parameters.
-    Raven.user_context(id: id, username: login, email: email)
+    Sentry.set_user(id: id, username: login, email: email)
   end
 
   def render_not_found
