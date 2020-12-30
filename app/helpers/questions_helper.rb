@@ -9,7 +9,8 @@ module QuestionsHelper
     if params[:controller] == "forms"
       # add the 'add questions to form' link if there are some questions
       unless @questions.empty?
-        links << batch_op_link(name: t("form.add_selected"), path: add_questions_form_path(@form))
+        links << batch_op_link(name: t("action_links.models.question.add_to_form"),
+                               path: add_questions_form_path(@form))
       end
 
       # add the create new questions link
@@ -21,7 +22,7 @@ module QuestionsHelper
       links << create_link(Question) if can?(:create, Question)
 
       links << batch_op_link(
-        name: t("question.bulk_destroy"),
+        name: t("action_links.delete_selected"),
         path: bulk_destroy_questions_path,
         confirm: "question.bulk_destroy_confirm"
       )

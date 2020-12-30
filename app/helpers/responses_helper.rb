@@ -41,7 +41,7 @@ module ResponsesHelper
     links = []
 
     links << batch_op_link(
-      name: t("response.bulk_destroy"),
+      name: t("action_links.delete_selected"),
       path: bulk_destroy_responses_path(search: params[:search]),
       confirm: "response.bulk_destroy_confirm"
     )
@@ -56,11 +56,11 @@ module ResponsesHelper
   end
 
   def export_dropdown_parent
-    link_to(t("response.export.export"), "#", id: "export-dropdown",
-                                              class: "dropdown-toggle",
-                                              role: "button",
-                                              "data-toggle": "dropdown",
-                                              "aria-haspopup": "true")
+    link_to(t("action_links.export"), "#", id: "export-dropdown",
+                                           class: "dropdown-toggle",
+                                           role: "button",
+                                           "data-toggle": "dropdown",
+                                           "aria-haspopup": "true")
   end
 
   def export_dropdown_children(responses)

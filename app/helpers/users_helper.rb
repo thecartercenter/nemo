@@ -5,21 +5,24 @@ module UsersHelper
   def users_index_links(_users)
     links = []
     if can?(:create, Broadcast) && !offline_mode?
-      links << batch_op_link(name: t("broadcast.send_broadcast"),
+      links << batch_op_link(name: t("action_links.models.user.send_broadcast"),
                              path: new_with_users_broadcasts_path(search: @search_params))
     end
     if can?(:export, User)
-      links << batch_op_link(name: t("user.export_vcard"), path: export_users_path(format: :vcf))
+      links << batch_op_link(name: t("action_links.models.user.export_to_vcard"),
+                             path: export_users_path(format: :vcf))
     end
     if can?(:bulk_destroy, User)
-      links << batch_op_link(name: t("user.bulk_destroy"), path: bulk_destroy_users_path,
+      links << batch_op_link(name: t("action_links.delete_selected"), path: bulk_destroy_users_path,
                              confirm: "user.bulk_destroy_confirm")
     end
     links << create_link(User) if can?(:create, User)
-    links << link_to(t("user.create_multiple"), new_user_import_path) if can?(:create, UserImport)
+    links << link_to(t("action_links.import_from_csv"), new_user_import_path) if can?(:create, UserImport)
     if can?(:view, UserGroup)
-      links << link_to(t("user.add_to_group"), "#user-group-modal", class: "add-to-group")
-      links << link_to(t("user.remove_from_group"), "#user-group-modal", class: "remove-from-group")
+      links << link_to(t("action_links.models.user.add_to_group"), "#user-group-modal",
+        class: "add-to-group")
+      links << link_to(t("action_links.models.user.remove_from_group"), "#user-group-modal",
+        class: "remove-from-group")
     end
     links
   end
