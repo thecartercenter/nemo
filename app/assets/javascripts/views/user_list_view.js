@@ -28,6 +28,8 @@ ELMO.Views.UserListView = class UserListView extends ELMO.Views.ApplicationView 
     return this.fetch_group_listing(ELMO.app.url_builder.build('user_groups'));
   }
 
+  // THESE METHODS SHOULD BE REFACTORED TO RE-USE THE SAME CODE THAT HANDLES THE REST OF THE
+  // BATCH OPERATIONS, INCLUDING SHOWING ERRORS WHEN NOTHING SELECTED AND ETC.
   add_to_group_modal(event) {
     event.preventDefault();
     if (this.selected_users().length > 0) {
