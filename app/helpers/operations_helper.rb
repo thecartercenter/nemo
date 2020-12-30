@@ -12,10 +12,8 @@ module OperationsHelper
   end
 
   def operations_index_links(_operations)
-    [].tap do |links|
-      links << link_to(translate_action(Operation, :clear), clear_operations_path,
-        method: :post, data: {confirm: t("operation.clear_confirm")})
-    end
+    [link_to(translate_action(Operation, :clear), clear_operations_path,
+      method: :post, data: {confirm: t("operation.clear_confirm")})]
   end
 
   def format_operations_field(operation, field)

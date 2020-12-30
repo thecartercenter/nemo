@@ -4,33 +4,22 @@
 module QuestionsHelper
   def questions_index_links(_questions)
     links = []
-
-    # links for form mode
+    # Links for when adding questions to form
     if params[:controller] == "forms"
-      # add the 'add questions to form' link if there are some questions
       unless @questions.empty?
         links << batch_op_link(name: t("action_links.models.question.add_to_form"),
                                path: add_questions_form_path(@form))
       end
-
-      # add the create new questions link
+      links << link_divider
       links << create_link(Question, js: true) if can?(:create, Question)
-
-    # otherwise, we're in regular questions mode
+    # Otherwise, we're in regular questions mode
     else
-      # add the create new question
+      links << batch_op_link(name: t("action_links.destroy"), path: bulk_destroy_questions_path,
+                             confirm: "question.bulk_destroy_confirm")
+      links << link_divider
       links << create_link(Question) if can?(:create, Question)
-
-      links << batch_op_link(
-        name: t("action_links.destroy"),
-        path: bulk_destroy_questions_path,
-        confirm: "question.bulk_destroy_confirm"
-      )
-
       add_import_standard_link_if_appropriate(links)
     end
-
-    # return the link set
     links
   end
 

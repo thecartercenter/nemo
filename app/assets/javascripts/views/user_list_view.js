@@ -5,7 +5,7 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 ELMO.Views.UserListView = class UserListView extends ELMO.Views.ApplicationView {
-  get el() { return '#index_table'; }
+  get el() { return '.index-table-wrapper'; }
 
   get events() {
     return {

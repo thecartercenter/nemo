@@ -54,7 +54,7 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
 
   update(data) {
     ELMO.app.loading(false);
-    $('#index_table').replaceWith(data);
+    $('.index-table-wrapper').replaceWith(data);
     this.reloadCount += 1;
     $('#reload-count').html(` | Reloads: ${this.reloadCount}`);
 

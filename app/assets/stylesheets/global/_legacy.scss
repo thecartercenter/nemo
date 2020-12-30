@@ -52,17 +52,6 @@ i.fa-certificate {
   color: $gold;
 }
 
-/* set of links */
-.link_set {
-  margin-bottom: 10px;
-
-  a,
-  input[type='submit'] {
-    display: inline-block;
-    padding-right: 10px;
-  }
-}
-
 /* option edit */
 .options_edit td.value input#option_value,
 .options_new td.value input#option_value { width: 100px; }

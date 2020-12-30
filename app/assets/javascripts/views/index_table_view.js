@@ -5,7 +5,7 @@
  */
 // Models an index table view as shown on most index pages.
 ELMO.Views.IndexTableView = class IndexTableView extends ELMO.Views.ApplicationView {
-  get el() { return '#index_table'; }
+  get el() { return '.index-table-wrapper'; }
 
   get events() {
     return {

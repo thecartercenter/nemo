@@ -8,8 +8,8 @@
 
 <div class="question_form">
   <% unless questions.empty? %>
-    <div class="link_set">
-      <%= link_to(t("form.back_to_questions"), "#", :class => "question_list") %>
+    <div class="index-links">
+      <%= link_to(t("form.back_to_questions"), "#", class: "question_list") %>
     </div>
   <% end %>
   <%= render("questionings/form") %>

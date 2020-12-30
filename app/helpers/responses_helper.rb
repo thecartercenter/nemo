@@ -2,6 +2,18 @@
 
 # DEPRECATED: Model-related display logic should move to a decorator.
 module ResponsesHelper
+  def responses_index_links(responses)
+    links = []
+    links << batch_op_link(
+      name: t("action_links.destroy"),
+      path: bulk_destroy_responses_path(search: params[:search]),
+      confirm: "response.bulk_destroy_confirm"
+    )
+    links << link_divider
+    links << export_dropdown(responses) if can?(:export, Response)
+    links
+  end
+
   def responses_index_fields
     if params[:controller] == "dashboard" # Dashboard mode
       %w[form_id user_id] + key_question_hashes(2) + %w[created_at reviewed]
@@ -35,20 +47,6 @@ module ResponsesHelper
       else resp.send(field)
       end
     end
-  end
-
-  def responses_index_links(responses)
-    links = []
-
-    links << batch_op_link(
-      name: t("action_links.destroy"),
-      path: bulk_destroy_responses_path(search: params[:search]),
-      confirm: "response.bulk_destroy_confirm"
-    )
-
-    links << export_dropdown(responses) if can?(:export, Response)
-
-    links
   end
 
   def export_dropdown(responses)

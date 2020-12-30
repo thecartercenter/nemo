@@ -128,6 +128,6 @@ ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.Ap
   process_destroy(e, data) {
     const target_row = $(e.target).closest('tr');
     this.$(target_row).remove();
-    return this.$('.header.link_set').html(data.page_entries_info);
+    return this.$('.index-links').html(data.page_entries_info);
   }
 };

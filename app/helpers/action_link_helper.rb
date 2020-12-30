@@ -31,6 +31,6 @@ module ActionLinkHelper
 
   # creates a link to a batch operation
   def batch_op_link(options)
-    link_to(options[:name], "#", data: options.slice(:path, :confirm), class: "batch_op_link")
+    link_to(options[:name], "#", data: options.slice(:path, :confirm), class: "batch-link batch-submit-link")
   end
 end

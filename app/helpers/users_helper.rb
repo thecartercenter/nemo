@@ -16,14 +16,15 @@ module UsersHelper
       links << batch_op_link(name: t("action_links.destroy"), path: bulk_destroy_users_path,
                              confirm: "user.bulk_destroy_confirm")
     end
-    links << create_link(User) if can?(:create, User)
-    links << link_to(t("action_links.import_from_csv"), new_user_import_path) if can?(:create, UserImport)
     if can?(:view, UserGroup)
       links << link_to(t("action_links.models.user.add_to_group"), "#user-group-modal",
-        class: "add-to-group")
+        class: "add-to-group batch-link")
       links << link_to(t("action_links.models.user.remove_from_group"), "#user-group-modal",
-        class: "remove-from-group")
+        class: "remove-from-group batch-link")
     end
+    links << link_divider
+    links << create_link(User) if can?(:create, User)
+    links << link_to(t("action_links.import_from_csv"), new_user_import_path) if can?(:create, UserImport)
     links
   end
 
