@@ -31,7 +31,7 @@ feature "form hints", js: true do
   scenario "modal form" do
     visit(new_question_path(mode: "m", mission_name: mission_name, locale: "en"))
     select("Select One", from: "Type")
-    click_link("Create New Option Set")
+    click_link("Create Option Set")
     wait_modal_to_be_visible
 
     # This is required for the spec to pass but not sure why.

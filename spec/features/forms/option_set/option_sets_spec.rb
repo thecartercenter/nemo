@@ -13,7 +13,7 @@ feature "option set" do
     visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
 
     # Fill in basic values
-    click_link("Create New Option Set")
+    click_link("Create Option Set")
     fill_in("Name", with: "Foo")
     check("Is Multilevel?")
 
@@ -65,7 +65,7 @@ feature "option set" do
   scenario "creating, showing, and editing options with values", js: true do
     visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
 
-    click_link("Create New Option Set")
+    click_link("Create Option Set")
     fill_in("Name", with: "Foo")
 
     click_link("Add Option")
@@ -101,7 +101,7 @@ feature "option set" do
       visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
 
       # Import
-      click_link("Import Standard Option Sets")
+      click_link("Import Standard")
       find('input[name="objs_to_import[]"]').set(true)
       click_button("Import")
       wait_modal_to_hide

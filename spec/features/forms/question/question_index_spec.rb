@@ -23,6 +23,6 @@ feature "question index", js: true do
 
   def perform_bulk_destroy
     all("input.batch_op").each { |b| b.set(true) }
-    accept_confirm { click_on("Delete Multiple Questions") }
+    accept_confirm { click_on("Delete") }
   end
 end

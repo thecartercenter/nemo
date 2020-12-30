@@ -58,7 +58,7 @@ describe "question form", js: true do
     visit(new_question_path(locale: "en", mode: "m", mission_name: mission.compact_name))
     select("Select One", from: "Type")
 
-    click_link("Create New Option Set")
+    click_link("Create Option Set")
     within("#create-option-set.modal") do
       fill_in("Name", with: "Flat")
       click_link("Add Option")

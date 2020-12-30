@@ -7,7 +7,7 @@ module ActionLinkHelper
     t("action_links.#{action}", default: :"action_links.models.#{i18nk}.#{action}")
   end
 
-  # Generates a link like "Create New Option Set" given a klass
+  # Generates a link like "Create Option Set" given a klass
   # options[:js] - if true, the link just points to # with expectation that js will bind to it
   def create_link(klass, options = {})
     href = options[:js] ? "#" : dynamic_path(klass, action: :new)
