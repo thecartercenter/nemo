@@ -2360,6 +2360,7 @@ en:
     add_users_success: "Successfully added %{count} users to group %{group}"
     remove_users_success: "Successfully removeed %{count} users from group %{group}"
     new_group: "New Group"
+    no_groups: "There are currently no user groups in this mission. Create a group by adding a group to a single user when editing or creating the user. Then it will be available here."
 
   welcome:
     awaiting_review: "**%{count}** Awaiting Review"
