@@ -10,7 +10,9 @@ module Storage
     style = params.delete(:style)
 
     if params[:disposition] == "inline"
-      attachment = attachment.variant(resize: Media::Image::SIZE_THUMB).processed if style == "thumb"
+      # 100px container, doubled to 200 to support retina screens.
+      attachment = attachment.variant(resize_to_limit: [200, 200]).processed if style == "thumb"
+
       # What a mess, there must be a better way to handle local/cloud original/variant...
       url = if local
               attachment.respond_to?(:variation) ? rails_representation_url(attachment) : rails_blob_path(attachment)
