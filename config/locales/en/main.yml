@@ -2319,8 +2319,8 @@ en:
       woman: "Woman"
       no_answer: "Decline to Answer"
       specify: "Specify..."
-    add_to_group: "Add Multiple Group Users"
-    remove_from_group: "Remove Multiple Group Users"
+    add_to_group: "Add to Group"
+    remove_from_group: "Remove grom Group"
     login_instructions:
       closing:
         - "Please note the 's' in 'https' in the site URL."
