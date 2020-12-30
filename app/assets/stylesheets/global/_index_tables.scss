@@ -2,9 +2,9 @@
   margin-bottom: 10px;
 
   > a {
+    color: $darker-accent-color;
     display: inline-block;
     margin-#{$right}: 10px;
-    color: $darker-accent-color;
 
     &.batch-link {
       color: $accent-color;
@@ -12,9 +12,9 @@
   }
 
   .link-divider {
+    color: $light-border-color;
     display: inline-block;
     margin-#{$right}: 10px;
-    color: $light-border-color;
   }
 }
 
