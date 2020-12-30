@@ -4,14 +4,9 @@
 module FormsHelper
   def forms_index_links(_forms)
     links = []
-
-    # add links based on authorization
     links << create_link(Form) if can?(:create, Form)
-    links << link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test)
-
     add_import_standard_link_if_appropriate(links)
-
-    # return links
+    links << link_to(t("action_links.models.form.sms_console"), new_sms_test_path) if can?(:create, Sms::Test)
     links
   end
 

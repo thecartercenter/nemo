@@ -1,7 +1,3 @@
-<div class="link_set">
-  <%= link_to(t("sms_console.back_to_forms"), forms_path) %>
-</div>
-
 <%= elmo_form_for(@sms_test) do |f| %>
   <%= f.field(:from) %>
   <%= f.field(:body, :type => :textarea) %>

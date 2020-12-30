@@ -1,4 +1,24 @@
-table.index_table {
+.index-links {
+  margin-bottom: 10px;
+
+  > a {
+    color: $darker-accent-color;
+    display: inline-block;
+    margin-#{$right}: 10px;
+
+    &.batch-link {
+      color: $accent-color;
+    }
+  }
+
+  .link-divider {
+    color: $light-border-color;
+    display: inline-block;
+    margin-#{$right}: 10px;
+  }
+}
+
+.index_table {
   $cell-top-bot-padding: 6px;
 
   @include media-breakpoint-up(md) {
@@ -28,7 +48,6 @@ table.index_table {
     }
 
     a:not(.badge) {
-      color: $darker-accent-color;
       padding: 5px 0;
     }
   }

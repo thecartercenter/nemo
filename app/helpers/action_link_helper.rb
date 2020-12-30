@@ -4,10 +4,10 @@
 module ActionLinkHelper
   def translate_action(klass_or_obj, action)
     i18nk = (klass_or_obj.respond_to?(:model_name) ? klass_or_obj : klass_or_obj.class).model_name.i18n_key
-    t("activerecord.action_links.#{action}", default: :"activerecord.action_links.models.#{i18nk}.#{action}")
+    t("action_links.#{action}", default: :"action_links.models.#{i18nk}.#{action}")
   end
 
-  # Generates a link like "Create New Option Set" given a klass
+  # Generates a link like "Create Option Set" given a klass
   # options[:js] - if true, the link just points to # with expectation that js will bind to it
   def create_link(klass, options = {})
     href = options[:js] ? "#" : dynamic_path(klass, action: :new)
@@ -31,6 +31,6 @@ module ActionLinkHelper
 
   # creates a link to a batch operation
   def batch_op_link(options)
-    link_to(options[:name], "#", data: options.slice(:path, :confirm), class: "batch_op_link")
+    link_to(options[:name], "#", data: options.slice(:path, :confirm), class: "batch-link batch-submit-link")
   end
 end

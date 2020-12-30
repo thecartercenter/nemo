@@ -59,8 +59,8 @@ module ActionLinks
     end
 
     def translate_action(action)
-      t("activerecord.action_links.#{action}",
-        default: :"activerecord.action_links.models.#{object.model_name.i18n_key}.#{action}")
+      t("action_links.#{action}",
+        default: :"action_links.models.#{object.model_name.i18n_key}.#{action}")
     end
 
     def delete_warning

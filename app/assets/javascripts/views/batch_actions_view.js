@@ -7,13 +7,13 @@
  */
 // Models the batch actions done on index pages
 ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.Views.ApplicationView {
-  get el() { return '#index_table'; }
+  get el() { return '.index-table-wrapper'; }
 
   get events() {
     return {
       'click #select-all-link': 'select_all_clicked',
       'click a.select_all_pages': 'select_all_pages_clicked',
-      'click a.batch_op_link': 'submit_batch',
+      'click a.batch-submit-link': 'submit_batch',
       'change input[type=checkbox].batch_op': 'checkbox_changed',
     };
   }

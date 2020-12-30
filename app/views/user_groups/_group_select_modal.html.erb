@@ -8,13 +8,20 @@
     </div>
 
     <div class="modal-body group-form">
-      <%= select_tag("user-group", options_from_collection_for_select(@user_groups, :id, :name), id: "user-group") %>
+      <% if @user_groups.empty? %>
+        <%= t("user_group.no_groups") %>
+      <% else %>
+        <%= select_tag("user-group", options_from_collection_for_select(@user_groups, :id, :name),
+              id: "user-group") %>
+      <% end %>
     </div>
 
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary <%= @mode_string %>">
-        <%= t("user.#{@mode_string}") %>
-      </button>
-    </div>
+    <% unless @user_groups.empty? %>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary <%= @mode_string %>">
+          <%= t("user.#{@mode_string}") %>
+        </button>
+      </div>
+    <% end %>
   </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->

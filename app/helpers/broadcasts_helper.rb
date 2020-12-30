@@ -4,7 +4,7 @@
 module BroadcastsHelper
   def broadcasts_index_links(_broadcasts)
     if can?(:create, Broadcast) && !offline_mode?
-      [link_to(t("broadcast.send_broadcast"), new_broadcast_path)]
+      [link_to(t("action_links.models.broadcast.send"), new_broadcast_path)]
     else
       []
     end

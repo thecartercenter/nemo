@@ -8,7 +8,7 @@ feature "user bulk destroy", js: true do
   include_context "bulk destroy"
   let(:admin) { create(:admin, name: "Alpha") } # So that this user comes first in the list.
   let(:mission) { get_mission }
-  let(:delete_link_name) { "Delete Multiple Users" }
+  let(:delete_link_name) { "Delete" }
   let(:klass) { User }
 
   before do

@@ -162,7 +162,7 @@ feature "responses index", js: true do
     scenario "works" do
       visit(responses_path)
       all("input.batch_op").each { |b| b.set(true) }
-      accept_confirm { click_on("Delete Selected") }
+      accept_confirm { click_on("Delete") }
       expect(page).to have_content("3 responses deleted successfully")
     end
   end

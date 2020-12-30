@@ -17,7 +17,7 @@ module IndexTableHelper
       links.concat(send(links_helper, objects).compact) if respond_to?(links_helper)
 
       # if there are any batch links, insert the 'select all' link
-      batch_ops = !links.select { |l| l.match(/class="batch_op_link"/) }.empty?
+      batch_ops = !links.select { |l| l.match(/batch-link/) }.empty?
       links.insert(0, select_all_link) if batch_ops
     end
 
@@ -34,7 +34,7 @@ module IndexTableHelper
 
   # creates a link to select all the checkboxes in an index table
   def select_all_link
-    link_to(t("layout.select_all"), "#", id: "select-all-link")
+    link_to(t("layout.select_all"), "#", id: "select-all-link", class: "batch-link")
   end
 
   def index_row_class(obj, options = {})
@@ -43,5 +43,9 @@ module IndexTableHelper
       classes << send(method, obj) if respond_to?(method)
       classes << "clickable" if options[:clickable]
     end.compact.join(" ")
+  end
+
+  def link_divider
+    content_tag(:span, "|", class: "link-divider")
   end
 end

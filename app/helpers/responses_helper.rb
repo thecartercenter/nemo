@@ -2,6 +2,18 @@
 
 # DEPRECATED: Model-related display logic should move to a decorator.
 module ResponsesHelper
+  def responses_index_links(responses)
+    links = []
+    links << batch_op_link(
+      name: t("action_links.destroy"),
+      path: bulk_destroy_responses_path(search: params[:search]),
+      confirm: "response.bulk_destroy_confirm"
+    )
+    links << link_divider
+    links << export_dropdown(responses) if can?(:export, Response)
+    links
+  end
+
   def responses_index_fields
     if params[:controller] == "dashboard" # Dashboard mode
       %w[form_id user_id] + key_question_hashes(2) + %w[created_at reviewed]
@@ -37,30 +49,16 @@ module ResponsesHelper
     end
   end
 
-  def responses_index_links(responses)
-    links = []
-
-    links << batch_op_link(
-      name: t("response.bulk_destroy"),
-      path: bulk_destroy_responses_path(search: params[:search]),
-      confirm: "response.bulk_destroy_confirm"
-    )
-
-    links << export_dropdown(responses) if can?(:export, Response)
-
-    links
-  end
-
   def export_dropdown(responses)
     [export_dropdown_parent, export_dropdown_children(responses)].reduce(:<<)
   end
 
   def export_dropdown_parent
-    link_to(t("response.export.export"), "#", id: "export-dropdown",
-                                              class: "dropdown-toggle",
-                                              role: "button",
-                                              "data-toggle": "dropdown",
-                                              "aria-haspopup": "true")
+    link_to(t("action_links.export"), "#", id: "export-dropdown",
+                                           class: "dropdown-toggle",
+                                           role: "button",
+                                           "data-toggle": "dropdown",
+                                           "aria-haspopup": "true")
   end
 
   def export_dropdown_children(responses)
