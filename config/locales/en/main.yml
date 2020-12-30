@@ -2320,7 +2320,7 @@ en:
       no_answer: "Decline to Answer"
       specify: "Specify..."
     add_to_group: "Add to Group"
-    remove_from_group: "Remove grom Group"
+    remove_from_group: "Remove from Group"
     login_instructions:
       closing:
         - "Please note the 's' in 'https' in the site URL."
@@ -2358,7 +2358,7 @@ en:
   user_group:
     create_prompt: "Please enter the name of your group."
     add_users_success: "Successfully added %{count} users to group %{group}"
-    remove_users_success: "Successfully removeed %{count} users from group %{group}"
+    remove_users_success: "Successfully removed %{count} users from group %{group}"
     new_group: "New Group"
     no_groups: "There are currently no user groups in this mission. Create a group by adding a group to a single user when editing or creating the user. Then it will be available here."
 
