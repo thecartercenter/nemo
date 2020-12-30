@@ -83,13 +83,6 @@ class Setting < ApplicationRecord
     setting
   end
 
-  # loads the default settings without saving
-  def self.load_default
-    setting = build_default
-    setting.load
-    setting
-  end
-
   # May return nil if it hasn't been created yet.
   # Admin mode setting gets created via load_for_mission when admin mode first loaded.
   def self.admin_mode_setting
