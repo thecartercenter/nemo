@@ -3,8 +3,7 @@
 upload_path = "uploads/:class/:attachment/:id_partition/:style/:filename"
 
 # We always do local storage in testing for speed and so that we don't rely on external services.
-storage_type = ENV["NEMO_STORAGE_TYPE"]
-storage_type ||= Settings.key?(:paperclip) ? Settings.paperclip.storage : "local"
+storage_type = ENV["NEMO_STORAGE_TYPE"].presence || Settings.paperclip&.storage || "local"
 
 if !Rails.env.test? && Settings.key?(:paperclip) && storage_type == "cloud"
   unless Settings.key?(:aws) || ENV.key?("NEMO_AWS_ACCESS_KEY_ID")
