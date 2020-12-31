@@ -63,7 +63,7 @@ class Ability
     can(:show, Welcome)
     can(%i[show update], User, id: user.id)
     can(:confirm_login, UserSession)
-    can(:manage, Operation, creator_id: user.id)
+    can(%i[manage download], Operation, creator_id: user.id)
     can(:submit_to, Form) { |f| user.admin? || user.assignments.detect { |a| a.mission == f.mission } }
 
     user.admin? ? admin_permissions : non_admin_permissions

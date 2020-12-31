@@ -24,14 +24,6 @@ class OperationsController < ApplicationController
   def show
   end
 
-  def download
-    if @operation.attachment.present?
-      send_attachment(@operation.attachment, filename: @operation.attachment_download_name)
-    else
-      render_not_found
-    end
-  end
-
   def destroy
     destroy_and_handle_errors(@operation)
     redirect_to(index_url_with_context)

@@ -55,7 +55,6 @@ class Operation < ApplicationRecord
 
   belongs_to :creator, class_name: "User"
 
-  # TODO: Send via rails_blob_path(attachment, disposition: "attachment")
   has_one_attached :attachment
 
   def name

@@ -23,7 +23,7 @@ describe SavedUpload do
 
   it "saves file" do
     saved_upload = described_class.create!(file: uploaded)
-    expect(File.read(saved_upload.file.path)).to eq("Stuff\n")
+    expect(saved_upload.file.download).to eq("Stuff\n")
   end
 
   describe "#cleanup_old_uploads" do
