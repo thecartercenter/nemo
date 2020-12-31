@@ -506,6 +506,8 @@ GEM
     rspec-expectations (3.9.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
+    rspec-github (2.3.1)
+      rspec-core (~> 3.0)
     rspec-mocks (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
@@ -733,6 +735,7 @@ DEPENDENCIES
   reverse_markdown (~> 2.0)
   rqrcode (~> 1.1)
   rspec-collection_matchers (~> 1.1)
+  rspec-github
   rspec-rails (~> 3.9)
   rubocop (= 1.5.2)
   rubocop-rails (~> 2.8)

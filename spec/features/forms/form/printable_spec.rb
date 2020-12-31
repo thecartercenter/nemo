@@ -9,7 +9,7 @@ feature "forms", js: true do
   end
   let(:forms_path) { "/en/m/#{form.mission.compact_name}/forms" }
 
-  # Allow longer delays because specs were failing on Travis.
+  # Allow longer delays because specs were failing on CI.
   let(:longer_wait_time) { 120 }
 
   before do
