@@ -115,7 +115,7 @@ gem "rails-i18n", "~> 6.0"
 # Analytics
 gem "scout_apm", "~> 2.6"
 gem "sentry-ruby", "~> 4.0"
-gem "sentry-rails", "~> 4.0"
+gem "sentry-rails", "~> 4.0" # rubocop:disable Bundler/OrderedGems
 
 # Force Sprockets to stay on v3 for now.
 gem "sprockets", "~> 3"
