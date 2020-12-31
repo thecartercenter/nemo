@@ -5,7 +5,7 @@ require "rails_helper"
 describe ResponseCSVExportOperationJob do
   let(:user) { create(:user, role_name: "coordinator") }
   let(:operation) { create(:operation, creator: user) }
-  let(:csv) { File.read(operation.attachment.path) }
+  let(:csv) { operation.attachment.download }
   let!(:form) { create(:form, question_types: %w[integer select_one]) }
   let!(:responses) do
     [

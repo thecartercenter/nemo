@@ -33,8 +33,8 @@ class OperationJob < ApplicationJob
     Setting.load_for_mission(mission)
   end
 
-  def operation_succeeded(attributes = nil)
-    operation.update!(attributes) if attributes.present?
+  def save_attachment(attachment, attachment_download_name)
+    operation.attachment.attach(io: attachment, filename: attachment_download_name)
   end
 
   def operation_failed(report)

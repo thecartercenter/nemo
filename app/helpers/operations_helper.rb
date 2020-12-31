@@ -41,8 +41,8 @@ module OperationsHelper
       when :failed
         link_to(t("operation.see_error_report"), operation.default_path)
       when :completed
-        if operation.attachment.present?
-          link_to(t("operation.result_link_text.#{operation.kind}"), download_operation_path(operation))
+        if operation.attachment.attached?
+          link_to(t("operation.result_link_text.#{operation.kind}"), rails_blob_path(operation.attachment, disposition: "attachment"))
         end
       end
     else
