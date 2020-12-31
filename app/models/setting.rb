@@ -71,6 +71,10 @@ class Setting < ApplicationRecord
     :generic_sms_json_error
   attr_writer :generic_sms_config_str
 
+  def self.for_mission(mission)
+    find_by(mission: mission)
+  end
+
   # Loads the settings for the given mission (or nil mission/admin mode)
   # into the configatron & Settings stores.
   # If the settings can't be found, a default setting is created and saved before being loaded.
@@ -215,6 +219,10 @@ class Setting < ApplicationRecord
   # Determines if this setting is read only due to mission being locked.
   def read_only?
     mission.try(:locked?) # Mission may be nil if admin mode, in which case it's not read only.
+  end
+
+  def site_name
+    ENV["NEMO_#{theme}_THEME_SITE_NAME"] || "NEMO"
   end
 
   private
