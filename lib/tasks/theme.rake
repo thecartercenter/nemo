@@ -17,17 +17,7 @@ namespace :theme do
   task install: :environment do
     Themeing::Installer.new.run
   end
-
-  desc "Migrates old theme setup to new one."
-  task migrate: :environment do
-    Themeing::Migrator.new.run
-  end
 end
-
-# For now, run migrate on assets:precompile to provide a smooth upgrade path.
-# Can remove this once we think everyone has upgraded to the new themeing setup.
-# This may result in preprocessing being run twice but who cares.
-Rake::Task["assets:precompile"].enhance(["theme:migrate"])
 
 # Always need to preprocess SCSS things before precompiling.
 Rake::Task["assets:precompile"].enhance(["theme:preprocess"])
