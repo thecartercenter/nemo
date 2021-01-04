@@ -6,7 +6,7 @@ module Sms
     include Singleton
 
     def name
-      Settings.site_name
+      I18n.t("common.system")
     end
   end
 end
