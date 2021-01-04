@@ -71,6 +71,8 @@ class Setting < ApplicationRecord
     :generic_sms_json_error
   attr_writer :generic_sms_config_str
 
+  # Gets the setting for the given mission. If nil is given, gets the root setting, which should always
+  # exist as it's system seed data.
   def self.for_mission(mission)
     find_by(mission: mission)
   end

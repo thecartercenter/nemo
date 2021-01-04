@@ -28,4 +28,8 @@ module ApplicationController::Settings
   def default_serializer_options
     {root: false}
   end
+
+  def current_mission_config
+    @current_mission_config ||= Setting.for_mission(current_mission)
+  end
 end
