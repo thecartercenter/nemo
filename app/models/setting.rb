@@ -224,11 +224,11 @@ class Setting < ApplicationRecord
   end
 
   def site_name
-    ENV["NEMO_#{theme}_THEME_SITE_NAME"] || "NEMO"
+    Cnfg.site_name(theme)
   end
 
   def broadcast_tag
-    ENV["NEMO_#{theme}_THEME_BROADCAST_TAG"] || "NEMO"
+    Cnfg.broadcast_tag(theme)
   end
 
   private
