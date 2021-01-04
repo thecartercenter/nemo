@@ -225,6 +225,10 @@ class Setting < ApplicationRecord
     ENV["NEMO_#{theme}_THEME_SITE_NAME"] || "NEMO"
   end
 
+  def broadcast_tag
+    ENV["NEMO_#{theme}_THEME_BROADCAST_TAG"] || "NEMO"
+  end
+
   private
 
   # gets rid of any junk chars in locales
