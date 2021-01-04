@@ -37,7 +37,7 @@ class Setting < ApplicationRecord
   include MissionBased
 
   # Attribs to copy to configatron
-  KEYS_TO_COPY = %w[timezone preferred_locales all_locales incoming_sms_numbers frontlinecloud_api_key
+  KEYS_TO_COPY = %w[timezone preferred_locales incoming_sms_numbers frontlinecloud_api_key
                     twilio_phone_number twilio_account_sid twilio_auth_token theme].freeze
 
   # These are the keys that make sense in admin mode
@@ -189,11 +189,6 @@ class Setting < ApplicationRecord
   # converts preferred locales to symbols on read
   def preferred_locales
     self["preferred_locales"].map(&:to_sym)
-  end
-
-  # union of system locales with the mission's user-defined locales
-  def all_locales
-    configatron.full_locales | preferred_locales
   end
 
   def default_locale
