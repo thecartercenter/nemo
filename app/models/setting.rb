@@ -227,10 +227,6 @@ class Setting < ApplicationRecord
     Cnfg.site_name(theme)
   end
 
-  def broadcast_tag
-    Cnfg.broadcast_tag(theme)
-  end
-
   private
 
   # gets rid of any junk chars in locales
