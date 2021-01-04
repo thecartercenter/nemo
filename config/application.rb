@@ -5,6 +5,9 @@ require_relative("boot")
 require "rails/all"
 require "coffee_script"
 
+# Load this here so that the Cnfg global is available.
+require_relative "../lib/config_manager"
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
