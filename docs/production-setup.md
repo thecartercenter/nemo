@@ -270,6 +270,8 @@ You can define a custom theme for the application. In the project root, run:
 This will create the files `/theme/style.scss`, `/theme/logo-light.png`, and `/theme/logo-dark.png`.
 Update those files to reflect the desired theme. Ensure your new logos are the same size as the examples.
 
+Set the `NEMO_CUSTOM_THEME_SITE_NAME` environment variable in the `.env.production` file to customize the site name.
+
 You will need to run `nvm use && bundle exec rake assets:precompile` (and re-start your server if it's currently running) for the theme to take effect.
 The compiler will tell you if there are any errors in your `style.scss` file.
 
