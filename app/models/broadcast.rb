@@ -133,7 +133,7 @@ class Broadcast < ApplicationRecord
 
   def deilver_smses_and_return_any_errors
     return unless sms_possible? && recipient_numbers.present?
-    tag = Setting.for_mission(mission).broadcast_tag
+    tag = Setting.for_mission(mission).site_name
     Sms::Broadcaster.deliver(self, which_phone, "[#{tag}] #{body}")
     nil
   rescue Sms::Error => e

@@ -9,6 +9,6 @@ class BroadcastMailer < ApplicationMailer
 
     # TODO: We should send a separate email to each recipient
     # like we do with an SMS broadcast
-    mail(to: to, subject: "[#{mission_setting.broadcast_tag}] #{subject}")
+    mail(to: to, subject: "[#{@site_name}] #{subject}")
   end
 end

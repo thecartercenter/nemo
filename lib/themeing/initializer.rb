@@ -18,8 +18,7 @@ module Themeing
     private
 
     def default_settings
-      "site_name: NEMO # Appears in page titles and elsewhere\n"\
-      "broadcast_tag: NEMO # Appears in SMSes and email subjects\n"
+      "site_name: NEMO # Appears in page titles and elsewhere\n"
     end
   end
 end
