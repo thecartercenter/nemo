@@ -45,7 +45,8 @@ describe Broadcast do
       end
 
       it "should call appropriate methods" do
-        expect(BroadcastMailer).to receive(:broadcast).with(["a@b.com"], "Foo", "Bar")
+        expect(BroadcastMailer).to receive(:broadcast)
+          .with(to: ["a@b.com"], subject: "Foo", body: "Bar", mission: get_mission)
           .and_return(double(deliver_now: nil))
         expect(Sms::Broadcaster).to receive(:deliver).with(broadcast, "main_only", "[NEMO] Bar")
         broadcast.deliver
