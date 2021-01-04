@@ -43,6 +43,6 @@ class ApplicationController < ActionController::Base
   before_action :load_settings_for_mission_into_config
   before_action :load_accessible_missions
 
-  helper_method :current_mode, :current_user, :current_mission, :current_root_path,
+  helper_method :current_mode, :current_user, :current_mission, :current_mission_config, :current_root_path,
     :admin_mode?, :basic_mode?, :mission_mode?, :admin_mode_exit_path, :offline_mode?, :offline?
 end
