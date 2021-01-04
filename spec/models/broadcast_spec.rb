@@ -40,10 +40,6 @@ describe Broadcast do
     end
 
     context "happy path" do
-      before do
-        Settings.broadcast_tag = "NEMO"
-      end
-
       it "should call appropriate methods" do
         expect(BroadcastMailer).to receive(:broadcast)
           .with(to: ["a@b.com"], subject: "Foo", body: "Bar", mission: get_mission)

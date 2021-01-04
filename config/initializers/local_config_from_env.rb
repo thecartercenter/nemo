@@ -20,7 +20,7 @@ env_var_if_set("NEMO_GOOGLE_MAPS_API_KEY") { |v| configatron.google_maps_api_key
 env_var_if_set("NEMO_UNIVERSAL_SMS_TOKEN") { |v| configatron.universal_sms_token = v }
 env_var_if_set("NEMO_SCOUT_KEY") { |v| configatron.scout.key = v }
 env_var_if_set("NEMO_WEBMASTER_EMAILS") { |v| configatron.webmaster_emails = v.split(/\s+,\s+/) }
-env_var_if_set("NEMO_FROM_EMAIL") { |v| configatron.site_email = %(\"#{Settings.site_name}\" <#{v}>) }
+env_var_if_set("NEMO_FROM_EMAIL") { |v| configatron.site_email = %(NEMO <#{v}>) }
 
 if ENV.key?("NEMO_RECAPTCHA_PUBLIC_KEY")
   Recaptcha.configure do |config|
