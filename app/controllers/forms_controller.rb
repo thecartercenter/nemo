@@ -89,7 +89,7 @@ class FormsController < ApplicationController
 
     # Options for the dropdown (symbols).
     # Union of system locales plus locales in the mission config (which may be different than system locales).
-    @locales = configatron.full_locales | current_mission_config.preferred_locales
+    @locales = I18n.available_locales | current_mission_config.preferred_locales
 
     @qings_with_indices = @form.smsable_questionings
 

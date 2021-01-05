@@ -124,7 +124,7 @@
     <%= form_tag(nil, :id => "locale_form") do %>
       <%# We can't change language unless the request is GET since no way to redirect browser to POST, etc. %>
       <%# So we disable with message in that case. %>
-      <%= select_tag(:locale, options_for_select(configatron.full_locales.map{|l| [language_name(l), l]}, I18n.locale),
+      <%= select_tag(:locale, options_for_select(I18n.available_locales.map{|l| [language_name(l), l]}, I18n.locale),
         class: 'form-control', disabled: !request.get?, title: request.get? ? '' : I18n.t('layout.locale_change_get_only')) %>
     <% end %>
 

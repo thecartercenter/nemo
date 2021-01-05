@@ -263,9 +263,9 @@ class Setting < ApplicationRecord
 
   # makes sure at least one of the chosen locales is an available locale
   def one_locale_must_have_translations
-    return unless (preferred_locales & configatron.full_locales).empty?
+    return unless (preferred_locales & I18n.available_locales).empty?
     errors.add(:preferred_locales_str, :one_must_have_translations,
-      locales: configatron.full_locales.join(","))
+      locales: I18n.available_locales.join(","))
   end
 
   # sms adapter can be blank or must be valid according to the Factory
