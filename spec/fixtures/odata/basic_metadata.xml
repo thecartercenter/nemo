@@ -20,7 +20,6 @@
         <Property Name="ResponseShortcode" Type="Edm.String" Nullable="true"/>
         <Property Name="ResponseReviewed" Type="Edm.Boolean" Nullable="true"/>
         <Property Name="FormName" Type="Edm.String" Nullable="true"/>
-        <Property Name="LastCached" Type="Edm.DateTimeOffset" Nullable="true"/>
       </EntityType>
       <EntityType Name="Responses: *form1*" OpenType="true" BaseType="NEMO.Response">
         <Property Name="*q_code1*" Type="Edm.Int64" Nullable="true"/>
