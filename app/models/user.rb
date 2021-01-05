@@ -56,6 +56,7 @@ class User < ApplicationRecord
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
   GENDER_OPTIONS = %w[man woman no_answer specify].freeze
   PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/.freeze
+  DEFAULT_RECENT_LOGIN_MAX_AGE = 60.minutes
 
   attr_writer(:reset_password_method)
   attr_accessor(:password_confirmation)
@@ -333,8 +334,7 @@ class User < ApplicationRecord
   end
 
   def current_login_recent?(max_age = nil)
-    max_age ||= configatron.recent_login_max_age
-
+    max_age ||= DEFAULT_RECENT_LOGIN_MAX_AGE
     current_login_age < max_age if current_login_at.present?
   end
 
