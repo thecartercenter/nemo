@@ -63,7 +63,7 @@ shared_context "incoming sms" do
     params[:incoming] = {body: params[:incoming]} unless params[:incoming].is_a?(Hash)
     params[:outgoing] = {body: params[:outgoing]} unless params[:outgoing].is_a?(Hash)
     params[:sent_at] ||= Time.current
-    params[:incoming][:adapter] ||= "TwilioSms"
+    params[:incoming][:adapter] ||= "Twilio"
     params[:url] ||= "#{url_prefix}/sms/submit/#{url_token}"
     params[:method] ||= :post
 
@@ -82,7 +82,7 @@ shared_context "incoming sms" do
         "sent_at" => params[:sent_at].strftime("%s"),
         "frontlinecloud" => "1"
       }
-    when "TwilioSms"
+    when "Twilio"
       req_params = {
         "From" => params[:from],
         "To" => "+1234567890",
