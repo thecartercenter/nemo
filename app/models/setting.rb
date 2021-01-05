@@ -77,6 +77,10 @@ class Setting < ApplicationRecord
     find_by(mission: mission)
   end
 
+  def self.root
+    find_by(mission: nil)
+  end
+
   # Loads the settings for the given mission (or nil mission/admin mode)
   # into the configatron & Settings stores. Setting should exist by this point.
   def self.load_for_mission(mission)
@@ -216,6 +220,10 @@ class Setting < ApplicationRecord
 
   def site_name
     Cnfg.site_name(theme)
+  end
+
+  def site_email_with_name
+    Cnfg.site_email_with_name(theme)
   end
 
   private

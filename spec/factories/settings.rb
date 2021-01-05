@@ -41,9 +41,5 @@ FactoryBot.define do
     twilio_auth_token { "pass" }
     incoming_sms_token { SecureRandom.hex }
     incoming_sms_numbers { [] }
-
-    factory :root_setting do
-      mission { nil }
-    end
   end
 end
