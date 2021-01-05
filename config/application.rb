@@ -125,8 +125,11 @@ module ELMO
     # assuming this caused no further issues
     I18n.available_locales = configatron.full_locales
 
-    # This is the default. It can be overridden in local_config.rb, which comes later.
-    configatron.offline_mode = false
+    # Error reporting via Sentry (formerly Raven).
+    Raven.configure do |config|
+      next if Rails.env.test?
+      config.dsn = "https://a81af08ff85042f3ae314e6c685853a3@o448595.ingest.sentry.io/5430181"
+    end
 
     # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
