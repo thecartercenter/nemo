@@ -20,7 +20,6 @@
         <Property Name="ResponseShortcode" Type="Edm.String" Nullable="true"/>
         <Property Name="ResponseReviewed" Type="Edm.Boolean" Nullable="true"/>
         <Property Name="FormName" Type="Edm.String" Nullable="true"/>
-        <Property Name="LastCached" Type="Edm.DateTimeOffset" Nullable="true"/>
       </EntityType>
       <EntityContainer Name="NEMOService">
         <EntitySet Name="Custom" EntityType="NEMO.Custom">
