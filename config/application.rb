@@ -107,29 +107,13 @@ module ELMO
     # For security.
     config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
 
-    ####################################
-    # CUSTOM SETTINGS
-    ####################################
-
-    # read system version from file
-    configatron.system_version = File.read(Rails.root.join("VERSION")).strip
-
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
     configatron.full_locales = %i[en fr es ar ko pt pt-BR]
-
-    # Of the locales in full_locales, the ones displayed RTL.
-    configatron.rtl_locales = %i[ar]
 
     # Restrict available locales to defined system locales
     # This should replace `configatron.full_locales` eventually
     # assuming this caused no further issues
     I18n.available_locales = configatron.full_locales
-
-    # Error reporting via Sentry (formerly Raven).
-    Raven.configure do |config|
-      next if Rails.env.test?
-      config.dsn = "https://a81af08ff85042f3ae314e6c685853a3@o448595.ingest.sentry.io/5430181"
-    end
 
     # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers

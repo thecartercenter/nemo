@@ -10,7 +10,7 @@ module ThemeHelper
   end
 
   def current_direction
-    configatron.rtl_locales.include?(I18n.locale) ? "rtl" : "ltr"
+    Cnfg.rtl_locales.include?(I18n.locale) ? "rtl" : "ltr"
   end
 
   def stylesheet_files

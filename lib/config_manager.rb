@@ -8,6 +8,16 @@ class ConfigManager
     ENV["NEMO_OFFLINE_MODE"] == "true"
   end
 
+  # read system version from file
+  def system_version
+    @system_version ||= File.read(Rails.root.join("VERSION")).strip
+  end
+
+  # Locales we support that are displayed right-to-left.
+  def rtl_locales
+    %i[ar]
+  end
+
   def site_name(theme = nil)
     theme ||= "NEMO"
     ENV["NEMO_#{theme.upcase}_THEME_SITE_NAME"] || "NEMO"

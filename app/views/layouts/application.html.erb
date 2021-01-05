@@ -140,7 +140,7 @@
         configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
     <% end %>
 
-    <%= t("layout.system_version") %>: <%= configatron.system_version %> &nbsp;|&nbsp;
+    <%= t("layout.system_version") %>: <%= Cnfg.system_version %> &nbsp;|&nbsp;
 
     <%= link_to(t('layout.about', site_name: current_mission_config.site_name), 'http://getnemo.org') %>
   </div>
