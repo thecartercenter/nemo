@@ -264,7 +264,7 @@ describe "incoming sms", :sms do
     it "should raise error" do
       expect do
         do_incoming_request(url: "/m/#{mission.compact_name}/sms/submit/#{token}", from: user.phone,
-                            incoming: {body: "#{form_code} 1.15 2.20", adapter: "TwilioSms"})
+                            incoming: {body: "#{form_code} 1.15 2.20", adapter: "Twilio"})
       end.to raise_error(Sms::Error)
     end
   end
