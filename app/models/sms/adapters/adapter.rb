@@ -3,7 +3,6 @@
 # models a generic sms adapter. should be subclassed.
 require "net/http"
 class Sms::Adapters::Adapter
-  attr_writer :deliveries
   attr_reader :config
 
   # checks if this adapter recognizes an incoming http receive request
@@ -20,6 +19,11 @@ class Sms::Adapters::Adapter
   def self.service_name
     # Warning: don't memoize this or a bunch of things fail.
     name.split("::").last.gsub(/Adapter$/, "")
+  end
+
+  # For testing.
+  def self.deliveries
+    @@deliveries ||= []
   end
 
   def initialize(options = {})
@@ -42,7 +46,7 @@ class Sms::Adapters::Adapter
     # save the message now, which sets the sent_at
     message.save!
 
-    deliveries << message
+    self.class.deliveries << message if Rails.env.test?
   end
 
   def deliver(_message)
@@ -72,10 +76,6 @@ class Sms::Adapters::Adapter
 
   # The body to be rendered when responding to an incoming message request.
   def response_body(reply)
-  end
-
-  def deliveries
-    @deliveries ||= []
   end
 
   protected
