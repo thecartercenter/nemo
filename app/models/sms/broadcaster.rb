@@ -3,11 +3,22 @@
 module Sms
   # Sends broadcast SMS messages, analogous to a mailer class for email.
   class Broadcaster
-    def self.deliver(broadcast, _which_phone, msg)
-      raise Sms::Error, I18n.t("sms.no_valid_adapter") unless configatron.to_h[:outgoing_sms_adapter]
+    include ActiveModel::Model
 
-      message = Sms::Broadcast.new(broadcast: broadcast, body: msg, mission: broadcast.mission)
-      configatron.outgoing_sms_adapter.deliver(message)
+    attr_accessor :mission
+
+    def deliver(broadcast)
+      adapter_name = mission_config.default_outgoing_sms_adapter
+      raise Sms::Error, I18n.t("sms.no_valid_adapter") if adapter_name.blank?
+      body = "[#{mission_config.site_name}] #{broadcast.body}"
+      message = Sms::Broadcast.new(broadcast: broadcast, body: body, mission: mission)
+      Sms::Adapters::Factory.instance.create(adapter_name, config: mission_config).deliver(message)
+    end
+
+    private
+
+    def mission_config
+      @mission_config ||= Setting.for_mission(mission)
     end
   end
 end

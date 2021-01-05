@@ -379,10 +379,12 @@ describe "incoming sms", :sms do
     end
 
     context "with reply via_adapter adapter" do
+      before do
+        Setting.root.update_column(:default_outgoing_sms_adapter, root_setting_default_adapter)
+      end
+
       context "with default adapter" do
-        before do
-          configatron.default_settings.outgoing_sms_adapter = "Twilio"
-        end
+        let(:root_setting_default_adapter) { "Twilio" }
 
         it "should send reply via default adapter if form not found" do
           assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
@@ -391,9 +393,7 @@ describe "incoming sms", :sms do
       end
 
       context "without default adapter" do
-        before do
-          configatron.default_settings.outgoing_sms_adapter = ""
-        end
+        let(:root_setting_default_adapter) { nil }
 
         it "should save error on reply message" do
           assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},

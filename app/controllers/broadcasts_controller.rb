@@ -104,7 +104,7 @@ class BroadcastsController < ApplicationController
 
   def prep_form_vars
     @medium_options =
-      if configatron.to_h[:outgoing_sms_adapter]
+      if current_mission_config.default_outgoing_sms_adapter.present?
         Broadcast::MEDIUM_OPTIONS
       else
         Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
