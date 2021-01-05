@@ -104,11 +104,12 @@ module ELMO
     # Default expiry for attachments.
     config.active_storage.service_urls_expire_in = 1.hour
 
+    # For security.
+    config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
+
     ####################################
     # CUSTOM SETTINGS
     ####################################
-
-    # NOTE: Don't add anymore configatron settings. Use settings.yml instead.
 
     # read system version from file
     configatron.system_version = File.read(Rails.root.join("VERSION")).strip
@@ -118,18 +119,6 @@ module ELMO
 
     # Of the locales in full_locales, the ones displayed RTL.
     configatron.rtl_locales = %i[ar]
-
-    # For security.
-    config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
-
-    # requests-per-minute limit for ODK Collect endpoints
-    configatron.direct_auth_request_limit = 30
-
-    # logins-per-minute threshold for showing a captcha
-    configatron.login_captcha_threshold = 30
-
-    # default timeout for sensitive areas requiring a password reprompt
-    configatron.recent_login_max_age = 60.minutes
 
     # Restrict available locales to defined system locales
     # This should replace `configatron.full_locales` eventually

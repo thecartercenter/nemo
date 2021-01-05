@@ -53,9 +53,6 @@ ELMO::Application.configure do
   # Raises error for missing translations.
   config.action_view.raise_on_missing_translations = false
 
-  # Use a lower ODK Collect request limit for tests
-  configatron.direct_auth_request_limit = 5
-
   # Enable rack-attack middleware for protecting against brute-force login attempts,
   # but disable it until needed.
   config.middleware.use(Rack::Attack)
