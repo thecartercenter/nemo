@@ -107,13 +107,9 @@ module ELMO
     # For security.
     config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
 
-    # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
-    configatron.full_locales = %i[en fr es ar ko pt pt-BR]
-
-    # Restrict available locales to defined system locales
-    # This should replace `configatron.full_locales` eventually
-    # assuming this caused no further issues
-    I18n.available_locales = configatron.full_locales
+    # Restrict available locales to defined system locales.
+    # Without this, it returns a whole bunch more defined by i18n-js.
+    I18n.available_locales = %i[en fr es ar ko pt pt-BR]
 
     # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
