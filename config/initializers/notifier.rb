@@ -6,7 +6,7 @@
 unless Rails.env.development? || configatron.offline_mode
   Rails.configuration.middleware.use(ExceptionNotification::Rack, email: {
     email_prefix: "[#{configatron.url.host} ERROR] ",
-    sender_address: configatron.site_email,
+    sender_address: Cnfg.site_email_with_name,
     exception_recipients: configatron.webmaster_emails,
 
     # Not including session because it contains user_credentials, not sure if that's secret,
