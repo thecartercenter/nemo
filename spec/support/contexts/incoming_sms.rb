@@ -104,6 +104,6 @@ shared_context "incoming sms" do
   end
 
   def expect_no_messages_delivered_through_adapter
-    expect(configatron.outgoing_sms_adapter.deliveries.size).to eq(0)
+    expect(Sms::Adapters::Adapter.deliveries.size).to eq(0)
   end
 end
