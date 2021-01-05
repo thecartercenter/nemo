@@ -6,7 +6,6 @@ describe Notifier do
   # This spec covers coordinator reply_to functionality.
   context "intro email" do
     let(:mission) { create(:mission) }
-    let!(:root_setting) { create(:root_setting) }
     let(:user) { create(:user, mission: mission, role_name: :enumerator) }
     let(:args) { [user] }
     let(:mail) { described_class.intro(*args).deliver_now }

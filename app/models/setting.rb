@@ -78,13 +78,9 @@ class Setting < ApplicationRecord
   end
 
   # Loads the settings for the given mission (or nil mission/admin mode)
-  # into the configatron & Settings stores.
-  # If the settings can't be found, a default setting is created and saved before being loaded.
+  # into the configatron & Settings stores. Setting should exist by this point.
   def self.load_for_mission(mission)
-    unless (setting = find_by(mission: mission))
-      setting = build_default(mission)
-      setting.save!
-    end
+    setting = find_by!(mission: mission)
     setting.load
     setting
   end

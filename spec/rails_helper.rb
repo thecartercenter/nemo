@@ -100,6 +100,9 @@ RSpec.configure do |config|
     # Ensure no leftover logged in user.
     ENV.delete("TEST_LOGGED_IN_USER_ID")
 
+    # This is seed data so it should always be available.
+    create(:root_setting)
+
     example.run
   end
 
