@@ -17,9 +17,9 @@ class Sms::Adapters::Factory
   end
 
   # creates an instance of the specified adapter
-  def create(name_or_class, options = {})
+  def create(name_or_class, config: nil)
     return nil if name_or_class.nil?
-    options[:config] ||= configatron
+    config ||= configatron
     if name_or_class.is_a?(String)
       unless self.class.name_is_valid?(name_or_class)
         raise ArgumentError, "invalid adapter name '#{name_or_class}'"
@@ -28,7 +28,7 @@ class Sms::Adapters::Factory
     else
       klass = name_or_class
     end
-    klass.new(options)
+    klass.new(config: config)
   end
 
   # Creates and returns an adapter that knows how to handle the given HTTP request params.

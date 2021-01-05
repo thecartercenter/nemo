@@ -129,19 +129,8 @@
     <% end %>
 
     &nbsp;|&nbsp;
-
     <%= t("layout.time_zone") %>: <%= Time.zone.to_s %> &nbsp;|&nbsp;
-
-    <% if current_mission %>
-      <%= t("sms.outgoing_provider") %>:
-      <%# We have to use to_h because calling .nil? or .is_a?
-        on configatron.outgoing_sms_adapter when it's nil don't work. %>
-      <%= configatron.to_h[:outgoing_sms_adapter] ?
-        configatron.outgoing_sms_adapter.service_name : "[#{t('common.none').capitalize}]" %> &nbsp;|&nbsp;
-    <% end %>
-
     <%= t("layout.system_version") %>: <%= Cnfg.system_version %> &nbsp;|&nbsp;
-
     <%= link_to(t('layout.about', site_name: current_mission_config.site_name), 'http://getnemo.org') %>
   </div>
 

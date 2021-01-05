@@ -32,4 +32,8 @@ module ApplicationController::Settings
   def current_mission_config
     @current_mission_config ||= Setting.for_mission(current_mission)
   end
+
+  def root_config
+    @root_config ||= Setting.root
+  end
 end

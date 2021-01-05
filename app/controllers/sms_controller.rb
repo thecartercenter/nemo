@@ -116,15 +116,17 @@ class SmsController < ApplicationController
     @incoming_adapter = Sms::Adapters::Factory.instance.create_for_request(request)
   end
 
-  # Returns the outgoing adapter. If none is found, tries default settings. If still none found, raises.
+  # If no outgoing adapter is found in mission, tries root config. If still none found, raises.
   def outgoing_adapter
-    if configatron.outgoing_sms_adapter
-      configatron.outgoing_sms_adapter
-    elsif (default_adapter_name = configatron.default_settings.outgoing_sms_adapter).present?
-      Sms::Adapters::Factory.instance.create(default_adapter_name, config: configatron.default_settings)
-    else
-      raise Sms::Error, "No adapter configured for outgoing response"
-    end
+    return @outgoing_adapter if defined?(@outgoing_adapter)
+    config = if current_mission_config.default_outgoing_sms_adapter.present?
+               current_mission_config
+             else
+               root_config
+             end
+    adapter_name = config.default_outgoing_sms_adapter
+    raise Sms::Error, "No adapter configured for outgoing response" if adapter_name.nil?
+    @outgoing_adapter = Sms::Adapters::Factory.instance.create(adapter_name, config: config)
   end
 
   def verify_token(token)
