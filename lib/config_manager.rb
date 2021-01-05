@@ -4,6 +4,10 @@
 class ConfigManager
   include Singleton
 
+  def offline_mode?
+    ENV["NEMO_OFFLINE_MODE"] == "true"
+  end
+
   def site_name(theme = nil)
     theme ||= "NEMO"
     ENV["NEMO_#{theme.upcase}_THEME_SITE_NAME"] || "NEMO"

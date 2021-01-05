@@ -83,9 +83,9 @@ feature "user form password field" do
 
     context "offline mode" do
       around do |example|
-        configatron.offline_mode = true
+        ENV["NEMO_OFFLINE_MODE"] = "true"
         example.run
-        configatron.offline_mode = false
+        ENV["NEMO_OFFLINE_MODE"] = "false"
       end
 
       include_examples("edit methods that should work online and offline")
@@ -111,9 +111,9 @@ feature "user form password field" do
 
       context "offline mode" do
         around do |example|
-          configatron.offline_mode = true
+          ENV["NEMO_OFFLINE_MODE"] = "true"
           example.run
-          configatron.offline_mode = false
+          ENV["NEMO_OFFLINE_MODE"] = "false"
         end
 
         scenario "setting enumerator password via printable should work in admin mode" do
@@ -165,9 +165,9 @@ feature "user form password field" do
 
       context "offline mode" do
         around do |example|
-          configatron.offline_mode = true
+          ENV["NEMO_OFFLINE_MODE"] = "true"
           example.run
-          configatron.offline_mode = false
+          ENV["NEMO_OFFLINE_MODE"] = "false"
         end
 
         scenario "setting enumerator password via email should be unavailable" do

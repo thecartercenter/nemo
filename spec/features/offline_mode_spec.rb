@@ -6,9 +6,9 @@ feature "offline mode" do
   let(:user) { create(:admin) }
 
   around do |example|
-    configatron.offline_mode = offline_mode
+    ENV["NEMO_OFFLINE_MODE"] = offline_mode.to_s
     example.run
-    configatron.offline_mode = false
+    ENV["NEMO_OFFLINE_MODE"] = "false"
   end
 
   context "offline mode on" do

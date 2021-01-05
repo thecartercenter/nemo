@@ -3,7 +3,7 @@
 # This file MUST come lexically after local_config.rb.
 # Also, while it may seem counterintuitive, it's important the middleware be enabled for test mode
 # because there are tests that test its behavior.
-unless Rails.env.development? || configatron.offline_mode
+unless Rails.env.development? || Cnfg.offline_mode?
   Rails.configuration.middleware.use(ExceptionNotification::Rack, email: {
     email_prefix: "[#{configatron.url.host} ERROR] ",
     sender_address: Cnfg.site_email_with_name,
