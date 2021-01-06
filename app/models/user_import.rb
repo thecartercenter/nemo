@@ -16,10 +16,11 @@ class UserImport < TabularImport
     return unless parse_headers(sheet)
     parse_rows(sheet).each_with_index do |row, index|
       row[:assignments] = [Assignment.new(mission_id: mission_id, role: User::ROLES.first)]
+      index += 2 # Account for 0-index and header row.
       user = User.create(row)
-      copy_validation_errors_for_row(index + 2, user.errors) if user.invalid?
+      copy_validation_errors_for_row(index, user.errors) if user.invalid?
       if run_errors.count >= IMPORT_ERROR_CUTOFF
-        add_too_many_errors(index + 2)
+        add_too_many_errors(index)
         break
       end
     end
@@ -28,7 +29,7 @@ class UserImport < TabularImport
   private
 
   def parse_headers(sheet)
-    row = sheet.row(1)
+    row = sheet[0]
     invalid_headers = []
     self.col_idx_to_attr_map = row.map.with_index do |header, col_idx|
       header = header.to_s.strip.presence # Col values may be numbers
@@ -53,8 +54,7 @@ class UserImport < TabularImport
   end
 
   def parse_rows(sheet)
-    (2..sheet.last_row).map do |row_num|
-      row = sheet.row(row_num)
+    sheet[1..].map do |row|
       next(nil) if row.all?(&:blank?)
       attributes = row_to_attr_map(row)
       phones_to_string(attributes)

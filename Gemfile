@@ -51,7 +51,6 @@ gem "scrypt", "~> 3.0"
 # Spreadsheets
 gem "caxlsx", "~> 3.0"
 gem "caxlsx_rails", "~> 0.6.2"
-gem "roo", "~> 2.8"
 
 # Pagination
 gem "will_paginate", "~> 3.1"

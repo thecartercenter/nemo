@@ -40,7 +40,7 @@ module OptionSets
     end
 
     def extract_headers(sheet)
-      headers = sheet.row(1)
+      headers = sheet[0]
       headers = headers[0...headers.index(nil)] if headers.any?(&:nil?)
       headers
     end
@@ -74,8 +74,9 @@ module OptionSets
     # The last element of each row's array is a hash of metadata like row_num
     # and special values like coordinates.
     def extract_and_clean_data_rows(sheet, headers, meta_headers)
-      (2..sheet.last_row).map do |row_num|
-        row = sheet.row(row_num)[0...headers.size].map { |c| c.to_s.presence }
+      sheet[1..].each_with_index.map do |row, row_num|
+        row = row[0...headers.size].map { |c| c.to_s.presence }
+        row_num += 2 # Account for 0-index and header row.
 
         metadata = extract_row_metadata(row, row_num, meta_headers)
 
