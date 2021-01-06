@@ -2260,7 +2260,7 @@ en:
 
   tabular_import:
     errors:
-      wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
+      wrong_type: "The uploaded file must be a valid CSV spreadsheet file."
       no_rows: "No rows to import."
       bad_csv: "There was an issue with your CSV file: %{msg}"
 

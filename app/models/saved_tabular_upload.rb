@@ -17,5 +17,5 @@
 
 # A model for a spreadsheet upload.
 class SavedTabularUpload < SavedUpload
-  validates_attachment_file_name :file, matches: /\.(csv|xlsx)\z/i
+  validates_attachment_file_name :file, matches: /\.(csv)\z/i
 end

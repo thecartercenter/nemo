@@ -22,7 +22,7 @@ describe TabularImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["The uploaded file must be a valid XLSX-type Excel file."])
+      expect(run_errors).to eq(["The uploaded file must be a valid CSV spreadsheet file."])
     end
   end
 
@@ -40,7 +40,7 @@ describe TabularImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["The uploaded file must be a valid XLSX-type Excel file."])
+      expect(run_errors).to eq(["The uploaded file must be a valid CSV spreadsheet file."])
     end
   end
 end
