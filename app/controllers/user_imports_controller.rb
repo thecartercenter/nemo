@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# For importing users from CSV/spreadsheet.
+# For importing Users from spreadsheet.
 class UserImportsController < TabularImportsController
   # ensure a recent login for all actions
   before_action :require_recent_login

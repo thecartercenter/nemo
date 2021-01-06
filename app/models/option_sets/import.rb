@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module OptionSets
-  # Imports an OptionSet from a spreadsheet or CSV file.
+  # Imports an OptionSet from a spreadsheet.
   class Import < TabularImport
     attr_accessor :option_set, :level_count, :cur_nodes, :cur_ranks
 

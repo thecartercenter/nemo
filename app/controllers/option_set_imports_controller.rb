@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# For importing OptionSets from CSV/spreadsheet.
+# For importing OptionSets from spreadsheet.
 class OptionSetImportsController < TabularImportsController
   def new
     authorize!(:create, OptionSets::Import)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# For importing tabular data (CSV, XLSX, etc.)
+# For importing tabular spreadsheet data (CSV files).
 class TabularImport
   include ActiveModel::Model
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# For importing CSV/spreadsheets
+# For importing spreadsheets
 class TabularImportsController < ApplicationController
   include OperationQueueable
 

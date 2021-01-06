@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Imports users from CSV or XLSX.
+# Imports users from a spreadsheet.
 class UserImport < TabularImport
   IMPORT_ERROR_CUTOFF = 50
   PERMITTED_ATTRIBS = %i[login name phone phone2 email birth_year gender

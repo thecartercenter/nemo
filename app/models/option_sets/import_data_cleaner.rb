@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module OptionSets
-  # Cleans data from spreadsheet for use in building option set.
+  # Cleans data from a spreadsheet for use in building an OptionSet.
   class ImportDataCleaner
     attr_accessor :sheet, :errors
 

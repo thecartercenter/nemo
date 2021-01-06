@@ -15,7 +15,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-# A model for a csv or xlsx file upload, managed by Paperclip
+# A model for a spreadsheet upload.
 class SavedTabularUpload < SavedUpload
   validates_attachment_file_name :file, matches: /\.(csv|xlsx)\z/i
 end
