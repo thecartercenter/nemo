@@ -1501,10 +1501,14 @@ en:
     longitude: "Longitude"
     value: "Numeric Value"
 
-
   option_set_import:
     instructions_html: |-
-      Upload a spreadsheet with your option set. Only XLSX-type Excel spreadsheets and CSV files are accepted.
+      Upload a spreadsheet with your options.
+
+      Notes:
+
+      * Only CSV files are accepted. You can export XLSX files to CSV using any standard spreadsheet software.
+      * You can find more documentation <a href="https://elmo-nemo.readthedocs.io/en/main/content/formsoptionsets/formsoptionsets.html#import-new-option-set">here</a>.
 
   tag:
     none_found: "No matching tags found"
@@ -2266,18 +2270,18 @@ en:
 
   user_import:
     instructions_html: |-
-      Upload a spreadsheet with your users. Only XLSX-type Excel spreadsheets and CSV files are accepted.
-
-      A spreadsheet template is available in <a href="%{xlsx_url}">XLSX</a> and <a href="%{csv_url}">CSV</a> formats as a starting point.
+      Upload a spreadsheet with your users. A <a href="%{csv_url}">CSV template</a> is available as a starting point.
 
       Notes:
 
-      * Please do not alter top row of spreadsheet in any way.
+      * Only CSV files are accepted. You can export XLSX files to CSV using any standard spreadsheet software.
+      * Please do not alter top row of template in any way.
       * Phone numbers should include country code (e.g. +17095551212).
       * Gender may be one of 'Man', 'Woman', or 'Decline to Answer', or can be any other value.
       * Nationality should be the name of a country such as 'Canada' or 'Bangladesh'.
       * Multiple user group names should be separated by a semicolon.
       * If a named user group does not exist, it will be created.
+      * You can find more documentation <a href="https://elmo-nemo.readthedocs.io/en/main/content/users/users.html#import-users">here</a>.
 
   user:
     add_assignment: "Add Assignment"

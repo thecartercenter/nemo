@@ -17,9 +17,6 @@ class UserImportsController < TabularImportsController
       format.csv do
         render(csv: UserFacingCSV.generate { |csv| csv << @headers })
       end
-      format.xlsx do
-        @sheet_name = User.model_name.human(count: 0)
-      end
     end
   end
 
