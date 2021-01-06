@@ -156,6 +156,7 @@ en:
     format: "%{attribute}: %{message}"
     file_upload:
       error: "There was an error uploading the file."
+      login_error: "You are no longer signed in, please refresh the page and try again."
       file_missing: "No file selected for import."
       invalid_format: "The uploaded file was not an accepted format."
       internal: "An internal error occurred while processing your upload."

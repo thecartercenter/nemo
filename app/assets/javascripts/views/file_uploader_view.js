@@ -60,7 +60,9 @@ ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.Applicat
     this.dropzone.removeFile(file);
     const errors = responseData.errors
       ? responseData.errors.join('<br/>')
-      : I18n.t('errors.file_upload.error');
+      : responseData === 'RECENT_LOGIN_REQUIRED'
+        ? I18n.t('errors.file_upload.login_error')
+        : I18n.t('errors.file_upload.error');
     return this.$('.dz-error-msg').show().html(errors);
   }
 
