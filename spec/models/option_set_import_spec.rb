@@ -10,8 +10,8 @@ describe OptionSets::Import do
   let(:import) { OptionSets::Import.new(mission_id: mission_id, name: "MySet", file: file).tap(&:run) }
   let(:run_errors) { import.run_errors }
 
-  context "with simple XLSX file" do
-    let(:filename) { "simple.xlsx" }
+  context "with simple CSV file" do
+    let(:filename) { "simple.csv" }
 
     context "in mission mode" do
       it "should succeed" do
@@ -28,14 +28,6 @@ describe OptionSets::Import do
     end
   end
 
-  context "with simple CSV file" do
-    let(:filename) { "simple.csv" }
-
-    it "should successfully import csv option set" do
-      expect_simple_option_set(import, mission: mission)
-    end
-  end
-
   context "with blank row" do
     let(:filename) { "blank_row.csv" }
 
@@ -45,7 +37,7 @@ describe OptionSets::Import do
   end
 
   context "multi-level geographic" do
-    let(:filename) { "multilevel_geographic.xlsx" }
+    let(:filename) { "multilevel_geographic.csv" }
 
     it "should be able to import a multi-level geographic option set" do
       expect(import).to be_succeeded
@@ -82,7 +74,7 @@ describe OptionSets::Import do
   end
 
   context "with invalid coordinates" do
-    let(:filename) { "invalid_geographic.xlsx" }
+    let(:filename) { "invalid_geographic.csv" }
 
     it "should correctly report errors" do
       expect(import).not_to be_succeeded
@@ -94,7 +86,7 @@ describe OptionSets::Import do
   end
 
   context "with blank interior cells" do
-    let(:filename) { "blank_interior.xlsx" }
+    let(:filename) { "blank_interior.csv" }
 
     it "should correctly report errors" do
       expect(import).not_to be_succeeded
@@ -106,7 +98,7 @@ describe OptionSets::Import do
   end
 
   context "with no data rows" do
-    let(:filename) { "no_rows.xlsx" }
+    let(:filename) { "no_rows.csv" }
 
     it "should correctly report errors" do
       expect(import).not_to be_succeeded
@@ -115,7 +107,7 @@ describe OptionSets::Import do
   end
 
   context "with long strings" do
-    let(:filename) { "long_strings.xlsx" }
+    let(:filename) { "long_strings.csv" }
 
     it "should correctly report errors" do
       expect(import).not_to be_succeeded

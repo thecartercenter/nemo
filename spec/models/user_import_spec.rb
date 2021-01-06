@@ -12,7 +12,7 @@ describe UserImport do
   let(:created_users) { User.order(:login).to_a }
 
   context "with varying amounts of info" do
-    let(:filename) { "varying_info.xlsx" }
+    let(:filename) { "varying_info.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
@@ -88,7 +88,7 @@ describe UserImport do
   end
 
   context "with blank lines" do
-    let(:filename) { "blank_lines.xlsx" }
+    let(:filename) { "blank_lines.csv" }
 
     it "ignores blank lines" do
       expect(import).to be_succeeded
@@ -97,7 +97,7 @@ describe UserImport do
   end
 
   context "when headers have trailing invisible blanks" do
-    let(:filename) { "abnormal_headers.xlsx" }
+    let(:filename) { "abnormal_headers.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
@@ -105,7 +105,7 @@ describe UserImport do
   end
 
   context "when creating users without emails" do
-    let(:filename) { "empty_emails.xlsx" }
+    let(:filename) { "empty_emails.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
@@ -114,7 +114,7 @@ describe UserImport do
 
   context "with tricky file" do
     # This file was causing users to get created with passwords.
-    let(:filename) { "no_passwords.xlsx" }
+    let(:filename) { "no_passwords.csv" }
 
     it "creates users with passwords" do
       expect(import).to be_succeeded
@@ -124,7 +124,7 @@ describe UserImport do
   end
 
   context "with one row" do
-    let(:filename) { "one_row.xlsx" }
+    let(:filename) { "one_row.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
@@ -133,7 +133,7 @@ describe UserImport do
   end
 
   context "with missing header row with a number in it" do
-    let(:filename) { "missing_headers.xlsx" }
+    let(:filename) { "missing_headers.csv" }
 
     it "reports unrecognized headers and handles numeric type" do
       expect(import).not_to be_succeeded
@@ -143,7 +143,7 @@ describe UserImport do
   end
 
   context "with simple validation error" do
-    let(:filename) { "errors.xlsx" }
+    let(:filename) { "errors.csv" }
 
     it "handles errors" do
       expect(import).not_to be_succeeded
@@ -155,7 +155,7 @@ describe UserImport do
   end
 
   context "with duplicate emails" do
-    let(:filename) { "duplicate_emails.xlsx" }
+    let(:filename) { "duplicate_emails.csv" }
 
     it "does not check for email uniqueness" do
       expect(import).to be_succeeded
@@ -163,7 +163,7 @@ describe UserImport do
   end
 
   context "with duplicate usernames and too many errors" do
-    let(:filename) { "multiple_errors.xlsx" }
+    let(:filename) { "multiple_errors.csv" }
 
     before do
       stub_const("UserImport::IMPORT_ERROR_CUTOFF", 3)
