@@ -28,8 +28,6 @@ public/assets
 public/javascripts/i18n.js
 app/assets/javascripts/i18n/
 
-public/form-attachments/
-
 # these are auto generated
 config/*.sphinx.conf
 
@@ -49,7 +47,9 @@ routes.txt
 /theme
 
 # file uploads
-/uploads
+/uploads/
+/storage/
+/public/form-attachments/
 
 # Bundle installs
 vendor/bundle/
