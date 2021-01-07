@@ -2,9 +2,12 @@
 
 require "rails_helper"
 
+ERR_PREFIX = "There was an issue with your CSV file"
+
 # Holds specs for code contained in TabularImport (parent class).
 describe TabularImport do
   # Fake child class.
+  # rubocop:disable Lint/ConstantDefinitionInBlock
   class TestImport < TabularImport
     protected
 
@@ -12,6 +15,7 @@ describe TabularImport do
       sheet.row[0] # Need to actually access some data to trip some errors.
     end
   end
+  # rubocop:enable Lint/ConstantDefinitionInBlock
 
   let(:file) { tabular_import_fixture(filename) }
   let(:import) { TestImport.new(file: file).tap(&:run) }
@@ -22,7 +26,7 @@ describe TabularImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["There was an issue with your CSV file: Invalid byte sequence in UTF-8 in line 1."])
+      expect(run_errors).to eq(["#{ERR_PREFIX}: Invalid byte sequence in UTF-8 in line 1."])
     end
   end
 
@@ -31,7 +35,7 @@ describe TabularImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["There was an issue with your CSV file: Unclosed quoted field in line 1."])
+      expect(run_errors).to eq(["#{ERR_PREFIX}: Unclosed quoted field in line 1."])
     end
   end
 
@@ -40,7 +44,7 @@ describe TabularImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["There was an issue with your CSV file: Invalid byte sequence in UTF-8 in line 1."])
+      expect(run_errors).to eq(["#{ERR_PREFIX}: Invalid byte sequence in UTF-8 in line 1."])
     end
   end
 end
