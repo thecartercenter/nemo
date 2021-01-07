@@ -672,7 +672,6 @@ ko:
     no_selection: "선택된 항목이 없습니다."
     reqd_sym_definition: "필수 항목은 %{reqd_sym}로 표시되었습니다."
     select_all: "모두 선택하기"
-    server_contact_error: "서버 접속중 오류 발생"
     system_error: "시스템 오류 발생. 조정자에게 전달되었습니다. "
     system_version: "시스템 버젼"
     time_ago: "%{time} 전"
@@ -920,7 +919,6 @@ ko:
     recipient_selection_options:
       all_users: "미션의 모든 사용자"
       specific: "미션의 특정 사용자/그룹"
-    send_broadcast: "발송하기"
     send_success: "성공적으로 발송 되었습니다."
     send_error: "발송 중 오류가 발생했습니다. (아래의 항목을 체크하십시오.)"
     sms_error: "SMS 오류"
@@ -939,9 +937,7 @@ ko:
     enter_full_screen: "전체화면 보기"
     exit_full_screen: "전체화면 닫기"
     expand_map: "지도 확대"
-    low_activity: "낮은 활동률"
     my_responses: "내 응답"
-    no_reports: "이 미션에는 아직 생성된 보고서가 없습니다."
     recent_responses: "최근 응답지"
     shrink_map: "지도 축소"
     response_locations: "응답 지역"
@@ -951,7 +947,6 @@ ko:
     select_api_users: "API를 통해 데이타에 접근 가능한 사용자들을 모두 선택하십시오."
     add_group: "그룹 추가"
     add_questions: "질문 추가"
-    add_selected: "선택된 질문들을 질문지에 추가"
     back_to_questions: "질문 목록으로 돌아가기"
     choose_form: "질문지를 선택하십시오."
     clone_confirm: "정말로 질문지 '%{form_name}'를 복사하시겠습니까?"
@@ -1137,7 +1132,6 @@ ko:
     choose_attrib_question: "특성 혹은 질문을 선택하십시오"
     choose_disagg_qing: "질문을 선택하십시오"
     choose_form: "질문지를 선택하십시오"
-    choose_report: "보고서를 선택하십시오"
     columns: "열"
     display_options: "선택사항"
     edit_report: "보고서 수정하기"
@@ -1154,7 +1148,6 @@ ko:
     how_to_display_questions: "질문이 게재되는 방식을 선택하십시오"
     how_to_display_results: "결과가 게재될 방식을 선택하십시오"
     how_to_order_questions: "질문이 나열될 순서를 선택하십시오"
-    loading_report: "보고서 로딩 중"
     questions_with_option_sets: "이 선택지가 쓰인 질문"
     mission: "미션"
     no_match: "해당하는 데이타를 찾지 못했습니다."
@@ -1396,7 +1389,6 @@ ko:
     api_key:
       regenerate: "생성하기"
     back_to_index: "사용자 목록으로 돌아가기"
-    bulk_destroy: "다수의 사용자 삭제하기"
     bulk_destroy_confirm:
       zero: "정말로 0명의 사용자를 삭제하시겠습니까?"
       one: "정말로 이 사용자를 삭제하시겠습니까?"
@@ -1422,15 +1414,12 @@ ko:
       other: "%{count}명의 사용자가 생략되었습니다."
     bulk_destroy_skipped_current: "현재 사용자를 삭제하지 않습니다."
     edit_profile: "프로필 수정하기"
-    export_vcard: "vCard로 내보내기"
     forgot_password: "비밀번호를 잊어버리셨습니까?"
     gender_options:
       man: "남성"
       woman: "여성"
       no_answer: "응답 거절"
       specify: "정확히 기술해 주십시오."
-    add_to_group: "다수의 사용자 그룹 추가하기"
-    remove_from_group: "다수의 사용자 그룹 제거하기"
     login_instructions:
       preamble_singular: |-
           로그인 가이드가 아래에 보여집니다. 이 페이지를 인쇄해 아래의 사용자들에게 나누어 주십시오.
@@ -1449,7 +1438,6 @@ ko:
   user_group:
     create_prompt: "그룹의 이름을 입력하십시오."
     add_users_success: "성공적으로 %{count}명의 사용자를 그룹 %{group}에 추가했습니다"
-    remove_users_success: "성공적으로 %{count}명의 사용자를 그룹 %{group}로부터 삭제했습니다"
     new_group: "새 그룹"
   welcome:
     awaiting_review: "**%{count}**개의 검토 대기중인 응답"

@@ -584,41 +584,6 @@ pt-BR:
       user:
         phone: "p.ex. +5535987654321"
         phone2: "p.ex. +5535987654321"
-    action_links:
-      show: "Ver"
-      edit: "Editar"
-      destroy: "Apagar"
-      index: "Listar"
-      clone: "Clonar"
-      models:
-        form:
-          new: "Criar novo formulário"
-          sms_guide: "Guia SMS"
-          sms_console: "Console de testes SMS"
-          go_live: "Colocar ao vivo"
-          pause: "Pausar"
-          return_to_draft: "Retornar ao status de rascunho"
-          print: "Imprimir"
-        mission:
-          new: "Criar missão"
-        operation:
-          clear: "Apagar todos completos"
-          destroy: "Apagar"
-        option_set:
-          new: "Criar novo conjunto de opções"
-          export: "Exportar para XLSX"
-        option_sets/import:
-          new: "Importar novo conjunto de opções"
-        question:
-          new: "Criar nova questão"
-        report/report:
-          new: "Criar novo relatório"
-          export: "Exportar para CSV"
-        user:
-          new: "Criar nova/o usuária/o"
-        user_group:
-          new: "Novo grupo"
-          members: "Listar integrantes"
     hints:
       form:
         name: "Nome descritivo para o formulário."
@@ -887,7 +852,6 @@ pt-BR:
     no_selection: "Você não selecionou nada."
     reqd_sym_definition: "Campos obrigatórios são marcados com um %{reqd_sym}."
     select_all: "Selecionar tudo"
-    server_contact_error: "Erro na conexão ao servidor"
     system_error: "Erro de sistema. O Administrador foi notificado."
     system_version: "Versão do sistema"
     time_ago: "Há %{time} atrás"
@@ -1160,7 +1124,6 @@ pt-BR:
       all_users: "Todas/os as/os usuárias/os da missão"
       all_enumerators: "Todas/os as/os preenchedoras/es da missão"
       specific: "Grupos ou usuárias/os específicos da missão"
-    send_broadcast: "Enviar transmissão"
     send_success: "Transmissão enviada com sucesso."
     send_error: "Erro ao enviar a transmissão (veja abaixo)."
     sms_error: "Erro de SMS"
@@ -1204,11 +1167,9 @@ pt-BR:
     enter_full_screen: "Entrar em tela cheia"
     exit_full_screen: "Sair da tela cheia"
     expand_map: "Expandir mapa"
-    low_activity: "Baixa atividade"
     my_responses: "Minhas submissões"
     no_map_offline: "O mapa está desabilitado por que o servidor não tem conexão para a internet."
     no_map_key: "O mapa está desabilitado por que nenhuma chave Google Maps foi especificada nas configurações."
-    no_reports: "Ainda não foram criados relatórios nesta missão."
     recent_responses: "Últimas submissões"
     shrink_map: "Reduzir o mapa"
     response_locations: "Localizações das submissões"
@@ -1231,7 +1192,6 @@ pt-BR:
     select_api_users: "Escolha todas/os as/os usuárias/os que podem acessar os dados do formulário pelo API:"
     add_group: "Adicionar grupo"
     add_questions: "Adicionar questões"
-    add_selected: "Adicionar questões escolhidas ao formulário"
     back_to_questions: "Voltar à lista de questões"
     choose_form: "Escolha um formulário..."
     clone_confirm: "Você tem certeza que quer fazer uma cópia do formulário '%{form_name}'?"
@@ -1442,7 +1402,6 @@ pt-BR:
     must_be_logged_out: "Você deve estar deslogado/a para ver esta página."
   question:
     answer_only_caps: "RESPONSA APENAS SE"
-    bulk_destroy: "Apagar múltiplas questões"
     bulk_destroy_confirm:
       zero: "Tem certeza que quer remover zero questões?"
       one: "Tem certeza que quer remover esta questão?"
@@ -1519,7 +1478,6 @@ pt-BR:
     choose_attrib_question: "Escolha um atributo ou uma questão"
     choose_disagg_qing: "Escolha uma questão..."
     choose_form: "Escolha um formulário..."
-    choose_report: "Escolha um relatório..."
     columns: "Colunas"
     display_options: "Opções"
     edit_report: "Editar relatório"
@@ -1536,7 +1494,6 @@ pt-BR:
     how_to_display_questions: "Como devem ser exibidas as questões?"
     how_to_display_results: "Como é que você gostaria de exibir os resultados?"
     how_to_order_questions: "Como devem ser ordenadas as questões?"
-    loading_report: "Carregando o relatório..."
     questions_with_option_sets: "Questões com estes conjuntos de opções"
     missing_enumerators: "Preenchedores que não criam relatórios"
     missing_enumerators_total_count: "%{user_count} no total"
@@ -1651,7 +1608,6 @@ pt-BR:
     save_and_mark_reviewed: "Salvar e marcar como revisada"
     view_response: "Ver submissão"
     checked_out: "Esta submissão está sendo editada por:"
-    bulk_destroy: "Apagar selecionadas"
     remove_media_object_confirm:
       image: "Tem certeza que quer apagar esta imagem?"
       audio: "Tem certeza que quer apagar este áudio?"
@@ -1944,7 +1900,6 @@ pt-BR:
     api_key:
       regenerate: "Gerar novamente"
     back_to_index: "Voltar à lista de usuárias/os"
-    bulk_destroy: "Apagar múltiplas/os usuárias/os"
     bulk_destroy_confirm:
       zero: "Tem certeza que quer apagar zero usuárias/os?"
       one: "Tem certeza que quer apagar este/esta usuário/a?"
@@ -1974,17 +1929,13 @@ pt-BR:
       many: "%{count} usuárias/os puladas/os."
       other: "%{count} usuárias/os puladas/os."
     bulk_destroy_skipped_current: "Não foi removida/o a/o usuária/o atual."
-    create_multiple: "Importar usuárias/os"
     edit_profile: "Editar perfil"
-    export_vcard: "Exportar como vCard"
     forgot_password: "Esqueceu a senha?"
     gender_options:
       man: "Homem"
       woman: "Mulher"
       no_answer: "Não deseja responder"
       specify: "Especifique..."
-    add_to_group: "Adicionar múltiplas/os usuárias/os de grupo"
-    remove_from_group: "Remover múltiplas/os usuárias/os de grupo"
     login_instructions:
       closing:
       - Por favor note o 's' no 'https' no link (URL).
@@ -2020,7 +1971,6 @@ pt-BR:
   user_group:
     create_prompt: "Por favor, insira o nome do seu grupo."
     add_users_success: "%{count} usuárias/os foram inseridas/os com sucesso ao grupo %{group}"
-    remove_users_success: "%{count} usuárias/os foram removidas/os com sucesso do grupo %{group}"
     new_group: "Novo grupo"
   welcome:
     awaiting_review: "**%{count}** aguardando revisão"

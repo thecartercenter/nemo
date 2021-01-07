@@ -606,41 +606,6 @@ ar:
       user:
         phone: "مثال +17123241235"
         phone2: "مثال +2348123456789"
-    action_links:
-      show: "عرض"
-      edit: "تعديل"
-      destroy: "حذف"
-      index: "قائمة"
-      clone: "استنساخ"
-      models:
-        form:
-          new: "إنشاء إستمارة جديدة"
-          sms_guide: "دليل الرسالة النصية القصيرة"
-          sms_console: "وحدة تحكم اختبار الرسائل النصية القصيرة"
-          go_live: "نشر"
-          pause: "توقيف النشر"
-          return_to_draft: "العودة إلى حالة المسودة"
-          print: "طباعة"
-        mission:
-          new: "إنشاء مهمة"
-        operation:
-          clear: "إزالة كل العمليات المكتملة"
-          destroy: "مسح"
-        option_set:
-          new: "إنشاء مجموعة خيار جديدة"
-          export: "تصدير إلى XLSX"
-        option_sets/import:
-          new: "إستيراد مجموعة خيار جديد"
-        question:
-          new: "إنشاء سؤال جديد"
-        report/report:
-          new: "إنشاء تقرير جديد"
-          export: "تصدير إلى CSV"
-        user:
-          new: "إنشاء مستخدم جديد"
-        user_group:
-          new: "مجموعة جديدة"
-          members: "قائمة الاعضاء"
     hints:
       form:
         name: "اسم وصفي للإستمارة"
@@ -920,7 +885,6 @@ ar:
     no_selection: "لم تحدد اي شيء"
     reqd_sym_definition: "الحقول الإلزامية مشار إليها ب %{reqd_sym}."
     select_all: "تحديد الكل"
-    server_contact_error: "خطأ في الاتصال بالخادم"
     system_error: "خطأ بالنظام. قد تم إخطار المسؤول."
     system_version: "نسخة إصدار النظام"
     time_ago: "%{time} مضى"
@@ -1197,7 +1161,6 @@ ar:
       all_users: "جميع المستخدمين في المهمة"
       all_enumerators: "جميع المراقبين في المهمة"
       specific: "مستخدمون/مجموعات محددة في المهمة"
-    send_broadcast: "إرسال نشرة"
     send_success: "تم ارسال النشرة بنجاح"
     send_error: "خطأ في ارسال النشرة (انظر ادناه)"
     sms_error: "خطأ بالرسالة النصية القصيرة"
@@ -1245,9 +1208,7 @@ ar:
     enter_full_screen: "دخول الشاشة الكاملة"
     exit_full_screen: "خروج من الشاشة الكاملة"
     expand_map: "توسيع الخريطة"
-    low_activity: "فعالية قليلة"
     my_responses: "ردودي"
-    no_reports: "لم يتم إنشاء تقارير لهذه المهمة بعد."
     recent_responses: "آخر الردود"
     shrink_map: "تقليص الخريطة"
     response_locations: "مواقع الردود"
@@ -1270,7 +1231,6 @@ ar:
     select_api_users: "تحديد كافة المستخدمين الذين يمكنهم الوصول لبيانات الاستمارة عبر API:"
     add_group: "إضافة مجموعة"
     add_questions: "إضافة أسئلة"
-    add_selected: "إضافة الأسئلة المختارة للإستمارة"
     back_to_questions: "العودة لقائمة الأسئلة"
     choose_form: "إختار إستمارة"
     clone_confirm: "هل أنت متأكد أنك تريد أن تنشئ نسخة من الاستمارة '%{form_name}'؟"
@@ -1498,7 +1458,6 @@ ar:
     must_be_logged_out: "يجب تسجيل الخروج لمشاهدة هذه الصفحة."
   question:
     answer_only_caps: "أجب فقط إذا"
-    bulk_destroy: "حذف أسئلة متعددة"
     bulk_destroy_confirm:
       zero: "هل أنت متأكد من أنك لا تريد حذف أي سؤال ؟"
       one: "هل أنت متأكد أنك تريد حذف هذا السؤال؟"
@@ -1573,7 +1532,6 @@ ar:
     choose_attrib_question: "إختار ميزة أو سؤال"
     choose_disagg_qing: "أختار سؤال"
     choose_form: "إختار إستمارة"
-    choose_report: "إختار تقرير"
     columns: "أعمدة"
     display_options: "خيارات"
     edit_report: "تعديل التقرير"
@@ -1590,7 +1548,6 @@ ar:
     how_to_display_questions: "كيف يجب أن يتم عرض الأسئلة؟"
     how_to_display_results: "كيف تريد عرض النتائج؟"
     how_to_order_questions: "كيف ينبغي أن ترتب الأسئلة؟"
-    loading_report: "تحميل التقرير ..."
     questions_with_option_sets: "أسئلة مع مجموعات الخيار"
     missing_enumerators: "مراقبون لا يقدمون تقارير"
     missing_enumerators_total_count: "%{user_count}في المجموع "
@@ -1701,7 +1658,6 @@ ar:
     save_and_mark_reviewed: "حفظ ووضع علامة تمت المراجعة"
     view_response: "عرض الرد"
     checked_out: "تم فحص هذا الرد من طرف:"
-    bulk_destroy: "حذف المحدد"
     remove_media_object_confirm:
       image: "هل انت متأكد من أنك تريد حذف الصورة؟"
       audio: "هل أنت متأكد من أنك تريد حذف هذا الصوت؟"
@@ -2197,7 +2153,6 @@ ar:
     api_key:
       regenerate: "إعادة انتاج"
     back_to_index: "العودة لقائمة المستخدمين"
-    bulk_destroy: "حذف عدة مستخدمين"
     bulk_destroy_confirm:
       zero: "هل أنت متأكد من أنك لا تريد حذف أي مستخدم؟"
       one: "هل أنت متأكد من أنك تريد حذف هذا المستخدم؟"
@@ -2227,17 +2182,13 @@ ar:
       many: "تم تخطي %{count} مستخدمين."
       other: "تم تخطي %{count} مستخدمين."
     bulk_destroy_skipped_current: "عدم حذف المستخدم الحالي"
-    create_multiple: "استيراد المستخدمين"
     edit_profile: "تعديل الحساب"
-    export_vcard: "تصدير بصيغة vCard"
     forgot_password: "نسيت كلمة المرور؟"
     gender_options:
       man: "رجل"
       woman: "امرأة"
       no_answer: "رفض الإجابة"
       specify: "تحديد ..."
-    add_to_group: "إضافة عدة مستخدمين إلى مجموعة"
-    remove_from_group: "حذف عدة مستخدمين من المجموعة"
     login_instructions:
       closing:
       - الرجاء ملاحظة 's' في 'https' في عنوان URL الخاص بالموقع.
@@ -2268,7 +2219,6 @@ ar:
   user_group:
     create_prompt: "الرجاء كتابة اسم مجموعتك."
     add_users_success: "تمت إضافة %{count} مستخدمين إلى المجموعة %{group} بنجاح"
-    remove_users_success: "تمت إزالة %{count} مستخدمين من المجموعة %{group} بنجاح"
     new_group: "مجموعة جديدة"
   welcome:
     awaiting_review: "**%{count}** بانتظار المراجعة"

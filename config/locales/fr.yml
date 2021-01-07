@@ -582,41 +582,6 @@ fr:
       user:
         phone: "Ex: +17123241235"
         phone2: "Ex: +2348123456789"
-    action_links:
-      show: "Afficher"
-      edit: "Editer"
-      destroy: "Supprimer"
-      index: "Liste"
-      clone: "Cloner"
-      models:
-        form:
-          new: "Créer un Nouveau Formulaire"
-          sms_guide: "Guide SMS"
-          sms_console: "Console de test SMS"
-          go_live: "Publier"
-          pause: "Pause"
-          return_to_draft: "Retour au statut brouillon"
-          print: "Imprimer"
-        mission:
-          new: "Créer une mission"
-        operation:
-          clear: "Effacer toutes les opérations terminées"
-          destroy: "Effacer"
-        option_set:
-          new: "Créer un Nouvel Ensemble d'Options"
-          export: "Exporter au format XLSX"
-        option_sets/import:
-          new: "Importer un ensemble d'options"
-        question:
-          new: "Créer une Nouvelle Question"
-        report/report:
-          new: "Créer un Nouveau Rapport"
-          export: "Exporter au format CSV"
-        user:
-          new: "Créer un Nouvel Utilisateur"
-        user_group:
-          new: "Nouveau groupe"
-          members: "Lister les membres"
     hints:
       form:
         name: "Un nom descriptif pour le formulaire."
@@ -880,7 +845,6 @@ fr:
     no_selection: "Rien n'a été sélectionné."
     reqd_sym_definition: "Les réponses obligatoires sont marqués avec un %{reqd_sym}."
     select_all: "Sélectionner tout"
-    server_contact_error: "Erreur de communication avec le serveur"
     system_error: "Erreur de système. L'administrateur a été notifié."
     system_version: "Version du système"
     time_ago: "%{time}"
@@ -1153,7 +1117,6 @@ fr:
       all_users: "Tous les utilisateurs dans la mission"
       all_enumerators: "Tous les observateurs dans la mission"
       specific: "Groupe ou utilisateur spécifique dans la mission"
-    send_broadcast: "Envoyer une diffusion"
     send_success: "Diffusion envoyée avec succès."
     send_error: "Erreur d'envoi de la diffusion (voir ci-dessous)."
     sms_error: "Erreur de SMS"
@@ -1197,9 +1160,7 @@ fr:
     enter_full_screen: "Agrandir l'écran"
     exit_full_screen: "Réduire l'écran"
     expand_map: "Étendre la carte"
-    low_activity: "Faible Activité"
     my_responses: "Mes Réponses"
-    no_reports: "Aucun des rapports n'ont encore été créé pour cette mission"
     recent_responses: "Dernières réponses"
     shrink_map: "Réduire la carte"
     response_locations: "Lieu de soumission des réponses"
@@ -1222,7 +1183,6 @@ fr:
     select_api_users: "Choisissez tous les utilisateurs qui peuvent accéder aux formulaires par l'API:"
     add_group: "Ajouter groupe"
     add_questions: "Ajouter des questions"
-    add_selected: "Ajouter des questions au formulaire"
     back_to_questions: "Retourner à la liste des questions"
     choose_form: "Choisissez un formulaire..."
     clone_confirm: "Vous êtes sûr que vous voulez faire un copie de le formulaire '%{form_name}'?"
@@ -1445,7 +1405,6 @@ fr:
     must_be_logged_out: "Vous devez être déconnecté pour voir cette page."
   question:
     answer_only_caps: "REPONDEZ SEULEMENT SI"
-    bulk_destroy: "Supprimer plusieurs questions"
     bulk_destroy_confirm:
       zero: "Êtes-vous sûr de vouloir supprimer zéro question?"
       one: "Êtes-vous sûr de vouloir supprimer cette question?"
@@ -1520,7 +1479,6 @@ fr:
     choose_attrib_question: "Choisissez un attribut ou question"
     choose_disagg_qing: "Choisissez une question..."
     choose_form: "Choisissez un formulaire..."
-    choose_report: "Choisissez un rapport..."
     columns: "Colonnes"
     display_options: "Options "
     edit_report: "Modifier Rapport"
@@ -1537,7 +1495,6 @@ fr:
     how_to_display_questions: "Comment voulez vous afficher les questions ?"
     how_to_display_results: "Comment voulez vous afficher les résultats ?"
     how_to_order_questions: "Comment devraient être ordonnés les questions?"
-    loading_report: "Chargement Le Rapport..."
     questions_with_option_sets: "Questions avec ces ensembles d'options"
     missing_enumerators: "Observateur n'ayant pas répondu"
     missing_enumerators_total_count: "%{user_count} au total"
@@ -1644,7 +1601,6 @@ fr:
     save_and_mark_reviewed: "Enregistrer et Marquer comme Revu"
     view_response: "Voir Réponse"
     checked_out: "Cette réponse a été examiné par:"
-    bulk_destroy: "Supprimer les éléments sélectionnés"
     remove_media_object_confirm:
       image: "Etes vous sûr de vouloir supprimer cette image?"
       audio: "Etes vous sûr de vouloir supprimer ce son?"
@@ -2145,7 +2101,6 @@ fr:
     api_key:
       regenerate: "Régénérer"
     back_to_index: "Retourner à liste d'utilisateurs"
-    bulk_destroy: "Supprimer plusieurs utilisateurs"
     bulk_destroy_confirm:
       zero: "Etes vous sûr de vouloir supprimer zéro utilisateur?"
       one: "Etes vous sûr de vouloir supprimer cet utilisateur?"
@@ -2175,17 +2130,13 @@ fr:
       many: "%{count} utilisateurs ignorés."
       other: "%{count} utilisateurs ignorés."
     bulk_destroy_skipped_current: "Ne peut supprimer l'utilisateur en cours"
-    create_multiple: "Importer des utilisateurs"
     edit_profile: "Modifier le profil"
-    export_vcard: "Exporter comme vCard"
     forgot_password: "Vous avez oublié votre mot de passe?"
     gender_options:
       man: "Homme"
       woman: "Femme"
       no_answer: "Refus de répondre"
       specify: "Spécifier "
-    add_to_group: "Ajouter plusieurs utilisateurs à un groupe"
-    remove_from_group: "Supprimer plusieurs utilisateurs d'un groupe"
     login_instructions:
       closing:
       - Veuillez noter le 's' dans 'https' dans l'URL du site.
@@ -2216,7 +2167,6 @@ fr:
   user_group:
     create_prompt: "Veuillez saisir le nom de votre groupe"
     add_users_success: "%{count} utilisateurs ajoutés avec succès au groupe %{group}"
-    remove_users_success: "%{count} utilisateurs supprimés avec succès du groupe %{group}"
     new_group: "Nouveau groupe"
   welcome:
     awaiting_review: "**%{count}** En attentes de révision"
