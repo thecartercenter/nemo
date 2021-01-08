@@ -36,7 +36,7 @@ class TabularImport
 
   def open_sheet
     self.file = Paperclip.io_adapters.for(file).read if file.class == Paperclip::Attachment
-    self.sheet = CSV.new(file).read
+    self.sheet = CSV.new(file, encoding: Encoding::UTF_8).read
   end
 
   def add_run_error(message, opts = {})
