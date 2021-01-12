@@ -37,6 +37,14 @@ class TabularImport
   def open_sheet
     self.file = Paperclip.io_adapters.for(file).read if file.class == Paperclip::Attachment
     self.sheet = CSV.new(file, encoding: Encoding::UTF_8).read
+    delete_bom_prefix(sheet[0][0])
+    sheet
+  end
+
+  # The "bom|utf-8" encoding could handle this automatically,
+  # but that only works for files, not strings which are used in some cases.
+  def delete_bom_prefix(str)
+    str.sub!(/\A#{UserFacingCSV::BOM}/, "")
   end
 
   def add_run_error(message, opts = {})

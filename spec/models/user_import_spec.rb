@@ -35,12 +35,21 @@ describe UserImport do
     end
   end
 
-  context "with CSV" do
+  context "with simple CSV" do
     let(:filename) { "batch_of_3.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
       expect_user_count(3)
+    end
+  end
+
+  context "with BOM character" do
+    let(:filename) { "bom.csv" }
+
+    it "succeeds" do
+      expect(import).to be_succeeded
+      expect_user_count(1)
     end
   end
 
