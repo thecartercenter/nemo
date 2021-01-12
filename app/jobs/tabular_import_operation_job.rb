@@ -7,7 +7,7 @@ class TabularImportOperationJob < OperationJob
     import = import_class.constantize.new(
       mission_id: mission&.id,
       name: name,
-      file: open_file(saved_upload.file)
+      file: saved_upload.file.download
     )
     import.run
     operation_failed(format_error_report(import.run_errors)) unless import.succeeded?
@@ -19,19 +19,5 @@ class TabularImportOperationJob < OperationJob
   def format_error_report(errors)
     return if errors.empty?
     errors.map { |error| "* #{error}" }.join("\n")
-  end
-
-  def open_file(file)
-    if file.options[:storage] == "fog"
-      # Preserve the file extension (Roo, for example, requires this in order to parse)
-      pathname = Pathname.new(file.path)
-      tmp = Tempfile.new(["tabular_import", pathname.basename.to_s])
-      tmp.binmode
-      URI.parse(file.expiring_url).open { |io| tmp.write(io.read) }
-      tmp.rewind
-      tmp
-    else
-      file
-    end
   end
 end
