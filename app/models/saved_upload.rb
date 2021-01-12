@@ -15,7 +15,7 @@
 #
 # rubocop:enable Layout/LineLength
 
-# A model for a generic file upload, managed by Paperclip
+# A model for a generic file upload.
 class SavedUpload < ApplicationRecord
   has_one_attached :file
   validates :file, attached: true

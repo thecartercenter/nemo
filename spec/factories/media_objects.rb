@@ -27,30 +27,31 @@
 
 FactoryBot.define do
   factory :media_object, class: "Media::Object" do
-    # This is attached after build.
+    # Attached after build.
     item { nil }
 
     transient do
-      file { media_fixture("images/the_swing.jpg") }
+      filename { "images/the_swing.jpg" }
+      fixture { media_fixture(filename) }
     end
 
     after(:build) do |obj, evaluator|
-      obj.item.attach(io: evaluator.file, filename: File.basename(evaluator.file))
+      obj.item.attach(io: evaluator.fixture, filename: File.basename(evaluator.fixture))
     end
 
     factory :media_image, class: "Media::Image" do
       jpg
 
       trait :jpg do
-        file { media_fixture("images/the_swing.jpg") }
+        filename { "images/the_swing.jpg" }
       end
 
       trait :png do
-        file { media_fixture("images/the_swing.png") }
+        filename { "images/the_swing.png" }
       end
 
       trait :tiff do
-        file { media_fixture("images/the_swing.tiff") }
+        filename { "images/the_swing.tiff" }
       end
     end
 
@@ -58,31 +59,31 @@ FactoryBot.define do
       m4a
 
       trait :flac do
-        file { media_fixture("audio/powerup.flac") }
+        filename { "audio/powerup.flac" }
       end
 
       trait :m4a do
-        file { media_fixture("audio/powerup.m4a") }
+        filename { "audio/powerup.m4a" }
       end
 
       trait :mp3 do
-        file { media_fixture("audio/powerup.mp3") }
+        filename { "audio/powerup.mp3" }
       end
 
       trait :ogg do
-        file { media_fixture("audio/powerup.ogg") }
+        filename { "audio/powerup.ogg" }
       end
 
       trait :opus do
-        file { media_fixture("audio/powerup.opus") }
+        filename { "audio/powerup.opus" }
       end
 
       trait :wav do
-        file { media_fixture("audio/powerup.wav") }
+        filename { "audio/powerup.wav" }
       end
 
       trait :webm do
-        file { media_fixture("audio/powerup.webm") }
+        filename { "audio/powerup.webm" }
       end
     end
 
@@ -90,31 +91,31 @@ FactoryBot.define do
       mp4
 
       trait :'3gp' do
-        file { media_fixture("video/jupiter.3gp") }
+        filename { "video/jupiter.3gp" }
       end
 
       trait :avi do
-        file { media_fixture("video/jupiter.avi") }
+        filename { "video/jupiter.avi" }
       end
 
       trait :mp4 do
-        file { media_fixture("video/jupiter.mp4") }
+        filename { "video/jupiter.mp4" }
       end
 
       trait :mpeg do
-        file { media_fixture("video/jupiter.mpeg") }
+        filename { "video/jupiter.mpeg" }
       end
 
       trait :webm do
-        file { media_fixture("video/jupiter.webm") }
+        filename { "video/jupiter.webm" }
       end
 
       trait :wmv do
-        file { media_fixture("video/jupiter.wmv") }
+        filename { "video/jupiter.wmv" }
       end
 
       trait :ogv do
-        file { media_fixture("video/jupiter.ogv") }
+        filename { "video/jupiter.ogv" }
       end
     end
   end

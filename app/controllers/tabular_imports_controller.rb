@@ -6,7 +6,8 @@ class TabularImportsController < ApplicationController
 
   def upload
     authorize!(:create, tabular_class)
-    saved_upload = SavedTabularUpload.new(file: params[:file])
+    saved_upload = SavedTabularUpload.new
+    saved_upload.file.attach(io: params[:file].tempfile, filename: params[:file].original_filename)
 
     if saved_upload.save
       # Json keys match hidden input names that contain the key in dropzone form.
