@@ -41,7 +41,9 @@ class FormsController < ApplicationController
       # OpenRosa format for ODK
       format.xml do
         authorize!(:download, Form)
-        @cache_key = "#{Form.odk_index_cache_key(mission: current_mission)}/#{CACHE_SUFFIX}"
+        # Also cache based on host because this endpoint returns full URLs for form access.
+        # Ignoring host leads to issues with proxies or when debugging across localhost/0.0.0.0/ngrok.
+        @cache_key = "#{Form.odk_index_cache_key(mission: current_mission)}/#{request.host}/#{CACHE_SUFFIX}"
         @forms = @forms.live
       end
     end
