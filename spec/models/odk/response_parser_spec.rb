@@ -463,7 +463,9 @@ describe ODK::ResponseParser do
 
       it "creates response tree with media object for media answer" do
         ODK::ResponseParser.new(response: response, files: files).populate_response
-        expect(response.root_node.c[3].media_object.item_file_name).to include(media_file_name)
+        # Allow garbage mixed in, e.g. "the_swing.jpg" => "the_swing20210111-21428-16ox2q0.jpg"
+        regex = /#{File.basename(media_file_name, ".*")}.*#{File.extname(media_file_name)}/
+        expect(response.root_node.c[3].media_object.item.filename.to_s).to match(regex)
       end
     end
 
@@ -498,7 +500,7 @@ describe ODK::ResponseParser do
         expect(Response.count).to eq(1)
         expect(populated.root_node.c.count).to eq(4)
         expect(populated.root_node.c[1].pending_file_name).to be_nil
-        expect(populated.root_node.c[1].media_object.item_file_name).to include(media_file_name_1)
+        expect(populated.root_node.c[1].media_object.item.filename.to_s).to include(media_file_name_1)
         expect(populated.root_node.c[2].pending_file_name).to eq(media_file_name_2)
         expect(populated.root_node.c[2].media_object).to be_nil
 
@@ -511,7 +513,7 @@ describe ODK::ResponseParser do
         populated.save!
         expect(Response.count).to eq(1)
         populated.reload
-        expect(populated.root_node.c[2].media_object.item_file_name).to include(media_file_name_2)
+        expect(populated.root_node.c[2].media_object.item.filename.to_s).to include(media_file_name_2)
         expect(populated.root_node.c[3].media_object).to be_nil
       end
     end
