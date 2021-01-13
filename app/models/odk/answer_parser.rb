@@ -71,7 +71,11 @@ module ODK
       raise "media class not found for question type #{question_type}" unless klass
 
       begin
-        klass.create!(item: files[pending_file_name])
+        file = files[pending_file_name]
+        object = klass.new
+        object.item.attach(io: file, filename: File.basename(file))
+        object.save!
+        object
       rescue ActiveRecord::RecordInvalid => e
         Rails.logger.info("Media object failed validation on ODK upload, skipping (message: '#{e}', "\
           "filename: '#{pending_file_name}')")

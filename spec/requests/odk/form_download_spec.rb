@@ -110,8 +110,8 @@ describe FormsController, :odk, type: :request do
         let(:form) { create(:form, :live, mission: mission, question_types: %w[text integer]) }
 
         before do
-          form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
-          form.c[1].question.update!(media_prompt: audio_fixture("powerup.wav"))
+          form.c[0].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "powerup.mp3")
+          form.c[1].question.media_prompt.attach(io: audio_fixture("powerup.wav"), filename: "powerup.wav")
         end
 
         it "should render manifest tags correctly" do
@@ -122,7 +122,7 @@ describe FormsController, :odk, type: :request do
 
           assert_select("mediaFile", count: 2) do |elements|
             assert_select(elements[0], "filename", text: "#{form.c[0].question.id}_media_prompt.mp3")
-            assert_select(elements[0], "hash", text: "e7fe3aa406b8b67209b9d89c0cd50aa8")
+            assert_select(elements[0], "hash", text: "5/46pAa4tnIJudicDNUKqA==")
             assert_select(
               elements[0],
               "downloadUrl",
@@ -130,7 +130,7 @@ describe FormsController, :odk, type: :request do
             )
 
             assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_media_prompt.wav")
-            assert_select(elements[1], "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
+            assert_select(elements[1], "hash", text: "/y/R4glGXFv/p4S1xX2ExA==")
             assert_select(
               elements[1],
               "downloadUrl",

@@ -6,13 +6,14 @@ module ODK
 
     URI_DIRS_BY_TYPE = {video: "video", audio: "audio", image: "images"}.freeze
 
-    # Make media prompt file name unique to curb collisions and duplications
+    # Make media prompt filename unique to curb collisions and duplications,
+    # maintaining the extension e.g. ".mp3"
     def unique_media_prompt_filename
-      "#{id}_media_prompt#{File.extname(media_prompt_file_name)}" if media_prompt_file_name
+      "#{id}_media_prompt#{File.extname(media_prompt.filename.to_s)}" if media_prompt?
     end
 
     def media_prompt_md5
-      Digest::MD5.file(media_prompt.path).hexdigest if media_prompt_file_name
+      media_prompt.checksum if media_prompt?
     end
 
     def media_prompt_odk_uri

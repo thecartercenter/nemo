@@ -33,7 +33,7 @@ describe ODK::FormDecorator, :odk do
 
       context "with media prompt question" do
         before do
-          form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
+          form.c[0].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "foo.mp3")
         end
 
         context "when question is enabled" do
