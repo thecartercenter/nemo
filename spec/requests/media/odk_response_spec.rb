@@ -28,8 +28,8 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       form_response = Response.last
       expect(form_response.form).to eq(form)
       expect(form_response.answers.count).to eq(2)
-      expect(form_response.odk_xml_file_name).to eq("submission.xml")
-      expect(form_response.odk_xml_file_size).to be > 0
+      expect(form_response.odk_xml.filename).to eq("submission.xml")
+      expect(form_response.odk_xml.byte_size).to be > 0
 
       tmp_files = Dir.glob(ResponsesController::TMP_UPLOADS_PATH.join("*.xml"))
       expect(FileUtils.rm(tmp_files)).to be_empty

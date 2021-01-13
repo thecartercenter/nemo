@@ -78,25 +78,25 @@ describe "media_prompt content types and filenames" do
   end
 
   describe "media_type" do
-    subject(:question) { build(:question, media_prompt_file_name: filename).media_prompt_type }
+    subject(:question) { build(:question, fixture: file).media_prompt_type }
 
     context "audio" do
-      let(:filename) { "foo.ogg" }
+      let(:file) { audio_fixture("powerup.ogg") }
       it { is_expected.to eq(:audio) }
     end
 
     context "video" do
-      let(:filename) { "foo.mp4" }
+      let(:file) { video_fixture("jupiter.mp4") }
       it { is_expected.to eq(:video) }
     end
 
     context "image" do
-      let(:filename) { "foo.png" }
+      let(:file) { image_fixture("the_swing.jpg") }
       it { is_expected.to eq(:image) }
     end
 
     context "invalid" do
-      let(:filename) { "foo.bar" }
+      let(:file) { media_fixture("foo.bar") }
       it { is_expected.to be_nil }
     end
   end

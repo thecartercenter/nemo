@@ -57,6 +57,19 @@ FactoryBot.define do
 
       # Optionally specifies the options for the option set.
       option_names { nil }
+
+      # Optionally specifies a media_prompt attachment.
+      filename { nil }
+      fixture { media_fixture(filename) if filename }
+    end
+
+    # Attached after build.
+    media_prompt { nil }
+
+    after(:build) do |obj, evaluator|
+      if evaluator.fixture
+        obj.media_prompt.attach(io: evaluator.fixture, filename: File.basename(evaluator.fixture))
+      end
     end
 
     qtype_name { "integer" }
