@@ -4,7 +4,7 @@ shared_context "media helpers" do
   shared_examples "accepts file types" do |file_types|
     file_types.each do |type|
       context "with #{type} file" do
-        let(:media_file) { build(factory_name(described_class), item: file_for_type(type)) }
+        let(:media_file) { build(factory_name(described_class), fixture: file_for_type(type)) }
 
         it "is valid" do
           expect(media_file).to be_valid
@@ -16,10 +16,10 @@ shared_context "media helpers" do
   shared_examples "rejects file types" do |file_types|
     file_types.each do |type|
       context "with #{type} file" do
-        let(:media_file) { build(factory_name(described_class), item: file_for_type(type)) }
+        let(:media_file) { build(factory_name(described_class), fixture: file_for_type(type)) }
 
         it "is invalid" do
-          expect(media_file).to have(1).error_on(:item_content_type)
+          expect(media_file).to have(1).error_on(:item)
           expect(media_file).to be_invalid
         end
       end

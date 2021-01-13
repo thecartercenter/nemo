@@ -58,7 +58,7 @@ gem "rdiscount", "~> 2.1"
 gem "reverse_markdown", "~> 2.0"
 
 # Storage
-gem "active_storage_validations", "~> 0.9.0"
+gem "active_storage_validations", github: "cooperka/active_storage_validations", tag: "2020-01-13-v0.9.2-regexArray"
 gem "aws-sdk-s3", "~> 1.86", require: false
 gem "fog-aws", "~> 3.3"
 gem "image_processing", "~> 1.12"
