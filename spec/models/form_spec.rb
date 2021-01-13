@@ -134,19 +134,15 @@ describe Form do
 
     context "when updating a form version" do
       it "should change" do
-        old = Form.odk_index_cache_key(mission: get_mission)
-        form2.increment_version
-        new = Form.odk_index_cache_key(mission: get_mission)
-        expect(new).not_to eq(old)
+        expect { form2.increment_version }
+          .to(change { Form.odk_index_cache_key(mission: get_mission) })
       end
     end
 
     context "when updating a form name" do
       it "should change" do
-        old = Form.odk_index_cache_key(mission: get_mission)
-        form2.update(name: "form2 changed")
-        new = Form.odk_index_cache_key(mission: get_mission)
-        expect(new).not_to eq(old)
+        expect { form2.update!(name: "New Name!") }
+          .to(change { Form.odk_index_cache_key(mission: get_mission) })
       end
     end
 
@@ -378,6 +374,7 @@ describe Form do
     f = options[:form] || form
     f.update_status(:live)
     f.published_changed_at -= (options[:diff] || 1.hour)
+    f.updated_at -= (options[:diff] || 1.hour)
     f.save! if options[:save]
   end
 end
