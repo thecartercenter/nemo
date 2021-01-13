@@ -3,7 +3,7 @@
 # FormController
 class FormsController < ApplicationController
   # Increment to expire caches for this controller as needed due to changes.
-  CACHE_SUFFIX = "/2"
+  CACHE_SUFFIX = "2"
 
   include StandardImportable
   include BatchProcessable
@@ -41,7 +41,7 @@ class FormsController < ApplicationController
       # OpenRosa format for ODK
       format.xml do
         authorize!(:download, Form)
-        @cache_key = "#{Form.odk_index_cache_key(mission: current_mission)}#{CACHE_SUFFIX}"
+        @cache_key = "#{Form.odk_index_cache_key(mission: current_mission)}/#{CACHE_SUFFIX}"
         @forms = @forms.live
       end
     end
@@ -96,7 +96,7 @@ class FormsController < ApplicationController
   # Format is always :xml
   def odk_manifest
     authorize!(:download, @form)
-    @cache_key = "#{@form.odk_download_cache_key}/manifest#{CACHE_SUFFIX}"
+    @cache_key = "#{@form.odk_download_cache_key}/manifest/#{CACHE_SUFFIX}"
     return if fragment_exist?(@cache_key)
 
     questions = @form.enabled_questionings.map(&:question).select(&:media_prompt?)
