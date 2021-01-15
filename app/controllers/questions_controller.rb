@@ -55,6 +55,9 @@ class QuestionsController < ApplicationController
     # Convert tag string from TokenInput to array
     permitted_params[:tag_ids] = permitted_params[:tag_ids].split(",")
 
+    # Force an update, otherwise the attachment won't save if nothing else was modified.
+    permitted_params[:updated_at] = Time.current if permitted_params[:media_prompt].present?
+
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @question.assign_attributes(permitted_params)
     @question.valid?
@@ -92,7 +95,6 @@ class QuestionsController < ApplicationController
 
   private
 
-  # creates/updates the question
   def create_or_update
     if @question.save
       set_success_and_redirect(@question)
