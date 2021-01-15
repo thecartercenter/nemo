@@ -12,9 +12,9 @@
     <% unless @decorated_questions.empty? %>
       <% @decorated_questions.each do |question| %>
         <mediaFile>
-          <filename><%= question.unique_media_prompt_filename %></filename>
-          <hash><%= question.media_prompt_md5 %></hash>
-          <downloadUrl><%= media_prompt_question_url(question) %></downloadUrl>
+          <filename><%= question.media_prompt.filename.to_s %></filename>
+          <hash><%= question.media_prompt.checksum %></hash>
+          <downloadUrl><%= rails_blob_url(question.media_prompt, disposition: "attachment") %></downloadUrl>
         </mediaFile>
       <% end %>
     <% end %>

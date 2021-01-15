@@ -14,7 +14,6 @@ class QuestionsController < ApplicationController
   include QuestionFormable
 
   load_and_authorize_resource
-  skip_authorize_resource only: :media_prompt
 
   decorates_assigned :questions
 
@@ -82,15 +81,6 @@ class QuestionsController < ApplicationController
     success << t("question.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?
     flash[:success] = success.join(" ") unless success.empty?
     redirect_to(questions_path)
-  end
-
-  def media_prompt
-    authorize!(:show, @question)
-
-    decorated_question = ODK::QuestionDecorator.decorate(@question)
-
-    send_attachment(decorated_question.media_prompt,
-      filename: decorated_question.unique_media_prompt_filename)
   end
 
   private

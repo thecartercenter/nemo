@@ -78,6 +78,7 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
   before_validation :normalize
+  before_save :set_filename
   before_save :check_condition_integrity
   after_destroy :check_condition_integrity
   after_save :update_forms
@@ -308,6 +309,17 @@ class Question < ApplicationRecord
     self.metadata_type = qtype_name == "datetime" ? metadata_type.presence : nil
 
     true
+  end
+
+  def set_filename
+    media_prompt.assign_attributes(filename: unique_media_prompt_filename) if media_prompt?
+  end
+
+  # Return a unique filename to curb collisions e.g. on ODK,
+  # maintaining the extension e.g. ".mp3".
+  def unique_media_prompt_filename
+    return nil unless media_prompt?
+    "#{id}_media_prompt#{File.extname(media_prompt.filename.to_s)}"
   end
 
   def at_least_one_name

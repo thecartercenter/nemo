@@ -83,11 +83,11 @@ describe "question form", js: true do
     click_on("Save")
 
     visit(question_path(locale: "en", mode: "m", mission_name: mission.compact_name, id: Question.last.id))
-    expect(page).to have_content("powerup.mp3")
+    expect(page).to have_content(".mp3")
 
     # Edit view shows file name and allows edit
     click_on("Edit")
-    expect(page).to have_content("powerup.mp3")
+    expect(page).to have_content(".mp3")
     attach_file("Media Prompt", audio_fixture("powerup.wav").path)
     click_on("Save")
 
@@ -95,8 +95,8 @@ describe "question form", js: true do
     visit(edit_question_path(Question.last.id, locale: "en", mode: "m",
                                                mission_name: get_mission.compact_name))
     expect(page).to have_css("input#question_media_prompt")
-    expect(page).to have_content("powerup.wav")
-    expect(page).not_to have_content("powerup.mp3")
+    expect(page).to have_content(".wav")
+    expect(page).not_to have_content(".mp3")
   end
 
   scenario "tags are deduplicated" do
