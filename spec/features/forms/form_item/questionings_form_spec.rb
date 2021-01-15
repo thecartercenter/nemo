@@ -125,7 +125,7 @@ describe "questionings form", js: true  do
 
           # we can still see the media prompt file
           visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
-          expect(page).to have_content("powerup.mp3")
+          expect(page).to have_content(".mp3")
         end
 
         it "should hide default field when if preload_last_saved is checked" do
