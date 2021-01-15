@@ -103,7 +103,7 @@ class FormsController < ApplicationController
 
     questions = @form.enabled_questionings.map(&:question).select(&:media_prompt?)
     @decorated_questions = ODK::QuestionDecorator.decorate_collection(questions)
-    @ifa = ODK::ItemsetsFormAttachment.new(form: @form).ensure_generated
+    @itemsets_attachment = ODK::ItemsetsFormAttachment.new(form: @form).ensure_generated
   end
 
   # Format is always :csv

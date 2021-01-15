@@ -81,14 +81,14 @@ describe FormsController, :odk, type: :request do
       end
 
       context "for form with small and large multilevel option sets" do
-        let(:ifa) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
+        let(:itemsets_attachment) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         it "should render regular manifest tag" do
           get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: auth_header)
           expect(response).to be_successful
           assert_select("filename", text: "itemsets.csv")
-          assert_select("hash", text: ifa.md5)
-          assert_select("downloadUrl", text: "http://www.example.com/#{ifa.path}")
+          assert_select("hash", text: itemsets_attachment.md5)
+          assert_select("downloadUrl", text: "http://www.example.com/#{itemsets_attachment.path}")
         end
 
         context "on https" do
@@ -101,7 +101,7 @@ describe FormsController, :odk, type: :request do
           it "should use https in URL" do
             get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: auth_header)
             expect(response).to be_successful
-            assert_select("downloadUrl", text: "https://www.example.com/#{ifa.path}")
+            assert_select("downloadUrl", text: "https://www.example.com/#{itemsets_attachment.path}")
           end
         end
       end
@@ -164,14 +164,14 @@ describe FormsController, :odk, type: :request do
 
     describe "getting itemsets file" do
       context "for form with option sets" do
-        let(:ifa) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
+        let(:itemsets_attachment) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         before do
-          ifa.ensure_generated
+          itemsets_attachment.ensure_generated
         end
 
         it "should succeed" do
-          get("/#{ifa.path}", headers: auth_header)
+          get("/#{itemsets_attachment.path}", headers: auth_header)
           expect(response).to be_successful
           expect(response.body).to match(/,Cat/) # Full contents tested in model spec
         end

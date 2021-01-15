@@ -6,7 +6,7 @@ require "fileutils"
 describe ODK::ItemsetsFormAttachment, :odk do
   let(:form) { create(:form, question_types: question_types) }
   let(:question_types) { %w[integer] }
-  subject(:ifa) { ODK::ItemsetsFormAttachment.new(form: form) }
+  subject(:itemsets_attachment) { ODK::ItemsetsFormAttachment.new(form: form) }
 
   describe "path" do
     before { allow(form).to receive(:id).and_return(42) }
@@ -18,7 +18,7 @@ describe ODK::ItemsetsFormAttachment, :odk do
       end
 
       it "should be based on published_changed_at" do
-        expect(ifa.path).to eq("form-attachments/test/000042/itemsets-20140101_120000.csv")
+        expect(itemsets_attachment.path).to eq("form-attachments/test/000042/itemsets-20140101_120000.csv")
       end
     end
 
@@ -29,7 +29,7 @@ describe ODK::ItemsetsFormAttachment, :odk do
 
       it "should be based on current time" do
         Timecop.freeze("2014-02-01 12:00:00 UTC") do
-          expect(ifa.path).to eq("form-attachments/test/000042/itemsets-20140201_120000.csv")
+          expect(itemsets_attachment.path).to eq("form-attachments/test/000042/itemsets-20140201_120000.csv")
         end
       end
     end
@@ -37,29 +37,29 @@ describe ODK::ItemsetsFormAttachment, :odk do
 
   describe "priv_path" do
     it "should be correct" do
-      allow(ifa).to receive(:path).and_return("foo")
-      expect(ifa.priv_path).to eq(Rails.root.join("public/foo"))
+      allow(itemsets_attachment).to receive(:path).and_return("foo")
+      expect(itemsets_attachment.priv_path).to eq(Rails.root.join("public/foo"))
     end
   end
 
   describe "md5" do
     context "for not yet generated itemset" do
       it "should raise IOerror" do
-        expect { ifa.md5 }.to raise_error(IOError)
+        expect { itemsets_attachment.md5 }.to raise_error(IOError)
       end
     end
 
     context "for generated itemset" do
       it "should return correct md5" do
-        allow(ifa).to receive(:file_contents).and_return("foo")
-        expect(ifa.md5).to eq("acbd18db4cc2f85cedef654fccc4a4d8") # This is md5 of "foo"
+        allow(itemsets_attachment).to receive(:file_contents).and_return("foo")
+        expect(itemsets_attachment.md5).to eq("acbd18db4cc2f85cedef654fccc4a4d8") # This is md5 of "foo"
       end
     end
   end
 
   describe "empty?" do
     before do
-      allow(ifa).to receive(:decorated_form).and_return(double(needs_external_csv?: needs_external_csv))
+      allow(itemsets_attachment).to receive(:decorated_form).and_return(double(needs_external_csv?: needs_external_csv))
     end
 
     context "with form needing external CSV" do
@@ -74,9 +74,9 @@ describe ODK::ItemsetsFormAttachment, :odk do
   end
 
   describe "generate!" do
-    let(:csv) { ifa.send(:file_contents) }
+    let(:csv) { itemsets_attachment.send(:file_contents) }
     let(:external_csv_threshold) { 3 } # 3 means both multilevel and super_multilevel sets are included
-    let(:priv_dir) { File.dirname(ifa.priv_path) }
+    let(:priv_dir) { File.dirname(itemsets_attachment.priv_path) }
 
     before do
       configatron.preferred_locales = [:en]
@@ -99,7 +99,7 @@ describe ODK::ItemsetsFormAttachment, :odk do
       end
 
       it "should delete any previous files" do
-        ifa.ensure_generated
+        itemsets_attachment.ensure_generated
         expect(File.exist?(dummy_path)).to be(false)
       end
     end
@@ -114,7 +114,7 @@ describe ODK::ItemsetsFormAttachment, :odk do
       end
 
       it "includes only the super_multilevel set" do
-        ifa.ensure_generated
+        itemsets_attachment.ensure_generated
         # Level names are repeated b/c each set is distinct.
         # Just a coincidence the names are the same in this CSV.
         expect(csv).to eq(prepare_itemset_expectation("multilevel.csv", form))
@@ -131,7 +131,7 @@ describe ODK::ItemsetsFormAttachment, :odk do
       end
 
       it "should build file with correct contents" do
-        ifa.ensure_generated
+        itemsets_attachment.ensure_generated
         expect(csv).to eq(prepare_itemset_expectation("uneven_multilevel.csv", form))
       end
     end
@@ -150,15 +150,15 @@ describe ODK::ItemsetsFormAttachment, :odk do
       end
 
       it "should build file with translations where available and fallback to English where not" do
-        ifa.ensure_generated
+        itemsets_attachment.ensure_generated
         expect(csv).to eq(prepare_itemset_expectation("multiple_languages.csv", form))
       end
     end
 
     context "for form with no option sets" do
       it "should not generate a file" do
-        ifa.ensure_generated
-        expect(File.exist?(ifa.priv_path)).to be(false)
+        itemsets_attachment.ensure_generated
+        expect(File.exist?(itemsets_attachment.priv_path)).to be(false)
       end
     end
   end
