@@ -25,12 +25,7 @@ class QuestioningsController < ApplicationController
     # Convert tag string from TokenInput to array
     @questioning.question.tag_ids = permitted_params[:question_attributes][:tag_ids].split(",")
 
-    if @questioning.save
-      set_success_and_redirect(@questioning.question, to: edit_form_path(@questioning.form))
-    else
-      flash.now[:error] = I18n.t("activerecord.errors.models.question.general")
-      prepare_and_render_form
-    end
+    create_or_update
   end
 
   def update
@@ -41,6 +36,11 @@ class QuestioningsController < ApplicationController
       permitted_params[:question_attributes][:tag_ids] = tag_ids.split(",")
     end
 
+    # Force a Question update, otherwise the attachment won't save if nothing else was modified.
+    if permitted_params[:question_attributes][:media_prompt].present?
+      permitted_params[:question_attributes][:updated_at] = Time.current
+    end
+
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @questioning.assign_attributes(permitted_params)
     @questioning.valid?
@@ -48,12 +48,7 @@ class QuestioningsController < ApplicationController
     authorize!(:update_core, @questioning) if @questioning.core_changed?
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
-    if @questioning.save
-      set_success_and_redirect(@questioning.question, to: edit_form_path(@questioning.form))
-    else
-      flash.now[:error] = I18n.t("activerecord.errors.models.question.general")
-      prepare_and_render_form
-    end
+    create_or_update
   end
 
   # Only called via AJAX
@@ -63,6 +58,15 @@ class QuestioningsController < ApplicationController
   end
 
   private
+
+  def create_or_update
+    if @questioning.save
+      set_success_and_redirect(@questioning.question, to: edit_form_path(@questioning.form))
+    else
+      flash.now[:error] = I18n.t("activerecord.errors.models.question.general")
+      prepare_and_render_form
+    end
+  end
 
   # prepares objects for and renders the form template
   def prepare_and_render_form
