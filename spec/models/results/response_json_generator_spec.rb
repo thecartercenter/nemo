@@ -46,7 +46,10 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
     end
 
     it "produces correct json" do
-      is_expected.to match_json(prepare_response_json_expectation("basic.json", image_id: [image.id]))
+      path = Rails.application.routes.url_helpers.rails_blob_url(image.item, disposition: "attachment",
+                                                                             only_path: true)
+      "#{Results::ResponseJsonGenerator::BASE_URL_PLACEHOLDER}#{path}"
+      is_expected.to match_json(prepare_response_json_expectation("basic.json", path: [path]))
     end
   end
 

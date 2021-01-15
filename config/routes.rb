@@ -137,12 +137,6 @@ ELMO::Application.routes.draw do
       collection do
         post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"
       end
-
-      member do
-        # odk needs to be able to download media prompts
-        get "media_prompt", defaults: {direct_auth: "basic"}
-        get "audio_prompt", defaults: {direct_auth: "basic"}, action: :media_prompt # Legacy endpoint
-      end
     end
 
     resources :questionings, only: %i[show edit create update destroy]
