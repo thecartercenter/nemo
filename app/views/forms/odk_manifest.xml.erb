@@ -1,10 +1,11 @@
 <% cache(@cache_key) do %><?xml version='1.0' encoding='UTF-8' ?>
   <manifest xmlns="http://openrosa.org/xforms/xformsManifest">
-    <% unless @ifa.empty? %>
+    <% unless @itemsets_attachment.empty? %>
       <mediaFile>
-        <filename>itemsets.csv</filename><%# This is the filename ODK will create on the device. %>
-        <hash><%= @ifa.md5 %></hash>
-        <downloadUrl><%= url_for_path(@ifa.path) %></downloadUrl>
+        <% # This is the filename ODK will create on the device. %>
+        <filename>itemsets.csv</filename>
+        <hash><%= @itemsets_attachment.md5 %></hash>
+        <downloadUrl><%= url_for_path(@itemsets_attachment.path) %></downloadUrl>
       </mediaFile>
     <% end %>
 
