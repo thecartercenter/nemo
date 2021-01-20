@@ -49,7 +49,7 @@ describe Broadcast do
         expect(BroadcastMailer).to receive(:broadcast)
           .with(to: ["a@b.com"], subject: "Foo", body: "Bar", mission: get_mission)
           .and_return(double(deliver_now: nil))
-        expect(broadcaster).to receive(:deliver).with(broadcast, "[NEMO] Bar")
+        expect(broadcaster).to receive(:deliver).with(broadcast)
         broadcast.deliver
       end
     end
