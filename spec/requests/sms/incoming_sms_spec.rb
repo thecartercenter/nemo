@@ -252,9 +252,9 @@ describe "incoming sms", :sms do
   end
 
   context "with failing Twilio validation" do
-    let(:twilio_adapter) { Sms::Adapters::Factory.instance.create("Twilio") }
     let(:mission) { get_mission }
     let(:token) { mission.setting.incoming_sms_token }
+    let(:twilio_adapter) { Sms::Adapters::Factory.instance.create("Twilio", config: mission.setting) }
 
     before do
       expect(twilio_adapter).to receive(:validate).and_raise(Sms::Error)

@@ -30,10 +30,12 @@ class SmsController < ApplicationController
     processor = Sms::Processor.new(incoming_msg)
     processor.process
 
+    # Missionless submission
     if current_mission.nil?
       if incoming_msg.mission
         @current_mission = incoming_msg.mission
         load_settings_for_mission_into_config if current_mission
+        rebuild_incoming_adapter
       else
         # If we get to this point, the reply waiting to be sent must be a complaint of form not found,
         # since if it were found, the mission would be stored on the incoming_msg by now.
@@ -111,9 +113,18 @@ class SmsController < ApplicationController
     outgoing_adapter.deliver(forward) if forward
   end
 
+  # Searches for adapter recognizing request. Uses mission config to populate adapter.
+  # Defaults to root_config if current_mission is not available due to missionless submission.
   def incoming_adapter
-    return @incoming_adapter if defined?(@incoming_adapter)
-    @incoming_adapter = Sms::Adapters::Factory.instance.create_for_request(request)
+    @incoming_adapter ||= Sms::Adapters::Factory.instance
+      .create_for_request(request, config: current_mission&.setting || root_config)
+  end
+
+  # With missionless submission, the adapter may at first be built without full configuration.
+  # Once the mission is determined, we can build it properly.
+  def rebuild_incoming_adapter
+    @incoming_adapter = nil
+    incoming_adapter
   end
 
   # If no outgoing adapter is found in mission, tries root config. If still none found, raises.

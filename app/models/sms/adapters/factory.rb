@@ -17,7 +17,7 @@ class Sms::Adapters::Factory
   end
 
   # creates an instance of the specified adapter
-  def create(name_or_class, config: nil)
+  def create(name_or_class, config:)
     return nil if name_or_class.nil?
     config ||= configatron
     if name_or_class.is_a?(String)
@@ -33,9 +33,9 @@ class Sms::Adapters::Factory
 
   # Creates and returns an adapter that knows how to handle the given HTTP request params.
   # Returns nil if no adapter classes recognized the request.
-  def create_for_request(request)
-    klass = self.class.products.detect { |a| a.recognize_receive_request?(request) }
+  def create_for_request(request, config:)
+    klass = self.class.products.detect { |a| a.recognize_receive_request?(request, config: config) }
     return nil if klass.nil?
-    create(klass)
+    create(klass, config: config)
   end
 end

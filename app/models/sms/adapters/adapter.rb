@@ -6,7 +6,7 @@ class Sms::Adapters::Adapter
   attr_reader :config
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(_request)
+  def self.recognize_receive_request?(*_args)
     false
   end
 
