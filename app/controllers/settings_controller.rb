@@ -8,6 +8,7 @@ class SettingsController < ApplicationController
 
   def index
     # setting is already loaded by application controller
+    flash.now[:notice] = I18n.t("setting.admin_mode_notice")
     prepare_and_render_form
   end
 

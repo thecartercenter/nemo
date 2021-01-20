@@ -65,4 +65,20 @@ feature "sms settings form", :sms do
       expect(find("#setting_generic_sms_config_str").value).to match(/"params":/)
     end
   end
+
+  context "admin mode" do
+    # Some SMS settings are visible in admin mode
+    scenario "filling in twilio settings should work" do
+      visit("/en/admin/settings")
+      expect(page).not_to have_content("Frontline SMS")
+      expect(page).not_to have_content("Generic SMS")
+      fill_in("setting_twilio_account_sid", with: "abc")
+      click_link("Change Auth Token")
+      fill_in("setting_twilio_auth_token1", with: "jfjfjfjf")
+      click_button("Save")
+      expect(page).to have_content("Settings updated successfully")
+      expect(find("#setting_twilio_account_sid").value).to eq("abc")
+      expect(find("#setting_twilio_auth_token1").value).to eq(nil)
+    end
+  end
 end

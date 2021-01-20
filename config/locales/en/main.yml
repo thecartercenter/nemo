@@ -2121,6 +2121,7 @@ en:
     invalid_date: "'%{value}' is not a valid date."
 
   setting:
+    admin_mode_notice: "The below settings serve as system-wide defaults and can be overridden by individual missions."
     change_sms_password: "Change Password"
     change_twilio_auth_token: "Change Auth Token"
     change_api_key: "Change API Key"
