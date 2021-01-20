@@ -40,16 +40,12 @@ class Setting < ApplicationRecord
   KEYS_TO_COPY = %w[timezone preferred_locales incoming_sms_numbers frontlinecloud_api_key
                     twilio_phone_number twilio_account_sid twilio_auth_token theme].freeze
 
-  # These are the keys that make sense in admin mode
-  ADMIN_MODE_KEYS = %w[timezone preferred_locales theme universal_sms_token].freeze
-
   DEFAULT_TIMEZONE = "UTC"
 
   scope :by_mission, ->(m) { where(mission: m) }
 
   before_validation :normalize_locales
   before_validation :normalize_incoming_sms_numbers
-  before_validation :nullify_fields_if_these_are_admin_mode_settings
   before_validation :normalize_twilio_phone_number
   before_validation :clear_sms_fields_if_requested
   before_validation :jsonify_generic_sms_config
@@ -330,16 +326,6 @@ class Setting < ApplicationRecord
     self.twilio_auth_token = twilio_auth_token1 if twilio_auth_token1.present?
     self.frontlinecloud_api_key = frontlinecloud_api_key1 if frontlinecloud_api_key1.present?
     true
-  end
-
-  # if we are in admin mode, then a bunch of fields don't make sense and should be null
-  # make sure they are in fact null
-  def nullify_fields_if_these_are_admin_mode_settings
-    # if mission_id is nil, that means we're in admin mode
-    return if mission_id.present?
-    (attributes.keys - ADMIN_MODE_KEYS - %w[id created_at updated_at mission_id]).each do |a|
-      send("#{a}=", nil)
-    end
   end
 
   # Inserts theme settings into Settings store.
