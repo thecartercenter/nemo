@@ -9,6 +9,10 @@ feature "option set" do
     login(user)
   end
 
+  after do
+    FileUtils.rm_rf("Foo.csv")
+  end
+
   scenario "creating, showing, editing and exporting", js: true do
     visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
 
@@ -58,8 +62,10 @@ feature "option set" do
     expect(page).not_to have_selector("form.option_set_form input[type=text]")
     expect(page).not_to have_selector("form.option_set_form a.action-link-edit")
 
-    # Test export page does not error out
     click_on("Export")
+    export = CSV.open("Foo.csv").read
+    expect(export[0][0]).to eq("Id")
+    expect(export[1][1]).to eq("Banana")
   end
 
   scenario "creating, showing, and editing options with values", js: true do
