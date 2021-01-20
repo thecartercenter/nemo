@@ -100,10 +100,16 @@ RSpec.configure do |config|
     # Ensure no leftover logged in user.
     ENV.delete("TEST_LOGGED_IN_USER_ID")
 
-    # This is the root setting, which is seed data so it should always be available.
-    create(:setting, mission: nil)
-
     example.run
+  end
+
+  config.before(:each) do |example|
+    # This is the root setting, which is seed data so it should always be available.
+    # It's in a before block because it needs to come after DatabaseCleaners things, which
+    # are in before blocks. If it goes in the above around block, it runs too early and doesn't get cleaned.
+    # If this causes issues, a solution might be to change the DatabaseCleaner initializer to use
+    # around blocks.
+    create(:setting, mission: nil)
   end
 
   # Print browser logs to console if they are non-empty.

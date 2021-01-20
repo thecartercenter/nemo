@@ -3,16 +3,22 @@
 require "rails_helper"
 
 describe Sms::Adapters::TwilioAdapter, :sms do
+  include_context "sms adapters"
+
   let(:msg) { create(:sms_broadcast) }
   let(:messages) { double(:twilio_messages, create: true) }
   let(:client) { double(:twilio_client, messages: messages) }
-  let(:adapter) { Sms::Adapters::Factory.instance.create("Twilio") }
+  let(:mission_config) do
+    double(twilio_phone_number: "+1234567890", twilio_account_sid: "AC00000000000000000000000000000000",
+           twilio_auth_token: "12121212121212121212121212121212", incoming_sms_numbers: [])
+  end
+  let(:adapter) { Sms::Adapters::Factory.instance.create("Twilio", config: mission_config) }
 
   before do
-    configatron.twilio_account_sid = "AC00000000000000000000000000000000"
-    configatron.twilio_auth_token = "12121212121212121212121212121212"
     allow(adapter).to receive(:client).and_return(client)
   end
+
+  it_behaves_like "all adapters that can deliver messages"
 
   it "should have correct service name" do
     expect(adapter.service_name).to eq("Twilio")
@@ -25,12 +31,12 @@ describe Sms::Adapters::TwilioAdapter, :sms do
 
   it "should recognize an incoming request with the proper params" do
     request = twilio_request(params: {From: "1", Body: "1"})
-    expect(adapter.class.recognize_receive_request?(request)).to be(true)
+    expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(true)
   end
 
   it "should not recognize an incoming request without all the proper params" do
     request = double(headers: {}, params: {From: "1", Body: "1"})
-    expect(adapter.class.recognize_receive_request?(request)).to be(false)
+    expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(false)
   end
 
   it "should correctly parse an twilio-style request" do
@@ -50,7 +56,6 @@ describe Sms::Adapters::TwilioAdapter, :sms do
   end
 
   it "should correctly parse a twilio-style request even if incoming_sms_numbers is empty" do
-    configatron.incoming_sms_numbers = []
     request = twilio_request(params: {Body: "foo", From: "2348036801489"})
     msg = adapter.receive(request)
     expect(msg.body).to eq("foo")
@@ -114,7 +119,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
     params = (options[:params] || {}).with_indifferent_access
 
     signature = options[:signature] || begin
-      validator = Twilio::Util::RequestValidator.new(configatron.twilio_auth_token)
+      validator = Twilio::Util::RequestValidator.new(mission_config.twilio_auth_token)
       validator.build_signature_for(url, params)
     end
 

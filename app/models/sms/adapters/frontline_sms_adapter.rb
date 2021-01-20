@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
-  def self.recognize_receive_request?(request)
+  def self.recognize_receive_request?(request, config:)
     %w[from text frontline] - request.params.keys == []
   end
 

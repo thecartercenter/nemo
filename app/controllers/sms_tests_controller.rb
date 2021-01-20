@@ -23,7 +23,7 @@ class SmsTestsController < ApplicationController
 
     # Send both the reply and forward (if exist) via the TestConsoleAdapter.
     # This really just saves them and sets the adapter name.
-    adapter = Sms::Adapters::Factory.instance.create("TestConsole")
+    adapter = Sms::Adapters::Factory.instance.create("TestConsole", config: current_mission_config)
     adapter.deliver(processor.reply) if processor.reply
     adapter.deliver(processor.forward) if processor.forward
 

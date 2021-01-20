@@ -163,7 +163,7 @@ class Setting < ApplicationRecord
 
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
-      Sms::Adapters::Factory.instance.create(default_outgoing_sms_adapter)
+      Sms::Adapters::Factory.instance.create(default_outgoing_sms_adapter, config: self)
     rescue ArgumentError
       nil
     end
@@ -174,7 +174,6 @@ class Setting < ApplicationRecord
     configatron.configure_from_hash(hsh)
 
     load_theme_settings
-    load_generic_sms_settings
   end
 
   # converts preferred_locales to a comma delimited string
@@ -368,9 +367,5 @@ class Setting < ApplicationRecord
       return YAML.load_file(file) if File.exist?(file)
     end
     {}
-  end
-
-  def load_generic_sms_settings
-    Settings.generic_sms_config = generic_sms_config
   end
 end
