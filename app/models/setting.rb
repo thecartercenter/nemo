@@ -158,21 +158,9 @@ class Setting < ApplicationRecord
 
   # Copies this setting to configatron and Settings stores.
   def load
-    # build hash
     hsh = Hash[*KEYS_TO_COPY.flat_map { |k| [k.to_sym, send(k)] }]
-
-    # get class based on sms adapter setting; default to nil if setting is invalid
-    hsh[:outgoing_sms_adapter] = begin
-      Sms::Adapters::Factory.instance.create(default_outgoing_sms_adapter, config: self)
-    rescue ArgumentError
-      nil
-    end
-
     Time.zone = timezone
-
-    # Copy to configatron
     configatron.configure_from_hash(hsh)
-
     load_theme_settings
   end
 
