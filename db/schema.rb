@@ -518,6 +518,7 @@ ActiveRecord::Schema.define(version: 2021_01_30_010746) do
     t.string "twilio_auth_token", limit: 255
     t.string "twilio_phone_number", limit: 255
     t.datetime "updated_at", null: false
+    t.index "((mission_id IS NULL))", name: "index_settings_on_mission_id_IS_NULL", unique: true, where: "(mission_id IS NULL)", comment: "Ensures only one root setting"
     t.index ["mission_id"], name: "index_settings_on_mission_id", unique: true
   end
 
