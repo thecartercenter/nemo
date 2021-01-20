@@ -844,7 +844,7 @@ en:
           invalid_headers:
             one: "The following column header was not recognized: %{headers}."
             other: "The following column headers were not recognized: %{headers}."
-          too_many_errors: "The uploaded spreadsheet has too many errors. Processing stopped at row %{row}."
+          too_many_errors: "The uploaded CSV file has too many errors. Processing stopped at row %{row}."
         user_group:
           general: "User group is invalid."
           attributes:
@@ -1503,7 +1503,7 @@ en:
 
   option_set_import:
     instructions_html: |-
-      Upload a spreadsheet with your options.
+      Upload a CSV file with your options.
 
       Notes:
 
@@ -2260,7 +2260,7 @@ en:
 
   tabular_import:
     errors:
-      wrong_type: "The uploaded file must be a valid CSV spreadsheet file."
+      wrong_type: "The uploaded file must be a valid CSV file."
       no_rows: "No rows to import."
       bad_csv: "There was an issue with your CSV file: %{msg}"
 
@@ -2270,7 +2270,7 @@ en:
 
   user_import:
     instructions_html: |-
-      Upload a spreadsheet with your users. A <a href="%{csv_url}">CSV template</a> is available as a starting point.
+      Upload a CSV file with your users. A <a href="%{csv_url}">CSV template</a> is available as a starting point.
 
       Notes:
 
