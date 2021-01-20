@@ -56,74 +56,70 @@ describe Setting do
   end
 
   describe "load_for_mission" do
-    shared_examples_for "load_for_mission" do
-      context "when there are no existing settings" do
+    context "for root setting" do
+      context "when there is no existing root setting (should never happen)" do
         before do
-          Setting.load_for_mission(mission).destroy
+          Setting.root.destroy
         end
 
-        it "should create one with default values" do
-          setting = Setting.load_for_mission(mission)
-          expect(setting.new_record?).to be_falsey
-          expect(setting.mission).to eq(mission)
-          expect(setting.timezone).to eq(Setting::DEFAULT_TIMEZONE)
+        it "should throw error" do
+          expect { Setting.load_for_mission(nil) }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
 
-      context "when a setting exists" do
-        before { Setting.load_for_mission(mission).update!(preferred_locales: [:fr]) }
-
-        it "should load it" do
-          setting = Setting.load_for_mission(mission)
-          expect(setting.preferred_locales).to eq([:fr])
+      context "when there is a root setting" do
+        it "should not have an incoming_sms_token", :sms do
+          setting = Setting.load_for_mission(nil)
+          expect(setting.incoming_sms_token).to be_nil
         end
-      end
-    end
-
-    context "for null mission" do
-      let(:mission) { nil }
-      it_should_behave_like "load_for_mission"
-
-      it "should not have an incoming_sms_token", :sms do
-        setting = Setting.load_for_mission(mission)
-        expect(setting.incoming_sms_token).to be_nil
       end
     end
 
     context "for mission" do
       let(:mission) { get_mission }
-      it_should_behave_like "load_for_mission"
 
-      it "should have an incoming_sms_token", :sms do
-        setting = Setting.load_for_mission(mission)
-        expect(setting.incoming_sms_token).to match(/\A[0-9a-f]{32}\z/)
+      context "when there is no existing setting for the mission" do
+        before do
+          setting.destroy
+        end
+
+        it "should throw error" do
+          expect { Setting.load_for_mission(mission) }.to raise_error(ActiveRecord::RecordNotFound)
+        end
       end
 
-      it "should have the same incoming_sms_token after reloading", :sms do
-        setting = Setting.load_for_mission(mission)
-        token = setting.incoming_sms_token
+      context "when there is a setting for the mission" do
+        it "should have an incoming_sms_token", :sms do
+          setting = Setting.load_for_mission(mission)
+          expect(setting.incoming_sms_token).to match(/\A[0-9a-f]{32}\z/)
+        end
 
-        setting.reload
+        it "should have the same incoming_sms_token after reloading", :sms do
+          setting = Setting.load_for_mission(mission)
+          token = setting.incoming_sms_token
 
-        expect(setting.incoming_sms_token).to eq(token)
-      end
+          setting.reload
 
-      it "should have a different incoming_sms_token after calling regenerate_incoming_sms_token!", :sms do
-        setting = Setting.load_for_mission(mission)
-        token = setting.incoming_sms_token
+          expect(setting.incoming_sms_token).to eq(token)
+        end
 
-        setting.regenerate_incoming_sms_token!
+        it "should have a different incoming_sms_token after calling regenerate_incoming_sms_token!", :sms do
+          setting = Setting.load_for_mission(mission)
+          token = setting.incoming_sms_token
 
-        expect(setting.incoming_sms_token).not_to eq(token)
-      end
+          setting.regenerate_incoming_sms_token!
 
-      it "should normalize the twilio_phone_number on save", :sms do
-        setting = Setting.load_for_mission(mission)
-        setting.twilio_phone_number = "+1 770 555 1212"
-        setting.twilio_account_sid = "AC0000000"
-        setting.twilio_auth_token = "ABCDefgh1234"
-        setting.save!
-        expect(setting.twilio_phone_number).to eq("+17705551212")
+          expect(setting.incoming_sms_token).not_to eq(token)
+        end
+
+        it "should normalize the twilio_phone_number on save", :sms do
+          setting = Setting.load_for_mission(mission)
+          setting.twilio_phone_number = "+1 770 555 1212"
+          setting.twilio_account_sid = "AC0000000"
+          setting.twilio_auth_token = "ABCDefgh1234"
+          setting.save!
+          expect(setting.twilio_phone_number).to eq("+17705551212")
+        end
       end
     end
 
