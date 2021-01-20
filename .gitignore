@@ -15,6 +15,9 @@ TODO
 .sass-cache/
 NOTES
 
+# Frappe configuration
+frpc.ini
+
 # IDE
 .idea/*
 !/.idea/runConfigurations/

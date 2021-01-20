@@ -5,6 +5,7 @@ ELMO::Application.configure do
 
   # Allow local puma-dev domains.
   config.hosts << "nemo.test"
+  config.hosts << "nemo.frappe.sassafras.coop"
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
