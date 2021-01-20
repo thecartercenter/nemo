@@ -48,10 +48,6 @@ gem "cancancan", "~> 3.1"
 gem "draper-cancancan", "~> 1.1"
 gem "scrypt", "~> 3.0"
 
-# Spreadsheets
-gem "caxlsx", "~> 3.0"
-gem "caxlsx_rails", "~> 0.6.2"
-
 # Pagination
 gem "will_paginate", "~> 3.1"
 gem "will_paginate-bootstrap4", "~> 0.2.2"

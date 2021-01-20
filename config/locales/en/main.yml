@@ -912,7 +912,7 @@ en:
         destroy: "Clear"
       option_set:
         new: "Create Option Set"
-        export: "Export to XLSX"
+        export: "Export to CSV"
       option_sets/import:
         new: "Import from CSV"
       question:
