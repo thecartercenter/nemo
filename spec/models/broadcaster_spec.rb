@@ -13,7 +13,9 @@ describe Sms::Broadcaster do
 
     it "builds appropriate adapter and Sms::Broadcast instance" do
       # Let it call original, which will error if adapter doesn't exist.
-      expect(Sms::Adapters::Factory.instance).to receive(:create).with("Twilio").and_call_original
+      expect(Sms::Adapters::Factory.instance).to receive(:create) do |adapter, _config:|
+        expect(adapter).to eq("Twilio")
+      end.and_call_original
       expect(Sms::Broadcast)
         .to receive(:new).with(broadcast: broadcast, body: "[NEMO] junk", mission: mission).and_call_original
       described_class.new(mission: mission).deliver(broadcast)
