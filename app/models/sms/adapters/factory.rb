@@ -10,9 +10,9 @@ class Sms::Adapters::Factory
   end
 
   # returns an array of known adapter classes
-  def self.products(options = {})
+  def self.products(can_deliver: false)
     VALID_ADAPTERS.map { |n| "Sms::Adapters::#{n}Adapter".constantize }.tap do |adapters|
-      adapters.select!(&:can_deliver?) if options[:can_deliver?]
+      adapters.select!(&:can_deliver?) if can_deliver
     end
   end
 

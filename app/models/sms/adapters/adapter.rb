@@ -26,8 +26,8 @@ class Sms::Adapters::Adapter
     @@deliveries ||= []
   end
 
-  def initialize(options = {})
-    @config = options[:config]
+  def initialize(config:)
+    @config = config
   end
 
   def service_name
