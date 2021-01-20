@@ -20,8 +20,9 @@ describe "generic incoming sms", :sms do
     end
 
     it "delivers via reply, not adapter" do
-      do_request
-      expect_no_messages_delivered_through_adapter
+      expect_no_messages_delivered_through_adapter do
+        do_request
+      end
     end
 
     it "message with no reply should result in empty response" do

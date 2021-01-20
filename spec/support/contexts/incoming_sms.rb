@@ -103,7 +103,7 @@ shared_context "incoming sms" do
     [params[:method], params[:url], {params: req_params, headers: req_headers}]
   end
 
-  def expect_no_messages_delivered_through_adapter
-    expect(Sms::Adapters::Adapter.deliveries.size).to eq(0)
+  def expect_no_messages_delivered_through_adapter(&block)
+    expect { block.call }.to change { Sms::Adapters::Adapter.deliveries.size }.by(0)
   end
 end
