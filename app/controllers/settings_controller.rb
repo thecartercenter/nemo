@@ -62,7 +62,7 @@ class SettingsController < ApplicationController
 
   # Prepares objects and renders the form template (which in this case is really the index template)
   def prepare_and_render_form
-    @adapter_options = Sms::Adapters::Factory.products(can_deliver?: true).map(&:service_name)
+    @adapter_options = Sms::Adapters::Factory.products(can_deliver: true).map(&:service_name)
     @external_sql = Results::SqlGenerator.new(current_mission).generate unless admin_mode?
     render(:index)
   end
