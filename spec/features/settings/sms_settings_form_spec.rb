@@ -3,7 +3,7 @@
 require "rails_helper"
 
 feature "sms settings form", :sms do
-  let(:mission) { create(:mission, setting: setting) }
+  let(:mission) { create(:mission, setting: nil) }
   let(:user) { create(:user, admin: true) }
 
   before do
@@ -13,10 +13,8 @@ feature "sms settings form", :sms do
   context "twilio" do
     context "with no prior settings" do
       let(:setting) do
-        build(:setting,
-          twilio_phone_number: nil,
-          twilio_account_sid: nil,
-          twilio_auth_token: nil)
+        create(:setting, mission: mission, twilio_phone_number: nil,
+                         twilio_account_sid: nil, twilio_auth_token: nil)
       end
 
       scenario "filling in account sid only should error" do
@@ -50,7 +48,7 @@ feature "sms settings form", :sms do
   end
 
   context "generic sms" do
-    let(:setting) { build(:setting) }
+    let(:setting) { create(:setting, mission: mission) }
 
     scenario "filling in sms settings should catch errors and work" do
       visit("/en/m/#{mission.compact_name}/settings")
