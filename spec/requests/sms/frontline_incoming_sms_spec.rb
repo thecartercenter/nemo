@@ -10,8 +10,9 @@ describe "frontline incoming sms", :sms do
   end
 
   it "reply body should be response body" do
-    do_incoming_request(from: "+1234567890", incoming: {body: "foo", adapter: "FrontlineSms"})
-    expect_no_messages_delivered_through_adapter
+    expect_no_messages_delivered_through_adapter do
+      do_incoming_request(from: "+1234567890", incoming: {body: "foo", adapter: "FrontlineSms"})
+    end
     expect(response.body).to eq("Sorry, we couldn't find you in the system.")
   end
 

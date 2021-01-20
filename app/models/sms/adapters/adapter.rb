@@ -45,8 +45,6 @@ class Sms::Adapters::Adapter
 
     # save the message now, which sets the sent_at
     message.save!
-
-    self.class.deliveries << message if Rails.env.test?
   end
 
   def deliver(_message)
@@ -115,5 +113,10 @@ class Sms::Adapters::Adapter
     else
       raise Sms::Error, "error contacting #{service_name} (#{response.class.name})"
     end
+  end
+
+  # For testing purposes
+  def log_delivery(message)
+    self.class.deliveries << message if Rails.env.test?
   end
 end

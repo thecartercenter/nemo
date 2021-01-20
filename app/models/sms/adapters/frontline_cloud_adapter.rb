@@ -15,6 +15,7 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
 
   def deliver(message)
     prepare_message_for_delivery(message)
+    log_delivery(message)
 
     # build the request payload
     recipients = message.recipient_numbers.map { |number| {"type" => "mobile", "value" => number} }
