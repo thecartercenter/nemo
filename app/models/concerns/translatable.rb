@@ -4,14 +4,10 @@
 module Translatable
   extend ActiveSupport::Concern
 
-  cattr_accessor :default_options
-
   module ClassMethods
     def translates(*args)
       # Shave off the optional options hash at the end and merge with defaults.
       options = args[-1].is_a?(Hash) ? args.delete_at(-1) : {}
-      default_options = configatron.translatable.default_options.to_h
-      options = default_options.merge(options)
 
       # Tidy options if given.
       options[:locales] = options[:locales].map(&:to_s) if options[:locales].is_a?(Array)
@@ -126,8 +122,7 @@ module Translatable
       to_try += [I18n.locale.to_s, I18n.default_locale.to_s] + translations.keys if options[:fallbacks]
 
       # If allowed locales are given, restrict attempted locales to those.
-      allowed = self.class.translate_options[:locales]
-      allowed = allowed.call if allowed.is_a?(Proc)
+      allowed = Setting.for_mission(mission_id)&.preferred_locales
       to_try &= allowed.map(&:to_s) if allowed.present?
 
       to_try.each do |l|

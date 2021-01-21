@@ -2,30 +2,24 @@
 
 require "rails_helper"
 
-opts = configatron.translatable.default_options
-configatron.translatable.default_options = nil
-
 class Basic
+  include ActiveModel::Model
   include Translatable
   translates :name, :hint
-  attr_accessor :canonical_name, :canonical_hint
+  attr_accessor :mission_id, :canonical_name, :canonical_hint
 end
 
 class NoCanonical
+  include ActiveModel::Model
   include Translatable
   translates :name
+  attr_accessor :mission_id
 end
-
-class RestrictedLocales
-  include Translatable
-  translates :name, :hint, locales: %i[en fr es]
-  attr_accessor :canonical_name, :canonical_hint
-end
-
-configatron.translatable.default_options = opts
 
 describe "Translatable" do
-  let(:obj) { Basic.new }
+  let(:preferred_locales_str) { "en,fr" }
+  let(:mission) { create(:mission, setting: build(:setting, preferred_locales_str: preferred_locales_str)) }
+  let(:obj) { Basic.new(mission_id: mission.id) }
 
   it "basic assignment and reading" do
     I18n.locale = :en
@@ -146,7 +140,7 @@ describe "Translatable" do
     end
 
     it "should not get stored if no canonical_name attrib available" do
-      b = NoCanonical.new
+      b = NoCanonical.new(mission_id: mission.id)
       b.name = "Foo"
       expect { b.canonical_name }.to raise_error(NoMethodError, /canonical_name/)
     end
@@ -185,8 +179,9 @@ describe "Translatable" do
   end
 
   describe "locale restrictions" do
-    context "with restriction set at class level" do
-      let(:obj) { RestrictedLocales.new }
+    context "with italian not permitted" do
+      let(:obj) { Basic.new(mission_id: mission.id) }
+      let(:preferred_locales_str) { "en,fr" }
 
       context "with allowed translations available" do
         before do
@@ -223,26 +218,32 @@ describe "Translatable" do
       end
     end
 
-    context "with restriction set globally as proc" do
-      it "should respect the setting" do
-        # default_options are copied in when `translates` is called, so we have to do it this way.
-        allowed = nil
-        configatron.translatable.default_options = {locales: -> { allowed }}
-        class X
-          include Translatable
-          translates :name
-        end
+    context "with no mission set" do
+      let(:obj) { Basic.new(mission_id: nil) }
 
-        obj = X.new
+      before do
+        Setting.root.update!(preferred_locales_str: "en,fr")
+        obj.name_en = "Eng"
+        obj.name_fr = "Fra"
         obj.name_it = "Ita"
+      end
 
-        allowed = %i[en fr]
-        expect(obj.name).to be_nil
+      it "should use the root setting and also restrict" do
+        expect(obj.name(:it)).to be_nil
+      end
+    end
 
-        allowed = %i[en it]
-        expect(obj.name).to eq("Ita")
+    context "when italian allowed and available" do
+      let(:preferred_locales_str) { "en,fr,it" }
 
-        configatron.translatable.default_options = nil
+      before do
+        obj.name_en = "Eng"
+        obj.name_fr = "Fra"
+        obj.name_it = "Ita"
+      end
+
+      it "should use italian" do
+        expect(obj.name(:it)).to eq("Ita")
       end
     end
   end

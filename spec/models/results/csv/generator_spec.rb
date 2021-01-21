@@ -267,7 +267,7 @@ describe Results::CSV::Generator, :reset_factory_sequences do
       # because fallbacks are enabled.
       I18n.backend.store_translations(:fr, response: {csv_headers: I18n.t("response.csv_headers")})
 
-      configatron.preferred_locales = %i[en fr]
+      get_mission.setting.update!(preferred_locales_str: "en,fr")
       I18n.locale = :fr
       group.update!(group_name_fr: "Groupe")
       option.update!(name_fr: "L'option")

@@ -195,7 +195,7 @@ describe Report::ListReport, :reports do
 
     before do
       I18n.locale = :fr
-      configatron.preferred_locales = %i[en fr]
+      get_mission.setting.update!(preferred_locales_str: "en,fr")
       response
     end
 
