@@ -201,7 +201,9 @@
     if (item.children) {
       ol = $('<ol>');
       if (item.children.length > 0) self.wrapper.show();
-      item.children.forEach((c) => { ol.append(self.render_item(c)); });
+      item.children.forEach((c) => {
+        ol.append(self.render_item(c));
+      });
     }
     li.append(ol);
 
