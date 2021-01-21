@@ -56,25 +56,6 @@ describe Setting do
   end
 
   describe "load_for_mission" do
-    context "for root setting" do
-      context "when there is no existing root setting (should never happen)" do
-        before do
-          Setting.root.destroy
-        end
-
-        it "should throw error" do
-          expect { Setting.load_for_mission(nil) }.to raise_error(ActiveRecord::RecordNotFound)
-        end
-      end
-
-      context "when there is a root setting" do
-        it "should not have an incoming_sms_token", :sms do
-          setting = Setting.load_for_mission(nil)
-          expect(setting.incoming_sms_token).to be_nil
-        end
-      end
-    end
-
     context "for mission" do
       let(:mission) { get_mission }
 
