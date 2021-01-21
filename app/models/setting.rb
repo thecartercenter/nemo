@@ -94,7 +94,7 @@ class Setting < ApplicationRecord
     setting.preferred_locales = [:en]
     setting.incoming_sms_numbers = []
     setting.generate_incoming_sms_token if mission.present?
-    if (root_theme = root.theme)
+    if (root_theme = root&.theme)
       setting.theme = root_theme
     end
     copy_default_settings_from_configatron_to(setting)
