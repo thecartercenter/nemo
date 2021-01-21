@@ -30,8 +30,4 @@ RSpec.configure do |config|
   config.after(:each) do |example|
     DatabaseCleaner.clean if example.metadata[:database_cleaner] != :all
   end
-
-  config.after(:all, database_cleaner: :all) do
-    DatabaseCleaner.clean_with(:truncation)
-  end
 end
