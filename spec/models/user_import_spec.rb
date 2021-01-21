@@ -190,7 +190,7 @@ describe UserImport do
         "Row 2: Username: Please enter a unique value.",
         "Row 3: Username: Please enter a unique value.",
         "Row 5: Username: Please enter a unique value.",
-        "The uploaded spreadsheet has too many errors. Processing stopped at row 5."
+        "The uploaded CSV file has too many errors. Processing stopped at row 5."
       ])
     end
   end
