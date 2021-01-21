@@ -54,16 +54,25 @@
     // add the value, trimming whitespace
     self.name_translations[params.locale] = params.value.trim();
 
-    // update name (current locale or default locale or first non-blank value)
-    const names = [self.name_translations[I18n.locale], self.name_translations[I18n.default_locale]];
-    for (const locale in self.name_translations) names.push(self.name_translations[locale]);
-    self.name = names.filter((n) => { return n && n != ''; })[0] || '';
+    self.name = self.defaultName();
+  };
+
+  // Get default name (current locale or default locale or first non-blank value)
+  klass.prototype.defaultName = function () {
+    const self = this;
+    return [
+      self.name_translations[I18n.locale],
+      self.name_translations[I18n.default_locale],
+      ...Object.values(self.name_translations),
+    ].find(Boolean) || '';
   };
 
   klass.prototype.translation = function (locale) {
     const self = this;
-    if (locale) return self.name_translations[locale];
-    return self.name;
+    if (locale) {
+      return self.name_translations[locale];
+    }
+    return self.name || self.defaultName();
   };
 
   klass.prototype.locales = function () {
