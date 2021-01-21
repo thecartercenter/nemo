@@ -15,9 +15,8 @@ module ApplicationController::Settings
     I18n.locale = I18n.default_locale
   end
 
-  # Loads the user-specified timezone from configatron, if one exists
   def set_timezone
-    Time.zone = configatron.timezone.to_s if configatron.timezone?
+    Time.zone = current_mission_config.timezone.to_s
   end
 
   # loads settings for the mission, or no mission (admin mode), into configatron
@@ -29,6 +28,7 @@ module ApplicationController::Settings
     {root: false}
   end
 
+  # Loads config for current mission, of if in admin mode, loads root config.
   def current_mission_config
     @current_mission_config ||= Setting.for_mission(current_mission)
   end
