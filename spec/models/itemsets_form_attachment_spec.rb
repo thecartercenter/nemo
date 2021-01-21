@@ -141,6 +141,7 @@ describe ODK::ItemsetsFormAttachment, :odk do
       let(:question_types) { %w[multilevel_select_one] }
 
       before do
+        form.mission.setting.update!(preferred_locales_str: "en,fr")
         configatron.preferred_locales = %i[en fr]
         form.c[0].option_set.options[0].update(name_fr: "Animale")
         form.c[0].option_set.options[1].update(name_fr: "Plante")
