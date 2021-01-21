@@ -51,7 +51,7 @@ module FormsHelper
       if can?(:print, form) # rubocop:disable Style/IfUnlessModifier
         links << action_link(:print, "#", class: "print-link", data: {form_id: form.id})
       end
-      if form.smsable? && form.live? && !admin_mode?
+      if form.smsable? && !admin_mode?
         links << action_link(:sms_guide, sms_guide_form_path(form))
       end
       links
