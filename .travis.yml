@@ -28,10 +28,7 @@ before_script:
   - nvm install $(cat .nvmrc)
   - yarn install --ignore-engines
 script:
-  - bundle exec rspec --format progress
-  - yarn run i18n:export
-  - yarn run test
-  - yarn run lint:react
+  - bundle exec rspec spec/features/forms/option_set/option_sets_spec.rb:16
 env:
   global:
     # Set reCAPTCHA keys to dummy values
