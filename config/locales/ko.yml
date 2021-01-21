@@ -1057,9 +1057,6 @@ ko:
     none_found: "해당하는 선택항목을 찾지 못했습니다."
     searching: "검색중"
     type_to_add_new: "선택 항목 이름을 입력하십시오."
-  option_set_import:
-    instructions_html: |-
-        선택항목이 기록된 스프레드시트를 들여오십시오. XLSX타입의 엑셀 스프레드시트나 CSV만 들여올 수 있습니다.
   tag:
     none_found: "해당되는 태그를 찾지 못했습니다."
     searching: "검색중"

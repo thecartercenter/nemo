@@ -823,7 +823,6 @@ fr:
           invalid_headers:
             one: "L'en-tête de colonne suivante n'a pas été reconnu: %{headers}"
             other: "Les en-têtes de colonne suivantes n'ont pas été reconnus: %{headers}"
-          too_many_errors: "La feuille de calcul téléchargée contient trop d'erreurs. Traitement arrêté à la ligne %{row}."
         user_group:
           general: "Groupe d'utilisateurs invalide"
           attributes:
@@ -1376,9 +1375,6 @@ fr:
     latitude: "Latitude"
     longitude: "Longitude"
     value: "Valeur numérique"
-  option_set_import:
-    instructions_html: |-
-        télécharger un classeur contenant votre ensemble d'option. seulement des fichiers XLSX ou CSV sont acceptés
   tag:
     none_found: "Aucun tag trouvé "
     searching: "Recherche..."
@@ -2076,26 +2072,11 @@ fr:
       other: "Il y avait %{count} erreurs."
   tabular_import:
     errors:
-      wrong_type: "Le fichier téléchargé doit être un fichier Excel de type XLSX valide."
       no_rows: "Aucune ligne à importer."
       bad_csv: "Un problème est survenu avec votre fichier CSV: %{msg}"
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
-  user_import:
-    instructions_html: |-
-        Téléchargez une feuille de calcul avec vos utilisateurs. Seuls les feuilles de calcul Excel et les fichiers CSV de type XLSX sont acceptés.
-
-        Un modèle de tableur est disponible dans les formats <a href="%{xlsx_url}">XLSX</a> et <a href="%{csv_url}">CSV</a> comme point de départ.
-
-        Notes:
-
-        * Ne modifiez en aucune cas la ligne supérieure de la feuille de calcul..
-        * Les numéros de téléphone doivent inclure le code du pays (ex: +17095551212).
-        * Le genre peut être un homme, une femme ou un refus de réponse, ou peut être n'importe quelle autre valeur.
-        * La nationalité doit être le nom d'un pays tel que "Canada" ou "Bangladesh".
-        * Si un utilisateur est affecté à plusieurs groupe, le nom des groupes doit être séparé par un point virgule.
-        * Si un groupe d'utilisateurs nommé n'existe pas, il sera créé.
   user:
     add_assignment: "Ajouter Une Tâche"
     api_key:

@@ -830,7 +830,6 @@ pt-BR:
           invalid_headers:
             one: "Os seguintes cabeçalhos de colunas não foram reconhecidos: %{headers}."
             other: "Os seguintes cabeçalhos de colunas não foram reconhecidos: %{headers}."
-          too_many_errors: "A planilha enviada tem erros demais. O processo parou na linha %{row}."
         user_group:
           general: "Grupo de usuárias/os é inválido."
           attributes:
@@ -1373,9 +1372,6 @@ pt-BR:
     latitude: "Latitude"
     longitude: "Longitude"
     value: "Valor numérico"
-  option_set_import:
-    instructions_html: |-
-        Envie uma planilha com seu conjunto de opções. Apenas planilhas do tipo XLSX e arquivos CSV são aceitos.
   tag:
     none_found: "Nenhuma etiqueta encontrada"
     searching: "Buscando..."
@@ -1875,26 +1871,11 @@ pt-BR:
       other: "Houve %{count} erros."
   tabular_import:
     errors:
-      wrong_type: "O arquivo enviado tem que ser um XLSX válido."
       no_rows: "Nenhuma linha para importar."
       bad_csv: "Houve um problema com o seu arquivo CSV: %{msg}"
   unauthorized:
     default: "Você não está autorizado a acessar esta página ou operação."
     must_login: "Você precisa fazer login para acessar esta página."
-  user_import:
-    instructions_html: |-
-        Envie uma planilha com seus usuários e usuárias. São aceitas apenas planilhas Excel do tipo XLSX e arquivos CSV.
-
-        Um modelo de planilha está disponível nos formatos <a href="%{xlsx_url}">XLSX</a> e <a href="%{csv_url}">CSV</a> como um ponto de partida.
-
-        Notas:
-
-        * Por favor não altere a primeira linha da planilha de forma alguma.
-        * Números de telefone devem incluir o código de país (p.ex: +55123456789).
-        * Gênero pode ser um entre 'Homem', 'Mulher', ou 'Não quer responder', ou pode ser qualquer outro valor.
-        * Nacionalidade deve ser o nome do país, como 'Canada' ou 'Bangladesh'.
-        * Múltiplos nomes de grupos de usuárias/os devem ser separados por ponto e vírgula.
-        * Se um grupo de usuária/o não existir, ele será criado.
   user:
     add_assignment: "Adicionar atribuição"
     api_key:
