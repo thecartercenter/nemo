@@ -179,7 +179,7 @@ ELMO::Application.routes.draw do
       member do
         get "child-nodes", as: "child-nodes", action: "child_nodes"
         put "clone"
-        get "export", defaults: {format: "xlsx"}
+        get "export", defaults: {format: "csv"}
       end
     end
 

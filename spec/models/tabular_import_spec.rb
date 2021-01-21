@@ -2,19 +2,23 @@
 
 require "rails_helper"
 
+ERR_PREFIX = "There was an issue with your CSV file"
+
 # Holds specs for code contained in TabularImport (parent class).
 describe TabularImport do
   # Fake child class.
-  class Foo < TabularImport
+  # rubocop:disable Lint/ConstantDefinitionInBlock
+  class TestImport < TabularImport
     protected
 
     def process_data
-      sheet.row(1) # Need to actually access some data to trip some errors.
+      sheet.row[0] # Need to actually access some data to trip some errors.
     end
   end
+  # rubocop:enable Lint/ConstantDefinitionInBlock
 
   let(:file) { tabular_import_fixture(filename) }
-  let(:import) { Foo.new(file: file).tap(&:run) }
+  let(:import) { TestImport.new(file: file).tap(&:run) }
   let(:run_errors) { import.run_errors }
 
   context "with invalid file type" do
@@ -22,7 +26,7 @@ describe TabularImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["The uploaded file must be a valid XLSX-type Excel file."])
+      expect(run_errors).to eq(["#{ERR_PREFIX}: Invalid byte sequence in UTF-8 in line 1."])
     end
   end
 
@@ -31,16 +35,16 @@ describe TabularImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["There was an issue with your CSV file: Unclosed quoted field in line 1."])
+      expect(run_errors).to eq(["#{ERR_PREFIX}: Unclosed quoted field in line 1."])
     end
   end
 
-  context "with older XLS file" do
+  context "with XLS file" do
     let(:filename) { "old_format.xls" }
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["The uploaded file must be a valid XLSX-type Excel file."])
+      expect(run_errors).to eq(["#{ERR_PREFIX}: Invalid byte sequence in UTF-8 in line 1."])
     end
   end
 end

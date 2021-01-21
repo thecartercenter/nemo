@@ -1,6 +1,5 @@
 <%= elmo_form_for(@option_set_import, url: option_set_imports_path, html: {multipart: true}) do |f| %>
-  <%= tmd("option_set_import.instructions_html", url: template_option_set_imports_path(format: "xlsx"),
-                                                 strip_outer_p_tags: false) %>
+  <%= tmd("option_set_import.instructions_html", strip_outer_p_tags: false) %>
   <%= f.field(:name, required: true) %>
   <%= f.field(:file, required: true, partial: "file_upload/operation_file_uploader",
                      locals: {operation_type_prefix: "option_set_imports"}) %>

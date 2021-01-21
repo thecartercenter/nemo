@@ -12,7 +12,7 @@ describe UserImport do
   let(:created_users) { User.order(:login).to_a }
 
   context "with varying amounts of info" do
-    let(:filename) { "varying_info.xlsx" }
+    let(:filename) { "varying_info.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
@@ -35,12 +35,21 @@ describe UserImport do
     end
   end
 
-  context "with CSV" do
+  context "with simple CSV" do
     let(:filename) { "batch_of_3.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
       expect_user_count(3)
+    end
+  end
+
+  context "with BOM character" do
+    let(:filename) { "bom.csv" }
+
+    it "succeeds" do
+      expect(import).to be_succeeded
+      expect_user_count(1)
     end
   end
 
@@ -88,7 +97,7 @@ describe UserImport do
   end
 
   context "with blank lines" do
-    let(:filename) { "blank_lines.xlsx" }
+    let(:filename) { "blank_lines.csv" }
 
     it "ignores blank lines" do
       expect(import).to be_succeeded
@@ -97,7 +106,7 @@ describe UserImport do
   end
 
   context "when headers have trailing invisible blanks" do
-    let(:filename) { "abnormal_headers.xlsx" }
+    let(:filename) { "abnormal_headers.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
@@ -105,7 +114,7 @@ describe UserImport do
   end
 
   context "when creating users without emails" do
-    let(:filename) { "empty_emails.xlsx" }
+    let(:filename) { "empty_emails.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
@@ -114,7 +123,7 @@ describe UserImport do
 
   context "with tricky file" do
     # This file was causing users to get created with passwords.
-    let(:filename) { "no_passwords.xlsx" }
+    let(:filename) { "no_passwords.csv" }
 
     it "creates users with passwords" do
       expect(import).to be_succeeded
@@ -124,7 +133,7 @@ describe UserImport do
   end
 
   context "with one row" do
-    let(:filename) { "one_row.xlsx" }
+    let(:filename) { "one_row.csv" }
 
     it "succeeds" do
       expect(import).to be_succeeded
@@ -133,7 +142,7 @@ describe UserImport do
   end
 
   context "with missing header row with a number in it" do
-    let(:filename) { "missing_headers.xlsx" }
+    let(:filename) { "missing_headers.csv" }
 
     it "reports unrecognized headers and handles numeric type" do
       expect(import).not_to be_succeeded
@@ -143,7 +152,7 @@ describe UserImport do
   end
 
   context "with simple validation error" do
-    let(:filename) { "errors.xlsx" }
+    let(:filename) { "errors.csv" }
 
     it "handles errors" do
       expect(import).not_to be_succeeded
@@ -155,7 +164,7 @@ describe UserImport do
   end
 
   context "with duplicate emails" do
-    let(:filename) { "duplicate_emails.xlsx" }
+    let(:filename) { "duplicate_emails.csv" }
 
     it "does not check for email uniqueness" do
       expect(import).to be_succeeded
@@ -163,7 +172,7 @@ describe UserImport do
   end
 
   context "with duplicate usernames and too many errors" do
-    let(:filename) { "multiple_errors.xlsx" }
+    let(:filename) { "multiple_errors.csv" }
 
     before do
       stub_const("UserImport::IMPORT_ERROR_CUTOFF", 3)
@@ -181,7 +190,7 @@ describe UserImport do
         "Row 2: Username: Please enter a unique value.",
         "Row 3: Username: Please enter a unique value.",
         "Row 5: Username: Please enter a unique value.",
-        "The uploaded spreadsheet has too many errors. Processing stopped at row 5."
+        "The uploaded CSV file has too many errors. Processing stopped at row 5."
       ])
     end
   end

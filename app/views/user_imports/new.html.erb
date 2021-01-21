@@ -1,6 +1,5 @@
 <%= elmo_form_for(@user_import, html: {multipart: true}) do |f| %>
-  <%= tmd("user_import.instructions_html", xlsx_url: template_user_imports_path(format: "xlsx"),
-                                           csv_url: template_user_imports_path(format: "csv"),
+  <%= tmd("user_import.instructions_html", csv_url: template_user_imports_path(format: "csv"),
                                            strip_outer_p_tags: false) %>
   <%= f.field(:file, required: true, partial: "file_upload/operation_file_uploader",
                      locals: {operation_type_prefix: "user_imports"}) %>

@@ -20,7 +20,7 @@ describe TabularImportOperationJob do
   end
 
   context "with simple validation error" do
-    let(:filename) { "errors.xlsx" }
+    let(:filename) { "errors.csv" }
 
     it "handles errors gracefully" do
       described_class.perform_now(operation, saved_upload_id: upload.id, import_class: "UserImport")

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# For importing users from CSV/spreadsheet.
+# For importing Users from spreadsheet.
 class UserImportsController < TabularImportsController
   # ensure a recent login for all actions
   before_action :require_recent_login
@@ -16,9 +16,6 @@ class UserImportsController < TabularImportsController
     respond_to do |format|
       format.csv do
         render(csv: UserFacingCSV.generate { |csv| csv << @headers })
-      end
-      format.xlsx do
-        @sheet_name = User.model_name.human(count: 0)
       end
     end
   end

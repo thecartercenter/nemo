@@ -57,10 +57,7 @@ class OptionSetsController < ApplicationController
   end
 
   def export
-    @headers = @option_set.headers_for_export
-    @rows = @option_set.arrange_as_rows
-
-    render(xlsx: "export", filename: "#{@option_set.name}.xlsx")
+    send_data(generate_csv, filename: "#{@option_set.name}.csv")
   end
 
   # always via AJAX
@@ -148,6 +145,22 @@ class OptionSetsController < ApplicationController
     else
       # render where we should redirect
       render(json: option_sets_path.to_json)
+    end
+  end
+
+  def generate_csv
+    headers = @option_set.headers_for_export
+    rows = @option_set.arrange_as_rows
+    locale = @option_set.mission&.default_locale || I18n.default_locale
+
+    CSV.generate(headers: true) do |csv|
+      I18n.with_locale(locale) do
+        csv << headers
+
+        rows.each do |row|
+          csv << row
+        end
+      end
     end
   end
 

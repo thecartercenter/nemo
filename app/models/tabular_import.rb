@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# For importing tabular data (CSV, XLSX, etc.)
+# For importing tabular spreadsheet data (CSV files).
 class TabularImport
   include ActiveModel::Model
 
@@ -35,10 +35,16 @@ class TabularImport
   protected
 
   def open_sheet
-    self.sheet = Roo::Spreadsheet.open(file).sheet(0)
-  rescue TypeError, ArgumentError => e
-    raise e unless /not an Excel 2007 file|Can't detect the type/.match?(e.to_s)
-    add_run_error(:wrong_type)
+    self.file = Paperclip.io_adapters.for(file).read if file.class == Paperclip::Attachment
+    self.sheet = CSV.new(file, encoding: Encoding::UTF_8).read
+    delete_bom_prefix(sheet[0][0])
+    sheet
+  end
+
+  # The "bom|utf-8" encoding could handle this automatically,
+  # but that only works for files, not strings which are used in some cases.
+  def delete_bom_prefix(str)
+    str.sub!(/\A#{UserFacingCSV::BOM}/, "")
   end
 
   def add_run_error(message, opts = {})
