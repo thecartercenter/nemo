@@ -85,12 +85,6 @@ class Setting < ApplicationRecord
     setting
   end
 
-  # May return nil if it hasn't been created yet.
-  # Admin mode setting gets created via load_for_mission when admin mode first loaded.
-  def self.admin_mode_setting
-    find_by(mission: nil)
-  end
-
   # Builds and returns (but doesn't save) a default Setting object
   # by using defaults specified here and those specified in the local config
   # mission may be nil.
@@ -100,8 +94,8 @@ class Setting < ApplicationRecord
     setting.preferred_locales = [:en]
     setting.incoming_sms_numbers = []
     setting.generate_incoming_sms_token if mission.present?
-    if (admin_mode_theme = admin_mode_setting.try(:theme))
-      setting.theme = admin_mode_theme
+    if (root_theme = root.theme)
+      setting.theme = root_theme
     end
     copy_default_settings_from_configatron_to(setting)
     setting
