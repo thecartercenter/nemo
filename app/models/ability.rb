@@ -63,6 +63,7 @@ class Ability
     can(:show, Welcome)
     can(%i[show update], User, id: user.id)
     can(:confirm_login, UserSession)
+    # TODO: Specs.
     can(%i[manage download], Operation, creator_id: user.id)
     can(:submit_to, Form) { |f| user.admin? || user.assignments.detect { |a| a.mission == f.mission } }
 
@@ -192,6 +193,8 @@ class Ability
       can(%i[index read export], Response, mission_id: mission.id)
     else
       can(:manage, Response, mission_id: mission.id)
+      # TODO: Specs.
+      can(:show, Media::Object) { |obj| can(:show, obj.answer&.response) }
       can(:create, Sms::Test)
     end
 

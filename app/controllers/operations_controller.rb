@@ -2,8 +2,6 @@
 
 # OperationsController
 class OperationsController < ApplicationController
-  include Storage
-
   # authorization via cancan
   load_and_authorize_resource
 

@@ -3,8 +3,6 @@
 module Media
   # Creating, getting, and deleting media attached to responses.
   class ObjectsController < ApplicationController
-    include Storage
-
     before_action :set_media_object, only: %i[show destroy]
     skip_authorization_check
 
@@ -17,24 +15,9 @@ module Media
       end
     end
 
-    def show
-      style = params[:style] || "original"
-      @answer = @media_object.answer
-      @response = @answer.try(:response)
-      disposition = params[:dl] == "1" ? "attachment" : "inline"
-
-      authorize!(:show, @response) if @response
-
-      send_attachment(@media_object.item,
-        style: style, disposition: disposition, filename: media_filename)
-    end
-
     def create
       media = media_class(params[:type]).new
       media.item.attach(params[:upload])
-      # answer_id can be blank because creation is asynchronous and
-      # will be assigned when the response is submitted
-      media.answer = Answer.find(params[:answer_id]) if params[:answer_id]
 
       if media.save
         # Json keys match hidden input names that contain the key in dropzone form.
@@ -61,15 +44,6 @@ module Media
 
     def media_object_params
       params.require(:media_object).permit(:answer_id, :annotation)
-    end
-
-    def media_filename
-      extension = File.extname(@media_object.item.filename.to_s)
-      if @response && @answer
-        "elmo-#{@response.shortcode}-#{@answer.id}#{extension}"
-      else
-        "elmo-unsaved_response-#{@media_object.id}#{extension}"
-      end
     end
 
     def media_class(type)
