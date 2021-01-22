@@ -8,7 +8,6 @@ class QuestionsController < ApplicationController
   include StandardImportable
 
   include Parameters
-  include Storage
 
   # this Concern includes routines for building question/ing forms
   include QuestionFormable
