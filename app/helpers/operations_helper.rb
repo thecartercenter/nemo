@@ -42,7 +42,8 @@ module OperationsHelper
         link_to(t("operation.see_error_report"), operation.default_path)
       when :completed
         if operation.attachment.attached?
-          link_to(t("operation.result_link_text.#{operation.kind}"), rails_blob_path(operation.attachment, disposition: "attachment"))
+          link_to(t("operation.result_link_text.#{operation.kind}"),
+            rails_blob_path(operation.attachment, disposition: "attachment"))
         end
       end
     else

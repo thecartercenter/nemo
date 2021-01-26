@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemovePaperclipNullConstraints < ActiveRecord::Migration[6.0]
   def up
     change_column_null :media_objects, :item_content_type, true
