@@ -63,8 +63,7 @@ class Ability
     can(:show, Welcome)
     can(%i[show update], User, id: user.id)
     can(:confirm_login, UserSession)
-    # TODO: Specs.
-    can(%i[manage download], Operation, creator_id: user.id)
+    can(%i[index show clear destroy], Operation, creator_id: user.id)
     can(:submit_to, Form) { |f| user.admin? || user.assignments.detect { |a| a.mission == f.mission } }
 
     user.admin? ? admin_permissions : non_admin_permissions
@@ -109,7 +108,7 @@ class Ability
 
     can(:view, :admin_mode)
     can(:switch_to, Mission)
-    can(:manage, Operation)
+    can(%i[index show clear destroy], Operation)
   end
 
   # Permissions that only non-admins need.
