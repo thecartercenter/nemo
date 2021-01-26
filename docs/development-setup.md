@@ -160,20 +160,25 @@ You can run this locally via `bin/delayed_job start`.
 To log output from these background jobs, you can use `Delayed::Worker.logger.info("foo")` and
 view `log/dj.log` within a few minutes (the log file doesn't always update immediately).
 
-### Testing with ODK
+### Testing with ODK Collect
 
-1. Download the ODK application onto your Android phone or tablet
+1. Download the Collect app onto your Android device or run it on an emulator
     - https://opendatakit.org/
-1. Configure your rails development server so ODK can find it
-    - Run `. bin/server -b 0.0.0.0`
-1. Create a user and password
+1. Configure your rails development server so Collect can find it
+    - Option A:
+        - Run `./bin/server -b 0.0.0.0` to expose NEMO on a local network
+        - Allow your emulator to access local ports: `adb reverse tcp:8443 tcp:8443`
+    - Option B:
+        - Run `ngrok http 8443` to expose NEMO publicly
+        - Allow the ngrok host to serve Rails by adding `config.hosts << "YOUR_ID.ngrok.io"` to `development.rb`, then restart NEMO
 1. Make your form live in NEMO
-1. Point the ODK app to your development server
-    - In ODK, go to `General Settings > Platform Settings > URL`
-    - For the URL put: `http://YOURIP:8443/m/yourmission`
-    - Also put in your username and password
+1. Point Collect to your development server
+    - In Collect, go to `General Settings > Platform Settings > URL`
+    - For the URL put: `http://YOUR_IP:8443/m/your_mission` or `https://YOUR_ID.ngrok.io/m/your_mission`
+    - Put in your username and password
 1. Retrieve Form
-    - In ODK, you should now be able to go to `Get Blank Form` to download the forms from NEMO
+    - In Collect, you should now be able to go to `Get Blank Form` to download the forms from NEMO
+    - If it fails, try restarting the server to make sure any config changes above were applied. Then check the server logs to make sure the connection is really going through.
 
 ### Troubleshooting
 
