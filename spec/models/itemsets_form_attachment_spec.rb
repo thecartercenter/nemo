@@ -59,7 +59,8 @@ describe ODK::ItemsetsFormAttachment, :odk do
 
   describe "empty?" do
     before do
-      allow(itemsets_attachment).to receive(:decorated_form).and_return(double(needs_external_csv?: needs_external_csv))
+      allow(itemsets_attachment).to receive(:decorated_form)
+        .and_return(double(needs_external_csv?: needs_external_csv))
     end
 
     context "with form needing external CSV" do

@@ -56,24 +56,29 @@ Lint/RedundantCopDisableDirective:
 Metrics/BlockLength:
   Enabled: true
   Exclude:
+    - db/migrate/*
     - config/routes.rb
     - spec/**/*
 
-Metrics/ClassLength:
+Metrics/CyclomaticComplexity:
+  Enabled: false
   Exclude:
     - db/migrate/*
 
-Metrics/CyclomaticComplexity:
-  Enabled: false
-
 Metrics/MethodLength:
   Max: 12
+  Exclude:
+    - db/migrate/*
 
 Metrics/AbcSize:
   Max: 30
+  Exclude:
+    - db/migrate/*
 
 Metrics/PerceivedComplexity:
   Max: 10
+  Exclude:
+    - db/migrate/*
 
 Metrics/ParameterLists:
   CountKeywordArgs: false
