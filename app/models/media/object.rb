@@ -41,6 +41,7 @@ module Media
     validates :item, attached: true
 
     delegate :mission, to: :answer
+    delegate :response, to: :answer, allow_nil: true
 
     scope :expired, -> { where(answer_id: nil).where("created_at < ?", 12.hours.ago) }
 
