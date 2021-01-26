@@ -139,9 +139,6 @@ describe FormsController, :odk, type: :request do
 
         it "should download successfully" do
           get(download_url(form.c[0].media_prompt), headers: auth_header)
-          # TODO: rails_blob_path depends on redirect which ODK doesn't support. Need a wrap if so.
-          # Update forum post with findings (hand-code form with manifest?).
-          # https://forum.getodk.org/t/will-collect-respect-a-302-redirect-on-a-file-listed-in-the-form-manifest/30309
           follow_redirect!
           expect(response).to be_successful
           expect(response.header["Content-Disposition"]).to include(form.c[0].question.id)

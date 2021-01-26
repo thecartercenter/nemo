@@ -103,7 +103,6 @@ feature "response form file upload", js: true do
   def expect_download(url)
     res = Net::HTTP.get_response(URI(url))
 
-    # TODO: May need to avoid redirect for ODK
     location = res["location"]
     if location
       warn("Redirected to #{location}")
