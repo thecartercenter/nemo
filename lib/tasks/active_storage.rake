@@ -7,7 +7,7 @@ namespace :active_storage do
   # By default, Paperclip looks like this:
   # public/system/users/avatars/000/000/004/original/the-mystery-of-life.png
   #
-  # And ActiveStorage looks like this:
+  # And ActiveStorage looks like this locally (or all in root directory for cloud storage):
   # storage/xM/RX/xMRXuT6nqpoiConJFQJFt6c9
   #
   # From https://github.com/thoughtbot/paperclip/blob/master/MIGRATING.md
@@ -19,6 +19,20 @@ namespace :active_storage do
       copy_all_s3
     end
   end
+end
+
+# This can't be a constant because rake needs environment first.
+def nemo_attachments
+  [
+    [Operation, "attachment"],
+    [SavedUpload, "file"],
+    [SavedTabularUpload, "file"],
+    [Question, "media_prompt"],
+    [Media::Audio, "item"],
+    [Media::Image, "item"],
+    [Media::Video, "item"],
+    [Response, "odk_xml"]
+  ].freeze
 end
 
 def copy_all_local
@@ -36,45 +50,37 @@ def copy_all_local
   end
 end
 
-# TODO: Cloud migration was originally written with expectation that ActiveStorage syntax is already migrated.
-#   It's now the opposite, so this will definitely not work.
 def copy_all_s3
   puts "Using CLOUD storage."
 
-  # TODO: Grab all NEMO relations.
-  relations = [
-    # e.g. User.where.not(image_file_name: nil)
-    #
-    # Response odk_xml
-    # SavedUpload file
-    # Operation attachment
-    # ::Media::Object (image, audio, video) item
-    # Mediable (ODK generic) media_prompt
-  ]
+  nemo_attachments.each do |pair|
+    relation, title = pair
+    relation = relation.where.not("#{title}_file_size".to_sym => nil)
 
-  relations.each do |relation|
-    puts "Copying #{relation.count} #{relation.name} attachments..."
+    puts "Copying #{relation.count} #{relation.name} #{title.pluralize}..."
     relation.order(id: :desc).find_each do |record|
-      copy_s3_item(record)
+      copy_s3_item(record, title)
     end
   end
 end
 
-def copy_s3_item(record)
-  filename = record.image_file_name
-  model = record.class.name.pluralize.downcase
-  # Paperclip defaults to `:class/:attachment/:id_partition/:style/:filename`.
-  record_path = "#{model}/images/#{id_partition(record.id)}/original/#{CGI.escape(filename)}"
-  image_url = "https://#{ENV['S3_BUCKET_NAME']}.s3.us-east-1.amazonaws.com/#{record_path}"
-  # Hack to avoid double-saving files when running this multiple times in a row.
-  # TODO: Find a better way to determine if an attachment is AciveStorage vs. Paperclip.
-  if record.image.attachment.created_at > 1.hour.ago
+# Download a Paperclip item from S3 and re-attach it using ActiveStorage.
+# Paperclip path defaults to `:class/:attachment/:id_partition/:style/:filename`.
+def copy_s3_item(record, title)
+  filename = record.send("#{title}_file_name")
+  model_path = record.class.name.pluralize.downcase.gsub("::", "/")
+  record_path = "#{model_path}/#{title.pluralize}/#{id_partition(record.id)}/original/#{CGI.escape(filename)}"
+  url = "https://#{ENV['NEMO_AWS_BUCKET']}.s3.#{ENV['NEMO_AWS_REGION']}.amazonaws.com/#{record_path}"
+
+  # Hack to avoid double-saving files when testing this multiple times in a row
+  # (no fast way to determine if an attachment is stored in ActiveStorage vs. Paperclip location).
+  if ENV["SKIP_MINUTES_AGO"].present? &&
+      record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
     puts "Skipping existing #{filename}"
   else
-    puts "Copying #{filename}\n  at #{image_url}"
-    record.image.attach(io: open(image_url),
-                        filename: filename,
-                        content_type: record.image_content_type)
+    puts "Copying #{filename}\n  at #{url}"
+    record.send(title).attach(io: URI.open(url), filename: filename,
+                              content_type: record.send("#{title}_content_type"))
   end
 end
 
