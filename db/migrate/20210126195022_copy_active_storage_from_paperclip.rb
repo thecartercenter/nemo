@@ -75,7 +75,7 @@ def copy_s3_item(record, title)
   # Hack to avoid double-saving files when testing this multiple times in a row
   # (no fast way to determine if an attachment is stored in ActiveStorage vs. Paperclip location).
   if ENV["SKIP_MINUTES_AGO"].present? &&
-      record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
+    record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
     puts "Skipping existing #{filename}"
   else
     puts "Copying #{filename}\n  at #{url}"
