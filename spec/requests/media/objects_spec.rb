@@ -7,6 +7,10 @@ describe "media object requests" do
   let(:user) { create(:user, mission: mission) }
   let(:form) { create(:form, mission: mission, question_types: %w[image]) }
 
+  before do
+    login(user)
+  end
+
   describe "upload media object" do
     context "with audio" do
       let(:form) { create(:form, mission: mission, question_types: %w[audio]) }
