@@ -3,8 +3,7 @@
 module Media
   # Creating, getting, and deleting media attached to responses.
   class ObjectsController < ApplicationController
-    before_action :set_media_object, only: %i[show destroy]
-    skip_authorization_check
+    load_and_authorize_resource
 
     def self.media_type(class_name)
       case class_name
@@ -32,15 +31,11 @@ module Media
     end
 
     def destroy
-      @media_object.destroy
+      @object.destroy
       render(body: nil, status: :no_content)
     end
 
     private
-
-    def set_media_object
-      @media_object = Media::Object.find(params[:id])
-    end
 
     def media_object_params
       params.require(:media_object).permit(:answer_id, :annotation)

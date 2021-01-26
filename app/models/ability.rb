@@ -74,6 +74,9 @@ class Ability
     # Can only modify own API key.
     cannot(:regenerate_api_key, User)
     can(:regenerate_api_key, User) { |u| u == user }
+
+    can(:create, Media::Object)
+    can(:destroy, Media::Object) { |obj| obj.response.nil? || can?(:edit, obj.response) }
   end
 
   def admin_permissions
@@ -192,8 +195,6 @@ class Ability
       can(%i[index read export], Response, mission_id: mission.id)
     else
       can(:manage, Response, mission_id: mission.id)
-      # TODO: Specs.
-      can(:show, Media::Object) { |obj| can(:show, obj.answer&.response) }
       can(:create, Sms::Test)
     end
 
