@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
-namespace :active_storage do
-  # Expectation: ActiveStorage syntax is NOT yet migrated
-  # (e.g. has_attached_file, NOT has_one_attached).
-  #
-  # By default, Paperclip looks like this:
-  # public/system/users/avatars/000/000/004/original/the-mystery-of-life.png
-  #
-  # And ActiveStorage looks like this locally (or all in root directory for cloud storage):
-  # storage/xM/RX/xMRXuT6nqpoiConJFQJFt6c9
-  #
-  # From https://github.com/thoughtbot/paperclip/blob/master/MIGRATING.md
-  desc "Copies attachments from Paperclip => ActiveStorage directory (locally or on AWS S3)"
-  task copy_from_paperclip: :environment do
+# Expectation: ActiveStorage syntax is NOT yet migrated
+# (e.g. has_attached_file, NOT has_one_attached).
+#
+# By default, Paperclip looks like this:
+# public/system/users/avatars/000/000/004/original/the-mystery-of-life.png
+#
+# And ActiveStorage looks like this locally (or all in root directory for cloud storage):
+# storage/xM/RX/xMRXuT6nqpoiConJFQJFt6c9
+#
+# From https://github.com/thoughtbot/paperclip/blob/master/MIGRATING.md
+class CopyActiveStorageFromPaperclip < ActiveRecord::Migration[6.0]
+  def up
     if Rails.configuration.active_storage.service == :local
       copy_all_local
     else
@@ -21,19 +20,16 @@ namespace :active_storage do
   end
 end
 
-# This can't be a constant because rake needs environment first.
-def nemo_attachments
-  [
-    [Operation, "attachment"],
-    [SavedUpload, "file"],
-    [SavedTabularUpload, "file"],
-    [Question, "media_prompt"],
-    [Media::Audio, "item"],
-    [Media::Image, "item"],
-    [Media::Video, "item"],
-    [Response, "odk_xml"]
-  ].freeze
-end
+NEMO_ATTACHMENTS = [
+  [Operation, "attachment"],
+  [SavedUpload, "file"],
+  [SavedTabularUpload, "file"],
+  [Question, "media_prompt"],
+  [Media::Audio, "item"],
+  [Media::Image, "item"],
+  [Media::Video, "item"],
+  [Response, "odk_xml"]
+].freeze
 
 def copy_all_local
   puts "Using LOCAL storage."
@@ -53,12 +49,12 @@ end
 def copy_all_s3
   puts "Using CLOUD storage."
 
-  nemo_attachments.each do |pair|
+  NEMO_ATTACHMENTS.each do |pair|
     relation, title = pair
     relation = relation.where.not("#{title}_file_size".to_sym => nil)
 
     puts "Copying #{relation.count} #{relation.name} #{title.pluralize}..."
-    relation.order(id: :desc).find_each do |record|
+    relation.order(:created_at).find_each do |record|
       copy_s3_item(record, title)
     end
   end
@@ -75,7 +71,7 @@ def copy_s3_item(record, title)
   # Hack to avoid double-saving files when testing this multiple times in a row
   # (no fast way to determine if an attachment is stored in ActiveStorage vs. Paperclip location).
   if ENV["SKIP_MINUTES_AGO"].present? &&
-    record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
+      record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
     puts "Skipping existing #{filename}"
   else
     puts "Copying #{filename}\n  at #{url}"
