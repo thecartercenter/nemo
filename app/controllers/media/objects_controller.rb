@@ -23,8 +23,8 @@ module Media
         # See ELMO.Views.FileUploaderView for more info.
         render(json: {media_object_id: media.id}, status: :created)
       else
-        # Currently there is only one type of validation failure: incorrect type.
-        # The default paperclip error messages are heinous, which is why we're doing this.
+        # Currently there is only one type of validation failure: incorrect content_type.
+        # We override this because the default error message is not user friendly.
         msg = I18n.t("errors.file_upload.invalid_format")
         render(json: {errors: [msg]}, status: :unprocessable_entity)
       end
