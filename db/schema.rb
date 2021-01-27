@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_26_195022) do
+ActiveRecord::Schema.define(version: 2021_01_26_195023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -257,7 +257,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_195022) do
     t.string "item_content_type", limit: 255
     t.string "item_file_name", limit: 255
     t.integer "item_file_size"
-    t.string "item_legacy_url"
     t.datetime "item_updated_at"
     t.string "type", limit: 255, null: false
     t.datetime "updated_at", null: false
@@ -280,7 +279,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_195022) do
     t.string "attachment_download_name"
     t.string "attachment_file_name"
     t.integer "attachment_file_size"
-    t.string "attachment_legacy_url"
     t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.uuid "creator_id"
@@ -368,7 +366,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_195022) do
     t.string "media_prompt_content_type"
     t.string "media_prompt_file_name"
     t.integer "media_prompt_file_size"
-    t.string "media_prompt_legacy_url"
     t.datetime "media_prompt_updated_at"
     t.string "metadata_type"
     t.decimal "minimum", precision: 15, scale: 8
@@ -453,7 +450,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_195022) do
     t.string "odk_xml_content_type"
     t.string "odk_xml_file_name"
     t.bigint "odk_xml_file_size"
-    t.string "odk_xml_legacy_url"
     t.datetime "odk_xml_updated_at"
     t.integer "old_id"
     t.boolean "reviewed", default: false, null: false
@@ -482,7 +478,6 @@ ActiveRecord::Schema.define(version: 2021_01_26_195022) do
     t.string "file_content_type"
     t.string "file_file_name"
     t.integer "file_file_size"
-    t.string "file_legacy_url"
     t.datetime "file_updated_at"
     t.datetime "updated_at", null: false
   end
