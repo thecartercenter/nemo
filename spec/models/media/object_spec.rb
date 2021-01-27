@@ -31,6 +31,6 @@ describe Media::Object do
   let(:media_file) { create(:media_image) }
 
   it "has attachment" do
-    expect(media_file.item.attached?).to be_truthy
+    expect(media_file.item.attached?).to be(true)
   end
 end

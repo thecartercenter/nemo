@@ -35,7 +35,6 @@ class TabularImport
   protected
 
   def open_sheet
-    self.file = Paperclip.io_adapters.for(file).read if file.class == Paperclip::Attachment
     self.sheet = CSV.new(file, encoding: Encoding::UTF_8).read
     delete_bom_prefix(sheet[0][0])
     sheet

@@ -65,9 +65,7 @@ gem "reverse_markdown", "~> 2.0"
 gem "active_storage_validations", github: "cooperka/active_storage_validations",
                                   tag: "2020-01-13-v0.9.2-regexArray"
 gem "aws-sdk-s3", "~> 1.86", require: false
-gem "fog-aws", "~> 3.3"
 gem "image_processing", "~> 1.12"
-gem "paperclip", "~> 6.0"
 
 # API
 gem "api-pagination", "~> 4.1"
