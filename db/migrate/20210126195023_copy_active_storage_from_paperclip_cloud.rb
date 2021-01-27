@@ -33,18 +33,21 @@ def copy_all_s3
   NEMO_ATTACHMENTS.each do |pair|
     relation, title = pair
     relation = relation.where.not("#{title}_file_size".to_sym => nil)
+    total = relation.count
 
-    puts "Copying #{relation.count} #{relation.name} #{title.pluralize}..."
-    relation.order(:created_at).find_each do |record|
-      copy_s3_item(record, title)
+    puts "Copying #{total} #{relation.name} #{title.pluralize}..."
+    num_threads = (ENV["NUM_THREADS"].presence || 100).to_i
+    Parallel.each_with_index(relation.each, in_threads: num_threads) do |record, index|
+      copy_s3_item(record, title, index, total)
     end
   end
 end
 
 # Download a Paperclip item from S3 and re-attach it using ActiveStorage.
-def copy_s3_item(record, title)
+def copy_s3_item(record, title, index, total)
   filename = record.send("#{title}_file_name")
   url = record.send("#{title}_legacy_url")
+  # For debugging: .presence || "https://nemo-stg.s3.amazonaws.com/uploads"
 
   if url.nil?
     puts "  => Nil URL, probably an old missing file for #{filename} (id #{record.id})."
@@ -57,12 +60,12 @@ def copy_s3_item(record, title)
       record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
     puts "Skipping existing #{filename}"
   else
-    puts "Copying #{filename}"
+    puts "Copying #{filename}... (#{index} / #{total})"
     puts "  at #{url}" if ENV["VERBOSE"]
     record.send(title).attach(io: URI.open(url), filename: filename,
                               content_type: record.send("#{title}_content_type"))
   end
 rescue StandardError => e
   raise e unless e.message == "403 Forbidden"
-  puts "  => File no longer exists (or server does not have access)."
+  puts "  => File no longer exists (or server does not have access) for #{filename} (id #{record.id})."
 end
