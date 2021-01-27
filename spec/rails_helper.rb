@@ -9,7 +9,6 @@ require "capybara/rspec"
 require "capybara/rails"
 require "selenium-webdriver"
 require "capybara-screenshot/rspec"
-require "paperclip/matchers"
 require "cancan/matchers"
 require "fileutils"
 require "vcr"
@@ -76,7 +75,6 @@ RSpec.configure do |config|
   config.include(FeatureSpecHelpers, type: :feature)
   config.include(GeneralSpecHelpers)
   config.include(ModelSpecHelpers, type: :model)
-  config.include(Paperclip::Shoulda::Matchers)
   config.include(RequestSpecHelpers, type: :request)
 
   config.before(:suite) do
