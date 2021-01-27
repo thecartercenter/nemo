@@ -1,100 +1,86 @@
 # frozen_string_literal: true
 
-# Expectation: ActiveStorage syntax is NOT yet migrated
-# (e.g. has_attached_file, NOT has_one_attached).
-#
-# By default, Paperclip looks like this:
-# public/system/users/avatars/000/000/004/original/the-mystery-of-life.png
-#
-# And ActiveStorage looks like this locally (or all in root directory for cloud storage):
-# storage/xM/RX/xMRXuT6nqpoiConJFQJFt6c9
-#
-# From https://github.com/thoughtbot/paperclip/blob/master/MIGRATING.md
-class CopyActiveStorageFromPaperclip < ActiveRecord::Migration[6.0]
+class CopyActiveStorageFromPaperclipLocal < ActiveRecord::Migration[6.0]
   def up
     if Rails.configuration.active_storage.service == :local
+      puts "Using LOCAL storage."
       copy_all_local
     else
-      copy_all_s3
+      # Prepare for the next migration when the copy will actually happen.
+      puts "Using CLOUD storage."
+
+      unless ActiveRecord::Base.connection.column_exists?(:operations, :attachment_legacy_url)
+        add_column :operations, :attachment_legacy_url, :string
+        add_column :saved_uploads, :file_legacy_url, :string
+        add_column :questions, :media_prompt_legacy_url, :string
+        add_column :media_objects, :item_legacy_url, :string
+        add_column :responses, :odk_xml_legacy_url, :string
+
+        Operation.reset_column_information
+        SavedUpload.reset_column_information
+        Question.reset_column_information
+        Media::Object.reset_column_information
+        Response.reset_column_information
+      end
+
+      save_legacy_urls
     end
+  end
+
+  def down
+    return unless ActiveRecord::Base.connection.column_exists?(:operations, :attachment_legacy_url)
+    remove_column :operations, :attachment_legacy_url
+    remove_column :saved_uploads, :file_legacy_url
+    remove_column :questions, :media_prompt_legacy_url
+    remove_column :media_objects, :item_legacy_url
+    remove_column :responses, :odk_xml_legacy_url
   end
 end
 
 NEMO_ATTACHMENTS = [
   [Operation, "attachment"],
   [SavedUpload, "file"],
-  [SavedTabularUpload, "file"],
   [Question, "media_prompt"],
-  [Media::Audio, "item"],
-  [Media::Image, "item"],
-  [Media::Video, "item"],
+  [Media::Object, "item"],
   [Response, "odk_xml"]
 ].freeze
 
+# Expectation: ActiveStorage syntax is NOT yet migrated
+# (e.g. has_attached_file, NOT has_one_attached).
+#
+# By default, Paperclip looks like this:
+# public/system/users/avatars/000/000/004/original/the-mystery-of-life.png
+#
+# And ActiveStorage looks like this:
+# storage/xM/RX/xMRXuT6nqpoiConJFQJFt6c9 (for local storage).
+#
+# From https://github.com/thoughtbot/paperclip/blob/master/MIGRATING.md
 def copy_all_local
-  puts "Using LOCAL storage."
-
-  ActiveStorage::Attachment.order(id: :desc).find_each do |attachment|
+  ActiveStorage::Attachment.order(:id).find_each do |attachment|
     name = attachment.name
     source = attachment.record.send(name).path
     dest_dir = File.join("storage", attachment.blob.key.first(2), attachment.blob.key.first(4).last(2))
     dest = File.join(dest_dir, attachment.blob.key)
 
-    puts "Copying #{source}\n  to #{dest}"
+    puts "Copying #{source}"
+    puts "  to #{dest}" if ENV["VERBOSE"]
     FileUtils.mkdir_p(dest_dir)
     FileUtils.cp(source, dest)
   end
 end
 
-def copy_all_s3
-  puts "Using CLOUD storage."
-
+# Save Paperclip URLs so that we can use them in the next migration
+# after ActiveStorage syntax is in use.
+def save_legacy_urls
   NEMO_ATTACHMENTS.each do |pair|
     relation, title = pair
-    relation = relation.where.not("#{title}_file_size".to_sym => nil)
+    relation = relation.where.not("#{title}_file_size": nil)
 
-    puts "Copying #{relation.count} #{relation.name} #{title.pluralize}..."
+    puts "Saving #{relation.count} #{relation.name} #{title.pluralize}..."
     relation.order(:created_at).find_each do |record|
-      copy_s3_item(record, title)
+      url = record.send(title).url
+      puts "Saving #{record.id}: #{url}" if ENV["VERBOSE"]
+      record.update_attribute("#{title}_legacy_url", url)
     end
   end
 end
-
-# Download a Paperclip item from S3 and re-attach it using ActiveStorage.
-# Paperclip path defaults to `:class/:attachment/:id_partition/:style/:filename`.
-def copy_s3_item(record, title)
-  filename = record.send("#{title}_file_name")
-  model_path = record.class.name.pluralize.downcase.gsub("::", "/")
-  record_path = "#{model_path}/#{title.pluralize}/#{id_partition(record.id)}/original/#{CGI.escape(filename)}"
-  url = "https://#{ENV['NEMO_AWS_BUCKET']}.s3.#{ENV['NEMO_AWS_REGION']}.amazonaws.com/#{record_path}"
-
-  # Hack to avoid double-saving files when testing this multiple times in a row
-  # (no fast way to determine if an attachment is stored in ActiveStorage vs. Paperclip location).
-  if ENV["SKIP_MINUTES_AGO"].present? &&
-      record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
-    puts "Skipping existing #{filename}"
-  else
-    puts "Copying #{filename}\n  at #{url}"
-    record.send(title).attach(io: URI.open(url), filename: filename,
-                              content_type: record.send("#{title}_content_type"))
-  end
-end
-
-# From Paperclip source:
-# https://github.com/thoughtbot/paperclip/blob/v4.2.4/lib/paperclip/interpolations.rb#L170
-#
-# Returns the id of the instance in a split path form. e.g. returns
-# 000/001/234 for an id of 1234.
-#
-# rubocop:disable all
-def id_partition(id)
-  case id
-  when Integer
-    ("%09d" % id).scan(/\d{3}/).join("/")
-  when String
-    ('%9.9s' % id).tr(" ", "0").scan(/.{3}/).join("/")
-  else
-    nil
-  end
-end
-# rubocop:enable
