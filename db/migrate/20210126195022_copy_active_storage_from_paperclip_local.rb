@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class CopyActiveStorageFromPaperclipLocal < ActiveRecord::Migration[6.0]
+  # Disable transaction wrapper so that the update queries will be committed even if we
+  # have to fail the transaction part-way through
+  # (this migration can be a memory hog with 10k+ attachments).
+  disable_ddl_transaction!
+
   def up
     if Rails.configuration.active_storage.service == :local
       puts "Using LOCAL storage."
@@ -74,12 +79,14 @@ end
 def save_legacy_urls
   NEMO_ATTACHMENTS.each do |pair|
     relation, title = pair
-    relation = relation.where.not("#{title}_file_size": nil)
+    relation = relation.where.not("#{title}_file_size": nil).where("#{title}_legacy_url": nil)
+    total = relation.count
 
-    puts "Saving #{relation.count} #{relation.name} #{title.pluralize}..."
-    relation.order(:created_at).find_each do |record|
+    puts "Saving #{total} #{relation.name} #{title.pluralize}..."
+    num_threads = (ENV["NUM_THREADS"].presence || 30).to_i
+    Parallel.each_with_index(relation.each, in_threads: num_threads) do |record, index|
       url = record.send(title).url
-      puts "Saving #{record.id}: #{url}" if ENV["VERBOSE"]
+      puts "Saving #{record.id}: #{url}... (#{index + 1} / #{total})"
       record.update_attribute("#{title}_legacy_url", url)
     end
   end
