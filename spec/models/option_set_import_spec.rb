@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 
 require "rails_helper"
@@ -97,6 +98,16 @@ describe OptionSets::Import do
     end
   end
 
+  context "with ISO 8859-1 encoding" do
+    let(:filename) { "simple_iso_8859_1.csv" }
+
+    it "should fail with legible error message" do
+      expect(import).not_to be_succeeded
+      expect(run_errors)
+        .to eq(["There was an issue with your CSV file: Invalid byte sequence in UTF-8 in line 2."])
+    end
+  end
+
   context "with no data rows" do
     let(:filename) { "no_rows.csv" }
 
@@ -132,6 +143,6 @@ describe OptionSets::Import do
       expect(option_set.level_names).to be_nil
     end
     expect(option_set.total_options).to eq(26)
-    expect(option_set.all_options).to include(have_attributes(canonical_name: "Kinshasa"))
+    expect(option_set.all_options).to include(have_attributes(canonical_name: "Équateur"))
   end
 end
