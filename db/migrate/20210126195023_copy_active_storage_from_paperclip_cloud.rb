@@ -36,7 +36,7 @@ def copy_all_s3
     total = relation.count
 
     puts "Copying #{total} #{relation.name} #{title.pluralize}..."
-    num_threads = (ENV["NUM_THREADS"].presence || 30).to_i
+    num_threads = (ENV["NUM_THREADS"].presence || 1).to_i
     Parallel.each_with_index(relation.each, in_threads: num_threads) do |record, index|
       copy_s3_item(record, title, index, total)
     end
