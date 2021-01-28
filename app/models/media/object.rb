@@ -45,8 +45,19 @@ module Media
 
     scope :expired, -> { where(answer_id: nil).where("created_at < ?", 12.hours.ago) }
 
+    after_save :generate_media_object_filename, if: :saved_change_to_answer_id?
+
     def dynamic_thumb?
       false
+    end
+
+    private
+
+    # Set a useful filename to assist data analysts who deal with lots of downloads.
+    def generate_media_object_filename
+      answer = item.record.answer
+      extension = File.extname(item.filename.to_s)
+      item.blob.update!(filename: "elmo-#{answer.response.shortcode}-#{answer.id}#{extension}")
     end
   end
 end
