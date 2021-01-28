@@ -20,49 +20,36 @@ class ConvertToActiveStorage < ActiveRecord::Migration[6.0]
       ) VALUES ($1, $2, $3, #{get_blob_id}, $4)
     SQL
 
-    Rails.application.eager_load!
-    models = ActiveRecord::Base.descendants.reject(&:abstract_class?)
-
     transaction do
-      models.each do |model|
-        attachment_keys = model.column_names.map do |c|
-          Regexp.last_match(1) if c =~ /(.+)_file_size$/
-        end.compact
+      NEMO_ATTACHMENTS.each do |pair|
+        relation, attachment_key = pair
+        relation = relation.where.not("#{attachment_key}_file_size".to_sym => nil)
 
-        next if attachment_keys.blank?
+        total = relation.all.count
+        puts "Converting #{total} #{relation.name.pluralize}..."
 
-        total = model.all.count
-        puts "Converting #{total} #{model.name.pluralize}..."
+        relation.find_each.each_with_index do |instance, index|
+          puts "Converting #{relation.name} #{attachment_key} #{instance.id} (#{index + 1} / #{total})"
 
-        model.find_each.each_with_index do |instance, index|
-          attachment_keys.each do |attachment_key|
-            if instance.send(attachment_key)&.path.blank?
-              puts "Skipping blank #{attachment_key} for #{model.name} #{instance.id}" if ENV["VERBOSE"]
-              next
-            end
+          ActiveRecord::Base.connection.raw_connection.exec_prepared(
+            "active_storage_blob_statement", [
+              key(instance, attachment_key),
+              instance.send("#{attachment_key}_file_name"),
+              instance.send("#{attachment_key}_content_type"),
+              instance.send("#{attachment_key}_file_size"),
+              checksum(instance.send(attachment_key)),
+              instance.updated_at.iso8601
+            ]
+          )
 
-            puts "Converting #{model.name} #{attachment_key} #{instance.id} (#{index} / #{total})"
-
-            ActiveRecord::Base.connection.raw_connection.exec_prepared(
-              "active_storage_blob_statement", [
-                key(instance, attachment_key),
-                instance.send("#{attachment_key}_file_name"),
-                instance.send("#{attachment_key}_content_type"),
-                instance.send("#{attachment_key}_file_size"),
-                checksum(instance.send(attachment_key)),
-                instance.updated_at.iso8601
-              ]
-            )
-
-            ActiveRecord::Base.connection.raw_connection.exec_prepared(
-              "active_storage_attachment_statement", [
-                attachment_key,
-                model.name,
-                instance.id,
-                instance.updated_at.iso8601
-              ]
-            )
-          end
+          ActiveRecord::Base.connection.raw_connection.exec_prepared(
+            "active_storage_attachment_statement", [
+              attachment_key,
+              relation.name,
+              instance.id,
+              instance.updated_at.iso8601
+            ]
+          )
         end
       end
     end
@@ -73,6 +60,14 @@ class ConvertToActiveStorage < ActiveRecord::Migration[6.0]
   end
 
   private
+
+  NEMO_ATTACHMENTS = [
+    [Operation, "attachment"],
+    [SavedUpload, "file"],
+    [Question, "media_prompt"],
+    [Media::Object, "item"],
+    [Response, "odk_xml"]
+  ].freeze
 
   def key(_instance, _attachment)
     SecureRandom.uuid
