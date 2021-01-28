@@ -31,13 +31,20 @@ class ConvertToActiveStorage < ActiveRecord::Migration[6.0]
         relation.find_each.each_with_index do |instance, index|
           puts "Converting #{relation.name} #{attachment_key} #{instance.id} (#{index + 1} / #{total})"
 
+          checksum = generate_checksum(instance.send(attachment_key))
+
+          if checksum.nil?
+            puts "  => File not found!"
+            next
+          end
+
           ActiveRecord::Base.connection.raw_connection.exec_prepared(
             "active_storage_blob_statement", [
               key(instance, attachment_key),
               instance.send("#{attachment_key}_file_name"),
               instance.send("#{attachment_key}_content_type"),
               instance.send("#{attachment_key}_file_size"),
-              checksum(instance.send(attachment_key)),
+              checksum,
               instance.updated_at.iso8601
             ]
           )
@@ -78,13 +85,17 @@ class ConvertToActiveStorage < ActiveRecord::Migration[6.0]
   # Note: This is super slow when running synchronously with cloud storage.
   # Parallelizing these downloads isn't compatible with exec_prepared above,
   # so the best solution is probably to copy all files locally before running this migration.
-  def checksum(attachment)
+  def generate_checksum(attachment)
     if Rails.configuration.active_storage.service == :local
-      url = attachment.path
-      Digest::MD5.base64digest(File.read(url))
+      path = attachment.path
+      Digest::MD5.base64digest(File.read(path))
     else
       url = attachment.url
-      Digest::MD5.base64digest(Net::HTTP.get(URI(url)))
+      data = Net::HTTP.get(URI(url))
+      return nil if data.match?(%r{<Message>Access Denied</Message>})
+      Digest::MD5.base64digest(data)
     end
+  rescue Errno::ENOENT
+    nil
   end
 end
