@@ -316,7 +316,8 @@ class Question < ApplicationRecord
   def generate_media_prompt_filename
     return nil unless media_prompt?
     extension = File.extname(media_prompt.filename.to_s)
-    media_prompt.assign_attributes(filename: "#{id}_media_prompt#{extension}")
+    unique_id = id.presence || "new_#{SecureRandom.uuid}" # Fallback if question is not yet saved.
+    media_prompt.assign_attributes(filename: "#{unique_id}_media_prompt#{extension}")
   end
 
   def at_least_one_name
