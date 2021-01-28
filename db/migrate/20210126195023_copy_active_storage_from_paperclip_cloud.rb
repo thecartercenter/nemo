@@ -36,7 +36,7 @@ def copy_all_s3
     total = relation.count
 
     puts "Copying #{total} #{relation.name} #{title.pluralize}..."
-    num_threads = (ENV["NUM_THREADS"].presence || 100).to_i
+    num_threads = (ENV["NUM_THREADS"].presence || 30).to_i
     Parallel.each_with_index(relation.each, in_threads: num_threads) do |record, index|
       copy_s3_item(record, title, index, total)
     end
@@ -60,7 +60,7 @@ def copy_s3_item(record, title, index, total)
       record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
     puts "Skipping existing #{filename}"
   else
-    puts "Copying #{filename}... (#{index} / #{total})"
+    puts "Copying #{filename}... (#{index + 1} / #{total})"
     puts "  at #{url}" if ENV["VERBOSE"]
     record.send(title).attach(io: URI.open(url), filename: filename,
                               content_type: record.send("#{title}_content_type"))
