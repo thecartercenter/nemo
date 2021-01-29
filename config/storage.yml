@@ -7,8 +7,14 @@ local:
   root: <%= Rails.root.join("storage") %>
 
 amazon:
-  access_key_id: <%= ENV["NEMO_AWS_ACCESS_KEY_ID"].presence %>
   service: S3
+  access_key_id: <%= ENV["NEMO_AWS_ACCESS_KEY_ID"].presence %>
   secret_access_key: <%= ENV["NEMO_AWS_SECRET_ACCESS_KEY"].presence %>
   region: <%= ENV["NEMO_AWS_REGION"].presence %>
   bucket: <%= ENV["NEMO_AWS_BUCKET"].presence %>
+
+azure:
+  service: AzureStorage
+  storage_account_name: <%= ENV["NEMO_AZURE_STORAGE_ACCOUNT_NAME"].presence %>
+  storage_access_key: <%= ENV["NEMO_AZURE_STORAGE_ACCESS_KEY"].presence %>
+  container: <%= ENV["NEMO_AZURE_CONTAINER"].presence %>

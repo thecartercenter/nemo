@@ -57,7 +57,7 @@ ELMO::Application.configure do
 
   # Where to store uploaded files (see config/storage.yml for options).
   storage_type = ENV["NEMO_STORAGE_TYPE"].presence
-  config.active_storage.service = storage_type == "cloud" ? :amazon : :local
+  config.active_storage.service = storage_type == "cloud" ? :amazon : (storage_type&.to_sym || :local)
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
