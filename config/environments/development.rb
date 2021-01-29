@@ -39,7 +39,7 @@ ELMO::Application.configure do
 
   # Where to store uploaded files (see config/storage.yml for options).
   storage_type = ENV["NEMO_STORAGE_TYPE"].presence
-  config.active_storage.service = storage_type == "cloud" ? :amazon : :local
+  config.active_storage.service = storage_type == "cloud" ? :amazon : (storage_type&.to_sym || :local)
 
   # Care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
