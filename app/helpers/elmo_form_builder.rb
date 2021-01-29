@@ -107,10 +107,10 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         body << @template.inline_load_ind(success_failure: true)
 
         # Backbone view
-        # rubocop:disable Rails/OutputSafety
+        # rubocop:disable RSpec/Rails/OutputSafety
         js = "new ELMO.Views.RegenerableFieldView({ el: $('##{field_id}') })".html_safe
         body << @template.content_tag(:script, js)
-        # rubocop:enable Rails/OutputSafety
+        # rubocop:enable RSpec/Rails/OutputSafety
       end
 
       body

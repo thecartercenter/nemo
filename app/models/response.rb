@@ -76,7 +76,7 @@ class Response < ApplicationRecord
     autosave: true, dependent: :destroy, inverse_of: :response
 
   # This association used only for cloning, hence it being private.
-  has_many :response_nodes # rubocop:disable Rails/HasManyOrHasOneDependent
+  has_many :response_nodes # rubocop:disable RSpec/Rails/HasManyOrHasOneDependent
   private :response_nodes, :response_nodes=
 
   has_closure_tree_root :root_node, class_name: "ResponseNode"

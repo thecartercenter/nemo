@@ -142,22 +142,22 @@ Bundler:
 Rails:
   Enabled: true
 
-Rails/Output:
+RSpec/Rails/Output:
   Enabled: true
   Exclude:
     - db/migrate/**/*
 
-Rails/SkipsModelValidations:
+RSpec/Rails/SkipsModelValidations:
   Enabled: false
 
 # This is generally bad advice, defaults are often set in code.
-Rails/NotNullColumn:
+RSpec/Rails/NotNullColumn:
   Enabled: false
 
 # This would be lovely but it breaks our custom ODK wrapper.
-Rails/ContentTag:
+RSpec/Rails/ContentTag:
   Enabled: false
 
 # This seems unnecessary to me and kind of ugly.
-Rails/SquishedSQLHeredocs:
+RSpec/Rails/SquishedSQLHeredocs:
   Enabled: false
