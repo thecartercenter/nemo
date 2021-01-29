@@ -188,7 +188,7 @@ group :development, :test do
   gem "awesome_print", "~> 1.6"
   gem "database_cleaner", "~> 1.7"
   gem "db-query-matchers", "~> 0.10"
-  gem "rubocop", "~> 0.91.0" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
+  gem "rubocop", "1.5.2" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
   gem "rubocop-rails", "~> 2.8"
   gem "rubocop-rspec", "~> 2.0"
   gem "timecop", "~> 0.9.2"
