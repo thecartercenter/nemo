@@ -46,9 +46,12 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
     end
 
     it "produces correct json" do
+      # Generate the object first before generating the test expectation,
+      # so a callback is able to change the filename from "the_swing.jpg" to "elmo-shortcode-id.jpg".
+      json = object
       path = Rails.application.routes.url_helpers.rails_blob_url(image.item, disposition: "attachment",
                                                                              only_path: true)
-      is_expected.to match_json(prepare_response_json_expectation("basic.json", path: [path]))
+      expect(json).to match_json(prepare_response_json_expectation("basic.json", path: [path]))
     end
   end
 
