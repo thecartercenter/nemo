@@ -54,17 +54,20 @@ def copy_s3_item(record, title, index, total)
     return
   end
 
-  # Hack to avoid double-saving files when testing this multiple times in a row
+  # Hack to avoid double-saving files when running this multiple times in a row
   # (no fast way to determine if an attachment is stored in ActiveStorage vs. Paperclip location).
-  if ENV["SKIP_MINUTES_AGO"].present? &&
-      record.send(title).attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
-    puts "Skipping existing #{filename}"
-  else
-    puts "Copying #{filename}... (#{index + 1} / #{total})"
-    puts "  at #{url}" if ENV["VERBOSE"]
-    record.send(title).attach(io: URI.open(url), filename: filename,
-                              content_type: record.send("#{title}_content_type"))
+  if ENV["SKIP_MINUTES_AGO"].present?
+    attachment = record.send(title).attachment
+    if attachment && attachment.created_at > ENV["SKIP_MINUTES_AGO"].to_f.minutes.ago
+      puts "Skipping existing #{filename}"
+      return
+    end
   end
+
+  puts "Copying #{filename}... (#{index + 1} / #{total})"
+  puts "  at #{url}" if ENV["VERBOSE"]
+  record.send(title).attach(io: URI.open(url), filename: filename,
+                            content_type: record.send("#{title}_content_type"))
 rescue StandardError => e
   raise e unless e.message == "403 Forbidden"
   puts "  => File no longer exists (or server does not have access) for #{filename} (id #{record.id})."
