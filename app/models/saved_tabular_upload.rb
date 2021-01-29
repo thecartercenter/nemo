@@ -17,5 +17,5 @@
 
 # A model for a spreadsheet upload.
 class SavedTabularUpload < SavedUpload
-  validates :file, content_type: %w[text/csv]
+  validates :file, content_type: %w[text/csv application/csv application/vnd.ms-excel]
 end
