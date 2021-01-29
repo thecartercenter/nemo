@@ -61,13 +61,19 @@ NEMO_ATTACHMENTS = [
 #
 # From https://github.com/thoughtbot/paperclip/blob/master/MIGRATING.md
 def copy_all_local
-  ActiveStorage::Attachment.order(:id).find_each do |attachment|
+  attachments = ActiveStorage::Attachment.order(:id)
+  total = attachments.count
+
+  attachments.each_with_index do |attachment, index|
     name = attachment.name
     source = attachment.record.send(name).path
     dest_dir = File.join("storage", attachment.blob.key.first(2), attachment.blob.key.first(4).last(2))
     dest = File.join(dest_dir, attachment.blob.key)
 
-    puts "Copying #{source}"
+    # Speedup when running multiple times due to failure.
+    next if File.exist?(dest)
+
+    puts "Copying #{source}... (#{index + 1} / #{total})"
     puts "  to #{dest}" if ENV["VERBOSE"]
     FileUtils.mkdir_p(dest_dir)
     FileUtils.cp(source, dest)
