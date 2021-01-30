@@ -80,7 +80,8 @@ gem "configatron", "~> 4.5" # Deprecated, prefer `config` gem
 gem "dotenv-rails", "~> 2.7"
 
 # Tree modelling
-gem "ancestry", "~> 3.0"
+# Fork: fixing `ordered_by_ancestry_and`. PR opened on upstream repo 1/30/21
+gem "ancestry", github: "thecartercenter/ancestry"
 # Fork: Performance improvements.
 # https://github.com/sassafrastech/closure_tree/commits/master
 gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.2.0-noReorder-fastInsert"
