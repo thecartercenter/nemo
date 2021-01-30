@@ -2,11 +2,7 @@
 
 source "http://rubygems.org"
 
-# 6.0.3.x has a blocking regression, waiting for a fix since May 2020:
-# https://github.com/rails/rails/issues/39173
-# TODO: Released in 6.1 https://github.com/rails/rails/commit/fa82ea4098a6f35a41b3eef61a77789cdc02510e
-# TODO: Remove active_storage_6_patch.rb AND lib/azure/ after upgrade to v6.1.
-gem "rails", "~> 6.0.2.2"
+gem "rails", "~> 6.1.1"
 
 # Misc
 gem "attribute_normalizer", "~> 1.2"
@@ -112,7 +108,6 @@ gem "parallel", "~> 1.19"
 gem "whenever", "~> 1.0", require: false
 
 # I18n
-gem "i18n_country_select", "~> 1.2"
 gem "i18n-country-translations", "~> 1.0"
 gem "i18n-js", "~> 3.0"
 gem "iso-639", "~> 0.3.5"
