@@ -19,7 +19,7 @@ describe "odk submissions", :odk, type: :request do
   let(:fixture_name) { "single_question" }
   let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: [1], formver: formver) }
   let(:file) { Tempfile.new.tap { |f| f.write(xml) && f.rewind } }
-  let(:upload) { fixture_file_upload(file, "text/xml") }
+  let(:upload) { Rack::Test::UploadedFile.new(file, "text/xml") }
   let(:request_params) { {xml_submission_file: upload, format: "xml"} }
   let(:nemo_response) { Response.first }
   let(:save_fixtures) { true }

@@ -456,7 +456,7 @@ describe ODK::ResponseParser do
 
     context "single part media" do
       let(:media_file_name) { "the_swing.jpg" }
-      let(:image) { fixture_file_upload(media_fixture("images/#{media_file_name}"), "image/jpeg") }
+      let(:image) { Rack::Test::UploadedFile.new(image_fixture(media_file_name), "image/jpeg") }
       let(:question_types) { %w[text text text image] }
       let(:files) { {xml_submission_file: StringIO.new(xml), media_file_name => image} }
       let(:xml_values) { ["A", "B", "C", media_file_name] }
