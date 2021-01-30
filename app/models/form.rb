@@ -82,7 +82,7 @@ class Form < ApplicationRecord
   scope :live, -> { where(status: "live") }
   scope :published, -> { where.not(status: "draft") }
   scope :by_name, -> { order(:name) }
-  scope :by_status, -> { order("CASE status WHEN 'draft' THEN 2 ELSE 1 END") }
+  scope :by_status, -> { order(Arel.sql("CASE status WHEN 'draft' THEN 2 ELSE 1 END")) }
   scope :default_order, -> { by_name }
   scope :with_responses_counts, lambda {
     forms = Form.arel_table
