@@ -21,4 +21,11 @@ feature "user import", js: true do
     click_on("User import from varying_info.csv")
     expect(page).to have_content("Status\nSuccess")
   end
+
+  scenario "with unsupported spreadsheet file" do
+    visit("/en/m/#{mission.compact_name}/user-imports/new")
+    drop_in_dropzone(user_import_fixture("old_format.xls").path)
+    expect_no_preview
+    expect(page).to have_content("The uploaded file was not an accepted format.")
+  end
 end

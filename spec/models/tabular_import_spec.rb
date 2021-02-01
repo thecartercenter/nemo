@@ -47,4 +47,13 @@ describe TabularImport do
       expect(run_errors).to eq(["#{ERR_PREFIX}: Invalid byte sequence in UTF-8 in line 1."])
     end
   end
+
+  context "with XLSX file" do
+    let(:filename) { "odk_form.xlsx" }
+
+    it "should correctly report error" do
+      expect(import).not_to be_succeeded
+      expect(run_errors).to eq(["#{ERR_PREFIX}: Invalid byte sequence in UTF-8 in line 1."])
+    end
+  end
 end
