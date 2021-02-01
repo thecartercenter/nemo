@@ -533,6 +533,8 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 0.90.0, < 2.0)
+    rubocop-rake (0.5.1)
+      rubocop
     rubocop-rspec (2.1.0)
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
@@ -734,6 +736,7 @@ DEPENDENCIES
   rspec-rails (~> 3.9)
   rubocop (= 1.5.2)
   rubocop-rails (~> 2.8)
+  rubocop-rake (~> 0.5.1)
   rubocop-rspec (~> 2.0)
   ruby-jmeter (~> 3.1)
   rubyzip (~> 2.3)
