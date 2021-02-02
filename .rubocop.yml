@@ -102,6 +102,10 @@ Naming/MethodParameterName:
 Style/AsciiComments:
   Enabled: false
 
+Style/CommentAnnotation:
+  Keywords: # Only care about these, the other defaults like "NOTE" are annoying.
+    - "TODO"
+
 Style/Documentation:
   Exclude:
     - "app/controllers/**/*"
