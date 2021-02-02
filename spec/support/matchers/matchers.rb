@@ -129,10 +129,13 @@ end
 
 RSpec::Matchers.define(:match_json) do |expected|
   match do |actual|
-    JSON.pretty_generate(actual).strip == expected.strip
+    actual == JSON.parse(expected)
   end
 
   failure_message do |actual|
-    diff_with_adjusted_actual_expected(JSON.pretty_generate(actual).strip, expected.strip)
+    expected = JSON.parse(expected)
+    diff = (expected.size > actual.size) ? expected.to_a - actual.to_a : actual.to_a - expected.to_a
+    diff = Hash[*diff.flatten]
+    "Expected:\n#{expected.pretty_inspect}\nGot:\n#{actual.pretty_inspect}\nDiff:\n#{diff.pretty_inspect}"
   end
 end
