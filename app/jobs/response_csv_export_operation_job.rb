@@ -4,8 +4,9 @@
 class ResponseCSVExportOperationJob < OperationJob
   def perform(operation, search: nil, options: {})
     ability = Ability.new(user: operation.creator, mission: mission)
-    result = generate_csv(responses(ability, search), options: options&.symbolize_keys)
-    operation_succeeded(result)
+    attachment = generate_csv(responses(ability, search), options: options.symbolize_keys)
+    timestamp = Time.current.to_s(:filename_datetime)
+    save_attachment(attachment, "#{mission.compact_name}-responses-#{timestamp}.csv")
   rescue Search::ParseError => e
     operation_failed(e.to_s)
   end
@@ -26,16 +27,6 @@ class ResponseCSVExportOperationJob < OperationJob
   end
 
   def generate_csv(responses, options:)
-    attachment = Results::CSV::Generator.new(responses, options: options).export
-    timestamp = Time.current.to_s(:filename_datetime)
-    attachment_download_name = "#{mission.compact_name}-responses-#{timestamp}.csv"
-    {
-      attachment: attachment,
-      # Metadata for disk storage.
-      attachment_download_name: attachment_download_name,
-      # Metadata for cloud storage.
-      attachment_file_name: attachment_download_name,
-      attachment_content_type: "text/csv"
-    }
+    Results::CSV::Generator.new(responses, options: options).export
   end
 end

@@ -81,14 +81,14 @@ describe FormsController, :odk, type: :request do
       end
 
       context "for form with small and large multilevel option sets" do
-        let(:ifa) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
+        let(:itemsets_attachment) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         it "should render regular manifest tag" do
           get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: auth_header)
           expect(response).to be_successful
           assert_select("filename", text: "itemsets.csv")
-          assert_select("hash", text: ifa.md5)
-          assert_select("downloadUrl", text: "http://www.example.com/#{ifa.path}")
+          assert_select("hash", text: itemsets_attachment.md5)
+          assert_select("downloadUrl", text: "http://www.example.com/#{itemsets_attachment.path}")
         end
 
         context "on https" do
@@ -101,7 +101,7 @@ describe FormsController, :odk, type: :request do
           it "should use https in URL" do
             get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: auth_header)
             expect(response).to be_successful
-            assert_select("downloadUrl", text: "https://www.example.com/#{ifa.path}")
+            assert_select("downloadUrl", text: "https://www.example.com/#{itemsets_attachment.path}")
           end
         end
       end
@@ -110,68 +110,52 @@ describe FormsController, :odk, type: :request do
         let(:form) { create(:form, :live, mission: mission, question_types: %w[text integer]) }
 
         before do
-          form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
-          form.c[1].question.update!(media_prompt: audio_fixture("powerup.wav"))
+          form.c[0].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "powerup.mp3")
+          form.c[1].question.media_prompt.attach(io: audio_fixture("powerup.wav"), filename: "powerup.wav")
         end
 
         it "should render manifest tags correctly" do
           get("/m/#{mission.compact_name}/forms/#{form.id}/manifest", headers: auth_header)
           expect(response).to be_successful
 
-          download_url = "http://www.example.com/en/m/#{mission.compact_name}/questions"
-
           assert_select("mediaFile", count: 2) do |elements|
             assert_select(elements[0], "filename", text: "#{form.c[0].question.id}_media_prompt.mp3")
-            assert_select(elements[0], "hash", text: "e7fe3aa406b8b67209b9d89c0cd50aa8")
+            assert_select(elements[0], "hash", text: "5/46pAa4tnIJudicDNUKqA==")
             assert_select(
               elements[0],
               "downloadUrl",
-              text: "#{download_url}/#{form.c[0].question.id}/media_prompt"
+              text: download_url(form.c[0].media_prompt)
             )
 
             assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_media_prompt.wav")
-            assert_select(elements[1], "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
+            assert_select(elements[1], "hash", text: "/y/R4glGXFv/p4S1xX2ExA==")
             assert_select(
               elements[1],
               "downloadUrl",
-              text: "#{download_url}/#{form.c[1].question.id}/media_prompt"
+              text: download_url(form.c[1].media_prompt)
             )
           end
         end
 
-        describe "should download successfully" do
-          let(:url_prefix) { "/en/m/#{mission.compact_name}/questions" }
-
-          it do
-            get("#{url_prefix}/#{form.c[0].question_id}/media_prompt", headers: auth_header)
-            expect(response).to be_successful
-            expect(response.header["Content-Disposition"]).to include(form.c[0].question.id)
-          end
-
-          it do
-            get("#{url_prefix}/#{form.c[1].question_id}/media_prompt", headers: auth_header)
-            expect(response).to be_successful
-            expect(response.header["Content-Disposition"]).to include(form.c[1].question.id)
-          end
-
-          it "should work with legacy endpoint" do
-            get("#{url_prefix}/#{form.c[1].question_id}/audio_prompt", headers: auth_header)
-            expect(response).to be_successful
-          end
+        it "should download successfully" do
+          get(download_url(form.c[0].media_prompt), headers: auth_header)
+          follow_redirect!
+          expect(response).to be_successful
+          expect(response.header["Content-Disposition"]).to include(form.c[0].question.id)
         end
       end
     end
 
     describe "getting itemsets file" do
       context "for form with option sets" do
-        let(:ifa) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
+        let(:itemsets_attachment) { ODK::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         before do
-          ifa.ensure_generated
+          itemsets_attachment.ensure_generated
         end
 
         it "should succeed" do
-          get("/#{ifa.path}", headers: auth_header)
+          get("/#{itemsets_attachment.path}", headers: auth_header)
           expect(response).to be_successful
           expect(response.body).to match(/,Cat/) # Full contents tested in model spec
         end
@@ -194,4 +178,8 @@ describe FormsController, :odk, type: :request do
       expect(response.body.strip).to be_empty
     end
   end
+end
+
+def download_url(attachment)
+  rails_blob_url(attachment, disposition: "attachment")
 end

@@ -10,12 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_09_194945) do
+ActiveRecord::Schema.define(version: 2021_01_27_195532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.uuid "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
 
   create_table "answer_hierarchies", id: false, force: :cascade do |t|
     t.uuid "ancestor_id", null: false
@@ -233,10 +254,11 @@ ActiveRecord::Schema.define(version: 2020_12_09_194945) do
   create_table "media_objects", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "answer_id"
     t.datetime "created_at", null: false
-    t.string "item_content_type", limit: 255, null: false
-    t.string "item_file_name", limit: 255, null: false
-    t.integer "item_file_size", null: false
-    t.datetime "item_updated_at", null: false
+    t.string "item_content_type", limit: 255
+    t.string "item_file_name", limit: 255
+    t.integer "item_file_size"
+    t.string "item_legacy_url"
+    t.datetime "item_updated_at"
     t.string "type", limit: 255, null: false
     t.datetime "updated_at", null: false
     t.index ["answer_id"], name: "index_media_objects_on_answer_id"
@@ -258,6 +280,7 @@ ActiveRecord::Schema.define(version: 2020_12_09_194945) do
     t.string "attachment_download_name"
     t.string "attachment_file_name"
     t.integer "attachment_file_size"
+    t.string "attachment_legacy_url"
     t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.uuid "creator_id"
@@ -345,6 +368,7 @@ ActiveRecord::Schema.define(version: 2020_12_09_194945) do
     t.string "media_prompt_content_type"
     t.string "media_prompt_file_name"
     t.integer "media_prompt_file_size"
+    t.string "media_prompt_legacy_url"
     t.datetime "media_prompt_updated_at"
     t.string "metadata_type"
     t.decimal "minimum", precision: 15, scale: 8
@@ -429,6 +453,7 @@ ActiveRecord::Schema.define(version: 2020_12_09_194945) do
     t.string "odk_xml_content_type"
     t.string "odk_xml_file_name"
     t.bigint "odk_xml_file_size"
+    t.string "odk_xml_legacy_url"
     t.datetime "odk_xml_updated_at"
     t.integer "old_id"
     t.boolean "reviewed", default: false, null: false
@@ -454,10 +479,11 @@ ActiveRecord::Schema.define(version: 2020_12_09_194945) do
 
   create_table "saved_uploads", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "file_content_type", null: false
-    t.string "file_file_name", null: false
-    t.integer "file_file_size", null: false
-    t.datetime "file_updated_at", null: false
+    t.string "file_content_type"
+    t.string "file_file_name"
+    t.integer "file_file_size"
+    t.string "file_legacy_url"
+    t.datetime "file_updated_at"
     t.datetime "updated_at", null: false
   end
 
@@ -609,6 +635,7 @@ ActiveRecord::Schema.define(version: 2020_12_09_194945) do
     t.index ["whitelistable_id"], name: "index_whitelistings_on_whitelistable_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answer_hierarchies", "answers", column: "ancestor_id"
   add_foreign_key "answer_hierarchies", "answers", column: "descendant_id"
   add_foreign_key "answers", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict

@@ -197,7 +197,7 @@ describe Results::CSV::Generator, :reset_factory_sequences do
 
     before do
       Timecop.freeze(submission_time) do
-        image_obj = Media::Image.create!(item: media_fixture("images/the_swing.jpg"))
+        image_obj = create(:media_image)
         create_response(form: form1, answer_values: ["foo", image_obj])
       end
     end

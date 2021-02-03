@@ -28,16 +28,10 @@
 module Media
   # Audio-type Answer attachment.
   class Audio < ::Media::Object
-    # A note on validation:
-    # We no longer validate file extensions because we can't anticipate what extensions folks
-    # will be sending from ODK Collect (since the platform changes over time)
-    # and there is no easy way to allow the user to correct behavior on validation fail-we just have to
-    # discard the file. So for that we reason we limit to mime type validation only since that still
-    # provides some security but is less restrictive and less superficial.
-    #
     # The list of types here is those we expect to be captured by an Android phone.
     # For some reason, the mime-magic gem returns video/ogg for audio OGG files. Same for WEBM.
-    validates_attachment_content_type :item, content_type: [%r{\Aaudio/.*\z}, "video/ogg", "video/webm"]
+    # See parent class comments for more info.
+    validates :item, content_type: [%r{\Aaudio/.*\z}, "video/ogg", "video/webm"]
 
     def static_thumb_path
       "media/audio.png"

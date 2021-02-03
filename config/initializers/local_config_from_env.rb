@@ -31,10 +31,10 @@ end
 
 if ENV.key?("NEMO_SMTP_ADDRESS")
   ActionMailer::Base.smtp_settings = {
-    address: ENV["NEMO_SMTP_ADDRESS"],
-    port: ENV["NEMO_SMTP_PORT"]&.to_i || 587,
-    authentication: ENV["NEMO_SMTP_AUTH_TYPE"]&.to_sym || :plain,
-    user_name: ENV["NEMO_SMTP_USERNAME"],
-    password: ENV["NEMO_SMTP_PASSWORD"]
+    address: ENV["NEMO_SMTP_ADDRESS"].presence,
+    port: ENV["NEMO_SMTP_PORT"].presence&.to_i || 587,
+    authentication: ENV["NEMO_SMTP_AUTH_TYPE"].presence&.to_sym || :plain,
+    user_name: ENV["NEMO_SMTP_USERNAME"].presence,
+    password: ENV["NEMO_SMTP_PASSWORD"].presence
   }
 end

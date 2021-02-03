@@ -174,7 +174,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
             option ? option[0] : ""
 
           when :file
-            val&.original_filename
+            val&.attachment&.filename&.to_s
 
           when :password
             "*******"
@@ -234,7 +234,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
         when :file
           tag_options.merge!(options.slice(:accept, :disabled, :multiple))
-          file_field(field_name, tag_options) << val&.original_filename
+          file_field(field_name, tag_options) << val&.attachment&.filename&.to_s
 
         when :number
           tag_options.merge!(options.slice(:step))

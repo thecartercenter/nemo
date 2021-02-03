@@ -34,9 +34,10 @@ class TabularImport
 
   protected
 
+  # Assumes file is an open File object.
+  # Opens as a CSV and sets `sheet` to an array of arrays with the data in the CSV.
   def open_sheet
-    self.file = Paperclip.io_adapters.for(file).read if file.class == Paperclip::Attachment
-    self.sheet = CSV.new(file, encoding: Encoding::UTF_8).read
+    self.sheet = CSV.open(file.path).read
     delete_bom_prefix(sheet[0][0])
     sheet
   end

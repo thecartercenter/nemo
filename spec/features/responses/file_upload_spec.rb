@@ -66,13 +66,16 @@ feature "response form file upload", js: true do
     # save w/ user
     select2(user.name, from: "response_user_id")
     click_button("Save")
-    expect(page).to_not(have_content("Response is invalid"))
+    expect(page).to have_content("Response created successfully")
 
     response = Response.last
     visit edit_response_path(params.merge(id: response.shortcode))
 
     image_node = find("[data-path='0']")
     video_node = find("[data-path='1']")
+
+    expect(image_node).to have_selector(".media-thumbnail img")
+    expect(video_node).to_not(have_selector(".media-thumbnail img"))
 
     # delete image
     delete_file(image_node)
@@ -81,9 +84,11 @@ feature "response form file upload", js: true do
     # upload different video
     drop_in_dropzone(video2, 1)
     expect_preview(video_node)
+    expect(page).to have_selector("#upload-progress-notice")
+    expect(page).to_not(have_selector("#upload-progress-notice"))
 
     click_button("Save")
-    expect(page).to_not(have_content("Response is invalid"))
+    expect(page).to have_content("Response updated successfully")
 
     visit edit_response_path(params.merge(id: response.shortcode))
 
@@ -97,6 +102,13 @@ feature "response form file upload", js: true do
 
   def expect_download(url)
     res = Net::HTTP.get_response(URI(url))
+
+    location = res["location"]
+    if location
+      warn("Redirected to #{location}")
+      return expect_download(location)
+    end
+
     expect(res.code).to eq("200")
   end
 

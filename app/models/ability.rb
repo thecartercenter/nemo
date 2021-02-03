@@ -63,7 +63,7 @@ class Ability
     can(:show, Welcome)
     can(%i[show update], User, id: user.id)
     can(:confirm_login, UserSession)
-    can(:manage, Operation, creator_id: user.id)
+    can(%i[index show clear destroy], Operation, creator_id: user.id)
     can(:submit_to, Form) { |f| user.admin? || user.assignments.detect { |a| a.mission == f.mission } }
 
     user.admin? ? admin_permissions : non_admin_permissions
@@ -74,6 +74,9 @@ class Ability
     # Can only modify own API key.
     cannot(:regenerate_api_key, User)
     can(:regenerate_api_key, User) { |u| u == user }
+
+    can(:create, Media::Object)
+    can(:destroy, Media::Object) { |obj| obj.response.nil? || can?(:edit, obj.response) }
   end
 
   def admin_permissions
@@ -108,7 +111,7 @@ class Ability
 
     can(:view, :admin_mode)
     can(:switch_to, Mission)
-    can(:manage, Operation)
+    can(%i[index show clear destroy], Operation)
   end
 
   # Permissions that only non-admins need.

@@ -1,3 +1,1 @@
-max_upload_size_mib: <%= ENV["NEMO_MAX_UPLOAD_SIZE_MIB"]&.to_i || 50 %>
-paperclip:
-  storage: local
+max_upload_size_mib: <%= ENV["NEMO_MAX_UPLOAD_SIZE_MIB"].presence&.to_i || 50 %>

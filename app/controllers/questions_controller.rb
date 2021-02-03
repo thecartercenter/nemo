@@ -8,13 +8,11 @@ class QuestionsController < ApplicationController
   include StandardImportable
 
   include Parameters
-  include Storage
 
   # this Concern includes routines for building question/ing forms
   include QuestionFormable
 
   load_and_authorize_resource
-  skip_authorize_resource only: :media_prompt
 
   decorates_assigned :questions
 
@@ -55,6 +53,9 @@ class QuestionsController < ApplicationController
     # Convert tag string from TokenInput to array
     permitted_params[:tag_ids] = permitted_params[:tag_ids].split(",")
 
+    # Force an update, otherwise the attachment won't save if nothing else was modified.
+    permitted_params[:updated_at] = Time.current if permitted_params[:media_prompt].present?
+
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @question.assign_attributes(permitted_params)
     @question.valid?
@@ -81,18 +82,8 @@ class QuestionsController < ApplicationController
     redirect_to(questions_path)
   end
 
-  def media_prompt
-    authorize!(:show, @question)
-
-    decorated_question = ODK::QuestionDecorator.decorate(@question)
-
-    send_attachment(decorated_question.media_prompt,
-      filename: decorated_question.unique_media_prompt_filename)
-  end
-
   private
 
-  # creates/updates the question
   def create_or_update
     if @question.save
       set_success_and_redirect(@question)

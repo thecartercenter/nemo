@@ -134,14 +134,10 @@ module Results
     end
 
     def media_value(answer)
-      media = answer.media_object
-      return nil if media.blank?
-      path = Rails.application.routes.url_helpers.media_object_path(
-        id: media.id,
-        type: Media::ObjectsController.media_type(media.type),
-        mission_name: response.mission.compact_name,
-        locale: response.mission.default_locale
-      )
+      item = answer.media_object.item
+      return nil unless item.attached?
+      path = Rails.application.routes.url_helpers.rails_blob_url(item, disposition: "attachment",
+                                                                       only_path: true)
       "#{BASE_URL_PLACEHOLDER}#{path}"
     end
 

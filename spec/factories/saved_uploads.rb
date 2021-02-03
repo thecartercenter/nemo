@@ -17,7 +17,16 @@
 
 FactoryBot.define do
   factory :saved_upload, class: SavedTabularUpload do
-    transient { filename { nil } }
-    file { user_import_fixture(filename) }
+    # Attached after build.
+    file { nil }
+
+    transient do
+      filename { nil }
+      fixture { user_import_fixture(filename) }
+    end
+
+    after(:build) do |obj, evaluator|
+      obj.file.attach(io: evaluator.fixture, filename: File.basename(evaluator.fixture))
+    end
   end
 end

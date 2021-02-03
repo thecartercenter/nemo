@@ -31,6 +31,18 @@ describe Media::Object do
   let(:media_file) { create(:media_image) }
 
   it "has attachment" do
-    expect(media_file).to have_attached_file(:item)
+    expect(media_file.item.attached?).to be(true)
+  end
+
+  context "with answer" do
+    let(:form) { create(:form, question_types: ["text"]) }
+    let(:response) { create(:response, form: form, answer_values: "foo") }
+    let(:answer) { response.c[0] }
+
+    it "sets filename after association with answer" do
+      expect(media_file.item.filename.to_s).to eq("the_swing.jpg")
+      media_file.update!(answer: answer)
+      expect(media_file.item.filename.to_s).to match(/elmo-.+-.+.jpg/)
+    end
   end
 end

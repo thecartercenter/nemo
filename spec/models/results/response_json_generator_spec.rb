@@ -32,9 +32,11 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
                                      "time",                       # 13
                                      "image"])                     # 14
     end
+
     let(:image) do
-      Media::Image.create(item: File.open(Rails.root.join("spec/fixtures/media/images/the_swing.jpg")))
+      create(:media_image)
     end
+
     let(:response) do
       create(:response, form: form,
                         answer_values: ["foo✓", %w[Canada Calgary],
@@ -44,7 +46,12 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
     end
 
     it "produces correct json" do
-      is_expected.to match_json(prepare_response_json_expectation("basic.json", image_id: [image.id]))
+      # Generate the object first before generating the test expectation,
+      # so a callback is able to change the filename from "the_swing.jpg" to "elmo-shortcode-id.jpg".
+      json = object
+      path = Rails.application.routes.url_helpers.rails_blob_url(image.item, disposition: "attachment",
+                                                                             only_path: true)
+      expect(json).to match_json(prepare_response_json_expectation("basic.json", path: [path]))
     end
   end
 

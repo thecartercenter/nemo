@@ -398,11 +398,11 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         # Then if we do adb push tmp/odk/forms/small_large_multilevel/. /sdcard/odk/forms
         # it will copy the form and the required itemset file for testing.
         if save_fixtures
-          ifa = ODK::ItemsetsFormAttachment.new(form: form).tap(&:ensure_generated)
+          itemsets_attachment = ODK::ItemsetsFormAttachment.new(form: form).tap(&:ensure_generated)
           media_dir = File.join(saved_fixture_dir(name: fixture_name, type: :form), "#{fixture_name}-media")
           FileUtils.mkdir_p(media_dir)
           puts "Saving itemsets file to #{media_dir}/itemsets.csv"
-          FileUtils.mv(ifa.priv_path, "#{media_dir}/itemsets.csv")
+          FileUtils.mv(itemsets_attachment.priv_path, "#{media_dir}/itemsets.csv")
         end
       end
 
@@ -497,9 +497,9 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       let(:form) { create(:form, :live, name: "Media Prompts", question_types: %w[text text text]) }
 
       before do
-        form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
-        form.c[1].question.update!(media_prompt: video_fixture("jupiter.mp4"))
-        form.c[2].question.update!(media_prompt: image_fixture("the_swing.png"))
+        form.c[0].question.media_prompt.attach(**attachment_args(audio_fixture("powerup.mp3")))
+        form.c[1].question.media_prompt.attach(**attachment_args(video_fixture("jupiter.mp4")))
+        form.c[2].question.media_prompt.attach(**attachment_args(image_fixture("the_swing.png")))
       end
 
       it "should render proper xml" do
