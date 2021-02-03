@@ -72,6 +72,8 @@ jobs:
         run: |
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
+      - name: React Linting
+        run: yarn run lint:react
       - name: RSpec & JS Tests
         # Run both in the same shell and return whether both of them passed by adding return values together.
         # This way both run even if the first one fails, but if either fails, we still fail the build.
