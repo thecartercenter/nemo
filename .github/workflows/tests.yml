@@ -1,4 +1,4 @@
-name: Verify
+name: RSpec & JS Tests
 on: [push]
 jobs:
   tests:
