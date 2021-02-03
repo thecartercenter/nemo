@@ -1,0 +1,92 @@
+name: RSpec & JS Tests
+on: [push]
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+      POSTGRES_USER: nemo
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: localhost
+    services:
+      postgres:
+        image: postgres:11
+        # These env vars need to be repeated here b/c they get passed as command line args to docker
+        env:
+          POSTGRES_USER: nemo
+          POSTGRES_DB: nemo_test
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        # These health checks are important to ensure Postgres is ready before moving on.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+      - name: Ruby gem cache
+        id: cache-gems
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          # Restore keys will be matched if the main key fails. This may restore older gems to the
+          # dir but we don't care because bundle install will check the gems anyway.
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Set bundle path
+        run: bundle config path vendor/bundle
+      - name: Install gems
+        # Save some time by not even running bundle install if we had a positive cache hit
+        # This doesn't work for yarn for some reason.
+        if: steps.cache-gems.outputs.cache-hit != 'true'
+        run: bundle install --jobs 4 --retry 3
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.15.3
+      - name: Find yarn cache location
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: JS package cache
+        id: cache-packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install packages
+        run: yarn install --pure-lockfile
+      - name: Setup test database
+        run: |
+          cp config/database.yml.ci config/database.yml
+          bin/rails db:setup
+      - name: Install Chromedriver
+        uses: nanasess/setup-chromedriver@master
+      - name: Configure Chromedriver
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+      - name: React Linting
+        run: yarn run lint:react
+      - name: RSpec & JS Tests
+        # Run both in the same shell and return whether both of them passed by adding return values together.
+        # This way both run even if the first one fails, but if either fails, we still fail the build.
+        env:
+          # A real Google Maps key is needed for some specs. This is stored in the Github repo
+          # under Settings > Secrets.
+          NEMO_GOOGLE_MAPS_API_KEY: ${{ secrets.NEMO_GOOGLE_MAPS_API_KEY }}
+        shell: bash {0}
+        run: |
+          yarn run i18n:export
+          yarn run test
+          YARN_RESULT=$?
+          bundle exec rspec --format RSpec::Github::Formatter --format documentation
+          RSPEC_RESULT=$?
+          exit `expr $RSPEC_RESULT + $YARN_RESULT`

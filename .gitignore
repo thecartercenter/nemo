@@ -1,6 +1,5 @@
 .bundle
 .DS_Store
-.env*
 db/*.sqlite3
 db/sphinx
 log
@@ -63,3 +62,8 @@ config/environments/*.local.yml
 /node_modules
 yarn-*.log*
 .yarn-integrity
+
+# Configuration. We don't ignore the .env.development, .env.production, etc. files as per
+# the recommendation of the gem. We also don't ignore .env since that's where default values for
+# configurations will go.
+.env*.local

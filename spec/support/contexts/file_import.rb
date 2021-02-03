@@ -42,8 +42,9 @@ shared_context "file import" do
     page.execute_script(<<-JS)
       fakeFileInput = window.$('<input/>').attr(
         {id: 'fakeFileInput', type:'file'}
-      ).appendTo('body');
+      ).appendTo('#content');
     JS
+    expect(page).to have_field("fakeFileInput")
     # Attach the file to the fake input selector with Capybara
     attach_file("fakeFileInput", file_path)
     # Trigger the fake drop event

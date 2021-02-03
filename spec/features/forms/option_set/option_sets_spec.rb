@@ -63,7 +63,7 @@ feature "option set" do
     expect(page).not_to have_selector("form.option_set_form a.action-link-edit")
 
     click_on("Export")
-    sleep(1) # Travis takes time to download and save the file.
+    sleep(1) # CI takes time to download and save the file.
     export = CSV.open("Foo.csv").read
     expect(export[0][0]).to eq("Id")
     expect(export[1][1]).to eq("Banana")
