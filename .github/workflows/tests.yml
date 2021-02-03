@@ -82,8 +82,8 @@ jobs:
         shell: bash {0}
         run: |
           yarn run i18n:export
-          bundle exec rspec --format RSpec::Github::Formatter --format documentation
-          RSPEC_RESULT=$?
           yarn run test
           YARN_RESULT=$?
+          bundle exec rspec --format RSpec::Github::Formatter --format documentation
+          RSPEC_RESULT=$?
           exit `expr $RSPEC_RESULT + $YARN_RESULT`
