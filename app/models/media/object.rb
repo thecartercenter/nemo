@@ -57,7 +57,7 @@ module Media
     def generate_media_object_filename
       answer = item.record.answer
       extension = File.extname(item.filename.to_s)
-      item.blob.update!(filename: "elmo-#{answer.response.shortcode}-#{answer.id}#{extension}")
+      item.blob.update!(filename: "nemo-#{answer.response.shortcode}-#{answer.id}#{extension}")
     end
   end
 end
