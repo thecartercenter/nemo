@@ -57,7 +57,7 @@ class SmsController < ApplicationController
   def incoming_numbers
     authorize!(:manage, Form)
     generator = Sms::IncomingNumberCSVGenerator.new(numbers: configatron.incoming_sms_numbers)
-    filename = "elmo-#{current_mission.compact_name}-incoming-numbers"
+    filename = "nemo-#{current_mission.compact_name}-incoming-numbers"
     render(csv: generator, filename: filename)
   end
 
