@@ -43,6 +43,7 @@ jobs:
         run: bundle config path vendor/bundle
       - name: Install gems
         # Save some time by not even running bundle install if we had a positive cache hit
+        # This doesn't work for yarn for some reason.
         if: steps.cache-gems.outputs.cache-hit != 'true'
         run: bundle install --jobs 4 --retry 3
       - name: Setup Node
