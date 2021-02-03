@@ -375,11 +375,11 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 See the [ActiveStorage Pull Request](https://github.com/thecartercenter/nemo/pull/802) for more details and tips for extremely large data sets.
 
-1. Check out/deploy the commit BEFORE `[Breaking]` (TODO: we should tag this commit after merge)
+1. Check out the final commit before switching to ActiveStorage, git tag `v12.0-step1`
 1. Increase the thread pool in `database.yml` to 100 to allow parallelization (only needed if using cloud storage)
-1. `rails db:migrate` to create new ActiveStorage tables and copy some data
-1. Check out/deploy latest commit on v12.0
-1. `rails db:migrate` to finish copying the data
+1. Run `rails db:migrate` to create new ActiveStorage tables and copy some data
+1. Check out the latest commit on v12.0, git tag `v12.0-step2`
+1. Run `rails db:migrate` to finish copying the data
 1. Clean up: Decrease the thread pool in `database.yml` back to 5
 
 #### Upgrading to latest
