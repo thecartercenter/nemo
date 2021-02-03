@@ -18,7 +18,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     end
 
     it "should successfully process the submission and clean up" do
-      image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
+      image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
       post submission_path, params: {xml_submission_file: submission_file, "the_swing.jpg" => image},
@@ -50,8 +50,8 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
     it "should successfully process the submission" do
-      image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
-      image2 = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
+      image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
+      image2 = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
       submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
@@ -87,7 +87,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     File.open(tmp_path, "w") do |f|
       f.write(prepare_odk_media_upload_fixture(template, form))
     end
-    fixture_file_upload(tmp_path, "text/xml")
+    Rack::Test::UploadedFile.new(tmp_path, "text/xml")
   end
 
   def prepare_odk_media_upload_fixture(filename, form)

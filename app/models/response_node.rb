@@ -59,11 +59,11 @@ class ResponseNode < ApplicationRecord
   belongs_to :response
 
   # These associations are used for cloning only, hence them being private.
-  # rubocop:disable Rails/HasManyOrHasOneDependent, Rails/InverseOf
+  # rubocop:disable RSpec/Rails/HasManyOrHasOneDependent, RSpec/Rails/InverseOf
   has_many :up_hierarchies, class_name: "AnswerHierarchy", foreign_key: "ancestor_id"
   has_many :down_hierarchies, class_name: "AnswerHierarchy", foreign_key: "descendant_id"
   private :up_hierarchies, :up_hierarchies=, :down_hierarchies, :down_hierarchies=
-  # rubocop:enable Rails/HasManyOrHasOneDependent, Rails/InverseOf
+  # rubocop:enable RSpec/Rails/HasManyOrHasOneDependent, RSpec/Rails/InverseOf
 
   # Used only for Answer, but included here for eager loading.
   belongs_to :option_node, inverse_of: :answers

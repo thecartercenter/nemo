@@ -2,9 +2,7 @@
 
 source "http://rubygems.org"
 
-# 6.0.3.x has a blocking regression, waiting for a fix since May 2020:
-# https://github.com/rails/rails/issues/39173
-gem "rails", "~> 6.0.2.2"
+gem "rails", "~> 6.1.1"
 
 # Misc
 gem "attribute_normalizer", "~> 1.2"
@@ -65,6 +63,7 @@ gem "reverse_markdown", "~> 2.0"
 gem "active_storage_validations", github: "cooperka/active_storage_validations",
                                   tag: "2020-01-13-v0.9.2-regexArray"
 gem "aws-sdk-s3", "~> 1.86", require: false
+gem "azure-storage-blob", require: false
 gem "image_processing", "~> 1.12"
 
 # API
@@ -81,7 +80,8 @@ gem "configatron", "~> 4.5" # Deprecated, prefer `config` gem
 gem "dotenv-rails", "~> 2.7"
 
 # Tree modelling
-gem "ancestry", "~> 3.0"
+# Fork: fixing `ordered_by_ancestry_and`. PR opened on upstream repo 1/30/21
+gem "ancestry", github: "thecartercenter/ancestry"
 # Fork: Performance improvements.
 # https://github.com/sassafrastech/closure_tree/commits/master
 gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.2.0-noReorder-fastInsert"
@@ -109,7 +109,6 @@ gem "parallel", "~> 1.19"
 gem "whenever", "~> 1.0", require: false
 
 # I18n
-gem "i18n_country_select", "~> 1.2"
 gem "i18n-country-translations", "~> 1.0"
 gem "i18n-js", "~> 3.0"
 gem "iso-639", "~> 0.3.5"
@@ -134,7 +133,8 @@ group :development do
   gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4"
   gem "listen", "~> 3.0"
-  gem "rails-erd", "~> 1.4"
+  # Fork: Rails 6.1 compatibility: https://github.com/voormedia/rails-erd/pull/365
+  gem "rails-erd", github: "andrew-newell/rails-erd"
   gem "spring", "~> 1.3"
   gem "thin", "~> 1.7"
 
@@ -187,8 +187,9 @@ group :development, :test do
   gem "awesome_print", "~> 1.6"
   gem "database_cleaner", "~> 1.7"
   gem "db-query-matchers", "~> 0.10"
-  gem "rubocop", "~> 0.91.0" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
+  gem "rubocop", "1.5.2" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
   gem "rubocop-rails", "~> 2.8"
-  gem "rubocop-rspec", "~> 1.44"
+  gem "rubocop-rake", "~> 0.5.1"
+  gem "rubocop-rspec", "~> 2.0"
   gem "timecop", "~> 0.9.2"
 end

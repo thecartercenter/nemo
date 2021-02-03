@@ -66,7 +66,7 @@ def copy_s3_item(record, title, index, total)
 
   puts "Copying #{filename}... (#{index + 1} / #{total})"
   puts "  at #{url}" if ENV["VERBOSE"]
-  record.send(title).attach(io: URI.open(url), filename: filename,
+  record.send(title).attach(io: URI.parse(url).open, filename: filename,
                             content_type: record.send("#{title}_content_type"))
 rescue StandardError => e
   raise e unless e.message == "403 Forbidden"

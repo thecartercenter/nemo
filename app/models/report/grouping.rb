@@ -26,7 +26,7 @@ class Report::Grouping
     rel = rel.group(value_expr.sql)
 
     # add order
-    rel = rel.order(sort_expr.sql) if sort_expr
+    rel = rel.order(Arel.sql(sort_expr.sql)) if sort_expr
 
     # add joins, with label as prefix
     rel = rel.joins(Results::Join.list_to_sql(@calculation.joins, prefix: prefix))
