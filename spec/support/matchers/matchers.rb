@@ -134,8 +134,7 @@ RSpec::Matchers.define(:match_json) do |expected|
 
   failure_message do |actual|
     expected = JSON.parse(expected)
-    diff = (expected.size > actual.size) ? expected.to_a - actual.to_a : actual.to_a - expected.to_a
-    diff = Hash[*diff.flatten]
+    diff = (expected.size > actual.size ? expected.to_a - actual.to_a : actual.to_a - expected.to_a).to_h
     "Expected:\n#{expected.pretty_inspect}\nGot:\n#{actual.pretty_inspect}\nDiff:\n#{diff.pretty_inspect}"
   end
 end
