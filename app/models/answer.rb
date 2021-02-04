@@ -173,7 +173,7 @@ class Answer < ResponseNode
   end
 
   def media_object_id
-    media_object.try(:id)
+    media_object&.id
   end
 
   # Attempts to find unassociated media object with given ID and assoicate with this answer.
@@ -190,8 +190,8 @@ class Answer < ResponseNode
     response&.update!(dirty_json: true)
   end
 
-  def has_media_object?
-    !media_object_id.nil?
+  def media_object?
+    !media_object.nil?
   end
 
   def group_level

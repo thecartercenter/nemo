@@ -134,8 +134,8 @@ module Results
     end
 
     def media_value(answer)
+      return nil unless answer.media_object?
       media_object = answer.media_object
-      return nil if media_object.nil?
       item = media_object.item
       return nil unless item.attached?
       path = Rails.application.routes.url_helpers.rails_blob_url(item, disposition: "attachment",

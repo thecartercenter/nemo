@@ -24,7 +24,7 @@
 
 <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 
-  <%= media_link(answer.media_object) if answer.has_media_object? %>
+  <%= media_link(answer.media_object) if answer.media_object? %>
 
 <% else %>
 

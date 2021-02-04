@@ -1,11 +1,11 @@
 <div id="media-uploader-<%= context.path_str %>" class="media-uploader">
-  <% if answer.has_media_object? %>
+  <% if answer.media_object? %>
     <div class="existing">
       <%= media_link(answer.media_object, show_delete: true) %>
     </div>
   <% end %>
 
-  <div id="dropzone-<%= context.path_str %>" class="dropzone <%= "collapse" if answer.has_media_object? %>">
+  <div id="dropzone-<%= context.path_str %>" class="dropzone <%= "collapse" if answer.media_object? %>">
     <%= hidden_field_tag(context.input_name(:media_object_id), answer.media_object_id) %>
     <div class="dz-message">
       <span class="message"><%= t("common.file_drop_message") %>&nbsp;</span>
