@@ -749,8 +749,6 @@ fr:
           attributes:
             code:
               invalid: "Commencer par une lettre. Utiliser seulement des lettres et des chiffres et un maximum de 20 caractères."
-            media_prompt_file_name:
-              invalid_type: "Le type de fichier est invalide."
             media_prompt_content_type:
               invalid_type: "Le type de fichier est invalide."
             reference:

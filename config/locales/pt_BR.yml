@@ -756,8 +756,6 @@ pt-BR:
           attributes:
             code:
               invalid: "Deveria começar com uma letra, usar apenas letras e números, e ter no máximo 20 caracteres."
-            media_prompt_file_name:
-              invalid_type: "O tipo de arquivo é inválido."
             media_prompt_content_type:
               invalid_type: "O tipo de arquivo é inválido."
             reference:

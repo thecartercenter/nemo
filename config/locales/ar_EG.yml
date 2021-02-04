@@ -785,8 +785,6 @@ ar:
           attributes:
             code:
               invalid: "يجب أن تبدأ بحرف، استخدم فقط الحروف والأرقام، وتكون بحد أقصى 20 رمز."
-            media_prompt_file_name:
-              invalid_type: "نوع الملف غير صالح."
             media_prompt_content_type:
               invalid_type: "نوع الملف غير صالح."
             reference:
