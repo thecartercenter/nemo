@@ -198,7 +198,7 @@ module ResponseFactoryHelper
     when "date", "time", "datetime"
       attrs["#{qing.qtype_name}_value"] = value
     when "image", "annotated_image", "signature", "sketch", "audio", "video"
-      attrs[:media_object] = value
+      attrs[:media_object] = value unless value == :no_file
     else
       attrs[:value] = value
     end

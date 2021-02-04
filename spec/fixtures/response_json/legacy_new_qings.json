@@ -7,8 +7,9 @@
   "ResponseReviewed": true,
   "LastCached": "2020-04-20T06:30:00-06:00",
   "TextQ1": "foo",
-  "TextQ2": null,
-  "SelectMultipleQ3": [
+  "ImageQ2": null,
+  "TextQ3": null,
+  "SelectMultipleQ4": [
 
   ]
 }

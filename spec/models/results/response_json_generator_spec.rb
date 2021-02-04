@@ -96,10 +96,10 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
 
   context "response with missing values" do
     let(:form) do
-      create(:form, question_types: ["text"])
+      create(:form, question_types: %w[text image])
     end
     let!(:response) do
-      create(:response, form: form, reviewed: true, answer_values: ["foo"])
+      create(:response, form: form, reviewed: true, answer_values: ["foo", :no_file])
     end
 
     it "produces correct json with defaults" do
