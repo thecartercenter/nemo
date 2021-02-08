@@ -4,7 +4,7 @@
     <%= f.base_errors %>
     <%= f.field(:form_id, type: :hidden) %>
     <%= f.field(:repeatable, type: :check_box) %>
-    <% configatron.preferred_locales.each do |locale| %>
+    <% current_mission_config.preferred_locales.each do |locale| %>
       <% lang_suffix = " (#{language_name(locale)})" %>
       <%= f.field(:"group_name_#{locale}",
           label: QingGroup.human_attribute_name("group_name") + lang_suffix) %>

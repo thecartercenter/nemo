@@ -39,5 +39,9 @@ module MissionBased
       rel = rel.where.not(id: id) unless new_record?
       rel.count.zero?
     end
+
+    def mission_config
+      Setting.for_mission(mission)
+    end
   end
 end

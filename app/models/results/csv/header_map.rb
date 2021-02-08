@@ -4,10 +4,11 @@ module Results
   module CSV
     # Keeps track of what column index each named header is written to.
     class HeaderMap
-      attr_accessor :common_headers, :group_headers
+      attr_accessor :common_headers, :group_headers, :locales
 
-      def initialize
+      def initialize(locales:)
         self.map = ActiveSupport::OrderedHash.new
+        self.locales = locales
       end
 
       def add_common(common_headers)
@@ -71,7 +72,7 @@ module Results
 
       def add_level_headers(code, level_names)
         JSON.parse(level_names).each do |level|
-          key = configatron.preferred_locales.detect { |l| level[l.to_s].present? } || level.keys.first
+          key = locales.detect { |l| level[l.to_s].present? } || level.keys.first
           add(code, suffix: level[key.to_s])
         end
       end

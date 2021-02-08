@@ -6,8 +6,9 @@ module Results
     class Query
       UUID_LENGTH = 36 # This should never change.
 
-      def initialize(response_scope:)
+      def initialize(response_scope:, locales:)
         self.response_scope = response_scope
+        self.locales = locales
       end
 
       def run
@@ -21,7 +22,7 @@ module Results
 
       protected
 
-      attr_accessor :response_scope
+      attr_accessor :response_scope, :locales
 
       def sql
         "#{select} #{from} #{where} #{order}"
@@ -35,7 +36,7 @@ module Results
 
       def translation_query(column, arr_index: nil)
         arr_op = arr_index && "->(#{arr_index})"
-        tries = ([I18n.locale] + configatron.preferred_locales).map do |locale|
+        tries = ([I18n.locale] + locales).map do |locale|
           "#{column}#{arr_op}->>'#{locale}'"
         end
         "COALESCE(#{tries.uniq.join(', ')})"

@@ -133,6 +133,7 @@ class OptionNode < ApplicationRecord
   def option_attribs=(attribs)
     attribs = attribs.to_h
     attribs.symbolize_keys! if attribs.respond_to?(:symbolize_keys!)
+    attribs[:mission_id] = mission_id
     if attribs[:id]
       self.option = Option.find(attribs[:id])
       option.assign_attributes(attribs)
@@ -259,7 +260,7 @@ class OptionNode < ApplicationRecord
 
   def preferred_name_translations(path)
     path.map do |p|
-      translations = configatron.preferred_locales.map { |locale| p.name(locale.to_s) }
+      translations = mission_config.preferred_locales.map { |locale| p.name(locale.to_s) }
       translations.compact.first
     end
   end

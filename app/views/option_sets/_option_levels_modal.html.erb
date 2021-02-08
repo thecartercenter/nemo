@@ -9,7 +9,7 @@
       <div class="modal-body">
         <%= elmo_fields_for(:option_level, @blank_option_level) do |f| %>
           <div class="fields">
-            <% configatron.preferred_locales.each do |locale| %>
+            <% current_mission_config.preferred_locales.each do |locale| %>
               <%= f.field(:"name_#{locale}", maxlength: Option::MAX_NAME_LENGTH,
                                              wrapper_class: "translation",
                                              label: language_name(locale),

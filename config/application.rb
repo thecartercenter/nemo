@@ -109,6 +109,8 @@ module ELMO
 
     # Restrict available locales to defined system locales.
     # Without this, it returns a whole bunch more defined by i18n-js.
+    # This is different from preferred_locales, which is part of the mission settings class and represents
+    # locales that questions, options, etc. may be defined in.
     I18n.available_locales = %i[en fr es ar ko pt pt-BR]
 
     # This was initially added to allow overriding the odata_server engine.

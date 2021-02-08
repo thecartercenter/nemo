@@ -93,10 +93,6 @@ RSpec.configure do |config|
     # Previous specs might leave locale set to something else, which can cause issues.
     I18n.locale = :en
 
-    # This setting is used in Translatable and can lead to weird results if it's set to
-    # something other than [:en] by a previous spec.
-    configatron.preferred_locales = [:en]
-
     # Ensure no leftover logged in user.
     ENV.delete("TEST_LOGGED_IN_USER_ID")
 

@@ -310,14 +310,11 @@ describe OptionNode do
     let(:option_node) { create(:option_node, option_attribs: {name_translations: {en: nil, fr: "Foo"}}) }
 
     before do
-      Setting.root.update!(preferred_locales_str: "en,fr")
+      option_node.mission.setting.update!(preferred_locales_str: "en,fr")
     end
 
     it "returns first non-nil translation" do
-      preferred_locales = configatron.preferred_locales
-      configatron.preferred_locales = %i[en fr]
       results = option_node.preferred_name_translations([option_node.option])
-      configatron.preferred_locales = preferred_locales
       expect(results).to eq(%w[Foo])
     end
   end

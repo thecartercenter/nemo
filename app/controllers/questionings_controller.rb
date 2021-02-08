@@ -91,7 +91,7 @@ class QuestioningsController < ApplicationController
       {constraints_attributes: [
         :id, :accept_if, :_destroy,
         {conditions_attributes: condition_params,
-         rejection_msg_translations: configatron.preferred_locales}
+         rejection_msg_translations: current_mission_config.preferred_locales}
       ]},
       question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]))
   end

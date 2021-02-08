@@ -27,6 +27,6 @@ class ResponseCSVExportOperationJob < OperationJob
   end
 
   def generate_csv(responses, options:)
-    Results::CSV::Generator.new(responses, options: options).export
+    Results::CSV::Generator.new(responses, options: options, mission: mission).export
   end
 end

@@ -6,7 +6,7 @@ describe Results::CSV::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }
   let(:responses) { [] }
   let(:options) { {} }
-  let(:generator) { Results::CSV::Generator.new(relation, options: options) }
+  let(:generator) { Results::CSV::Generator.new(relation, mission: get_mission, options: options) }
   let(:submission_time) { Time.zone.parse("2015-11-20 12:30 UTC") }
   subject(:output) { generator.export.read }
 

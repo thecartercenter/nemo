@@ -171,11 +171,7 @@ describe ResponsesSearcher do
     let(:preferred_locales) { configatron.preferred_locales }
 
     before do
-      configatron.preferred_locales = %i[en fr]
-    end
-
-    after do
-      configatron.preferred_locales = preferred_locales
+      form.mission.setting.update!(preferred_locales_str: "en,fr")
     end
 
     it "has correct filter data" do
