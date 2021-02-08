@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_30_010746) do
+ActiveRecord::Schema.define(version: 2021_02_08_212426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -623,7 +623,7 @@ ActiveRecord::Schema.define(version: 2021_01_30_010746) do
     t.string "persistence_token", limit: 255
     t.string "phone", limit: 255
     t.string "phone2", limit: 255
-    t.string "pref_lang", limit: 255, null: false
+    t.string "pref_lang", limit: 255, default: "en", null: false
     t.string "sms_auth_code", limit: 255
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email"

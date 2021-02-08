@@ -91,7 +91,6 @@ class User < ApplicationRecord
     c.logged_in_timeout(SESSION_TIMEOUT)
   end
 
-  after_initialize :set_default_pref_lang
   before_validation :normalize_fields
   before_validation :generate_password_if_none
   before_save :clear_assignments_without_roles
@@ -414,12 +413,5 @@ class User < ApplicationRecord
   # generates a random password before validation if this is a new record, unless one is already set
   def generate_password_if_none
     reset_password if new_record? && password.blank? && password_confirmation.blank?
-  end
-
-  # sets the user's preferred language to the mission default
-  def set_default_pref_lang
-    self.pref_lang ||= configatron.key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : "en"
-  rescue ActiveModel::MissingAttributeError
-    # we rescue this error in case find_by_sql is being used
   end
 end
