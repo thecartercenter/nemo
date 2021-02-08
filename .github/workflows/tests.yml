@@ -87,6 +87,6 @@ jobs:
           yarn run i18n:export
           yarn run test
           YARN_RESULT=$?
-          bundle exec rspec --format RSpec::Github::Formatter --format documentation
+          bundle exec rspec --format RSpec::Github::Formatter --format documentation --seed 10280
           RSPEC_RESULT=$?
           exit `expr $RSPEC_RESULT + $YARN_RESULT`
