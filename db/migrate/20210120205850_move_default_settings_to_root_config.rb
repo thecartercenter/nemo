@@ -3,6 +3,7 @@
 class MoveDefaultSettingsToRootConfig < ActiveRecord::Migration[6.0]
   def up
     return unless configatron.key?(:default_settings)
+    Setting.build_default(nil).save! if Setting.root.blank?
     root_setting = Setting.root
     root_setting.default_outgoing_sms_adapter = fetch_default_setting(:outgoing_sms_adapter)
     root_setting.twilio_account_sid = fetch_default_setting(:twilio_account_sid)
