@@ -6,7 +6,7 @@ feature "SMS Guide", js: true do
   let!(:user) { create(:user) }
 
   before do
-    get_mission.setting.update!(preferred_locales_str: "en,fr,rw")
+    get_mission.setting.update!(preferred_locales_str: "en,fr,rw", incoming_sms_numbers_str: "+1234567890")
     login(user)
   end
 

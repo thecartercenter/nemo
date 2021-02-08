@@ -94,7 +94,8 @@ class FormsController < ApplicationController
     @qings_with_indices = @form.smsable_questionings
 
     # If there are more than one incoming numbers, we need to set a flash notice.
-    @number_appendix = configatron.incoming_sms_numbers.size > 1
+    @incoming_sms_numbers = current_mission_config.incoming_sms_numbers
+    @number_appendix = @incoming_sms_numbers.size > 1
   end
 
   # Format is always :xml

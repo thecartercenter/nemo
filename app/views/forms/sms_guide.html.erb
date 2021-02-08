@@ -46,7 +46,7 @@
                 <% if @number_appendix %>
                   <%= t(".instructions.2a_appendix", locale: @locale) %>
                 <% else  %>
-                  <% number = configatron.incoming_sms_numbers.first || t(".unknown_number", locale: @locale) %>
+                  <% number = @incoming_sms_numbers.first || t(".unknown_number", locale: @locale) %>
                   <%= t(".instructions.2a_number_html", number: number, locale: @locale) %>
                 <% end %>
               </li>
