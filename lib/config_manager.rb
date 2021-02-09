@@ -4,6 +4,10 @@
 class ConfigManager
   include Singleton
 
+  def secret_key_base
+    ENV.fetch("NEMO_SECRET_KEY_BASE")
+  end
+
   def offline_mode?
     ENV["NEMO_OFFLINE_MODE"] == "true"
   end
