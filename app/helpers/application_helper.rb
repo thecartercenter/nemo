@@ -96,7 +96,7 @@ module ApplicationHelper
 
   def google_maps_js
     return "" if offline?
-    javascript_include_tag("https://maps.googleapis.com/maps/api/js?key=#{Cnfg.google_maps_api_key}&v=3")
+    javascript_include_tag("https://maps.googleapis.com/maps/api/js?key=#{Cnfg.google_maps_key}&v=3")
   end
 
   # Converts given object/value to json and runs through html_safe.

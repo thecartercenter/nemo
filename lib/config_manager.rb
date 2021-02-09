@@ -55,8 +55,12 @@ class ConfigManager
     options
   end
 
-  def google_maps_api_key
+  def google_maps_key
     ENV["NEMO_GOOGLE_MAPS_API_KEY"]
+  end
+
+  def scout_key
+    ENV["NEMO_SCOUT_KEY"]
   end
 
   def allow_missionless_sms?
