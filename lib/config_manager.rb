@@ -34,6 +34,26 @@ class ConfigManager
   def max_upload_size_mib
     ENV.fetch("NEMO_MAX_UPLOAD_SIZE_MIB").to_i
   end
+
+  def url_protocol
+    ENV.fetch("NEMO_URL_PROTOCOL")
+  end
+
+  def url_host
+    ENV.fetch("NEMO_URL_HOST")
+  end
+
+  def url_port
+    ENV.fetch("NEMO_URL_PORT").to_i
+  end
+
+  # Returns a hash of url options (port, protocol, host). Omits port if it's default for protocol.
+  def url_options
+    options = {protocol: url_protocol, host: url_host}
+    return options if url_protocol == "http" && url_port == 80 || url_protocol == "https" && url_port == 443
+    options[:port] = url_port
+    options
+  end
 end
 
 Cnfg = ConfigManager.instance

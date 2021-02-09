@@ -119,11 +119,7 @@ RSpec.configure do |config|
     end
   end
 
-  # Important that url options are consistent for specs regardless of what's in local config.
-  configatron.url.host = "www.example.com"
-  configatron.url.protocol = "http"
-  configatron.url.port = nil
-  ActionMailer::Base.default_url_options = configatron.url.to_h.slice(:host, :port, :protocol)
+  ActionMailer::Base.default_url_options = Cnfg.url_options
 
   VCR.configure do |c|
     c.cassette_library_dir = "spec/cassettes"

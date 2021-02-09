@@ -8,8 +8,8 @@ module ApplicationHelper
   # Builds a URL with the exact given path based on the system's host, protocol, and port.
   def url_for_path(path)
     path = "/#{path}" if path[0] != "/"
-    builder = configatron.url.protocol == "https" ? URI::HTTPS : URI::HTTP
-    builder.build(configatron.url.to_h.merge(path: path))
+    builder = Cnfg.url_protocol == "https" ? URI::HTTPS : URI::HTTP
+    builder.build(Cnfg.url_options.merge(path: path))
   end
 
   # hackish way of getting the route key identical to what would be returned

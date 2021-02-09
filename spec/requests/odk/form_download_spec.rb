@@ -93,9 +93,9 @@ describe FormsController, :odk, type: :request do
 
         context "on https" do
           around do |example|
-            configatron.url.protocol = "https"
-            example.run
-            configatron.url.protocol = "http"
+            with_env("NEMO_URL_PROTOCOL" => "https", "NEMO_URL_PORT" => "443") do
+              example.run
+            end
           end
 
           it "should use https in URL" do

@@ -59,9 +59,9 @@ module Utils
           # This alleviates needing to duplicate the following code in each test.
 
           defaults(
-            domain: configatron.url.host,
-            port: configatron.url.port.to_i,
-            protocol: configatron.url.protocol
+            domain: Cnfg.url_host,
+            port: Cnfg.url_port,
+            protocol: Cnfg.url_protocol
           )
 
           threads(count: options[:thread_count], duration: options[:duration]) do

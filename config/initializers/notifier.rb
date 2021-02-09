@@ -5,7 +5,7 @@
 # because there are tests that test its behavior.
 unless Rails.env.development? || Cnfg.offline_mode?
   Rails.configuration.middleware.use(ExceptionNotification::Rack, email: {
-    email_prefix: "[#{configatron.url.host} ERROR] ",
+    email_prefix: "[#{Cnfg.url_host} ERROR] ",
     sender_address: Cnfg.site_email_with_name,
     exception_recipients: configatron.webmaster_emails,
 
