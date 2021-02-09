@@ -67,14 +67,25 @@ class Setting < ApplicationRecord
     :generic_sms_json_error
   attr_writer :generic_sms_config_str
 
+  def self.with_cache
+    Thread.current[:mission_config_cache] = {}
+    yield
+    Thread.current[:mission_config_cache] = nil
+  end
+
   # Gets the setting for the given mission. If nil is given, gets the root setting, which should always
   # exist as it's system seed data.
   def self.for_mission(mission)
-    find_by(mission: mission)
+    if (cache = Thread.current[:mission_config_cache])
+      mission_id = mission.is_a?(String) ? mission : mission&.id
+      cache[mission_id] ||= find_by(mission: mission)
+    else
+      find_by(mission: mission)
+    end
   end
 
   def self.root
-    find_by(mission: nil)
+    for_mission(nil)
   end
 
   # Loads the settings for the given mission (or nil mission/admin mode)

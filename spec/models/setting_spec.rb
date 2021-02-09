@@ -55,6 +55,38 @@ describe Setting do
     expect(setting.override_code.size).to eq(6)
   end
 
+  describe ".for_mission cache" do
+    # We want to load the thing once per request. How does query cache work? Like that but one level higher.
+    # In app controller, we could enable Settings cache in around_action, cover with system spec
+    # Also in around_perform for jobs, cover with job spec
+    context "without cache enabled" do
+      it "queries DB each time" do
+        Setting.for_mission(nil)
+        expect { 3.times { Setting.for_mission(nil) } }.to make_database_queries(count: 3)
+      end
+    end
+
+    context "with cache enabled" do
+      around do |example|
+        Setting.with_cache { example.run }
+      end
+
+      it "preforms fewer queries" do
+        Setting.for_mission(nil)
+        expect { 3.times { Setting.for_mission(nil) } }.not_to make_database_queries
+      end
+
+      it "does not save queries on new threads" do
+        # Starting a new thread means no cache. Within the thread, we expect that the cache doesn't
+        # save on queries.
+        Thread.new do
+          Setting.for_mission(nil)
+          expect { 3.times { Setting.for_mission(nil) } }.to make_database_queries(count: 3)
+        end
+      end
+    end
+  end
+
   describe "load_for_mission" do
     context "for mission" do
       let(:mission) { get_mission }

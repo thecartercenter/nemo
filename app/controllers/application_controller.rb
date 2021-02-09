@@ -28,6 +28,8 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_invalid_authenticity_token
 
+  around_action :enable_settings_caching
+
   before_action :set_initial_exception_context
   before_action :disable_client_caching
   before_action :check_route
