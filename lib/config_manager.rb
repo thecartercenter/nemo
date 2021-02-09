@@ -30,6 +30,10 @@ class ConfigManager
   def site_email
     ENV.fetch("NEMO_SITE_EMAIL")
   end
+
+  def max_upload_size_mib
+    ENV.fetch("NEMO_MAX_UPLOAD_SIZE_MIB").to_i
+  end
 end
 
 Cnfg = ConfigManager.instance
