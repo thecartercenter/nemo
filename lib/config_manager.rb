@@ -31,6 +31,11 @@ class ConfigManager
     ENV.fetch("NEMO_SITE_EMAIL")
   end
 
+  # Returns an array of email addresses.
+  def webmaster_emails
+    ENV.fetch("NEMO_WEBMASTER_EMAILS").split(/\s+,\s+/)
+  end
+
   def max_upload_size_mib
     ENV.fetch("NEMO_MAX_UPLOAD_SIZE_MIB").to_i
   end
