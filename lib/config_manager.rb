@@ -79,6 +79,14 @@ class ConfigManager
   def universal_sms_token
     allow_missionless_sms? ? ENV["NEMO_UNIVERSAL_SMS_TOKEN"] : nil
   end
+
+  def recaptcha_public_key
+    ENV["NEMO_RECAPTCHA_PUBLIC_KEY"]
+  end
+
+  def recaptcha_private_key
+    ENV["NEMO_RECAPTCHA_PRIVATE_KEY"]
+  end
 end
 
 Cnfg = ConfigManager.instance

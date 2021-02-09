@@ -122,5 +122,12 @@ module ELMO
         require_dependency override
       end
     end
+
+    if Cnfg.recaptcha_public_key.present?
+      Recaptcha.configure do |config|
+        config.public_key = Cnfg.recaptcha_public_key
+        config.private_key = Cnfg.recaptcha_private_key
+      end
+    end
   end
 end
