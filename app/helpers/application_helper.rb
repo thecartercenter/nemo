@@ -94,14 +94,9 @@ module ApplicationHelper
     javascript_tag("$(document).ready(function(){#{content}});")
   end
 
-  def google_maps_key_missing?
-    !configatron.key?(:google_maps_api_key)
-  end
-
   def google_maps_js
-    return "" if google_maps_key_missing? || offline?
-    api_key = configatron.google_maps_api_key
-    javascript_include_tag("https://maps.googleapis.com/maps/api/js?key=#{api_key}&v=3")
+    return "" if offline?
+    javascript_include_tag("https://maps.googleapis.com/maps/api/js?key=#{Cnfg.google_maps_api_key}&v=3")
   end
 
   # Converts given object/value to json and runs through html_safe.
