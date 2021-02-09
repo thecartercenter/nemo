@@ -5,17 +5,13 @@ module ThemeHelper
   DEFAULT_THEME = "nemo"
   DEFAULT_DIRECTION = "ltr"
 
-  def current_theme
-    configatron.key?(:theme) ? configatron.theme : DEFAULT_THEME
-  end
-
   def current_direction
     Cnfg.rtl_locales.include?(I18n.locale) ? "rtl" : "ltr"
   end
 
   def stylesheet_files
     [
-      "application_#{current_theme}_#{current_direction}",
+      "application_#{current_mission_config.theme}_#{current_direction}",
       "application_#{DEFAULT_THEME}_#{current_direction}",
       "application_#{DEFAULT_THEME}_#{DEFAULT_DIRECTION}"
     ]
@@ -35,6 +31,6 @@ module ThemeHelper
 
   # Returns an image tag for the logo for the requested style and the current theme.
   def logo_image(style: :light, **options)
-    image_tag("logos/#{current_theme}/#{style}.png", **options)
+    image_tag("logos/#{current_mission_config.theme}/#{style}.png", **options)
   end
 end
