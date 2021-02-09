@@ -87,7 +87,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
     options[:read_only] = true
     options[:read_only_content] = @template.content_tag(:div, id: field_id, class: "regenerable-field") do
-      current = @object.send(field_name)
+      current = options[:initial_value] || @object.send(field_name)
       action = options.delete(:action) || "regenerate_#{field_name}"
       link_i18n_key = options.delete(:link_i18n_key) || (current ? "common.regenerate" : "common.generate")
 

@@ -58,6 +58,14 @@ class ConfigManager
   def google_maps_api_key
     ENV["NEMO_GOOGLE_MAPS_API_KEY"]
   end
+
+  def allow_missionless_sms?
+    ENV["NEMO_ALLOW_MISSIONLESS_SMS"] == "true"
+  end
+
+  def universal_sms_token
+    allow_missionless_sms? ? ENV["NEMO_UNIVERSAL_SMS_TOKEN"] : nil
+  end
 end
 
 Cnfg = ConfigManager.instance

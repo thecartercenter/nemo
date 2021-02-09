@@ -50,13 +50,8 @@ shared_context "incoming sms" do
     req_params = {}
     req_headers = params[:headers] || {}
 
-    url_prefix = defined?(missionless_url) && missionless_url ? "" : "/m/#{get_mission.compact_name}"
-
-    url_token = if defined?(missionless_url) && missionless_url
-                  configatron.key?(:universal_sms_token) ? configatron.universal_sms_token : nil
-                else
-                  get_mission.setting.incoming_sms_token
-                end
+    url_prefix = missionless_url ? "" : "/m/#{get_mission.compact_name}"
+    url_token = missionless_url ? universal_sms_token : get_mission.setting.incoming_sms_token
 
     params[:from] ||= user.phone
     params[:mission] = get_mission unless params.key?(:mission)

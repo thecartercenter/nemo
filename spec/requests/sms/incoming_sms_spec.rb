@@ -11,9 +11,17 @@ describe "incoming sms", :sms do
   let(:form_code) { form.code }
   let(:wrong_code) { form_code.sub(form.code[0], form.code[0] == "a" ? "b" : "a") }
   let(:bad_incoming_token) { "0" * 32 }
+  let(:universal_sms_token) { SecureRandom.hex }
+  let(:missionless_url) { false }
 
-  before do
-    configatron.universal_sms_token = SecureRandom.hex
+  around do |example|
+    if missionless_url
+      with_env("NEMO_ALLOW_MISSIONLESS_SMS" => "true", "NEMO_UNIVERSAL_SMS_TOKEN" => universal_sms_token) do
+        example.run
+      end
+    else
+      example.run
+    end
   end
 
   context "with text form" do
@@ -357,7 +365,7 @@ describe "incoming sms", :sms do
       let(:second_form) { setup_form(questions: %w[integer text], mission: second_mission) }
       let(:first_form_code) { first_form.code }
       let(:second_form_code) { second_form.code }
-      let(:submission_url) { "/sms/submit/#{configatron.universal_sms_token}" }
+      let(:submission_url) { "/sms/submit/#{universal_sms_token}" }
 
       it "should process first mission correctly with valid form code" do
         assert_sms_response(
@@ -407,7 +415,7 @@ describe "incoming sms", :sms do
   context "with duplicate phone numbers" do
     # setup extra mission
     let!(:missionless_url) { true }
-    let!(:submission_url) { "/sms/submit/#{configatron.universal_sms_token}" }
+    let!(:submission_url) { "/sms/submit/#{universal_sms_token}" }
     let!(:mission) { get_mission }
     let!(:other_mission) { create(:mission) }
 

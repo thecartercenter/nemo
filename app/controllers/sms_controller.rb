@@ -142,8 +142,7 @@ class SmsController < ApplicationController
 
   def verify_token(token)
     mission_token = current_mission.setting.incoming_sms_token
-    global_token = configatron.key?(:universal_sms_token) ? configatron.universal_sms_token : nil
-
+    global_token = Cnfg.universal_sms_token
     [mission_token, global_token].compact.include?(token)
   end
 end

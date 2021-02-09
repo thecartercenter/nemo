@@ -134,10 +134,6 @@ class Setting < ApplicationRecord
     save!
   end
 
-  def universal_sms_token
-    configatron.key?(:universal_sms_token) ? configatron.universal_sms_token : nil
-  end
-
   def generate_incoming_sms_token(replace = false)
     # Don't replace token unless replace==true
     return unless incoming_sms_token.nil? || replace
