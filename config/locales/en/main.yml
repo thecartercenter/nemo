@@ -2267,6 +2267,7 @@ en:
   unauthorized:
     default: "You are not authorized to access that page or operation."
     must_login: "You must login to access that page."
+    expired: "Your request has expired, please try again."
 
   user_import:
     instructions_html: |-

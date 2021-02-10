@@ -65,7 +65,7 @@ module ApplicationController::LoginLogistics
                           # otherwise, store the referrer (if defined),
                           # since it doesn't make sense to store a URL for a different method
                           elsif request.referer
-                            request.referer
+                            request.referer unless request.referer.match?(%r{/login\z})
                             # otherwise store nothing
                           end
   end
