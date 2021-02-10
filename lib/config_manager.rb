@@ -87,6 +87,11 @@ class ConfigManager
   def recaptcha_private_key
     ENV["NEMO_RECAPTCHA_PRIVATE_KEY"]
   end
+
+  def storage_service
+    storage_type = ENV.fetch("NEMO_STORAGE_TYPE")
+    storage_type == "cloud" ? :amazon : storage_type.to_sym
+  end
 end
 
 Cnfg = ConfigManager.instance

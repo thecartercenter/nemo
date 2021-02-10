@@ -56,8 +56,7 @@ ELMO::Application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Where to store uploaded files (see config/storage.yml for options).
-  storage_type = ENV["NEMO_STORAGE_TYPE"].presence
-  config.active_storage.service = storage_type == "cloud" ? :amazon : (storage_type&.to_sym || :local)
+  config.active_storage.service = Cnfg.storage_service
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
