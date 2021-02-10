@@ -1,21 +1,17 @@
 # frozen_string_literal: true
 
 class SettingsController < ApplicationController
-  # using a customize before_action to authorize resource here because Setting is atypical
-  before_action :authorize_settings
-
+  before_action :load_setting
+  before_action :authorize_settings # using a customize before_action because Setting is atypical
   before_action :require_recent_login
 
   def index
-    # setting is already loaded by application controller
     flash.now[:notice] = I18n.t("setting.admin_mode_notice") if admin_mode?
     prepare_and_render_form
   end
 
   def update
-    # Setting is already loaded in app/controllers/concerns/application_controller/settings.rb
     @setting.update!(setting_params)
-
     set_success_and_redirect(@setting)
   rescue ActiveRecord::RecordInvalid
     flash.now[:error] = I18n.t("activerecord.errors.models.setting.general")
@@ -24,15 +20,12 @@ class SettingsController < ApplicationController
 
   def regenerate_override_code
     @setting.generate_override_code!
-
     render(json: {value: @setting.override_code})
   end
 
   def regenerate_incoming_sms_token
     @setting.regenerate_incoming_sms_token!
-
     Notifier.sms_token_change_alert(current_mission).deliver_now
-
     render(json: {value: @setting.incoming_sms_token})
   end
 
@@ -49,6 +42,10 @@ class SettingsController < ApplicationController
   end
 
   private
+
+  def load_setting
+    @setting = current_mission_config
+  end
 
   # We use a custom before_action here instead of CanCanCan's authorize_resource
   # in order to specify the :update action instead of the controller action
