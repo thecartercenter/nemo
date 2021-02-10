@@ -12,7 +12,6 @@ describe "incoming sms", :sms do
   let(:wrong_code) { form_code.sub(form.code[0], form.code[0] == "a" ? "b" : "a") }
   let(:bad_incoming_token) { "0" * 32 }
   let(:universal_sms_token) { SecureRandom.hex }
-  let(:missionless_url) { false }
 
   around do |example|
     if missionless_url

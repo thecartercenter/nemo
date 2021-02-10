@@ -2,6 +2,7 @@
 
 shared_context "incoming sms" do
   let(:user) { get_user }
+  let(:missionless_url) { false }
 
   # helper that sets up a new form with the given parameters
   def setup_form(options)
