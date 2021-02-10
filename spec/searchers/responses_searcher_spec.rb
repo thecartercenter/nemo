@@ -168,7 +168,6 @@ describe ResponsesSearcher do
     let(:form2) { create(:form) }
     let(:codes) { form.c[0..2].map(&:code) }
     let(:node3) { form.c[2].question.option_set.c[0] }
-    let(:preferred_locales) { configatron.preferred_locales }
 
     before do
       form.mission.setting.update!(preferred_locales_str: "en,fr")
