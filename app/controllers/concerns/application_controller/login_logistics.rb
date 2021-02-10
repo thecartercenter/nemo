@@ -45,9 +45,10 @@ module ApplicationController::LoginLogistics
     session[:return_to] = tmp
   end
 
-  # redirects to the login page
-  # or if this is an ajax request, returns a 401 unauthorized error (but this should never happen)
-  # in the latter case, the script should catch this error and redirect to the login page itself
+  # Store the intended location and redirect to the login page.
+  #
+  # Renders an error if AJAX (but this should never happen; the script
+  # should catch this error and redirect to the login page itself).
   def redirect_to_login
     if request.xhr?
       flash[:error] = nil
@@ -58,15 +59,15 @@ module ApplicationController::LoginLogistics
     end
   end
 
+  # Store the intended location of the request so we can return the user after interruption.
   def store_location
-    # if the request is a GET, then store as normal
     session[:return_to] = if request.get?
                             request.fullpath
-                          # otherwise, store the referrer (if defined),
-                          # since it doesn't make sense to store a URL for a different method
                           elsif request.referer
+                            # No need to redirect to the login page if that's where they came from
+                            # (e.g. for InvalidAuthenticityToken).
                             request.referer unless request.referer.match?(%r{/login\z})
-                            # otherwise store nothing
+                            # Otherwise store nothing.
                           end
   end
 
