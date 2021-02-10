@@ -19,7 +19,6 @@ class Sms::Adapters::Factory
   # creates an instance of the specified adapter
   def create(name_or_class, config:)
     return nil if name_or_class.nil?
-    config ||= configatron
     if name_or_class.is_a?(String)
       unless self.class.name_is_valid?(name_or_class)
         raise ArgumentError, "invalid adapter name '#{name_or_class}'"
