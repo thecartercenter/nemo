@@ -36,7 +36,9 @@
 class Setting < ApplicationRecord
   include MissionBased
 
-  DEFAULT_TIMEZONE = "UTC"
+  KEYS_TO_COPY_FROM_ROOT = %i[default_outgoing_sms_adapter frontlinecloud_api_key incoming_sms_numbers
+                              preferred_locales theme timezone
+                              twilio_account_sid twilio_auth_token twilio_phone_number].freeze
 
   scope :by_mission, ->(m) { where(mission: m) }
 
@@ -55,9 +57,6 @@ class Setting < ApplicationRecord
   validate :generic_sms_required_keys
 
   before_save :save_sms_credentials
-
-  serialize :preferred_locales, JSON
-  serialize :incoming_sms_numbers, JSON
 
   attr_accessor :twilio_auth_token1, :frontlinecloud_api_key1, :clear_twilio, :clear_frontlinecloud,
     :generic_sms_json_error
@@ -87,14 +86,11 @@ class Setting < ApplicationRecord
   # Builds and returns (but doesn't save) a default Setting object
   # by using defaults specified here and those specified in the local config
   # mission may be nil.
-  def self.build_default(mission = nil)
+  def self.build_default(mission:)
     setting = new(mission: mission)
-    setting.timezone = DEFAULT_TIMEZONE
-    setting.preferred_locales = [:en]
-    setting.incoming_sms_numbers = []
-    setting.generate_incoming_sms_token if mission.present?
-    if (root_theme = root&.theme)
-      setting.theme = root_theme
+    if mission.present?
+      KEYS_TO_COPY_FROM_ROOT.each { |k| setting[k] = root[k] }
+      setting.generate_incoming_sms_token
     end
     setting
   end
@@ -172,7 +168,7 @@ class Setting < ApplicationRecord
 
   # Determines if this setting is read only due to mission being locked.
   def read_only?
-    mission.try(:locked?) # Mission may be nil if admin mode, in which case it's not read only.
+    mission&.locked? # Mission may be nil if admin mode, in which case it's not read only.
   end
 
   def site_name

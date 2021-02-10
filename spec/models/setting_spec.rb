@@ -90,17 +90,61 @@ describe Setting do
   describe ".build_default" do
     let(:mission) { get_mission }
 
-    context "with existing admin mode setting" do
-      let!(:admin_setting) { Setting.root.update_attribute(:theme, "elmo") }
-
-      it "copies theme setting from admin mode setting" do
-        expect(Setting.build_default(mission).theme).to eq("elmo")
+    context "without mission" do
+      it "uses reasonable defaults" do
+        Setting.root.destroy # destroy the old one so we can test building without the factory
+        setting = Setting.build_default(mission: nil)
+        expect(setting).to have_attributes(
+          default_outgoing_sms_adapter: nil,
+          frontlinecloud_api_key: nil,
+          generic_sms_config: nil,
+          incoming_sms_numbers: [],
+          incoming_sms_token: nil,
+          override_code: nil,
+          preferred_locales: [:en],
+          theme: "nemo",
+          timezone: "UTC",
+          twilio_account_sid: nil,
+          twilio_auth_token: nil,
+          twilio_phone_number: nil
+        )
       end
     end
 
-    context "without existing admin mode setting" do
-      it "defaults to nemo" do
-        expect(Setting.build_default(mission).theme).to eq("nemo")
+    context "with mission" do
+      before do
+        # Only settings that are allowed to be set in the admin mode settings form are set here.
+        Setting.root.update!(
+          default_outgoing_sms_adapter: "FrontlineCloud",
+          frontlinecloud_api_key: "ab123456",
+          incoming_sms_numbers_str: "+1234567890",
+          preferred_locales_str: "en,fr",
+          theme: "elmo",
+          timezone: "Saskatchewan",
+          twilio_account_sid: "cd123456",
+          twilio_auth_token: "ef123456",
+          twilio_phone_number: "+2345678900"
+        )
+      end
+
+      it "copies settings from admin mode setting" do
+        mission.setting.destroy # destroy the old one so we can test saving the new one
+        setting = Setting.build_default(mission: mission)
+        setting.save!
+        expect(setting.reload).to have_attributes(
+          default_outgoing_sms_adapter: "FrontlineCloud",
+          frontlinecloud_api_key: "ab123456",
+          generic_sms_config: nil,
+          incoming_sms_numbers: ["+1234567890"],
+          override_code: nil,
+          preferred_locales: %i[en fr],
+          theme: "elmo",
+          timezone: "Saskatchewan",
+          twilio_account_sid: "cd123456",
+          twilio_auth_token: "ef123456",
+          twilio_phone_number: "+2345678900"
+        )
+        expect(setting.incoming_sms_token).not_to be_blank
       end
     end
   end

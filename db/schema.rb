@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_08_212426) do
+ActiveRecord::Schema.define(version: 2021_02_10_185051) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -507,13 +507,13 @@ ActiveRecord::Schema.define(version: 2021_02_08_212426) do
     t.string "default_outgoing_sms_adapter", limit: 255
     t.string "frontlinecloud_api_key", limit: 255
     t.jsonb "generic_sms_config"
-    t.text "incoming_sms_numbers"
+    t.jsonb "incoming_sms_numbers", default: [], null: false
     t.string "incoming_sms_token", limit: 255
     t.uuid "mission_id"
     t.string "override_code", limit: 255
-    t.string "preferred_locales", limit: 255, null: false
+    t.jsonb "preferred_locales", default: ["en"], null: false
     t.string "theme", default: "nemo", null: false
-    t.string "timezone", limit: 255, null: false
+    t.string "timezone", limit: 255, default: "UTC", null: false
     t.string "twilio_account_sid", limit: 255
     t.string "twilio_auth_token", limit: 255
     t.string "twilio_phone_number", limit: 255
