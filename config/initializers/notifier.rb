@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# This file MUST come lexically after local_config.rb.
 # Also, while it may seem counterintuitive, it's important the middleware be enabled for test mode
 # because there are tests that test its behavior.
 unless Rails.env.development? || Cnfg.offline_mode?
