@@ -36,10 +36,6 @@
 class Setting < ApplicationRecord
   include MissionBased
 
-  # Attribs to copy to configatron
-  KEYS_TO_COPY = %w[timezone preferred_locales incoming_sms_numbers frontlinecloud_api_key
-                    twilio_phone_number twilio_account_sid twilio_auth_token theme].freeze
-
   DEFAULT_TIMEZONE = "UTC"
 
   scope :by_mission, ->(m) { where(mission: m) }
@@ -88,14 +84,6 @@ class Setting < ApplicationRecord
     for_mission(nil)
   end
 
-  # Loads the settings for the given mission (or nil mission/admin mode)
-  # into the configatron & Settings stores. Setting should exist by this point.
-  def self.load_for_mission(mission)
-    setting = find_by!(mission: mission)
-    setting.load
-    setting
-  end
-
   # Builds and returns (but doesn't save) a default Setting object
   # by using defaults specified here and those specified in the local config
   # mission may be nil.
@@ -108,14 +96,7 @@ class Setting < ApplicationRecord
     if (root_theme = root&.theme)
       setting.theme = root_theme
     end
-    copy_default_settings_from_configatron_to(setting)
     setting
-  end
-
-  def self.copy_default_settings_from_configatron_to(setting)
-    configatron.default_settings.configatron_keys.each do |k|
-      setting.send("#{k}=", configatron.default_settings.send(k)) if setting.respond_to?("#{k}=")
-    end
   end
 
   def self.theme_exists?
@@ -151,14 +132,6 @@ class Setting < ApplicationRecord
   def regenerate_incoming_sms_token!
     generate_incoming_sms_token(true)
     save!
-  end
-
-  # Copies this setting to configatron and Settings stores.
-  def load
-    hsh = Hash[*KEYS_TO_COPY.flat_map { |k| [k.to_sym, send(k)] }]
-    Time.zone = timezone
-    configatron.configure_from_hash(hsh)
-    load_theme_settings
   end
 
   # converts preferred_locales to a comma delimited string
@@ -327,20 +300,5 @@ class Setting < ApplicationRecord
     self.twilio_auth_token = twilio_auth_token1 if twilio_auth_token1.present?
     self.frontlinecloud_api_key = frontlinecloud_api_key1 if frontlinecloud_api_key1.present?
     true
-  end
-
-  # Inserts theme settings into Settings store.
-  def load_theme_settings
-    theme_settings.each { |k, v| Settings[k] = v }
-  end
-
-  # Loads theme settings from a YML file.
-  def theme_settings
-    theme_settings_dir = Rails.root.join("config/settings/themes")
-    [theme, "nemo"].each do |t|
-      file = theme_settings_dir.join("#{t}.yml")
-      return YAML.load_file(file) if File.exist?(file)
-    end
-    {}
   end
 end

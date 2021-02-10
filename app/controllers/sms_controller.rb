@@ -34,7 +34,6 @@ class SmsController < ApplicationController
     if current_mission.nil?
       if incoming_msg.mission
         @current_mission = incoming_msg.mission
-        load_settings_for_mission_into_config if current_mission
         rebuild_incoming_adapter
       else
         # If we get to this point, the reply waiting to be sent must be a complaint of form not found,

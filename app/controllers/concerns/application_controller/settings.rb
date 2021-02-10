@@ -19,11 +19,6 @@ module ApplicationController::Settings
     Time.zone = current_mission_config.timezone.to_s
   end
 
-  # loads settings for the mission, or no mission (admin mode), into configatron
-  def load_settings_for_mission_into_config
-    @setting = Setting.load_for_mission(current_mission)
-  end
-
   def default_serializer_options
     {root: false}
   end

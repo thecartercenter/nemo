@@ -12,7 +12,6 @@ class OperationJob < ApplicationJob
   # in the database.  While unlikely, it's possible that the job was pending
   # in the queue and, meanwhile, the operation record was deleted.
   before_perform :operation_started, if: :operation
-  before_perform :load_settings, if: :operation
   after_perform :operation_completed, if: :operation
 
   delegate :mission, to: :operation
@@ -25,12 +24,6 @@ class OperationJob < ApplicationJob
 
   def operation_started
     operation.update!(job_started_at: Time.current)
-  end
-
-  def load_settings
-    # load the mission's settings into configatron
-    # if mission is nil, the admin mode settings will be loaded
-    Setting.load_for_mission(mission)
   end
 
   def save_attachment(attachment, attachment_download_name)

@@ -42,7 +42,6 @@ class ApplicationController < ActionController::Base
   before_action :remember_mission
   before_action :remember_context, only: :index
   before_action :set_scout_context
-  before_action :load_settings_for_mission_into_config
   before_action :load_accessible_missions
 
   helper_method :current_mode, :current_user, :current_mission, :current_mission_config, :current_root_path,
