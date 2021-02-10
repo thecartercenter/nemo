@@ -61,6 +61,7 @@ class UserImport < TabularImport
       attributes[:gender], attributes[:gender_custom] = coerce_gender(attributes[:gender])
       attributes[:nationality] = coerce_nationality(attributes[:nationality])
       attributes[:user_groups] = coerce_user_groups(attributes[:user_groups])
+      attributes[:pref_lang] = preferred_mission_system_locale
       attributes
     end.compact
   end
@@ -101,6 +102,13 @@ class UserImport < TabularImport
         mission_id: mission_id)
       user_group || UserGroup.create!(name: gn.strip, mission_id: mission_id)
     end
+  end
+
+  # Returns the first mission preferred_locale that matches a system locale. Returns I18n.default_locale
+  # if no match found.
+  def preferred_mission_system_locale
+    config = Setting.for_mission(mission_id)
+    (config.preferred_locales & I18n.available_locales).first || I18n.default_locale
   end
 
   def add_header_error(invalid_headers)

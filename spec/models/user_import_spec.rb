@@ -19,19 +19,20 @@ describe UserImport do
       expect_user_count(5)
       expect_user_attribs(0,
         login: "a.bob", name: "A Bob", phone: "+2279182137", phone2: nil,
-        gender: "man", email: "a@bc.com")
+        gender: "man", email: "a@bc.com", pref_lang: "en")
       expect_user_attribs(1,
         login: "bcod", name: "Bo Cod", phone: nil, phone2: nil,
-        gender: "woman", email: "b@co.com", nationality: "US")
+        gender: "woman", email: "b@co.com", nationality: "US", pref_lang: "en")
       expect_user_attribs(2,
         login: "clo", name: "Cha Lo", phone: "+983755482", phone2: "+9837494434",
-        birth_year: nil, gender: nil, gender_custom: nil, email: "ch@lo.com", nationality: nil)
+        birth_year: nil, gender: nil, gender_custom: nil, email: "ch@lo.com", nationality: nil,
+        pref_lang: "en")
       expect_user_attribs(3,
         login: "flim.flo", name: "Flim Flo", phone: "+123456789", phone2: nil,
-        birth_year: 1989, email: "f@fl.com", nationality: nil)
+        birth_year: 1989, email: "f@fl.com", nationality: nil, pref_lang: "en")
       expect_user_attribs(4,
         login: "shobo", name: "Sho Bo", phone: nil, phone2: nil,
-        gender: "specify", gender_custom: "Genderqueer", email: "d@ef.stu")
+        gender: "specify", gender_custom: "Genderqueer", email: "d@ef.stu", pref_lang: "en")
     end
   end
 
@@ -53,20 +54,50 @@ describe UserImport do
     end
   end
 
-  context "with other locale and case-variant headers" do
+  context "with other locale in I18n.locale and case-variant headers" do
     let(:filename) { "french.csv" }
 
     it "succeeds" do
       in_locale(:fr) do
         expect(import).to be_succeeded
         expect_user_count(3)
+        # pref_lang still is 'en' because that is the mission preference
         expect_user_attribs(0,
           login: "user0", name: "User0", phone: "+17098885555", phone2: "+17098885556",
           gender: "man", email: "email0@email.com", birth_year: 1981, nationality: "CA", notes: "note_0",
-          user_groups: ["Les habitants"])
+          user_groups: ["Les habitants"], pref_lang: "en")
         expect_user_attribs(1, login: "user1")
         expect_user_attribs(2, login: "user2")
       end
+    end
+  end
+
+  context "with mission with non-english preferred locales" do
+    let(:filename) { "varying_info.csv" }
+
+    before do
+      mission.setting.update!(preferred_locales_str: "et,fr,en")
+    end
+
+    it "sets pref_lang to the first locale that matches a system locale" do
+      expect(import).to be_succeeded
+      expect_user_attribs(0, pref_lang: "fr")
+      expect_user_attribs(1, pref_lang: "fr")
+    end
+  end
+
+  context "with mission with no preferred locales that match system locales" do
+    let(:filename) { "varying_info.csv" }
+
+    before do
+      # Validation doesn't let us do this typically, but testing just in case.
+      mission.setting.update_attribute(:preferred_locales_str, "et,fo")
+    end
+
+    it "defaults to english" do
+      expect(import).to be_succeeded
+      expect_user_attribs(0, pref_lang: "en")
+      expect_user_attribs(1, pref_lang: "en")
     end
   end
 
