@@ -56,13 +56,17 @@ describe OperationJob do
       end
     end
 
-    # The below test only works if perform_later is used.
     context "when operation gets deleted before job is run" do
-      it "exits silently" do
-        TestOperationJob.perform_later(operation)
+      it "raises error" do
+        serialized = TestOperationJob.new(operation).serialize
         operation.destroy
-        expect(ExceptionNotifier).to receive(:notify_exception).with(ActiveJob::DeserializationError)
-        Delayed::Worker.new.work_off
+
+        # The .execute method is what AJ calls internally to run a deserialized job.
+        # We can't test this functionality by using perform_now because we can't destroy the operation
+        # between when the job is enqueued and when it is run in that case.
+        # We tried using perform_later and Delayed::Worker.new.work_off. This did not work on CI
+        # for unknown reasons.
+        expect { TestOperationJob.execute(serialized) }.to raise_error(ActiveJob::DeserializationError)
       end
     end
   end

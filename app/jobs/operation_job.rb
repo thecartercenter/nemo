@@ -14,9 +14,10 @@ class OperationJob < ApplicationJob
 
   delegate :mission, to: :operation
 
+  # The `Operation` instance tracking this job is always passed as
+  # the first argument to `perform`. There is at least one case (CacheODataOperationJob) in which
+  # no operation is passed. This should probably be refactored somehow.
   def operation
-    # The `Operation` instance tracking this job is always passed as
-    # the first argument to `perform`
     arguments.first
   end
 
@@ -40,7 +41,7 @@ class OperationJob < ApplicationJob
   private
 
   def mission_config
-    mission.setting
+    Setting.for_mission(mission)
   end
 
   def load_timezone_from_mission
