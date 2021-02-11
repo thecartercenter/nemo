@@ -8,11 +8,8 @@ class OperationJob < ApplicationJob
 
   rescue_from StandardError, with: :operation_raised_error
 
-  # These callbacks are conditional on the operation record being present
-  # in the database.  While unlikely, it's possible that the job was pending
-  # in the queue and, meanwhile, the operation record was deleted.
-  before_perform :operation_started, if: :operation
-  after_perform :operation_completed, if: :operation
+  before_perform :mark_operation_started
+  after_perform :mark_operation_completed
 
   delegate :mission, to: :operation
 
@@ -20,10 +17,6 @@ class OperationJob < ApplicationJob
     # The `Operation` instance tracking this job is always passed as
     # the first argument to `perform`
     arguments.first
-  end
-
-  def operation_started
-    operation.update!(job_started_at: Time.current)
   end
 
   def save_attachment(attachment, attachment_download_name)
@@ -43,13 +36,18 @@ class OperationJob < ApplicationJob
     raise exception if Rails.env.test?
   end
 
-  def operation_completed
+  private
+
+  def mark_operation_started
+    operation.update!(job_started_at: Time.current)
+  end
+
+  def mark_operation_completed
     operation.update!(job_completed_at: Time.current)
   end
 
-  private
-
   def save_failure(msg)
+    return if operation.nil?
     attributes = {job_failed_at: Time.current, job_error_report: msg}
     attributes[:job_completed_at] = Time.current unless operation.completed?
     operation.update!(attributes)
