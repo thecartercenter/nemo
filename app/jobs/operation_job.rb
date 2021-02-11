@@ -8,6 +8,7 @@ class OperationJob < ApplicationJob
 
   rescue_from StandardError, with: :operation_raised_error
 
+  before_perform :load_timezone_from_mission
   before_perform :mark_operation_started
   after_perform :mark_operation_completed
 
@@ -37,6 +38,14 @@ class OperationJob < ApplicationJob
   end
 
   private
+
+  def mission_config
+    mission.setting
+  end
+
+  def load_timezone_from_mission
+    Time.zone = mission_config.timezone
+  end
 
   def mark_operation_started
     operation.update!(job_started_at: Time.current)

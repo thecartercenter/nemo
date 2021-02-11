@@ -2,10 +2,11 @@
 
 require "rails_helper"
 
-# A fake operation job that raises an error if requested.
+# A fake operation job that raises an error if requested and writes the timezone to the DB.
 class TestOperationJob < OperationJob
   def perform(operation, *args)
     raise StandardError if args[0] == :raise
+    operation.update!(details: "The time zone is #{Time.zone}")
   end
 end
 
@@ -21,6 +22,17 @@ describe OperationJob do
     it "marks operation as completed" do
       TestOperationJob.perform_now(operation)
       expect(operation.reload.job_completed_at).not_to be_nil
+    end
+
+    context "with funky mission timezone" do
+      before do
+        operation.mission.setting.update!(timezone: "Newfoundland")
+      end
+
+      it "uses appropriate timeonze" do
+        TestOperationJob.perform_now(operation)
+        expect(operation.details).to eq("The time zone is (GMT-03:30) Newfoundland")
+      end
     end
 
     context "when unexpected error is raised" do
