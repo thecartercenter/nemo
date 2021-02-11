@@ -32,6 +32,10 @@ if Rails.env.production? && File.split($0).last != "rake"
       abort("NEMO_WEBMASTER_EMAILS must be set to real value in production")
     end
 
+    if Cnfg.smtp_address.match?(/example.com/)
+      abort("NEMO_SMTP_ADDRESS must be set to a real value in production")
+    end
+
     if Cnfg.recaptcha_public_key.match?(/yyyyyyyy/)
       abort("NEMO_RECAPTCHA_PUBLIC_KEY must be set to real value in production")
     end

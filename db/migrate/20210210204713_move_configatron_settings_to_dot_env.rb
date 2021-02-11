@@ -48,7 +48,7 @@ class MoveConfigatronSettingsToDotEnv < ActiveRecord::Migration[6.1]
     to_write[:NEMO_SECRET_KEY_BASE] = ELMO::Application.config.secret_key_base
 
     smtp_settings = ELMO::Application.config.action_mailer.smtp_settings
-    %i[address port authentication user_name password].each do |k|
+    %i[address domain port authentication user_name password].each do |k|
       to_write[:"NEMO_SMTP_#{k.to_s.upcase}"] = smtp_settings[k] if smtp_settings[k].present?
     end
 

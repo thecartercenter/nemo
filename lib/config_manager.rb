@@ -56,6 +56,30 @@ class ConfigManager
     ENV.fetch("NEMO_URL_PORT").to_i
   end
 
+  def smtp_address
+    ENV.fetch("NEMO_SMTP_ADDRESS")
+  end
+
+  def smtp_port
+    ENV.fetch("NEMO_SMTP_PORT").to_i
+  end
+
+  def smtp_domain
+    ENV["NEMO_SMTP_DOMAIN"]
+  end
+
+  def smtp_authentication
+    ENV["NEMO_SMTP_AUTHENTICATION"]&.to_sym
+  end
+
+  def smtp_user_name
+    ENV["NEMO_SMTP_USER_NAME"]
+  end
+
+  def smtp_password
+    ENV["NEMO_SMTP_PASSWORD"]
+  end
+
   # Returns a hash of url options (port, protocol, host). Omits port if it's default for protocol.
   def url_options
     options = {protocol: url_protocol, host: url_host}

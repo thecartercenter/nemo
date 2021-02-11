@@ -87,6 +87,15 @@ ELMO::Application.configure do
 
   config.action_mailer.delivery_method = :smtp
 
+  config.action_mailer.smtp_settings = {
+    address: Cnfg.smtp_address,
+    port: Cnfg.smtp_port,
+    domain: Cnfg.smtp_domain,
+    authentication: Cnfg.smtp_authentication,
+    user_name: Cnfg.smtp_user_name,
+    password: Cnfg.smtp_password
+  }
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
