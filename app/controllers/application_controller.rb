@@ -35,6 +35,7 @@ class ApplicationController < ActionController::Base
   before_action :check_route
   before_action :remove_missionchange_flag
   before_action :set_locale
+  before_action :set_timezone
   before_action :load_current_mission
   before_action :load_current_user
   before_action :prepare_exception_notifier
