@@ -2,7 +2,7 @@
 
 This guide assumes:
 
-* You have an Ubuntu server up and running (version 18.04 recommended).
+* You have an Ubuntu server up and running (version 20.04 recommended; see revision history for earlier versions).
 * You have a domain name (e.g. yoursite.example.com) pointing to the server's IP address.
 * Port 443 on the server is open to the world.
 * You have ssh'ed to the server as the root user or a user with sudo privileges (`root` is assumed as the username below).
@@ -32,7 +32,7 @@ Remove the default ruby installation so we can install our own later:
 ### Install Nginx and Passenger
 
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
-    sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger bionic main > /etc/apt/sources.list.d/passenger.list'
+    sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger focal main > /etc/apt/sources.list.d/passenger.list'
     sudo apt update && sudo apt install -y nginx apt-transport-https ca-certificates libnginx-mod-http-passenger
 
 ### Configure memcached
@@ -43,7 +43,7 @@ Paste the contents of [this config file](memcached.conf), then restart: `sudo sy
 
 ### Install PostgreSQL and create database
 
-    sudo apt install -y postgresql postgresql-contrib postgresql-server-dev-10
+    sudo apt install -y postgresql postgresql-contrib postgresql-server-dev-12
     sudo -u postgres createuser -d deploy
     sudo -u postgres createdb nemo_production -O deploy
     sudo -u postgres psql nemo_production -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'
