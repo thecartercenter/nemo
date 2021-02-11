@@ -270,7 +270,7 @@ You can define a custom theme for the application. In the project root, run:
 This will create the files `/theme/style.scss`, `/theme/logo-light.png`, and `/theme/logo-dark.png`.
 Update those files to reflect the desired theme. Ensure your new logos are the same size as the examples.
 
-Set the `NEMO_CUSTOM_THEME_SITE_NAME` environment variable in the `.env.production` file to customize the site name.
+Set the `NEMO_CUSTOM_THEME_SITE_NAME` environment variable in the `.env.production.local` file to customize the site name.
 
 You will need to run `nvm use && bundle exec rake assets:precompile` (and re-start your server if it's currently running) for the theme to take effect.
 The compiler will tell you if there are any errors in your `style.scss` file.
@@ -371,7 +371,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 #### Upgrading to v11.11
 
-1. Migrate any configs from `config/settings.local.yml` to `.env` (see `.env.development` for what the new keys should be named)
+1. Migrate any configs from `config/settings.local.yml` to `.env.production.local` (see `.env.development` for what the new keys should be named)
 
 #### Upgrading to v12.0
 
@@ -379,10 +379,18 @@ See the [ActiveStorage Pull Request](https://github.com/thecartercenter/nemo/pul
 
 1. Check out the final commit before switching to ActiveStorage, git tag `v12.0-step1`
 1. Increase the thread pool in `database.yml` to 100 to allow parallelization (only needed if using cloud storage)
-1. Run `rails db:migrate` to create new ActiveStorage tables and copy some data
+1. Run `rake db:migrate` to create new ActiveStorage tables and copy some data
 1. Check out the latest commit on v12.0, git tag `v12.0-step2`
-1. Run `rails db:migrate` to finish copying the data
+1. Run `rake db:migrate` to finish copying the data
 1. Clean up: Decrease the thread pool in `database.yml` back to 5
+
+#### Upgrading to v12.1
+
+1. Prior to upgrading, if you have a `.env` or `.env.production` file prior to migrating, rename it to `.env.production.local`.
+1. Check out tag `v12.1`.
+1. If you have a custom theme, be sure to define `NEMO_CUSTOM_THEME_SITE_NAME` in `.env.production.local`. The `broadcast_tag` setting is no longer used (site_name is used instead).
+1. Run `rake db:migrate`. Any previous setting values in `config/initializers/local_config.rb` should be copied to `.env.production.local` by the migration. The old `local_config.rb` file will remain for now, but it will not be used by the app and a deprecation notice will be added to the top.
+1. You may delete the `local_config.rb`, `settings.local.yml`, and `/config/settings/themes/custom.yml` files at this point.
 
 #### Upgrading to latest
 
