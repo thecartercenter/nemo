@@ -31,7 +31,7 @@ class Replication::UniqueFieldGenerator
     found_exact = false
 
     # build a relation to get existing objs matching prefix
-    existing = klass.for_mission_id(mission_id).where(["#{field} LIKE ?", "#{prefix}%"])
+    existing = klass.for_mission(mission_id).where(["#{field} LIKE ?", "#{prefix}%"])
     existing = existing.where("id != '#{exclude_id}'") if exclude_id
 
     # get the number suffixes of all existing objects
