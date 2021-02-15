@@ -6,11 +6,10 @@ namespace :db do
   desc "Create fake data for manual testing purposes."
   task :create_fake_data, [:mission_name] => [:environment] do |_t, args|
     mission_name = args[:mission_name] || "Fake Mission #{rand(10_000)}"
-
-    mission = Mission.create(name: mission_name)
+    mission = Mission.find_by(name: mission_name) || Mission.create(name: mission_name)
 
     puts "Creating forms"
-    sample_form = create(:form, :live, mission: mission, question_types: [
+    sample_form = FactoryBot.create(:form, :live, mission: mission, question_types: [
       "text",
       "long_text",
       "integer",
@@ -42,7 +41,8 @@ namespace :db do
       question_types: QuestionType.with_property(:smsable).map(&:name))
 
     puts "Creating users"
-    # Create users and groups
+    existing_users = User.all.pluck(:id)
+
     25.times do
       FactoryBot.create(:user, mission: mission, role_name: User::ROLES.sample)
     end
@@ -50,11 +50,12 @@ namespace :db do
     FactoryBot.create_list(:user_group, 5, mission: mission)
 
     50.times do
-      uga = UserGroupAssignment.new(user_group: UserGroup.all.sample, user: User.all.sample)
-      uga.save if uga.valid?
+      UserGroupAssignment.new(user_group: UserGroup.all.sample,
+                              user: User.where.not(id: existing_users).sample)
+    rescue ActiveRecord::RecordNotUnique
+      # Ignore
     end
 
-    # Define media paths
     image_path = Rails.root.join("spec/fixtures/media/images/the_swing.png")
     audio_path = Rails.root.join("spec/fixtures/media/audio/powerup.mp3")
     video_path = Rails.root.join("spec/fixtures/media/video/jupiter.mp4")
@@ -65,7 +66,7 @@ namespace :db do
       3.times do
         print "."
         answer_values = [
-          Faker::Pokemon.name, # text
+          Faker::Games::Pokemon.name, # text
           Faker::Hipster.paragraphs(number: 3).join("\n\n"), # long_text
           rand(1000..5000), # integer
           rand(1..100), # counter
@@ -77,6 +78,7 @@ namespace :db do
           %w[Cat Dog], # select_multiple
           Faker::Time.backward(days: 365), # datetime
           Faker::Date.birthday, # date
+          # TODO: Remove format?
           Faker::Time.between(from: 1.year.ago, to: Time.zone.today, format: :evening), # time
           FactoryBot.build(:media_image, file: File.open(image_path)), # image
           FactoryBot.build(:media_image, item: File.open(image_path)), # annotated image
@@ -96,6 +98,6 @@ namespace :db do
     end
     print "\n"
 
-    puts "Created #{mission_name}"
+    puts "Created #{mission_name} with fake data."
   end
 end

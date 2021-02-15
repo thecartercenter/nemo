@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+
 # Here we re-open odata_server's main controller
 # to do NEMO things like schema overrides.
 ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   authorize_resource class: false
+
+  include FactoryBot::Syntax::Methods
 
   private # rubocop:disable Layout/EmptyLinesAroundAccessModifier
 
@@ -30,6 +33,18 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   end
 
   def transform_json_for_root(json)
+    form = create(:form, name: "Junk #{Random.letters(5)}", question_types: ["select_one", "select_multiple", %w[integer integer]])
+    responses =
+      # We don't use create_list because that wouldn't create new images each time.
+      Array.new(4) do
+        create(:response, form: form, answer_values: ["Cat", %w[Cat Dog], [1, 2]])
+      end
+    scope = Response.where(id: responses.map(&:id))
+
+    Rack::MiniProfiler.step("Destroying") do
+      ResponseDestroyer.new(scope: scope).destroy!
+    end
+
     trim_context_params(json)
   end
 
