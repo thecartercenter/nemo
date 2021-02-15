@@ -119,7 +119,7 @@ module ELMO
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
     config.to_prepare do
       Dir.glob(Rails.root.join("app/overrides/**/*_override.rb")).each do |override|
-        require_dependency override
+        load override
       end
     end
 
