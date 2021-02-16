@@ -12,7 +12,7 @@ module Sms
         return false if generic_sms_config["params"].blank?
         params_match = generic_sms_config["params"].values - request.params.keys == []
         headers_match =
-          if generic_sms_config["matchHeaders"]&.is_a?(Hash)
+          if generic_sms_config["matchHeaders"].is_a?(Hash)
             generic_sms_config["matchHeaders"].all? { |k, v| request.headers[k] == v }
           else
             true

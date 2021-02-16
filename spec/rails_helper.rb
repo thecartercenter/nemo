@@ -99,7 +99,7 @@ RSpec.configure do |config|
     example.run
   end
 
-  config.before(:each) do |example|
+  config.before(:each) do
     # This is the root setting, which is seed data so it should always be available.
     # It's in a before block because it needs to come after DatabaseCleaners things, which
     # are in before blocks. If it goes in the above around block, it runs too early and doesn't get cleaned.
