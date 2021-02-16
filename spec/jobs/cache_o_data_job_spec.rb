@@ -29,6 +29,13 @@ describe CacheODataJob do
     let(:num_responses) { 3 }
     let!(:responses) { create_list(:response, num_responses, dirty_json: true) }
 
+    around do |example|
+      old = Delayed::Worker.delay_jobs
+      Delayed::Worker.delay_jobs = false
+      example.run
+      Delayed::Worker.delay_jobs = old
+    end
+
     before do
       stub_const(CacheODataJob, "BATCH_SIZE", 2)
       stub_const(CacheODataJob, "OPERATION_THRESHOLD", 100) # Not testing this here.
