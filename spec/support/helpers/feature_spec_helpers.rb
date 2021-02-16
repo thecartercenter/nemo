@@ -12,8 +12,8 @@ module FeatureSpecHelpers
     ENV["TEST_LOGGED_IN_USER_ID"] = user.id
   end
 
-  def real_login(user, password = test_password)
-    visit(login_path(locale: "en"))
+  def real_login(user, password = test_password, skip_visit: false)
+    visit(login_path(locale: "en")) unless skip_visit
     fill_in("Username", with: user.login)
     fill_in("Password", with: password)
     click_button("Login")

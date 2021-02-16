@@ -8,8 +8,9 @@ module ApplicationController::ErrorHandling
     raise exception
   end
 
-  def handle_invalid_authenticity_token(exception)
-    raise exception
+  def handle_invalid_authenticity_token(_exception)
+    flash[:error] = I18n.t("unauthorized.expired")
+    redirect_to_login
   end
 
   # Add some context right away, before we do things like load the mission
