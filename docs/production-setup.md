@@ -76,7 +76,7 @@ Database server:
 
 Paste the contents of [this config file](nginx-certbot.conf). Update the `server_name` setting to match your domain.
 
-Then follow the [short instructions at the Certbot site](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx).
+Then follow the [short instructions at the Certbot site](https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx).
 The Certbot program should obtain your certificate, add the necessary settings to your nginx configuration file, and restart the server.
 
 Certificate auto-renewal is required since LetsEncrypt certificates are only valid for 90 days.
