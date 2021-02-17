@@ -2,9 +2,9 @@
 
 # Assumes a local_config.rb file still exists and has set some local settings that we want to move
 # to .env.
-# rubocop:disable Style/GuardClause
-class MoveConfigatronSettingsToDotEnv < ActiveRecord::Migration[6.1]
-  def up
+namespace :config do
+  desc "Migrate config files to new system."
+  task migrate: :environment do |args|
     to_write = {}
 
     if configatron.key?(:webmaster_emails)
@@ -59,23 +59,16 @@ class MoveConfigatronSettingsToDotEnv < ActiveRecord::Migration[6.1]
       to_write[:NEMO_RECAPTCHA_PRIVATE_KEY] = Recaptcha.configuration.private_key
     end
 
-    write_local_config_deprecation
-    write_to_env(to_write)
-  end
-
-  private
-
-  def write_local_config_deprecation
     local_conf_path = Rails.root.join("config/initializers/local_config.rb")
-    return unless File.exist?(local_conf_path)
-    contents = File.read(local_conf_path)
-    return if contents.match?(/\A# DEPRECATED/)
-    notice = "# DEPRECATED: This file is no longer used. "\
-      "Its values have been copied to .env.#{Rails.env}.local.\n\n\n\n"
-    File.open(local_conf_path, "w") { |f| f.write("#{notice}#{contents}") }
-  end
+    if File.exist?(local_conf_path)
+      contents = File.read(local_conf_path)
+      unless contents.match?(/\A# DEPRECATED/)
+        notice = "# DEPRECATED: This file is no longer used. "\
+          "Its values have been copied to .env.#{Rails.env}.local.\n\n\n\n"
+        File.open(local_conf_path, "w") { |f| f.write("#{notice}#{contents}") }
+      end
+    end
 
-  def write_to_env(to_write)
     env_path = Rails.root.join(".env.#{Rails.env}.local")
     existing = File.read(env_path)
     begin_marker = "### BEGIN MIGRATED CONFIG ###"
@@ -85,6 +78,7 @@ class MoveConfigatronSettingsToDotEnv < ActiveRecord::Migration[6.1]
     bits = existing.split(/\s*### BEGIN MIGRATED CONFIG ###.+### END MIGRATED CONFIG ###\s*/m)
     existing = bits.map(&:strip).join("\n")
     File.open(env_path, "w") { |f| f.write("#{existing}\n\n#{migrated}") }
+
+    puts "Config migrated."
   end
 end
-# rubocop:enable Style/GuardClause
