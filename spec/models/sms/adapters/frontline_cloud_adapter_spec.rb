@@ -3,38 +3,41 @@
 require "rails_helper"
 
 describe Sms::Adapters::FrontlineCloudAdapter, :sms do
-  before :all do
-    @adapter = Sms::Adapters::Factory.instance.create("FrontlineCloud")
-  end
+  include_context "sms adapters"
+
+  let(:mission_config) { double(incoming_sms_numbers: [], frontlinecloud_api_key: "abc") }
+  let(:adapter) { Sms::Adapters::Factory.instance.create("FrontlineCloud", config: mission_config) }
+
+  it_behaves_like "all adapters that can deliver messages"
 
   it "should be created by factory" do
-    expect(@adapter).to_not(be_nil)
+    expect(adapter).to_not(be_nil)
   end
 
   it "should have correct service name" do
-    expect(@adapter.service_name).to eq("FrontlineCloud")
+    expect(adapter.service_name).to eq("FrontlineCloud")
   end
 
   it "should recognize an incoming request with the proper params" do
     request = double(params: frontlinecloud_params)
-    expect(@adapter.class.recognize_receive_request?(request)).to be_truthy
+    expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be_truthy
   end
 
   it "should not recognize an incoming request without the special frontlinecloud param" do
     request = double(params: frontlinecloud_params("frontlinecloud" => nil))
-    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
+    expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be_falsey
   end
 
   it "should not recognize an incoming request without the other params" do
     request = double(params: frontlinecloud_params("body" => nil, "from" => nil, "sent_at" => nil))
-    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
+    expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be_falsey
   end
 
   it "should correctly parse a frontlinecloud-style request" do
     Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
 
     request = double(params: frontlinecloud_params)
-    msg = @adapter.receive(request)
+    msg = adapter.receive(request)
 
     parsing_expectations(msg, request)
   end
@@ -42,9 +45,8 @@ describe Sms::Adapters::FrontlineCloudAdapter, :sms do
   it "should correctly parse a frontlinecloud-style request even if incoming_sms_numbers is empty" do
     Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
 
-    configatron.incoming_sms_numbers = []
     request = double(params: frontlinecloud_params)
-    msg = @adapter.receive(request)
+    msg = adapter.receive(request)
 
     parsing_expectations(msg, request)
   end

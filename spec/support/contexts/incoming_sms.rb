@@ -2,6 +2,7 @@
 
 shared_context "incoming sms" do
   let(:user) { get_user }
+  let(:missionless_url) { false }
 
   # helper that sets up a new form with the given parameters
   def setup_form(options)
@@ -50,20 +51,15 @@ shared_context "incoming sms" do
     req_params = {}
     req_headers = params[:headers] || {}
 
-    url_prefix = defined?(missionless_url) && missionless_url ? "" : "/m/#{get_mission.compact_name}"
-
-    url_token = if defined?(missionless_url) && missionless_url
-                  configatron.key?(:universal_sms_token) ? configatron.universal_sms_token : nil
-                else
-                  get_mission.setting.incoming_sms_token
-                end
+    url_prefix = missionless_url ? "" : "/m/#{get_mission.compact_name}"
+    url_token = missionless_url ? universal_sms_token : get_mission.setting.incoming_sms_token
 
     params[:from] ||= user.phone
     params[:mission] = get_mission unless params.key?(:mission)
     params[:incoming] = {body: params[:incoming]} unless params[:incoming].is_a?(Hash)
     params[:outgoing] = {body: params[:outgoing]} unless params[:outgoing].is_a?(Hash)
     params[:sent_at] ||= Time.current
-    params[:incoming][:adapter] ||= "TwilioSms"
+    params[:incoming][:adapter] ||= "Twilio"
     params[:url] ||= "#{url_prefix}/sms/submit/#{url_token}"
     params[:method] ||= :post
 
@@ -82,7 +78,7 @@ shared_context "incoming sms" do
         "sent_at" => params[:sent_at].strftime("%s"),
         "frontlinecloud" => "1"
       }
-    when "TwilioSms"
+    when "Twilio"
       req_params = {
         "From" => params[:from],
         "To" => "+1234567890",
@@ -103,7 +99,7 @@ shared_context "incoming sms" do
     [params[:method], params[:url], {params: req_params, headers: req_headers}]
   end
 
-  def expect_no_messages_delivered_through_adapter
-    expect(configatron.outgoing_sms_adapter.deliveries.size).to eq(0)
+  def expect_no_messages_delivered_through_adapter(&block)
+    expect { block.call }.to change { Sms::Adapters::Adapter.deliveries.size }.by(0)
   end
 end

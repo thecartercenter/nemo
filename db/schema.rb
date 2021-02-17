@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_30_010746) do
+ActiveRecord::Schema.define(version: 2021_02_10_204713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -507,17 +507,18 @@ ActiveRecord::Schema.define(version: 2021_01_30_010746) do
     t.string "default_outgoing_sms_adapter", limit: 255
     t.string "frontlinecloud_api_key", limit: 255
     t.jsonb "generic_sms_config"
-    t.text "incoming_sms_numbers"
+    t.jsonb "incoming_sms_numbers", default: [], null: false
     t.string "incoming_sms_token", limit: 255
     t.uuid "mission_id"
     t.string "override_code", limit: 255
-    t.string "preferred_locales", limit: 255, null: false
+    t.jsonb "preferred_locales", default: ["en"], null: false
     t.string "theme", default: "nemo", null: false
-    t.string "timezone", limit: 255, null: false
+    t.string "timezone", limit: 255, default: "UTC", null: false
     t.string "twilio_account_sid", limit: 255
     t.string "twilio_auth_token", limit: 255
     t.string "twilio_phone_number", limit: 255
     t.datetime "updated_at", null: false
+    t.index "((mission_id IS NULL))", name: "index_settings_on_mission_id_IS_NULL", unique: true, where: "(mission_id IS NULL)", comment: "Ensures only one root setting"
     t.index ["mission_id"], name: "index_settings_on_mission_id", unique: true
   end
 
@@ -622,7 +623,7 @@ ActiveRecord::Schema.define(version: 2021_01_30_010746) do
     t.string "persistence_token", limit: 255
     t.string "phone", limit: 255
     t.string "phone2", limit: 255
-    t.string "pref_lang", limit: 255, null: false
+    t.string "pref_lang", limit: 255, default: "en", null: false
     t.string "sms_auth_code", limit: 255
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email"

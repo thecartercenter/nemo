@@ -5,6 +5,9 @@ require_relative("boot")
 require "rails/all"
 require "coffee_script"
 
+# Load this here so that the Cnfg global is available.
+require_relative "../lib/config_manager"
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -14,6 +17,8 @@ module ELMO
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults(6.0)
+
+    config.secret_key_base = Cnfg.secret_key_base
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -101,46 +106,27 @@ module ELMO
     # Default expiry for attachments.
     config.active_storage.service_urls_expire_in = 1.hour
 
-    ####################################
-    # CUSTOM SETTINGS
-    ####################################
-
-    # NOTE: Don't add anymore configatron settings. Use settings.yml instead.
-
-    # read system version from file
-    configatron.system_version = File.read(Rails.root.join("VERSION")).strip
-
-    # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
-    configatron.full_locales = %i[en fr es ar ko pt pt-BR]
-
-    # Of the locales in full_locales, the ones displayed RTL.
-    configatron.rtl_locales = %i[ar]
-
     # For security.
     config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
 
-    # requests-per-minute limit for ODK Collect endpoints
-    configatron.direct_auth_request_limit = 30
-
-    # logins-per-minute threshold for showing a captcha
-    configatron.login_captcha_threshold = 30
-
-    # default timeout for sensitive areas requiring a password reprompt
-    configatron.recent_login_max_age = 60.minutes
-
-    # Restrict available locales to defined system locales
-    # This should replace `configatron.full_locales` eventually
-    # assuming this caused no further issues
-    I18n.available_locales = configatron.full_locales
-
-    # This is the default. It can be overridden in local_config.rb, which comes later.
-    configatron.offline_mode = false
+    # Restrict available locales to defined system locales.
+    # Without this, it returns a whole bunch more defined by i18n-js.
+    # This is different from preferred_locales, which is part of the mission settings class and represents
+    # locales that questions, options, etc. may be defined in.
+    I18n.available_locales = %i[en fr es ar ko pt pt-BR]
 
     # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
     config.to_prepare do
       Dir.glob(Rails.root.join("app/overrides/**/*_override.rb")).each do |override|
         require_dependency override
+      end
+    end
+
+    if Cnfg.recaptcha_public_key.present?
+      Recaptcha.configure do |config|
+        config.public_key = Cnfg.recaptcha_public_key
+        config.private_key = Cnfg.recaptcha_private_key
       end
     end
   end

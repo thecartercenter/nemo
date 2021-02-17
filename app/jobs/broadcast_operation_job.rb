@@ -26,6 +26,6 @@ class BroadcastOperationJob < OperationJob
   private
 
   def error_url(broadcast)
-    broadcast_path(broadcast, mission_name: operation.mission.compact_name, locale: I18n.locale)
+    broadcast_path(broadcast, mission_name: mission.compact_name, locale: I18n.locale)
   end
 end

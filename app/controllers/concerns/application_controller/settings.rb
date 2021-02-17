@@ -15,17 +15,20 @@ module ApplicationController::Settings
     I18n.locale = I18n.default_locale
   end
 
-  # Loads the user-specified timezone from configatron, if one exists
   def set_timezone
-    Time.zone = configatron.timezone.to_s if configatron.timezone?
-  end
-
-  # loads settings for the mission, or no mission (admin mode), into configatron
-  def load_settings_for_mission_into_config
-    @setting = Setting.load_for_mission(current_mission)
+    Time.zone = current_mission_config.timezone.to_s
   end
 
   def default_serializer_options
     {root: false}
+  end
+
+  # Loads config for current mission, of if in admin mode, loads root config.
+  def current_mission_config
+    @current_mission_config ||= Setting.for_mission(current_mission)
+  end
+
+  def root_config
+    @root_config ||= Setting.root
   end
 end

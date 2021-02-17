@@ -5,6 +5,7 @@ ELMO::Application.configure do
 
   # Allow local puma-dev domains.
   config.hosts << "nemo.test"
+  config.hosts << "nemo.frappe.sassafras.coop"
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -19,7 +20,6 @@ ELMO::Application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  # If you want to override this long-term, please do it privately in `local_config.rb`.
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
@@ -38,8 +38,7 @@ ELMO::Application.configure do
   end
 
   # Where to store uploaded files (see config/storage.yml for options).
-  storage_type = ENV["NEMO_STORAGE_TYPE"].presence
-  config.active_storage.service = storage_type == "cloud" ? :amazon : (storage_type&.to_sym || :local)
+  config.active_storage.service = Cnfg.storage_service
 
   # Care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true

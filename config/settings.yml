@@ -1,1 +1,0 @@
-max_upload_size_mib: <%= ENV["NEMO_MAX_UPLOAD_SIZE_MIB"].presence&.to_i || 50 %>

@@ -93,14 +93,19 @@ RSpec.configure do |config|
     # Previous specs might leave locale set to something else, which can cause issues.
     I18n.locale = :en
 
-    # This setting is used in Translatable and can lead to weird results if it's set to
-    # something other than [:en] by a previous spec.
-    configatron.preferred_locales = [:en]
-
     # Ensure no leftover logged in user.
     ENV.delete("TEST_LOGGED_IN_USER_ID")
 
     example.run
+  end
+
+  config.before(:each) do
+    # This is the root setting, which is seed data so it should always be available.
+    # It's in a before block because it needs to come after DatabaseCleaners things, which
+    # are in before blocks. If it goes in the above around block, it runs too early and doesn't get cleaned.
+    # If this causes issues, a solution might be to change the DatabaseCleaner initializer to use
+    # around blocks.
+    create(:setting, mission: nil)
   end
 
   # Print browser logs to console if they are non-empty.
@@ -114,11 +119,7 @@ RSpec.configure do |config|
     end
   end
 
-  # Important that url options are consistent for specs regardless of what's in local config.
-  configatron.url.host = "www.example.com"
-  configatron.url.protocol = "http"
-  configatron.url.port = nil
-  ActionMailer::Base.default_url_options = configatron.url.to_h.slice(:host, :port, :protocol)
+  ActionMailer::Base.default_url_options = Cnfg.url_options
 
   VCR.configure do |c|
     c.cassette_library_dir = "spec/cassettes"

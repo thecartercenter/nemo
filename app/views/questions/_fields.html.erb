@@ -15,14 +15,14 @@
 
   <%# title and hint boxes, one for each language %>
   <div class="names_hints">
-    <% configatron.preferred_locales.each_with_index do |lang, rank| %>
+    <% current_mission_config.preferred_locales.each_with_index do |lang, rank| %>
       <%= render("questions/title_and_hint", f: f, lang: lang, rank: rank) %>
     <% end %>
   </div>
 
   <%= f.field(:reference, type: :text) %>
   <%= f.field(:media_prompt, type: :file, hint: t("activerecord.hints.question.media_prompt",
-        max_size_mib: Settings.max_upload_size_mib)) %>
+        max_size_mib: Cnfg.max_upload_size_mib)) %>
 
   <div class="minmax">
     <%= f.field(:casted_minimum, partial: "questions/min_max_condition") %>

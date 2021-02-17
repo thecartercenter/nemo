@@ -9,6 +9,8 @@ module ODK
     include LanguageHelper
     attr_accessor :form
 
+    delegate :mission_config, to: :form
+
     def initialize(attribs)
       self.form = attribs[:form]
     end
@@ -81,7 +83,7 @@ module ODK
     # Generates CSV header.
     def generate_header_row(csv)
       row = %w[list_name name]
-      row += configatron.preferred_locales.map { |l| "label::#{language_name(l)}" }
+      row += mission_config.preferred_locales.map { |l| "label::#{language_name(l)}" }
       row += %w[parent_id]
       csv << row
     end
@@ -103,7 +105,7 @@ module ODK
     # Generates a CSV row for a normal node.
     def option_row(node)
       row = [option_set_code(node), node.odk_code]
-      row += configatron.preferred_locales.map { |l| node.option.name(l, fallbacks: true) }
+      row += mission_config.preferred_locales.map { |l| node.option.name(l, fallbacks: true) }
       # Node ID and parent node ID (unless parent is root)
       row << (node.depth > 1 ? node.parent_odk_code : nil)
       row
@@ -113,7 +115,7 @@ module ODK
     # options[:type] - Whether this is a child or (great)grandchild of the last non-None node.
     def none_row(node, options)
       row = [option_set_code(node), "none"]
-      row += configatron.preferred_locales.map { |l| "[#{I18n.t('common.blank', locale: l)}]" }
+      row += mission_config.preferred_locales.map { |l| "[#{I18n.t('common.blank', locale: l)}]" }
       row << (options[:type] == :child ? node.odk_code : "none")
       row
     end

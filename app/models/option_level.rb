@@ -11,6 +11,9 @@ class OptionLevel
 
   translates :name
 
+  # Required by Translatable
+  delegate :mission_id, to: :option_set
+
   # For serialization.
   def attributes
     %w[name name_translations].map_hash { |a| send(a) }

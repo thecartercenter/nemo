@@ -9,6 +9,7 @@ class Sms::Adapters::TestConsoleAdapter < Sms::Adapters::Adapter
   def deliver(message)
     # Don't have to do much here as we're not really sending this message, just pretending!
     prepare_message_for_delivery(message)
+    log_delivery(message)
     true
   end
 

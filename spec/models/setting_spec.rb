@@ -55,136 +55,139 @@ describe Setting do
     expect(setting.override_code.size).to eq(6)
   end
 
-  describe "load_for_mission" do
-    shared_examples_for "load_for_mission" do
-      context "when there are no existing settings" do
-        before do
-          Setting.load_for_mission(mission).destroy
-        end
-
-        it "should create one with default values" do
-          setting = Setting.load_for_mission(mission)
-          expect(setting.new_record?).to be_falsey
-          expect(setting.mission).to eq(mission)
-          expect(setting.timezone).to eq(Setting::DEFAULT_TIMEZONE)
-        end
-      end
-
-      context "when a setting exists" do
-        before { Setting.load_for_mission(mission).update!(preferred_locales: [:fr]) }
-
-        it "should load it" do
-          setting = Setting.load_for_mission(mission)
-          expect(setting.preferred_locales).to eq([:fr])
-        end
+  describe ".for_mission cache" do
+    # We want to load the thing once per request. How does query cache work? Like that but one level higher.
+    # In app controller, we could enable Settings cache in around_action, cover with system spec
+    # Also in around_perform for jobs, cover with job spec
+    context "without cache enabled" do
+      it "queries DB each time" do
+        Setting.for_mission(nil)
+        expect { 3.times { Setting.for_mission(nil) } }.to make_database_queries(count: 3)
       end
     end
 
-    context "for null mission" do
-      let(:mission) { nil }
-      it_should_behave_like "load_for_mission"
+    context "with cache enabled" do
+      around do |example|
+        Setting.with_cache { example.run }
+      end
 
-      it "should not have an incoming_sms_token", :sms do
-        setting = Setting.load_for_mission(mission)
-        expect(setting.incoming_sms_token).to be_nil
+      it "preforms fewer queries" do
+        Setting.for_mission(nil)
+        expect { 3.times { Setting.for_mission(nil) } }.not_to make_database_queries
+      end
+
+      it "does not save queries on new threads" do
+        # Starting a new thread means no cache. Within the thread, we expect that the cache doesn't
+        # save on queries.
+        Thread.new do
+          Setting.for_mission(nil)
+          expect { 3.times { Setting.for_mission(nil) } }.to make_database_queries(count: 3)
+        end
+      end
+    end
+  end
+
+  describe ".build_default" do
+    let(:mission) { get_mission }
+
+    context "without mission" do
+      it "uses reasonable defaults" do
+        Setting.root.destroy # destroy the old one so we can test building without the factory
+        setting = Setting.build_default(mission: nil)
+        expect(setting).to have_attributes(
+          default_outgoing_sms_adapter: nil,
+          frontlinecloud_api_key: nil,
+          generic_sms_config: nil,
+          incoming_sms_numbers: [],
+          incoming_sms_token: nil,
+          override_code: nil,
+          preferred_locales: [:en],
+          theme: "nemo",
+          timezone: "UTC",
+          twilio_account_sid: nil,
+          twilio_auth_token: nil,
+          twilio_phone_number: nil
+        )
       end
     end
 
-    context "for mission" do
-      let(:mission) { get_mission }
-      it_should_behave_like "load_for_mission"
-
-      it "should have an incoming_sms_token", :sms do
-        setting = Setting.load_for_mission(mission)
-        expect(setting.incoming_sms_token).to match(/\A[0-9a-f]{32}\z/)
+    context "with mission" do
+      before do
+        # Only settings that are allowed to be set in the admin mode settings form are set here.
+        Setting.root.update!(
+          default_outgoing_sms_adapter: "FrontlineCloud",
+          frontlinecloud_api_key: "ab123456",
+          incoming_sms_numbers_str: "+1234567890",
+          preferred_locales_str: "en,fr",
+          theme: "elmo",
+          timezone: "Saskatchewan",
+          twilio_account_sid: "cd123456",
+          twilio_auth_token: "ef123456",
+          twilio_phone_number: "+2345678900"
+        )
       end
 
-      it "should have the same incoming_sms_token after reloading", :sms do
-        setting = Setting.load_for_mission(mission)
-        token = setting.incoming_sms_token
-
-        setting.reload
-
-        expect(setting.incoming_sms_token).to eq(token)
-      end
-
-      it "should have a different incoming_sms_token after calling regenerate_incoming_sms_token!", :sms do
-        setting = Setting.load_for_mission(mission)
-        token = setting.incoming_sms_token
-
-        setting.regenerate_incoming_sms_token!
-
-        expect(setting.incoming_sms_token).not_to eq(token)
-      end
-
-      it "should normalize the twilio_phone_number on save", :sms do
-        setting = Setting.load_for_mission(mission)
-        setting.twilio_phone_number = "+1 770 555 1212"
-        setting.twilio_account_sid = "AC0000000"
-        setting.twilio_auth_token = "ABCDefgh1234"
+      it "copies settings from admin mode setting" do
+        mission.setting.destroy # destroy the old one so we can test saving the new one
+        setting = Setting.build_default(mission: mission)
         setting.save!
-        expect(setting.twilio_phone_number).to eq("+17705551212")
+        expect(setting.reload).to have_attributes(
+          default_outgoing_sms_adapter: "FrontlineCloud",
+          frontlinecloud_api_key: "ab123456",
+          generic_sms_config: nil,
+          incoming_sms_numbers: ["+1234567890"],
+          override_code: nil,
+          preferred_locales: %i[en fr],
+          theme: "elmo",
+          timezone: "Saskatchewan",
+          twilio_account_sid: "cd123456",
+          twilio_auth_token: "ef123456",
+          twilio_phone_number: "+2345678900"
+        )
+        expect(setting.incoming_sms_token).not_to be_blank
       end
     end
+  end
 
-    describe ".build_default" do
-      let(:mission) { get_mission }
-
-      context "with existing admin mode setting" do
-        let!(:admin_setting) { Setting.load_for_mission(nil).update_attribute(:theme, "elmo") }
-
-        it "copies theme setting from admin mode setting" do
-          expect(Setting.build_default(mission).theme).to eq("elmo")
-        end
+  describe "validation" do
+    describe "generic_sms_config_str" do
+      it "should error if invalid json" do
+        setting = build(:setting,
+          mission_id: get_mission.id,
+          generic_sms_config_str: "{")
+        expect(setting).to be_invalid
+        expect(setting.errors[:generic_sms_config_str].join).to match(/JSON error:/)
       end
 
-      context "without existing admin mode setting" do
-        it "defaults to nemo" do
-          expect(Setting.build_default(mission).theme).to eq("nemo")
-        end
+      it "should error if invalid keys" do
+        setting = build(:setting,
+          mission_id: get_mission.id,
+          generic_sms_config_str: '{"params":{"from":"x", "body":"y"}, "response":"x", "foo":"y"}')
+        expect(setting).to be_invalid
+        expect(setting.errors[:generic_sms_config_str].join).to match(/Valid keys are params/)
       end
-    end
 
-    describe "validation" do
-      describe "generic_sms_config_str" do
-        it "should error if invalid json" do
-          setting = build(:setting,
-            mission_id: get_mission.id,
-            generic_sms_config_str: "{")
-          expect(setting).to be_invalid
-          expect(setting.errors[:generic_sms_config_str].join).to match(/JSON error:/)
-        end
+      it "should error if missing top-level key" do
+        setting = build(:setting,
+          mission: get_mission,
+          generic_sms_config_str: '{"params":{"from":"x", "body":"y"}}')
+        expect(setting).to be_invalid
+        expect(setting.errors[:generic_sms_config_str].join).to match(/Configuration must include/)
+      end
 
-        it "should error if invalid keys" do
-          setting = build(:setting,
-            mission_id: get_mission.id,
-            generic_sms_config_str: '{"params":{"from":"x", "body":"y"}, "response":"x", "foo":"y"}')
-          expect(setting).to be_invalid
-          expect(setting.errors[:generic_sms_config_str].join).to match(/Valid keys are params/)
-        end
+      it "should error if missing second-level key" do
+        setting = build(:setting,
+          mission: get_mission,
+          generic_sms_config_str: '{"params":{"from":"x"}, "response":"x"}')
+        expect(setting).to be_invalid
+        expect(setting.errors[:generic_sms_config_str].join).to match(/Configuration must include/)
+      end
 
-        it "should error if missing top-level key" do
-          setting = build(:setting,
-            mission: get_mission,
-            generic_sms_config_str: '{"params":{"from":"x", "body":"y"}}')
-          expect(setting).to be_invalid
-          expect(setting.errors[:generic_sms_config_str].join).to match(/Configuration must include/)
-        end
-
-        it "should error if missing second-level key" do
-          setting = build(:setting,
-            mission: get_mission,
-            generic_sms_config_str: '{"params":{"from":"x"}, "response":"x"}')
-          expect(setting).to be_invalid
-          expect(setting.errors[:generic_sms_config_str].join).to match(/Configuration must include/)
-        end
-
-        it "should not error if required keys present" do
-          setting = build(:setting,
-            mission: get_mission,
-            generic_sms_config_str: '{"params":{"from":"x", "body":"y"}, "response":"x"}')
-          expect(setting).to be_valid
-        end
+      it "should not error if required keys present" do
+        setting = build(:setting,
+          mission: get_mission,
+          generic_sms_config_str: '{"params":{"from":"x", "body":"y"}, "response":"x"}')
+        expect(setting).to be_valid
       end
     end
   end

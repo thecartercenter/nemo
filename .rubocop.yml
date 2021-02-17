@@ -53,6 +53,11 @@ Layout/LineLength:
 Lint/RedundantCopDisableDirective:
   Enabled: false
 
+Lint/UnusedMethodArgument:
+  # Otherwise we have to remove named args from the method signature altogether which seems to reduce
+  # clarity of the code.
+  AllowUnusedKeywordArguments: true
+
 Metrics/BlockLength:
   Enabled: true
   Exclude:
@@ -145,6 +150,11 @@ Bundler:
 
 Rails:
   Enabled: true
+
+# Helpers are deprecated so this only ever fires for legacy code, which we don't want to spend time
+# refactoring to get around this cop.
+Rails/HelperInstanceVariable:
+  Enabled: false
 
 RSpec/Rails/Output:
   Enabled: true

@@ -7,6 +7,8 @@ module OptionSets
 
     validates :name, presence: true
 
+    delegate :mission_config, to: :option_set
+
     protected
 
     def process_data
@@ -87,7 +89,7 @@ module OptionSets
     end
 
     def name_locale_key
-      :"name_#{configatron.preferred_locales[0]}"
+      :"name_#{mission_config.preferred_locales[0]}"
     end
 
     def init_state_vars

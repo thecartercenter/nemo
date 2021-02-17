@@ -80,7 +80,6 @@ describe ODK::ItemsetsFormAttachment, :odk do
     let(:priv_dir) { File.dirname(itemsets_attachment.priv_path) }
 
     before do
-      configatron.preferred_locales = [:en]
       stub_const(ODK::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", external_csv_threshold)
     end
 
@@ -141,13 +140,9 @@ describe ODK::ItemsetsFormAttachment, :odk do
       let(:question_types) { %w[multilevel_select_one] }
 
       before do
-        configatron.preferred_locales = %i[en fr]
+        form.mission.setting.update!(preferred_locales_str: "en,fr")
         form.c[0].option_set.options[0].update(name_fr: "Animale")
         form.c[0].option_set.options[1].update(name_fr: "Plante")
-      end
-
-      after do
-        configatron.preferred_locales = [:en]
       end
 
       it "should build file with translations where available and fallback to English where not" do

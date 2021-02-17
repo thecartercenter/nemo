@@ -24,7 +24,7 @@ describe "search qualifiers" do
 
         qual_en = I18n.t("search_qualifiers.#{qual.name}", locale: :en, raise: true)
 
-        configatron.full_locales.each do |locale|
+        I18n.available_locales.each do |locale|
           I18n.locale = locale
 
           # If translation doesn't exist in target lang, the help text will be in English, so we assume

@@ -114,6 +114,6 @@ class Mission < ApplicationRecord
 
   # creates an accompanying settings object composed of defaults, unless one exists
   def ensure_setting
-    self.setting ||= Setting.build_default(self)
+    self.setting ||= Setting.build_default(mission: self)
   end
 end

@@ -2,10 +2,13 @@
 
 # Sends broadcast emails.
 class BroadcastMailer < ApplicationMailer
-  def broadcast(recips, subj, msg)
-    @msg = msg
+  def broadcast(to:, subject:, body:, mission:)
+    @body = body
+    @mission = mission
+    @site_name = site_name
+
     # TODO: We should send a separate email to each recipient
     # like we do with an SMS broadcast
-    mail(to: recips, subject: "[#{Settings.broadcast_tag}] #{subj}")
+    mail(to: to, subject: "[#{site_name}] #{subject}")
   end
 end

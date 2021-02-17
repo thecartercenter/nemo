@@ -11,9 +11,16 @@ describe "incoming sms", :sms do
   let(:form_code) { form.code }
   let(:wrong_code) { form_code.sub(form.code[0], form.code[0] == "a" ? "b" : "a") }
   let(:bad_incoming_token) { "0" * 32 }
+  let(:universal_sms_token) { SecureRandom.hex }
 
-  before do
-    configatron.universal_sms_token = SecureRandom.hex
+  around do |example|
+    if missionless_url
+      with_env("NEMO_ALLOW_MISSIONLESS_SMS" => "true", "NEMO_UNIVERSAL_SMS_TOKEN" => universal_sms_token) do
+        example.run
+      end
+    else
+      example.run
+    end
   end
 
   context "with text form" do
@@ -252,9 +259,9 @@ describe "incoming sms", :sms do
   end
 
   context "with failing Twilio validation" do
-    let(:twilio_adapter) { Sms::Adapters::Factory.instance.create("Twilio") }
     let(:mission) { get_mission }
     let(:token) { mission.setting.incoming_sms_token }
+    let(:twilio_adapter) { Sms::Adapters::Factory.instance.create("Twilio", config: mission.setting) }
 
     before do
       expect(twilio_adapter).to receive(:validate).and_raise(Sms::Error)
@@ -264,7 +271,7 @@ describe "incoming sms", :sms do
     it "should raise error" do
       expect do
         do_incoming_request(url: "/m/#{mission.compact_name}/sms/submit/#{token}", from: user.phone,
-                            incoming: {body: "#{form_code} 1.15 2.20", adapter: "TwilioSms"})
+                            incoming: {body: "#{form_code} 1.15 2.20", adapter: "Twilio"})
       end.to raise_error(Sms::Error)
     end
   end
@@ -357,7 +364,7 @@ describe "incoming sms", :sms do
       let(:second_form) { setup_form(questions: %w[integer text], mission: second_mission) }
       let(:first_form_code) { first_form.code }
       let(:second_form_code) { second_form.code }
-      let(:submission_url) { "/sms/submit/#{configatron.universal_sms_token}" }
+      let(:submission_url) { "/sms/submit/#{universal_sms_token}" }
 
       it "should process first mission correctly with valid form code" do
         assert_sms_response(
@@ -379,10 +386,12 @@ describe "incoming sms", :sms do
     end
 
     context "with reply via_adapter adapter" do
+      before do
+        Setting.root.update_column(:default_outgoing_sms_adapter, root_setting_default_adapter)
+      end
+
       context "with default adapter" do
-        before do
-          configatron.default_settings.outgoing_sms_adapter = "Twilio"
-        end
+        let(:root_setting_default_adapter) { "Twilio" }
 
         it "should send reply via default adapter if form not found" do
           assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
@@ -391,9 +400,7 @@ describe "incoming sms", :sms do
       end
 
       context "without default adapter" do
-        before do
-          configatron.default_settings.outgoing_sms_adapter = ""
-        end
+        let(:root_setting_default_adapter) { nil }
 
         it "should save error on reply message" do
           assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
@@ -407,7 +414,7 @@ describe "incoming sms", :sms do
   context "with duplicate phone numbers" do
     # setup extra mission
     let!(:missionless_url) { true }
-    let!(:submission_url) { "/sms/submit/#{configatron.universal_sms_token}" }
+    let!(:submission_url) { "/sms/submit/#{universal_sms_token}" }
     let!(:mission) { get_mission }
     let!(:other_mission) { create(:mission) }
 

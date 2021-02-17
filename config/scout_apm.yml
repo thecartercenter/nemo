@@ -4,7 +4,7 @@ common: &defaults
 
   # key: Your Organization key for Scout APM. Found on the settings screen. This key does not provide API access.
   # - Default: none
-  key: <%= configatron.scout.key %>
+  key: <%= Cnfg.scout_key %>
 
   # log_level: Verboseness of logs.
   # - Default: 'info'

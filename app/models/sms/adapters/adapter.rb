@@ -3,11 +3,10 @@
 # models a generic sms adapter. should be subclassed.
 require "net/http"
 class Sms::Adapters::Adapter
-  attr_writer :deliveries
   attr_reader :config
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(_request)
+  def self.recognize_receive_request?(*_args)
     false
   end
 
@@ -22,8 +21,14 @@ class Sms::Adapters::Adapter
     name.split("::").last.gsub(/Adapter$/, "")
   end
 
-  def initialize(options = {})
-    @config = options[:config]
+  # For testing.
+  def self.deliveries
+    # We want this to be inherited by all subclasses so we want a class var, not a class instance var
+    @@deliveries ||= [] # rubocop:disable Style/ClassVars
+  end
+
+  def initialize(config:)
+    @config = config
   end
 
   def service_name
@@ -41,8 +46,6 @@ class Sms::Adapters::Adapter
 
     # save the message now, which sets the sent_at
     message.save!
-
-    deliveries << message
   end
 
   def deliver(_message)
@@ -72,10 +75,6 @@ class Sms::Adapters::Adapter
 
   # The body to be rendered when responding to an incoming message request.
   def response_body(reply)
-  end
-
-  def deliveries
-    @deliveries ||= []
   end
 
   protected
@@ -115,5 +114,10 @@ class Sms::Adapters::Adapter
     else
       raise Sms::Error, "error contacting #{service_name} (#{response.class.name})"
     end
+  end
+
+  # For testing purposes
+  def log_delivery(message)
+    self.class.deliveries << message if Rails.env.test?
   end
 end

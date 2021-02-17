@@ -15,7 +15,6 @@
     mission_id: current_mission.id, # needed for storing the map bounds between refreshes
     reloadInterval: Rails.env.development? ? 10 : 30, # shorter interval is better for debugging
     map: {
-      key_missing: google_maps_key_missing?,
       offline: offline?,
       locations: @response_locations,
       info_window_url: dashboard_info_window_url,

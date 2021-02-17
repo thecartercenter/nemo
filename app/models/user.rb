@@ -56,6 +56,7 @@ class User < ApplicationRecord
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
   GENDER_OPTIONS = %w[man woman no_answer specify].freeze
   PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/.freeze
+  DEFAULT_RECENT_LOGIN_MAX_AGE = 60.minutes
 
   attr_writer(:reset_password_method)
   attr_accessor(:password_confirmation)
@@ -90,7 +91,6 @@ class User < ApplicationRecord
     c.logged_in_timeout(SESSION_TIMEOUT)
   end
 
-  after_initialize :set_default_pref_lang
   before_validation :normalize_fields
   before_validation :generate_password_if_none
   before_save :clear_assignments_without_roles
@@ -333,8 +333,7 @@ class User < ApplicationRecord
   end
 
   def current_login_recent?(max_age = nil)
-    max_age ||= configatron.recent_login_max_age
-
+    max_age ||= DEFAULT_RECENT_LOGIN_MAX_AGE
     current_login_age < max_age if current_login_at.present?
   end
 
@@ -414,12 +413,5 @@ class User < ApplicationRecord
   # generates a random password before validation if this is a new record, unless one is already set
   def generate_password_if_none
     reset_password if new_record? && password.blank? && password_confirmation.blank?
-  end
-
-  # sets the user's preferred language to the mission default
-  def set_default_pref_lang
-    self.pref_lang ||= configatron.key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : "en"
-  rescue ActiveModel::MissingAttributeError
-    # we rescue this error in case find_by_sql is being used
   end
 end

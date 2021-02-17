@@ -112,8 +112,7 @@ git checkout develop
 1. Install the required gems by running `bundle install` in the project directory.
 1. Install the required Node modules by running `yarn install` in the project directory.
 1. Run `cp config/database.yml.example config/database.yml`.
-1. (optional) Run `cp .env.development .env.development.local` and adjust settings as appropriate.
-1. Run `cp config/initializers/local_config.rb.example config/initializers/local_config.rb` and adjust settings as appropriate. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
+1. (Optional) Create a `.env.development.local` file and override any settings from `.env` as you see fit. Note that a valid Google Maps API key must be present for certain tests to pass.
 1. Setup the UUID postgres extension:
     1. On Linux: `sudo -u postgres psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
     1. On Mac with Homebrew: `psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`

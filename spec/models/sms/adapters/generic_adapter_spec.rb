@@ -3,35 +3,44 @@
 require "rails_helper"
 
 describe Sms::Adapters::GenericAdapter, :sms do
-  let(:adapter) { Sms::Adapters::Factory.instance.create("Generic") }
+  include_context "sms adapters"
 
-  it "should be created by factory" do
-    expect(adapter).not_to be_nil
-  end
+  let(:mission_config) { double(generic_sms_config: config) }
+  let(:adapter) { Sms::Adapters::Factory.instance.create("Generic", config: mission_config) }
 
-  it "should have correct service name" do
-    expect(adapter.service_name).to eq("Generic")
-  end
+  describe "general" do
+    let(:config) do
+      {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
+    end
 
-  it "should raise exception on deliver" do
-    expect { adapter.deliver(nil) }.to raise_error(NotImplementedError)
+    it "should be created by factory" do
+      expect(adapter).not_to be_nil
+    end
+
+    it "should have correct service name" do
+      expect(adapter.service_name).to eq("Generic")
+    end
+
+    it "should raise exception on deliver" do
+      expect { adapter.deliver(nil) }.to raise_error(NotImplementedError)
+    end
   end
 
   describe ".recognize_receive_request" do
     context "with no configuration" do
-      before do
-        Settings.generic_sms_config = nil
+      let(:config) do
+        nil
       end
 
       it "should return false" do
         request = double(params: {"num" => "1", "msg" => "1", "foo" => "1"})
-        expect(adapter.class.recognize_receive_request?(request)).to be(false)
+        expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(false)
       end
     end
 
     context "with params-only configuration" do
-      before do
-        Settings.generic_sms_config = {
+      let(:config) do
+        {
           "params" => {"from" => "num", "body" => "msg"},
           "response" => "x"
         }
@@ -39,18 +48,18 @@ describe Sms::Adapters::GenericAdapter, :sms do
 
       it "should match request with matching params" do
         request = double(params: {"num" => "1", "msg" => "1", "foo" => "1"})
-        expect(adapter.class.recognize_receive_request?(request)).to be(true)
+        expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(true)
       end
 
       it "should not match request with missing param" do
         request = double(params: {"num" => "1", "foo" => "1"})
-        expect(adapter.class.recognize_receive_request?(request)).to be(false)
+        expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(false)
       end
     end
 
     context "with params and matchHeaders configuration" do
-      before do
-        Settings.generic_sms_config = {
+      let(:config) do
+        {
           "params" => {"from" => "num", "body" => "msg"},
           "response" => "x",
           "matchHeaders" => {"Header1" => "foo", "Header2" => "bar"}
@@ -62,7 +71,7 @@ describe Sms::Adapters::GenericAdapter, :sms do
           params: {"num" => "1", "msg" => "1", "foo" => "1"},
           headers: {"Header1" => "foo", "Header2" => "bar"}
         )
-        expect(adapter.class.recognize_receive_request?(request)).to be(true)
+        expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(true)
       end
 
       it "should not match request with matching params but missing header" do
@@ -70,7 +79,7 @@ describe Sms::Adapters::GenericAdapter, :sms do
           params: {"num" => "1", "msg" => "1", "foo" => "1"},
           headers: {"Header1" => "foo"}
         )
-        expect(adapter.class.recognize_receive_request?(request)).to be(false)
+        expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(false)
       end
 
       it "should not match request with missing param but matching headers" do
@@ -78,13 +87,13 @@ describe Sms::Adapters::GenericAdapter, :sms do
           params: {"num" => "1", "foo" => "1"},
           headers: {"Header1" => "foo", "Header2" => "bar"}
         )
-        expect(adapter.class.recognize_receive_request?(request)).to be(false)
+        expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(false)
       end
     end
 
     context "with invalid matchHeaders configuration" do
-      before do
-        Settings.generic_sms_config = {
+      let(:config) do
+        {
           "params" => {"from" => "num", "body" => "msg"},
           "response" => "x",
           "matchHeaders" => "x"
@@ -96,14 +105,17 @@ describe Sms::Adapters::GenericAdapter, :sms do
           params: {"num" => "1", "msg" => "1", "foo" => "1"},
           headers: {"Header1" => "foo", "Header2" => "bar"}
         )
-        expect(adapter.class.recognize_receive_request?(request)).to be(true)
+        expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be(true)
       end
     end
   end
 
   describe "#receive" do
+    let(:config) do
+      {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
+    end
+
     before do
-      Settings.generic_sms_config = {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
       Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
     end
 
@@ -123,10 +135,10 @@ describe Sms::Adapters::GenericAdapter, :sms do
 
   describe "#response_body" do
     context "default type" do
-      before do
-        Settings.generic_sms_config = {
+      let(:config) do
+        {
           "params" => {"from" => "num", "body" => "msg"},
-          "response" => "Reply: %{reply}"
+          "response" => "Reply: %{reply}" # rubocop:disable Style/FormatStringToken
         }
       end
 
@@ -137,10 +149,10 @@ describe Sms::Adapters::GenericAdapter, :sms do
     end
 
     context "xml type" do
-      before do
-        Settings.generic_sms_config = {
+      let(:config) do
+        {
           "params" => {"from" => "num", "body" => "msg"},
-          "response" => "<msg>%{reply}</msg>",
+          "response" => "<msg>%{reply}</msg>", # rubocop:disable Style/FormatStringToken
           "responseType" => "application/xml"
         }
       end
@@ -152,10 +164,10 @@ describe Sms::Adapters::GenericAdapter, :sms do
     end
 
     context "json type" do
-      before do
-        Settings.generic_sms_config = {
+      let(:config) do
+        {
           "params" => {"from" => "num", "body" => "msg"},
-          "response" => %({"foo":"bar","msg":%{reply}}),
+          "response" => %({"foo":"bar","msg":%{reply}}), # rubocop:disable Style/FormatStringToken
           "responseType" => "application/json"
         }
       end
@@ -169,10 +181,10 @@ describe Sms::Adapters::GenericAdapter, :sms do
 
   describe "#response_content_type" do
     context "default" do
-      before do
-        Settings.generic_sms_config = {
+      let(:config) do
+        {
           "params" => {"from" => "num", "body" => "msg"},
-          "response" => "%{reply}"
+          "response" => "%{reply}" # rubocop:disable Style/FormatStringToken
         }
       end
 
@@ -182,10 +194,10 @@ describe Sms::Adapters::GenericAdapter, :sms do
     end
 
     context "specified" do
-      before do
-        Settings.generic_sms_config = {
+      let(:config) do
+        {
           "params" => {"from" => "num", "body" => "msg"},
-          "response" => "<msg>%{reply}</msg>",
+          "response" => "<msg>%{reply}</msg>", # rubocop:disable Style/FormatStringToken
           "responseType" => "text/xml"
         }
       end

@@ -84,15 +84,18 @@ class FormsController < ApplicationController
   def sms_guide
     return (flash.now[:error] = I18n.t("forms.sms_guide.draft_error", form_name: @form.name)) if @form.draft?
 
-    # determine the most appropriate language to show the form in
-    # if params[:lang] is set, use that
-    # otherwise try to use the current locale set
-    @locale = params[:lang] || I18n.locale
+    # Current locale (string)
+    @locale = params[:lang] || I18n.locale.to_s
+
+    # Options for the dropdown (symbols).
+    # Union of system locales plus locales in the mission config (which may be different than system locales).
+    @locales = I18n.available_locales | current_mission_config.preferred_locales
 
     @qings_with_indices = @form.smsable_questionings
 
     # If there are more than one incoming numbers, we need to set a flash notice.
-    @number_appendix = configatron.incoming_sms_numbers.size > 1
+    @incoming_sms_numbers = current_mission_config.incoming_sms_numbers
+    @number_appendix = @incoming_sms_numbers.size > 1
   end
 
   # Format is always :xml

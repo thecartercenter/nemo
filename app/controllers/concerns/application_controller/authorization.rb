@@ -69,12 +69,12 @@ module ApplicationController::Authorization
   end
 
   def offline_mode?
-    configatron.offline_mode
+    Cnfg.offline_mode?
   end
 
   # Checks for an internet connection if offline_mode is on. Otherwise always returns false.
   def offline?
-    return false unless configatron.offline_mode
+    return false unless Cnfg.offline_mode?
     return @offline if defined?(@offline)
     Resolv::DNS.new.getaddress("icann.org")
     @offline = false

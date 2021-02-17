@@ -262,13 +262,6 @@ describe User do
     end
   end
 
-  it "creating a user with minimal info should produce good defaults", :investigate do
-    user = User.create!(name: "Alpha Tester", login: "alpha", reset_password_method: "print",
-                        assignments: [Assignment.new(mission: mission, role: User::ROLES.first)])
-    expect(user.pref_lang).to eq("en")
-    expect(user.login).to eq("alpha")
-  end
-
   describe "destruction" do
     let!(:user) { create(:user) }
 

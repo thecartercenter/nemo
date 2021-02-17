@@ -3,24 +3,33 @@
 require "rails_helper"
 
 describe Notifier do
-  context "password reset email" do
+  # This spec covers coordinator reply_to functionality.
+  context "intro email" do
     let(:mission) { create(:mission) }
     let(:user) { create(:user, mission: mission, role_name: :enumerator) }
     let(:args) { [user] }
-    let(:mail) { described_class.password_reset_instructions(*args).deliver_now }
-
-    it "should have user's email in to field" do
-      expect(mail.to).to eq([user.email])
-    end
+    let(:mail) { described_class.intro(*args).deliver_now }
 
     context "no mission given" do
-      it "should not have anyone in reply-to" do
+      let(:args) { [user] }
+
+      it do
+        expect(mail.to).to eq([user.email])
         expect(mail.reply_to).to be_empty
+        expect(mail.subject).to eq("Welcome to NEMO!")
+        expect(mail.body.encoded).to match("Welcome to NEMO!")
+        expect(mail.body.encoded).to match("Your login name is")
+        expect(mail.body.encoded).to match("http://www.example.com/en/password-resets/")
       end
     end
 
     context "mission given" do
       let(:args) { [user, {mission: mission}] }
+
+      it do
+        expect(mail.subject).to eq("Welcome to NEMO!")
+        expect(mail.body.encoded).to match("Welcome to NEMO!")
+      end
 
       context "mission does not have any coordinator" do
         it "should not have anyone in reply-to" do
@@ -37,6 +46,21 @@ describe Notifier do
           expect(mail.reply_to).to contain_exactly(coordinator1.email, coordinator2.email)
         end
       end
+    end
+  end
+
+  context "password reset email" do
+    let(:mission) { create(:mission) }
+    let(:user) { create(:user, mission: mission, role_name: :enumerator) }
+    let(:args) { [user] }
+    let(:mail) { described_class.password_reset_instructions(*args).deliver_now }
+
+    it do
+      mail = described_class.password_reset_instructions(user, mission: mission).deliver_now
+      expect(mail.to).to eq([user.email])
+      expect(mail.subject).to eq("Password Reset Instructions")
+      expect(mail.body).to match(/A request to reset your NEMO password has been made/)
+      expect(mail.body).to match("http://www.example.com/en/password-resets")
     end
   end
 

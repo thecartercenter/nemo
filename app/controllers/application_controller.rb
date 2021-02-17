@@ -28,6 +28,8 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_invalid_authenticity_token
 
+  around_action :enable_settings_caching
+
   before_action :set_initial_exception_context
   before_action :disable_client_caching
   before_action :check_route
@@ -35,14 +37,14 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :load_current_mission
   before_action :load_current_user
+  before_action :set_timezone
   before_action :prepare_exception_notifier
   before_action :protect_admin_mode
   before_action :remember_mission
   before_action :remember_context, only: :index
   before_action :set_scout_context
-  before_action :load_settings_for_mission_into_config
   before_action :load_accessible_missions
 
-  helper_method :current_mode, :current_user, :current_mission, :current_root_path,
+  helper_method :current_mode, :current_user, :current_mission, :current_mission_config, :current_root_path,
     :admin_mode?, :basic_mode?, :mission_mode?, :admin_mode_exit_path, :offline_mode?, :offline?
 end

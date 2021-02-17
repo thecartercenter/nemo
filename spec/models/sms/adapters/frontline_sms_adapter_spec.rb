@@ -3,42 +3,43 @@
 require "rails_helper"
 
 describe Sms::Adapters::FrontlineSmsAdapter, :sms do
-  before :all do
-    @adapter = Sms::Adapters::Factory.instance.create("FrontlineSms")
-  end
+  include_context "sms adapters"
+
+  let(:mission_config) { double(incoming_sms_numbers: []) }
+  let(:adapter) { Sms::Adapters::Factory.instance.create("FrontlineSms", config: mission_config) }
 
   it "should be created by factory" do
-    expect(@adapter).to_not(be_nil)
+    expect(adapter).to_not(be_nil)
   end
 
   it "should have correct service name" do
-    expect(@adapter.service_name).to eq("FrontlineSms")
+    expect(adapter.service_name).to eq("FrontlineSms")
   end
 
   it "should raise exception on deliver" do
-    expect { @adapter.deliver(nil) }.to raise_error(NotImplementedError)
+    expect { adapter.deliver(nil) }.to raise_error(NotImplementedError)
   end
 
   it "should recognize an incoming request with the proper params" do
     request = double(params: {"frontline" => "1", "from" => "1", "text" => "1"})
-    expect(@adapter.class.recognize_receive_request?(request)).to be_truthy
+    expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be_truthy
   end
 
   it "should not recognize an incoming request without the special frontline param" do
     request = double(params: {"from" => "1", "text" => "1"})
-    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
+    expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be_falsey
   end
 
   it "should not recognize an incoming request without the other params" do
     request = double(params: {"frontline" => "1"})
-    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
+    expect(adapter.class.recognize_receive_request?(request, config: mission_config)).to be_falsey
   end
 
   it "should correctly parse a frontline-style request" do
     Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
 
     request = double(params: {"frontline" => "1", "text" => "foo", "from" => "+2348036801489"})
-    msg = @adapter.receive(request)
+    msg = adapter.receive(request)
     expect(msg).to be_a(Sms::Incoming)
     expect(msg.to).to be_nil
     expect(msg.from).to eq("+2348036801489")
@@ -50,9 +51,8 @@ describe Sms::Adapters::FrontlineSmsAdapter, :sms do
   end
 
   it "should correctly parse a frontline-style request even if incoming_sms_numbers is empty" do
-    configatron.incoming_sms_numbers = []
     request = double(params: {"frontline" => "1", "text" => "foo", "from" => "+2348036801489"})
-    msg = @adapter.receive(request)
+    msg = adapter.receive(request)
     expect(msg.body).to eq("foo")
     expect(msg.to).to be_nil
   end

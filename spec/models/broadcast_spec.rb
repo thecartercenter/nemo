@@ -38,16 +38,18 @@ describe Broadcast do
       create(:broadcast, medium: "both", subject: "Foo", body: "Bar",
                          which_phone: "main_only", recipient_users: [user1])
     end
+    let(:broadcaster) { double }
+
+    before do
+      expect(Sms::Broadcaster).to receive(:new).and_return(broadcaster)
+    end
 
     context "happy path" do
-      before do
-        Settings.broadcast_tag = "NEMO"
-      end
-
       it "should call appropriate methods" do
-        expect(BroadcastMailer).to receive(:broadcast).with(["a@b.com"], "Foo", "Bar")
+        expect(BroadcastMailer).to receive(:broadcast)
+          .with(to: ["a@b.com"], subject: "Foo", body: "Bar", mission: get_mission)
           .and_return(double(deliver_now: nil))
-        expect(Sms::Broadcaster).to receive(:deliver).with(broadcast, "main_only", "[NEMO] Bar")
+        expect(broadcaster).to receive(:deliver).with(broadcast)
         broadcast.deliver
       end
     end
@@ -56,7 +58,7 @@ describe Broadcast do
       it "should save and re-raise" do
         expect(BroadcastMailer).to receive(:broadcast)
           .and_raise(Net::SMTPAuthenticationError.new("Auth failed"))
-        expect(Sms::Broadcaster).to receive(:deliver)
+        expect(broadcaster).to receive(:deliver)
         expect { broadcast.deliver }.to raise_error(Net::SMTPAuthenticationError)
         expect(broadcast.send_errors).to eq("Email Error: Auth failed")
       end
@@ -65,7 +67,7 @@ describe Broadcast do
     context "with sms errors" do
       it "should save and re-raise" do
         expect(BroadcastMailer).to receive(:broadcast).and_return(double(deliver_now: nil))
-        expect(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Error.new("Failure 1\nFailure 2"))
+        expect(broadcaster).to receive(:deliver).and_raise(Sms::Error.new("Failure 1\nFailure 2"))
         expect { broadcast.deliver }.to raise_error(Sms::Error)
         expect(broadcast.send_errors).to eq("SMS Error: Failure 1\nSMS Error: Failure 2")
       end
@@ -75,7 +77,7 @@ describe Broadcast do
       it "should save all errors and re-raise first one" do
         expect(BroadcastMailer).to receive(:broadcast)
           .and_raise(Net::SMTPAuthenticationError.new("Auth failed"))
-        expect(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Error.new("Failure 1\nFailure 2"))
+        expect(broadcaster).to receive(:deliver).and_raise(Sms::Error.new("Failure 1\nFailure 2"))
         expect { broadcast.deliver }.to raise_error(Net::SMTPAuthenticationError)
         expect(broadcast.send_errors).to eq("Email Error: Auth failed\n"\
           "SMS Error: Failure 1\nSMS Error: Failure 2")

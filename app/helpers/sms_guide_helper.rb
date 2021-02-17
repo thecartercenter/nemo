@@ -106,10 +106,10 @@ module SmsGuideHelper
 
   # returns the sms submit number or an indicator that it's not set up
   def submit_numbers
-    numbers = if configatron.incoming_sms_numbers.empty?
-                "[" + t("sms_form.guide.unknown_number") + "]"
+    numbers = if @incoming_sms_numbers.empty?
+                "[#{t('sms_form.guide.unknown_number')}]"
               else
-                configatron.incoming_sms_numbers.join(", ")
+                @incoming_sms_numbers.join(", ")
               end
     content_tag("strong", numbers)
   end

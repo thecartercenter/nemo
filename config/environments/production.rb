@@ -56,8 +56,7 @@ ELMO::Application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Where to store uploaded files (see config/storage.yml for options).
-  storage_type = ENV["NEMO_STORAGE_TYPE"].presence
-  config.active_storage.service = storage_type == "cloud" ? :amazon : (storage_type&.to_sym || :local)
+  config.active_storage.service = Cnfg.storage_service
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -87,6 +86,15 @@ ELMO::Application.configure do
   config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.delivery_method = :smtp
+
+  config.action_mailer.smtp_settings = {
+    address: Cnfg.smtp_address,
+    port: Cnfg.smtp_port,
+    domain: Cnfg.smtp_domain,
+    authentication: Cnfg.smtp_authentication,
+    user_name: Cnfg.smtp_user_name,
+    password: Cnfg.smtp_password
+  }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

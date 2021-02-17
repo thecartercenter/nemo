@@ -5,8 +5,8 @@ require "rails_helper"
 feature "settings regenerable fields", js: true do
   include_context "regenerable fields"
 
-  let!(:user) { create(:user) }
   let!(:mission) { get_mission }
+  let!(:user) { create(:user, role_name: :coordinator, mission: get_mission) }
 
   before do
     login(user)

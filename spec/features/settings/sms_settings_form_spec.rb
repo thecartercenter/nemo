@@ -3,7 +3,7 @@
 require "rails_helper"
 
 feature "sms settings form", :sms do
-  let(:mission) { create(:mission, setting: setting) }
+  let(:mission) { create(:mission) }
   let(:user) { create(:user, admin: true) }
 
   before do
@@ -11,12 +11,10 @@ feature "sms settings form", :sms do
   end
 
   context "twilio" do
-    context "with no prior settings" do
-      let(:setting) do
-        build(:setting,
-          twilio_phone_number: nil,
-          twilio_account_sid: nil,
-          twilio_auth_token: nil)
+    context "with no prior twilio settings" do
+      before do
+        mission.setting.update!(default_outgoing_sms_adapter: nil, twilio_phone_number: nil,
+                                twilio_account_sid: nil, twilio_auth_token: nil)
       end
 
       scenario "filling in account sid only should error" do
@@ -50,8 +48,6 @@ feature "sms settings form", :sms do
   end
 
   context "generic sms" do
-    let(:setting) { build(:setting) }
-
     scenario "filling in sms settings should catch errors and work" do
       visit("/en/m/#{mission.compact_name}/settings")
       fill_in("setting_generic_sms_config_str", with: "{")
@@ -65,6 +61,22 @@ feature "sms settings form", :sms do
       # Ensure save was successful.
       expect(page).to have_content("Settings updated successfully")
       expect(find("#setting_generic_sms_config_str").value).to match(/"params":/)
+    end
+  end
+
+  context "admin mode" do
+    # Some SMS settings are visible in admin mode
+    scenario "filling in twilio settings should work" do
+      visit("/en/admin/settings")
+      expect(page).not_to have_content("Frontline SMS")
+      expect(page).not_to have_content("Generic SMS")
+      fill_in("setting_twilio_account_sid", with: "abc")
+      click_link("Change Auth Token")
+      fill_in("setting_twilio_auth_token1", with: "jfjfjfjf")
+      click_button("Save")
+      expect(page).to have_content("Settings updated successfully")
+      expect(find("#setting_twilio_account_sid").value).to eq("abc")
+      expect(find("#setting_twilio_auth_token1").value).to eq(nil)
     end
   end
 end

@@ -34,8 +34,6 @@ describe "mission destroy" do
   let(:after_counts) { before_counts.transform_values { |_| 0 }.to_h }
 
   before do
-    Setting.load_for_mission(mission)
-
     user_groups = create_list(:user_group, 2, mission: mission)
     users.each { |u| create(:user_group_assignment, user: u, user_group: user_groups.sample) }
     users[0].update!(last_mission: mission)

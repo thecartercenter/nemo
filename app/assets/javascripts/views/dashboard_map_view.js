@@ -11,7 +11,7 @@ ELMO.Views.DashboardMapView = class DashboardMapView extends ELMO.Views.Applicat
   // constructor
   initialize(params) {
     this.params = params;
-    this.disabled = params.offline || params.key_missing;
+    this.disabled = params.offline;
     if (this.disabled) {
       this.show_disabled_notice();
     } else {

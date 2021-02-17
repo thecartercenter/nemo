@@ -260,7 +260,8 @@ class ResponsesSearcher < Searcher
     results = OptionNode.none
 
     # Allow matching any translation in the mission's locales.
-    configatron.preferred_locales.each do |locale|
+    mission_config = Setting.for_mission(scope[:mission])
+    mission_config.preferred_locales.each do |locale|
       results = results.or(possibilities.where("LOWER(options.name_translations ->> ?) = ?", locale, value))
     end
 

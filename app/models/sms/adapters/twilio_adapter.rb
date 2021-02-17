@@ -8,7 +8,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   end
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(request)
+  def self.recognize_receive_request?(request, config:)
     request.headers.include?(header_signature_name)
   end
 
@@ -26,6 +26,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     dry_run = Rails.env.test? if dry_run.nil?
 
     prepare_message_for_delivery(message)
+    log_delivery(message)
 
     params = {from: message.from, to: message.to, body: message.body}
     Rails.logger.info("Sending Twilio message: #{params}")
