@@ -100,10 +100,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_record_query_trace (1.8)
-      globalid (>= 0.3.6)
     activejob (6.1.1)
       activesupport (= 6.1.1)
+      globalid (>= 0.3.6)
     activemodel (6.1.1)
       activesupport (= 6.1.1)
     activemodel-serializers-xml (1.0.2)
@@ -335,7 +334,7 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (1.8.7)
+    i18n (1.8.9)
       concurrent-ruby (~> 1.0)
     i18n-country-translations (1.4.1)
       i18n (>= 0.9.3, < 2)
@@ -655,7 +654,6 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-page_caching (~> 1.1)
-  active_record_query_trace (~> 1.8)
   active_storage_validations!
   activerecord-session_store (~> 1.1)
   acts_as_list

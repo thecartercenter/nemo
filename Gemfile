@@ -182,7 +182,6 @@ group :development, :test do
   # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
 
   # Misc
-  gem "active_record_query_trace", "~> 1.8"
   gem "annotate", "~> 3.1"
   gem "assert_difference", "~> 1.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6"
