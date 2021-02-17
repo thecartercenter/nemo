@@ -23,7 +23,8 @@ class Sms::Adapters::Adapter
 
   # For testing.
   def self.deliveries
-    @@deliveries ||= []
+    # We want this to be inherited by all subclasses so we want a class var, not a class instance var
+    @@deliveries ||= [] # rubocop:disable Style/ClassVars
   end
 
   def initialize(config:)
