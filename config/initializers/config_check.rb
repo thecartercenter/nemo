@@ -37,11 +37,11 @@ if Rails.env.production? && File.split($PROGRAM_NAME).last != "rake"
     end
 
     if Cnfg.recaptcha_public_key.match?(/yyyyyyyy/)
-      abort("NEMO_RECAPTCHA_PUBLIC_KEY must be set to real value in production")
+      # abort("NEMO_RECAPTCHA_PUBLIC_KEY must be set to real value in production")
     end
 
     if Cnfg.recaptcha_public_key.match?(/xxxxxxxx/)
-      abort("NEMO_RECAPTCHA_PRIVATE_KEY must be set to real value in production")
+      # abort("NEMO_RECAPTCHA_PRIVATE_KEY must be set to real value in production")
     end
 
     if Cnfg.google_maps_key.match?(/XXXXXXXX/)
