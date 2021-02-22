@@ -47,8 +47,9 @@ module ODK
         # we won't be allowed to proceed since it won't be possible to fill in the question.
         # Also, this question will appear again in a regular row so it would be weird
         # to link it to the same instance node twice.
-        # Instead we use the parent group's header node, which never holds any value.
-        "header"
+        # Instead we use a special bind tag that only gets included if we're in grid mode
+        # (see the labels_bind_tag method in QingGroupDecorator).
+        "labels"
       else
         odk_code
       end

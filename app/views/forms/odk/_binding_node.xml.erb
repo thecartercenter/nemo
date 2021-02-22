@@ -7,6 +7,7 @@
 <% else %>
   <%= node.bind_tag(xpath_prefix: xpath_prefix) %>
   <%= node.header_bind_tag(xpath_prefix: xpath_prefix) %>
+  <%= node.labels_bind_tag(xpath_prefix: xpath_prefix) %>
   <% node.enabled_children.each do |child| %>
     <%= render("forms/odk/binding_node", node: child, parent: node, xpath_prefix: node.xpath(xpath_prefix)) %>
   <% end %>

@@ -44,6 +44,11 @@ module ODK
       tag(:bind, nodeset: "#{xpath(xpath_prefix)}/header", readonly: "true()", type: "string")
     end
 
+    def labels_bind_tag(xpath_prefix: "/data")
+      return +"" if root? || !render_as_grid?
+      tag(:bind, nodeset: "#{xpath(xpath_prefix)}/labels", type: "string")
+    end
+
     # The general structure for a group is:
     # group tag
     #   label
