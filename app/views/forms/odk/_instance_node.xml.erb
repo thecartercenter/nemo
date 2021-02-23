@@ -5,10 +5,11 @@
   <% end %>
 <% else %>
   <%# ODK throws a null object reference error if we put jr:template on an
-      instance element with no children (other than <header/>). %>
+      instance element with no children (other than <header/> and <labels/>). %>
   <%= conditional_tag(node.odk_code, !node.root?,
         node.repeatable? && node.children? ? {"jr:template" => ""} : nil) do %>
     <%= tag(:header) unless node.root? %>
+    <%= tag(:labels) if node.render_as_grid? %>
     <% node.enabled_children.each do |child| %>
       <%= render "forms/odk/instance_node", node: child %>
     <% end %>
