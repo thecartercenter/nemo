@@ -7,7 +7,6 @@ feature "forms", js: true do
   let(:form) do
     create(:form, name: "Foo", question_types: %w[integer multilevel_select_one select_one integer])
   end
-  let(:forms_path) { "/en/m/#{form.mission.compact_name}/forms" }
 
   # Allow longer delays because specs were failing on CI.
   let(:longer_wait_time) { 120 }
@@ -16,14 +15,11 @@ feature "forms", js: true do
     login(user)
   end
 
-  describe "print from index" do
+  shared_examples_for "shows tips and prints" do
     context "first time" do
-      before do
-        visit(forms_path)
-        page.execute_script("localStorage.removeItem('form_print_format_tips_shown')")
-      end
-
       it "should work and show tip" do
+        visit(url)
+        page.execute_script("localStorage.removeItem('form_print_format_tips_shown')")
         using_wait_time longer_wait_time do
           find("a.print-link").click
           expect(page).to have_css("h4", text: "Print Format Tips")
@@ -32,20 +28,16 @@ feature "forms", js: true do
           wait_for_load
 
           # Should still be on same page.
-          expect(current_url).to end_with("forms")
+          expect(current_url).to match(url)
         end
       end
     end
 
     context "with shown flag set" do
-      before do
-        visit(forms_path)
-
+      it "should not show tip" do
+        visit(url)
         date = Time.zone.today.strftime("%Y-%m-%d")
         page.execute_script("localStorage.setItem('form_print_format_tips_shown', '#{date}')")
-      end
-
-      it "should not show tip" do
         using_wait_time longer_wait_time do
           find("a.print-link").click
           wait_for_load
@@ -53,5 +45,20 @@ feature "forms", js: true do
         end
       end
     end
+  end
+
+  describe "print from index" do
+    let(:url) { "/en/m/#{form.mission.compact_name}/forms" }
+    it_behaves_like "shows tips and prints"
+  end
+
+  describe "print from form show page" do
+    let(:url) { "/en/m/#{form.mission.compact_name}/forms/#{form.id}" }
+    it_behaves_like "shows tips and prints"
+  end
+
+  describe "print from form edit page" do
+    let(:url) { "/en/m/#{form.mission.compact_name}/forms/#{form.id}/edit" }
+    it_behaves_like "shows tips and prints"
   end
 end

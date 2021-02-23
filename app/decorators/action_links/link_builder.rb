@@ -18,29 +18,30 @@ module ActionLinks
       return nil if object.new_record?
       h.content_tag(:div, class: "top-action-links d-print-none") do
         safe_str << actions.map do |action|
-          action, url, method = unpack_action(action)
+          action, url, method, data = unpack_action(action)
           next unless url && can?(action, object)
+          data[:confirm] = delete_warning if action == :destroy
           h.link_to(h.icon_tag(action) << translate_action(action), url,
-            method: method, data: {confirm: action == :destroy ? delete_warning : nil},
-            class: "#{action.to_s.dasherize}-link")
+            method: method, data: data, class: "#{action.to_s.dasherize}-link")
         end.compact.reduce(:<<)
       end
     end
 
     private
 
-    # Takes the action params provided and returns a three element array of form [action, url, method]
+    # Takes the action params provided and returns a 4-element array of form [action, url, method, data]
     def unpack_action(params)
       if params.is_a?(Array)
         if params[1].is_a?(Hash)
           method = params[1][:method] || method_for_action(params[0])
           url = params[1][:url] || url_for_action(params[0], method)
-          [params[0], url, method]
+          data = params[1][:data] || {}
+          [params[0], url, method, data]
         else
-          params << method_for_action(params[0])
+          params << method_for_action(params[0]) << {}
         end
       else
-        [params, url_for_action(params), method_for_action(params)]
+        [params, url_for_action(params), method_for_action(params), {}]
       end
     end
 
