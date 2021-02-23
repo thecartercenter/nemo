@@ -18,7 +18,7 @@ module ElmoFormHelper
     args << merge_options(defaults, options)
 
     # Init code for the generic view that manages the form hints.
-    hint_view = javascript_tag("$(function() { new ELMO.Views.FormHintView({el: '.#{specific_class}'}); })")
+    hint_view = javascript_tag("$(function() { new ELMO.Views.FormHintView() })")
 
     form_for(obj, *args, &block) << hint_view
   end
@@ -62,8 +62,9 @@ module ElmoFormHelper
         ""
       else
         link ||= content_tag(:i, "", class: "hint fa fa-2x fa-info-circle")
-        content_tag(:a, link, tabindex: -1, role: "button", "data-trigger": "focus", rel: "popover",
-                              class: "hint", "data-content": content)
+        content_tag(:a, link, tabindex: -1, role: "button", class: "hint",
+                              "data-trigger": "manual", "data-toggle": "popover",
+                              "data-content": content)
       end
     end
   end
