@@ -104,8 +104,10 @@ describe ODK::NamePatternParser do
     end
 
     context "with quoted string containing $" do
-      let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
-      it { is_expected.to eq(%{<output value="myfunc((5 + 12) / (#{q1path}), &#39; (($money cash&#39;)" />}) }
+      let(:pattern) { "calc(myfunc((5 + 12) div $Q1, ' (($money cash'))" }
+      it do
+        is_expected.to eq(%{<output value="myfunc((5 + 12) div (#{q1path}), &#39; (($money cash&#39;)" />})
+      end
     end
 
     context "with invalid code" do

@@ -163,8 +163,8 @@ describe ODK::ResponsePatternParser do
       end
 
       context "with quoted string containing $" do
-        let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
-        it { is_expected.to eq("myfunc((5 + 12) / (/data/#{q1.odk_code}), ' (($money cash')") }
+        let(:pattern) { "calc(myfunc((5 + 12) div $Q1, ' (($money cash'))" }
+        it { is_expected.to eq("myfunc((5 + 12) div (/data/#{q1.odk_code}), ' (($money cash')") }
       end
 
       context "with invalid code" do
