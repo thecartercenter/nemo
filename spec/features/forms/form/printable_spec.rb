@@ -20,7 +20,7 @@ feature "forms", js: true do
       it "should work and show tip" do
         visit(url)
         page.execute_script("localStorage.removeItem('form_print_format_tips_shown')")
-        using_wait_time longer_wait_time do
+        using_wait_time(longer_wait_time) do
           find("a.print-link").click
           expect(page).to have_css("h4", text: "Print Format Tips")
 
@@ -38,7 +38,7 @@ feature "forms", js: true do
         visit(url)
         date = Time.zone.today.strftime("%Y-%m-%d")
         page.execute_script("localStorage.setItem('form_print_format_tips_shown', '#{date}')")
-        using_wait_time longer_wait_time do
+        using_wait_time(longer_wait_time) do
           find("a.print-link").click
           wait_for_load
           expect(page).not_to have_css("h4", text: "Print Format Tips")
@@ -60,5 +60,23 @@ feature "forms", js: true do
   describe "print from form edit page" do
     let(:url) { "/en/m/#{form.mission.compact_name}/forms/#{form.id}/edit" }
     it_behaves_like "shows tips and prints"
+  end
+
+  context "when viewing print media" do
+    let(:url) { "/en/m/#{form.mission.compact_name}/forms" }
+
+    it "should have form title" do
+      visit(url)
+
+      using_wait_time(longer_wait_time) do
+        find("a.print-link").click
+        click_button("OK")
+        wait_for_load
+      end
+
+      with_print_emulation do
+        expect(page).to have_css("h1", text: "Foo")
+      end
+    end
   end
 end

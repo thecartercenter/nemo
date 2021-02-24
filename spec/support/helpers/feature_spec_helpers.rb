@@ -207,4 +207,12 @@ module FeatureSpecHelpers
       text;
     })
   end
+
+  def with_print_emulation
+    bridge = Capybara.current_session.driver.browser.send(:bridge)
+    path = "/session/#{bridge.session_id}/chromium/send_command"
+    bridge.http.call(:post, path, cmd: "Emulation.setEmulatedMedia", params: {media: "print"})
+    yield
+    bridge.http.call(:post, path, cmd: "Emulation.setEmulatedMedia", params: {media: ""})
+  end
 end

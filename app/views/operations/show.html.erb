@@ -1,4 +1,4 @@
-<% @title_args = { name: @operation.name } %>
+<% @title_args = {name: @operation.name} %>
 <%= elmo_form_for(@operation) do |f| %>
   <%= ActionLinks::LinkBuilder.new(@operation, %i[destroy]) %>
   <%= f.field :id %>

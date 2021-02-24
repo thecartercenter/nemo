@@ -4,7 +4,8 @@
 <html dir="<%= current_direction %>">
 <head>
   <title>
-    <%= current_mission_config.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %>
+    <%= [current_mission_config.site_name,
+         title(text_only: true, **(@title_args || {}))].compact.join(": ") %>
   </title>
 
   <%= main_stylesheet_tag(params) %>
@@ -111,7 +112,7 @@
     <%= yield(:alerts) %>
     <% unless @dont_print_title %>
       <div id="title-container">
-        <%= h1_title(content: yield(:title_content)) %>
+        <%= h1_title(content: yield(:title_content), **(@title_args || {})) %>
       </div>
     <% end %>
     <%= body %>

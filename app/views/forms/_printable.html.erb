@@ -1,7 +1,9 @@
-<div id="printable_form" class="d-none d-print-block">
+<div id="printable-form" class="d-none d-print-block">
   <%= logo_image(style: :dark, class: "logo") %>
-  <h1 class="title"><%= title(name_only: true) %></h1>
-  <div class="mission"><%= current_mission.try(:name) || "[#{t('form.no_mission')}]" %></div>
+  <h1 class="title">
+    <%= title(name_only: true, name: @form.name, standardized: @form.standardized?) %>
+  </h1>
+  <div class="mission"><%= current_mission&.name || "[#{t('form.no_mission')}]" %></div>
   <table>
     <tr>
       <td class="name"><%= Response.human_attribute_name("user_id") %></td>

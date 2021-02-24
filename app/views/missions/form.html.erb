@@ -1,4 +1,4 @@
-<% @title_args = {:name => @mission.name} %>
+<% @title_args = {name: @mission.name} %>
 
 <%= elmo_form_for(@mission) do |f| %>
   <%= ActionLinks::LinkBuilder.new(@mission, %i[edit destroy]) %>
