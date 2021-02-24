@@ -187,12 +187,8 @@ class Question < ApplicationRecord
     forms.count
   end
 
-  def answer_count
-    standard? ? copies.to_a.sum(&:answer_count) : response_nodes.count
-  end
-
   def data?
-    answer_count.positive?
+    response_nodes.exists?
   end
 
   def in_use?

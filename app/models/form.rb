@@ -303,24 +303,6 @@ class Form < ApplicationRecord
     update_columns(downloads: 0, published_changed_at: Time.current)
   end
 
-  # efficiently gets the number of answers for the given questioning on this form
-  # returns zero if form is standard
-  def qing_answer_count(qing)
-    return 0 if standard?
-
-    @answer_counts ||= Questioning.find_by_sql([%{
-      SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
-      FROM form_items
-        LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id
-          AND form_items.type = 'Questioning'
-      WHERE form_items.form_id = ?
-      GROUP BY form_items.id
-    }, id]).index_by(&:id)
-
-    # get the desired count
-    @answer_counts[qing.id].try(:answer_count) || 0
-  end
-
   private
 
   def init_downloads
