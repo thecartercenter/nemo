@@ -57,7 +57,7 @@ class Questioning < FormItem
     :first_leaf_option_node, :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels,
     :min_max_error_msg, :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name,
     :option_set_id, :option_set_id=, :option_set, :option_set=, :options, :preordered_option_nodes,
-    :printable?, :qtype_name, :qtype_name=, :qtype, :select_options,
+    :printable?, :qtype_name, :qtype_name=, :qtype,
     :sms_formatting_as_appendix?, :sms_formatting_as_text?, :standardized?, :subqings, :tags,
     :temporal?, :textual?, :title, :metadata_type, :reference, :select_multiple?,
     to: :question
@@ -76,15 +76,8 @@ class Questioning < FormItem
     form.not_draft?
   end
 
-  # checks if this form has any answers
-  # uses the form.qing_answer_count method because these requests tend to come in batches so better
-  # to fetch the counts for all qings on the form at once
   def data?
-    form.qing_answer_count(self).positive?
-  end
-
-  def answer_count
-    answers.count
+    answers.exists?
   end
 
   def conditions_changed?

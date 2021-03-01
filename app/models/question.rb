@@ -177,22 +177,13 @@ class Question < ApplicationRecord
     location_type? || qtype_name == "select_one" && option_set.geographic?
   end
 
-  # DEPRECATED: this method should go away later
-  def select_options
-    (first_level_options || []).map { |o| [o.name, o.id] }
-  end
-
   # gets the number of forms which with this question is directly associated
   def form_count
     forms.count
   end
 
-  def answer_count
-    standard? ? copies.to_a.sum(&:answer_count) : response_nodes.count
-  end
-
   def data?
-    answer_count.positive?
+    response_nodes.exists?
   end
 
   def in_use?

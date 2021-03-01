@@ -22,7 +22,6 @@ module OptionSetsHelper
       # only show the first 3 options as there could be many many
       option_set.options[0...3].collect(&:name).join(", ") + (option_set.options.size > 3 ? ", ..." : "")
     when "questions" then option_set.questions_count
-    when "answers" then number_with_delimiter(option_set.answer_count)
     when "actions"
       # add a clone link if auth'd
       if can?(:clone, option_set)

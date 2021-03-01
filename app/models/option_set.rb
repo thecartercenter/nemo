@@ -209,10 +209,6 @@ class OptionSet < ApplicationRecord
     standard? ? copies.to_a.sum(&:question_count) : 0
   end
 
-  def answer_count
-    standard? ? copies.to_a.sum(&:answer_count) : questionings.to_a.sum(&:answer_count)
-  end
-
   # gets all forms to which this option set is linked (through questionings)
   def forms
     questionings.collect(&:form).uniq
