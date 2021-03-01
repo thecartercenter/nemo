@@ -49,6 +49,12 @@ feature "form hints", js: true do
   def expect_hint_to_show_and_hide(selector:, text:)
     find(selector).click
     expect(page).to have_content(text)
+
+    # Clicking on the popover itself shouldn't hide the popover.
+    find("div.popover-body").click
+    expect(page).to have_content(text)
+
+    # Clicking elsewhere on the page should hide the popover.
     find("body").click
     expect(page).not_to have_content(text)
   end
