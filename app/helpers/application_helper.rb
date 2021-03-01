@@ -135,49 +135,35 @@ module ApplicationHelper
     pluralize_model(model, count: 1)
   end
 
-  # gets or constructs the page title from the translation file or from an explicitly set @title
-  # returns empty string if no translation found and no explicit title set
-  # looks for special :standard option in @title_args, shows seal if set
-  # options[:text_only] - don't return any images or html
-  def title(options = {})
-    # use explicit title if given
+  # Gets or constructs the page title from the translation file or from an explicitly set @title.
+  # returns nil if no translation found and no explicit title set
+  def title(text_only: false, name_only: false, standardized: false, name: nil, **i18n_params)
     return @title unless @title.nil?
 
-    @title_args ||= {}
-
-    # if action specified outright, use that
-    action = @title_action ||
-      case action_name
-      when "update" then "edit"
-      when "create" then "new"
-      else action_name
-      end
-
-    "".html_safe.tap do |ttl|
+    safe_str.tap do |result|
       model_name = controller_name.classify.downcase
 
       # Add standard icon if appropriate
-      ttl << std_icon(@title_args[:standardized]) unless options[:text_only]
+      result << std_icon(standardized) unless text_only
 
       # Add object type icon where appropriate
-      if !options[:text_only] && IconHelper::FONT_AWESOME_ICON_MAPPINGS.include?(model_name.to_sym)
-        ttl << icon_tag(model_name)
+      if !text_only && IconHelper::FONT_AWESOME_ICON_MAPPINGS.include?(model_name.to_sym)
+        result << icon_tag(model_name)
       end
 
-      # add text
-      ttl << if options[:name_only]
-               @title_args[:name]
-             else
-               options = {scope: "page_titles.#{controller_name}", default: [:all, ""]}
-                 .merge(@title_args || {})
-               t(action, **options)
-             end
+      result << if name_only
+                  name
+                else
+                  i18n_params[:name] = name
+                  params = {scope: "page_titles.#{controller_name}", default: [:all, ""]}.merge(i18n_params)
+                  t(action_name, **params)
+                end
     end
   end
 
-  def h1_title(content: "")
+  def h1_title(content: "", **args)
     content_tag(:h1, class: "title") do
-      title << content
+      title(**args) << content
     end
   end
 
