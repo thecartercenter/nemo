@@ -3,9 +3,7 @@
 # Check key settings in production to make sure they have safe and sensible values.
 
 # rubocop:disable Style/IfUnlessModifier
-# Don't abort if we're running via a rake task b/c we need to be able to run migrations on deploy
-# since migrations will copy the config to .env.
-if Rails.env.production? && File.split($PROGRAM_NAME).last != "rake"
+if Rails.env.production?
   secret_key_base = Rails.configuration.secret_key_base
   if secret_key_base.blank? || secret_key_base.match?(/XXXXXXXXXXXXXXXX/)
     abort("NEMO_SECRET_KEY_BASE must be set to a real value")
