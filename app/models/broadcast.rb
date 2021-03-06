@@ -76,6 +76,7 @@ class Broadcast < ApplicationRecord
 
   # Delivers broadcast and catches any errors.
   # Re-raises the first error raised (if any) so the job can handle it.
+  # Both Email and SMS?
   def deliver
     errors = []
     errors << deilver_emails_and_return_any_errors

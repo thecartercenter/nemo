@@ -55,6 +55,8 @@ class BroadcastsController < ApplicationController
 
   def show
     # We need to include all medium options in case this is an old broadcast and the options have changed.
+    # TODO: Server side validation for if there's no SMS adapater?
+    # Yes already in broadcaster. Make sure there's a test case.
     @medium_options = Broadcast::MEDIUM_OPTIONS
     render(:form)
   end
