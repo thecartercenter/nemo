@@ -10,7 +10,9 @@ class MoveDefaultSettingsToRootConfig < ActiveRecord::Migration[6.0]
     root_setting.twilio_auth_token = fetch_default_setting(:twilio_auth_token) || "FALLBACK"
     root_setting.twilio_phone_number = fetch_default_setting(:twilio_phone_number)
     root_setting.frontlinecloud_api_key = fetch_default_setting(:frontlinecloud_api_key)
-    root_setting.save!
+    if !root_setting.save
+      raise "Something more explicit"
+    end
   end
 
   private
