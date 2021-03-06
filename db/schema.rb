@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_10_204713) do
+ActiveRecord::Schema.define(version: 2021_03_06_010516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -261,11 +261,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_204713) do
   create_table "media_objects", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "answer_id"
     t.datetime "created_at", null: false
-    t.string "item_content_type", limit: 255
-    t.string "item_file_name", limit: 255
-    t.integer "item_file_size"
-    t.string "item_legacy_url"
-    t.datetime "item_updated_at"
     t.string "type", limit: 255, null: false
     t.datetime "updated_at", null: false
     t.index ["answer_id"], name: "index_media_objects_on_answer_id"
@@ -283,12 +278,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_204713) do
   end
 
   create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.string "attachment_content_type"
-    t.string "attachment_download_name"
-    t.string "attachment_file_name"
-    t.integer "attachment_file_size"
-    t.string "attachment_legacy_url"
-    t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.uuid "creator_id"
     t.string "details", limit: 255, null: false
@@ -372,11 +361,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_204713) do
     t.boolean "key", default: false, null: false
     t.decimal "maximum", precision: 15, scale: 8
     t.boolean "maxstrictly"
-    t.string "media_prompt_content_type"
-    t.string "media_prompt_file_name"
-    t.integer "media_prompt_file_size"
-    t.string "media_prompt_legacy_url"
-    t.datetime "media_prompt_updated_at"
     t.string "metadata_type"
     t.decimal "minimum", precision: 15, scale: 8
     t.boolean "minstrictly"
@@ -456,12 +440,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_204713) do
     t.boolean "incomplete", default: false, null: false
     t.uuid "mission_id", null: false
     t.string "odk_hash", limit: 255
-    t.text "odk_xml"
-    t.string "odk_xml_content_type"
-    t.string "odk_xml_file_name"
-    t.bigint "odk_xml_file_size"
-    t.string "odk_xml_legacy_url"
-    t.datetime "odk_xml_updated_at"
     t.integer "old_id"
     t.boolean "reviewed", default: false, null: false
     t.uuid "reviewer_id"
@@ -486,11 +464,6 @@ ActiveRecord::Schema.define(version: 2021_02_10_204713) do
 
   create_table "saved_uploads", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "file_content_type"
-    t.string "file_file_name"
-    t.integer "file_file_size"
-    t.string "file_legacy_url"
-    t.datetime "file_updated_at"
     t.datetime "updated_at", null: false
   end
 

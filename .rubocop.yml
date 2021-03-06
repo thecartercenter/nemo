@@ -156,6 +156,10 @@ Rails:
 Rails/HelperInstanceVariable:
   Enabled: false
 
+# This is annoying to do and doesn't really help in most cases.
+Rails/BulkChangeTable:
+  Enabled: false
+
 RSpec/Rails/Output:
   Enabled: true
   Exclude:
