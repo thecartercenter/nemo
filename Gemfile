@@ -42,7 +42,7 @@ gem "uglifier", "~> 4.2"
 gem "webpacker", "~> 4.2"
 
 # Authz and Authn
-gem "activerecord-session_store", "~> 1.1"
+gem "activerecord-session_store", "~> 2.0"
 gem "authlogic", "~> 6.1"
 gem "cancancan", "~> 3.1"
 gem "draper-cancancan", "~> 1.1"
