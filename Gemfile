@@ -65,6 +65,7 @@ gem "active_storage_validations", github: "cooperka/active_storage_validations",
 gem "aws-sdk-s3", "~> 1.86", require: false
 gem "azure-storage-blob", require: false
 gem "image_processing", "~> 1.12"
+gem "sys-filesystem", "~> 1.4"
 
 # API
 gem "api-pagination", "~> 4.1"
