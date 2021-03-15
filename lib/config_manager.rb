@@ -56,6 +56,14 @@ class ConfigManager
     ENV.fetch("NEMO_URL_PORT").to_i
   end
 
+  # Returns a hash of url options (port, protocol, host). Omits port if it's default for protocol.
+  def url_options
+    options = {protocol: url_protocol, host: url_host}
+    return options if url_protocol == "http" && url_port == 80 || url_protocol == "https" && url_port == 443
+    options[:port] = url_port
+    options
+  end
+
   def smtp_address
     ENV.fetch("NEMO_SMTP_ADDRESS")
   end
@@ -80,12 +88,17 @@ class ConfigManager
     ENV["NEMO_SMTP_PASSWORD"]
   end
 
-  # Returns a hash of url options (port, protocol, host). Omits port if it's default for protocol.
-  def url_options
-    options = {protocol: url_protocol, host: url_host}
-    return options if url_protocol == "http" && url_port == 80 || url_protocol == "https" && url_port == 443
-    options[:port] = url_port
-    options
+  # Returns a hash of SMTP options, omitting anything that's blank
+  # (otherwise, e.g. if `domain` is `nil` then all messages will be rejected).
+  def smtp_options
+    {
+      address: smtp_address,
+      port: smtp_port,
+      domain: smtp_domain,
+      authentication: smtp_authentication,
+      user_name: smtp_user_name,
+      password: smtp_password
+    }.select { |_key, value| value.presence }
   end
 
   def google_maps_key
