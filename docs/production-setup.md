@@ -195,7 +195,7 @@ Entering a functioning email server is important as NEMO relies on email to send
 
 Email is important for NEMO to work properly. To test it, run:
 
-    bundle exec rails console
+    bundle exec rails console -e production
 
 and then enter the following, replacing EMAIL with an email address you can check and that is _different from_ the one you entered for the site's email.
 
