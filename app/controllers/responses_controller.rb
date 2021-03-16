@@ -58,8 +58,8 @@ class ResponsesController < ApplicationController
       # csv output is for exporting responses
       format.csv do
         authorize!(:export, Response)
-
         enqueue_csv_export
+        enqueue_bulk_media_export if params[:response_csv_export_options][:download_media].present?
         prep_operation_queued_flash(:response_csv_export)
         redirect_to(responses_path)
       end
@@ -305,6 +305,18 @@ class ResponsesController < ApplicationController
         end
       end
     end
+  end
+
+  def enqueue_bulk_media_export
+    options = params[:response_csv_export_options].permit(%i[download_media])
+    operation = Operation.new(
+      creator: current_user,
+      mission: current_mission,
+      job_class: BulkMediaDownloadOperationJob,
+      details: t("operation.details.bulk_media_export"),
+      job_params: {search: params[:search], options: options}
+    )
+    operation.enqueue
   end
 
   def enqueue_csv_export

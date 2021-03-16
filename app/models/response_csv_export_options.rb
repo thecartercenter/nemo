@@ -4,7 +4,7 @@
 class ResponseCSVExportOptions
   include ActiveModel::Model
 
-  attr_accessor :long_text_behavior
+  attr_accessor :long_text_behavior, :download_media
 
   LONG_TEXT_BEHAVIOR_OPTIONS = %w[exclude truncate include].freeze
 

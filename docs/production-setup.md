@@ -390,6 +390,7 @@ See the [ActiveStorage Pull Request](https://github.com/thecartercenter/nemo/pul
 1. Check out tag `v12.1`.
 1. If you have a custom theme, be sure to define `NEMO_CUSTOM_THEME_SITE_NAME` in `.env.production.local`. The `broadcast_tag` setting is no longer used (site_name is used instead).
 1. Run `rake db:migrate`. Any previous setting values in `config/initializers/local_config.rb` should be copied to `.env.production.local` by the migration. The old `local_config.rb` file will remain for now, but it will not be used by the app and a deprecation notice will be added to the top.
+1. Run `rake db:seed`.
 1. You may delete the `local_config.rb`, `settings.local.yml`, and `/config/settings/themes/custom.yml` files at this point.
 
 #### Upgrading to latest

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe BulkImageDownloadOperationJob do
+describe BulkMediaDownloadOperationJob do
   let(:user) { create(:user, role_name: "coordinator") }
   let(:operation) { create(:operation, creator: user) }
   let!(:form) { create(:form, name: "foo", question_types: %w[image]) }

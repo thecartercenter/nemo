@@ -23,8 +23,7 @@ feature "responses csv export" do
   scenario "exporting csv" do
     visit(responses_path(params))
 
-    click_link("Export")
-    click_link("CSV Format")
+    click_link("Download CSV")
     expect(page).to(have_content("#{Response.all.length} responses to be exported"))
 
     perform_enqueued_jobs do
@@ -43,5 +42,22 @@ feature "responses csv export" do
     expect(result.size).to(eq(3)) # 2 response rows, 1 header row
     expect(result[1][9]).to(eq("Animal"))
     expect(result[2][9]).to(eq("Plant"))
+  end
+
+  scenario "exporting csv with bulk media download" do
+    visit(responses_path(params))
+    click_link("Download CSV")
+    expect(page).to(have_content("#{Response.all.length} responses to be exported"))
+
+    perform_enqueued_jobs do
+      check("response_csv_export_options[download_media]")
+      click_button("Export")
+    end
+
+    expect(page).to(have_content("Response CSV export queued"))
+    click_link("operations panel")
+    expect(page).to(have_content("Bulk Media export"))
+    expect(page).to(have_content("Response CSV export"))
+    expect(page).to(have_content("Success"))
   end
 end
