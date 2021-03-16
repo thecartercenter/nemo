@@ -117,6 +117,7 @@ git checkout develop
     1. On Linux: `sudo -u postgres psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
     1. On Mac with Homebrew: `psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
 1. Load the database schema: `bundle exec rake db:schema:load`.
+1. Seed the database: `bundle exec rake db:seed`.
 1. Pre-process the theme SCSS files: `bundle exec rake theme:preprocess`
 1. Create an admin account: `bundle exec rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it and use on your first login).
 1. Optionally, you can create some fake data to get things rolling by running `bundle exec rake db:create_fake_data`.

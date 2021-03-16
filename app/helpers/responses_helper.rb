@@ -4,13 +4,22 @@
 module ResponsesHelper
   def responses_index_links(responses)
     links = []
+
+    if responses.present? && can?(:export, Response)
+      links << link_to(t("response.download_csv"), "#",
+        id: "export-csv-link", class: "batch-link")
+    end
+
     links << batch_op_link(
       name: t("action_links.destroy"),
       path: bulk_destroy_responses_path(search: params[:search]),
       confirm: "response.bulk_destroy_confirm"
     )
     links << link_divider
-    links << export_dropdown(responses) if can?(:export, Response)
+
+    links << link_to(t("response.connect_odata"), "#", id: "export-odata-link")
+
+    # links << export_dropdown(responses) if can?(:export, Response)
     links
   end
 

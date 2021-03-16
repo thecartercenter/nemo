@@ -7,6 +7,7 @@ en:
       response_csv_export: "Response CSV export"
       broadcast: "Broadcast '%{message}'"
       cache_odata: "Refreshing API data"
+      bulk_media_export: "Bulk Media export"
     notes:
       remaining: "Remaining"
     operations_panel: "Operations Panel"
@@ -43,3 +44,4 @@ en:
     see_error_report: "See error report"
     result_link_text:
       response_csv_export: "Download CSV"
+      bulk_image_download: "Bulk Media Download"

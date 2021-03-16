@@ -31,8 +31,9 @@ module Utils
 
     def space_on_disk?
       stat = Sys::Filesystem.stat("/")
+      # need to leave space for images, zip file, and copy of zip file while attaching to operation
       space_left = bytes_to_mb(stat.block_size * stat.blocks_available) -
-        bytes_to_mb(calculate_media_size)
+        bytes_to_mb(calculate_media_size * 2)
       space_left >= DISK_ALLOWANCE
     end
 
