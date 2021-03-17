@@ -8,7 +8,7 @@ class BulkMediaDownloadOperationJob < OperationJob
     ability = Ability.new(user: operation.creator, mission: mission)
     packager = Utils::BulkMediaPackager.new(ability: ability, search: search, operation: operation)
 
-    raise "Not enough space on disk for media export" unless packer.space_on_disk?
+    raise "Not enough space on disk for media export" unless packager.space_on_disk?
 
     result = packager.download_and_zip_images
     save_attachment(File.open(result.to_s), result.basename)
