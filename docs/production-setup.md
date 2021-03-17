@@ -393,6 +393,10 @@ See the [ActiveStorage Pull Request](https://github.com/thecartercenter/nemo/pul
 1. Run `rake db:seed`.
 1. You may delete the `local_config.rb`, `settings.local.yml`, and `/config/settings/themes/custom.yml` files at this point.
 
+#### Upgrading to v12.3
+
+1. After upgrading, run `rake db:sessions:upgrade` to address [this possible vulnerability](https://github.com/rails/activerecord-session_store/blob/master/README.md#cve-2019-25025-mitigation) in a 3rd-party library.
+
 #### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.
