@@ -10,7 +10,7 @@ module Utils
     include ActiveModel::Model
     # Space we want to leave on disk in mib
     DISK_ALLOWANCE = 2048
-    TMP_DIR = "tmp/bulk_images"
+    TMP_DIR = "tmp/bulk_media"
 
     attr_accessor :ability, :search, :operation
 
@@ -43,7 +43,7 @@ module Utils
       media_ids = media_objects_scope.pluck("media_objects.id")
 
       zipfile_name = Rails.root.join(TMP_DIR,
-        "bulk_images_archive_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M-%S')}.zip")
+        "bulk_media_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M-%S')}.zip")
 
       Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
         media_ids.each do |media_id|
