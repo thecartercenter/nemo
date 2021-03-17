@@ -8,7 +8,7 @@ module Utils
   # Utility to support a bulk image download operation
   class BulkMediaPackager
     include ActiveModel::Model
-    # Space we want to leave on disk in mb in base 2
+    # Space we want to leave on disk in mib
     DISK_ALLOWANCE = 2048
     TMP_DIR = "tmp/bulk_images"
 
@@ -32,14 +32,13 @@ module Utils
     def space_on_disk?
       stat = Sys::Filesystem.stat("/")
       # need to leave space for images, zip file, and copy of zip file while attaching to operation
-      space_left = bytes_to_mb(stat.block_size * stat.blocks_available) -
-        bytes_to_mb(calculate_media_size * 2)
+      space_left = bytes_to_mib(stat.block_size * stat.blocks_available) -
+        bytes_to_mib(calculate_media_size * 2)
       space_left >= DISK_ALLOWANCE
     end
 
     def download_and_zip_images
-      Dir.mkdir(Rails.root.join(TMP_DIR)) unless
-        File.exist?(Rails.root.join(TMP_DIR))
+      Dir.mkdir_p(Rails.root.join(TMP_DIR))
 
       media_ids = media_objects_scope.pluck("media_objects.id")
 
@@ -48,14 +47,7 @@ module Utils
 
       Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
         media_ids.each do |media_id|
-          attachment = ::Media::Object.find(media_id).item
-          attachment.open do |file|
-            filename = File.basename(file.path)
-            new_path = Rails.root.join(TMP_DIR, filename)
-            FileUtils.mv(file.path, new_path)
-            zip_entry = Utils::ZipEntry.new(new_path, filename)
-            zipfile.add(zip_entry, new_path)
-          end
+          zip_media(::Media::Object.find(media_id).item, zipfile)
         end
       end
       zipfile_name
@@ -63,11 +55,21 @@ module Utils
 
     private
 
+    def zip_media(attachment, zipfile)
+      attachment.open do |file|
+        filename = File.basename(file.path)
+        new_path = Rails.root.join(TMP_DIR, filename)
+        FileUtils.mv(file.path, new_path)
+        zip_entry = Utils::ZipEntry.new(new_path, filename)
+        zipfile.add(zip_entry, new_path)
+      end
+    end
+
     def apply_search_scope(responses, search, mission)
       ResponsesSearcher.new(relation: responses, query: search, scope: {mission: mission}).apply
     end
 
-    def bytes_to_mb(bytes)
+    def bytes_to_mib(bytes)
       bytes / 1024 / 1024
     end
   end
