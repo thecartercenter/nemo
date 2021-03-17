@@ -38,7 +38,7 @@ module Utils
     end
 
     def download_and_zip_images
-      Dir.mkdir_p(Rails.root.join(TMP_DIR))
+      FileUtils.mkdir_p(Rails.root.join(TMP_DIR))
 
       media_ids = media_objects_scope.pluck("media_objects.id")
 
