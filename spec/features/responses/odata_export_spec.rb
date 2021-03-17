@@ -17,8 +17,7 @@ feature "responses odata export", js: true do
   scenario "exporting odata" do
     visit(responses_path(params))
 
-    click_link("Export")
-    click_link("OData via API")
+    click_link("Connect to OData")
     expect(page).to(have_selector(".widget pre", text: /#{OData::BASE_PATH}/))
 
     find("#copy-btn-api_url").click
