@@ -12,8 +12,9 @@
             <input type="hidden" name="search" value="<%= params[:search] %>" />
             <%= f.field(:long_text_behavior, type: :select, required: true,
                 options: translate_options(ResponseCSVExportOptions::LONG_TEXT_BEHAVIOR_OPTIONS, [:response, :long_text_behavior_options])) %>
-
-            <%= f.field(:download_media, type: :check_box, label: t("response.export_options.download_media")) %>
+            <% if ENV["NEMO_BULK_MEDIA_DOWNLOAD"].present? %>
+              <%= f.field(:download_media, type: :check_box, label: t("response.export_options.download_media")) %>
+            <% end %>
           </div>
         </div>
         <div class="modal-footer">
