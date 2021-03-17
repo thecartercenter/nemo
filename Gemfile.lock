@@ -112,12 +112,6 @@ GEM
     activerecord (6.1.2.1)
       activemodel (= 6.1.2.1)
       activesupport (= 6.1.2.1)
-    activerecord-session_store (2.0.0)
-      actionpack (>= 5.2.4.1)
-      activerecord (>= 5.2.4.1)
-      multi_json (~> 1.11, >= 1.11.2)
-      rack (>= 2.0.8, < 3)
-      railties (>= 5.2.4.1)
     activestorage (6.1.2.1)
       actionpack (= 6.1.2.1)
       activejob (= 6.1.2.1)
@@ -614,7 +608,6 @@ PLATFORMS
 DEPENDENCIES
   actionpack-page_caching (~> 1.1)
   active_storage_validations!
-  activerecord-session_store (~> 2.0)
   acts_as_list
   ancestry!
   annotate (~> 3.1)
