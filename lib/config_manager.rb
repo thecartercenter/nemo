@@ -109,6 +109,10 @@ class ConfigManager
     ENV["NEMO_SCOUT_KEY"]
   end
 
+  def sentry_dsn
+    ENV["NEMO_SENTRY_DSN"]
+  end
+
   def allow_missionless_sms?
     ENV["NEMO_ALLOW_MISSIONLESS_SMS"] == "true"
   end
