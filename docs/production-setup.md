@@ -156,15 +156,10 @@ To switch to the `deploy` user, do:
 
 You shouldn't need to edit `database.yml` if you followed the PostgreSQL setup instructions above.
 
-    cp config/initializers/local_config.rb.example config/initializers/local_config.rb
-    $EDITOR config/initializers/local_config.rb
+    cp .env .env.production.local
+    $EDITOR .env.production.local
 
-Read the comments in the file and enter sensible values for the settings. Then:
-
-    cp config/settings.local.yml.example config/settings.local.yml
-    $EDITOR config/settings.local.yml
-
-Similarly, read the comments in the file and enter sensible values for the settings.
+Read the comments in the file and enter sensible values for the settings.
 
 Entering a functioning email server is important as NEMO relies on email to send broadcasts, and registration info, and password reset requests. Once you have NEMO running, you can test your email setup by creating a new user for yourself and delivering the login instructions via email or by using the password reset feature.
 
@@ -391,7 +386,7 @@ See the [ActiveStorage Pull Request](https://github.com/thecartercenter/nemo/pul
 1. If you have a custom theme, be sure to define `NEMO_CUSTOM_THEME_SITE_NAME` in `.env.production.local`. The `broadcast_tag` setting is no longer used (site_name is used instead).
 1. Run `rake db:migrate`. Any previous setting values in `config/initializers/local_config.rb` should be copied to `.env.production.local` by the migration. The old `local_config.rb` file will remain for now, but it will not be used by the app and a deprecation notice will be added to the top.
 1. Run `rake db:seed`.
-1. You may delete the `local_config.rb`, `settings.local.yml`, and `/config/settings/themes/custom.yml` files at this point.
+1. You may delete the `local_config.rb`, `settings.local.yml`, `.rbenv-vars`, and `/config/settings/themes/custom.yml` files at this point, as everything is unified in `.env.*`.
 
 #### Upgrading to latest
 
@@ -437,10 +432,8 @@ Then:
     bundle exec rake assets:precompile
     bundle exec rake db:migrate
 
-Now be sure to check the [commit history of the local config file](https://github.com/thecartercenter/nemo/commits/develop/config/initializers/local_config.rb.example) and/or run:
-
-    diff config/initializers/local_config.rb.example config/initializers/local_config.rb
-
+Now check the commit history of [the `.env` default config file](https://github.com/thecartercenter/nemo/commits/main/.env)
+(and older now-obsolete files such as [`local_config.rb.example`](https://github.com/thecartercenter/nemo/commits/main/config/initializers/local_config.rb.example) if necessary)
 to see if anything needs to be updated in your local configuration.
 
 Finally:

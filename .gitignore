@@ -6,7 +6,6 @@ log
 tmp/
 railsenv
 config/railsenv
-config/initializers/local_config.rb
 config/database.yml
 config/mysql2postgres.yml
 config/thinking_sphinx.yml
@@ -55,10 +54,6 @@ routes.txt
 
 # Bundle installs
 vendor/bundle/
-
-config/settings.local.yml
-config/settings/*.local.yml
-config/environments/*.local.yml
 
 /public/packs
 /public/packs-test
