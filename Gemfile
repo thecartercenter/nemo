@@ -134,7 +134,6 @@ group :development do
   gem "listen", "~> 3.0"
   # Fork: Rails 6.1 compatibility: https://github.com/voormedia/rails-erd/pull/365
   gem "rails-erd", github: "andrew-newell/rails-erd"
-  gem "spring", "~> 1.3"
   gem "thin", "~> 1.7"
 
   # N+1 detection. Config is in environments/development.rb
