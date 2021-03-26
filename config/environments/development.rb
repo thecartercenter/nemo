@@ -68,6 +68,9 @@ ELMO::Application.configure do
   config.action_view.raise_on_missing_translations = false
   config.i18n.fallbacks = false
 
+  # Enable rack-attack middleware for protecting against brute-force login attempts
+  config.middleware.use(Rack::Attack)
+
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker

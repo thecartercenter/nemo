@@ -15,7 +15,7 @@ gem "friendly_id", "~> 5.1"
 gem "phony", "~> 2.15"
 # Fork: Added ability to disable. TODO: This is 5 years old, look into upgrading.
 # https://github.com/sassafrastech/rack-attack/commits/master
-gem "rack-attack", github: "sassafrastech/rack-attack"
+gem "rack-attack", "~> 6.3"
 gem "rake", "~> 13.0"
 gem "random_data", "~> 1.6" # Deprecated: Use Faker instead
 gem "recaptcha", "~> 3.4", require: "recaptcha/rails" # Small change in v4, we should upgrade eventually.

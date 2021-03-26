@@ -44,13 +44,6 @@ GIT
       rails (>= 5.2)
 
 GIT
-  remote: https://github.com/sassafrastech/rack-attack.git
-  revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
-  specs:
-    rack-attack (4.3.0)
-      rack
-
-GIT
   remote: https://github.com/thecartercenter/ancestry.git
   revision: 201e59bc7523e7fb25950d17bc29261d17216812
   specs:
@@ -376,6 +369,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
+    rack-attack (6.5.0)
+      rack (>= 1.0, < 3)
     rack-proxy (0.6.5)
       rack
     rack-test (1.1.0)
@@ -665,7 +660,7 @@ DEPENDENCIES
   pry-byebug (~> 3.9)
   pry-rails (~> 0.3)
   puma (~> 5.0)
-  rack-attack!
+  rack-attack (~> 6.3)
   rails (~> 6.1.1)
   rails-backbone!
   rails-controller-testing (~> 1.0)
