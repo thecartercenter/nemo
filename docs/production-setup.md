@@ -431,6 +431,7 @@ Then:
     bundle exec whenever -i nemo
     bundle exec rake assets:precompile
     bundle exec rake db:migrate
+    bundle exec rake config:migrate
 
 Now check the commit history of [the `.env` default config file](https://github.com/thecartercenter/nemo/commits/main/.env)
 (and older now-obsolete files such as [`local_config.rb.example`](https://github.com/thecartercenter/nemo/commits/main/config/initializers/local_config.rb.example) if necessary)
