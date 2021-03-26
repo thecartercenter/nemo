@@ -56,5 +56,5 @@ ELMO::Application.configure do
   # Enable rack-attack middleware for protecting against brute-force login attempts,
   # but disable it until needed.
   config.middleware.use(Rack::Attack)
-  Rack::Attack.disable!
+  Rack::Attack.enabled = false
 end

@@ -3,7 +3,7 @@
 class Rack::Attack::Request
   def direct_auth?
     # Match paths starting with "/m/mission_name", but exclude "/m/mission_name/sms" paths
-    return Regexp.last_match(1) !~ /^sms/ if path =~ %r{^/m/[a-z][a-z0-9]*/(.*)$}
+    Regexp.last_match(1) !~ /^sms/ if path =~ %r{^/m/[a-z][a-z0-9]*/(.*)$}
   end
 
   def login_related?
@@ -29,7 +29,8 @@ Rack::Attack.track("login-attempts/ip", limit: proc { 60 },
 end
 
 # Set 'elmo.captcha_required=true' in the Rack env if the rate is exceeded
-ActiveSupport::Notifications.subscribe("rack.attack") do |_, _, _, _, req|
+ActiveSupport::Notifications.subscribe("track.rack_attack") do |_, _, _, _, payload|
+  req = payload[:request]
   if req.login_attempts_exceeded?
     Rails.logger.info("Login attempts per minute exceeded; enabling reCAPTCHA for #{req.ip}")
     req.env["elmo.captcha_required"] = true
