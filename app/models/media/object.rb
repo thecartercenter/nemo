@@ -51,8 +51,6 @@ module Media
       false
     end
 
-    private
-
     # Set a useful filename to assist data analysts who deal with lots of downloads.
     def generate_media_object_filename
       return if item.record.answer_id.nil?
@@ -74,7 +72,7 @@ module Media
     end
 
     def respect_ancestors(answer_group, repeat_groups)
-      repeat_groups << "#{answer_group.group_name}#{answer_group.new_rank + 1}"
+      repeat_groups << "#{answer_group.group_name.gsub(/\s+/, '_')}#{answer_group.new_rank + 1}"
       if answer_group.parent_id.present?
         parent_answer_group = next_agroup_up(answer_group.parent_id)
         if parent_answer_group.present? && parent_answer_group.group_name.present?
