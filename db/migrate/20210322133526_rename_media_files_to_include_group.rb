@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
   def up
     attachments = ActiveStorage::Attachment.where(record_type: "Media::Object")
