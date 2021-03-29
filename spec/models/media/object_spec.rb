@@ -52,13 +52,13 @@ describe Media::Object do
     let(:repeat_form) do
       create(:form,
         question_types:
-          ["integer",                                  # 1
-           {repeating: {name: "Person", items: [
-             "text",                                   # 2
-             {repeating: {name: "Eyes", items: ["image"]}}
-            ]}
-          }]
-        )
+          ["integer",
+           {repeating:
+             {name: "Person",
+              items: [
+                "text",
+                {repeating: {name: "Eyes", items: ["image"]}}
+              ]}}])
     end
 
     let(:media_jpg) { create(:media_image, :jpg) }
