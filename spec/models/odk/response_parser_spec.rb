@@ -500,7 +500,7 @@ describe ODK::ResponseParser do
         expect(Response.count).to eq(1)
         expect(populated.root_node.c.count).to eq(4)
         expect(populated.root_node.c[1].pending_file_name).to be_nil
-        expect(populated.root_node.c[1].media_object.item.filename.to_s).to match(/elmo-.+-.+.jpg/)
+        expect(populated.root_node.c[1].media_object.item.filename.to_s).to match(/nemo-.+-.+.jpg/)
         expect(populated.root_node.c[2].pending_file_name).to eq(media_file_name_2)
         expect(populated.root_node.c[2].media_object).to be_nil
 

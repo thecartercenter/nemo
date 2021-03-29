@@ -63,7 +63,6 @@ describe Media::Object do
 
     let(:media_jpg) { create(:media_image, :jpg) }
     let(:media_png) { create(:media_image, :png) }
-    let(:media_jpg) { create(:media_image, :tiff) }
 
     before do
       create_response(form: repeat_form, answer_values: [
