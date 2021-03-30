@@ -1,8 +1,4 @@
 # frozen_string_literal: true
-
-# rubocop:disable Layout/MultilineHashBraceLayout
-# rubocop:disable Layout/HashAlignment
-# rubocop:disable Style/WordArray
 # == Schema Information
 #
 # Table name: media_objects
@@ -27,6 +23,9 @@
 #
 require "rails_helper"
 
+# rubocop:disable Layout/MultilineHashBraceLayout
+# rubocop:disable Layout/HashAlignment
+# rubocop:disable Style/WordArray
 describe Media::Object do
   let(:media_file) { create(:media_image) }
   let(:responses) { [] }
@@ -103,10 +102,13 @@ describe Media::Object do
     it "should have correct and unique filenames" do
       r = Response.last
       media = r.root_node.c[0].c[0].c
+      # get question code
+      code1 = media_jpg.answer.question.code
+      code2 = media_png.answer.question.code
       filename1 = media[0].media_object.item.blob.filename.to_s
-      expect(filename1).to match(/ImageQ1.jpg/)
+      expect(filename1).to include(code1)
       filename2 = media[1].media_object.item.blob.filename.to_s
-      expect(filename2).to match(/ImageQ2.png/)
+      expect(filename2).to include(code2)
     end
   end
 
