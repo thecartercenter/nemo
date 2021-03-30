@@ -69,10 +69,10 @@ module Media
       if answer_group.present? && answer_group.repeatable?
         repeat_groups = respect_ancestors(answer_group, repeat_groups)
         filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
-        filename += File.extname(item.filename.to_s)
       else
-        filename += "_#{answer.new_rank + 1}_#{item.blob.filename}"
+        filename += "_#{answer.question.code}"
       end
+      filename += File.extname(item.filename.to_s)
       filename
     end
 

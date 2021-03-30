@@ -104,9 +104,9 @@ describe Media::Object do
       r = Response.last
       media = r.root_node.c[0].c[0].c
       filename1 = media[0].media_object.item.blob.filename.to_s
-      expect(filename1).to match(/_1_the_swing.jpg/)
+      expect(filename1).to match(/ImageQ1.jpg/)
       filename2 = media[1].media_object.item.blob.filename.to_s
-      expect(filename2).to match(/_2_the_swing.png/)
+      expect(filename2).to match(/ImageQ2.png/)
     end
   end
 
