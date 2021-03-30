@@ -54,6 +54,7 @@ module Media
     # Set a useful filename to assist data analysts who deal with lots of downloads.
     def generate_media_object_filename
       return if item.record.answer_id.nil?
+      answer = item.record.answer
       filename = "nemo-#{answer.response.shortcode}"
       filename = build_filename(filename, item)
       item.blob.update!(filename: filename)
