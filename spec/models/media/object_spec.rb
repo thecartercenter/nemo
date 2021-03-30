@@ -43,7 +43,6 @@ describe Media::Object do
     it "sets filename after association with answer" do
       expect(media_file.item.filename.to_s).to eq("the_swing.jpg")
       media_file.update!(answer: answer)
-      puts media_file.item.filename.to_s
       expect(media_file.item.filename.to_s).to match(/nemo-.+-.+.jpg/)
     end
   end
@@ -76,8 +75,73 @@ describe Media::Object do
 
     it "should have correct filename" do
       r = Response.last
-      filename = r.root_node.c[1].c[1].c[1].c[0].c[0].media_object.item.blob.filename.to_s
-      expect(filename).to match(/Person2-Eyes1.tiff/)
+      filename1 = r.root_node.c[1].c[1].c[1].c[0].c[0].media_object.item.blob.filename.to_s
+      filename2 = r.root_node.c[1].c[1].c[1].c[1].c[0].media_object.item.blob.filename.to_s
+
+      expect(filename1).to match(/Person2-Eyes1.jpg/)
+      expect(filename2).to match(/Person2-Eyes2.png/)
+    end
+  end
+
+  context "Regular nested groups" do
+    let(:repeat_form) do
+      create(:form,
+        question_types:[
+          [["image", "image"]]
+        ])
+    end
+
+    let!(:media_jpg) { create(:media_image, :jpg) }
+    let!(:media_png) { create(:media_image, :png) }
+
+    before do
+      create_response(form: repeat_form, answer_values: [
+        [[media_jpg, media_png]]
+      ])
+    end
+
+    it "should have correct and unique filenames" do
+      r = Response.last
+      media = r.root_node.c[0].c[0].c
+      filename1 = media[0].media_object.item.blob.filename.to_s
+      expect(filename1).to match(/_1_the_swing.jpg/)
+      filename2 = media[1].media_object.item.blob.filename.to_s
+      expect(filename2).to match(/_2_the_swing.png/)
+    end
+  end
+
+  context "One group, one repeat group" do
+    let(:repeat_form) do
+      create(:form,
+        question_types:[
+          [
+            {repeating:
+              {name: "Person",
+               items: ["image"]
+            }}
+          ]
+        ])
+    end
+
+    let!(:media_jpg) { create(:media_image, :jpg) }
+    let!(:media_png) { create(:media_image, :png) }
+
+    before do
+      create_response(form: repeat_form, answer_values: [
+        [{repeating: [[media_jpg], [media_png]]}]
+      ])
+    end
+
+    it "should have correct and unique filenames" do
+      r = Response.last
+      filename1 = r.root_node.c[0].c[0].c[1].c[0].media_object.item.blob.filename.to_s
+      group_name = r.root_node.c[0].group_name.gsub(/\s+/, "_").to_s
+      expect(filename1).to include(group_name)
+      expect(filename1).to match(/Person2.png/)
+
+      filename2 = r.root_node.c[0].c[0].c[0].c[0].media_object.item.blob.filename.to_s
+      expect(filename2).to include(group_name)
+      expect(filename2).to match(/Person1.jpg/)
     end
   end
 

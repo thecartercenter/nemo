@@ -54,25 +54,32 @@ module Media
     # Set a useful filename to assist data analysts who deal with lots of downloads.
     def generate_media_object_filename
       return if item.record.answer_id.nil?
-
-      repeat_groups = []
-      answer = item.record.answer
-      extension = File.extname(item.filename.to_s)
       filename = "nemo-#{answer.response.shortcode}"
-
-      # build a more complex filename if is nested in repeat groups
-      if answer.parent_group_name.present?
-        answer_group = next_agroup_up(answer.parent_id)
-        repeat_groups = respect_ancestors(answer_group, repeat_groups) if answer_group.repeatable?
-      end
-
-      filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
-      filename += extension
+      filename = build_filename(filename, item)
       item.blob.update!(filename: filename)
     end
 
+    # build a more complex filename if is nested in repeat groups
+    def build_filename(filename, item)
+      repeat_groups = []
+      answer = item.record.answer
+      answer_group = nil
+      answer_group = next_agroup_up(answer.parent_id) if answer.from_group?
+      if answer_group.present? && answer_group.repeatable?
+        repeat_groups = respect_ancestors(answer_group, repeat_groups)
+        filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
+        filename += File.extname(item.filename.to_s)
+      else
+        filename += "_#{answer.new_rank + 1}_#{item.blob.filename}"
+      end
+      filename
+    end
+
+    # returns an array of group name strings from all nested groups
     def respect_ancestors(answer_group, repeat_groups)
-      repeat_groups << "#{answer_group.group_name.gsub(/\s+/, '_')}#{answer_group.new_rank + 1}"
+      name = answer_group.group_name.gsub(/\s+/, "_").to_s
+      name += (answer_group.new_rank + 1).to_s if answer_group.repeatable?
+      repeat_groups << name
       if answer_group.parent_id.present?
         parent_answer_group = next_agroup_up(answer_group.parent_id)
         if parent_answer_group.present? && parent_answer_group.group_name.present?
