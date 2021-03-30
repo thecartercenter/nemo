@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-# rubocop:disable Layout/LineLength
+# rubocop:disable Layout/MultilineHashBraceLayout
+# rubocop:disable Layout/HashAlignment
+# rubocop:disable Style/WordArray
 # == Schema Information
 #
 # Table name: media_objects
@@ -23,8 +25,6 @@
 #
 #  media_objects_answer_id_fkey  (answer_id => answers.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# rubocop:enable Layout/LineLength
-
 require "rails_helper"
 
 describe Media::Object do
@@ -86,7 +86,7 @@ describe Media::Object do
   context "Regular nested groups" do
     let(:repeat_form) do
       create(:form,
-        question_types:[
+        question_types: [
           [["image", "image"]]
         ])
     end
@@ -113,7 +113,7 @@ describe Media::Object do
   context "One group, one repeat group" do
     let(:repeat_form) do
       create(:form,
-        question_types:[
+        question_types: [
           [
             {repeating:
               {name: "Person",
@@ -149,3 +149,7 @@ describe Media::Object do
     responses << create(:response, params)
   end
 end
+
+# rubocop:enable Layout/MultilineHashBraceLayout
+# rubocop:enable Layout/HashAlignment
+# rubocop:enable Style/WordArray
