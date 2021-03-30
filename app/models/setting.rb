@@ -142,8 +142,6 @@ class Setting < ApplicationRecord
   # converts preferred locales to symbols on read
   def preferred_locales
     locales = self["preferred_locales"]
-    # Hack because it's late and I don't know why this is a string on 3/20 servers.
-    locales = JSON.parse(locales) if locales.is_a?(String)
     locales.map(&:to_sym)
   end
 
