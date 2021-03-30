@@ -18,7 +18,6 @@ class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
     return if item.blob.filename.to_s.include?(answer.response.shortcode)
     filename = "nemo-#{answer.response.shortcode}"
     filename = build_filename(filename, item)
-    puts "Filename: #{filename}"
     item.blob.update!(filename: filename)
   end
 
