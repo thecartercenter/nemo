@@ -53,11 +53,10 @@ module Media
 
     private
 
-    # Set a useful filename to assist data analysts who deal with lots of downloads.
-    # Media not in any group: nemo-response-id_question-code
-    # Media in regular group: nemo-responseid_question-code
-    # Media in repeat group: nemo-responseid_repeatgroupname_answer-rank
-    # Media in nested repeat groups: nemo-responseid_repeatgroupname_answer-rank_repeatgroupname_answer-rank
+    # Set a useful filename to assist data analysts who deal with lots of downloads, e.g.:
+    # Media not in any group: nemo-responseId-questionCode
+    # Media in regular group: nemo-responseId-questionCode
+    # Media in repeat group(s): nemo-responseId-repeatGroupName(s)-questionCode
     def generate_media_object_filename
       return if item.record.answer_id.nil?
       answer = item.record.answer
@@ -75,9 +74,8 @@ module Media
       if answer_group.present? && answer_group.repeatable?
         repeat_groups = respect_ancestors(answer_group, repeat_groups)
         filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
-      else
-        filename += "_#{answer.question.code}"
       end
+      filename += "-#{answer.question.code}"
       filename += File.extname(item.filename.to_s)
       filename.gsub(/[^0-9A-Za-z.\-]/, "_")
     end

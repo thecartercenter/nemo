@@ -44,9 +44,8 @@ class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
     if answer_group.present? && answer_group.repeatable?
       repeat_groups = respect_ancestors(answer_group, repeat_groups)
       filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
-    else
-      filename += "_#{answer.question.code}"
     end
+    filename += "-#{answer.question.code}"
     filename += File.extname(item.filename.to_s)
     filename.gsub(/[^0-9A-Za-z.\-]/, "_")
   end

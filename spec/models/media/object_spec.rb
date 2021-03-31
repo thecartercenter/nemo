@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# rubocop:disable Layout/LineLength
 # == Schema Information
 #
 # Table name: media_objects
@@ -21,6 +23,8 @@
 #
 #  media_objects_answer_id_fkey  (answer_id => answers.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Layout/LineLength
+
 require "rails_helper"
 
 # rubocop:disable Layout/MultilineHashBraceLayout
@@ -77,8 +81,8 @@ describe Media::Object do
       filename1 = r.root_node.c[1].c[1].c[1].c[0].c[0].media_object.item.blob.filename.to_s
       filename2 = r.root_node.c[1].c[1].c[1].c[1].c[0].media_object.item.blob.filename.to_s
 
-      expect(filename1).to match(/Person2-Eyes1.jpg/)
-      expect(filename2).to match(/Person2-Eyes2.png/)
+      expect(filename1).to match(/-Person2-Eyes1-.+.jpg/)
+      expect(filename2).to match(/-Person2-Eyes2-.+.png/)
     end
   end
 
@@ -139,11 +143,11 @@ describe Media::Object do
       filename1 = r.root_node.c[0].c[0].c[1].c[0].media_object.item.blob.filename.to_s
       group_name = r.root_node.c[0].group_name.gsub(/\s+/, "_").to_s
       expect(filename1).to include(group_name)
-      expect(filename1).to match(/Person2.png/)
+      expect(filename1).to match(/-Person2-.+.png/)
 
       filename2 = r.root_node.c[0].c[0].c[0].c[0].media_object.item.blob.filename.to_s
       expect(filename2).to include(group_name)
-      expect(filename2).to match(/Person1.jpg/)
+      expect(filename2).to match(/-Person1-.+.jpg/)
     end
   end
 
@@ -151,7 +155,6 @@ describe Media::Object do
     responses << create(:response, params)
   end
 end
-
 # rubocop:enable Layout/MultilineHashBraceLayout
 # rubocop:enable Layout/HashAlignment
 # rubocop:enable Style/WordArray
