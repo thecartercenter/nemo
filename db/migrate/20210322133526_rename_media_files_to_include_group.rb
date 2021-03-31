@@ -3,18 +3,33 @@
 class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
   def up
     attachments = ActiveStorage::Attachment.where(record_type: "Media::Object")
-    attachments.includes(record: {answer: :response}).each do |attachment|
+    total = attachments.count
+    puts "Total attachments: #{attachments.count}"
+    attachments.includes(record: {answer: :response}).each_with_index do |attachment, index|
       media_object = attachment.record
-      generate_media_object_filename(media_object) if media_object.present?
+      if media_object.nil?
+        puts "Skipping nil media for #{attachment.id}"
+        next
+      end
+      generate_media_object_filename(media_object, index, total)
     end
   end
 
-  def generate_media_object_filename(media_object)
+  def generate_media_object_filename(media_object, index, total)
     item = media_object.item
-    return if item.record.answer_id.nil?
+    if item.record.answer_id.nil?
+      puts "Skipping nil answer for #{item.id}"
+      return
+    end
+
     answer = item.record.answer
-    # this means we have already run the migration since the response code is in the filename
-    return if item.blob.filename.to_s.include?(answer.response.shortcode)
+    if item.blob.filename.to_s.include?(answer.response.shortcode) && ENV["FORCE_REDO"].blank?
+      puts "Skipping already-migrated #{answer.id}"
+      return
+    end
+
+    puts "Generating name for #{answer.id} (#{index + 1} / #{total})"
+
     filename = "nemo-#{answer.response.shortcode}"
     filename = build_filename(filename, item)
     item.blob.update!(filename: filename)
