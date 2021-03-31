@@ -35,23 +35,23 @@ class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
     item.blob.update!(filename: filename)
   end
 
-  # build a more complex filename if is nested in repeat groups
+  # Note: Intentionally duplicated code, see app/models/media/object.rb.
   def build_filename(filename, item)
     repeat_groups = []
     answer = item.record.answer
     answer_group = nil
-    answer_group = next_agroup_up(answer.parent_id) if answer.from_group?
+    answer_group = next_agroup_up(answer.parent_id) if answer.from_group? && answer.parent_id
     if answer_group.present? && answer_group.repeatable?
       repeat_groups = respect_ancestors(answer_group, repeat_groups)
       filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
-      filename += File.extname(item.filename.to_s)
     else
-      filename += "_#{answer.new_rank + 1}_#{item.blob.filename}"
+      filename += "_#{answer.question.code}"
     end
+    filename += File.extname(item.filename.to_s)
     filename.gsub(/[^0-9A-Za-z.\-]/, "_")
   end
 
-  # returns an array of group name strings from all nested groups
+  # Note: Intentionally duplicated code, see app/models/media/object.rb.
   def respect_ancestors(answer_group, repeat_groups)
     name = answer_group.group_name
     name += (answer_group.new_rank + 1).to_s if answer_group.repeatable?
@@ -65,6 +65,7 @@ class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
     repeat_groups
   end
 
+  # Note: Intentionally duplicated code, see app/models/media/object.rb.
   def next_agroup_up(agroup_id)
     parent = ResponseNode.find(agroup_id)
     if parent.type != "AnswerGroup" && parent.parent_id.present?
