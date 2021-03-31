@@ -44,4 +44,4 @@ en:
     see_error_report: "See error report"
     result_link_text:
       response_csv_export: "Download CSV"
-      bulk_image_download: "Bulk Media Download"
+      bulk_media_download: "Bulk Media Download"

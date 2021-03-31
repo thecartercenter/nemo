@@ -45,7 +45,7 @@ module Media
 
     scope :expired, -> { where(answer_id: nil).where("created_at < ?", 12.hours.ago) }
 
-    after_save :generate_media_object_filename, if: :saved_change_to_answer_id?
+    after_save :generate_media_object_filename
 
     def dynamic_thumb?
       false
@@ -53,11 +53,54 @@ module Media
 
     private
 
-    # Set a useful filename to assist data analysts who deal with lots of downloads.
+    # Set a useful filename to assist data analysts who deal with lots of downloads, e.g.:
+    # Media not in any group: nemo-responseId-questionCode
+    # Media in regular group: nemo-responseId-questionCode
+    # Media in repeat group(s): nemo-responseId-repeatGroupName(s)-questionCode
     def generate_media_object_filename
+      return if item.record.answer_id.nil?
       answer = item.record.answer
-      extension = File.extname(item.filename.to_s)
-      item.blob.update!(filename: "elmo-#{answer.response.shortcode}-#{answer.id}#{extension}")
+      filename = "nemo-#{answer.response.shortcode}"
+      filename = build_filename(filename, item)
+      item.blob.update!(filename: filename)
+    end
+
+    # build a more complex filename if is nested in repeat groups
+    def build_filename(filename, item)
+      repeat_groups = []
+      answer = item.record.answer
+      answer_group = nil
+      answer_group = next_agroup_up(answer.parent_id) if answer.from_group? && answer.parent_id
+      if answer_group.present? && answer_group.repeatable?
+        repeat_groups = respect_ancestors(answer_group, repeat_groups)
+        filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
+      end
+      filename += "-#{answer.question.code}"
+      filename += File.extname(item.filename.to_s)
+      filename.gsub(/[^0-9A-Za-z.\-]/, "_")
+    end
+
+    # returns an array of group name strings from all nested groups
+    def respect_ancestors(answer_group, repeat_groups)
+      name = answer_group.group_name
+      name += (answer_group.new_rank + 1).to_s if answer_group.repeatable?
+      repeat_groups << name
+      if answer_group.parent_id.present?
+        parent_answer_group = next_agroup_up(answer_group.parent_id)
+        if parent_answer_group.present? && parent_answer_group.group_name.present?
+          repeat_groups = respect_ancestors(parent_answer_group, repeat_groups)
+        end
+      end
+      repeat_groups
+    end
+
+    def next_agroup_up(agroup_id)
+      parent = ResponseNode.find(agroup_id)
+      if parent.type != "AnswerGroup" && parent.parent_id.present?
+        next_agroup_up(parent.parent_id)
+      else
+        parent
+      end
     end
   end
 end
