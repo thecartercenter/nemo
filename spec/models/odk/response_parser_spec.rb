@@ -513,7 +513,7 @@ describe ODK::ResponseParser do
         populated.save!
         expect(Response.count).to eq(1)
         populated.reload
-        expect(populated.root_node.c[2].media_object.item.filename.to_s).to match(/elmo-.+-.+.jpg/)
+        expect(populated.root_node.c[2].media_object.item.filename.to_s).to match(/nemo-.+-.+.jpg/)
         expect(populated.root_node.c[3].media_object).to be_nil
       end
     end
