@@ -57,7 +57,7 @@ module Utils
 
     def zip_media(attachment, zipfile)
       attachment.open do |file|
-        filename = File.basename(file.path)
+        filename = attachment.filename.to_s
         new_path = Rails.root.join(TMP_DIR, filename)
         FileUtils.mv(file.path, new_path)
         zip_entry = Utils::ZipEntry.new(new_path, filename)

@@ -2,6 +2,7 @@
 
 require "rails_helper"
 require "fileutils"
+require "zip"
 
 describe Utils::BulkMediaPackager do
   let(:user) { create(:user, role_name: "coordinator") }
@@ -44,6 +45,12 @@ describe Utils::BulkMediaPackager do
       expect(results.basename.to_s).to match(/#{operation.mission.compact_name}-media-.+.zip/)
       expect(File.exist?(results.to_s)).to be(true)
       expect(Dir["#{results.dirname}/*.jpg"].any?).to be(false)
+
+      Zip::File.open(results.to_s) do |zipfile|
+        zipfile.each do |file|
+          expect(file.name).to match(/nemo-.+-.+.(jpg|png|tiff)/)
+        end
+      end
     end
   end
 end
