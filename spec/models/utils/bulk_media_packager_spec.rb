@@ -41,7 +41,7 @@ describe Utils::BulkMediaPackager do
       packager = described_class.new(ability: ability, search: "form: foo", operation: operation)
       results = packager.download_and_zip_images
 
-      expect(results.basename.to_s).to match(/bulk_media/)
+      expect(results.basename.to_s).to match(/#{operation.mission.compact_name}-media-.+.zip/)
       expect(File.exist?(results.to_s)).to be(true)
       expect(Dir["#{results.dirname}/*.jpg"].any?).to be(false)
     end

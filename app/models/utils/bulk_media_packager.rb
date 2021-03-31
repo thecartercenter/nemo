@@ -42,8 +42,8 @@ module Utils
 
       media_ids = media_objects_scope.pluck("media_objects.id")
 
-      zipfile_name = Rails.root.join(TMP_DIR,
-        "bulk_media_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M-%S')}.zip")
+      filename = "#{@operation.mission.compact_name}-media-#{Time.current.to_s(:filename_datetime)}.zip"
+      zipfile_name = Rails.root.join(TMP_DIR, filename)
 
       Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
         media_ids.each do |media_id|
