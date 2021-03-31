@@ -23,11 +23,6 @@ class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
     end
 
     answer = item.record.answer
-    if item.blob.filename.to_s.include?(answer.response.shortcode) && ENV["FORCE_REDO"].blank?
-      puts "Skipping already-migrated #{answer.id}"
-      return
-    end
-
     puts "Generating name for #{answer.id} (#{index + 1} / #{total})"
 
     filename = "nemo-#{answer.response.shortcode}"
