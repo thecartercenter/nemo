@@ -71,7 +71,7 @@ module Media
       repeat_groups = []
       answer = item.record.answer
       answer_group = nil
-      answer_group = next_agroup_up(answer.parent_id) if answer.from_group?
+      answer_group = next_agroup_up(answer.parent_id) if answer.from_group? && answer.parent_id
       if answer_group.present? && answer_group.repeatable?
         repeat_groups = respect_ancestors(answer_group, repeat_groups)
         filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
