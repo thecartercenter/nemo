@@ -162,6 +162,8 @@ view `log/dj.log` within a few minutes (the log file doesn't always update immed
 
 ### Testing with ODK Collect
 
+#### Using NEMO live
+
 1. Download the Collect app onto your Android device or run it on an emulator
     - https://opendatakit.org/
 1. Configure your rails development server so Collect can find it
@@ -179,6 +181,13 @@ view `log/dj.log` within a few minutes (the log file doesn't always update immed
 1. Retrieve Form
     - In Collect, you should now be able to go to `Get Blank Form` to download the forms from NEMO
     - If it fails, try restarting the server to make sure any config changes above were applied. Then check the server logs to make sure the connection is really going through.
+1. If the form doesn't work right, look at xml directly by adding `.xml` to the URL path, e.g. <http://nemo.test/en/m/sandbox/forms/form-123.xml>
+
+#### Using hardcoded forms
+
+1. Download example form from <https://github.com/opendatakit/sample-forms>
+1. Send to your device: `adb push myform.xml /sdcard/odk/forms`
+1. Try out form, make changes, repeat.
 
 ### Troubleshooting
 
