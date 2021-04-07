@@ -113,7 +113,7 @@ gem "iso-639", "~> 0.3.5"
 gem "rails-i18n", "~> 6.0"
 
 # Analytics
-gem "scout_apm", "~> 2.6"
+gem "scout_apm", "~> 4.0"
 gem "sentry-ruby", "~> 4.0"
 gem "sentry-rails", "~> 4.0" # rubocop:disable Bundler/OrderedGems
 

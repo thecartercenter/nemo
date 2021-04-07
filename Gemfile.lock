@@ -509,7 +509,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    scout_apm (2.6.10)
+    scout_apm (4.0.4)
       parser
     scrypt (3.0.7)
       ffi-compiler (>= 1.0, < 2.0)
@@ -683,7 +683,7 @@ DEPENDENCIES
   rubocop-rspec (~> 2.0)
   ruby-jmeter (~> 3.1)
   rubyzip (~> 2.3)
-  scout_apm (~> 2.6)
+  scout_apm (~> 4.0)
   scrypt (~> 3.0)
   select2-rails (~> 4.0)
   selenium-webdriver (~> 3.9)
