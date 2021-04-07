@@ -138,7 +138,7 @@ To switch to the `deploy` user, do:
     exec $SHELL
 
     # This step will take a few minutes.
-    rbenv install `cat .ruby-version`
+    RUBY_CONFIGURE_OPTS=--disable-install-doc rbenv install `cat .ruby-version`
     echo "gem: --no-ri --no-rdoc" > ~/.gemrc
     gem install bundler
     exec $SHELL
