@@ -3,9 +3,8 @@
 ELMO::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # Allow local puma-dev domains.
-  config.hosts << "nemo.test"
-  config.hosts << "nemo.frappe.sassafras.coop"
+  # Allow test/demo domains.
+  config.hosts += %w[nemo.test nemo.frappe.sassafras.coop *.ngrok.io]
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
