@@ -147,6 +147,12 @@ class FormsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
+  def re_cache
+    Response.where(form_id: @form.id).update_all(dirty_json: true)
+    flash[:success] = t("operation.details.cache_odata")
+    redirect_after_status_change
+  end
+
   def go_live
     @form.update_status(:live)
     redirect_after_status_change

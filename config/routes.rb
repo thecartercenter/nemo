@@ -65,6 +65,7 @@ ELMO::Application.routes.draw do
         patch "go-live", as: "go_live"
         patch "return-to-draft", as: "return_to_draft"
         patch "increment_version"
+        patch "re_cache"
       end
     end
 

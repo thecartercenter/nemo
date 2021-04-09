@@ -24,11 +24,23 @@ describe "abilities for forms" do
   context "mission mode" do
     let(:ability) { Ability.new(user: user, mode: "mission", mission: get_mission) }
 
+    context "for admin" do
+      let(:user) { create(:user, admin: true) }
+
+      it "should allow re-caching forms" do
+        expect(ability).to be_able_to(:re_cache, Form)
+      end
+    end
+
     context "for coordinator" do
       let(:user) { create(:user, role_name: "coordinator") }
 
       it "should be able to create and index" do
         %i[create index].each { |op| expect(ability).to be_able_to(op, Form) }
+      end
+
+      it "should not be able to re-cache" do
+        %i[re_cache].each { |op| expect(ability).not_to be_able_to(op, Form) }
       end
 
       context "when draft" do
@@ -75,6 +87,7 @@ describe "abilities for forms" do
       it "should be able to index but not create" do
         expect(ability).to be_able_to(:index, Form)
         expect(ability).not_to be_able_to(:create, Form)
+        expect(ability).not_to be_able_to(:re_cache, Form)
       end
 
       context "when draft" do

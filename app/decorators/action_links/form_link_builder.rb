@@ -14,6 +14,7 @@ module ActionLinks
           actions << :sms_guide
           actions << [:sms_console, h.new_sms_test_path] if can?(:create, Sms::Test)
         end
+        actions << [:re_cache, {method: :patch}] if can?(:re_cache, form)
       end
       actions << :destroy
       super(form, actions)
