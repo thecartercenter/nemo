@@ -28,6 +28,7 @@ module IconHelper
     report_report: "bar-chart-o",
     response: "check-circle-o",
     return_to_draft: "undo",
+    re_cache: "refresh",
     hierarchicalresponse: "check-circle-o",
     setting: "gear",
     show: "file-o",

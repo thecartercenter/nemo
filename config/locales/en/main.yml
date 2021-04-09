@@ -905,6 +905,7 @@ en:
         pause: "Pause"
         return_to_draft: "Return to Draft Status"
         print: "Print"
+        re_cache: "Re-cache OData"
       mission:
         new: "Create Mission"
       operation:

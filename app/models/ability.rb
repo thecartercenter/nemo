@@ -66,8 +66,10 @@ class Ability
     can(%i[index show clear destroy], Operation, creator_id: user.id)
     can(:submit_to, Form) { |f| user.admin? || user.assignments.detect { |a| a.mission == f.mission } }
 
-    user.admin? ? admin_permissions : non_admin_permissions
+    # Toggle permissions in order of increasing level of role power.
+    non_admin_permissions unless user.admin?
     mission_dependent_permissions if mission
+    admin_permissions if user.admin?
 
     cannot(:change_assignments, User, id: user.id) unless user.admin?
 
@@ -101,6 +103,8 @@ class Ability
     elsif mode == "mission"
       # Admins can edit themselves in mission mode even if they're not currently assigned.
       can(%i[update login_instructions change_assignments], User, id: user.id)
+
+      can(%i[re_cache], Form)
     end
 
     # Only admins can give/take admin (adminify) to/from others, but not from themselves
@@ -160,9 +164,12 @@ class Ability
        QingGroup, OptionNode, Option, Tag, Tagging].each do |klass|
         can(:manage, klass, mission_id: mission.id)
       end
-      can(:condition_form, Constraint, mission_id: mission.id)
+      # This is intentionally redundant with `manage` as we're slowly migrating to explicit permissions.
       can(:change_status, Form, mission_id: mission.id)
+      cannot(:re_cache, Form)
       can(:update_core, OptionSet, mission_id: mission.id)
+
+      can(:condition_form, Constraint, mission_id: mission.id)
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: mission.id)
