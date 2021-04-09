@@ -51,6 +51,13 @@ ELMO::Application.routes.draw do
                                    defaults: {mode: "m"} do
     mount(OData::Engine, at: OData::BASE_PATH, defaults: {direct_auth: "basic"})
 
+    # OData debugging endpoints to allow serving static text.
+    if Rails.env.development?
+      get(OData::STUBS_PATH, to: "stubbed_o_data#root")
+      get("#{OData::STUBS_PATH}/$metadata", to: "stubbed_o_data#metadata")
+      get("#{OData::STUBS_PATH}/:id", to: "stubbed_o_data#resource")
+    end
+
     # Regular form resources are defined under the admin-or-mission section.
     resources :forms, only: [] do
       member do
