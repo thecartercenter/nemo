@@ -7,9 +7,9 @@
         <data id="*form1*" version="*formver1*">
           <*itemcode1*/>
           <*itemcode2*/>
+          <*itemcode3*/>
         </data>
       </instance>
-
       <instance id="*optsetcode1*_level1">
         <root>
           <item>
@@ -26,7 +26,22 @@
           </item>
         </root>
       </instance>
-
+      <instance id="*optsetcode2*_level1">
+        <root>
+          <item>
+            <itextId>*optcode4*</itextId>
+            <numericValue>4</numericValue>
+          </item>
+          <item>
+            <itextId>*optcode5*</itextId>
+            <numericValue>5</numericValue>
+          </item>
+          <item>
+            <itextId>*optcode6*</itextId>
+            <numericValue>6</numericValue>
+          </item>
+        </root>
+      </instance>
       <itext>
         <translation lang="English">
           <text id="*itemcode1*:label">
@@ -36,10 +51,16 @@
             <value>Question Hint 1</value>
           </text>
           <text id="*itemcode2*:label">
-            <value>Integer Question Title 2</value>
+            <value>Select One Question Title 2</value>
           </text>
           <text id="*itemcode2*:hint">
             <value>Question Hint 2</value>
+          </text>
+          <text id="*itemcode3*:label">
+            <value>Integer Question Title 3</value>
+          </text>
+          <text id="*itemcode3*:hint">
+            <value>Question Hint 3</value>
           </text>
           <text id="*optcode1*">
             <value>Excellent</value>
@@ -50,13 +71,23 @@
           <text id="*optcode3*">
             <value>Bad</value>
           </text>
+          <text id="*optcode4*">
+            <value>OK</value>
+          </text>
+          <text id="*optcode5*">
+            <value>Whatever</value>
+          </text>
+          <text id="*optcode6*">
+            <value>Bad</value>
+          </text>
           <text id="BLANK">
             <value/>
           </text>
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*" type="select1"/>
-      <bind nodeset="/data/*itemcode2*" type="int" calculate="(jr:itext(coalesce(/data/*itemcode1*,'BLANK'))):value"/>
+      <bind nodeset="/data/*itemcode2*" type="select1"/>
+      <bind nodeset="/data/*itemcode3*" type="int" calculate="(jr:itext(coalesce(/data/*itemcode1*,'BLANK'))):value + (jr:itext(coalesce(/data/*itemcode2*,'BLANK'))):value"/>
     </model>
   </h:head>
   <h:body>
@@ -76,9 +107,25 @@
         <value>*optcode3*</value>
       </item>
     </select1>
-    <input ref="/data/*itemcode2*">
+    <select1 ref="/data/*itemcode2*">
       <label ref="jr:itext('*itemcode2*:label')"/>
       <hint ref="jr:itext('*itemcode2*:hint')"/>
+      <item>
+        <label ref="jr:itext('*optcode4*')"/>
+        <value>*optcode4*</value>
+      </item>
+      <item>
+        <label ref="jr:itext('*optcode5*')"/>
+        <value>*optcode5*</value>
+      </item>
+      <item>
+        <label ref="jr:itext('*optcode6*')"/>
+        <value>*optcode6*</value>
+      </item>
+    </select1>
+    <input ref="/data/*itemcode3*">
+      <label ref="jr:itext('*itemcode3*:label')"/>
+      <hint ref="jr:itext('*itemcode3*:hint')"/>
     </input>
   </h:body>
 </h:html>

@@ -433,17 +433,21 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
     end
 
-    # NEW TEST ~~~~~~~
+    # Two select one questions and one default value question using dynamic values
     context "Dynamic answer based on option set" do
       let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad],
         option_values: [1, 2, 3]) }
+      let(:likert_options2) { create(:option_set, option_names: %w[OK Whatever Bad],
+          option_values: [4, 5, 6]) }
       let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options)}
+      let(:likert_question2) { create(:question, code: "likert2", qtype_name: "select_one", option_set: likert_options2)}
       let(:score) { create(:question, code: "score1", qtype_name: "integer")}
-      let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, score]) }
+      let(:form) { create(:form, :live, name: "Dynamic answers for option sets",
+        questions: [likert_question, likert_question2, score]) }
 
       before do
         qing = form.questionings.last
-        qing.default = "calc($likert1:value)"
+        qing.default = "calc($likert1:value + $likert2:value)"
         qing.save!
       end
 

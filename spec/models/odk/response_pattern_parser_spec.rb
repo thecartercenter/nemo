@@ -144,6 +144,30 @@ describe ODK::ResponsePatternParser do
     end
   end
 
+  describe "Dynamic question value $questionCode:value" do
+    context "for default answer value calculation" do
+
+      let(:fruit_options) { create(:option_set, option_names: %w[Apples Oranges Bananas],
+        option_values: [1, 2, 3])}
+      let(:fruits) { create(:question, code: "fruit1", qtype_name: "select_one", option_set: fruit_options)}
+      let(:fruit_quantity) { create(:question, code: "fruit2", qtype_name: "integer")}
+      let(:fruit_payment) { create(:question, code: "payment", qtype_name: "integer", hint: "calc($fruit1:value * $fruit2)")}
+      let(:form) { create(:form, question_types: %w[integer text integer]) }
+
+      let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+      let(:q2) { ODK::QingDecorator.decorate(form.c[1]) }
+      let(:src_item) { q1 }
+      let(:pattern) { "calc($fruit1:value * $fruit2)" }
+
+      it "should perform the correct calculation" do
+         is_expected.to eq("(/data/#{q1.odk_code}) * /data/#{q1.odk_code}")
+         # need to get level
+         # first get osuuid, decorator will give us osuuid level X
+         # instance(osuuid_level_X)
+      end
+    end
+  end
+
   describe "calc()" do
     let(:form) { create(:form, question_types: %w[integer text integer]) }
     let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }

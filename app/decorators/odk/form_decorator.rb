@@ -59,5 +59,21 @@ module ODK
     def needs_last_saved_instance?
       enabled_questionings.any?(&:preload_last_saved?)
     end
+
+    # returns array of option sets that are referenced by the default dynamic calcultion
+    def ref_option_sets(qing)
+      codes = qing.default.scan(/\$(\w+):value+/)
+      questions = codes.flatten.map { |c| Question.with_code(c).first }
+      questions.map { |q| q.option_set.presence }
+    end
+
+    # returns array of option sets needed for dynamic calculations
+    def option_sets_for_instances
+      opt_sets = []
+      enabled_questionings.each do |qing|
+        opt_sets |= ref_option_sets(qing) if qing.default.present? && qing.default.include?("value")
+      end
+      opt_sets
+    end
   end
 end
