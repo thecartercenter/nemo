@@ -29,15 +29,15 @@ module ODK
 
     # Returns <instance> for option sets that have dynamic calcs only
     # Only supports level 1 option sets
-    def instances_for_dynamic_calcs
-      content_tag(:instance, id: "#{odk_code}_level1") do
+    def option_instances_for_dynamic_calcs
+      content_tag(:instance, id: "#{odk_code}_numeric_values") do
         content_tag(:root) do
-          first_level_option_nodes.map { |node| item_content(node) }.reduce(&:<<)
+          first_level_option_nodes.map { |node| option_item(node) }.reduce(&:<<)
         end
       end
     end
 
-    def item_content(node)
+    def option_item(node)
       content_tag(:item) do
         content_tag(:itextId, ODK::CodeMapper.instance.code_for_item(node)) <<
           content_tag(:numericValue, node.option.value)
@@ -46,7 +46,6 @@ module ODK
 
     # Returns <instance> tags for each non-first level of the set. These are used for supporting
     # cascading behavior.
-    # start at level 1 or 2
     def cascading_instances
       tags = (2..level_count).map do |depth|
         content_tag(:instance, id: instance_id_for_depth(depth)) do

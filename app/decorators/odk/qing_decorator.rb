@@ -63,6 +63,10 @@ module ODK
       msgs.compact.join("; ").presence
     end
 
+    def xpath_for_option_value(option_set, option_node)
+
+    end
+
     private
 
     def default_answer?

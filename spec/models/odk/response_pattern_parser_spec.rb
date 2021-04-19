@@ -147,23 +147,32 @@ describe ODK::ResponsePatternParser do
   describe "Dynamic question value $questionCode:value" do
     context "for default answer value calculation" do
 
-      let(:fruit_options) { create(:option_set, option_names: %w[Apples Oranges Bananas],
-        option_values: [1, 2, 3])}
-      let(:fruits) { create(:question, code: "fruit1", qtype_name: "select_one", option_set: fruit_options)}
-      let(:fruit_quantity) { create(:question, code: "fruit2", qtype_name: "integer")}
-      let(:fruit_payment) { create(:question, code: "payment", qtype_name: "integer", hint: "calc($fruit1:value * $fruit2)")}
-      let(:form) { create(:form, question_types: %w[integer text integer]) }
+      let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
+      let(:likert_options2) { create(:option_set, option_names: %w[OK Whatever Bad], option_values: [4, 5, 6]) }
+      let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
+      let(:likert_question2) { create(:question, code: "likert2", qtype_name: "select_one", option_set: likert_options2) }
+      let(:score) { create(:question, code: "score1", qtype_name: "integer") }
+      let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, likert_question2, score]) }
+      let(:q3) { ODK::QingDecorator.decorate(form.c[2]) }
 
-      let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
-      let(:q2) { ODK::QingDecorator.decorate(form.c[1]) }
-      let(:src_item) { q1 }
-      let(:pattern) { "calc($fruit1:value * $fruit2)" }
+      let(:src_item) { q3 }
+      let(:pattern) { "calc($likert1:value + $likert2:value)" }
+
+      before do
+        qing = form.questionings.last
+        qing.default = "calc($likert1:value + $likert2:value)"
+        qing.save!
+      end
 
       it "should perform the correct calculation" do
-         is_expected.to eq("(/data/#{q1.odk_code}) * /data/#{q1.odk_code}")
+         is_expected.to eq("junk")
+         #is_expected.to eq("(/data/#{q1.odk_code}) * /data/#{q1.odk_code}")
+
          # need to get level
          # first get osuuid, decorator will give us osuuid level X
          # instance(osuuid_level_X)
+         # instance('cities')/root/item[country='nl']
+         # instance('*optsetcode1*_level1')/root/item[itextId='optnodecode']/value
       end
     end
   end

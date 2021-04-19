@@ -54,4 +54,38 @@ describe ODK::FormDecorator, :odk do
       end
     end
   end
+
+  context "option sets for dynamic default answers" do
+    let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
+    let(:likert_options2) { create(:option_set, option_names: %w[OK Whatever Bad], option_values: [4, 5, 6]) }
+    let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
+    let(:likert_question2) { create(:question, code: "likert2", qtype_name: "select_one", option_set: likert_options2) }
+    let(:score) { create(:question, code: "score1", qtype_name: "integer") }
+    let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, likert_question2, score]) }
+    let(:decorated_form) { decorate(form) }
+
+    describe "with invalid question code" do
+      before do
+        qing = form.questionings.last
+        qing.default = "calc($likertbad:value)"
+        qing.save!
+      end
+
+      it "should return zero option sets" do
+        expect(decorated_form.option_sets_for_instances).to eq([])
+      end
+    end
+
+    describe "with value question code" do
+      before do
+        qing = form.questionings.last
+        qing.default = "calc($likertvalue)"
+        qing.save!
+      end
+
+      it "should return zero option sets" do
+        expect(decorated_form.option_sets_for_instances).to eq([])
+      end
+    end
+  end
 end

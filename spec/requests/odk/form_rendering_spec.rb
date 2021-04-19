@@ -436,7 +436,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     # Two select one questions and one default value question using dynamic values
     # rubocop:disable Layout/LineLength
     # rubocop:disable Layout/HashAlignment
-    context "Dynamic answer based on option set" do
+    context "dynamic answer based on option set" do
       let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
       let(:likert_options2) { create(:option_set, option_names: %w[OK Whatever Bad], option_values: [4, 5, 6]) }
       let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
