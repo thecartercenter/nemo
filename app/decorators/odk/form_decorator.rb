@@ -60,20 +60,22 @@ module ODK
       enabled_questionings.any?(&:preload_last_saved?)
     end
 
-    # returns array of option sets that are referenced by the default dynamic calcultion
-    def ref_option_sets(qing)
+    # TODO: these methods may go elsewhere, e.g. optionset decorator
+    # returns array of option sets that are referenced by the default dynamic calculation
+    def referenced_option_sets(qing)
+      # parsing code, belongs in the pattern parser
       codes = qing.default.scan(/\$(\w+):value+/)
       questions = codes.flatten.map { |c| Question.with_code(c).first }
-      questions.map { |q| q.option_set.presence }
+      questions[0].nil? ? [] : questions.map { |q| q.option_set.presence }
     end
 
     # returns array of option sets needed for dynamic calculations
     def option_sets_for_instances
-      opt_sets = []
-      enabled_questionings.each do |qing|
-        opt_sets |= ref_option_sets(qing) if qing.default.present? && qing.default.include?("value")
+      opt_sets = enabled_questionings.map do |qing|
+        # parsing code
+        referenced_option_sets(qing) if qing.default.present? && qing.default.include?("value")
       end
-      opt_sets
+      opt_sets.flatten.compact.uniq
     end
   end
 end

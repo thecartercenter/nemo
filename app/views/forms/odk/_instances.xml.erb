@@ -12,11 +12,8 @@
 </instance>
 
 <%# Instances for first level option sets if needed for dynamic calculations %>
-<% option_sets = @form.option_sets_for_instances %>
-<% unless option_sets.empty? %>
-  <% option_sets.each do |option_set| %>
-    <%= ODK::DecoratorFactory.decorate(option_set).instances_for_dynamic_calcs %>
-  <% end %>
+<% @form.option_sets_for_instances.each do |option_set| %>
+  <%= ODK::DecoratorFactory.decorate(option_set).option_instances_for_dynamic_calcs %>
 <% end %>
 
 <%# Instances for non-first levels of option sets. Used for cascading behavior. %>

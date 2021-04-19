@@ -10,7 +10,7 @@
           <*itemcode3*/>
         </data>
       </instance>
-      <instance id="*optsetcode1*_level1">
+      <instance id="*optsetcode1*_numeric_value">
         <root>
           <item>
             <itextId>*optcode1*</itextId>
@@ -26,7 +26,7 @@
           </item>
         </root>
       </instance>
-      <instance id="*optsetcode2*_level1">
+      <instance id="*optsetcode2*_numeric_value">
         <root>
           <item>
             <itextId>*optcode4*</itextId>
