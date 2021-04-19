@@ -59,7 +59,8 @@ class ResponsesController < ApplicationController
       format.csv do
         authorize!(:export, Response)
         enqueue_csv_export
-        enqueue_bulk_media_export if params[:response_csv_export_options][:download_media].present?
+        download_media = params[:response_csv_export_options][:download_media]
+        enqueue_bulk_media_export if download_media.present? && download_media == "1"
         prep_operation_queued_flash(:response_csv_export)
         redirect_to(responses_path)
       end
