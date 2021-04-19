@@ -145,8 +145,22 @@ describe ODK::ResponsePatternParser do
   end
 
   describe "Dynamic question value $questionCode:value" do
-    context "for default answer value calculation" do
+    context "for one default answer value calculation" do
+      let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
+      let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
+      let(:score) { create(:question, code: "score1", qtype_name: "integer") }
+      let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, score]) }
+      let(:q3) { ODK::QingDecorator.decorate(form.c[1]) }
 
+      let(:src_item) { q3 }
+      let(:pattern) { "calc($likert1:value)" }
+
+      it "should have correct xpath" do
+         is_expected.to eq("(instance('os#{likert_options.id}_numeric_value')/root/item[itextId=/data/#{likert_question.code}]/numericValue)")
+      end
+    end
+
+    context "for default answer value with two calculations" do
       let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
       let(:likert_options2) { create(:option_set, option_names: %w[OK Whatever Bad], option_values: [4, 5, 6]) }
       let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
@@ -158,21 +172,8 @@ describe ODK::ResponsePatternParser do
       let(:src_item) { q3 }
       let(:pattern) { "calc($likert1:value + $likert2:value)" }
 
-      before do
-        qing = form.questionings.last
-        qing.default = "calc($likert1:value + $likert2:value)"
-        qing.save!
-      end
-
-      it "should perform the correct calculation" do
-         is_expected.to eq("junk")
-         #is_expected.to eq("(/data/#{q1.odk_code}) * /data/#{q1.odk_code}")
-
-         # need to get level
-         # first get osuuid, decorator will give us osuuid level X
-         # instance(osuuid_level_X)
-         # instance('cities')/root/item[country='nl']
-         # instance('*optsetcode1*_level1')/root/item[itextId='optnodecode']/value
+      it "should have correct xpath" do
+         is_expected.to eq("(instance('os#{likert_options.id}_numeric_value')/root/item[itextId=/data/#{likert_question.code}]/numericValue) + (instance('os#{likert_options2.id}_numeric_value')/root/item[itextId=/data/#{likert_question2.code}]/numericValue)")
       end
     end
   end

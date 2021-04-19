@@ -63,8 +63,8 @@ module ODK
       msgs.compact.join("; ").presence
     end
 
-    def xpath_for_option_value(option_set, option_node)
-
+    def xpath_to_option_value
+      "instance('os#{option_set.id}_numeric_value')/root/item[itextId=/data/#{code}]/numericValue"
     end
 
     private
