@@ -4,7 +4,7 @@ module ODK
   # Abstract parent class for classes that parse $-style patterns for ODK.
   class DynamicPatternParser
     # Basic regex for codes like $Question7 or $Question3:value
-    CODE_REGEX = /[$]!?[A-z]\w+\:value|[$]!?[A-z]\w+/.freeze
+    CODE_REGEX = /[$]!?[A-z]\w+:value|[$]!?[A-z]\w+/.freeze
 
     # Same as above but anchored to string start and end for checking individual tokens.
     ANCHORED_CODE_REGEX = Regexp.new("\\A#{CODE_REGEX.source}\\z")
@@ -23,27 +23,19 @@ module ODK
       self.src_item = ODK::DecoratorFactory.decorate(src_item)
       self.calculated = false
       self.codes_to_outputs = {}
-      self.option_values = false
       process_calc_wrapper
     end
 
     def to_odk
-      puts "all the tokens #{pattern.split(token_regex)}"
-      puts "Rege ex #{token_regex}"
-      tokens = pattern.split(token_regex).reject(&:empty?).map do |t|
-        puts "doing map token #{t}"
-        process_token(t)
-      end.compact
-      puts "TOKENS #{tokens}"
+      tokens = pattern.split(token_regex).reject(&:empty?).map { |t| process_token(t) }.compact
       join_tokens(tokens)
     end
 
     protected
 
-    attr_accessor :pattern, :src_item, :form, :calculated, :codes_to_outputs, :option_values
+    attr_accessor :pattern, :src_item, :form, :calculated, :codes_to_outputs
 
     alias calculated? calculated
-    alias option_values? option_values
 
     def process_token(_token)
       raise NotImplementedError
@@ -85,34 +77,34 @@ module ODK
       return if md.nil?
       self.pattern = md[1]
       self.calculated = true
-      process_option_values
-    end
-
-    def process_option_values
-      md = pattern.scan(/\$(\w+):value+/)
-      return if md.nil?
-      self.option_values = true
     end
 
     # Converts the given $-style code to the appropriate output fragment. Returns nil if code not valid.
     # Caches results in a hash.
     def process_code(code)
-      puts "CODE PROCESSING #{code}"
       return codes_to_outputs[code] if codes_to_outputs[code]
       unwrapped =
         if reserved_codes.key?(code)
           reserved_codes[code]
-        elsif has_option_value?(code)
-          # get qing
-          # build output
+        # if there is a :value in the code, indicating a build path to the option value
+        elsif option_value?(code) && (qing = form.questioning_with_code(qing_code(code)))
+          build_output(ODK::QingDecorator.decorate(qing), option_value: true)
         elsif (qing = form.questioning_with_code(code[1..]))
-          build_output(code, ODK::QingDecorator.decorate(qing))
+          build_output(ODK::QingDecorator.decorate(qing))
         elsif calculated?
           # We don't want to return nil in calculated expressions because it might result in
           # invalid XPath. Better to return an empty string and hope that it doesn't break the form.
           "''"
         end
       codes_to_outputs[code] = calculated? ? "(#{unwrapped})" : unwrapped
+    end
+
+    def option_value?(code)
+      code =~ /:value/
+    end
+
+    def qing_code(code)
+      code.match(/\w+/)[0]
     end
 
     # Returns the regular expression by which the input pattern should be split into tokens.
