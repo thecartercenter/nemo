@@ -55,7 +55,7 @@ describe ODK::FormDecorator, :odk do
     end
   end
 
-#rubocop:disable Layout/LineLength
+  # rubocop:disable Layout/LineLength
   context "option sets for dynamic default answers" do
     let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
     let(:likert_options2) { create(:option_set, option_names: %w[OK Whatever Bad], option_values: [4, 5, 6]) }
@@ -89,6 +89,5 @@ describe ODK::FormDecorator, :odk do
       end
     end
   end
-  #rubocop:enable Layout/LineLength
-
+  # rubocop:enable Layout/LineLength
 end
