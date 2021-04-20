@@ -144,6 +144,7 @@ describe ODK::ResponsePatternParser do
     end
   end
 
+  #rubocop:disable Layout/LineLength
   describe "Dynamic question value $questionCode:value" do
     context "for one default answer value calculation" do
       let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
@@ -156,7 +157,7 @@ describe ODK::ResponsePatternParser do
       let(:pattern) { "calc($likert1:value)" }
 
       it "should have correct xpath" do
-         is_expected.to eq("(instance('os#{likert_options.id}_numeric_value')/root/item[itextId=/data/#{likert_question.code}]/numericValue)")
+         is_expected.to eq("(instance('os#{likert_options.id}_numeric_values')/root/item[itextId=/data/#{likert_question.code}]/numericValue)")
       end
     end
 
@@ -173,10 +174,13 @@ describe ODK::ResponsePatternParser do
       let(:pattern) { "calc($likert1:value + $likert2:value)" }
 
       it "should have correct xpath" do
-         is_expected.to eq("(instance('os#{likert_options.id}_numeric_value')/root/item[itextId=/data/#{likert_question.code}]/numericValue) + (instance('os#{likert_options2.id}_numeric_value')/root/item[itextId=/data/#{likert_question2.code}]/numericValue)")
+         is_expected.to eq("(instance('os#{likert_options.id}_numeric_values')/root/item[itextId=/data/#{likert_question.code}]/numericValue) + (instance('os#{likert_options2.id}_numeric_values')/root/item[itextId=/data/#{likert_question2.code}]/numericValue)")
       end
     end
   end
+
+  #rubocop:enable Layout/LineLength
+
 
   describe "calc()" do
     let(:form) { create(:form, question_types: %w[integer text integer]) }
