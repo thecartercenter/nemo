@@ -60,7 +60,6 @@ module ODK
       enabled_questionings.any?(&:preload_last_saved?)
     end
 
-    # TODO: these methods may go elsewhere, e.g. optionset decorator
     # returns array of option sets that are referenced by the default dynamic calculation
     def referenced_option_sets(qing)
       # parsing code, belongs in the pattern parser
