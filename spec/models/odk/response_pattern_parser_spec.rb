@@ -144,7 +144,7 @@ describe ODK::ResponsePatternParser do
     end
   end
 
-  #rubocop:disable Layout/LineLength
+  # rubocop:disable Layout/LineLength
   describe "Dynamic question value $questionCode:value" do
     context "for one default answer value calculation" do
       let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
@@ -158,7 +158,7 @@ describe ODK::ResponsePatternParser do
       let(:pattern) { "calc($likert1:value)" }
 
       it "should have correct xpath" do
-         is_expected.to eq("(instance('os#{likert_options.id}_numeric_values')/root/item[itextId=/data/#{q1.odk_code}]/numericValue)")
+        is_expected.to eq("(instance('os#{likert_options.id}_numeric_values')/root/item[itextId=/data/#{q1.odk_code}]/numericValue)")
       end
     end
 
@@ -182,8 +182,7 @@ describe ODK::ResponsePatternParser do
     end
   end
 
-  #rubocop:enable Layout/LineLength
-
+  # rubocop:enable Layout/LineLength
 
   describe "calc()" do
     let(:form) { create(:form, question_types: %w[integer text integer]) }
