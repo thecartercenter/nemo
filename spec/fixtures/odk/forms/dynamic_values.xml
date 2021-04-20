@@ -10,7 +10,7 @@
           <*itemcode3*/>
         </data>
       </instance>
-      <instance id="*optsetcode1*_numeric_value">
+      <instance id="*optsetcode1*_numeric_values">
         <root>
           <item>
             <itextId>*optcode1*</itextId>
@@ -26,7 +26,7 @@
           </item>
         </root>
       </instance>
-      <instance id="*optsetcode2*_numeric_value">
+      <instance id="*optsetcode2*_numeric_values">
         <root>
           <item>
             <itextId>*optcode4*</itextId>
@@ -57,7 +57,7 @@
             <value>Question Hint 2</value>
           </text>
           <text id="*itemcode3*:label">
-            <value>Integer Question Title 3</value>
+            <value>Text Question Title 3</value>
           </text>
           <text id="*itemcode3*:hint">
             <value>Question Hint 3</value>
@@ -87,7 +87,7 @@
       </itext>
       <bind nodeset="/data/*itemcode1*" type="select1"/>
       <bind nodeset="/data/*itemcode2*" type="select1"/>
-      <bind nodeset="/data/*itemcode3*" type="int" calculate="(jr:itext(coalesce(/data/*itemcode1*,'BLANK'))):value + (jr:itext(coalesce(/data/*itemcode2*,'BLANK'))):value"/>
+      <bind nodeset="/data/*itemcode3*" type="string" calculate="(instance('*optsetcode1*_numeric_values')/root/item[itextId=/data/*itemcode1*]/numericValue) + (instance('*optsetcode2*_numeric_values')/root/item[itextId=/data/*itemcode2*]/numericValue)"/>
     </model>
   </h:head>
   <h:body>
