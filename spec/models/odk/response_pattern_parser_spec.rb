@@ -151,13 +151,14 @@ describe ODK::ResponsePatternParser do
       let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
       let(:score) { create(:question, code: "score1", qtype_name: "integer") }
       let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, score]) }
-      let(:q3) { ODK::QingDecorator.decorate(form.c[1]) }
+      let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+      let(:q2) { ODK::QingDecorator.decorate(form.c[1]) }
 
-      let(:src_item) { q3 }
+      let(:src_item) { q2 }
       let(:pattern) { "calc($likert1:value)" }
 
       it "should have correct xpath" do
-         is_expected.to eq("(instance('os#{likert_options.id}_numeric_values')/root/item[itextId=/data/#{likert_question.code}]/numericValue)")
+         is_expected.to eq("(instance('os#{likert_options.id}_numeric_values')/root/item[itextId=/data/#{q1.odk_code}]/numericValue)")
       end
     end
 
@@ -168,13 +169,15 @@ describe ODK::ResponsePatternParser do
       let(:likert_question2) { create(:question, code: "likert2", qtype_name: "select_one", option_set: likert_options2) }
       let(:score) { create(:question, code: "score1", qtype_name: "integer") }
       let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, likert_question2, score]) }
+      let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+      let(:q2) { ODK::QingDecorator.decorate(form.c[1]) }
       let(:q3) { ODK::QingDecorator.decorate(form.c[2]) }
 
       let(:src_item) { q3 }
       let(:pattern) { "calc($likert1:value + $likert2:value)" }
 
       it "should have correct xpath" do
-         is_expected.to eq("(instance('os#{likert_options.id}_numeric_values')/root/item[itextId=/data/#{likert_question.code}]/numericValue) + (instance('os#{likert_options2.id}_numeric_values')/root/item[itextId=/data/#{likert_question2.code}]/numericValue)")
+        is_expected.to eq("(instance('os#{likert_options.id}_numeric_values')/root/item[itextId=/data/#{q1.odk_code}]/numericValue) + (instance('os#{likert_options2.id}_numeric_values')/root/item[itextId=/data/#{q2.odk_code}]/numericValue)")
       end
     end
   end
