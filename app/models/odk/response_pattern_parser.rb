@@ -19,12 +19,8 @@ module ODK
 
     # Returns the output fragment for the given target questioning.
     def build_output(other_qing, option_value: false)
-      xpath = if option_value
-                other_qing.xpath_to_option_value
-              else
-                src_item.xpath_to(target_qing_or_subqing(other_qing))
-              end
-
+      return other_qing.xpath_to_option_value if option_value
+      xpath = src_item.xpath_to(target_qing_or_subqing(other_qing))
       other_qing.has_options? && !option_value ? itext_expr(xpath) : xpath
     end
 

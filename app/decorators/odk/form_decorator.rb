@@ -62,17 +62,17 @@ module ODK
 
     # returns array of option sets that are referenced by the default dynamic calculation
     def referenced_option_sets(qing)
-      # parsing code, belongs in the pattern parser
-      codes = qing.default.scan(/\$(\w+):value+/)
+      codes = qing.default.scan(ODK::DynamicPatternParser::CODE_ONLY_REGEX)
       questions = codes.flatten.map { |c| Question.with_code(c).first }
-      questions[0].nil? ? [] : questions.map { |q| q.option_set.presence }
+      questions.any? ? questions.map { |q| q.option_set.presence } : []
     end
 
     # returns array of option sets needed for dynamic calculations
     def option_sets_for_instances
       opt_sets = enabled_questionings.map do |qing|
-        # parsing code
-        referenced_option_sets(qing) if qing.default.present? && qing.default.include?("value")
+        if qing.default.present? && qing.default =~ ODK::DynamicPatternParser::VALUE_REGEX
+          referenced_option_sets(qing)
+        end
       end
       opt_sets.flatten.compact.uniq
     end

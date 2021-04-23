@@ -17,6 +17,10 @@ module ODK
     # XPath 1.0 is specified (you have to use html entities for quotes in strings).
     TOKEN_REGEX_WITH_STRINGS = Regexp.new(%{('[^']*'|"[^"]*"|#{CODE_REGEX.source})})
 
+    # Regex for parsing values and codes for dynamic calculations of option sets
+    CODE_ONLY_REGEX = /\$(\w+):value+/.freeze
+    VALUE_REGEX = /:value/.freeze
+
     def initialize(pattern, src_item:)
       self.pattern = pattern
       self.form = src_item.form
