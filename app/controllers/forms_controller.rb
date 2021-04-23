@@ -77,6 +77,7 @@ class FormsController < ApplicationController
         @form = ODK::DecoratorFactory.decorate(@form)
         @questionings = ODK::DecoratorFactory.decorate_collection(@form.questionings)
         @option_sets = ODK::DecoratorFactory.decorate_collection(@form.option_sets)
+        @option_sets_for_instances = ODK::DecoratorFactory.decorate_collection(@form.option_sets_for_instances)
       end
     end
   end

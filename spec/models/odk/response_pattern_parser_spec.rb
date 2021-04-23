@@ -146,6 +146,41 @@ describe ODK::ResponsePatternParser do
 
   # rubocop:disable Layout/LineLength
   describe "Dynamic question value $questionCode:value" do
+    context "should not recognize the pattern as a token" do
+      let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
+      let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
+      let(:score) { create(:question, code: "score1", qtype_name: "integer") }
+      let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, score]) }
+      let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+      let(:q2) { ODK::QingDecorator.decorate(form.c[1]) }
+
+      let(:src_item) { q2 }
+      let(:pattern) { "calc(likert1:value)" }
+
+      it "should have correct xpath" do
+        is_expected.to eq("likert1:value")
+      end
+    end
+
+    context "should use labels as xpath if values are not used" do
+      let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
+      let(:likert_options2) { create(:option_set, option_names: %w[OK Whatever Bad], option_values: [4, 5, 6]) }
+      let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
+      let(:likert_question2) { create(:question, code: "likert2", qtype_name: "select_one", option_set: likert_options2) }
+      let(:score) { create(:question, code: "score1", qtype_name: "integer") }
+      let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, likert_question2, score]) }
+      let(:q1) { ODK::QingDecorator.decorate(form.c[0]) }
+      let(:q2) { ODK::QingDecorator.decorate(form.c[1]) }
+      let(:q3) { ODK::QingDecorator.decorate(form.c[2]) }
+
+      let(:src_item) { q3 }
+      let(:pattern) { "calc($likert1 + $likert2)" }
+
+      it "should have correct xpath" do
+        is_expected.to eq("(jr:itext(coalesce(/data/#{q1.odk_code},'BLANK'))) + (jr:itext(coalesce(/data/#{q2.odk_code},'BLANK')))")
+      end
+    end
+
     context "for one default answer value calculation" do
       let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
       let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }

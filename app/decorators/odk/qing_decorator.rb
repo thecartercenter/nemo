@@ -64,8 +64,8 @@ module ODK
     end
 
     def xpath_to_option_value
-      "instance('#{decorated_option_set.odk_code}_numeric_values')/root/item[itextId=/data/"\
-        "#{odk_code}]/numericValue"
+      instance = "#{decorated_option_set.odk_code}_numeric_values"
+      "instance('#{instance}')/root/item[itextId=/data/#{odk_code}]/numericValue"
     end
 
     private
