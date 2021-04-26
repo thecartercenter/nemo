@@ -1887,7 +1887,7 @@ fr:
           Les qualificateurs que vous pouvez utiliser sont les suivant:
 
           * __content__ Le contenu du message (correspondances partielles autorisées)
-          * __type__ Le type de message: 'incoming' pour les messages entrants, 'reply' pour les réponses envoyées par ELMO/NEMO, 'broadcast' pour les messages de diffusion. (correspondances partielles autorisées)
+          * __type__ Le type de message: 'incoming' pour les messages entrants, 'reply' pour les réponses envoyées par NEMO, 'broadcast' pour les messages de diffusion. (correspondances partielles autorisées)
           * __username__ Le nom d'utilisateur de l'expéditeur ou du destinataire (correspondances partielles autorisées)
           * __name__ Le nom complet de l'expéditeur ou du destinataire (correspondances partielles autorisées)
           * __number__ Le numéro de téléphone de l'expéditeur ou du destinataire (correspondances partielles autorisées)
