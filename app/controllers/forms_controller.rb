@@ -69,16 +69,8 @@ class FormsController < ApplicationController
           prepare_and_render_form
         end
       end
-
       # for xml, render openrosa
-      format.xml do
-        authorize!(:download, @form)
-        @form.add_download
-        @form = ODK::DecoratorFactory.decorate(@form)
-        @questionings = ODK::DecoratorFactory.decorate_collection(@form.questionings)
-        @option_sets = ODK::DecoratorFactory.decorate_collection(@form.option_sets)
-        @option_sets_for_instances = ODK::DecoratorFactory.decorate_collection(@form.option_sets_for_instances)
-      end
+      format.xml { prepare_xml }
     end
   end
 
@@ -215,6 +207,17 @@ class FormsController < ApplicationController
   end
 
   private
+
+  def prepare_xml
+    authorize!(:download, @form)
+    @form.add_download
+    @form = ODK::DecoratorFactory.decorate(@form)
+    @questionings = ODK::DecoratorFactory.decorate_collection(@form.questionings)
+    @option_sets = ODK::DecoratorFactory.decorate_collection(@form.option_sets)
+    @option_sets_for_instances = ODK::DecoratorFactory.decorate_collection(
+      @form.option_sets_for_instances
+    )
+  end
 
   # Decorates questions for choose_questions view.
   def questions
