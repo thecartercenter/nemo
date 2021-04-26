@@ -39,15 +39,15 @@ module Utils
 
     def download_and_zip_images
       FileUtils.mkdir_p(Rails.root.join(TMP_DIR))
-
       media_ids = media_objects_scope.pluck("media_objects.id")
-
       filename = "#{@operation.mission.compact_name}-media-#{Time.current.to_s(:filename_datetime)}.zip"
       zipfile_name = Rails.root.join(TMP_DIR, filename)
 
       Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
         media_ids.each do |media_id|
           zip_media(::Media::Object.find(media_id).item, zipfile)
+        rescue Zip::EntryExistsError
+          next
         end
       end
       zipfile_name
