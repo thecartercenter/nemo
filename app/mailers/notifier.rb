@@ -29,6 +29,8 @@ class Notifier < ApplicationMailer
   end
 
   def bug_tracker_warning(error)
+    Sentry.capture_exception(error)
+
     mail(
       to: Cnfg.webmaster_emails,
       reply_to: no_reply_address,

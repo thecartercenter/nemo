@@ -54,6 +54,9 @@ module Utils
         media_ids.each do |media_id|
           zip_media(::Media::Object.find(media_id).item, zipfile)
         rescue Zip::EntryExistsError => e
+          Sentry.add_breadcrumb(Sentry::Breadcrumb.new(
+            message: "Mission: #{@operation.mission.compact_name}. Media ID: #{media_id}"
+          ))
           notify_admins(e)
           next
         end
