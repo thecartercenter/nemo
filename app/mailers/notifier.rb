@@ -28,11 +28,25 @@ class Notifier < ApplicationMailer
          subject: t("notifier.sms_token_change.subject", mission_name: mission.name))
   end
 
+  def bug_tracker_warning(error)
+    Sentry.capture_exception(error)
+
+    mail(
+      to: Cnfg.webmaster_emails,
+      reply_to: no_reply_address,
+      subject: %([#{Cnfg.url_host} WARNING] \(#{error.class.name}\) "#{error.message}")
+    )
+  end
+
   private
 
   def coordinator_emails(mission)
     return [] if mission.nil?
     User.with_roles(mission, :coordinator).active.pluck(:email).uniq[0, 10] # Max of 10, should be rare.
+  end
+
+  def no_reply_address
+    "no-reply@#{Cnfg.url_host}"
   end
 
   def admin_emails

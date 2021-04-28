@@ -93,4 +93,15 @@ describe Notifier do
       end
     end
   end
+
+  context "warning alert email" do
+    let(:error) { StandardError.new("Test") }
+    let(:mail) { described_class.bug_tracker_warning(error).deliver_now }
+
+    it do
+      expect(mail.to).to eq(%w[test1@getnemo.org test2@getnemo.org])
+      expect(mail.subject).to match(/StandardError/)
+      expect(mail.body).to match(/in Sentry/)
+    end
+  end
 end
