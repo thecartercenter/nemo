@@ -28,16 +28,11 @@ class Notifier < ApplicationMailer
          subject: t("notifier.sms_token_change.subject", mission_name: mission.name))
   end
 
-  # params: item, error, response
-  def bug_tracker_warning(params)
-    @response = params[:response]
-    @error = params[:error]
-    @item = params[:item]
-
+  def bug_tracker_warning(error)
     mail(
-      to: NEMO_WEBMASTER_EMAILS,
-      reply_to: "no-reply@getnemo.org",
-      subject: "[#{NEMO_URL_HOST} WARNING] (#{@error})"
+      to: Cnfg.webmaster_emails,
+      reply_to: no_reply_address,
+      subject: %([#{Cnfg.url_host} WARNING] \(#{error.class.name}\) "#{error.message}")
     )
   end
 
@@ -46,6 +41,10 @@ class Notifier < ApplicationMailer
   def coordinator_emails(mission)
     return [] if mission.nil?
     User.with_roles(mission, :coordinator).active.pluck(:email).uniq[0, 10] # Max of 10, should be rare.
+  end
+
+  def no_reply_address
+    "no-reply@#{Cnfg.url_host}"
   end
 
   def admin_emails

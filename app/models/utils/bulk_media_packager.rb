@@ -62,12 +62,7 @@ module Utils
     end
 
     def notify_admins(error)
-      response = ::Media::Object.find(media_id).answer.response
-      Notifier.bug_tracker_warning(
-        item: ::Media::Object.find(media_id),
-        error: error,
-        response: response
-      ).deliver_now
+      Notifier.bug_tracker_warning(error).deliver_now
     end
 
     def zip_media(attachment, zipfile)
