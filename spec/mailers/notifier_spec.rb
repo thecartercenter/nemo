@@ -93,4 +93,16 @@ describe Notifier do
       end
     end
   end
+
+  # TODO: mailing "a bug warning" do
+  #   let(:mission) { create(:mission) }
+  #   let(:user) { create(:user, mission: mission, role_name: :enumerator) }
+  #   let(:args) { [user] }
+  #   let(:mail) { described_class.intro(*args).deliver_now }
+  #
+  #
+  #   it do
+  #
+  #   end
+  # end
 end

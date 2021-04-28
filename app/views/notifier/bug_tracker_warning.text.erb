@@ -1,0 +1,23 @@
+Error
+<%= @error.to_s %>
+<%= @error.full_message %>
+
+Server
+<%= NEMO_URL_HOST %>
+
+Mission
+<%= @response.mission.name %>
+
+Form
+<%= @response.form.name %>
+
+Object
+<%= @item.class.name %>
+
+Item id
+<%= @item.id %>
+
+---
+
+Stacktrace
+<%= @error.backtrace.join("\n") %>

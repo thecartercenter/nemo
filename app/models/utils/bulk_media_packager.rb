@@ -44,16 +44,31 @@ module Utils
 
       filename = "#{@operation.mission.compact_name}-media-#{Time.current.to_s(:filename_datetime)}.zip"
       zipfile_name = Rails.root.join(TMP_DIR, filename)
+      zip(zipfile_name, media_ids)
+    end
 
+    private
+
+    def zip(zipfile_name, media_ids)
       Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
         media_ids.each do |media_id|
           zip_media(::Media::Object.find(media_id).item, zipfile)
+        rescue Zip::EntryExistsError => e
+          notify_admins(e)
+          next
         end
       end
       zipfile_name
     end
 
-    private
+    def notify_admins(error)
+      response = ::Media::Object.find(media_id).answer.response
+      Notifier.bug_tracker_warning(
+        item: ::Media::Object.find(media_id),
+        error: error,
+        response: response
+      ).deliver_now
+    end
 
     def zip_media(attachment, zipfile)
       attachment.open do |file|

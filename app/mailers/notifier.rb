@@ -28,6 +28,19 @@ class Notifier < ApplicationMailer
          subject: t("notifier.sms_token_change.subject", mission_name: mission.name))
   end
 
+  # params: item, error, response
+  def bug_tracker_warning(params)
+    @response = params[:response]
+    @error = params[:error]
+    @item = params[:item]
+
+    mail(
+      to: NEMO_WEBMASTER_EMAILS,
+      reply_to: "no-reply@getnemo.org",
+      subject: "[#{NEMO_URL_HOST} WARNING] (#{@error})"
+    )
+  end
+
   private
 
   def coordinator_emails(mission)
