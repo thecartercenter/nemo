@@ -141,6 +141,7 @@ class FormsController < ApplicationController
   end
 
   def re_cache
+    Rails.logger.debug("OData dirty_json cause: manual re-cache of #{@form.id}")
     Response.where(form_id: @form.id).update_all(dirty_json: true)
     flash[:success] = t("operation.details.cache_odata")
     redirect_after_status_change

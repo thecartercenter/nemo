@@ -187,6 +187,7 @@ class Answer < ResponseNode
 
     # Manually mark as dirty since the creation of media objects
     # is difficult to listen for otherwise.
+    Rails.logger.debug("OData dirty_json cause: media_object_id=#{id}")
     response&.update!(dirty_json: true)
   end
 
