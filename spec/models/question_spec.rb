@@ -147,14 +147,14 @@ describe Question do
       let(:question) { build(:question, reference: ref) }
 
       context "with valid reference" do
-        let(:ref) { "https://eos.cartercenter.org/parts/6" }
+        let(:ref) { "https://example.org/parts/6" }
         it "has a valid reference" do
           expect(question).to be_valid
         end
       end
 
       context "with valid reference" do
-        let(:ref) { "http://eos.cartercenter.org/parts/6" }
+        let(:ref) { "http://example.org/parts/6" }
         it "has a valid reference" do
           expect(question).to be_valid
         end
