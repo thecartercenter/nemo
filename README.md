@@ -1,8 +1,8 @@
-# NEMO/ELMO
+# NEMO
 
-NEMO/ELMO is a mobile data collection and analysis web application. Originally designed for the [Carter Center](http://www.cartercenter.org) for election observation missions, it can be used in many different contexts for data collection.
+NEMO is a mobile data collection and analysis web application. Originally designed for the [Carter Center](http://www.cartercenter.org), it can be used in many different contexts for data collection.
 
-Consider NEMO/ELMO if you need:
+Consider NEMO if you need:
 
 - Integrated form design
 - Standardized form sets
@@ -14,7 +14,7 @@ Consider NEMO/ELMO if you need:
 - Offline operation in poorly-connected areas
 
 To learn more about the history and goals of the project, [visit the project site](http://getnemo.org).
-You can also learn more about The Carter Center's Election Standards [here](http://cartercenter.org).
+You can also learn more about The Carter Center [here](http://cartercenter.org).
 
 ## Production Setup
 
@@ -22,7 +22,7 @@ For production scenarios, [Sassafras Tech Collective](http://sassafras.coop) off
 
 ## Contributing
 
-NEMO/ELMO is 100% open-source. We would like you to be part of the community! We accept and encourage contributions from the public. You can start by filing a bug report or feature request using a [Github issue](https://github.com/thecartercenter/nemo/issues).
+NEMO is 100% open-source. We would like you to be part of the community! We accept and encourage contributions from the public. You can start by filing a bug report or feature request using a [Github issue](https://github.com/thecartercenter/nemo/issues).
 
 Pull requests are also welcome, but discussing things first in an issue is always a good idea.
 
