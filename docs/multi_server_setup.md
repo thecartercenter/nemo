@@ -51,7 +51,7 @@
           <<: *default
           database: nemo_production
           host: <DB_INST_PRIV_DNS>
-          user: deploy
+          username: deploy
           password: "<DB_PASSWORD>"
     (Note quotes around password, just to be safe).
 3. Restart nginx and ensure site still works.

@@ -12,7 +12,7 @@ production:
 #  <<: *default
 #  database: nemo_production
 #  host: 10.0.0.2 # Wherever the DB can be accessed locally
-#  user: deploy # Database user
+#  username: deploy # Database user
 #  password: 123ChangeMe # Database user password, set via psql
 
 test:
