@@ -57,10 +57,7 @@ gem "rdiscount", "~> 2.1"
 gem "reverse_markdown", "~> 2.0"
 
 # Storage
-# Fork: Allow regex in content_type arrays.
-# https://github.com/igorkasyanchuk/active_storage_validations/pull/104
-gem "active_storage_validations", github: "cooperka/active_storage_validations",
-                                  tag: "2020-01-13-v0.9.2-regexArray"
+gem "active_storage_validations", "~> 0.9.3"
 gem "aws-sdk-s3", "~> 1.86", require: false
 gem "azure-storage-blob", require: false
 gem "image_processing", "~> 1.12"
