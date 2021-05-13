@@ -434,28 +434,24 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     # Two select one questions and one default value question using dynamic values
-    # rubocop:disable Layout/LineLength
-    # rubocop:disable Layout/HashAlignment
     context "dynamic answer based on option set" do
-      let(:likert_options) { create(:option_set, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3]) }
-      let(:likert_options2) { create(:option_set, option_names: %w[OK Whatever Bad], option_values: [4, 5, 6]) }
-      let(:likert_question) { create(:question, code: "likert1", qtype_name: "select_one", option_set: likert_options) }
-      let(:likert_question2) { create(:question, code: "likert2", qtype_name: "select_one", option_set: likert_options2) }
-      let(:score) { create(:question, code: "score1", qtype_name: "text") }
-      let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, likert_question2, score]) }
+      let(:likert_options) { create(:option_set, option_names: %w[A B C], option_values: [1, 2, 3]) }
+      let(:likert_options2) { create(:option_set, option_names: %w[D E F], option_values: [4, 5, 6]) }
+      let(:form) do
+        create(:form, :live, name: "Dynamic answers for option sets",
+                             question_types: ["select_one", {repeating: {items: %w[select_one text]}}])
+      end
 
       before do
-        qing = form.questionings.last
-        qing.default = "calc($likert1:value + $likert2:value)"
-        qing.save!
+        form.c[0].question.update!(code: "likert1", option_set: likert_options)
+        form.c[1].c[0].question.update!(code: "likert2", option_set: likert_options2)
+        form.c[1].c[1].update!(default: "calc($likert1:value + $likert2:value)")
       end
 
       it "should render proper xml" do
         expect_xml(form, "dynamic_values")
       end
     end
-    # rubocop:enable Layout/LineLength
-    # rubocop:enable Layout/HashAlignment
 
     context "repeat group form with dynamic item names" do
       let!(:form) do

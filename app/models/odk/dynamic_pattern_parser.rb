@@ -70,6 +70,15 @@ module ODK
       "jr:itext(coalesce(#{xpath_to_node},'BLANK'))"
     end
 
+    def option_value_expr(xpath_to_node, opt_set_odk_code)
+      instance = "#{opt_set_odk_code}_numeric_values"
+
+      # We need to add `current()` for relative paths b/c this expression is in the context
+      # of a the other instance. This is because the context of the predicate is the path that it acts on.
+      xpath_to_node = "current()/#{xpath_to_node}" if xpath_to_node =~ /\A\./
+      "instance('#{instance}')/root/item[itextId=#{xpath_to_node}]/numericValue"
+    end
+
     private
 
     def token_is_code?(token)
