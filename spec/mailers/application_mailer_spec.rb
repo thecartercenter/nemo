@@ -29,6 +29,10 @@ describe ApplicationMailer do
       Setting.root.update!(theme: "elmo")
     end
 
+    after do
+      Setting.root.update!(theme: "nemo")
+    end
+
     it "has correct site name in from address" do
       # Call mailer several times to make sure @mission instance variable works as expected
       expect(SampleMailer.sample(mission1).deliver_now["From"].value).to eq("NEMO <nemo@example.com>")
