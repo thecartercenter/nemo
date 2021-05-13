@@ -6,8 +6,11 @@
       <instance>
         <data id="*form1*" version="*formver1*">
           <*itemcode1*/>
-          <*itemcode2*/>
-          <*itemcode3*/>
+          <*itemcode2* jr:template="">
+            <header/>
+            <*itemcode3*/>
+            <*itemcode4*/>
+          </*itemcode2*>
         </data>
       </instance>
       <instance id="*optsetcode1*_numeric_values">
@@ -44,41 +47,47 @@
       </instance>
       <itext>
         <translation lang="English">
+          <text id="*itemcode2*:label">
+            <value>Group 1</value>
+          </text>
+          <text id="*itemcode2*:hint">
+            <value>Group Hint 1</value>
+          </text>
           <text id="*itemcode1*:label">
             <value>Select One Question Title 1</value>
           </text>
           <text id="*itemcode1*:hint">
             <value>Question Hint 1</value>
           </text>
-          <text id="*itemcode2*:label">
+          <text id="*itemcode3*:label">
             <value>Select One Question Title 2</value>
           </text>
-          <text id="*itemcode2*:hint">
+          <text id="*itemcode3*:hint">
             <value>Question Hint 2</value>
           </text>
-          <text id="*itemcode3*:label">
+          <text id="*itemcode4*:label">
             <value>Text Question Title 3</value>
           </text>
-          <text id="*itemcode3*:hint">
+          <text id="*itemcode4*:hint">
             <value>Question Hint 3</value>
           </text>
           <text id="*optcode1*">
-            <value>Excellent</value>
+            <value>A</value>
           </text>
           <text id="*optcode2*">
-            <value>Good</value>
+            <value>B</value>
           </text>
           <text id="*optcode3*">
-            <value>Bad</value>
+            <value>C</value>
           </text>
           <text id="*optcode4*">
-            <value>OK</value>
+            <value>D</value>
           </text>
           <text id="*optcode5*">
-            <value>Whatever</value>
+            <value>E</value>
           </text>
           <text id="*optcode6*">
-            <value>Bad</value>
+            <value>F</value>
           </text>
           <text id="BLANK">
             <value/>
@@ -86,8 +95,10 @@
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*" type="select1"/>
-      <bind nodeset="/data/*itemcode2*" type="select1"/>
-      <bind nodeset="/data/*itemcode3*" type="string" calculate="(instance('*optsetcode1*_numeric_values')/root/item[itextId=/data/*itemcode1*]/numericValue) + (instance('*optsetcode2*_numeric_values')/root/item[itextId=/data/*itemcode2*]/numericValue)"/>
+      <bind nodeset="/data/*itemcode2*"/>
+      <bind nodeset="/data/*itemcode2*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode3*" type="select1"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode4*" type="string" calculate="(instance('*optsetcode1*_numeric_values')/root/item[itextId=/data/*itemcode1*]/numericValue) + (instance('*optsetcode2*_numeric_values')/root/item[itextId=../*itemcode3*]/numericValue)"/>
     </model>
   </h:head>
   <h:body>
@@ -107,25 +118,35 @@
         <value>*optcode3*</value>
       </item>
     </select1>
-    <select1 ref="/data/*itemcode2*">
+    <group ref="/data/*itemcode2*">
       <label ref="jr:itext('*itemcode2*:label')"/>
-      <hint ref="jr:itext('*itemcode2*:hint')"/>
-      <item>
-        <label ref="jr:itext('*optcode4*')"/>
-        <value>*optcode4*</value>
-      </item>
-      <item>
-        <label ref="jr:itext('*optcode5*')"/>
-        <value>*optcode5*</value>
-      </item>
-      <item>
-        <label ref="jr:itext('*optcode6*')"/>
-        <value>*optcode6*</value>
-      </item>
-    </select1>
-    <input ref="/data/*itemcode3*">
-      <label ref="jr:itext('*itemcode3*:label')"/>
-      <hint ref="jr:itext('*itemcode3*:hint')"/>
-    </input>
+      <repeat nodeset="/data/*itemcode2*">
+        <group appearance="field-list">
+          <input ref="/data/*itemcode2*/header">
+            <hint ref="jr:itext('*itemcode2*:hint')"/>
+          </input>
+          <select1 ref="/data/*itemcode2*/*itemcode3*">
+            <label ref="jr:itext('*itemcode3*:label')"/>
+            <hint ref="jr:itext('*itemcode3*:hint')"/>
+            <item>
+              <label ref="jr:itext('*optcode4*')"/>
+              <value>*optcode4*</value>
+            </item>
+            <item>
+              <label ref="jr:itext('*optcode5*')"/>
+              <value>*optcode5*</value>
+            </item>
+            <item>
+              <label ref="jr:itext('*optcode6*')"/>
+              <value>*optcode6*</value>
+            </item>
+          </select1>
+          <input ref="/data/*itemcode2*/*itemcode4*">
+            <label ref="jr:itext('*itemcode4*:label')"/>
+            <hint ref="jr:itext('*itemcode4*:hint')"/>
+          </input>
+        </group>
+      </repeat>
+    </group>
   </h:body>
 </h:html>

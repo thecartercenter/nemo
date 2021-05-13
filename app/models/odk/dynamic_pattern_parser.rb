@@ -70,6 +70,11 @@ module ODK
       "jr:itext(coalesce(#{xpath_to_node},'BLANK'))"
     end
 
+    def option_value_expr(xpath_to_node, opt_set_odk_code)
+      instance = "#{opt_set_odk_code}_numeric_values"
+      "instance('#{instance}')/root/item[itextId=#{xpath_to_node}]/numericValue"
+    end
+
     private
 
     def token_is_code?(token)
