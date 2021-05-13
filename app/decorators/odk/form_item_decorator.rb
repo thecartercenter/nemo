@@ -12,10 +12,13 @@ module ODK
       decorate_collection(self_and_ancestors).map(&:odk_code).join("/")
     end
 
-    def xpath_to(dest)
+    def xpath_to(dest, prepend_current: false)
       dest = decorate(dest)
+      return "current()" if object == dest.object && prepend_current
       return "." if object == dest.object
       return dest.absolute_xpath if dest.top_level?
+
+      current_prefix = prepend_current ? +"current()/" : +""
 
       common_ancestor = object.lowest_common_ancestor(dest)
       ancestor_to_self = object.path_from_ancestor(common_ancestor, include_ancestor: true)
@@ -28,7 +31,7 @@ module ODK
           root_to_ancestor = decorate_collection(root_to_ancestor)
           root_to_ancestor.each_with_index do |node, i|
             xpath_self_to_cur_group = ([".."] * (ancestry_depth - i - 1)).join("/")
-            args << node.absolute_xpath << "position(#{xpath_self_to_cur_group})"
+            args << node.absolute_xpath << "position(#{current_prefix}#{xpath_self_to_cur_group})"
           end
         end
 
@@ -45,7 +48,7 @@ module ODK
         ancestor_to_dest += [dest]
         xpath_ancestor_to_dest = ancestor_to_dest.map(&:odk_code).join("/")
 
-        [xpath_self_to_ancestor, xpath_ancestor_to_dest].join("/")
+        current_prefix << [xpath_self_to_ancestor, xpath_ancestor_to_dest].join("/")
       end
     end
 
