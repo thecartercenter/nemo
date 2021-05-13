@@ -8,9 +8,9 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   let(:form) { create(:form) }
   let(:fixture_filename) { "#{fixture_name}.xml" }
 
-  # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk/forms`.
-  # Then use e.g. `adb push tmp/odk/forms/my_form/. /sdcard/odk/forms` to push one onto a phone for testing.
-  let(:save_fixtures) { true }
+  # Set this to `true` temporarily to make the spec save prepared XML files under `tmp/odk/forms/`
+  # to allow pushing onto a phone for testing.
+  let(:save_fixtures) { false }
 
   before do
     login(user)
@@ -395,7 +395,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         stub_const(ODK::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
 
         # Generate the itemset file and save with the saved fixture if saving fixtures.
-        # Then if we do adb push tmp/odk/forms/small_large_multilevel/. /sdcard/odk/forms
+        # Then if we do: adb push tmp/odk/forms/small_large_multilevel/. /sdcard/Android/data/org.odk.collect.android/files/forms
         # it will copy the form and the required itemset file for testing.
         if save_fixtures
           itemsets_attachment = ODK::ItemsetsFormAttachment.new(form: form).tap(&:ensure_generated)
