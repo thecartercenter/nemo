@@ -98,7 +98,7 @@
       <bind nodeset="/data/*itemcode2*"/>
       <bind nodeset="/data/*itemcode2*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode2*/*itemcode3*" type="select1"/>
-      <bind nodeset="/data/*itemcode2*/*itemcode4*" type="string" calculate="(instance('*optsetcode1*_numeric_values')/root/item[itextId=/data/*itemcode1*]/numericValue) + (instance('*optsetcode2*_numeric_values')/root/item[itextId=../*itemcode3*]/numericValue)"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode4*" type="string" calculate="(instance('*optsetcode1*_numeric_values')/root/item[itextId=/data/*itemcode1*]/numericValue) + (instance('*optsetcode2*_numeric_values')/root/item[itextId=current()/../*itemcode3*]/numericValue)"/>
     </model>
   </h:head>
   <h:body>
