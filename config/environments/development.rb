@@ -4,7 +4,7 @@ ELMO::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Allow test/demo domains.
-  config.hosts += %w[nemo.test nemo.frappe.sassafras.coop *.ngrok.io]
+  config.hosts += %w[nemo.test nemo.frappe.sassafras.coop foo.ngrok.io]
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
