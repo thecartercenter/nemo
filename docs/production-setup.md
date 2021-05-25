@@ -19,15 +19,11 @@ This will be the (unprivileged) user under which the app runs.
     sudo apt install -y nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev memcached imagemagick vim-gtk ntp
     sudo systemctl enable ntp
 
-Remove the default ruby installation so we can install our own later:
-
-    sudo apt remove -y ruby
-
 ### Configure a default text editor
 
-    echo 'export EDITOR=vim' | sudo tee -a ~/.bashrc /home/deploy/.bashrc
-    # OR:
-    echo 'export EDITOR=nano' | sudo tee -a ~/.bashrc /home/deploy/.bashrc
+    export EDITOR=vim # Option 1.
+    export EDITOR=nano # Option 2.
+    echo "export EDITOR=$EDITOR" | sudo tee -a ~/.bashrc /home/deploy/.bashrc
 
 ### Install Nginx and Passenger
 
@@ -65,8 +61,8 @@ Web server:
 - Follow the instructions in the web server's `database.yml` to configure the connection
 
 Database server:
-- Modify `/etc/postgresql/10/main/pg_hba.conf` to allow remote connections
-- Modify `/etc/postgresql/10/main/postgresql.conf` to listen on any ports needed
+- Modify `/etc/postgresql/12/main/pg_hba.conf` to allow remote connections
+- Modify `/etc/postgresql/12/main/postgresql.conf` to listen on any ports needed
 
 ### Setup SSL and configure Nginx
 
@@ -145,7 +141,7 @@ To switch to the `deploy` user, do:
 
 ### Install nvm, Node.js, and Yarn
 
-    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
     exec $SHELL
     nvm install
     npm install -g yarn
