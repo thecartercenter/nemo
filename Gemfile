@@ -159,7 +159,7 @@ group :development, :test do
   gem "capybara", "~> 3.30"
   gem "capybara-screenshot", "~> 1.0"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
-  gem "puma", "~> 5.0"
+  gem "puma", "~> 5.3"
   gem "selenium-webdriver", "~> 3.9"
   gem "webdrivers", "~> 4.0"
 
