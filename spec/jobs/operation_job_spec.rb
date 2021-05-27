@@ -51,7 +51,7 @@ describe OperationJob do
       end
 
       it "calls exception notifier" do
-        expect(ExceptionNotifier).to receive(:notify_exception).with(StandardError)
+        expect(ExceptionNotifier).to receive(:notify_exception).at_least(:once).with(StandardError)
         expect { TestOperationJob.perform_now(operation, :raise) }.to raise_error(StandardError)
       end
     end
