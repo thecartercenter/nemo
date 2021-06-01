@@ -70,8 +70,8 @@ module Media
       repeat_groups = []
       answer = item.record.answer
       answer_group = nil
-      answer_group = next_agroup_up(answer.parent_id) if answer.from_group? && answer.parent_id
-      if answer_group.present? && answer_group.repeatable?
+      answer_group = next_repeat_group_up(answer.parent_id) if answer.parent_id
+      if answer_group.present?
         repeat_groups = respect_ancestors(answer_group, repeat_groups)
         filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
       end
@@ -92,6 +92,15 @@ module Media
         end
       end
       repeat_groups
+    end
+
+    def next_repeat_group_up(agroup_id)
+      parent = ResponseNode.find(agroup_id)
+      if parent.type == "AnswerGroup" && parent.repeatable?
+        parent
+      elsif parent.parent_id.present?
+        next_repeat_group_up(parent.parent_id)
+      end
     end
 
     def next_agroup_up(agroup_id)

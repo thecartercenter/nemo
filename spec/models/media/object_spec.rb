@@ -137,13 +137,15 @@ describe Media::Object do
     end
     let!(:media_jpg) { create(:media_image, :jpg) }
     let!(:media_png) { create(:media_image, :png) }
+    let!(:media_jpg2) { create(:media_image, :jpg) }
+    let!(:media_png2) { create(:media_image, :png) }
 
     before do
       create_response(form: repeat_form, answer_values: [
         {repeating:
           [
             ["touchstone", ["alice", media_jpg, media_png]],
-            ["greatoak", ["rhys", media_jpg, media_png]]
+            ["greatoak", ["rhys", media_jpg2, media_png2]]
           ]
         }
       ])
@@ -151,15 +153,14 @@ describe Media::Object do
 
     it "should have correct and unique filenames" do
       r = Response.first
-      puts "response"
-      puts r.debug_tree
-      filename1 = r.root_node.c[0].c[0].c[1].c[2].media_object
-      # media_object.item.blob.filename.to_s
-      puts "filename:"
-      puts filename1
+      filename1 = r.c[0].c[1].c[1].c[2].media_object.item.blob.filename.to_s
+      filename2 = r.c[0].c[1].c[1].c[1].media_object.item.blob.filename.to_s
+      filename3 = r.c[0].c[0].c[1].c[1].media_object.item.blob.filename.to_s
 
+      expect(filename1).to match(/-RC2-Image/)
+      expect(filename2).to match(/-RC2-Image/)
+      expect(filename3).to match(/-RC1-Image/)
     end
-
   end
 
   context "One group, one repeat group" do
