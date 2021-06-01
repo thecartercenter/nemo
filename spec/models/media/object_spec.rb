@@ -116,6 +116,52 @@ describe Media::Object do
     end
   end
 
+  context "Repeat group with group inside" do
+    let(:repeat_form) do
+      create(:form,
+        question_types: [
+          {repeating:
+            {name: "RC",
+             items: [
+               "text",
+               # inner group
+               [
+                 "text",
+                 "image",
+                 "image"
+               ]
+             ]
+            }
+          }
+        ])
+    end
+    let!(:media_jpg) { create(:media_image, :jpg) }
+    let!(:media_png) { create(:media_image, :png) }
+
+    before do
+      create_response(form: repeat_form, answer_values: [
+        {repeating:
+          [
+            ["touchstone", ["alice", media_jpg, media_png]],
+            ["greatoak", ["rhys", media_jpg, media_png]]
+          ]
+        }
+      ])
+    end
+
+    it "should have correct and unique filenames" do
+      r = Response.first
+      puts "response"
+      puts r.debug_tree
+      filename1 = r.root_node.c[0].c[0].c[1].c[2].media_object
+      # media_object.item.blob.filename.to_s
+      puts "filename:"
+      puts filename1
+
+    end
+
+  end
+
   context "One group, one repeat group" do
     let(:repeat_form) do
       create(:form,
