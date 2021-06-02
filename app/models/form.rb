@@ -75,7 +75,7 @@ class Form < ApplicationRecord
 
   after_save :update_minimum
 
-  validates :name, presence: true, length: {maximum: 32}
+  validates :name, presence: true, length: {maximum: 32}, format: {with: /\A[A-Za-z0-9]+\z/}
   validate :name_unique_per_mission
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
 

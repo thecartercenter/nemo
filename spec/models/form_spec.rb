@@ -51,6 +51,7 @@ describe Form do
     end
 
     it "should return true for user in whitelist" do
+      puts form.name
       expect(form.api_user_id_can_see?(user.id)).to be_truthy
     end
 
@@ -67,6 +68,21 @@ describe Form do
       it "is hooked up properly" do
         expect(form).to be_invalid
         expect(form.errors[:default_response_name].join).to match(/must surround/)
+      end
+    end
+
+    context "form name" do
+      describe "form name with invalid characters" do
+        let(:form) { build(:form, name: "abc_!$") }
+        it "should be invalid" do
+          expect(form).to_not(be_valid)
+        end
+      end
+      describe "form name with alphanumeric" do
+        let(:form) { build(:form, name: "Bert123") }
+        it "should be valid" do
+          expect(form).to be_valid
+        end
       end
     end
   end
@@ -104,7 +120,7 @@ describe Form do
     end
 
     it "should not be updated when form saved otherwise" do
-      expect { form.update!(name: "New Name!") }.not_to(change { form.published_changed_at })
+      expect { form.update!(name: "NewName") }.not_to(change { form.published_changed_at })
     end
   end
 
@@ -141,7 +157,7 @@ describe Form do
 
     context "when updating a form name" do
       it "should change" do
-        expect { form2.update!(name: "New Name!") }
+        expect { form2.update!(name: "NewName") }
           .to(change { Form.odk_index_cache_key(mission: get_mission) })
       end
     end

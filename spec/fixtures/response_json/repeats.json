@@ -1,7 +1,7 @@
 {
   "ResponseID": "*id1*",
   "ResponseShortcode": "*shortcode1*",
-  "FormName": "Sample Form 1",
+  "FormName": "SampleForm1",
   "ResponseSubmitterName": "A User 1",
   "ResponseSubmitDate": "2020-04-20T06:30:00-06:00",
   "ResponseReviewed": true,

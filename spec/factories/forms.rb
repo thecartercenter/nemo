@@ -134,7 +134,7 @@ FactoryBot.define do
 
     authenticate_sms { false }
     mission { get_mission }
-    sequence(:name) { |n| "Sample Form #{n}" }
+    sequence(:name) { |n| "SampleForm#{n}" }
 
     after(:create) do |form, evaluator|
       items = evaluator.questions.presence || evaluator.question_types
