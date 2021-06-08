@@ -5,26 +5,26 @@ require "rails_helper"
 # Tests the search functionality for the response model
 describe ResponsesSearcher do
   # Deliberately putting a period in form name here. This used to cause issues.
-  let(:form) { create(:form, name: "foo 1.0", question_types: %w[integer]) }
+  let(:form) { create(:form, name: "foo1", question_types: %w[integer]) }
 
   describe "form qualifier" do
     let(:form2) { create(:form, name: "bar", question_types: %w[integer]) }
-    let(:form3) { create(:form, name: "qu'o`t\"es") }
+    let(:form3) { create(:form, name: "quotes") }
     let!(:r1) { create(:response, form: form) }
     let!(:r2) { create(:response, form: form2) }
     let!(:r3) { create(:response, form: form) }
     let!(:r4) { create(:response, form: form3) }
 
     it "matches the correct objects" do
-      expect(search(%(form:"foo 1.0"))).to contain_exactly(r1, r3)
-      expect(search(%(form:(qu'o`t"es)))).to contain_exactly(r4)
+      expect(search(%(form:"foo1"))).to contain_exactly(r1, r3)
+      expect(search(%(form:(quotes)))).to contain_exactly(r4)
       expect(search(%(form-id:"#{form.id}"))).to contain_exactly(r1, r3)
     end
 
     it "has correct filter data" do
-      expect(searcher(%(form:"foo 1.0"))).to have_filter_data(
+      expect(searcher(%(form:"foo1"))).to have_filter_data(
         form_ids: [],
-        advanced_text: "form:(\"foo 1.0\")"
+        advanced_text: "form:\"foo1\""
       )
       expect(searcher(%(form-id:"#{form.id}"))).to have_filter_data(form_ids: [form.id])
       expect(searcher(%(form-id:("#{form.id}" | #{form2.id})))).to have_filter_data(
