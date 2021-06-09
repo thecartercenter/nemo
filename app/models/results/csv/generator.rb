@@ -4,9 +4,6 @@ module Results
   module CSV
     # Generates CSV from responses in an efficient way. Built to handle millions of Answers.
     class Generator
-      ODATA_BASE_KEYS = OData::SimpleEntities::RESPONSE_BASE_PROPERTIES.keys.map(&:to_s) +
-        OData::SimpleEntities::RESPONSE_EXTRA_PROPERTIES.keys.map(&:to_s)
-
       attr_accessor :buffer, :answer_processor, :header_map, :response_scope, :options, :locales
 
       def initialize(response_scope, mission:, options:)
@@ -41,18 +38,32 @@ module Results
         header_map.add_group(%w[parent_group_name parent_group_depth])
         qcodes = HeaderQuery.new(response_scope: response_scope, locales: locales).run.to_a.flatten
         header_map.add_from_qcodes(qcodes)
-        header_map.add_placeholders(response_form_qcodes)
+
+        # Forms that have conditional logic that leads to a question NEVER being shown to users
+        # will never have that question code stored in their response tree, so here we
+        # ensure that all headers get added (so that data analysts aren't confused).
+        header_map.add_from_qcodes(response_form_qcodes)
       end
 
       def response_form_qcodes
-        # Get the oldest response from each different form.
-        distinct_responses = response_scope.order(:created_at).distinct(:form_id)
-        form_qcodes = distinct_responses.map do |response|
-          # Ensure it's cached, and grab the JSON keys because this is fast.
-          cached_json = response.cached_json.presence || CacheODataJob.cache_response(response)
-          cached_json.keys
+        forms = response_scope.distinct(:form_id).includes(:form).map(&:form)
+        qcodes = forms.map do |form|
+          form.descendants.map do |form_item|
+            form_item.instance_of?(Questioning) ? hash_from_form_item(form_item) : nil
+          end.compact
         end
-        form_qcodes.flatten.uniq - ODATA_BASE_KEYS
+        qcodes.flatten.uniq { |hash| hash["code"] }
+      end
+
+      # Returns the same structure of data that HeaderQuery would return,
+      # so that it can be parsed by header_map#add_from_qcodes.
+      def hash_from_form_item(form_item)
+        {
+          "code" => form_item.question.code,
+          "qtype_name" => form_item.question.qtype_name,
+          "level_names" => form_item.option_set&.level_names&.to_json,
+          "allow_coordinates" => form_item.option_set&.allow_coordinates
+        }
       end
 
       def write_header(csv)
