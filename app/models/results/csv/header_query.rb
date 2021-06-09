@@ -18,6 +18,8 @@ module Results
         SQL
       end
 
+      # Note: This will NOT include answers marked "not relevant" (e.g. skipped questions).
+      # These must be added separately.
       def from
         <<~SQL.squish
           FROM responses

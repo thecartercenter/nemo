@@ -208,6 +208,33 @@ describe Results::CSV::Generator, :reset_factory_sequences do
     end
   end
 
+  context "with display logic" do
+    let(:form1) do
+      create(:form, question_types: ["text",                       # 1
+                                     "integer",                    # 2, skipped
+                                     "decimal"])                   # 3
+    end
+    let(:qings) { form1.questionings }
+
+    before do
+      # Only show Q2 if Q1 == "secret".
+      qings[1].update!(
+        display_if: "all_met",
+        display_conditions_attributes: [
+          {left_qing_id: qings[0].id, op: "eq", value: "secret"}
+        ]
+      )
+
+      Timecop.freeze(submission_time) do
+        create_response(form: form1, answer_values: ["foo", nil, -123.50])
+      end
+    end
+
+    it "produces correct csv" do
+      is_expected.to match_user_facing_csv(prepare_response_csv_expectation("display_logic.csv"))
+    end
+  end
+
   context "with deleted response and answer" do
     let(:form1) { create(:form, question_types: %w[text text]) }
     let(:form2) { create(:form, question_types: %w[text]) }
