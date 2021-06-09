@@ -34,16 +34,11 @@ module Results
         end
       end
 
-      def add_from_qcode(row)
-        if row["level_names"]
-          add_level_headers(row["code"], row["level_names"])
-        else
-          add(row["code"])
-        end
-
-        # If it's a select question that has coords, add cols for that.
-        return unless row["allow_coordinates"] && row["qtype_name"] != "select_multiple"
-        add_location_headers(row["code"], lat_lng_only: true)
+      # Forms with conditional logic that leads to a question NEVER being shown to users
+      # will never have that question code stored in their response tree.
+      # Ensure the headers still get added so that data analysts aren't confused.
+      def add_placeholders(placeholder_headers)
+        placeholder_headers.each { |h| add(h) }
       end
 
       # Returns the index the given header maps to, or nil if not found.
@@ -69,6 +64,18 @@ module Results
 
       def translate(header)
         I18n.t("response.csv_headers.#{header}")
+      end
+
+      def add_from_qcode(row)
+        if row["level_names"]
+          add_level_headers(row["code"], row["level_names"])
+        else
+          add(row["code"])
+        end
+
+        # If it's a select question that has coords, add cols for that.
+        return unless row["allow_coordinates"] && row["qtype_name"] != "select_multiple"
+        add_location_headers(row["code"], lat_lng_only: true)
       end
 
       def add_location_headers(code, lat_lng_only: false)

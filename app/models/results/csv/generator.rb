@@ -4,6 +4,9 @@ module Results
   module CSV
     # Generates CSV from responses in an efficient way. Built to handle millions of Answers.
     class Generator
+      ODATA_BASE_KEYS = OData::SimpleEntities::RESPONSE_BASE_PROPERTIES.keys.map(&:to_s) +
+        OData::SimpleEntities::RESPONSE_EXTRA_PROPERTIES.keys.map(&:to_s)
+
       attr_accessor :buffer, :answer_processor, :header_map, :response_scope, :options, :locales
 
       def initialize(response_scope, mission:, options:)
@@ -38,6 +41,18 @@ module Results
         header_map.add_group(%w[parent_group_name parent_group_depth])
         qcodes = HeaderQuery.new(response_scope: response_scope, locales: locales).run.to_a.flatten
         header_map.add_from_qcodes(qcodes)
+        header_map.add_placeholders(response_form_qcodes)
+      end
+
+      def response_form_qcodes
+        # Get the oldest response from each different form.
+        distinct_responses = response_scope.order(:created_at).distinct(:form_id)
+        form_qcodes = distinct_responses.map do |response|
+          # Ensure it's cached, and grab the JSON keys because this is fast.
+          cached_json = response.cached_json.presence || CacheODataJob.cache_response(response)
+          cached_json.keys
+        end
+        form_qcodes.flatten.uniq - ODATA_BASE_KEYS
       end
 
       def write_header(csv)
