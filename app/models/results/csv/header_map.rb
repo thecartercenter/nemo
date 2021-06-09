@@ -34,13 +34,6 @@ module Results
         end
       end
 
-      # Forms with conditional logic that leads to a question NEVER being shown to users
-      # will never have that question code stored in their response tree.
-      # Ensure the headers still get added so that data analysts aren't confused.
-      def add_placeholders(placeholder_headers)
-        placeholder_headers.each { |h| add(h) }
-      end
-
       # Returns the index the given header maps to, or nil if not found.
       def index_for(header)
         map[header]
