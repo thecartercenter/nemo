@@ -29,14 +29,21 @@ module Results
           if row["qtype_name"] == "location"
             add_location_headers(row["code"])
           else
-            row["level_names"] ? add_level_headers(row["code"], row["level_names"]) : add(row["code"])
-
-            # If it's a select question that has coords, add cols for that.
-            if row["allow_coordinates"] && row["qtype_name"] != "select_multiple"
-              add_location_headers(row["code"], lat_lng_only: true)
-            end
+            add_from_qcode(row)
           end
         end
+      end
+
+      def add_from_qcode(row)
+        if row["level_names"]
+          add_level_headers(row["code"], row["level_names"])
+        else
+          add(row["code"])
+        end
+
+        # If it's a select question that has coords, add cols for that.
+        return unless row["allow_coordinates"] && row["qtype_name"] != "select_multiple"
+        add_location_headers(row["code"], lat_lng_only: true)
       end
 
       # Returns the index the given header maps to, or nil if not found.
