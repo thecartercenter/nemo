@@ -14,6 +14,12 @@ module OData
       FormName: :string
     }.freeze
 
+    # These have been added on since an earlier full re-cache,
+    # and shouldn't be relied upon to exist on every old cached response.
+    RESPONSE_EXTRA_PROPERTIES = {
+      LastCached: :datetime
+    }.freeze
+
     GEOGRAPHIC_PROPERTIES = Answer::LOCATION_COLS.map do |key|
       [key.titleize.to_s, :decimal]
     end.to_h
