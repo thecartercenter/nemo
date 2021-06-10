@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
+class RenameMediaFilesToIncludeRepeatGroup < ActiveRecord::Migration[6.1]
   def up
     attachments = ActiveStorage::Attachment.where(record_type: "Media::Object")
     total = attachments.count
@@ -35,8 +35,8 @@ class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
     repeat_groups = []
     answer = item.record.answer
     answer_group = nil
-    answer_group = next_agroup_up(answer.parent_id) if answer.from_group? && answer.parent_id
-    if answer_group.present? && answer_group.repeatable?
+    answer_group = next_repeat_group_up(answer.parent_id) if answer.parent_id
+    if answer_group.present?
       repeat_groups = respect_ancestors(answer_group, repeat_groups)
       filename += "-#{repeat_groups.pop}" until repeat_groups.empty?
     end
@@ -57,6 +57,16 @@ class RenameMediaFilesToIncludeGroup < ActiveRecord::Migration[6.1]
       end
     end
     repeat_groups
+  end
+
+  # Note: Intentionally duplicated code, see app/models/media/object.rb.
+  def next_repeat_group_up(agroup_id)
+    parent = ResponseNode.find(agroup_id)
+    if parent.type == "AnswerGroup" && parent.repeatable?
+      parent
+    elsif parent.parent_id.present?
+      next_repeat_group_up(parent.parent_id)
+    end
   end
 
   # Note: Intentionally duplicated code, see app/models/media/object.rb.
