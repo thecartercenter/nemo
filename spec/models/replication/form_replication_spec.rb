@@ -325,12 +325,13 @@ describe Form do
       end
     end
 
-    context "for a form with a parenth in its name" do
-      let(:orig) { create(:form, name: "The (Form)") }
+    context "for a form with symbols in its name" do
+      # See models/form.rb for validations; some symbols are completely disallowed.
+      let(:orig) { create(:form, name: "The [Form]") }
       let(:copy) { orig.replicate(mode: :clone) }
 
       it "should work" do
-        expect(copy.name).to eq("The (Form) 2")
+        expect(copy.name).to eq("The [Form] 2")
       end
     end
 
