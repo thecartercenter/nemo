@@ -75,7 +75,10 @@ class Form < ApplicationRecord
 
   after_save :update_minimum
 
+  # rubocop:disable Style/RegexpLiteral
   validates :name, presence: true, length: {maximum: 32}, format: {without: /[\/()\\|]/}
+  # rubocop:enable Style/RegexpLiteral
+
   validate :name_unique_per_mission
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
 
