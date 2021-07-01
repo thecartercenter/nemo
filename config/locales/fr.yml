@@ -589,6 +589,7 @@ fr:
         sms_relay: "s'il faut autoriser le transfert de SMS aux utilisateurs et groupes"
         recipient_ids: "Si vous saisissez un utilisateur ou un groupe d'utilisateur ici, les réponses SMS entrant leur seront automatiquement transmises"
         authenticate_sms: "Si coché, l'utilisateur devra entrer son code utilisateur lors de l'envoi de réponse par SMS."
+        allow_incomplete: "Si coché, permet l'envoi des formulaires avec des questions obligatoires sans réponse (seulement par web et ODK). Les observateurs utilisant ODK doivent saisir un code de dérogation (cf. paramètres) pour ce faire."
         current_version_name: "Chaque version du formulaire a un identifiant à 10 chiffres et un code à 3 lettres. Le système de gestion des versions de formulaire est destiné à indiquer de petits changements dans la conception du formulaire afin que les observateurs puissent mettre à jour leurs copies du formulaire."
         access_level: "Public: tous les utilisateurs peuvent accéder aux données via API. Protégé: Seulement les utilisateurs spécifiques peuvent accéder aux donnes via API. Privé: Personne ne peut accéder aux donnes via API."
       mission:
@@ -620,6 +621,8 @@ fr:
         reference: "Une URL pour complémenter la question. Doit commencer par http: // ou https: //."
       questioning:
         display_logic: "Conditions qui doivent être remplies pour que cette question soit visible pour l'utilisateur"
+        hidden: "Seulement pour ODK collect:  masque la question mais prend la réponse par défaut."
+        required: "Si cette question doit avoir une réponse"
         skip_logic: "Règles pour savoir quelle question afficher après cette question."
         all_levels_required: "Pour une question de sélection à plusieurs niveau, est-ce que l'énumérateur doit saisir une valeur pour chaque niveau ?"
       report/report:
@@ -642,6 +645,10 @@ fr:
             * La langue préférée pour les nouveau utilisateurs
             * La langue préférée pour les réponses SMS
             * La langue pour les questions et les options
+        override_code: |-
+            Ce code doit être remis aux observateur si il y a besoin d'envoyer des formulaires incomplets. Les formulaires avec des questions obligatoires sans réponses ne pourront pas être soumis sans ce code.
+
+            Si vous générez un nouveau code, veuillez sauvegarder l'ancien code s'il existe des formulaires non soumis.
         incoming_sms_numbers_str: "Entrez le ou les numéros de téléphone (y compris le code du pays, séparés par des virgules) auxquels les SMS entrants pour les formulaires SMS doivent être envoyés. Nécessaire uniquement si vous utilisez des soumissions SMS."
         incoming_sms_token: |-
             ce jeton est inclu dans l'URL utilisé par le fournisseur de SMS entrant pour eviter l'envoi des messages non autorisés.
@@ -665,6 +672,7 @@ fr:
         body: "Entrez le corps du message."
       user:
         name: "Le nom complet de l'utilisateur. Par exemple: 'Tout-le-monde Durant' ou 'Équipe 1.1'"
+        login: "L'identifiant ou nom d'utilisateur sera utilisee pour se connecter. Il peut contenir seulement des lettres, des chiffres, le point (.) et le -"
         phone: "Le numéro de téléphone doit inclure l'indicatif téléphonique du pays. Par exemple: +25680344523"
         phone2: "Le numéro de téléphone doit inclure l'indicatif téléphonique du pays. Par exemple: +25680344523"
         admin: "Indique si cet utilisateur est un administrateur à l'échelle du système. Vous pouvez contrôler les autorisations par mission en utilisant les champs ci-dessous."
@@ -813,6 +821,8 @@ fr:
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "Au moins une tâche est obligatoire pour l'utilisateurs non-administratifs."
+            login:
+              invalid: "Utilisez seulement des lettres, des chiffres, les points et les traits"
             reset_password_method:
               cant_passwd_email: "Non autorisé sauf si une adresse email est fournie."
         user_import:
@@ -842,6 +852,7 @@ fr:
     no_selection: "Rien n'a été sélectionné."
     reqd_sym_definition: "Les réponses obligatoires sont marqués avec un %{reqd_sym}."
     select_all: "Sélectionner tout"
+    server_contact_error: "Ne peut pas atteindre le serveur"
     system_error: "Erreur de système. L'administrateur a été notifié."
     system_version: "Version du système"
     time_ago: "%{time}"
@@ -1158,9 +1169,11 @@ fr:
     exit_full_screen: "Réduire l'écran"
     expand_map: "Étendre la carte"
     my_responses: "Mes Réponses"
+    no_reports: "Aucun rapport n'a encore été créé pour cette mission "
     recent_responses: "Dernières réponses"
     shrink_map: "Réduire la carte"
     response_locations: "Lieu de soumission des réponses"
+    response_locations_truncated: "Seulement les 1%{max} des localisations sont affichées "
     summary: "Résumé"
     top_forms: "Formulaires les plus Actifs"
   filter:
@@ -1473,6 +1486,7 @@ fr:
     choose_attrib_question: "Choisissez un attribut ou question"
     choose_disagg_qing: "Choisissez une question..."
     choose_form: "Choisissez un formulaire..."
+    choose_report: "Choisissez un rapport"
     columns: "Colonnes"
     display_options: "Options "
     edit_report: "Modifier Rapport"
