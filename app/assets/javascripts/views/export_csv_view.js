@@ -1,4 +1,4 @@
-// Handles exports and polling for new responses.
+// Handles getting info about bulk media thresholds
 ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationView {
   get events() {
     return {
