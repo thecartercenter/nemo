@@ -12,9 +12,17 @@
             <input type="hidden" name="search" value="<%= params[:search] %>" />
             <%= f.field(:long_text_behavior, type: :select, required: true,
                 options: translate_options(ResponseCSVExportOptions::LONG_TEXT_BEHAVIOR_OPTIONS, [:response, :long_text_behavior_options])) %>
-            <% if ENV["NEMO_BULK_MEDIA_DOWNLOAD"].present? %>
               <%= f.field(:download_media, type: :check_box, label: t("response.export_options.download_media")) %>
-            <% end %>
+            <div class="calculating-info">
+              <%= image_tag("loader.gif") %>
+              <p><%= t("response.export_options.calculating") %></p>
+            </div>
+            <div class="media-info">
+              <%= t("response.export_options.media_size") %> <span id="media-size"></span>
+            </div>
+            <div class="error-info">
+              <div class="error_box alert alert-danger"><%= t("response.export_options.no_space") %></div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -29,3 +37,11 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<%= javascript_doc_ready do %>
+  ELMO.ExportCsvView = new ELMO.Views.ExportCsvView(<%=json(
+    el: "#export-csv-modal",
+    search: params[:search]
+  )%>);
+<% end %>

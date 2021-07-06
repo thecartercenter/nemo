@@ -109,6 +109,9 @@ ELMO::Application.routes.draw do
     resources :list_reports, controller: "reports"
     resources :standard_form_reports, controller: "reports"
 
+    # special responses routes
+    get "/media-size", to: "responses#media_size", action: "media_size"
+
     # special dashboard routes
     get "/dashboard/report", to: "dashboard#report", as: :dashboard_report
     get "/dashboard/info-window", to: "dashboard#info_window", as: :dashboard_info_window

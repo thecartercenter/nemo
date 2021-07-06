@@ -123,6 +123,12 @@ class ResponsesController < ApplicationController
     render_possible_users(users)
   end
 
+  def media_size
+    ability = Ability.new(user: current_user, mission: current_mission)
+    packager = Utils::BulkMediaPackager.new(ability: ability, search: params[:search], operation: nil)
+    render(json: packager.media_meta)
+  end
+
   private
 
   def render_possible_users(possible_users)
