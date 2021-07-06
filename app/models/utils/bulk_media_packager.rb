@@ -25,15 +25,19 @@ module Utils
           active_storage_blobs.id = active_storage_attachments.blob_id")
     end
 
-    def calculate_media_size
-      media_objects_scope.sum("active_storage_blobs.byte_size")
+    def media_meta
+      {space_on_disk: space_on_disk?, media_size: bytes_to_mb(media_size)}
+    end
+
+    def media_size
+      @media_size ||= media_objects_scope.sum("active_storage_blobs.byte_size")
     end
 
     def space_on_disk?
       stat = Sys::Filesystem.stat("/")
       # need to leave space for images, zip file, and copy of zip file while attaching to operation
       space_left = bytes_to_mib(stat.block_size * stat.blocks_available) -
-        bytes_to_mib(calculate_media_size * 2)
+        bytes_to_mib(media_size * 2)
       space_left >= DISK_ALLOWANCE
     end
 
@@ -84,6 +88,10 @@ module Utils
 
     def bytes_to_mib(bytes)
       bytes / 1024 / 1024
+    end
+
+    def bytes_to_mb(bytes)
+      ((bytes / 1024.0 / 1024.0) * 1.049).round(2)
     end
   end
 end
