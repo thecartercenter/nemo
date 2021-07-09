@@ -2,6 +2,8 @@
 
 # OperationsController
 class OperationsController < ApplicationController
+  PER_PAGE = 20
+
   # authorization via cancan
   load_and_authorize_resource
 
@@ -17,6 +19,7 @@ class OperationsController < ApplicationController
                   else
                     @operations.order(created_at: :desc) # Display ALL operations on server
                   end
+    @operations = @operations.paginate(page: params[:page], per_page: PER_PAGE)
   end
 
   def show

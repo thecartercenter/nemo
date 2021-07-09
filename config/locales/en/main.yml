@@ -1016,6 +1016,9 @@ en:
       page_entries_info:
         single_page_html:
           zero:  "No Operations found"
+          one:   "Displaying <b>1</b> Operation"
+          other: "Displaying <b>all %{count}</b> Operation"
+        multi_page_html: "Displaying Operation <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
 
   # authlogic translations
   authlogic:
