@@ -44,6 +44,26 @@ feature "responses csv export" do
     expect(result[2][9]).to(eq("Plant"))
   end
 
+  describe "bulk media download", js: true do
+    scenario "without a threshold" do
+      visit(responses_path(params))
+      click_link("Download CSV")
+      check("response_csv_export_options[download_media]")
+      expect(page).to(have_content("Total size of media: 0 MB"))
+    end
+
+    context "No space on disk for bulk media export" do
+      scenario "Should see an error" do
+        with_env("STUB_DISK_FULL" => "true") do
+          visit(responses_path(params))
+          click_link("Download CSV")
+          check("response_csv_export_options[download_media]")
+          expect(page).to(have_content("There is not enough space"))
+        end
+      end
+    end
+  end
+
   scenario "exporting csv with bulk media download" do
     visit(responses_path(params))
     click_link("Download CSV")
