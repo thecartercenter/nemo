@@ -12,10 +12,10 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
     $(".media-info").hide();
   }
 
-  calculateMediaSize(event) {
+  async calculateMediaSize(event) {
     if (($(event.target)).is(':checked')) {
       $("input[type=submit]").prop("disabled", true);
-      this.spaceLeft();
+      await this.spaceLeft();
       $(".media-info").show();
 
     } else {
@@ -25,10 +25,10 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
     }
   }
 
-  spaceLeft() {
+  async spaceLeft() {
     $(".calculating-info").show();
 
-    $.ajax({
+    return $.ajax({
       url: ELMO.app.url_builder.build("media-size"),
       method: "get",
       data: "",
