@@ -54,16 +54,19 @@ feature "responses csv export" do
     end
 
     context "No space on disk for bulk media export" do
+      before do
+        stub = double(block_size: 0, blocks_available: 0)
+        allow(Sys::Filesystem).to receive(:stat).and_return(stub)
+      end
+
       scenario "Should see an error" do
-        with_env("STUB_DISK_FULL" => "true") do
-          visit(responses_path(params))
-          click_link("Download CSV")
-          check("response_csv_export_options[download_media]")
-          expect(page).to(have_content("There is not enough space"))
-          expect(page).to(have_button("Export", disabled: true))
-          uncheck("response_csv_export_options[download_media]")
-          expect(page).to(have_button("Export", disabled: false))
-        end
+        visit(responses_path(params))
+        click_link("Download CSV")
+        check("response_csv_export_options[download_media]")
+        expect(page).to(have_content("There is not enough space"))
+        expect(page).to(have_button("Export", disabled: true))
+        uncheck("response_csv_export_options[download_media]")
+        expect(page).to(have_button("Export", disabled: false))
       end
     end
   end
