@@ -40,9 +40,13 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
           $("input[type=submit]").removeAttr("disabled");
 
         } else {
+          $("#export-error").html(I18n.t("response.export_options.no_space"));
           $(".error-info").show();
         }
         return data;
+      },
+      error: (xhr, error) => {
+        $("#export-error").html(I18n.t("response.export_options.try_again"));
       }
     });
   }
