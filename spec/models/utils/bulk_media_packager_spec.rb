@@ -27,14 +27,14 @@ describe Utils::BulkMediaPackager do
       it "should return the correct size of images" do
         ability = Ability.new(user: operation.creator, mission: operation.mission)
         packager = described_class.new(ability: ability, search: nil, operation: operation)
-        size = packager.calculate_media_size
+        size = packager.media_size
         expect(size).to equal(1_819_435)
       end
 
       it "should return the correct size of images with search" do
         ability = Ability.new(user: operation.creator, mission: operation.mission)
         packager = described_class.new(ability: ability, search: "form: foo", operation: operation)
-        size = packager.calculate_media_size
+        size = packager.media_size
         expect(size).to equal(855_939)
       end
 
