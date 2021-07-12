@@ -50,6 +50,7 @@ feature "responses csv export" do
       click_link("Download CSV")
       check("response_csv_export_options[download_media]")
       expect(page).to(have_content("Total size of media: 0 MB"))
+      expect(page).to(have_button("Export", disabled: false))
     end
 
     context "No space on disk for bulk media export" do
@@ -59,6 +60,9 @@ feature "responses csv export" do
           click_link("Download CSV")
           check("response_csv_export_options[download_media]")
           expect(page).to(have_content("There is not enough space"))
+          expect(page).to(have_button("Export", disabled: true))
+          uncheck("response_csv_export_options[download_media]")
+          expect(page).to(have_button("Export", disabled: false))
         end
       end
     end
