@@ -64,7 +64,7 @@ ELMO::Application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -117,9 +117,6 @@ ELMO::Application.configure do
 
   # Enable rack-attack middleware for protecting against brute-force login attempts
   config.middleware.use(Rack::Attack)
-
-  # Force SSL since application deployments should be SSL
-  config.force_ssl
 
   # React production variant (minified)
   config.react.variant = :production
