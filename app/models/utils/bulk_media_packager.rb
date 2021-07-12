@@ -34,6 +34,8 @@ module Utils
     end
 
     def space_on_disk?
+      return false if Rails.env.test? && ENV.key?("STUB_DISK_FULL")
+
       stat = Sys::Filesystem.stat("/")
       # need to leave space for images, zip file, and copy of zip file while attaching to operation
       space_left = bytes_to_mib(stat.block_size * stat.blocks_available) -
