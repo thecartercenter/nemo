@@ -6,6 +6,10 @@ fr:
       option_sets_import: "Importation de l'ensemble d'options '%{file}' "
       response_csv_export: "Export des réponses au format CSV"
       broadcast: "Diffusion '%{message}'"
+      cache_odata: "Actualisation des données de  l'API"
+      bulk_media_export: "Exportation des médias en mass"
+    notes:
+      remaining: "Restant"
     operations_panel: "Panneau des opérations"
     status:
       completed: "Succès"
@@ -40,6 +44,7 @@ fr:
     see_error_report: "Voir le rapport d'erreur"
     result_link_text:
       response_csv_export: "Télécharger CSV"
+      bulk_media_download: "Téléchargement des médias en mass"
   locale_name: "Français"
   common:
     accept: "Accepter"
@@ -88,6 +93,7 @@ fr:
       many: "Exemples"
       other: "Exemples"
     example_abbr: "ex."
+    export: "Exporter"
     file_drop_message: "Cliquez ou déposez le fichier ici"
     found: "Trouvé"
     generate: "Générer"
@@ -142,6 +148,7 @@ fr:
       one: "succès"
       other: "succès "
     successfully: "Avec succès"
+    system: "Système "
     thanks_excl: "Merci!"
     this: "Ce(tte)"
     total: "Total"
@@ -183,6 +190,7 @@ fr:
     format: "%{attribute}: %{message}"
     file_upload:
       error: "Il y a eu une erreur lors du téléchargement du fichier."
+      login_error: "Vous n'êtes plus connecte, veuillez actualiser la page et réessayer."
       file_missing: "Aucun fichier sélectionné pour l'import."
       invalid_format: "Le fichier téléchargé n'était pas au format accepté"
       internal: "une erreur interne s'est produite lors du traitement de votre téléchargement."
@@ -489,9 +497,11 @@ fr:
         display_logic: "Logique d'affichage"
         skip_logic: "logique de saut"
         hidden: "Masqué?"
+        disabled: "Désactivé?"
         rank: "Rang"
         required: "Obligatoire?"
         all_levels_required: "Niveaux Requis"
+        preload_last_saved: "Pre-remplir la dernière réponse?"
         default: "Réponse par défaut"
         delete: "Êtes-vous certain de vouloir enlever la question '%{code}' de ce formulaire?"
         read_only: "Lecture seule"
@@ -592,6 +602,7 @@ fr:
         allow_incomplete: "Si coché, permet l'envoi des formulaires avec des questions obligatoires sans réponse (seulement par web et ODK). Les observateurs utilisant ODK doivent saisir un code de dérogation (cf. paramètres) pour ce faire."
         current_version_name: "Chaque version du formulaire a un identifiant à 10 chiffres et un code à 3 lettres. Le système de gestion des versions de formulaire est destiné à indiquer de petits changements dans la conception du formulaire afin que les observateurs puissent mettre à jour leurs copies du formulaire."
         access_level: "Public: tous les utilisateurs peuvent accéder aux données via API. Protégé: Seulement les utilisateurs spécifiques peuvent accéder aux donnes via API. Privé: Personne ne peut accéder aux donnes via API."
+        default_response_name: "Le texte entré ici sera utilisé comme nom par défaut des formulaires remplis dans ODK. Vous pouvez saisir $CodeQuestion pour inclure la valeur d'une question dans le formulaire.\n\nPar exemple, entrer:\n\nQuestionnaire pour $NumVillage-$NomDeFamille\n\npourrait nommer le formulaire:\n\nQuestionnaire pour 7-Smith\n\nen supposant que vous avez des questions avec les codes 'NumVillage' et 'NomDeFamille'\n\nVous pouvez également entrer une expression de calcul XPath en l’entourant de la fonction calc():\n\n<code></code>\n<code>calc($NumVillage + 100 / 2)</code>"
       mission:
         name: "Le titre de cette mission doit être unique et contenir un maximum de 32 caractères. Il est recommandé d'inclure l'année si des missions futures utiliseront le même titre."
         locked: "Si une mission est verrouillée, les réponses et les formulaires ne peuvent pas être créés ou modifiés et les utilisateurs ne peuvent pas être ajoutés ou supprimés."
@@ -607,12 +618,16 @@ fr:
           read_only: "Les options qui apparaissent pour les questions à l'aide de cet ensemble des options."
         option_levels: "Les titres pour chaque niveau d'options, (p.ex 'Pays', 'Province', 'Ville'). Notez que les titres des niveaux sont différent parmi les options elles-mêmes. "
         sms_guide_formatting: "Les significations des options sont les suivantes: Auto: Determiner automatiquement si il faut utiliser 'inline' ou 'appendix'. Inline: Montre la liste des options dans le guide SMS. Appendix: Inclue la liste des options dans un tableau créé par le coordonnateur. Treat as text: Considere les options comme des textes saisis"
+      qing_group:
+        group_item_name: "Vous pouvez saisir $QuestionCode pour inclure la valeur d'une question (pour ODK seulement)\nPar exemple, imaginons que nous créons un groupe répétable où le code de la question est 'HouseholdID' et nous saisissons\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID\n\nVous créez un groupe et répondez '123' pour \"HouseholdID'. En suite vous créez un deuxième groupe et vous répondez '789' pour 'HouseholdID'. Le premier nom du groupe sera 'HouseholdID:123'. Le second groupe sera 'Household:789'"
       question:
+        media_prompt: "Joignez un fichier multimédia que les énumérateurs peuvent visualiser ou écouter lors de la consultation de la question dans ODK. Video (mp4), audio (mp3, ogg, wav, flac), et fichiers image (png, jpg) sont tous acceptés. La taille des fichiers peut être jusqu'à %{max_size_mib}."
         code: "Un nom de code court (entre 2-20 caractères), qui devrait contenir seulement des lettres et des chiffres, par ex. UrneClos, HeureDeDepart."
         hint: "Instructions additionnels, par ex. 'Entrez un nombre approximatif de personnes qui sont dans la file d'attente pour voter.'"
         key: "Les réponses aux questions clés aident à résumer les réponses et apparaissent dans la liste des réponses. Exemples de questions clé: Région, Evaluation globale."
         minimum: "La valeur minimale de la réponse. Cochez la case si le minimum lui-même n'est pas valide."
         maximum: "La valeur maximale de la réponse. Cochez la case si le maximum lui-même n'est pas valide."
+        auto_increment: "Si cette case est cochée et que vous utilisez ODK collect, la valeur sera incrémentée chaque fois que vous remplissez un nouveau formulaire."
         name: "Le texte de la question principale, par ex. 'Combien de personnes sont dans la file d'attente?'"
         option_set_id: "Le groupe d'options que l'utilisateur pourra choisir."
         qtype_name: "Le type d'information que l'utilisateur entrera."
@@ -620,11 +635,17 @@ fr:
         metadata_type: "Une valeur spéciale qui peut être pré-remplie dans cette question. Si cette option est choisie, cette question sera automatiquement masquée et non requise, et toutes les conditions seront supprimées."
         reference: "Une URL pour complémenter la question. Doit commencer par http: // ou https: //."
       questioning:
+        default: "Le texte saisi ici sera pré-rempli dans l'espace de réponse (pour ODK uniquement). Vous pouvez entrer $CodeQuestion pour inclure la valeur d'une question précédente et $!RepeatNum pour inclure le numéro de l'élément actuel dans un groupe qui se répète..\n\nPar exemple, entrer\n\nID: $Menage-$!RepeatNum\n\nen assumant que vous avez une question avec le code 'Menage', pour la deuxième personne du ménage 176, pré-remplirait la réponse avec\n\nID: 176-2\n\nVous pouvez également entrer une expression de calcul XPath en l’incluant dans la fonction calc():\n\n<code></code>\n<code>calc($NumVillage + 100 / 2)</code>"
         display_logic: "Conditions qui doivent être remplies pour que cette question soit visible pour l'utilisateur"
         hidden: "Seulement pour ODK collect:  masque la question mais prend la réponse par défaut."
+        hidden_more_info: "Voir plus a propos des questions masquées dans la documentation."
+        disabled: "Masquez la question et ne récoltez aucune réponse."
+        read_only: "ODK Collect uniquement. Ne peut pas modifier la réponse par défaut."
         required: "Si cette question doit avoir une réponse"
         skip_logic: "Règles pour savoir quelle question afficher après cette question."
+        constraints: "Conditions à remplir pour qu'une réponse soit acceptée. Actuellement pour ODK seulement."
         all_levels_required: "Pour une question de sélection à plusieurs niveau, est-ce que l'énumérateur doit saisir une valeur pour chaque niveau ?"
+        preload_last_saved: "Uniquement ODK Collect: Pre remplir la dernière réponse enregistrée par défaut."
       report/report:
         name: "Un titre descriptif pour ce rapport."
         aggregation_id: "L'opération que vous voulez accomplir sur les données combinées."
@@ -637,6 +658,8 @@ fr:
         bar_style: "Si les bandes doivent être empilés ou côte-à-côte."
       response:
         incomplete: "Cochez cette boîte s'il-y-a des réponses obligatoires manquantes. Il sera quand même possible d'enregistrer votre formulaire. La réponse sera simplement marquée comme étant \"incomplète\"."
+      response_csv_export_options:
+        long_text_behavior: "Certains logiciels limitent le nombre des caractères pouvant être contenu dans une cellule. Vous pouvez modifier les données exportées de la manière suivant:\n\n&nbsp;&nbsp;&nbsp;<b>Exclude</b>: Exporter toutes les réponses de type Texte Long comme vide.  Ceci est l'option la plus rapide.\n&nbsp;&nbsp;&nbsp <b>Tronquer</b> Les données seront tronquées pour ne pas dépasser la limite des cellules Excel. Ceci peut rompre les lient hypertexte contenu dans les réponses exportées. C'est l'option la plus lente.\n&nbsp;&nbsp;&nbsp <b>Inclure</b>  Aucune modification ne sera faite."
       setting:
         preferred_locales_str: |-
             Entrez le <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>code à deux lettres</a> pour les langues préférées de cette mission. Séparez les langues par des virgules.
@@ -652,6 +675,7 @@ fr:
         incoming_sms_numbers_str: "Entrez le ou les numéros de téléphone (y compris le code du pays, séparés par des virgules) auxquels les SMS entrants pour les formulaires SMS doivent être envoyés. Nécessaire uniquement si vous utilisez des soumissions SMS."
         incoming_sms_token: |-
             ce jeton est inclu dans l'URL utilisé par le fournisseur de SMS entrant pour eviter l'envoi des messages non autorisés.
+        theme: "Choisissez un thème pour l'application. Vous pouvez consulter  <a href='https://github.com/thecartercenter/nemo/blob/main/docs/production-setup.md#custom-theme'>les instructions pour créer un thème personnalisé</a>."
         universal_sms_token: |-
             Ce jeton est contenu dans l'URL utilisé par le fournisseur de SMS entrant pour empêcher l'envoi des messages non autorisés. Utilisez cet URL si vous voulez permettre à plusieurs missions d'envoyer des formulaires par la même adresse URL.
         using_incoming_sms_token_title: Utilisation du jeton du SMS entrant
@@ -757,6 +781,8 @@ fr:
           attributes:
             code:
               invalid: "Commencer par une lettre. Utiliser seulement des lettres et des chiffres et un maximum de 20 caractères."
+            media_prompt:
+              invalid_type: "Le type de fichier est invalide."
             media_prompt_content_type:
               invalid_type: "Le type de fichier est invalide."
             reference:
@@ -814,6 +840,9 @@ fr:
               blank_unless_goto_end: "Ce champ est obligatoire à moins que vous ne choisissiez 'passer à la fin du formulaire'."
         user:
           at_least_digits: "Entrez au moins %{num} chiffres"
+          cant_delete_if_has_responses: "Vous ne pouvez pas supprimer cet utilisateur car il a des réponses associées."
+          cant_delete_if_has_reviewed_responses: "Vous ne pouvez pas supprimer cet utilisateur car il a révisé des réponses."
+          cant_delete_if_has_sms_messages: "Vous ne pouvez pas supprimer cet utilisateur car il a des messages SMS associés."
           duplicate_assignments: "Il y a des tâches en double."
           no_missions: "Vous n'êtes pas affecté à des missions."
           phone_assigned_to_other: "A déjà été attribué à un autre utilisateur"
@@ -831,6 +860,7 @@ fr:
           invalid_headers:
             one: "L'en-tête de colonne suivante n'a pas été reconnu: %{headers}"
             other: "Les en-têtes de colonne suivantes n'ont pas été reconnus: %{headers}"
+          too_many_errors: "Le fichier CSV téléchargé contient plusieurs erreurs. Le traitement s'est arrêté a la linge %{row}"
         user_group:
           general: "Groupe d'utilisateurs invalide"
           attributes:
@@ -842,6 +872,7 @@ fr:
     are_you_sure: "Êtes-vous sur?"
     change_language: "Changer la langue"
     created_by: "Crée par"
+    copy_to_clipboard: "Copier dans le presse papier"
     delete_warning: "Êtes-vous sur que vous voulez supprimer définitivement le %{obj_description}?"
     deselect_all: "Désélectionner tout"
     loading: "Téléchargement"
@@ -861,11 +892,59 @@ fr:
     no_live_forms: "Pas de formulaires disponibles"
   actions:
     clone: "Cloner"
+    close: "Fermer"
     edit: "Editer"
     go_live: "Publier"
     pause: "Pause"
     print: "Imprimer"
     sms_guide: "Guide SMS"
+  action_links:
+    show: "Afficher"
+    edit: "Modifier"
+    close: "Fermer"
+    destroy: "Supprimer"
+    index: "Liste"
+    clone: "Dupliquer"
+    import_standard: "Importer des formulaires standard"
+    import_from_csv: "Importer au format CSV"
+    export: "Exporter"
+    models:
+      form:
+        new: "Créer un formulaire"
+        sms_guide: "Guide SMS"
+        sms_console: "Console de test SMS"
+        go_live: "Publier"
+        pause: "Pause"
+        return_to_draft: "Retour au statut brouillon"
+        print: "Imprimer"
+        re_cache: "Re-cache OData"
+      mission:
+        new: "Créer une mission"
+      operation:
+        clear: "Effacer toutes les opérations terminées"
+        destroy: "Effacer"
+      option_set:
+        new: "Créer un Nouvel Ensemble d'Options"
+        export: "Exporter au format CSV"
+      option_sets/import:
+        new: "Importer au format CSV"
+      question:
+        new: "Créer une nouvelle question"
+        add_to_form: "Ajouter au formulaire"
+      report/report:
+        new: "Créer un Rapport"
+        export: "Exporter au format CSV"
+      user:
+        new: "Créer un utilisateur"
+        export_to_vcard: "Exporter comme vCard"
+        add_to_group: "Ajouter au groupe"
+        remove_from_group: "Retirer du groupe"
+        send_broadcast: "Envoyer une diffusion"
+      user_group:
+        new: "Nouveau groupe"
+        members: "Lister les membres"
+      broadcast:
+        send: "Envoyer une diffusion"
   will_paginate:
     previous_label: "&#8592; Précédent"
     next_label: "Suivant &#8594;"
@@ -907,12 +986,14 @@ fr:
           zero: "Il n'y avait pas de questions trouvées."
           one: "<b>1</b> question affichée"
           other: "<b>Affichage de %{count}</b> questions"
+        multi_page_html: "Affichage des questions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     questioning:
       page_entries_info:
         single_page_html:
           zero: "Pas de questions trouvées"
           one: "<b>1</b> question affichée"
           other: "<b>Affichage de %{count}</b> questions"
+        multi_page_html: "Affichage des questions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     report/report:
       page_entries_info:
         single_page_html:
@@ -1169,11 +1250,16 @@ fr:
     exit_full_screen: "Réduire l'écran"
     expand_map: "Étendre la carte"
     my_responses: "Mes Réponses"
+    no_map_offline: "La carte est désactivée parce que le serveur n'a pas de connexion internet."
+    no_map_key: "La carte est désactivée parce qu'aucune clé Google Maps n'a été défini dans les paramètres. "
     no_reports: "Aucun rapport n'a encore été créé pour cette mission "
+    create_report: "Vous pouvez créer un "
+    create_report_also: "Vous pouvez aussi créer un nouveau."
     recent_responses: "Dernières réponses"
     shrink_map: "Réduire la carte"
     response_locations: "Lieu de soumission des réponses"
     response_locations_truncated: "Seulement les 1%{max} des localisations sont affichées "
+    report_placeholder: "Sélectionner un rapport ci dessus pour explorer les données. Les rapports sont actualisées toutes les 30 secondes."
     summary: "Résumé"
     top_forms: "Formulaires les plus Actifs"
   filter:
@@ -1245,6 +1331,7 @@ fr:
         other: "Les appendices suivants doivent être inclus avec ce formulaire:"
       auth_code: "Code d'autorisation de l'utilisateur (recquis)"
       header: "Guide SMS"
+      draft_error: "Vous ne pouvez pas voir le guide SMS pour le formulaire %{form_name} parce qu'il est actuellement un brouillon. Publier le formulaire ou l'interrompre pour voir le guide SMS"
       for_paper_record: "Pour l'enregistrement sur papier seulement"
       form_code: "Le code unique du formulaire (recquis)"
       multiple_sms_numbers: "Numéro d'envoi multiple de SMS"
@@ -1341,6 +1428,7 @@ fr:
         standard_copy: "Cette question est basée sur une question standard"
         data: "Cette question a des réponses associées"
       option_set:
+        in_use: "Cet ensemble d'options apparaît sur %{count} questions"
         published: "Cet ensemble d'options apparaît sur au moins un formulaire publié (pas un brouillon)"
         standard_copy: "Cet ensemble d'options est basé sur un standard"
         data: "Cet ensemble d'options a des réponses associées"
@@ -1386,6 +1474,14 @@ fr:
     latitude: "Latitude"
     longitude: "Longitude"
     value: "Valeur numérique"
+  option_set_import:
+    instructions_html: |-
+        Telecharger un fichier CSV avec vos options
+
+        Notes
+
+        *Seuls les fichiers CSV sont acceptees. Ils doivent etre encodes UTF-8. Vous pouvez exporter des fichiers XLSX au format CSV en utilisant n'importe quel tableur.
+        *Vous pouvez trouver plus de documentation <a href="https://elmo-nemo.readthedocs.io/en/main/content/formsoptionsets/formsoptionsets.html#import-new-option-set">ici </a>
   tag:
     none_found: "Aucun tag trouvé "
     searching: "Recherche..."
@@ -1399,6 +1495,7 @@ fr:
     multiple_accounts: "Il existe plusieurs comptes associés à cet email. Veuillez saisir votre code utilisateur ou contactez un administrateur."
     no_associated_email: "Il n'y a pas d'email associé à ce compte. Veuillez contacter un administrateur pour changer votre mot de passe"
     success: "Mot de passe mis à jour avec succès"
+    success_but_inactive: "Le mot de passe a été mis a jour mais votre compte n'est pas actif, vous ne pouvez pas vous connecter."
     token_not_found: |-
         Désolé, le compte n'a pas été trouvé. Si vous avez des problèmes, ressayez  l'URL de votre courriel dans votre navigateur ou recommencer le procès de remettre le mot de passe.
     user_not_found: "Aucun utilisateur trouvé avec cet adresse email ou identifiant"
@@ -1444,6 +1541,8 @@ fr:
     one_screen_disabled: "Non disponible car le groupe contient une condition ou un autre groupe."
     tooltips:
       repeatable: "Répétable"
+      one_screen: "S'affiche sur un seul écran sur ODK collect"
+      multi_screen: "S'affiche sur plusieurs écran sur ODK collect"
   question_type:
     text: "Texte"
     long_text: "Texte Long"
@@ -1604,6 +1703,22 @@ fr:
   response:
     reviewed: "Cette réponse a été revu"
     edit_this_response: "Modifier cette réponse"
+    download_csv: "Télécharger CSV"
+    connect_odata: "Connecter aux OData"
+    export:
+      export: "Exporter"
+      to_csv: "Format CSV"
+      to_odata: "OData via API"
+      odata_prompt_html: "Utiliser l'API de NEMO pour accéder aux données en utilisant un OData standard. Vous pouvez copier cet URL dans votre logiciel de traitement des données comme Power BI."
+    export_options:
+      summary:
+        zero: "Aucune réponse a exporter."
+        one: "%{count} réponses a exporter"
+        two: "%{count} réponses a exporter"
+        few: "%{count} réponses a exporter"
+        many: "%{count} réponses a exporter"
+        other: "%{count} réponses a exporter"
+      download_media: "Télécharger les médias joints"
     loading: "Chargement Réponse..."
     observation_time: "Le temps d'Observation"
     save_and_mark_reviewed: "Enregistrer et Marquer comme Revu"
@@ -1614,6 +1729,10 @@ fr:
       audio: "Etes vous sûr de vouloir supprimer ce son?"
       video: "Etes vous sûr de vouloir supprimer cette vidéo?"
     drop_more_info: "Plus d'info"
+    drop_hint:
+      image: "L'image doit etre au plus %{max_size_mib} MB. Les formats acceptes sont: JPG, PNG."
+      video: "La vidéo doit avoir la taille maximum de %{max_size_mib} MiB. les formats acceptés sont: 3gp, mp4, webm, mpg, wmv, avi."
+      audio: "l'audio doit avoir au plus %{max_size_mib} MiB, les formats acceptés sont: mp3, ogg, webm, wav"
     csv_headers:
       response_id: "NumeroReponse"
       reviewed: "Revu"
@@ -1643,6 +1762,10 @@ fr:
       few: "%{count} réponses supprimée avec succès."
       many: "%{count} réponses supprimée avec succès."
       other: "%{count} réponses supprimée avec succès."
+    long_text_behavior_options:
+      exclude: "exclus"
+      truncate: "Tronquer pour Excel (plus lent)"
+      include: "Contient"
   role:
     role: "Rôle"
     enumerator: "Observateur"
@@ -1952,6 +2075,7 @@ fr:
     boolean_error: "Le qualificatif '%{qualifier}' doit être réglé sur \"oui\" ou \"non\" (\"1\" et \"0\" sont également acceptés)."
     invalid_date: "'%{value}' n'est pas une date valide."
   setting:
+    admin_mode_notice: "Les paramètres ci dessous sont définis comme paramètres par défaut pour toutes les nouvelles missions et servent comme solution de rechange dans les cas ou le contexte d'une mission n'est pas disponible. Certains d'entre eux affectent le mode administrateur. (ex: thème, préférences locales)."
     change_sms_password: "Changez mot de passe pour SMS"
     change_twilio_auth_token: "Changer le jeton d'authentification"
     change_api_key: "Changer Clé API"
@@ -2084,11 +2208,26 @@ fr:
       other: "Il y avait %{count} erreurs."
   tabular_import:
     errors:
+      wrong_type: "Le fichier téléchargé doit être un fichier de type CSV valide."
       no_rows: "Aucune ligne à importer."
       bad_csv: "Un problème est survenu avec votre fichier CSV: %{msg}"
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
+    expired: "Votre requête a expirée, veuillez réessayer."
+  user_import:
+    instructions_html: |-
+        Téléchargez un fichier CSV avec les utilisateurs.  Un modelé est disponible pour illustrer <a href="%{csv_url}">CSV template</a>
+
+        Notes:
+
+        Seuls les fichiers CSV sont acceptés. Ils doivent être encodés UTF-8. Vous pouvez exporter des fichiers XLSX au format CSV en utilisant n'importe quel tableur.
+        Veuillez ne pas modifier la première ligne du fichier model.
+        Les numéros de téléphone doivent avoir le code pays. (ex: +17095551212)
+        Le genre ou sexe peut être Homme, Femme ou Pas de réponse ou toute autre valeur.
+        La nationalité doit être le nom d'un pays comme "Canada" ou "Bangladesh".
+        Les noms des groupes multiples doivent être sépares par des virgules. Si un nom du groupe n'existe pas, il sera créé.
+        Vous trouverez plus d'informations  <a href="https://elmo-nemo.readthedocs.io/en/main/content/users/users.html#import-users">ici</a>
   user:
     add_assignment: "Ajouter Une Tâche"
     api_key:
@@ -2130,6 +2269,8 @@ fr:
       woman: "Femme"
       no_answer: "Refus de répondre"
       specify: "Spécifier "
+    add_to_group: "Ajouter au groupe"
+    remove_from_group: "Retirer du groupe"
     login_instructions:
       closing:
       - Veuillez noter le 's' dans 'https' dans l'URL du site.
@@ -2141,6 +2282,7 @@ fr:
       preamble_plural: |-
           Les instructions de connexion se trouvent ci-dessous. Merci de les imprimer et de vous assurer que les utilisateurs reçoivent les instructions.
           Les mots de passe sont emmagasinés dans un format encodé, ils seront donc irrécupérables après avoir quitté cette page.
+      qr_code: "QR Code ODK collect"
       site_url: "Adresse URL du site"
       title: "L'instructions détaillées pour se connecter."
       welcome: "Bienvenue à %{site}. Votre titres sont les suivants:"
@@ -2160,7 +2302,9 @@ fr:
   user_group:
     create_prompt: "Veuillez saisir le nom de votre groupe"
     add_users_success: "%{count} utilisateurs ajoutés avec succès au groupe %{group}"
+    remove_users_success: "%{count} utilisateurs supprimés avec succès du groupe %{group}"
     new_group: "Nouveau groupe"
+    no_groups: "Il n'y a actuellement aucun groupe d'utilisateurs dans cette mission. Créer un groupe en ajoutant a un utilisateur un groupe lors de la création ou de la mise a jour d'un utilisateur."
   welcome:
     awaiting_review: "**%{count}** En attentes de révision"
     by_you: "**%{count}** Réponses par vous"
