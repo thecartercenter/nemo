@@ -164,22 +164,22 @@ Rails/Blank:
 Rails/BulkChangeTable:
   Enabled: false
 
-RSpec/Rails/Output:
+Rails/Output:
   Enabled: true
   Exclude:
     - db/migrate/**/*
 
-RSpec/Rails/SkipsModelValidations:
+Rails/SkipsModelValidations:
   Enabled: false
 
 # This is generally bad advice, defaults are often set in code.
-RSpec/Rails/NotNullColumn:
+Rails/NotNullColumn:
   Enabled: false
 
 # This would be lovely but it breaks our custom ODK wrapper.
-RSpec/Rails/ContentTag:
+Rails/ContentTag:
   Enabled: false
 
 # This seems unnecessary to me and kind of ugly.
-RSpec/Rails/SquishedSQLHeredocs:
+Rails/SquishedSQLHeredocs:
   Enabled: false

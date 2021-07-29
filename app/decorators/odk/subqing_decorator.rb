@@ -143,7 +143,7 @@ module ODK
       str = params.map { |k, v| "#{k}=#{v}" }.join(", ")
 
       # This is not HTML and won't be run in a browser so output safety isn't an issue.
-      "ex:org.opendatakit.counter(#{str})".html_safe # rubocop:disable RSpec/Rails/OutputSafety
+      "ex:org.opendatakit.counter(#{str})".html_safe # rubocop:disable Rails/OutputSafety
     end
 
     def use_external_csv_itemset_query?

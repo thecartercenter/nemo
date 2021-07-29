@@ -235,6 +235,6 @@ module ApplicationHelper
   # We use this string to concatenate other strings onto to build larger safe strings
   # and avoid having to call html_safe all over the place.
   def safe_str
-    "".html_safe # rubocop:disable RSpec/Rails/OutputSafety # It's an empty string!
+    "".html_safe # rubocop:disable Rails/OutputSafety # It's an empty string!
   end
 end
