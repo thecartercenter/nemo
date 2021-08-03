@@ -24,6 +24,8 @@ module Results
         TO_TSVECTOR('simple', COALESCE(
           new.value,
           to_char(new.date_value, 'YYYY-MM-DD'),
+          to_char(new.time_value, 'HH24hMImSSs'),
+          to_char(new.datetime_value, 'YYYY-MM-DD HH24hMImSSs'),
           (SELECT STRING_AGG(opt_name_translation.value, ' ')
             FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation
             WHERE

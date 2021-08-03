@@ -294,23 +294,35 @@ describe ResponsesSearcher do
   end
 
   describe "special non-text search" do
-    # TODO: All the other qtypes too.
     let!(:q1) { create(:question, qtype_name: "date", code: "date", add_to_form: form) }
+    let!(:q2) { create(:question, qtype_name: "time", code: "time", add_to_form: form) }
+    let!(:q3) { create(:question, qtype_name: "datetime", code: "datetime", add_to_form: form) }
     let!(:r1) do
       create(:response, form: form, reviewed: false, answer_values:
-        [1, "2021-01-01"])
+        [1, "2021-01-01", "12:00:00", "2021-01-01 12:00:00"])
     end
     let!(:r2) do
       create(:response, form: form, reviewed: true, answer_values:
-        [1, "2020-12-31"])
+        [1, "2020-12-31", "12:00:01", "2020-12-31 12:00:01"])
     end
     let!(:r3) do
       create(:response, form: form, reviewed: true, answer_values:
-        [1, nil])
+        [1, nil, nil, nil])
     end
 
     it "matches the correct objects" do
       expect(search("{date}:2021-01-01")).to contain_exactly(r1)
+      expect(search("{time}:12h00m00s")).to contain_exactly(r1)
+      expect(search("{datetime}:2021-01-01 12h00m00s")).to contain_exactly(r1)
+      expect(search("{datetime}:2021 12h")).to contain_exactly(r1) # Partial string match also works
+      expect(search("12h00m")).to contain_exactly(r1, r2) # Or just plaintext search
+    end
+
+    it "respects updated values" do
+      expect(search("{date}:2021-01-01")).to contain_exactly(r1)
+      r1.c[1].update!(date_value: Date.parse("2022-02-02"))
+      expect(search("{date}:2021-01-01")).to be_empty
+      expect(search("{date}:2022-02-02")).to contain_exactly(r1)
     end
   end
 

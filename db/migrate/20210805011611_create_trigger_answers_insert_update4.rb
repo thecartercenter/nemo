@@ -11,7 +11,7 @@ class CreateTriggerAnswersInsertUpdate4 < ActiveRecord::Migration[6.1]
     create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
       .on("answers")
       .before(:insert, :update) do
-      "new.tsv := TO_TSVECTOR('simple', COALESCE( new.value, to_char(new.date_value, 'YYYY-MM-DD'), (SELECT STRING_AGG(opt_name_translation.value, ' ') FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation WHERE options.id = option_nodes.option_id AND (option_nodes.id = new.option_node_id OR option_nodes.id IN (SELECT option_node_id FROM choices WHERE answer_id = new.id))), '' ));"
+      "new.tsv := TO_TSVECTOR('simple', COALESCE( new.value, to_char(new.date_value, 'YYYY-MM-DD'), to_char(new.time_value, 'HH24hMImSSs'), to_char(new.datetime_value, 'YYYY-MM-DD HH24hMImSSs'), (SELECT STRING_AGG(opt_name_translation.value, ' ') FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation WHERE options.id = option_nodes.option_id AND (option_nodes.id = new.option_node_id OR option_nodes.id IN (SELECT option_node_id FROM choices WHERE answer_id = new.id))), '' ));"
     end
   end
 
