@@ -212,8 +212,8 @@ describe ResponsesSearcher do
     let!(:q2) { create(:question, qtype_name: "text", add_to_form: form) }
     let!(:q3) { create(:question, qtype_name: "long_text", code: "blue", add_to_form: form) }
     let!(:q4) { create(:question, qtype_name: "long_text", code: "Green", add_to_form: form) }
-    let!(:q5) { create(:question, qtype_name: "select_one", code: "Pink", add_to_form: form) }
-    let!(:q6) do
+    let!(:q_select_one) { create(:question, qtype_name: "select_one", code: "Pink", add_to_form: form) }
+    let!(:q_select_multiple) do
       create(:question, qtype_name: "select_multiple", code: "Brown",
                         option_names: %w[hammer wrench screwdriver], add_to_form: form)
     end
@@ -232,10 +232,10 @@ describe ResponsesSearcher do
 
     before do
       # Add option names a different languages
-      node = q5.option_set.c[0]
+      node = q_select_one.option_set.c[0]
       node.update!(option_attribs: {id: node.option_id,
                                     name_translations: {name_en: "Cat", name_fr: "chat"}})
-      node = q6.option_set.c[0]
+      node = q_select_multiple.option_set.c[0]
       node.update!(option_attribs: {id: node.option_id,
                                     name_translations: {name_en: "hammer", name_fr: "marteau"}})
     end
@@ -290,6 +290,27 @@ describe ResponsesSearcher do
 
       # Mixture of indexed and normal qualifiers should work
       expect(search("{Green}:ipswitch reviewed:1")).to contain_exactly(r2)
+    end
+  end
+
+  describe "special non-text search" do
+    # TODO: All the other qtypes too.
+    let!(:q1) { create(:question, qtype_name: "date", code: "date", add_to_form: form) }
+    let!(:r1) do
+      create(:response, form: form, reviewed: false, answer_values:
+        [1, "2021-01-01"])
+    end
+    let!(:r2) do
+      create(:response, form: form, reviewed: true, answer_values:
+        [1, "2020-12-31"])
+    end
+    let!(:r3) do
+      create(:response, form: form, reviewed: true, answer_values:
+        [1, nil])
+    end
+
+    it "matches the correct objects" do
+      expect(search("{date}:2021-01-01")).to contain_exactly(r1)
     end
   end
 
