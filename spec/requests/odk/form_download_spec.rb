@@ -110,8 +110,8 @@ describe FormsController, :odk, type: :request do
         let(:form) { create(:form, :live, mission: mission, question_types: %w[text integer]) }
 
         before do
-          form.c[0].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "powerup.mp3")
-          form.c[1].question.media_prompt.attach(io: audio_fixture("powerup.wav"), filename: "powerup.wav")
+          form.c[0].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "one.mp3")
+          form.c[1].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "two.mp3")
         end
 
         it "should render manifest tags correctly" do
@@ -127,8 +127,8 @@ describe FormsController, :odk, type: :request do
               text: download_url(form.c[0].media_prompt)
             )
 
-            assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_media_prompt.wav")
-            assert_select(elements[1], "hash", text: "/y/R4glGXFv/p4S1xX2ExA==")
+            assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_media_prompt.mp3")
+            assert_select(elements[1], "hash", text: "5/46pAa4tnIJudicDNUKqA==")
             assert_select(
               elements[1],
               "downloadUrl",
