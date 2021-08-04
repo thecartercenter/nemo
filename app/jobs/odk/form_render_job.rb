@@ -6,7 +6,7 @@ module ODK
     def perform(form)
       form.odk_xml.attach(
         io: StringIO.new(FormRenderer.new(form).xml),
-        filename: "form.xml",
+        filename: "#{form.id}.xml",
         content_type: "application/xml"
       )
     end
