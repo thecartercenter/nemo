@@ -44,7 +44,7 @@ class FormsController < ApplicationController
         # Also cache based on host because this endpoint returns full URLs for form access.
         # Ignoring host leads to issues with proxies or when debugging across localhost/0.0.0.0/ngrok.
         @cache_key = "#{Form.odk_index_cache_key(mission: current_mission)}/#{request.host}/#{CACHE_SUFFIX}"
-        @forms = @forms.live
+        @forms = @forms.live.rendered
       end
     end
   end

@@ -26,9 +26,14 @@ describe FormsController, :odk, type: :request do
 
   context "for regular mission" do
     describe "listing forms" do
+      let!(:unrendered_form) { create(:form, :live, mission: mission) }
       let!(:forms) { [form_simple, form_select, form_small_multi, form_both_multi] }
 
-      it "should succeed" do
+      before do
+        forms.each { |f| ODK::FormRenderJob.perform_now(f) }
+      end
+
+      it "should succeed, skipping live but not yet rendered forms" do
         get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: auth_header)
         expect(response).to be_successful
 

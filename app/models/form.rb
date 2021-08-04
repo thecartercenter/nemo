@@ -98,6 +98,9 @@ class Form < ApplicationRecord
     select(forms[Arel.star]).select(count_subquery)
   }
 
+  # Performs an inner join, which removes any forms without attachments.
+  scope :rendered, -> { joins(:odk_xml_attachment) }
+
   delegate :children, :sorted_children, :visible_children, :c, :sc,
     :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
