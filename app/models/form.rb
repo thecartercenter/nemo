@@ -316,7 +316,7 @@ class Form < ApplicationRecord
 
   def odk_xml_md5
     return nil unless odk_xml.attached?
-    odk_xml.checksum.unpack("m0").first.unpack("H*").first # Convert base64 to hex
+    odk_xml.checksum.unpack1("m0").unpack1("H*") # Convert base64 to hex
   end
 
   private

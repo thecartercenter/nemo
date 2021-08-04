@@ -7,6 +7,6 @@ describe ODK::FormRenderJob do
 
   it "stores rendered form in attachment" do
     described_class.perform_now(form)
-    expect(form.reload.odk_xml.open { |f| f.read }).to include("<h:title>My Form</h:title>")
+    expect(form.reload.odk_xml.open(&:read)).to include("<h:title>My Form</h:title>")
   end
 end

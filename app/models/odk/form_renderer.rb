@@ -25,7 +25,7 @@ module ODK
         option_sets_for_instances: ODK::DecoratorFactory.decorate_collection(
           decorated_form.option_sets_for_instances
         ),
-        condition_computer: Forms::ConditionComputer.new(@form)
+        condition_computer: Forms::ConditionComputer.new(form)
       })
     end
 
