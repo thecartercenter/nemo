@@ -3,7 +3,7 @@
 # FormController
 class FormsController < ApplicationController
   # Increment to expire caches for this controller as needed due to changes.
-  CACHE_SUFFIX = "2"
+  CACHE_SUFFIX = "3"
 
   include StandardImportable
   include BatchProcessable
