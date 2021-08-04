@@ -5,7 +5,7 @@
       <model>
         <%= render("forms/odk/instances") %>
         <itext>
-          <% current_mission_config.preferred_locales.each do |lang| %>
+          <% @preferred_locales.each do |lang| %>
             <%= render("forms/odk/translation", lang: lang) %>
           <% end %>
         </itext>

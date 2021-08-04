@@ -36,6 +36,18 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
     end
   end
 
+  context "form in mission with multiple languages" do
+    let!(:form) { create(:form, :live, question_types: %w[text]) }
+
+    before do
+      get_mission.setting.update_attribute(:preferred_locales_str, "en,fr")
+    end
+
+    it "should render both languages" do
+      expect_xml(renderer, "bilingual")
+    end
+  end
+
   context "form with incomplete responses allowed" do
     let(:form) do
       create(:form, :live, name: "Allows Incomplete", question_types: %w[integer], allow_incomplete: true)

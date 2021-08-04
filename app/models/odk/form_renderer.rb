@@ -18,6 +18,7 @@ module ODK
     def render
       decorated_form = ODK::DecoratorFactory.decorate(form)
       ApplicationController.render(template: "forms/show", format: :xml, assigns: {
+        preferred_locales: mission_config.preferred_locales,
         form: decorated_form,
         questionings: ODK::DecoratorFactory.decorate_collection(form.questionings),
         option_sets: ODK::DecoratorFactory.decorate_collection(form.option_sets),
@@ -26,6 +27,10 @@ module ODK
         ),
         condition_computer: Forms::ConditionComputer.new(@form)
       })
+    end
+
+    def mission_config
+      @mission_config ||= Setting.for_mission(form.mission)
     end
   end
 end
