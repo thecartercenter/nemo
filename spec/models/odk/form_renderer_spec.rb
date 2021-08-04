@@ -3,7 +3,7 @@
 require "rails_helper"
 require "fileutils"
 
-describe "form rendering for odk", :odk, :reset_factory_sequences do
+describe ODK::FormRenderer, :odk, :reset_factory_sequences do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
   let(:fixture_filename) { "#{fixture_name}.xml" }
@@ -12,9 +12,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   # to allow pushing onto a phone for testing.
   let(:save_fixtures) { false }
 
-  before do
-    login(user)
-  end
+  subject(:renderer) { described_class.new(form) }
 
   context "form with various question types" do
     let!(:form) do
@@ -34,7 +32,19 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "various_question_types")
+      expect_xml(renderer, "various_question_types")
+    end
+  end
+
+  context "form in mission with multiple languages" do
+    let!(:form) { create(:form, :live, question_types: %w[text]) }
+
+    before do
+      get_mission.setting.update_attribute(:preferred_locales_str, "en,fr")
+    end
+
+    it "should render both languages" do
+      expect_xml(renderer, "bilingual")
     end
   end
 
@@ -49,7 +59,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "allows_incomplete")
+      expect_xml(renderer, "allows_incomplete")
     end
   end
 
@@ -101,7 +111,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "conditional_logic")
+      expect_xml(renderer, "conditional_logic")
     end
   end
 
@@ -115,8 +125,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should not have parsing errors" do
-      do_request_and_expect_success
-      doc = Nokogiri::XML(response.body, &:noblanks)
+      doc = Nokogiri::XML(renderer.xml, &:noblanks)
       expect(doc.errors).to be_empty
     end
   end
@@ -142,7 +151,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "grid_group_with_condition")
+        expect_xml(renderer, "grid_group_with_condition")
       end
     end
 
@@ -158,7 +167,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should not render with grid format" do
-        expect_xml(form, "multi_screen_gridable")
+        expect_xml(renderer, "multi_screen_gridable")
       end
     end
   end
@@ -177,7 +186,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "non_repeat_group_with_condition")
+        expect_xml(renderer, "non_repeat_group_with_condition")
       end
     end
 
@@ -194,7 +203,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should not render on single page due to condition" do
-        expect_xml(form, "single_screen_repeat_group_with_condition")
+        expect_xml(renderer, "single_screen_repeat_group_with_condition")
       end
     end
 
@@ -208,7 +217,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "multi_screen_group")
+        expect_xml(renderer, "multi_screen_group")
       end
     end
 
@@ -249,7 +258,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "nested_repeat_group")
+        expect_xml(renderer, "nested_repeat_group")
       end
     end
 
@@ -271,7 +280,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "empty_and_hidden")
+        expect_xml(renderer, "empty_and_hidden")
       end
     end
 
@@ -293,7 +302,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "empty_and_disabled")
+        expect_xml(renderer, "empty_and_disabled")
       end
     end
   end
@@ -313,7 +322,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "various_selects")
+        expect_xml(renderer, "various_selects")
       end
     end
 
@@ -327,7 +336,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "non_repeat_group_with_multilevel_select")
+        expect_xml(renderer, "non_repeat_group_with_multilevel_select")
       end
     end
 
@@ -345,7 +354,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "multiscreen_group_with_multilevel")
+        expect_xml(renderer, "multiscreen_group_with_multilevel")
       end
     end
 
@@ -377,7 +386,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "nested_group_with_multilevel")
+        expect_xml(renderer, "nested_group_with_multilevel")
       end
     end
 
@@ -407,7 +416,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, fixture_name)
+        expect_xml(renderer, fixture_name)
       end
     end
   end
@@ -429,7 +438,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "default_patterns")
+        expect_xml(renderer, "default_patterns")
       end
     end
 
@@ -449,7 +458,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "dynamic_values")
+        expect_xml(renderer, "dynamic_values")
       end
     end
 
@@ -479,7 +488,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "repeat_group")
+        expect_xml(renderer, "repeat_group")
       end
     end
   end
@@ -496,7 +505,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "preload_last_saved")
+      expect_xml(renderer, "preload_last_saved")
     end
   end
 
@@ -509,7 +518,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "media_questions")
+        expect_xml(renderer, "media_questions")
       end
     end
 
@@ -523,19 +532,13 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "media_prompts")
+        expect_xml(renderer, "media_prompts")
       end
     end
   end
 
-  def expect_xml(form, fixture_name)
-    do_request_and_expect_success
-    expect(tidyxml(response.body)).to eq(prepare_odk_form_fixture(fixture_name, form))
-  end
-
-  def do_request_and_expect_success
-    get(form_path(form, format: :xml))
-    expect(response).to be_successful
+  def expect_xml(renderer, fixture_name)
+    expect(tidyxml(renderer.xml)).to eq(prepare_odk_form_fixture(fixture_name, renderer.form))
   end
 
   def prepare_odk_form_fixture(name, form, options = {})
