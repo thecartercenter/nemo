@@ -50,6 +50,10 @@ describe FormsController, :odk, type: :request do
     end
 
     describe "showing forms" do
+      before do
+        ODK::FormRenderJob.perform_now(form_both_multi)
+      end
+
       it "should succeed" do
         # XML rendering details are tested elsewhere.
         get(
@@ -58,6 +62,7 @@ describe FormsController, :odk, type: :request do
           headers: auth_header
         )
         expect(response).to be_successful
+        expect(response.body).to include("<h:title>")
       end
 
       it "should succeed with no locale" do
