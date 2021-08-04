@@ -64,6 +64,8 @@ class Form < ApplicationRecord
   has_many :form_items
   private :form_items, :form_items=
 
+  has_one_attached :odk_xml
+
   clone_options follow: %i[form_items versions]
 
   before_validation :normalize
