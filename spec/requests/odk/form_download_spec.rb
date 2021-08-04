@@ -37,7 +37,7 @@ describe FormsController, :odk, type: :request do
           elements.each do |element|
             form_id = element.to_s.match(%r{:(.+)</formID>})[1]
             assert_select(element, "manifestUrl", form_both_multi.id == form_id ? 1 : 0)
-            assert_select(element, "majorMinorVersion",
+            assert_select(element, "version",
               count: 1, text: forms.detect { |f| f.id == form_id }.number)
           end
         end
