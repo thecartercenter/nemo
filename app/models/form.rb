@@ -314,6 +314,11 @@ class Form < ApplicationRecord
     update_columns(downloads: 0, published_changed_at: Time.current)
   end
 
+  def odk_xml_md5
+    return nil unless odk_xml.attached?
+    odk_xml.checksum.unpack("m0").first.unpack("H*").first # Convert base64 to md5
+  end
+
   private
 
   def init_downloads
