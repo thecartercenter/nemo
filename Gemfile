@@ -75,8 +75,7 @@ gem "odata_server", github: "sassafrastech/odata_server", branch: "sassafras"
 gem "dotenv-rails", "~> 2.7"
 
 # Tree modelling
-# Fork: fixing `ordered_by_ancestry_and`. PR opened on upstream repo 1/30/21
-gem "ancestry", github: "thecartercenter/ancestry"
+gem "ancestry", "~> 4.1"
 # Fork: Performance improvements.
 # https://github.com/sassafrastech/closure_tree/commits/master
 gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.2.0-noReorder-fastInsert"
