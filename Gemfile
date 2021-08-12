@@ -127,8 +127,7 @@ group :development do
   gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4"
   gem "listen", "~> 3.0"
-  # Fork: Rails 6.1 compatibility: https://github.com/voormedia/rails-erd/pull/365
-  gem "rails-erd", github: "andrew-newell/rails-erd"
+  gem "rails-erd", "~> 1.6"
 
   # N+1 detection. Config is in environments/development.rb
   gem "bullet", "~> 6.1"
