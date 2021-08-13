@@ -4,7 +4,15 @@ exports[`renders (default) 1`] = `
 <ErrorBoundary
   message="message"
 >
-  children
+  <ErrorBoundary
+    fallback={
+      <ErrorFallback
+        message="message"
+      />
+    }
+  >
+    children
+  </ErrorBoundary>
 </ErrorBoundary>
 `;
 
@@ -12,11 +20,23 @@ exports[`renders (error) 1`] = `
 <ErrorBoundary
   message="message"
 >
-  <div
-    className="alert alert-danger"
-    role="alert"
+  <ErrorBoundary
+    fallback={
+      <ErrorFallback
+        message="message"
+      />
+    }
   >
-    message
-  </div>
+    <ErrorFallback
+      message="message"
+    >
+      <div
+        className="alert alert-danger"
+        role="alert"
+      >
+        message
+      </div>
+    </ErrorFallback>
+  </ErrorBoundary>
 </ErrorBoundary>
 `;

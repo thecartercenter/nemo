@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as Sentry from '@sentry/react';
+
+const ErrorFallback = ({ message }) => (
+  <div className="alert alert-danger" role="alert">
+    {message}
+  </div>
+);
 
 class ErrorBoundary extends Component {
   static propTypes = {
@@ -11,29 +18,13 @@ class ErrorBoundary extends Component {
     message: I18n.t('common.jsError'),
   };
 
-  state = {
-    hasError: false,
-  };
-
-  componentDidCatch(error, info) {
-    if (process.env.NODE_ENV !== 'test') {
-      console.error('[Boundary error]', error);
-      console.error('[Boundary info]', info);
-    }
-
-    this.setState({ hasError: true });
-  }
-
   render = () => {
-    const { hasError } = this.state;
     const { message, children } = this.props;
 
-    if (!hasError) return children;
-
     return (
-      <div className="alert alert-danger" role="alert">
-        {message}
-      </div>
+      <Sentry.ErrorBoundary fallback={<ErrorFallback message={message} />}>
+        {children}
+      </Sentry.ErrorBoundary>
     );
   };
 }
