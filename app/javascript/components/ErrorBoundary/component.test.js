@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import Component from './component';
 
@@ -13,12 +13,12 @@ const DangerousComponent = () => {
 };
 
 it('renders (default)', () => {
-  const wrapper = shallow(<Component {...mockProps} />);
+  const wrapper = mount(<Component {...mockProps} />);
   expect(wrapper).toMatchSnapshot();
 });
 
 it('renders (error)', () => {
-  const wrapper = shallow(
+  const wrapper = mount(
     <Component {...mockProps}>
       <DangerousComponent />
     </Component>,
