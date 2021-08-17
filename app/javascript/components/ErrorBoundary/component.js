@@ -8,6 +8,10 @@ const ErrorFallback = ({ message }) => (
   </div>
 );
 
+ErrorFallback.propTypes = {
+  message: PropTypes.string,
+};
+
 class ErrorBoundary extends Component {
   static propTypes = {
     message: PropTypes.string,
