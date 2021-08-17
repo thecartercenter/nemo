@@ -14,8 +14,11 @@ module ActionLinks
           actions << :sms_guide
           actions << [:sms_console, h.new_sms_test_path] if can?(:create, Sms::Test)
         end
-        actions << [:re_cache, {method: :patch}] if can?(:re_cache, form)
-        actions << [:view_raw_odata, {url: api_url(form)}] if can?(:view_raw_odata, form)
+        if can?(:re_cache, form) || can?(:view_raw_odata, form)
+          actions << link_divider
+          actions << [:re_cache, {method: :patch}] if can?(:re_cache, form)
+          actions << [:view_raw_odata, {url: api_url(form)}] if can?(:view_raw_odata, form)
+        end
       end
       actions << :destroy
       super(form, actions)
