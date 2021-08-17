@@ -1,6 +1,7 @@
 en:
   operation:
     clear_confirm: "Are you sure you want to clear all completed operations?"
+    destroy_confirm: "Are you sure you want to cancel this operation?"
     details:
       user_import: "User import from %{file}"
       option_sets_import: "Option Set '%{file}' import"

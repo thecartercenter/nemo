@@ -20,12 +20,18 @@ class OperationsController < ApplicationController
                     @operations.order(created_at: :desc) # Display ALL operations on server
                   end
     @operations = @operations.paginate(page: params[:page], per_page: PER_PAGE)
+
   end
 
   def show
   end
 
   def destroy
+    # first destroy delayed job
+    if @operation.provider_job_id.present? && Delayed::Job.exists?(@operation.provider_job_id)
+      Delayed::Job.find(@operation.provider_job_id).destroy
+    end
+
     destroy_and_handle_errors(@operation)
     redirect_to(index_url_with_context)
   end
