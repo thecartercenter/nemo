@@ -906,6 +906,7 @@ en:
         return_to_draft: "Return to Draft Status"
         print: "Print"
         re_cache: "Re-cache OData"
+        view_raw_odata: "View raw OData"
       mission:
         new: "Create Mission"
       operation:

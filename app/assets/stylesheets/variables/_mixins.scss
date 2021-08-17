@@ -1,4 +1,14 @@
+@mixin link-divider {
+  .link-divider {
+    color: $light-border-color;
+    display: inline-block;
+    margin-#{$right}: 10px;
+  }
+}
+
 @mixin top-action-links {
+  @include link-divider;
+
   margin-bottom: 10px;
 
   a {

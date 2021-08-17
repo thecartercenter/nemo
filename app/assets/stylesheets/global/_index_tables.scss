@@ -11,11 +11,7 @@
     }
   }
 
-  .link-divider {
-    color: $light-border-color;
-    display: inline-block;
-    margin-#{$right}: 10px;
-  }
+  @include link-divider;
 }
 
 .index_table {

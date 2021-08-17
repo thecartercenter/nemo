@@ -29,6 +29,7 @@ module IconHelper
     response: "check-circle-o",
     return_to_draft: "undo",
     re_cache: "refresh",
+    view_raw_odata: "database",
     hierarchicalresponse: "check-circle-o",
     setting: "gear",
     show: "file-o",
