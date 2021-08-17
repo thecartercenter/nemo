@@ -27,7 +27,9 @@ module ActionLinks
     private
 
     def api_url(form)
-      "#{h.request.base_url}#{h.current_root_path}#{OData::BASE_PATH}/#{OData::FormDecorator.new(form).responses_url}"
+      base_path = "#{h.request.base_url}#{h.current_root_path}#{OData::BASE_PATH}"
+      responses_path = OData::FormDecorator.new(form).responses_url
+      "#{base_path}/#{responses_path}"
     end
   end
 end

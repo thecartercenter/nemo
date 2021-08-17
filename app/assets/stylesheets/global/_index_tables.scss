@@ -1,4 +1,6 @@
 .index-links {
+  @include link-divider;
+
   margin-bottom: 10px;
 
   > a {
@@ -10,8 +12,6 @@
       color: $accent-color;
     }
   }
-
-  @include link-divider;
 }
 
 .index_table {
