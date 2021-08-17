@@ -105,6 +105,7 @@ class Ability
       can(%i[update login_instructions change_assignments], User, id: user.id)
 
       can(%i[re_cache], Form)
+      can(%i[view_raw_odata], Form)
     end
 
     # Only admins can give/take admin (adminify) to/from others, but not from themselves
@@ -167,6 +168,7 @@ class Ability
       # This is intentionally redundant with `manage` as we're slowly migrating to explicit permissions.
       can(:change_status, Form, mission_id: mission.id)
       cannot(:re_cache, Form)
+      cannot(:view_raw_odata, Form)
       can(:update_core, OptionSet, mission_id: mission.id)
 
       can(:condition_form, Constraint, mission_id: mission.id)

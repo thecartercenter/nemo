@@ -1,4 +1,6 @@
 .index-links {
+  @include link-divider;
+
   margin-bottom: 10px;
 
   > a {
@@ -9,12 +11,6 @@
     &.batch-link {
       color: $accent-color;
     }
-  }
-
-  .link-divider {
-    color: $light-border-color;
-    display: inline-block;
-    margin-#{$right}: 10px;
   }
 }
 
