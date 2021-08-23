@@ -1,5 +1,42 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders (default) 1`] = `"children"`;
+exports[`renders (default) 1`] = `
+<ErrorBoundary
+  message="message"
+>
+  <ErrorBoundary
+    fallback={
+      <ErrorFallback
+        message="message"
+      />
+    }
+  >
+    children
+  </ErrorBoundary>
+</ErrorBoundary>
+`;
 
-exports[`renders (error) 1`] = `<DangerousComponent />`;
+exports[`renders (error) 1`] = `
+<ErrorBoundary
+  message="message"
+>
+  <ErrorBoundary
+    fallback={
+      <ErrorFallback
+        message="message"
+      />
+    }
+  >
+    <ErrorFallback
+      message="message"
+    >
+      <div
+        className="alert alert-danger"
+        role="alert"
+      >
+        message
+      </div>
+    </ErrorFallback>
+  </ErrorBoundary>
+</ErrorBoundary>
+`;

@@ -2,6 +2,9 @@
 
 module Results
   # Updates the search vector on the Answers model and provides the trigger query to do the same.
+  #
+  # After modifying, make sure you run `rake db:generate_trigger_migration`
+  # (see https://github.com/jenseng/hair_trigger).
   class AnswerSearchVectorUpdater
     include Singleton
 
@@ -20,6 +23,9 @@ module Results
       <<-SQL.squish
         TO_TSVECTOR('simple', COALESCE(
           new.value,
+          to_char(new.date_value, 'YYYY-MM-DD'),
+          to_char(new.time_value, 'HH24hMImSSs'),
+          to_char(new.datetime_value, 'YYYY-MM-DD HH24hMImSSs'),
           (SELECT STRING_AGG(opt_name_translation.value, ' ')
             FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation
             WHERE

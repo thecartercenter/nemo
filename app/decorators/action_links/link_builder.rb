@@ -18,8 +18,12 @@ module ActionLinks
       return nil if object.new_record?
       h.content_tag(:div, class: "top-action-links d-print-none") do
         safe_str << actions.map do |action|
+          # It may already be HTML.
+          next action if action.instance_of?(ActiveSupport::SafeBuffer)
+
           action, url, method, data = unpack_action(action)
           next unless url && can?(action, object)
+
           data[:confirm] = delete_warning if action == :destroy
           h.link_to(h.icon_tag(action) << translate_action(action), url,
             method: method, data: data, class: "#{action.to_s.dasherize}-link")
@@ -62,6 +66,10 @@ module ActionLinks
     def translate_action(action)
       t("action_links.#{action}",
         default: :"action_links.models.#{object.model_name.i18n_key}.#{action}")
+    end
+
+    def link_divider
+      h.content_tag(:span, "|", class: "link-divider")
     end
 
     def delete_warning

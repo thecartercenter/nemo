@@ -9,7 +9,7 @@ class ApplicationDecorator < Draper::Decorator
   end
 
   def nbsp
-    "&nbsp;".html_safe # rubocop:disable RSpec/Rails/OutputSafety
+    "&nbsp;".html_safe # rubocop:disable Rails/OutputSafety
   end
 
   def show_action?

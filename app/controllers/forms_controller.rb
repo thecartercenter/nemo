@@ -3,7 +3,7 @@
 # FormController
 class FormsController < ApplicationController
   # Increment to expire caches for this controller as needed due to changes.
-  CACHE_SUFFIX = "2"
+  CACHE_SUFFIX = "3"
 
   include StandardImportable
   include BatchProcessable
@@ -44,7 +44,10 @@ class FormsController < ApplicationController
         # Also cache based on host because this endpoint returns full URLs for form access.
         # Ignoring host leads to issues with proxies or when debugging across localhost/0.0.0.0/ngrok.
         @cache_key = "#{Form.odk_index_cache_key(mission: current_mission)}/#{request.host}/#{CACHE_SUFFIX}"
-        @forms = @forms.live
+
+        # We have to skip forms that have not yet been rendered since we won't have access to their
+        # checksum hash. It should be rare that a live form is not also rendered.
+        @forms = @forms.live.rendered
       end
     end
   end
@@ -69,8 +72,13 @@ class FormsController < ApplicationController
           prepare_and_render_form
         end
       end
-      # for xml, render openrosa
-      format.xml { prepare_xml }
+      format.xml do
+        authorize!(:download, @form)
+        @form.add_download
+        @form.odk_xml.download { |chunk| response.stream.write(chunk) }
+      ensure
+        response.stream.close
+      end
     end
   end
 
@@ -214,17 +222,6 @@ class FormsController < ApplicationController
   end
 
   private
-
-  def prepare_xml
-    authorize!(:download, @form)
-    @form.add_download
-    @form = ODK::DecoratorFactory.decorate(@form)
-    @questionings = ODK::DecoratorFactory.decorate_collection(@form.questionings)
-    @option_sets = ODK::DecoratorFactory.decorate_collection(@form.option_sets)
-    @option_sets_for_instances = ODK::DecoratorFactory.decorate_collection(
-      @form.option_sets_for_instances
-    )
-  end
 
   # Decorates questions for choose_questions view.
   def questions

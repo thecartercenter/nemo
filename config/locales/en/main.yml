@@ -906,6 +906,7 @@ en:
         return_to_draft: "Return to Draft Status"
         print: "Print"
         re_cache: "Re-cache OData"
+        view_raw_odata: "View raw OData"
       mission:
         new: "Create Mission"
       operation:
@@ -1887,6 +1888,7 @@ en:
         * __submit-date__ The date the response was submitted (e.g. 1985-03-22)
         * __reviewed__ Whether the response has been marked 'reviewed' (1 = yes or 0 = no)
         * __source__ The medium via which the response was submitted ('web', 'odk', or 'sms')
+        * __{QuestionCode}__ The answer to a qustion with the code QuestionCode
 
         ## Exact Phrases
 
@@ -1931,6 +1933,16 @@ en:
         * __submit-date >= 2000-01-01 submit-date < 2000-02-01__
 
         will match responses submitted in the month of January 2000.
+
+        ## Answer format
+
+        Certain types of questions expect a specific format to search for answers: for example, searching for answers to a Date-type question with question code DateQ1 might look like "{DateQ1}:2021-01-01"
+
+        * Date: YYYY-MM-DD, e.g. "2021-01-01"
+        * Time: HHhMMmSSs, e.g. "13h00m00s" (1 pm in 24-hour time)
+        * DateTime: YYYY-MM-DD HHhMMmSSs, e.g. "2021-01-01 13h00m00s"
+
+        These values are treated like plain text, so you could also for example seach just "13h" to find any Time, DateTime, or Text-based answer that matches this word.
 
       users: |-
         ## Qualifiers

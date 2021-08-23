@@ -64,6 +64,8 @@ class Form < ApplicationRecord
   has_many :form_items
   private :form_items, :form_items=
 
+  has_one_attached :odk_xml
+
   clone_options follow: %i[form_items versions]
 
   before_validation :normalize
@@ -95,6 +97,9 @@ class Form < ApplicationRecord
       .where(responses[:form_id].eq(forms[:id])).arel.as("AS responses_count")
     select(forms[Arel.star]).select(count_subquery)
   }
+
+  # Performs an inner join, which removes any forms without attachments.
+  scope :rendered, -> { joins(:odk_xml_attachment) }
 
   delegate :children, :sorted_children, :visible_children, :c, :sc,
     :descendants, :child_groups, to: :root_group
@@ -254,6 +259,8 @@ class Form < ApplicationRecord
 
     # Ensure the form has a version if it's becoming live.
     increment_version if live? && current_version.nil?
+
+    ODK::FormRenderJob.perform_later(self) if live? && old_status == :draft
   end
 
   def live?
@@ -305,6 +312,11 @@ class Form < ApplicationRecord
     # Reset downloads since we are only interested in downloads of present version.
     # Touch last changed so the cache key gets bumped.
     update_columns(downloads: 0, published_changed_at: Time.current)
+  end
+
+  def odk_xml_md5
+    return nil unless odk_xml.attached?
+    odk_xml.checksum.unpack1("m0").unpack1("H*") # Convert base64 to hex
   end
 
   private

@@ -105,6 +105,8 @@ class Answer < ResponseNode
       .where("parents.type != 'AnswerSet' OR answers.new_rank = 0")
   }
 
+  # Allow searching for various kinds of answer values (such as option ID, date, etc.)
+  # See answer_search_vector_updater.rb for details.
   pg_search_scope :search_by_value,
     against: :value,
     using: {

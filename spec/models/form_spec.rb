@@ -264,6 +264,37 @@ describe Form do
     end
   end
 
+  describe "running FormRenderJob" do
+    let!(:form) { create(:form, initial_status) }
+
+    context "on draft form becoming live" do
+      let(:initial_status) { :draft }
+
+      it "enqueues the job" do
+        expect(ODK::FormRenderJob).to receive(:perform_later).with(form)
+        form.update_status(:live)
+      end
+    end
+
+    context "on live form becoming draft" do
+      let(:initial_status) { :live }
+
+      it "doesn't enqueue the job" do
+        expect(ODK::FormRenderJob).not_to receive(:perform_later)
+        form.update_status(:draft)
+      end
+    end
+
+    context "on live form becoming paused" do
+      let(:initial_status) { :live }
+
+      it "doesn't enqueue the job" do
+        expect(ODK::FormRenderJob).not_to receive(:perform_later)
+        form.update_status(:paused)
+      end
+    end
+  end
+
   describe "destroy" do
     let!(:form) { create(:form, :standard, question_types: %w[text text text]) }
     let!(:form2) { form.replicate(mode: :to_mission, dest_mission: get_mission) }

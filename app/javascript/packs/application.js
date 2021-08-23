@@ -10,6 +10,20 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
+import * as Sentry from '@sentry/react';
+import { Integrations } from '@sentry/tracing';
+
+const isOnline = !process.env.NEMO_OFFLINE_MODE || process.env.NEMO_OFFLINE_MODE === 'false';
+if (isOnline && process.env.NODE_ENV !== 'test') {
+  Sentry.init({
+    dsn: process.env.NEMO_SENTRY_DSN,
+    integrations: [new Integrations.BrowserTracing()],
+
+    // Percentage between 0.0 - 1.0.
+    tracesSampleRate: 1.0,
+  });
+}
+
 // Support component names relative to this directory:
 const componentRequireContext = require.context('components', true);
 const ReactRailsUJS = require('react_ujs');

@@ -30,6 +30,10 @@ describe "abilities for forms" do
       it "should allow re-caching forms" do
         expect(ability).to be_able_to(:re_cache, Form)
       end
+
+      it "should allow viewing raw odata link" do
+        expect(ability).to be_able_to(:view_raw_odata, Form)
+      end
     end
 
     context "for coordinator" do
@@ -41,6 +45,10 @@ describe "abilities for forms" do
 
       it "should not be able to re-cache" do
         %i[re_cache].each { |op| expect(ability).not_to be_able_to(op, Form) }
+      end
+
+      it "should not be able to view raw odata link" do
+        %i[view_raw_odata].each { |op| expect(ability).not_to be_able_to(op, Form) }
       end
 
       context "when draft" do
@@ -88,6 +96,7 @@ describe "abilities for forms" do
         expect(ability).to be_able_to(:index, Form)
         expect(ability).not_to be_able_to(:create, Form)
         expect(ability).not_to be_able_to(:re_cache, Form)
+        expect(ability).not_to be_able_to(:view_raw_odata, Form)
       end
 
       context "when draft" do

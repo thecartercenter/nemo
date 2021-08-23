@@ -26,9 +26,14 @@ describe FormsController, :odk, type: :request do
 
   context "for regular mission" do
     describe "listing forms" do
+      let!(:unrendered_form) { create(:form, :live, mission: mission) }
       let!(:forms) { [form_simple, form_select, form_small_multi, form_both_multi] }
 
-      it "should succeed" do
+      before do
+        forms.each { |f| ODK::FormRenderJob.perform_now(f) }
+      end
+
+      it "should succeed, skipping live but not yet rendered forms" do
         get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: auth_header)
         expect(response).to be_successful
 
@@ -37,7 +42,8 @@ describe FormsController, :odk, type: :request do
           elements.each do |element|
             form_id = element.to_s.match(%r{:(.+)</formID>})[1]
             assert_select(element, "manifestUrl", form_both_multi.id == form_id ? 1 : 0)
-            assert_select(element, "majorMinorVersion",
+            assert_select(element, "hash", text: /\A[a-f0-9]{32}\z/)
+            assert_select(element, "version",
               count: 1, text: forms.detect { |f| f.id == form_id }.number)
           end
         end
@@ -50,6 +56,10 @@ describe FormsController, :odk, type: :request do
     end
 
     describe "showing forms" do
+      before do
+        ODK::FormRenderJob.perform_now(form_both_multi)
+      end
+
       it "should succeed" do
         # XML rendering details are tested elsewhere.
         get(
@@ -58,6 +68,7 @@ describe FormsController, :odk, type: :request do
           headers: auth_header
         )
         expect(response).to be_successful
+        expect(response.body).to include("<h:title>")
       end
 
       it "should succeed with no locale" do
@@ -110,8 +121,8 @@ describe FormsController, :odk, type: :request do
         let(:form) { create(:form, :live, mission: mission, question_types: %w[text integer]) }
 
         before do
-          form.c[0].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "powerup.mp3")
-          form.c[1].question.media_prompt.attach(io: audio_fixture("powerup.wav"), filename: "powerup.wav")
+          form.c[0].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "one.mp3")
+          form.c[1].question.media_prompt.attach(io: audio_fixture("powerup.mp3"), filename: "two.mp3")
         end
 
         it "should render manifest tags correctly" do
@@ -127,8 +138,8 @@ describe FormsController, :odk, type: :request do
               text: download_url(form.c[0].media_prompt)
             )
 
-            assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_media_prompt.wav")
-            assert_select(elements[1], "hash", text: "/y/R4glGXFv/p4S1xX2ExA==")
+            assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_media_prompt.mp3")
+            assert_select(elements[1], "hash", text: "5/46pAa4tnIJudicDNUKqA==")
             assert_select(
               elements[1],
               "downloadUrl",

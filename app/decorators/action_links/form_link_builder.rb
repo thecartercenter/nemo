@@ -14,10 +14,22 @@ module ActionLinks
           actions << :sms_guide
           actions << [:sms_console, h.new_sms_test_path] if can?(:create, Sms::Test)
         end
-        actions << [:re_cache, {method: :patch}] if can?(:re_cache, form)
+        if can?(:re_cache, form) || can?(:view_raw_odata, form)
+          actions << link_divider
+          actions << [:re_cache, {method: :patch}] if can?(:re_cache, form)
+          actions << [:view_raw_odata, {url: api_url(form)}] if can?(:view_raw_odata, form)
+        end
       end
       actions << :destroy
       super(form, actions)
+    end
+
+    private
+
+    def api_url(form)
+      base_path = "#{h.request.base_url}#{h.current_root_path}#{OData::BASE_PATH}"
+      responses_path = OData::FormDecorator.new(form).responses_url
+      "#{base_path}/#{responses_path}"
     end
   end
 end

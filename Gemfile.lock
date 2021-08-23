@@ -1,14 +1,4 @@
 GIT
-  remote: https://github.com/andrew-newell/rails-erd.git
-  revision: cd225439688b6a9f7d74f28106fe2ada73090345
-  specs:
-    rails-erd (1.6.0)
-      activerecord (>= 4.2)
-      activesupport (>= 4.2)
-      choice (~> 0.2.0)
-      ruby-graphviz (~> 1.2)
-
-GIT
   remote: https://github.com/codebrew/backbone-rails.git
   revision: 231090bd690cd365a9486c17b00eec1e73ec37ec
   specs:
@@ -34,13 +24,6 @@ GIT
   specs:
     odata_server (0.2.0)
       rails (>= 5.2)
-
-GIT
-  remote: https://github.com/thecartercenter/ancestry.git
-  revision: 201e59bc7523e7fb25950d17bc29261d17216812
-  specs:
-    ancestry (3.2.1)
-      activerecord (>= 5.0.0)
 
 GEM
   remote: http://rubygems.org/
@@ -116,6 +99,8 @@ GEM
       activerecord (>= 4.2)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
+    ancestry (4.1.0)
+      activerecord (>= 5.2.6)
     annotate (3.1.1)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
@@ -200,7 +185,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.8)
+    concurrent-ruby (1.1.9)
     connection_pool (2.2.3)
     crack (0.4.4)
     crass (1.0.6)
@@ -264,7 +249,7 @@ GEM
       activerecord (>= 4.0.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    hairtrigger (0.2.23)
+    hairtrigger (0.2.24)
       activerecord (>= 5.0, < 7)
       ruby2ruby (~> 2.4)
       ruby_parser (~> 3.10)
@@ -389,6 +374,11 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
+    rails-erd (1.6.1)
+      activerecord (>= 4.2)
+      activesupport (>= 4.2)
+      choice (~> 0.2.0)
+      ruby-graphviz (~> 1.2)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
     rails-i18n (6.0.0)
@@ -490,8 +480,8 @@ GEM
     ruby2ruby (2.4.4)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.6)
-    ruby_parser (3.15.0)
-      sexp_processor (~> 4.9)
+    ruby_parser (3.16.0)
+      sexp_processor (~> 4.15, >= 4.15.1)
     rubyzip (2.3.0)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -515,7 +505,7 @@ GEM
     sentry-ruby (4.1.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       faraday (>= 1.0)
-    sexp_processor (4.15.1)
+    sexp_processor (4.15.3)
     spinjs-rails (1.3)
       rails (>= 3.1)
     sprockets (3.7.2)
@@ -591,7 +581,7 @@ DEPENDENCIES
   actionpack-page_caching (~> 1.1)
   active_storage_validations (~> 0.9.3)
   acts_as_list
-  ancestry!
+  ancestry (~> 4.1)
   annotate (~> 3.1)
   api-pagination (~> 4.1)
   assert_difference (~> 1.0)
@@ -656,7 +646,7 @@ DEPENDENCIES
   rails (~> 6.1.1)
   rails-backbone!
   rails-controller-testing (~> 1.0)
-  rails-erd!
+  rails-erd (~> 1.6)
   rails-i18n (~> 6.0)
   rake (~> 13.0)
   random_data (~> 1.6)

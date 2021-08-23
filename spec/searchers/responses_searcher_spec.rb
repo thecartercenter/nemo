@@ -212,8 +212,8 @@ describe ResponsesSearcher do
     let!(:q2) { create(:question, qtype_name: "text", add_to_form: form) }
     let!(:q3) { create(:question, qtype_name: "long_text", code: "blue", add_to_form: form) }
     let!(:q4) { create(:question, qtype_name: "long_text", code: "Green", add_to_form: form) }
-    let!(:q5) { create(:question, qtype_name: "select_one", code: "Pink", add_to_form: form) }
-    let!(:q6) do
+    let!(:q_select_one) { create(:question, qtype_name: "select_one", code: "Pink", add_to_form: form) }
+    let!(:q_select_multiple) do
       create(:question, qtype_name: "select_multiple", code: "Brown",
                         option_names: %w[hammer wrench screwdriver], add_to_form: form)
     end
@@ -232,10 +232,10 @@ describe ResponsesSearcher do
 
     before do
       # Add option names a different languages
-      node = q5.option_set.c[0]
+      node = q_select_one.option_set.c[0]
       node.update!(option_attribs: {id: node.option_id,
                                     name_translations: {name_en: "Cat", name_fr: "chat"}})
-      node = q6.option_set.c[0]
+      node = q_select_multiple.option_set.c[0]
       node.update!(option_attribs: {id: node.option_id,
                                     name_translations: {name_en: "hammer", name_fr: "marteau"}})
     end
@@ -290,6 +290,39 @@ describe ResponsesSearcher do
 
       # Mixture of indexed and normal qualifiers should work
       expect(search("{Green}:ipswitch reviewed:1")).to contain_exactly(r2)
+    end
+  end
+
+  describe "special non-text search" do
+    let!(:q1) { create(:question, qtype_name: "date", code: "date", add_to_form: form) }
+    let!(:q2) { create(:question, qtype_name: "time", code: "time", add_to_form: form) }
+    let!(:q3) { create(:question, qtype_name: "datetime", code: "datetime", add_to_form: form) }
+    let!(:r1) do
+      create(:response, form: form, reviewed: false, answer_values:
+        [1, "2021-01-01", "12:00:00", "2021-01-01 12:00:00"])
+    end
+    let!(:r2) do
+      create(:response, form: form, reviewed: true, answer_values:
+        [1, "2020-12-31", "12:00:01", "2020-12-31 12:00:01"])
+    end
+    let!(:r3) do
+      create(:response, form: form, reviewed: true, answer_values:
+        [1, nil, nil, nil])
+    end
+
+    it "matches the correct objects" do
+      expect(search("{date}:2021-01-01")).to contain_exactly(r1)
+      expect(search("{time}:12h00m00s")).to contain_exactly(r1)
+      expect(search("{datetime}:2021-01-01 12h00m00s")).to contain_exactly(r1)
+      expect(search("{datetime}:2021 12h")).to contain_exactly(r1) # Partial string match also works
+      expect(search("12h00m")).to contain_exactly(r1, r2) # Or just plaintext search
+    end
+
+    it "respects updated values" do
+      expect(search("{date}:2021-01-01")).to contain_exactly(r1)
+      r1.c[1].update!(date_value: Date.parse("2022-02-02"))
+      expect(search("{date}:2021-01-01")).to be_empty
+      expect(search("{date}:2022-02-02")).to contain_exactly(r1)
     end
   end
 
