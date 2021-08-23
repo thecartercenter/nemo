@@ -22,7 +22,15 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
 
   showExportCsvModal(event) {
     event.preventDefault();
-    this.$('#export-csv-modal').modal('show');
+
+    let form = $('.index-table-wrapper form');
+    let checked = form.find('input.batch_op:checked');
+    let selectAll = form.find('input[name=select_all_pages]').val();
+    let shouldExportAll = checked.length === 0 || selectAll;
+    let count = shouldExportAll ? $('.index-table-wrapper').data('entries') : checked.length;
+    $('#export-options-summary').text(I18n.t('response.export_options.summary', { count }));
+
+    $('#export-csv-modal').modal('show');
   }
 
   showExportODataModal(event) {
