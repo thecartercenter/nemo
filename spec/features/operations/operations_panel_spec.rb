@@ -52,4 +52,13 @@ feature "operations panel" do
       end
     end
   end
+
+  context "pending operations" do
+    scenario "cancel an operation" do
+      visit("/en/m/#{mission.compact_name}/operations")
+      click_on "Cancel"
+      expect(page).to_not(have_content("Cancel"))
+      expect(Operation.all.count).to eq(1)
+    end
+  end
 end
