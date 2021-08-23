@@ -13,11 +13,11 @@ ELMO.Views.FormView = class FormView extends ELMO.Views.ApplicationView {
     // If we find it, we are done. Else we expect the actual form (e.g. input, select) element to
     // have a predictable ID and to work with the `val` jquery method. If it doesn't this method won't work.
     const id = `${klass}_${attrib}`;
-    const ro_val = this.$(`.form-field.${id} .ro-val`);
+    const ro_val = $(`.form-field.${id} .ro-val`);
     if (ro_val.length) {
       return ro_val.data('val');
     }
-    return this.$(`#${id}`).val();
+    return $(`#${id}`).val();
   }
 
   // Shows/hides the form field with the given name.
@@ -25,6 +25,6 @@ ELMO.Views.FormView = class FormView extends ELMO.Views.ApplicationView {
     if (options == null) { options = {}; }
     const comparison = options.prefix ? '^=' : '=';
     const display = showHide ? 'flex' : 'none';
-    return this.$(`.form-field[data-field-name${comparison}\"${name}\"]`).css('display', display);
+    return $(`.form-field[data-field-name${comparison}\"${name}\"]`).css('display', display);
   }
 };

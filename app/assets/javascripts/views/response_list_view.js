@@ -9,7 +9,7 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
   }
 
   initialize(options) {
-    this.$('#export-dropdown').dropdown();
+    $('#export-dropdown').dropdown();
     new Clipboard('#copy-btn-api_url');
     this.reloadCount = 0;
     if (options.refreshInterval > 0) {
@@ -22,16 +22,16 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
 
   showExportCsvModal(event) {
     event.preventDefault();
-    this.$('#export-csv-modal').modal('show');
+    $('#export-csv-modal').modal('show');
   }
 
   showExportODataModal(event) {
     event.preventDefault();
-    this.$('#export-odata-modal').modal('show');
+    $('#export-odata-modal').modal('show');
   }
 
   selectApiUrl() {
-    this.$('#copy-value-api_url').selectText();
+    $('#copy-value-api_url').selectText();
   }
 
   fetch() {
@@ -63,13 +63,13 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
     // Highlight any new rows.
     this.getIds().forEach((id) => {
       if (this.oldIds.indexOf(id) === -1) {
-        this.$(`#${id}`).effect('highlight', {}, 1000);
+        $(`#${id}`).effect('highlight', {}, 1000);
       }
     });
   }
 
   // Gets IDs of each row in index table
   getIds() {
-    return this.$('.index_table_body tr').map((index, row) => row.id).toArray();
+    return $('.index_table_body tr').map((index, row) => row.id).toArray();
   }
 };

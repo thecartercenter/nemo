@@ -24,7 +24,7 @@ ELMO.Views.ResponseFormRepeatView = class ResponseFormRepeatView extends ELMO.Vi
   }
 
   children() {
-    return this.$('> .children');
+    return $('> .children');
   }
 
   addRepeat(event) {
@@ -50,6 +50,6 @@ ELMO.Views.ResponseFormRepeatView = class ResponseFormRepeatView extends ELMO.Vi
   }
 
   toggleEmptyNotice() {
-    return this.$('> .empty-notice').toggle(this.children().find(':visible').length === 0);
+    return $('> .empty-notice').toggle(this.children().find(':visible').length === 0);
   }
 };

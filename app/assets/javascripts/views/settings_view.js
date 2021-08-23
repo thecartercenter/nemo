@@ -23,12 +23,12 @@ ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView 
   }
 
   selectExternalSql() {
-    this.$('#copy-value-external_sql').selectText();
+    $('#copy-value-external_sql').selectText();
   }
 
   show_change_credential_fields(event) {
-    this.$(event.target).hide();
-    this.$(event.target).closest('.adapter-settings').find('.credential-fields').show();
+    $(event.target).hide();
+    $(event.target).closest('.adapter-settings').find('.credential-fields').show();
     return false;
   }
 
@@ -63,13 +63,13 @@ ELMO.Views.SettingsView = class SettingsView extends ELMO.Views.ApplicationView 
   }
 
   show_credential_fields_with_errors() {
-    const adapters = this.$('.form-field.has-errors:hidden').closest('.adapter-settings');
-    this.$(adapters).find('.credential-fields').show();
-    return this.$(adapters).find('a.show-credential-fields').hide();
+    const adapters = $('.form-field.has-errors:hidden').closest('.adapter-settings');
+    $(adapters).find('.credential-fields').show();
+    return $(adapters).find('a.show-credential-fields').hide();
   }
 
   clear_sms_fields(event) {
-    const inputs = this.$(event.target).closest('.adapter-settings').find('input[type=text]');
-    return this.$(inputs).val('');
+    const inputs = $(event.target).closest('.adapter-settings').find('input[type=text]');
+    return $(inputs).val('');
   }
 };

@@ -41,8 +41,8 @@ ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.Applicat
   deleteExisting(event) {
     event.preventDefault();
     if (confirm($(event.currentTarget).data('confirm-msg'))) {
-      this.$('.existing').remove();
-      this.$('.dropzone').show();
+      $('.existing').remove();
+      $('.dropzone').show();
       return this.clearMetaFields();
     }
   }
@@ -63,11 +63,11 @@ ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.Applicat
       : responseData === 'RECENT_LOGIN_REQUIRED'
         ? I18n.t('errors.file_upload.login_error')
         : I18n.t('errors.file_upload.error');
-    return this.$('.dz-error-msg').show().html(errors);
+    return $('.dz-error-msg').show().html(errors);
   }
 
   fileRemoved() {
-    this.$('.dz-message').show();
+    $('.dz-message').show();
     return this.clearMetaFields();
   }
 
@@ -76,10 +76,10 @@ ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.Applicat
       this.listener.uploadStarting();
     }
     if (this.genericThumbPath != null) {
-      this.$('img')[0].src = this.genericThumbPath;
+      $('img')[0].src = this.genericThumbPath;
     }
-    this.$('.dz-message').hide();
-    return this.$('.dz-error-msg').hide();
+    $('.dz-message').hide();
+    return $('.dz-error-msg').hide();
   }
 
   uploadFinished() {
@@ -89,6 +89,6 @@ ELMO.Views.FileUploaderView = class FileUploaderView extends ELMO.Views.Applicat
   }
 
   clearMetaFields() {
-    return this.$('input:hidden').each((index, e) => $(e).val(''));
+    return $('input:hidden').each((index, e) => $(e).val(''));
   }
 };

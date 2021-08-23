@@ -33,7 +33,7 @@ ELMO.Views.FileUploaderManager = class FileUploaderManager extends ELMO.Views.Ap
 
   updateButtons() {
     const canSubmit = this.uploadsInProgress === 0;
-    this.$('.submit-buttons .btn-primary').css('display', canSubmit ? 'inline-block' : 'none');
-    return this.$('#upload-progress-notice').css('display', canSubmit ? 'none' : 'inline-block');
+    $('.submit-buttons .btn-primary').css('display', canSubmit ? 'inline-block' : 'none');
+    return $('#upload-progress-notice').css('display', canSubmit ? 'none' : 'inline-block');
   }
 };

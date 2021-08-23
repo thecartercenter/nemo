@@ -68,9 +68,9 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
 
   // Updates any condition cross-references after a drop or delete.
   update_condition_refs() {
-    return this.$('.condition').each((i, cond) => {
+    return $('.condition').each((i, cond) => {
       cond = $(cond);
-      const refd = this.$(`li.form-item[data-id=${cond.data('ref-id')}]`);
+      const refd = $(`li.form-item[data-id=${cond.data('ref-id')}]`);
       if (refd.length) {
         return cond.find('span').html(this.get_full_rank(refd).join('.'));
       }
@@ -84,7 +84,7 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   check_condition_order(placeholder, item) {
     // If item or any children refer to questions, the placeholder must be after all the referred questions.
     for (const c of Array.from(item.find('.refd-qing'))) {
-      const refd = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
+      const refd = $(`li.form-item[data-id=${$(c).data('ref-id')}]`);
       if (this.compare_ranks(placeholder, refd) !== 1) { return false; }
     }
 

@@ -32,10 +32,10 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
       this.request.abort();
     }
     this.toggleLoader(true);
-    this.$('.report-title-text').html(name);
-    this.$('.report-chooser').find('option').attr('selected', false);
-    this.$('.report-output-and-modal').empty();
-    this.$('.action-link').hide();
+    $('.report-title-text').html(name);
+    $('.report-chooser').find('option').attr('selected', false);
+    $('.report-output-and-modal').empty();
+    $('.action-link').hide();
     const url = ELMO.app.url_builder.build(`dashboard/report?id=${id || ''}`);
     this.request = $.get(url, this.handleReportLoaded.bind(this));
   }
@@ -47,7 +47,7 @@ ELMO.Views.DashboardReportView = class DashboardReportView extends ELMO.Views.Ap
   }
 
   isEmpty() {
-    return this.$('.report-output-and-modal').length == 0;
+    return $('.report-output-and-modal').length == 0;
   }
 
   toggleLoader(bool) {

@@ -29,7 +29,7 @@ ELMO.Views.SearchFormView = class SearchFormView extends ELMO.Views.ApplicationV
    * @deprecated - Use the newer Filters#submitSearch method instead.
    */
   setQualifier(qualifier, val) {
-    const search_box = this.$('.search-str');
+    const search_box = $('.search-str');
     let current_search = search_box.val();
 
     // Remove the qualifier text if it's already in the current search

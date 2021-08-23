@@ -15,7 +15,7 @@ ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.Applic
   initialize(params) {
     this.keyword = params.keyword;
     // Ensure box is empty in case cached.
-    this.$('#override').val('');
+    $('#override').val('');
     this.accepted = false;
   }
 
@@ -26,30 +26,30 @@ ELMO.Views.ReturnToDraftView = class ReturnToDraftView extends ELMO.Views.Applic
     // Otherwise show the modal instead.
     event.preventDefault();
     event.stopPropagation();
-    this.$('#return-to-draft-modal').modal('show');
+    $('#return-to-draft-modal').modal('show');
   }
 
   handleModalShown() {
-    this.$('#override').focus();
+    $('#override').focus();
   }
 
   handleKeypress(event) {
     if (event.key === 'Enter' && this.isCorrectKeyword()) {
-      this.$('#return-to-draft-modal .btn-primary').trigger('click');
+      $('#return-to-draft-modal .btn-primary').trigger('click');
     }
   }
 
   handleKeyup() {
-    this.$('.btn-primary').toggle(this.isCorrectKeyword());
+    $('.btn-primary').toggle(this.isCorrectKeyword());
   }
 
   handleAcceptClicked() {
     this.accepted = true;
     // Trigger another click on the link so we can use the data-method machinery to make the PUT request.
-    this.$('.return-to-draft-link').trigger('click');
+    $('.return-to-draft-link').trigger('click');
   }
 
   isCorrectKeyword() {
-    return this.$('#override').val() === this.keyword;
+    return $('#override').val() === this.keyword;
   }
 };

@@ -9,8 +9,8 @@ ELMO.Views.FormMinimumVersionView = class FormMinimumVersionView extends ELMO.Vi
   get events() { return { 'regenerable-field:updated .form_current_version_name': 'handleFormVersionIncremented' }; }
 
   handleFormVersionIncremented(event, responseData) {
-    const val = this.$('.form_minimum_version_id select').val();
-    this.$('.form_minimum_version_id select').html(responseData.minimum_version_options);
-    return this.$('.form_minimum_version_id select').val(val);
+    const val = $('.form_minimum_version_id select').val();
+    $('.form_minimum_version_id select').html(responseData.minimum_version_options);
+    return $('.form_minimum_version_id select').val(val);
   }
 };

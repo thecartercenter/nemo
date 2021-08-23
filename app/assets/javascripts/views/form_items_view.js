@@ -62,8 +62,8 @@ ELMO.Views.FormItemsView = class FormItemsView extends ELMO.Views.ApplicationVie
   }
 
   add_new_group(data) {
-    this.$('.form-items-list').append(data);
-    return this.$('.no-questions-notice').hide();
+    $('.form-items-list').append(data);
+    return $('.no-questions-notice').hide();
   }
 
   update_group_on_edit(data) {
@@ -117,10 +117,10 @@ ELMO.Views.FormItemsView = class FormItemsView extends ELMO.Views.ApplicationVie
   }
 
   show_saving_message(show) {
-    return this.$('#saving-message')[show ? 'show' : 'hide']();
+    return $('#saving-message')[show ? 'show' : 'hide']();
   }
 
   go_to_question(e) {
-    if (!(this.$(e.target).parents('a').length > 0)) { return window.location.href = this.$(e.currentTarget).data('href'); }
+    if (!(this.$(e.target).parents('a').length > 0)) { return window.location.href = $(e.currentTarget).data('href'); }
   }
 };

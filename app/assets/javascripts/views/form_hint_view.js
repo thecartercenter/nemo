@@ -13,12 +13,12 @@ ELMO.Views.FormHintView = class FormHintView extends ELMO.Views.ApplicationView 
   }
 
   initialize() {
-    this.$('a.hint').popover({ html: true });
+    $('a.hint').popover({ html: true });
   }
 
   toggle(e) {
     // Show the popover when link is clicked. Don't propagate up so the dismissAll method doesn't fire.
-    this.$(e.currentTarget).popover('show');
+    $(e.currentTarget).popover('show');
     e.stopPropagation();
   }
 
@@ -27,6 +27,6 @@ ELMO.Views.FormHintView = class FormHintView extends ELMO.Views.ApplicationView 
     if (this.$(e.target).parents('.popover').length) {
       return;
     }
-    this.$('a.hint').popover('hide');
+    $('a.hint').popover('hide');
   }
 };

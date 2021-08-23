@@ -62,6 +62,6 @@ ELMO.Views.QuestionFormView = class QuestionFormView extends ELMO.Views.FormView
   }
 
   fieldElement(attrib) {
-    return this.$(`.form-field[data-field-name=${attrib}] .control`);
+    return $(`.form-field[data-field-name=${attrib}] .control`);
   }
 };

@@ -7,7 +7,7 @@ ELMO.Views.UsingIncomingSmsTokenModalView = class UsingIncomingSmsTokenModalView
   get el() { return '#using-incoming-sms-token-modal'; }
 
   initialize(options) {
-    this.$('.modal-body').html(options.html);
+    $('.modal-body').html(options.html);
     return this.show();
   }
 

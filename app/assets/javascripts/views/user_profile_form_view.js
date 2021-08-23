@@ -22,7 +22,7 @@ ELMO.Views.UserProfileFormView = class UserProfileFormView extends ELMO.Views.Ap
 
   init_user_group_select() {
     const option_builder = new ELMO.Utils.Select2OptionBuilder();
-    return this.$('#user_user_group_ids').select2({
+    return $('#user_user_group_ids').select2({
       tags: true,
       templateResult: this.format_suggestions,
       ajax: option_builder.ajax(this.params.user_group_options_url, 'possible_groups', 'name'),
@@ -38,16 +38,16 @@ ELMO.Views.UserProfileFormView = class UserProfileFormView extends ELMO.Views.Ap
   }
 
   toggle_custom_gender_visibility(event) {
-    const select_value = this.$('select#user_gender').val();
+    const select_value = $('select#user_gender').val();
     if (select_value === 'specify') {
-      return this.$('div.user_gender_custom').show();
+      return $('div.user_gender_custom').show();
     }
-    this.$('input#user_gender_custom').val('');
-    return this.$('div.user_gender_custom').hide();
+    $('input#user_gender_custom').val('');
+    return $('div.user_gender_custom').hide();
   }
 
   toggle_password_fields(event) {
-    const select_value = this.$('select#user_reset_password_method').val();
-    return this.$('.password-fields').toggleClass('d-none', (select_value !== 'enter') && (select_value !== 'enter_and_show'));
+    const select_value = $('select#user_reset_password_method').val();
+    return $('.password-fields').toggleClass('d-none', (select_value !== 'enter') && (select_value !== 'enter_and_show'));
   }
 };

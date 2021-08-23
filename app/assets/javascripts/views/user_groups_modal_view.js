@@ -110,7 +110,7 @@ ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.Ap
       method: 'patch',
       data: { name: target_value },
       success: (data) => {
-        return this.$(e.currentTarget).closest('tr').find('.name_col').html(`<div>${data.name}</div>`);
+        return $(e.currentTarget).closest('tr').find('.name_col').html(`<div>${data.name}</div>`);
       },
       error: (data) => {
         this.$el.modal('hide');
@@ -122,12 +122,12 @@ ELMO.Views.UserGroupsModalView = class UserGroupsModalView extends ELMO.Views.Ap
 
   process_edit(e, data, status, xhr) {
     const target_field = $(e.target).closest('tr').find('.name_col');
-    return this.$(target_field).html(data);
+    return $(target_field).html(data);
   }
 
   process_destroy(e, data) {
     const target_row = $(e.target).closest('tr');
-    this.$(target_row).remove();
-    return this.$('.index-links').html(data.page_entries_info);
+    $(target_row).remove();
+    return $('.index-links').html(data.page_entries_info);
   }
 };

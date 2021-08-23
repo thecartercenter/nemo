@@ -45,29 +45,29 @@ ELMO.Views.FormSettingsView = class FormSettingsView extends ELMO.Views.Applicat
 
   show_hide_sms_settings() {
     let m;
-    const read_only = this.$('#smsable div.ro-val').length > 0;
+    const read_only = $('#smsable div.ro-val').length > 0;
     if (read_only) {
-      m = this.$('#smsable div.ro-val').data('val') ? 'show' : 'hide';
+      m = $('#smsable div.ro-val').data('val') ? 'show' : 'hide';
     } else {
-      m = this.$('#form_smsable').is(':checked') ? 'show' : 'hide';
+      m = $('#form_smsable').is(':checked') ? 'show' : 'hide';
     }
 
-    return this.$('.sms-fields')[m]();
+    return $('.sms-fields')[m]();
   }
 
   show_hide_recipients() {
     let m;
-    const read_only = this.$('#sms_relay div.ro-val').length > 0;
+    const read_only = $('#sms_relay div.ro-val').length > 0;
     if (read_only) {
-      m = this.$('#sms_relay div.ro-val').data('val') ? 'show' : 'hide';
+      m = $('#sms_relay div.ro-val').data('val') ? 'show' : 'hide';
     } else {
-      m = this.$('#form_sms_relay').is(':checked') ? 'show' : 'hide';
+      m = $('#form_sms_relay').is(':checked') ? 'show' : 'hide';
     }
 
-    return this.$('.form_recipient_ids')[m]();
+    return $('.form_recipient_ids')[m]();
   }
 
   init_recipient_select() {
-    return this.$('#form_recipient_ids').select2({ ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(this.recipient_options_url) });
+    return $('#form_recipient_ids').select2({ ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(this.recipient_options_url) });
   }
 };

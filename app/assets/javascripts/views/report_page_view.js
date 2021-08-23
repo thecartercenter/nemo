@@ -11,7 +11,7 @@ ELMO.Views.ReportPageView = class ReportView extends ELMO.Views.ApplicationView 
 
   handleReportLoad(e, reportView) {
     this.reportView = reportView;
-    this.$('a.export-link').toggle(!this.reportView.isEmpty());
+    $('a.export-link').toggle(!this.reportView.isEmpty());
   }
 
   handleEditClick(e) {

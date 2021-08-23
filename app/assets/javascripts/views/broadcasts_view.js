@@ -18,7 +18,7 @@ ELMO.Views.BroadcastsView = class BroadcastsView extends ELMO.Views.FormView {
     this.medium_changed();
     this.recipient_selection_changed();
 
-    return this.$('#broadcast_recipient_ids').select2({ ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(options.recipient_options_url) });
+    return $('#broadcast_recipient_ids').select2({ ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(options.recipient_options_url) });
   }
 
   recipient_selection_changed(e) {
@@ -29,16 +29,16 @@ ELMO.Views.BroadcastsView = class BroadcastsView extends ELMO.Views.FormView {
   medium_changed(e) {
     const selected = this.form_value('broadcast', 'medium');
     const sms_possible = (selected !== 'email_only') && (selected !== '');
-    this.$('#char_limit').toggle(sms_possible);
+    $('#char_limit').toggle(sms_possible);
     this.showField('which_phone', sms_possible);
     this.showField('subject', !sms_possible);
     if (sms_possible) { return this.update_char_limit(); }
   }
 
   update_char_limit() {
-    const div = this.$('#char_limit');
+    const div = $('#char_limit');
     if (div.is(':visible')) {
-      const diff = 140 - this.$('#broadcast_body').val().length;
+      const diff = 140 - $('#broadcast_body').val().length;
       const msg = I18n.t(`broadcast.chars.${diff >= 0 ? 'remaining' : 'too_many'}`);
       div.text(`${Math.abs(diff)} ${msg}`);
       return div.css('color', diff >= 0 ? 'black' : '#d02000');

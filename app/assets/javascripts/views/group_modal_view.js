@@ -31,7 +31,7 @@ ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
   }
 
   serialize() {
-    this.form_data = this.$('.qing_group_form').serialize();
+    this.form_data = $('.qing_group_form').serialize();
     return this.form_data;
   }
 
@@ -57,7 +57,7 @@ ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
   }
 
   modal_shown() {
-    this.$('input[type=text]')[0].focus();
+    $('input[type=text]')[0].focus();
     return this.toggle_item_name();
   }
 
@@ -102,11 +102,11 @@ ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
   }
 
   replaceModalBody({ responseText }) {
-    this.$('.modal-body').replaceWith(responseText);
+    $('.modal-body').replaceWith(responseText);
     ReactRailsUJS.mountComponents('.modal-body');
   }
 
   toggle_item_name() {
-    return this.showField('group_item_name_', this.$('#qing_group_repeatable')[0].checked, { prefix: true });
+    return this.showField('group_item_name_', $('#qing_group_repeatable')[0].checked, { prefix: true });
   }
 };
