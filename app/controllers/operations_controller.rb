@@ -20,7 +20,6 @@ class OperationsController < ApplicationController
                     @operations.order(created_at: :desc) # Display ALL operations on server
                   end
     @operations = @operations.paginate(page: params[:page], per_page: PER_PAGE)
-
   end
 
   def show

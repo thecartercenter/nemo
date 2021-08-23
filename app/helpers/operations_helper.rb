@@ -17,7 +17,6 @@ module OperationsHelper
   end
 
   def format_operations_field(operation, field)
-
     case field
     when "mission"
       if (mission = operation.mission)
