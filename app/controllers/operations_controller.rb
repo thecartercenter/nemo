@@ -27,8 +27,8 @@ class OperationsController < ApplicationController
 
   def destroy
     # first destroy delayed job
-    if @operation.provider_job_id.present? && Delayed::Job.exists?(@operation.provider_job_id)
-      Delayed::Job.find(@operation.provider_job_id).destroy
+    if @operation.provider_job_id.present?
+      Delayed::Job.where(id: @operation.provider_job_id).destroy_all
     end
 
     destroy_and_handle_errors(@operation)
