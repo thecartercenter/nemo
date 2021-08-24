@@ -3,6 +3,7 @@
 module IconHelper
   FONT_AWESOME_ICON_MAPPINGS = {
     broadcast: "bullhorn",
+    cancel: "ban",
     clone: "copy",
     destroy: "trash-o",
     drop_pin: "map-marker",

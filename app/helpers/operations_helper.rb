@@ -7,7 +7,7 @@ module OperationsHelper
       fields << "mission" if admin_mode?
       fields.concat(%w[details created_at])
       fields << "creator" if can?(:manage, Operation)
-      fields.concat(%w[status action])
+      fields.concat(%w[status actions])
     end
   end
 
@@ -36,23 +36,23 @@ module OperationsHelper
       t("layout.time_ago", time: time_ago_in_words(operation.created_at))
     when "status"
       link_to(t("operation.status.#{operation.status}"), operation.default_path)
-    when "action"
+    when "actions"
       case operation.status
       when :failed
-        link_to(t("operation.see_error_report"), operation.default_path)
+        [link_to(t("operation.see_error_report"), operation.default_path)]
       when :completed
         if operation.attachment.attached?
-          link_to(t("operation.result_link_text.#{operation.kind}"),
-            rails_blob_path(operation.attachment, disposition: "attachment"))
+          [link_to(t("operation.result_link_text.#{operation.kind}"),
+            rails_blob_path(operation.attachment, disposition: "attachment"))]
         end
       when :pending
         if can?(:destroy, operation)
-          link_to(
-            t("common.cancel"),
+          [action_link(
+            :cancel,
             operation_path(operation),
             method: :delete,
             data: {confirm: t("operation.destroy_confirm")}
-          )
+          )]
         end
       end
     else

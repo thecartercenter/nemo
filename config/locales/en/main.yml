@@ -878,6 +878,7 @@ en:
     no_live_forms: "No available forms"
 
   actions:
+    cancel: "Cancel"
     clone: "Clone"
     close: "Close"
     edit: "Edit"
