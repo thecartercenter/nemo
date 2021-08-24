@@ -26,11 +26,7 @@ class OperationsController < ApplicationController
   end
 
   def destroy
-    # first destroy delayed job
-    if @operation.provider_job_id.present?
-      Delayed::Job.where(id: @operation.provider_job_id).destroy_all
-    end
-
+    Delayed::Job.where(id: @operation.provider_job_id).destroy_all if @operation.provider_job_id.present?
     destroy_and_handle_errors(@operation)
     redirect_to(index_url_with_context)
   end
