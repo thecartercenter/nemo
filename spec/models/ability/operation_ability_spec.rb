@@ -33,12 +33,11 @@ describe Operation do
     context "with in progress operation" do
       let(:operation) { create(:operation, provider_job_id: "xxx") }
 
-      before do
-        expect(Delayed::Job).to receive(:exists?).and_return(true)
-      end
-
-      it "should be able to show but not destroy" do
+      it "should be able to show, but not destroy if started" do
         expect(ability).to be_able_to(:show, operation)
+        expect(ability).to be_able_to(:destroy, operation)
+        expect(Delayed::Job).to receive(:exists?).and_return(true)
+        operation.job_started_at = Time.zone.now
         expect(ability).not_to be_able_to(:destroy, operation)
       end
     end

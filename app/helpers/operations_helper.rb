@@ -46,7 +46,7 @@ module OperationsHelper
             rails_blob_path(operation.attachment, disposition: "attachment"))
         end
       when :pending
-        if operation.status == :pending && can?(:destroy, operation)
+        if can?(:destroy, operation)
           link_to(
             t("common.cancel"),
             operation_path(operation),
