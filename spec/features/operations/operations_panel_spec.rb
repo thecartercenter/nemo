@@ -61,4 +61,15 @@ feature "operations panel" do
       expect(Operation.all.count).to eq(1)
     end
   end
+
+  context "pending and then running operation" do
+    scenario "clicking cancel on an operation that then gets picked up shouldn't stop it" do
+      visit("/en/m/#{mission.compact_name}/operations")
+      mission_operation.job_started_at = Time.zone.now
+      click_on "Cancel"
+      expect(mission_operation.status).to eq(:running)
+      visit("/en/m/#{mission.compact_name}/operations")
+      expect(page).to_not(have_content("Cancel"))
+    end
+  end
 end
