@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 class ResponsesController < ApplicationController
+  include ActionView::Helpers::NumberHelper
+
   PER_PAGE = 20
   REFRESH_INTERVAL = 30_000 # ms
 
   TMP_UPLOADS_PATH = Rails.root.join("tmp/odk_uploads")
+  CSV_EXPORT_LIMIT = 100_000
+  CSV_EXPORT_WARNING = 5_000
 
   include BatchProcessable
   include ODKHeaderable

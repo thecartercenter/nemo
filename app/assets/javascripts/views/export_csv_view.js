@@ -10,6 +10,10 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
     $(".calculating-info").hide();
     $(".error-info").hide();
     $(".media-info").hide();
+
+    if (params.disable_export)
+      $("input[type=submit]").prop("disabled", true);
+
   }
 
   async calculateMediaSize(event) {
