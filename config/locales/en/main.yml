@@ -1770,7 +1770,7 @@ en:
       media_size: "Total size of media:"
       try_again: "There was an error. Please try again."
       export_error: "Exporting more than %{threshold} responses is not permitted. Please select fewer responses or use the OData API."
-      export_warning: "Exporting more than %{threshold} responses is not permitted. Please select fewer responses or use the OData API."
+      export_warning: "Exporting more than %{threshold} responses may take a long time. Consider selecting fewer responses or use the OData API."
     loading: "Loading Response..."
     observation_time: "Observation Time"
     save_and_mark_reviewed: "Save & Mark Reviewed"
