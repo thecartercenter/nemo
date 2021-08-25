@@ -44,6 +44,20 @@ feature "responses csv export" do
     expect(result[2][9]).to(eq("Plant"))
   end
 
+  scenario "export with threshold warning" do
+    stub_const("ResponsesController::CSV_EXPORT_WARNING", 1)
+    visit(responses_path(params))
+    click_link("Download CSV")
+    expect(page).to(have_content("may take a long time"))
+  end
+
+  scenario "export with threshold limit" do
+    stub_const("ResponsesController::CSV_EXPORT_LIMIT", 1)
+    visit(responses_path(params))
+    click_link("Download CSV")
+    expect(page).to(have_content("is not permitted"))
+  end
+
   describe "bulk media download", js: true do
     scenario "without a threshold" do
       visit(responses_path(params))
