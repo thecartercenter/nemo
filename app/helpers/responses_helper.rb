@@ -65,5 +65,4 @@ module ResponsesHelper
       tmd("welcome.in_the_past_#{count[1]}", count: number_with_delimiter(count[0]))
     end
   end
-
 end
