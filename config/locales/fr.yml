@@ -1026,7 +1026,6 @@ fr:
         single_page_html:
           zero: "Aucune opération trouvée"
           one: "<b>1</b> opération affiché"
-          other: "<b>Affichage de %{count}</b> opérations"
         multi_page_html: "Affichage des opérations <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
   authlogic:
     error_messages:
@@ -1812,77 +1811,6 @@ fr:
     help_link: "Aide"
     help_title: "Aide "
     help_text:
-      responses: |-
-          ## Qualificatifs
-
-          Une recherche simple telle que:
-
-          * __romeo juliet__
-
-          cherche les réponses aux questions. Pour rechercher dans les attributs de réponse, utilisez un qualificatif, par exemple.:
-
-          * __form:Widgets__
-
-          affichera uniquement les réponses au formulaire 'Widgets'.
-
-          Combinez les deux éléments ci-dessus pour affiner votre recherche:
-
-          * __romeo juliet form:Widgets__
-
-          affichera les réponses au formulaire 'Widgets' contenant les mots 'romeo' et 'juliet'.
-
-          Les qualificatifs que vous pouvez utiliser sont les suivant:
-
-          * __form__ Le nom du formulaire
-          * __submitter__ Le nom de l'utilisateur qui a soumis la réponse (correspondances partielles autorisées)
-          * __group__ Le nom d'un groupe d'utilisateurs auquel appartient l'utilisateur qui soumet (correspondances partielles autorisées)
-          * __submit-date__ Date à laquelle la réponse a été soumise (par exemple, 1985-03-22)
-          * __reviewed__ Si la réponse a été marquée 'révisée' (1 = oui ou 0 = non)
-          * __source__ Le moyen par lequel la réponse a été soumise ('web', 'odk' ou 'sms')
-
-          ## Phrases exactes
-
-          Les phrases exactes peuvent être trouvées en les mettant entre guillemets:
-
-          * __submitter:"John Smith"__
-
-          Les phrases entre guillemets ne peuvent actuellement être utilisées qu'avec des qualificatifs autres que "text".
-
-          ## Tous les termes vs. N'importe quel terme
-
-          Par défaut, tous les termes de la recherche doivent correspondre. Par exemple,
-
-          * __alpha lima peru__
-
-          correspond uniquement aux réponses avec ces trois mots. Utilisez le caractère barre verticale ('|') pour faire correspondre plusieurs mots / phrases:
-
-          * __form:( Lions | "Bears and Sharks" | Tigers )__
-
-          correspond aux réponses pour n'importe lequel des formulaires ci-dessus. Le '|' ne peut être utilisé qu'avec des qualificatifs autres que "text".
-
-          ## Les opérateurs
-
-          Vous pouvez inverser le sens d'une recherche en utilisant l'opérateur de négation:
-
-          * __form != Widgets__
-
-          correspondra aux réponses pour tout formulaire sauf le formulaire 'Widgets'.
-
-          Pour la recherche de réponses, la négation fonctionne différemment:
-
-          * __ballot -box__
-
-          correspondra à toute réponse avec une réponse contenant le mot "ballot" mais pas le mot "box". Il doit y avoir au moins un terme non nié dans une telle recherche.
-
-          Pour certains qualificatifs (par exemple, __submit-date__), les comparaisons supérieures à et inférieures à sont également autorisées.:
-
-          * __submit-date > 2000-01-01__
-
-          Plusieurs de ceux-ci peuvent être combinés pour limiter la recherche à une plage:
-
-          * __submit-date >= 2000-01-01 submit-date < 2000-02-01__
-
-          correspondra aux réponses soumises au mois de janvier 2000.
       users: |-
           ## Qualificatifs
 
