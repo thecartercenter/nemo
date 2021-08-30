@@ -1026,6 +1026,7 @@ fr:
         single_page_html:
           zero: "Aucune opération trouvée"
           one: "<b>1</b> opération affiché"
+          other: "<b>Affichage de %{count}</b> opérations"
         multi_page_html: "Affichage des opérations <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
   authlogic:
     error_messages:
