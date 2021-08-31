@@ -250,7 +250,7 @@ The following command will upgrade and clean up your installed packages. Sometim
 You should now be able to visit https://yourdomain.example.org in your browser (replace with your real domain name).
 The NEMO login screen should appear. Login with username **admin** and the password created above.
 
-See the [NEMO Documentation](https://elmo-nemo.readthedocs.io) for help on using your new NEMO instance!
+See the [NEMO Documentation](https://getnemo.readthedocs.io) for help on using your new NEMO instance!
 
 ### Custom Theme
 

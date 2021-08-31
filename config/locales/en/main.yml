@@ -1514,7 +1514,7 @@ en:
       Notes:
 
       * Only CSV files are accepted. They must be UTF-8 encoded. You can export XLSX files to CSV using any standard spreadsheet software.
-      * You can find more documentation <a href="https://elmo-nemo.readthedocs.io/en/main/content/formsoptionsets/formsoptionsets.html#import-new-option-set">here</a>.
+      * You can find more documentation <a href="https://getnemo.readthedocs.io/en/main/content/formsoptionsets/formsoptionsets.html#import-new-option-set">here</a>.
 
   tag:
     none_found: "No matching tags found"
@@ -2309,7 +2309,7 @@ en:
       * Gender may be one of 'Man', 'Woman', or 'Decline to Answer', or can be any other value.
       * Nationality should be the name of a country such as 'Canada' or 'Bangladesh'.
       * Multiple user group names should be separated by a semicolon. If a named user group does not exist, it will be created.
-      * You can find more documentation <a href="https://elmo-nemo.readthedocs.io/en/main/content/users/users.html#import-users">here</a>.
+      * You can find more documentation <a href="https://getnemo.readthedocs.io/en/main/content/users/users.html#import-users">here</a>.
 
   user:
     add_assignment: "Add Assignment"
