@@ -32,7 +32,9 @@
 #
 # rubocop:enable Layout/LineLength
 
-# A collection of options for a select one or select multiple question. May be flat or multi-level.
+# A collection of Options for a select_one or select_multiple question. May be flat or multi-level.
+#
+# See also the documentation at docs/architecture.md.
 class OptionSet < ApplicationRecord
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields

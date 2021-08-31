@@ -36,6 +36,9 @@
 #
 # rubocop:enable Layout/LineLength
 
+# OptionNodes belong to OptionSet, and also to their parents (they're a tree).
+#
+# See also the documentation at docs/architecture.md.
 class OptionNode < ApplicationRecord
   include Replication::Replicable
   include MissionBased

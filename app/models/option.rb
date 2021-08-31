@@ -28,6 +28,9 @@
 # rubocop:enable Layout/LineLength
 
 # A single selectable option in an OptionSet for a select question.
+# Option should be one-to-one with OptionNode (rather vestigial, and eventually being deprecated).
+#
+# See also the documentation at docs/architecture.md.
 class Option < ApplicationRecord
   include Replication::Replicable
   include Translatable

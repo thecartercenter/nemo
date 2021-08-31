@@ -48,3 +48,13 @@ Possible ActiveStorage attachments:
 * `Question.media_prompt` (shown on questions)
 * `MediaObject.item` - Audio, Image, Video (submitted as answers)
 * `Response.odk_xml` (raw ODK submissions)
+
+## Options, OptionSets, and OptionNodes
+
+For select_one or select_multiple question. May be flat or multi-level.
+
+* OptionSet is a collection of Options
+* Option should be one-to-one with OptionNode (rather vestigial, and eventually being deprecated)
+* OptionNodes belong to OptionSets, and also to their own parents (they're a tree)
+
+See also the individual models for deeper information.
