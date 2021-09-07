@@ -31,7 +31,9 @@ module OptionSets
     # Returns a hash of form {0 => :id, 3 => :coordinates, ...}, mapping column indices to
     # the names of meta headers like Coordinates and Shortcode.
     def detect_meta_headers(headers)
-      special_headers = %i[coordinates shortcode value].map { |k| I18n.t("activerecord.attributes.option.#{k}") }
+      special_headers = %i[coordinates shortcode value].map do |k|
+        I18n.t("activerecord.attributes.option.#{k}")
+      end
       special_headers.unshift("Id")
       meta_headers = {}
       headers.each_with_index do |h, i|
