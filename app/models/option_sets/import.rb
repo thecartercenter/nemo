@@ -53,13 +53,13 @@ module OptionSets
       # Metadata about the option is included at the end of the row array.
       metadata = row.extract_options!
       if languages.any?
-        translation_row(row, row_idx, metadata, languages)
+        process_translated_row(row, row_idx, metadata, languages)
       else
-        multilevel_row(row, row_idx, metadata)
+        process_untranslated_row(row, row_idx, metadata)
       end
     end
 
-    def translation_row(row, row_idx, metadata, languages)
+    def process_translated_row(row, row_idx, metadata, languages)
       option = create_translated_option(row, metadata, languages)
       if option.invalid?
         copy_validation_errors_for_row(metadata[:orig_row_num], option.errors)
@@ -98,7 +98,7 @@ module OptionSets
       copy_validation_errors_for_row(metadata[:orig_row_num], node.errors) if node.invalid?
     end
 
-    def multilevel_row(row, row_idx, metadata)
+    def process_untranslated_row(row, row_idx, metadata)
       # if multilevel, need option for each column
       row.each_with_index do |cell, col_idx|
         next if cur_nodes[col_idx].present? && cell == cur_nodes[col_idx].option.name
