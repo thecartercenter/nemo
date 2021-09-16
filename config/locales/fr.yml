@@ -1477,14 +1477,6 @@ fr:
     latitude: "Latitude"
     longitude: "Longitude"
     value: "Valeur numérique"
-  option_set_import:
-    instructions_html: |-
-        Telecharger un fichier CSV avec vos options
-
-        Notes
-
-        *Seuls les fichiers CSV sont acceptees. Ils doivent etre encodes UTF-8. Vous pouvez exporter des fichiers XLSX au format CSV en utilisant n'importe quel tableur.
-        *Vous pouvez trouver plus de documentation <a href="https://elmo-nemo.readthedocs.io/en/main/content/formsoptionsets/formsoptionsets.html#import-new-option-set">ici </a>
   tag:
     none_found: "Aucun tag trouvé "
     searching: "Recherche..."
@@ -2147,19 +2139,6 @@ fr:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
     expired: "Votre requête a expirée, veuillez réessayer."
-  user_import:
-    instructions_html: |-
-        Téléchargez un fichier CSV avec les utilisateurs.  Un modelé est disponible pour illustrer <a href="%{csv_url}">CSV template</a>
-
-        Notes:
-
-        Seuls les fichiers CSV sont acceptés. Ils doivent être encodés UTF-8. Vous pouvez exporter des fichiers XLSX au format CSV en utilisant n'importe quel tableur.
-        Veuillez ne pas modifier la première ligne du fichier model.
-        Les numéros de téléphone doivent avoir le code pays. (ex: +17095551212)
-        Le genre ou sexe peut être Homme, Femme ou Pas de réponse ou toute autre valeur.
-        La nationalité doit être le nom d'un pays comme "Canada" ou "Bangladesh".
-        Les noms des groupes multiples doivent être sépares par des virgules. Si un nom du groupe n'existe pas, il sera créé.
-        Vous trouverez plus d'informations  <a href="https://elmo-nemo.readthedocs.io/en/main/content/users/users.html#import-users">ici</a>
   user:
     add_assignment: "Ajouter Une Tâche"
     api_key:
