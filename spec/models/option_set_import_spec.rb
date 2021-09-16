@@ -32,14 +32,35 @@ describe OptionSets::Import do
   context "with simple translations" do
     let(:filename) { "translations_simple.csv" }
 
-    it "should be able to import with simple translations" do
+    it "should be able to import" do
       expect(import).to be_succeeded
       option_set = import.option_set
       expect(option_set.options[0].name).to eq("student")
       expect(option_set.options[0].value).to eq(0)
       expect(option_set.options[2].name).to eq("teacher")
       expect(option_set.options[2].value).to eq(2)
-      expect(option_set.options[2].name_translations["ht"]).to eq("pwofesè")
+      expect(option_set.options[2].name_translations["en"]).to eq("teacher")
+      expect(option_set.options[2].name_translations["fr"]).to eq("professeure")
+      expect(option_set.options[2].name_translations["ar_EG"]).to eq("pwofesè")
+      expect(option_set.options[2].name_translations["foo"]).to eq(nil)
+      expect(option_set.options).to have(3).items
+    end
+  end
+
+  context "with mistaken translations" do
+    let(:filename) { "translations_mistake.csv" }
+
+    it "should ignore bad columns" do
+      expect(import).to be_succeeded
+      option_set = import.option_set
+      expect(option_set.options[0].name).to eq("student")
+      expect(option_set.options[0].value).to eq(0)
+      expect(option_set.options[2].name).to eq("teacher")
+      expect(option_set.options[2].value).to eq(2)
+      expect(option_set.options[2].name_translations["en"]).to eq("teacher")
+      expect(option_set.options[2].name_translations["fr"]).to eq("professeure")
+      expect(option_set.options[2].name_translations["ar_EG"]).to eq(nil)
+      expect(option_set.options[2].name_translations["foo"]).to eq(nil)
       expect(option_set.options).to have(3).items
     end
   end

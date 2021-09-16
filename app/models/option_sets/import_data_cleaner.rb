@@ -102,7 +102,7 @@ module OptionSets
     def detect_translations(headers)
       languages = []
       headers.each do |h|
-        language = h.match(/\[(..)\]/)
+        language = h.match(/\[(\w+)\]\Z/)
         languages << language[1] if language.present?
       end
       languages
