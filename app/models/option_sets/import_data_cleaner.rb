@@ -15,13 +15,14 @@ module OptionSets
       check_header_lengths(headers)
       meta_headers = detect_meta_headers(headers)
       rows = extract_and_clean_data_rows(sheet, headers, meta_headers)
+      languages = detect_translations(headers)
 
       if rows.empty?
         errors << [:no_rows]
       else
         # Remove the meta headers from the main headers.
         meta_headers.keys.reverse_each { |i| headers.delete_at(i) }
-        [headers, meta_headers, rows]
+        [headers, meta_headers, languages, rows]
       end
     end
 
@@ -30,7 +31,9 @@ module OptionSets
     # Returns a hash of form {0 => :id, 3 => :coordinates, ...}, mapping column indices to
     # the names of meta headers like Coordinates and Shortcode.
     def detect_meta_headers(headers)
-      special_headers = %i[coordinates shortcode].map { |k| I18n.t("activerecord.attributes.option.#{k}") }
+      special_headers = %i[coordinates shortcode value].map do |k|
+        I18n.t("activerecord.attributes.option.#{k}")
+      end
       special_headers.unshift("Id")
       meta_headers = {}
       headers.each_with_index do |h, i|
@@ -94,6 +97,15 @@ module OptionSets
         metadata[meta_headers[col_idx]] = row.delete_at(col_idx)
       end
       metadata
+    end
+
+    def detect_translations(headers)
+      languages = []
+      headers.each do |h|
+        language = h.match(/\[(\w+)\]\Z/)
+        languages << language[1] if language.present?
+      end
+      languages
     end
   end
 end

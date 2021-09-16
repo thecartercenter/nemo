@@ -37,6 +37,8 @@
 # rubocop:enable Layout/LineLength
 
 # OptionNodes belong to OptionSet, and also to their parents (they're a tree).
+# Rank represents the order of the options for a set
+# Sequence is for printing out for SMS?
 #
 # See also the documentation at docs/architecture.md.
 class OptionNode < ApplicationRecord

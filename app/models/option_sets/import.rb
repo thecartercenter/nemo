@@ -12,14 +12,20 @@ module OptionSets
     protected
 
     def process_data
-      headers, meta_headers, rows = cleaner.clean
+      headers, meta_headers, languages, rows = cleaner.clean
       add_run_errors(cleaner.errors)
       return if failed?
 
-      self.level_count = headers.size
-      init_state_vars
-      create_option_set_and_copy_any_errors(headers, meta_headers.value?(:coordinates))
-      rows.each_with_index { |row, row_idx| process_row(row, row_idx) }
+      # We are not supporting multilevel translations just yet
+      if languages.any?
+        self.level_count = 0
+        create_option_set_and_copy_any_errors([], false)
+      else
+        self.level_count = headers.size
+        init_state_vars
+        create_option_set_and_copy_any_errors(headers, meta_headers.value?(:coordinates))
+      end
+      rows.each_with_index { |row, row_idx| process_row(row, row_idx, languages) }
     end
 
     private
@@ -29,24 +35,73 @@ module OptionSets
     end
 
     def create_option_set_and_copy_any_errors(headers, geographic)
-      self.option_set = OptionSet.create(
+      params = {
         mission: mission,
         name: name,
-        levels: headers.map { |h| OptionLevel.new(name: h) },
         geographic: geographic,
         allow_coordinates: geographic,
         root_node: OptionNode.new
-      )
+      }
+
+      params[:levels] = headers.map { |h| OptionLevel.new(name: h) } if headers.any?
+
+      self.option_set = OptionSet.create(params)
       copy_validation_errors_for_row(1, option_set.errors) unless option_set.valid?
     end
 
-    def process_row(row, row_idx)
+    def process_row(row, row_idx, languages)
       # Metadata about the option is included at the end of the row array.
       metadata = row.extract_options!
+      if languages.any?
+        process_translated_row(row, row_idx, metadata, languages)
+      else
+        process_untranslated_row(row, row_idx, metadata)
+      end
+    end
 
+    def process_translated_row(row, row_idx, metadata, languages)
+      option = create_translated_option(row, metadata, languages)
+      if option.invalid?
+        copy_validation_errors_for_row(metadata[:orig_row_num], option.errors)
+        nil
+      else
+        create_translated_option_node(option, row_idx)
+        option
+      end
+    end
+
+    def create_translated_option(row, metadata, languages)
+      option = {
+        mission: mission,
+        canonical_name: row[0],
+        name_translations: build_translation_json(row, languages)
+      }
+      option[:value] = metadata[:value] if metadata[:value].present?
+      Option.create(option)
+    end
+
+    def build_translation_json(row, languages)
+      translation_json = {}
+      languages.each_with_index do |l, l_idx|
+        translation_json[l.to_sym] = row[l_idx]
+      end
+      translation_json
+    end
+
+    def create_translated_option_node(option, row_idx)
+      node = option_set.root_node.children.create(
+        mission: mission,
+        rank: row_idx + 1,
+        option_set: option_set,
+        option: option
+      )
+      copy_validation_errors_for_row(metadata[:orig_row_num], node.errors) if node.invalid?
+    end
+
+    def process_untranslated_row(row, row_idx, metadata)
+      # if multilevel, need option for each column
       row.each_with_index do |cell, col_idx|
         next if cur_nodes[col_idx].present? && cell == cur_nodes[col_idx].option.name
-
         if cell.present?
           option = create_option(row, cell, col_idx, metadata)
           create_option_node(row_idx, col_idx, metadata, option) if option.present?
