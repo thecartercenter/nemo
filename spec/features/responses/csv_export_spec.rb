@@ -61,6 +61,25 @@ feature "responses csv export" do
     expect(page).to(have_content("1 response to be exported"))
   end
 
+  scenario "opening the export modal multiple times", :js do
+    visit(responses_path(params))
+
+    check("selected[#{response1.id}]")
+
+    hidden_selector = "input#selected_#{response1.id}"
+    expect(page).not_to have_css(hidden_selector, visible: :hidden)
+
+    click_link("Download CSV")
+    expect(page).to(have_content("1 response to be exported"))
+    expect(page).to have_css(hidden_selector, visible: :hidden, count: 1)
+
+    find(".close").click
+
+    click_link("Download CSV")
+    expect(page).to(have_content("1 response to be exported"))
+    expect(page).to have_css(hidden_selector, visible: :hidden, count: 1)
+  end
+
   context "with multiple pages" do
     before do
       stub_const("ResponsesController::PER_PAGE", 1)
