@@ -32,10 +32,19 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
   async spaceLeft() {
     $(".calculating-info").show();
 
+    // Read the hidden metadata that was copied earlier.
+    let form = $('#new_response_csv_export_options');
+    let checked = form.find('input.batch_op:hidden:checked');
+    let selectAll = form.find('input[name=select_all_pages]').val();
+
+    let selected = checked.map(function() {
+      return $(this).data("response-id");
+    }).get();
+
     return $.ajax({
       url: ELMO.app.url_builder.build("media-size"),
       method: "get",
-      data: "",
+      data: { selected, selectAll },
       success: (data) => {
         $(".calculating-info").hide();
         $("#media-size").html(data.media_size + " MB");
