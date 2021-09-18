@@ -53,7 +53,9 @@ describe Utils::BulkMediaPackager do
 
       it "should download, zip all the images, and cleanup" do
         ability = Ability.new(user: operation.creator, mission: operation.mission)
-        packager = described_class.new(ability: ability, search: "form: foo", selected: [], operation: operation)
+        packager = described_class.new(
+          ability: ability, search: "form: foo", selected: [], operation: operation
+        )
         results = packager.download_and_zip_images
 
         expect(results.basename.to_s).to match(/#{operation.mission.compact_name}-media-.+.zip/)
@@ -70,7 +72,9 @@ describe Utils::BulkMediaPackager do
 
       it "should only zip the selection" do
         ability = Ability.new(user: operation.creator, mission: operation.mission)
-        packager = described_class.new(ability: ability, search: "form: foo", selected: [responses.first.id], operation: operation)
+        packager = described_class.new(
+          ability: ability, search: "form: foo", selected: [responses.first.id], operation: operation
+        )
         results = packager.download_and_zip_images
 
         Zip::File.open(results.to_s) do |zipfile|
