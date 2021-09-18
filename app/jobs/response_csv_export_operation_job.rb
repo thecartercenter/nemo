@@ -5,7 +5,7 @@ class ResponseCSVExportOperationJob < OperationJob
   def perform(operation, search: nil, options: {})
     ability = Ability.new(user: operation.creator, mission: mission)
     attachment = generate_csv(
-      responses(ability, search, selected: options[:selected]),
+      responses(ability, search, selected: options[:selected] || []),
       long_text_behavior: options[:long_text_behavior]
     )
     timestamp = Time.current.to_s(:filename_datetime)
@@ -16,7 +16,7 @@ class ResponseCSVExportOperationJob < OperationJob
 
   private
 
-  def responses(ability, search, selected:)
+  def responses(ability, search, selected: [])
     responses = Response.accessible_by(ability, :export)
     responses = apply_search_scope(responses, search, mission) if search.present?
     responses = responses.where(id: selected) if selected.any?

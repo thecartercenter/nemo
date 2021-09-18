@@ -20,11 +20,12 @@ feature "responses csv export" do
 
   before { login(user) }
 
-  scenario "exporting csv" do
+  scenario "exporting csv happy path" do
     visit(responses_path(params))
 
     click_link("Download CSV")
-    expect(page).to(have_content("#{Response.all.length} responses to be exported"))
+    # This expectation doesn't work unless :js is enabled (in which case we can't download the resulting CSV).
+    # expect(page).to(have_content("#{Response.all.length} responses to be exported"))
 
     perform_enqueued_jobs do
       click_button("Export")
@@ -42,6 +43,38 @@ feature "responses csv export" do
     expect(result.size).to(eq(3)) # 2 response rows, 1 header row
     expect(result[1][9]).to(eq("Animal"))
     expect(result[2][9]).to(eq("Plant"))
+  end
+
+  scenario "exporting csv with nothing checked", :js do
+    visit(responses_path(params))
+
+    click_link("Download CSV")
+    expect(page).to(have_content("#{Response.all.length} responses to be exported"))
+  end
+
+  scenario "exporting csv with checkbox selection", :js do
+    visit(responses_path(params))
+
+    check("selected[#{response1.id}]")
+
+    click_link("Download CSV")
+    expect(page).to(have_content("1 response to be exported"))
+  end
+
+  context "with multiple pages" do
+    before do
+      stub_const("ResponsesController::PER_PAGE", 1)
+    end
+
+    scenario "exporting csv with checkbox selection AND 'select all' override", :js do
+      visit(responses_path(params))
+
+      check("selected[#{response2.id}]")
+      click_link("Select all #{Response.all.length} Responses")
+
+      click_link("Download CSV")
+      expect(page).to(have_content("#{Response.all.length} responses to be exported"))
+    end
   end
 
   scenario "export with threshold warning" do

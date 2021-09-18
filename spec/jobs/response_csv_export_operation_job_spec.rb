@@ -27,6 +27,12 @@ describe ResponseCSVExportOperationJob do
       expect(csv).to match(/2,Cat/)
     end
 
+    it "succeeds with checkbox selection" do
+      described_class.perform_now(operation, options: {selected: [responses.first.id]})
+      expect(csv).to match(/1,Dog/)
+      expect(csv).not_to match(/2,Cat/)
+    end
+
     it "handles search parse error gracefully" do
       described_class.perform_now(operation, search: "Cat:")
       expect(operation.job_failed_at).not_to be_nil

@@ -345,10 +345,11 @@ class ResponsesController < ApplicationController
 
   def extract_export_options
     select_all = params[:select_all_pages].present?
+    selected = params[:selected] || {}
     {
       long_text_behavior: params[:response_csv_export_options][:long_text_behavior],
       download_media: params[:response_csv_export_options][:download_media],
-      selected: select_all ? [] : params[:selected].keys # Empty selection is equivalent to "all".
+      selected: select_all ? [] : selected.keys # Empty selection is equivalent to "all".
     }
   end
 end
