@@ -1,3 +1,5 @@
+var CLONE_MARKER = "CLONE_MARKER";
+
 // Handles exports and polling for new responses.
 ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.ApplicationView {
   get events() {
@@ -23,14 +25,28 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
   showExportCsvModal(event) {
     event.preventDefault();
 
-    let form = $('.index-table-wrapper form');
-    let checked = form.find('input.batch_op:checked');
-    let selectAll = form.find('input[name=select_all_pages]').val();
-    let shouldExportAll = checked.length === 0 || selectAll;
+    // Calculate how many responses will actually be exported.
+    let responsesForm = $('.index-table-wrapper form');
+    let checked = responsesForm.find('input.batch_op:checked');
+    let selectAll = responsesForm.find('input[name=select_all_pages]');
+    let shouldExportAll = checked.length === 0 || selectAll.val();
     let count = shouldExportAll ? $('.index-table-wrapper').data('entries') : checked.length;
     $('#export-options-summary').text(I18n.t('response.export_options.summary', { count }));
 
+    // Save the user's selection to the export options,
+    // ensuring we wipe the slate clean first in case they open/close the modal multiple times in a row.
+    let exportOptionsForm = $('#new_response_csv_export_options');
+    exportOptionsForm.find(`[data-${CLONE_MARKER}]`).remove();
+    exportOptionsForm.append(checked.clone().map(this.hideAndTrackElement));
+    exportOptionsForm.append(selectAll.clone().map(this.hideAndTrackElement));
+
     $('#export-csv-modal').modal('show');
+  }
+
+  hideAndTrackElement(index, el) {
+    el.setAttribute("type", "hidden");
+    el.setAttribute(`data-${CLONE_MARKER}`, true);
+    return el;
   }
 
   showExportODataModal(event) {

@@ -319,6 +319,7 @@ class ResponsesController < ApplicationController
   end
 
   def enqueue_bulk_media_export
+    # TODO: Also respect selection here.
     options = params[:response_csv_export_options].permit(%i[download_media])
     operation = Operation.new(
       creator: current_user,
@@ -331,7 +332,11 @@ class ResponsesController < ApplicationController
   end
 
   def enqueue_csv_export
-    options = params[:response_csv_export_options].permit(%i[long_text_behavior])
+    options = {
+      long_text_behavior: params[:response_csv_export_options][:long_text_behavior],
+      selected: params[:selected].keys,
+      select_all: params[:select_all_pages].present?
+    }
     operation = Operation.new(
       creator: current_user,
       mission: current_mission,
