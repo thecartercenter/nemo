@@ -137,7 +137,7 @@ feature "responses csv export" do
     end
   end
 
-  scenario "exporting csv with bulk media download" do
+  scenario "exporting csv with bulk media download", :js do
     visit(responses_path(params))
     click_link("Download CSV")
     expect(page).to(have_content("#{Response.all.length} responses to be exported"))

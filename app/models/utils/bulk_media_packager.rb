@@ -17,7 +17,7 @@ module Utils
     def media_objects_scope
       responses = Response.accessible_by(@ability, :export)
       responses = apply_search_scope(responses, @search, @operation.mission) if @search.present?
-      responses = responses.where(id: @selected) if @selected.any?
+      responses = responses.where(id: @selected) if @selected.present?
       responses.joins(:answers)
         .joins("INNER JOIN media_objects ON media_objects.answer_id = answers.id")
         .joins("INNER JOIN active_storage_attachments ON
