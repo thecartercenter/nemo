@@ -173,8 +173,9 @@ Entering a functioning email server is important as NEMO relies on email to send
     # Setup cron jobs
     bundle exec whenever -i nemo
 
-    # Load database schema
+    # Load database schema and seed data
     bundle exec rake db:schema:load
+    bundle exec rake db:seed
 
     # Precompile assets
     bundle exec rake assets:precompile
