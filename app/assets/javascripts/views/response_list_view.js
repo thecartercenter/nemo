@@ -13,6 +13,8 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
   initialize(options) {
     this.$('#export-dropdown').dropdown();
     new Clipboard('#copy-btn-api_url');
+    this.exportWarningThreshold = options.exportWarningThreshold;
+    this.exportErrorThreshold = options.exportErrorThreshold;
     this.reloadCount = 0;
     if (options.refreshInterval > 0) {
       setInterval(this.fetch.bind(this), options.refreshInterval);
@@ -25,13 +27,26 @@ ELMO.Views.ResponseListView = class ResponseListView extends ELMO.Views.Applicat
   showExportCsvModal(event) {
     event.preventDefault();
 
+    // Reset defaults in case the modal is shown several times.
+    $('#export-count-warning').hide();
+    $('#export-count-error').hide();
+    $("input[type=submit]").prop("disabled", false);
+
     // Calculate how many responses will actually be exported.
     let responsesForm = $('.index-table-wrapper form');
     let checked = responsesForm.find('input.batch_op:checked');
     let selectAll = responsesForm.find('input[name=select_all_pages]');
     let shouldExportAll = checked.length === 0 || selectAll.val();
-    let count = shouldExportAll ? $('.index-table-wrapper').data('entries') : checked.length;
-    $('#export-options-summary').text(I18n.t('response.export_options.summary', { count }));
+    let exportCount = shouldExportAll ? $('.index-table-wrapper').data('entries') : checked.length;
+    $('#export-options-summary').text(I18n.t('response.export_options.summary', { count: exportCount }));
+
+    // Toggle elements as needed.
+    if (exportCount >= this.exportErrorThreshold) {
+      $('#export-count-error').show();
+      $("input[type=submit]").prop("disabled", true);
+    } else if (exportCount >= this.exportWarningThreshold) {
+      $('#export-count-warning').show();
+    }
 
     // Save the user's selection to the export options,
     // ensuring we wipe the slate clean first in case they open/close the modal multiple times in a row.

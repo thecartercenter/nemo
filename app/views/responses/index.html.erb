@@ -9,6 +9,8 @@
   ELMO.responseListView = new ELMO.Views.ResponseListView(<%=json(
     el: "#content",
     refreshInterval: ResponsesController::REFRESH_INTERVAL,
-    showReloadCount: Rails.env.test?
+    showReloadCount: Rails.env.test?,
+    exportWarningThreshold: ResponsesController::CSV_EXPORT_WARNING,
+    exportErrorThreshold: ResponsesController::CSV_EXPORT_LIMIT,
   )%>);
 <% end %>

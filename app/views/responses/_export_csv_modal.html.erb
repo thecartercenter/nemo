@@ -8,19 +8,19 @@
         </div>
         <div class="modal-body">
           <div class="fields">
-            <% if responses.total_entries >= ResponsesController::CSV_EXPORT_LIMIT %>
-              <div class="alert alert-danger">
-                <%= t("response.export_options.export_error",
-                  threshold: number_with_delimiter(ResponsesController::CSV_EXPORT_LIMIT)) %>
-              </div>
-            <% elsif responses.total_entries >= ResponsesController::CSV_EXPORT_WARNING %>
-              <div class="alert alert-warning">
-                <%= t("response.export_options.export_warning",
-                  threshold: number_with_delimiter(ResponsesController::CSV_EXPORT_WARNING)) %>
-              </div>
-            <% end %>
+            <!-- Shown via JS. -->
+            <div id="export-count-error" class="alert alert-danger hide">
+              <%= t("response.export_options.export_error",
+                threshold: number_with_delimiter(ResponsesController::CSV_EXPORT_LIMIT)) %>
+            </div>
+            <div id="export-count-warning" class="alert alert-warning hide">
+              <%= t("response.export_options.export_warning",
+                threshold: number_with_delimiter(ResponsesController::CSV_EXPORT_WARNING)) %>
+            </div>
 
+            <!-- Placeholder replaced via JS. -->
             <p id="export-options-summary">Calculating...</p>
+
             <input type="hidden" name="search" value="<%= params[:search] %>" />
             <%= f.field(:long_text_behavior, type: :select, required: true,
                 options: translate_options(ResponseCSVExportOptions::LONG_TEXT_BEHAVIOR_OPTIONS, [:response, :long_text_behavior_options])) %>
@@ -55,6 +55,5 @@
   ELMO.ExportCsvView = new ELMO.Views.ExportCsvView(<%=json(
     el: "#export-csv-modal",
     search: params[:search],
-    disable_export: responses.total_entries >= ResponsesController::CSV_EXPORT_LIMIT
   )%>);
 <% end %>
