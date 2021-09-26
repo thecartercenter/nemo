@@ -80,6 +80,29 @@ feature "responses csv export" do
     expect(page).to have_css(hidden_selector, visible: :hidden, count: 1)
   end
 
+  scenario "too many at first", :js do
+    stub_const("ResponsesController::CSV_EXPORT_LIMIT", 2)
+
+    visit(responses_path(params))
+
+    check("selected[#{response1.id}]")
+    check("selected[#{response2.id}]")
+
+    click_link("Download CSV")
+    expect(page).to(have_content("2 responses to be exported"))
+    expect(page).to(have_content("is not permitted"))
+    expect(page).to(have_button("Export", disabled: true))
+
+    find(".close").click
+
+    uncheck("selected[#{response2.id}]")
+
+    click_link("Download CSV")
+    expect(page).to(have_content("1 response to be exported"))
+    expect(page).not_to(have_content("is not permitted"))
+    expect(page).to(have_button("Export", disabled: false))
+  end
+
   context "with multiple pages" do
     before do
       stub_const("ResponsesController::PER_PAGE", 1)
@@ -96,18 +119,20 @@ feature "responses csv export" do
     end
   end
 
-  scenario "export with threshold warning" do
+  scenario "export with threshold warning", :js do
     stub_const("ResponsesController::CSV_EXPORT_WARNING", 1)
     visit(responses_path(params))
     click_link("Download CSV")
     expect(page).to(have_content("may take a long time"))
+    expect(page).to(have_button("Export", disabled: false))
   end
 
-  scenario "export with threshold limit" do
+  scenario "export with threshold limit", :js do
     stub_const("ResponsesController::CSV_EXPORT_LIMIT", 1)
     visit(responses_path(params))
     click_link("Download CSV")
     expect(page).to(have_content("is not permitted"))
+    expect(page).to(have_button("Export", disabled: true))
   end
 
   describe "bulk media download", js: true do
