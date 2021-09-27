@@ -1,0 +1,3 @@
+Code,QType,Option Set Name,Title[en],Hint[en],Title[fr],Hint[fr],Title[ht],Hint[ht]
+localite,select_one,notexist,Select a location,,Localité,,lokalite
+localite,select_one,,Select a location,,Localité,,lokalite,

@@ -1,0 +1,4 @@
+Code,QType,Option Set Name,Title[en],Hint[en],Title[fr],Hint[fr],Title[ht],Hint[ht]
+localite 2,select_one,yesno,Select a location,loc,Localité,loc,lokalite,lok
+A1installation,blarf,yesno,Is there a safe installation (TB) for ACDs in the market,safety first,Existe-t-il une installation sûre (TB) pour les DAA au marché,sûre,Existe-t-il une installation sûre ,sor
+A13cuisine,integer,,Number of sellers of cooked fish,fish,Nombre de vendeurs de poisson cuisiné,poisson,Nombre de vendeurs de poisson cuisiné,poisson
