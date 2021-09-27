@@ -51,6 +51,10 @@ module GeneralSpecHelpers
     fixture("option_set_imports", name)
   end
 
+  def question_import_fixture(name)
+    fixture("question_imports", name)
+  end
+
   def user_import_fixture(name)
     fixture("user_imports", name)
   end

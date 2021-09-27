@@ -763,6 +763,9 @@ en:
           header_too_long: "Error on row %{row_num}: headers can't be more than %{limit} characters."
         question:
           at_least_one_name: "You must enter a title in at least one language."
+          code: "Question code is required."
+          option_set: "Option set does not exist."
+          qtype_unrecognized: "Question type unrecognized."
           attributes:
             code:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
@@ -2292,6 +2295,10 @@ en:
       wrong_type: "The uploaded file must be a valid CSV file."
       no_rows: "No rows to import."
       bad_csv: "There was an issue with your CSV file: %{msg}"
+
+  question_import:
+    errors:
+      missing_headers: "Too few header columns."
 
   unauthorized:
     default: "You are not authorized to access that page or operation."
