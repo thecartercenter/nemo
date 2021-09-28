@@ -20,11 +20,12 @@ feature "responses csv export" do
 
   before { login(user) }
 
-  scenario "exporting csv" do
+  scenario "exporting csv happy path" do
     visit(responses_path(params))
 
     click_link("Download CSV")
-    expect(page).to(have_content("#{Response.all.length} responses to be exported"))
+    # This expectation doesn't work unless :js is enabled (in which case we can't download the resulting CSV).
+    # expect(page).to(have_content("#{Response.all.length} responses to be exported"))
 
     perform_enqueued_jobs do
       click_button("Export")
@@ -44,18 +45,94 @@ feature "responses csv export" do
     expect(result[2][9]).to(eq("Plant"))
   end
 
-  scenario "export with threshold warning" do
+  scenario "exporting csv with nothing checked", :js do
+    visit(responses_path(params))
+
+    click_link("Download CSV")
+    expect(page).to(have_content("#{Response.all.length} responses to be exported"))
+  end
+
+  scenario "exporting csv with checkbox selection", :js do
+    visit(responses_path(params))
+
+    check("selected[#{response1.id}]")
+
+    click_link("Download CSV")
+    expect(page).to(have_content("1 response to be exported"))
+  end
+
+  scenario "opening the export modal multiple times", :js do
+    visit(responses_path(params))
+
+    check("selected[#{response1.id}]")
+
+    hidden_selector = "input#selected_#{response1.id}"
+    expect(page).not_to have_css(hidden_selector, visible: :hidden)
+
+    click_link("Download CSV")
+    expect(page).to(have_content("1 response to be exported"))
+    expect(page).to have_css(hidden_selector, visible: :hidden, count: 1)
+
+    find(".close").click
+
+    click_link("Download CSV")
+    expect(page).to(have_content("1 response to be exported"))
+    expect(page).to have_css(hidden_selector, visible: :hidden, count: 1)
+  end
+
+  scenario "too many at first", :js do
+    stub_const("ResponsesController::CSV_EXPORT_LIMIT", 2)
+
+    visit(responses_path(params))
+
+    check("selected[#{response1.id}]")
+    check("selected[#{response2.id}]")
+
+    click_link("Download CSV")
+    expect(page).to(have_content("2 responses to be exported"))
+    expect(page).to(have_content("is not permitted"))
+    expect(page).to(have_button("Export", disabled: true))
+
+    find(".close").click
+
+    uncheck("selected[#{response2.id}]")
+
+    click_link("Download CSV")
+    expect(page).to(have_content("1 response to be exported"))
+    expect(page).not_to(have_content("is not permitted"))
+    expect(page).to(have_button("Export", disabled: false))
+  end
+
+  context "with multiple pages" do
+    before do
+      stub_const("ResponsesController::PER_PAGE", 1)
+    end
+
+    scenario "exporting csv with checkbox selection AND 'select all' override", :js do
+      visit(responses_path(params))
+
+      check("selected[#{response2.id}]")
+      click_link("Select all #{Response.all.length} Responses")
+
+      click_link("Download CSV")
+      expect(page).to(have_content("#{Response.all.length} responses to be exported"))
+    end
+  end
+
+  scenario "export with threshold warning", :js do
     stub_const("ResponsesController::CSV_EXPORT_WARNING", 1)
     visit(responses_path(params))
     click_link("Download CSV")
     expect(page).to(have_content("may take a long time"))
+    expect(page).to(have_button("Export", disabled: false))
   end
 
-  scenario "export with threshold limit" do
+  scenario "export with threshold limit", :js do
     stub_const("ResponsesController::CSV_EXPORT_LIMIT", 1)
     visit(responses_path(params))
     click_link("Download CSV")
     expect(page).to(have_content("is not permitted"))
+    expect(page).to(have_button("Export", disabled: true))
   end
 
   describe "bulk media download", js: true do
@@ -85,7 +162,7 @@ feature "responses csv export" do
     end
   end
 
-  scenario "exporting csv with bulk media download" do
+  scenario "exporting csv with bulk media download", :js do
     visit(responses_path(params))
     click_link("Download CSV")
     expect(page).to(have_content("#{Response.all.length} responses to be exported"))

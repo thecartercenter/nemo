@@ -129,7 +129,10 @@ class ResponsesController < ApplicationController
 
   def media_size
     ability = Ability.new(user: current_user, mission: current_mission)
-    packager = Utils::BulkMediaPackager.new(ability: ability, search: params[:search], operation: nil)
+    selected = params[:selectAll].present? ? [] : params[:selected] # Empty selection is equivalent to "all".
+    packager = Utils::BulkMediaPackager.new(
+      ability: ability, search: params[:search], selected: selected, operation: nil
+    )
     render(json: packager.media_meta)
   end
 
@@ -319,26 +322,34 @@ class ResponsesController < ApplicationController
   end
 
   def enqueue_bulk_media_export
-    options = params[:response_csv_export_options].permit(%i[download_media])
     operation = Operation.new(
       creator: current_user,
       mission: current_mission,
       job_class: BulkMediaDownloadOperationJob,
       details: t("operation.details.bulk_media_export"),
-      job_params: {search: params[:search], options: options}
+      job_params: {search: params[:search], options: extract_export_options}
     )
     operation.enqueue
   end
 
   def enqueue_csv_export
-    options = params[:response_csv_export_options].permit(%i[long_text_behavior])
     operation = Operation.new(
       creator: current_user,
       mission: current_mission,
       job_class: ResponseCSVExportOperationJob,
       details: t("operation.details.response_csv_export"),
-      job_params: {search: params[:search], options: options}
+      job_params: {search: params[:search], options: extract_export_options}
     )
     operation.enqueue
+  end
+
+  def extract_export_options
+    select_all = params[:select_all_pages].present?
+    selected = params[:selected] || {}
+    {
+      long_text_behavior: params[:response_csv_export_options][:long_text_behavior],
+      download_media: params[:response_csv_export_options][:download_media],
+      selected: select_all ? [] : selected.keys # Empty selection is equivalent to "all".
+    }
   end
 end

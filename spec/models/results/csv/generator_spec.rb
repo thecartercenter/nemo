@@ -5,8 +5,10 @@ require "rails_helper"
 describe Results::CSV::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }
   let(:responses) { [] }
-  let(:options) { {} }
-  let(:generator) { Results::CSV::Generator.new(relation, mission: get_mission, options: options) }
+  let(:long_text_behavior) { nil }
+  let(:generator) do
+    Results::CSV::Generator.new(relation, mission: get_mission, long_text_behavior: long_text_behavior)
+  end
   let(:submission_time) { Time.zone.parse("2015-11-20 12:30 UTC") }
   subject(:output) { generator.export.read }
 
@@ -328,7 +330,7 @@ describe Results::CSV::Generator, :reset_factory_sequences do
   end
 
   context "with long_text_behavior" do
-    let(:options) { {long_text_behavior: "truncate"} }
+    let(:long_text_behavior) { "truncate" }
     let(:form) { create(:form, question_types: %w[text long_text]) }
 
     before do

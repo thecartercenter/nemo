@@ -130,6 +130,9 @@ ELMO.Views.BatchActionsView = class BatchActionsView extends ELMO.Views.Applicat
     // else, show confirm dialog (if requested), and proceed if 'yes' clicked
     } else if (!options.confirm || confirm(I18n.t(options.confirm, { count: selected }))) {
       // construct a temporary form
+      //
+      // TODO: This fake DOM submission logic is old, hacky, and should be refactored eventually.
+      //   Perhaps it could be a simple AJAX request which updates the paginated list on success.
       const form = $('<form>').attr('action', options.path).attr('method', 'post').attr('style', 'display: none');
 
       // copy the checked checkboxes to it, along with the select_all field

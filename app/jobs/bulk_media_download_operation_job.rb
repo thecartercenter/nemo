@@ -6,7 +6,9 @@ require "fileutils"
 class BulkMediaDownloadOperationJob < OperationJob
   def perform(operation, search: nil, options: {})
     ability = Ability.new(user: operation.creator, mission: mission)
-    packager = Utils::BulkMediaPackager.new(ability: ability, search: search, operation: operation)
+    packager = Utils::BulkMediaPackager.new(
+      ability: ability, search: search, selected: options[:selected], operation: operation
+    )
 
     raise "Not enough space on disk for media export" unless packager.space_on_disk?
 
