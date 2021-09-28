@@ -1,3 +1,5 @@
+// Marks elements as having been added automatically (cloned into the form),
+// so that we can destroy them automatically later without fear.
 var CLONE_MARKER = "CLONE_MARKER";
 
 // Handles exports and polling for new responses.
