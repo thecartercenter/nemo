@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module PathHelper
-  KEYS = {"OptionSets::Import" => "option_set_import"}.freeze
+  KEYS = {"OptionSets::Import" => "option_set_import", "Questions::Import" => "question_import"}.freeze
   PLURAL_KEYS = {"Sms::Message" => "sms"}.freeze
 
   # DEPRECATED: Prefer using path helpers directly in decorators. The below is too complex.

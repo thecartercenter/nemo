@@ -24,6 +24,7 @@ module IconHelper
     pause: "pause",
     print: "print",
     question: "question-circle",
+    questionimport: "question-circle",
     remove: "times",
     report: "bar-chart-o",
     report_report: "bar-chart-o",

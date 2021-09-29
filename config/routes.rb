@@ -195,6 +195,13 @@ ELMO::Application.routes.draw do
       end
     end
 
+    resources :question_imports, path: "question-imports", only: %i[new create] do
+      collection do
+        get :template
+        post :upload
+      end
+    end
+
     # import routes for standardizeable objects
     %w[forms questions option_sets].each do |k|
       post "/#{k.tr('_', '-')}/import-standard", to: "#{k}#import_standard", as: "import_standard_#{k}"

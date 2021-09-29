@@ -18,6 +18,7 @@ module QuestionsHelper
                              confirm: "question.bulk_destroy_confirm")
       links << link_divider
       links << create_link(Question) if can?(:create, Question)
+      links << create_link(Questions::Import) if can?(:create, Questions::Import)
       add_import_standard_link_if_appropriate(links)
     end
     links
