@@ -465,6 +465,8 @@ en:
         metadata_type: "Metadata Type"
         tag_ids: "Tags"
         sms_guide_formatting: "SMS Guide Formatting"
+      questions/import:
+        file: "File to Import"
       questioning:
         name: "Title"
         condition: "Condition?"
@@ -925,6 +927,8 @@ en:
       question:
         new: "Create Question"
         add_to_form: "Add to Form"
+      questions/import:
+        new: "Import from CSV"
       report/report:
         new: "Create Report"
         export: "Export to CSV"
@@ -1134,6 +1138,8 @@ en:
       index: "Questions"
       new: "New Question"
       show: "Question: %{code}"
+    question_imports:
+      new: "Import New Questions"
     questionings:
       edit: "Edit Question: %{code}"
       index: "Questions"
@@ -1510,7 +1516,6 @@ en:
     latitude: "Latitude"
     longitude: "Longitude"
     value: "Numeric Value"
-
   option_set_import:
     instructions_html: |-
       Upload a CSV file with your options.
@@ -2297,6 +2302,17 @@ en:
       bad_csv: "There was an issue with your CSV file: %{msg}"
 
   question_import:
+    instructions_html: |-
+      Upload a CSV file with your options.
+
+      Notes:
+
+      * Only CSV files are accepted. They must be UTF-8 encoded. You can export XLSX files to CSV using any standard spreadsheet software.
+      * The columns are: Code | QType | Option Set Name | Title[en] | Hint[en] | Title[fr] | Hint[fr] | ...
+      * Code must be a short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime.
+      * QType must be one of the following: integer, select\_one, select\_multiple, text, long\_text, decimal.
+      * The option set name must match an existing option set name.
+      * You can find more documentation <a href="https://getnemo.readthedocs.io/en/main/content/formsquestions/formsquestions.html#import-new-questions">here</a>.
     errors:
       missing_headers: "Too few header columns."
 
