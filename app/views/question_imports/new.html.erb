@@ -5,6 +5,6 @@
                      locals: {operation_type_prefix: "question_imports"}) %>
   <div class="submit-buttons">
     <%= render("file_upload/upload_in_progress_button", single_file: true) %>
-    <%= f.submit(class: "btn btn-primary") %>
+    <%= f.submit t("common.import"), class: "btn btn-primary" %>
   </div>
 <% end %>
