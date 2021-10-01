@@ -9,6 +9,20 @@ GIT
       railties
 
 GIT
+  remote: https://github.com/mschiller/azure-storage-ruby.git
+  revision: c84806f766b773cdeea72a7f73d79ddab598b256
+  tag: c84806f766b773cdeea72a7f73d79ddab598b256
+  specs:
+    azure-storage-blob (2.0.1)
+      azure-storage-common (~> 2.0)
+      nokogiri (~> 1.12)
+    azure-storage-common (2.0.2)
+      faraday (~> 1.0)
+      faraday_middleware (~> 1.0.0.rc1)
+      net-http-persistent (~> 4.0)
+      nokogiri (~> 1.12)
+
+GIT
   remote: https://github.com/sassafrastech/closure_tree.git
   revision: 531edabe1853a89f13ab595f660bb5926c895e58
   tag: v7.2.0-noReorder-fastInsert
@@ -133,14 +147,6 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.2.2)
       aws-eventstream (~> 1, >= 1.0.2)
-    azure-storage-blob (2.0.1)
-      azure-storage-common (~> 2.0)
-      nokogiri (~> 1.11.0.rc2)
-    azure-storage-common (2.0.2)
-      faraday (~> 1.0)
-      faraday_middleware (~> 1.0.0.rc1)
-      net-http-persistent (~> 4.0)
-      nokogiri (~> 1.11.0.rc2)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -322,7 +328,7 @@ GEM
     mime-types-data (3.2020.1104)
     mini_magick (4.11.0)
     mini_mime (1.1.1)
-    mini_portile2 (2.5.3)
+    mini_portile2 (2.6.1)
     minitest (5.14.4)
     mocha (1.11.2)
     msgpack (1.3.3)
@@ -332,8 +338,8 @@ GEM
       connection_pool (~> 2.2)
     netrc (0.11.0)
     nio4r (2.5.8)
-    nokogiri (1.11.7)
-      mini_portile2 (~> 2.5.0)
+    nokogiri (1.12.5)
+      mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     parallel (1.20.1)
     parser (3.0.0.0)
@@ -605,7 +611,7 @@ DEPENDENCIES
   authlogic (~> 6.1)
   awesome_print (~> 1.6)
   aws-sdk-s3 (~> 1.86)
-  azure-storage-blob (~> 2.0)
+  azure-storage-blob!
   binding_of_caller (~> 0.8.0)
   bluecloth (~> 2.2)
   blueprinter (~> 0.25.1)

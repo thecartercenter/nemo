@@ -13,8 +13,6 @@ gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
 gem "friendly_id", "~> 5.1"
 gem "phony", "~> 2.15"
-# Fork: Added ability to disable. TODO: This is 5 years old, look into upgrading.
-# https://github.com/sassafrastech/rack-attack/commits/master
 gem "rack-attack", "~> 6.3"
 gem "rake", "~> 13.0"
 gem "random_data", "~> 1.6" # Deprecated: Use Faker instead
@@ -59,7 +57,10 @@ gem "reverse_markdown", "~> 2.0"
 # Storage
 gem "active_storage_validations", "~> 0.9.3"
 gem "aws-sdk-s3", "~> 1.86", require: false
-gem "azure-storage-blob", "~> 2.0", require: false
+# Fork: address nokogiri vuln.
+# https://github.com/Azure/azure-storage-ruby/issues/194
+gem "azure-storage-blob", github: "mschiller/azure-storage-ruby",
+                          tag: "c84806f766b773cdeea72a7f73d79ddab598b256", require: false
 gem "image_processing", "~> 1.12"
 gem "sys-filesystem", "~> 1.4"
 
