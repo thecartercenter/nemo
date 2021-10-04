@@ -174,9 +174,8 @@ module ApplicationHelper
     t("activerecord.models.#{klass.model_name.i18n_key}", count: options[:count] || 500)
   end
 
-  # Translates and interprets markdown style translations.
-  # Escapes HTML in any arguments.
-  # options[:strip_outer_p_tags] - Whether to strip outer p tags if they exist. Defaults to true for now.
+  # Translates and interprets markdown-style translations.
+  # Escapes HTML in any options, and passes them through to `I18n.t`.
   def tmd(key, strip_outer_p_tags: true, **options)
     options.keys.each do |k|
       options[k] = html_escape(options[k]).to_s unless %w[default scope].include?(k.to_s)
@@ -185,11 +184,11 @@ module ApplicationHelper
     html = BlueCloth.new(t(key, **options)).to_html
 
     # Remove surrounding <p> tags if present and requested.
-    html = html[3..-5] if strip_outer_p_tags != false && html[0, 3] == "<p>" && html[-4, 4] == "</p>"
+    html = html[3..-5] if strip_outer_p_tags && html[0, 3] == "<p>" && html[-4, 4] == "</p>"
 
     # We can safely do this because we control what's in the translation file
     # and we've escaped the options.
-    html.html_safe
+    html.html_safe # rubocop:disable Rails/OutputSafety
   end
 
   # makes sure error messages look right
