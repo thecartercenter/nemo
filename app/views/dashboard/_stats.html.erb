@@ -2,8 +2,8 @@
   <h2><%= t("dashboard.summary") %></h2>
   <ul>
     <li><%= link_to(translate_recent_responses(@recent_response_count), responses_path) %></li>
-    <li><%= link_to(tmd("welcome.total_responses", count: number_with_delimiter(@total_response_count)), responses_path) %></li>
-    <li><%= link_to(tmd("welcome.awaiting_review", count: number_with_delimiter(@unreviewed_response_count)), responses_path(search: "reviewed:no")) %></li>
+    <li><%= link_to(t_markdown("welcome.total_responses", count: number_with_delimiter(@total_response_count)), responses_path) %></li>
+    <li><%= link_to(t_markdown("welcome.awaiting_review", count: number_with_delimiter(@unreviewed_response_count)), responses_path(search: "reviewed:no")) %></li>
   </ul>
 </div>
 <div class="stat-block">

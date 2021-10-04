@@ -60,9 +60,9 @@ module ResponsesHelper
   # takes a recent count (e.g. [5, "week"]) and translates it
   def translate_recent_responses(count)
     if count.nil?
-      tmd("welcome.no_recent")
+      t_markdown("welcome.no_recent")
     else
-      tmd("welcome.in_the_past_#{count[1]}", count: number_with_delimiter(count[0]))
+      t_markdown("welcome.in_the_past_#{count[1]}", count: number_with_delimiter(count[0]))
     end
   end
 end

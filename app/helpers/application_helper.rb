@@ -176,7 +176,7 @@ module ApplicationHelper
 
   # Translates and interprets markdown-style translations.
   # Escapes HTML in any options, and passes them through to `I18n.t`.
-  def tmd(key, strip_outer_p_tags: true, **options)
+  def t_markdown(key, strip_outer_p_tags: true, **options)
     options.keys.each do |k|
       options[k] = html_escape(options[k]).to_s unless %w[default scope].include?(k.to_s)
     end
