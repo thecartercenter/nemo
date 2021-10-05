@@ -38,6 +38,8 @@
 class OptionSet < ApplicationRecord
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
+  before_validation :add_timestamp_if_duplicate
+  
   # This need to be up here or they will run too late.
   before_destroy :check_associations
   before_destroy :nullify_root_node
@@ -80,6 +82,18 @@ class OptionSet < ApplicationRecord
 
   # Indicates that this OptionSet is being created to be added to a question of the given type
   attr_accessor :adding_to_question_type
+
+  def self.rename_duplicates!
+    # for each mission
+    OptionSet.find_each do |os|
+      sets = OptionSet.where(mission_id: os.mission_id).where(name: os.name)
+      next if sets.count < 2
+      sets.each do |set|
+        set.name = "#{set.name} #{set.created_at}"
+        set.save
+      end
+    end
+  end
 
   # Efficiently deletes option nodes for all option sets with given IDs.
   def self.terminate_sub_relationships(option_set_ids)
@@ -349,6 +363,11 @@ class OptionSet < ApplicationRecord
     self.name = name.strip
     self.allow_coordinates = false unless geographic?
     self.level_names = nil unless multilevel?
+    true
+  end
+
+  def add_timestamp_if_duplicate
+    self.name = "#{name} #{DateTime.now}" if OptionSet.find_by(name: name, mission_id: mission_id).present?
     true
   end
 
