@@ -39,7 +39,7 @@ class OptionSet < ApplicationRecord
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
   before_validation :add_timestamp_if_duplicate
-  
+
   # This need to be up here or they will run too late.
   before_destroy :check_associations
   before_destroy :nullify_root_node
