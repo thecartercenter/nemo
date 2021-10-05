@@ -45,6 +45,8 @@ class SkipRule < ApplicationRecord
                {name: :dest_item, second_pass: true}
              ]
 
+  clone_options follow: %i[conditions]
+
   def all_fields_blank?
     destination.blank? && dest_item.blank? && conditions.all?(&:all_fields_blank?)
   end
