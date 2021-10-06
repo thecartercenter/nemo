@@ -21,7 +21,7 @@ if (isOnline && process.env.NODE_ENV !== 'test') {
 
     // Uncomment to enable Sentry performance monitoring (disabled in favor of Scout).
     // Percentage between 0.0 - 1.0.
-    //tracesSampleRate: 1.0,
+    // tracesSampleRate: 1.0,
   });
 }
 
