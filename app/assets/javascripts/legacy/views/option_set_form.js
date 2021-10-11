@@ -280,10 +280,16 @@
           $('.elmo-form-wrapper').replaceWith(jqxhr.responseText);
         }
       },
-      error() {
+      error(jqxhr, status, error) {
         if (ELMO.unloading) return;
-        // if we get an HTTP error, it's some server thing so just display a generic message
-        $('.elmo-form-wrapper').replaceWith('Server Error');
+        if (jqxhr.status == 400) {
+          self.add_error(
+            '.option_set_name',
+            I18n.t('activerecord.errors.models.option_set.duplicate')
+          );
+        } else {
+          $('.elmo-form-wrapper').replaceWith('Server Error');
+        }
         // Stop loading
         ELMO.app.loading(false);
       },

@@ -101,6 +101,28 @@ feature "option set" do
     expect(page).to have_selector("#options-wrapper div", text: "Banana (2)")
   end
 
+  context "with duplicate option set" do
+    let!(:likert) { create(:option_set, name: "likert", mission: get_mission) }
+
+    scenario "creating, showing, and editing options with values", js: true do
+      visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+
+      click_link("Create Option Set")
+      fill_in("Name", with: "likert")
+
+      click_link("Add Option")
+      wait_modal_to_be_visible
+      fill_in("English", with: "Apple")
+      fill_in("Value", with: "1")
+      click_button("Save and Add Another")
+      fill_in("English", with: "Banana")
+      fill_in("Value", with: "2")
+      click_button("Save and Close")
+      click_button("Save")
+      expect(page).to have_content("please enter a unique name")
+    end
+  end
+
   context "with standard set" do
     let!(:std_set) { create(:option_set, :standard, name: "Gold", option_names: :multilevel) }
 

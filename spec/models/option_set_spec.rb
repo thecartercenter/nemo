@@ -143,9 +143,9 @@ describe OptionSet do
     let!(:likert) { create(:option_set, name: "likert", mission: mission) }
 
     context "create duplicate name in same mission" do
-      it "should create option set with timestamp" do
-        set = create(:option_set, name: "likert", mission: mission)
-        expect(set.name).to_not(eq("likert"))
+      it "should fail" do
+        set = build(:option_set, name: "likert", mission: mission)
+        expect(set).not_to be_valid
       end
     end
 
@@ -153,38 +153,6 @@ describe OptionSet do
       it "should create option set with same name" do
         set = create(:option_set, name: "likert", mission_id: "aaa-2222")
         expect(set.name).to eq("likert")
-      end
-    end
-  end
-
-  describe "rename duplicates" do
-    let!(:mission) { create(:mission) }
-
-    # context "3 duplicates in same mission" do
-    #   let!(:likert1) { create(:option_set, name: "likert", mission_id: mission.id, created_at: "2020-01-01T12:00Z") }
-    #   let!(:likert2) { create(:option_set, name: "likert", mission_id: mission.id, created_at: "2021-01-01T12:00Z") }
-    #   let!(:likert3) { create(:option_set, name: "likert", mission_id: mission.id, created_at: "2019-01-01T12:00Z") }
-    #
-    #   it "should rename them" do
-    #     OptionSet.rename_duplicates!
-    #     expect(OptionSet.all.order(created_at: :desc).first.name).to eq("likert 2021-01-01 07:00:00 -0500")
-    #     expect(OptionSet.all.order(created_at: :desc).second.name).to eq("likert 2020-01-01 07:00:00 -0500")
-    #     expect(OptionSet.all.order(created_at: :desc).third.name).to eq("likert 2019-01-01 07:00:00 -0500")
-    #   end
-    # end
-
-    context "3 duplicates in different missions" do
-      let(:mission1) { create(:mission) }
-      let(:mission2) { create(:mission) }
-      let(:mission3) { create(:mission) }
-
-      let!(:likert1) { create(:option_set, name: "likert", mission_id: mission1.id, created_at: "2020-01-01T12:00Z") }
-      let!(:likert2) { create(:option_set, name: "likert", mission_id: mission2.id, created_at: "2021-01-01T12:00Z") }
-      let!(:likert3) { create(:option_set, name: "likert", mission_id: mission3.id, created_at: "2019-01-01T12:00Z") }
-
-      it "should not rename them" do
-        OptionSet.rename_duplicates!
-        expect(OptionSet.all.order(created_at: :desc).first.name).to eq("likert")
       end
     end
   end

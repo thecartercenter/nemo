@@ -1,5 +1,5 @@
 <div class="elmo-form-wrapper">
-  <%= alerts(flash) if request.xhr? %>
+  <%= alerts(flash) %>
   <% if form_mode == :edit %>
     <%= Forms::IntegrityWarnings::Builder.new(@option_set) %>
     <%= multilevel_forbidden_notice if @option_set.select_multiple_questions? %>
