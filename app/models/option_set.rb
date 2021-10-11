@@ -66,7 +66,7 @@ class OptionSet < ApplicationRecord
   scope :by_name, -> { order("option_sets.name") }
   scope :default_order, -> { by_name }
 
-  validates :name, uniqueness: { scope: :mission_id }
+  validates :name, uniqueness: {scope: :mission_id}
 
   replicable child_assocs: :root_node, backwards_assocs: :questions,
              uniqueness: {field: :name, style: :sep_words}
