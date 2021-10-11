@@ -133,8 +133,19 @@ class OptionSetsController < ApplicationController
 
   # creates/updates the option set
   def create_or_update
-    @option_set.save!
+    if @option_set.save
+      create_or_update_success
+    else
+      error = if @option_set.errors.attribute_names[0] == :name
+                :bad_request
+              else
+                :internal_server_error
+              end
+      render(json: "error", status: error)
+    end
+  end
 
+  def create_or_update_success
     # set the flash, which will be shown when the next request is issued as expected
     # (not needed in modal mode)
     set_success(@option_set) unless params[:modal_mode]

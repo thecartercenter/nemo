@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_05_011611) do
+ActiveRecord::Schema.define(version: 2021_10_05_130501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -325,7 +325,7 @@ ActiveRecord::Schema.define(version: 2021_08_05_011611) do
     t.boolean "geographic", default: false, null: false
     t.jsonb "level_names"
     t.uuid "mission_id"
-    t.string "name", limit: 255, null: false
+    t.string "name", null: false
     t.uuid "original_id"
     t.uuid "root_node_id"
     t.string "sms_guide_formatting", limit: 255, default: "auto", null: false
@@ -333,6 +333,7 @@ ActiveRecord::Schema.define(version: 2021_08_05_011611) do
     t.datetime "updated_at", null: false
     t.index ["geographic"], name: "index_option_sets_on_geographic"
     t.index ["mission_id"], name: "index_option_sets_on_mission_id"
+    t.index ["name", "mission_id"], name: "index_option_sets_on_name_and_mission_id", unique: true
     t.index ["original_id"], name: "index_option_sets_on_original_id"
     t.index ["root_node_id"], name: "index_option_sets_on_root_node_id", unique: true
   end

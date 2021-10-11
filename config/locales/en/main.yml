@@ -754,6 +754,7 @@ en:
           at_least_one: "You must choose at least one option."
           cant_delete_if_has_questions: "You can't delete this Option Set because one or more Questions are associated with it."
           cant_delete_if_has_answers: "You can't delete this Option Set because it is included in at least one Answer."
+          duplicate: "That option set name already exists in this mission, please enter a unique name."
           general: "There was a problem saving the option set."
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         option_sets/import:
