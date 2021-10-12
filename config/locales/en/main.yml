@@ -2303,7 +2303,7 @@ en:
 
   question_import:
     instructions_html: |-
-      Upload a CSV file with your options.
+      Upload a CSV file with your questions.
 
       Notes:
 
@@ -2311,10 +2311,10 @@ en:
       * The columns are: Code | QType | Option Set Name | Title[en] | Hint[en] | Title[fr] | Hint[fr] | ...
       * Code must be a short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime.
       * QType must be one of the following: integer, select\_one, select\_multiple, text, long\_text, decimal.
-      * The option set name must match an existing option set name.
-      * You can find more documentation <a href="https://getnemo.readthedocs.io/en/main/content/formsquestions/formsquestions.html#import-new-questions">here</a>.
+      * The option set name must match an existing option set name, if specified.
+      * You can find more documentation <a href="https://getnemo.readthedocs.io/en/latest/content/formsquestions/formsquestions.html#import-new-questions">here</a>.
     errors:
-      missing_headers: "Too few header columns."
+      missing_headers: "Your CSV was missing some columns, please see the template/docs."
 
   unauthorized:
     default: "You are not authorized to access that page or operation."

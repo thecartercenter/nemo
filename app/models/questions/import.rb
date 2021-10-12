@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Questions
-  # Imports an OptionSet from a spreadsheet.
+  # Imports Questions from a spreadsheet.
   class Import < TabularImport
     attr_accessor :questions, :lang_column
 
@@ -22,7 +22,7 @@ module Questions
       add_run_errors(cleaner.errors)
       return if failed?
 
-      rows.each_with_index { |row, row_idx| process_row(row, row_idx, languages) }
+      rows.each_with_index { |row, row_idx| process_row(row, row_idx + 2, languages) }
     end
 
     private
@@ -38,15 +38,15 @@ module Questions
         code: row[0],
         qtype_name: qtype_name(row[1], row_idx),
         mission_id: mission_id,
-        name_translations: translations_json(row, languages, false),
-        hint_translations: translations_json(row, languages, true)
+        name_translations: translations_json(row, TRANSLATION_COLUMN, languages),
+        hint_translations: translations_json(row, TRANSLATION_COLUMN + 1, languages)
       }
 
       params[:option_set_id] = option_set_id(row[2], row_idx) if row[2].present?
 
       question = Question.create(params)
       questions << question
-      copy_validation_errors_for_row(1, question.errors) unless question.valid?
+      copy_validation_errors_for_row(row_idx, question.errors) unless question.valid?
     end
 
     def code_presence?(code, row_idx)
@@ -63,19 +63,19 @@ module Questions
     end
 
     def option_set_id(name, row_idx)
-      os_id = OptionSet.find_by(name: name)
-      if os_id.nil?
+      os = OptionSet.find_by(name: name)
+      if os.nil?
         add_run_error(I18n.t(
           "operation.row_error",
           row: row_idx,
           error: I18n.t("activerecord.errors.models.question.option_set")
         ))
+      else
+        os.id
       end
-      os_id.id if os_id.present?
     end
 
     def qtype_name(name, row_idx)
-      # add_run_error("Row #{row_idx}: Question type is required.") if name.blank?
       return nil if name.blank?
       qtype = QuestionType[name.downcase]
       if qtype.nil?
@@ -84,17 +84,18 @@ module Questions
           row: row_idx,
           error: I18n.t("activerecord.errors.models.question.qtype_unrecognized")
         ))
+      else
+        qtype.name
       end
-      qtype.name if qtype.present?
     end
 
-    def translations_json(row, languages, hint)
+    def translations_json(row, start_col, languages)
       translation_json = {}
-      column = hint ? TRANSLATION_COLUMN + 1 : TRANSLATION_COLUMN
+      col = start_col
       languages.each do |l|
-        translation_json[l.to_sym] = row[column]
+        translation_json[l.to_sym] = row[col]
         # question name column translations alternates with hint
-        column += 2
+        col += 2
       end
       translation_json
     end
