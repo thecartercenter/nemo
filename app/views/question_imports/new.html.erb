@@ -1,5 +1,5 @@
 <%= elmo_form_for(@question_import, url: question_imports_path, html: {multipart: true}) do |f| %>
-  <%= tmd("question_import.instructions_html", strip_outer_p_tags: false) %>
+  <%= t_markdown("question_import.instructions_html", strip_outer_p_tags: false) %>
 
   <%= f.field(:file, required: true, partial: "file_upload/operation_file_uploader",
                      locals: {operation_type_prefix: "question_imports"}) %>
