@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# For importing OptionSets from spreadsheet.
+# For importing Questions from spreadsheet.
 class QuestionImportsController < TabularImportsController
   def new
     authorize!(:create, Questions::Import)
@@ -8,7 +8,6 @@ class QuestionImportsController < TabularImportsController
   end
 
   def template
-    # TODO: make template
     NotImplementedError
   end
 

@@ -52,9 +52,9 @@ describe Questions::Import do
     it "should not be able to import" do
       expect(import).to_not(be_succeeded)
       expect(run_errors).to eq([
-        "Row 0: Option set does not exist.",
-        "Row 1: Option set: This field is required.",
-        "Row 1: Option set: This field is required."
+        "Row 2: Option set does not exist.",
+        "Row 2: Option set: This field is required.",
+        "Row 3: Option set: This field is required."
       ])
     end
   end
@@ -65,10 +65,9 @@ describe Questions::Import do
     it "should not be able to import" do
       expect(import).to_not(be_succeeded)
       expect(run_errors).to eq([
-        "Row 1: Code: Should start with a letter, use only letters and numbers, "\
+        "Row 2: Code: Should start with a letter, use only letters and numbers, "\
           "and be a maximum of 20 characters.",
-        "Row 1: Question type unrecognized.",
-        "Row 1: Type: This field is required."
+        "Row 3: Question type unrecognized."
       ])
     end
   end
@@ -78,7 +77,7 @@ describe Questions::Import do
 
     it "should not be able to import" do
       expect(import).to_not(be_succeeded)
-      expect(run_errors).to eq(["Row 0: Question code is required.", "Row 1: Type: This field is required."])
+      expect(run_errors).to eq(["Row 2: Question code is required.", "Row 3: Type: This field is required."])
     end
   end
 
@@ -87,7 +86,7 @@ describe Questions::Import do
 
     it "should not be able to import" do
       expect(import).to_not(be_succeeded)
-      expect(run_errors).to eq(["Row 1: You must enter a title in at least one language."])
+      expect(run_errors).to eq(["Row 2: You must enter a title in at least one language."])
     end
   end
 

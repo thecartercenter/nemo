@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Questions
-  # Cleans data from a spreadsheet for use in building an OptionSet.
+  # Cleans data from a spreadsheet for use in building Questions.
   class ImportDataCleaner
     MIN_HEADERS = 4
 
