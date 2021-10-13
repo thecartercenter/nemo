@@ -1,5 +1,7 @@
 <%= elmo_form_for(@option_set_import, url: option_set_imports_path, html: {multipart: true}) do |f| %>
-  <%= t_markdown("option_set_import.instructions_html", strip_outer_p_tags: false) %>
+  <%= t_markdown("option_set_import.instructions_html", csv_url_1: template_multilevel_option_set_imports_path(format: "csv"),
+                                                        csv_url_2: template_translations_option_set_imports_path(format: "csv"),
+                                                        strip_outer_p_tags: false) %>
   <%= f.field(:name, required: true) %>
   <%= f.field(:file, required: true, partial: "file_upload/operation_file_uploader",
                      locals: {operation_type_prefix: "option_set_imports"}) %>

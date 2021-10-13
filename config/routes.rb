@@ -190,7 +190,8 @@ ELMO::Application.routes.draw do
 
     resources :option_set_imports, path: "option-set-imports", only: %i[new create] do
       collection do
-        get :template
+        get :template_multilevel
+        get :template_translations
         post :upload
       end
     end
