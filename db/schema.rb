@@ -325,7 +325,7 @@ ActiveRecord::Schema.define(version: 2021_10_05_130501) do
     t.boolean "geographic", default: false, null: false
     t.jsonb "level_names"
     t.uuid "mission_id"
-    t.string "name", null: false
+    t.string "name", limit: 255, null: false
     t.uuid "original_id"
     t.uuid "root_node_id"
     t.string "sms_guide_formatting", limit: 255, default: "auto", null: false
