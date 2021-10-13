@@ -95,7 +95,7 @@ describe Questions::Import do
 
     it "should not be able to import" do
       expect(import).to_not(be_succeeded)
-      expect(run_errors).to eq(["Too few header columns."])
+      expect(run_errors).to eq(["Your CSV was missing some columns, please see the template/docs."])
     end
   end
 end
