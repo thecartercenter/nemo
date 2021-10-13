@@ -8,7 +8,13 @@ class QuestionImportsController < TabularImportsController
   end
 
   def template
-    NotImplementedError
+    authorize!(:create, Questions::Import)
+    headers = %i(Code QType Option\ Set\ Name Title[en] Hint[en] Title[fr] Hint[fr])
+    respond_to do |format|
+      format.csv do
+        render(csv: UserFacingCSV.generate { |csv| csv << headers })
+      end
+    end
   end
 
   protected
