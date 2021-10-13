@@ -13,4 +13,8 @@ class RenameOptionSetNameWhereDuplicates < ActiveRecord::Migration[6.1]
 
     add_index(:option_sets, %i[name mission_id], unique: true)
   end
+
+  def down
+    remove_index(:option_sets, %i[name mission_id])
+  end
 end
