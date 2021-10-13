@@ -71,9 +71,9 @@ class OptionSetsController < ApplicationController
     OptionSet.transaction do
       @option_set.assign_attributes(option_set_params) # Quotes vs symbol is important here.
 
-      # validate now so that normalization runs before authorizing and saving
-      # We raise if there is an error since validation should happen client side.
-      raise ActiveRecord::RecordInvalid, "Option set is invalid" unless @option_set.valid?
+      # Validate now so that normalization runs before authorizing and saving;
+      # if there are errors, they will be handled later.
+      @option_set.validate
 
       # authorize special abilities
       authorize!(:update_core, @option_set) if @option_set.core_changed?
