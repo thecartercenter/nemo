@@ -7,9 +7,32 @@ class OptionSetImportsController < TabularImportsController
     build_object
   end
 
-  def template
-    # TODO: make template
-    NotImplementedError
+  def template_multilevel
+    authorize!(:create, OptionSets::Import)
+    respond_to do |format|
+      format.csv do
+        render(csv: UserFacingCSV.generate do |csv|
+          csv << %i[Kingdom Species]
+          csv << %i[Animal Cat]
+          csv << %i[Animal Dog]
+          csv << %i[Plant Oak]
+          csv << %i[Plant Tulip]
+        end)
+      end
+    end
+  end
+
+  def template_translations
+    authorize!(:create, OptionSets::Import)
+    respond_to do |format|
+      format.csv do
+        render(csv: UserFacingCSV.generate do |csv|
+          csv << %i(foo[en] foo[fr] Value)
+          csv << %i[Cat Chat 1]
+          csv << %i[Dog Chien 2]
+        end)
+      end
+    end
   end
 
   protected

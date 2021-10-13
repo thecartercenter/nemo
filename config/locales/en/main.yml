@@ -1519,7 +1519,7 @@ en:
     value: "Numeric Value"
   option_set_import:
     instructions_html: |-
-      Upload a CSV file with your options.
+      Upload a CSV file with your options. CSV templates with <a href="%{csv_url_1}">multilevel options</a> and <a href="%{csv_url_2}">single-level translated optoins</a> are available as a starting point.
 
       Notes:
 
