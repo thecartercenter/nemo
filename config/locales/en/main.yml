@@ -903,6 +903,7 @@ en:
     clone: "Clone"
     import_standard: "Import Standard"
     import_from_csv: "Import from CSV"
+    export_csv: "Export CSV"
     export: "Export"
     models:
       form:

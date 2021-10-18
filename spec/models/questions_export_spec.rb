@@ -28,7 +28,13 @@ describe Questions::Export do
       mission_id: mission.id)
   end
 
-  let!(:q3) { create(:question, name_en: "Yea or nay?", hint: nil, qtype_name: "select_one", mission_id: mission.id) }
+  let!(:q3) do
+    create(:question,
+      name_en: "Yea or nay?",
+      hint: nil,
+      qtype_name: "select_one",
+      mission_id: mission.id)
+  end
 
   context "export with some translations and some not" do
     before do
