@@ -147,6 +147,7 @@ ELMO::Application.routes.draw do
     resources :questions do
       collection do
         post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"
+        post "export", defaults: {format: "csv"}
       end
     end
 
