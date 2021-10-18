@@ -17,7 +17,10 @@ module QuestionsHelper
       links << batch_op_link(name: t("action_links.destroy"), path: bulk_destroy_questions_path,
                              confirm: "question.bulk_destroy_confirm")
 
-      links << batch_op_link(name: "action_links.export_csv", path: export_questions_path)
+      if can?(:export, Question)
+        links << batch_op_link(name: t("action_links.export_csv"), path: export_questions_path)
+      end
+
       links << link_divider
       links << create_link(Question) if can?(:create, Question)
       links << create_link(Questions::Import) if can?(:create, Questions::Import)
