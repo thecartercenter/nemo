@@ -86,7 +86,7 @@ class QuestionsController < ApplicationController
     respond_to do |format|
       format.csv do
         @questions = restrict_by_search_and_ability_and_selection(@questions)
-        locales = @questions.first.mission.setting.preferred_locales
+        locales = admin_mode? ? Setting.root.preferred_locales : current_mission.setting.preferred_locales
         exporter = Questions::Export.new(@questions, locales)
         send_data(exporter.to_csv, filename: "questions-#{Time.zone.today}.csv")
       end

@@ -2,7 +2,6 @@
 
 require "rails_helper"
 
-# See also tabular_import_spec
 describe Questions::Export do
   let(:mission) { create(:mission) }
   let(:q1) { create(:question, mission_id: mission.id) }
@@ -33,6 +32,7 @@ describe Questions::Export do
       name_en: "Yea or nay?",
       hint: nil,
       qtype_name: "select_one",
+      option_set: yesno,
       mission_id: mission.id)
   end
 
@@ -49,7 +49,7 @@ describe Questions::Export do
         "Code,QType,Option Set Name,Title[en],Hint[en],Title[fr],Hint[fr],Title[ht],Hint[ht]\n"\
         "Cheese,integer,\"\",How many cheeses?,cheesey,Combien de fromages?,fromagey,Fromage,fr\n"\
         "TextQ1,text,\"\",Your job?,Question Hint 2,Votre metier?,,,\n"\
-        "SelectOneQ2,select_one,Option Set 1,Yea or nay?,\"\",,\"\",,\"\"\n"
+        "SelectOneQ2,select_one,yesno,Yea or nay?,\"\",,\"\",,\"\"\n"
       )
     end
   end
