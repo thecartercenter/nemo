@@ -16,37 +16,39 @@ module Questions
     def to_csv(options = {})
       CSV.generate(**options) do |csv|
         csv << @columns
-        row = []
         @questions.each do |q|
+          row = []
           row << q.code << q.qtype_name
           os_name = q.option_set_id.present? ? q.option_set&.name : ""
           row << os_name
-
-          row = translations(q, row)
-
+          row.concat(translations(q))
           csv << row
-          row = []
         end
       end
     end
 
     private
 
-    def translations(question, row)
-      # no translations
-      if question.name_translations.nil?
-        row << q.name_or_none
-        row << q.hint
-        return
-      end
-
+    def build_name_and_hint(question)
+      translations = []
       @locales.each do |l|
         title = question.name_translations.blank? ? question.name_or_none : question.name_translations[l.to_s]
-        row << title
+        translations << title
         hint = question.hint_translations.blank? ? "" : question.hint_translations[l.to_s]
-        row << hint
+        translations << hint
       end
-      row
+      translations
+    end
+
+    def translations(question)
+      translations = []
+      # no translations
+      if question.name_translations.nil?
+        translations << q.name_or_none
+        translations << q.hint
+        return translations
+      end
+      translations.concat(build_name_and_hint(question))
     end
   end
 end
