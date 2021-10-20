@@ -46,6 +46,10 @@ header {
     .admin-mode {
       color: $light-yellow;
     }
+
+    ul.dropdown-user-menu {
+      display: none;
+    }
   }
 
   div,

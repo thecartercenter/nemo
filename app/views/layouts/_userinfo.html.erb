@@ -20,20 +20,30 @@
       </div>
     </div>
 
+    <%# docs link %>
+    <div class="icon-btn">
+      <a href="https://getnemo.readthedocs.io/" target="_blank">
+        <i class="fa fa-2x fa-book"></i>
+        <br/>
+        <%= t('common.docs') %>
+      </a>
+    </div>
+
     <%# admin mode link %>
     <% if current_user.admin? %>
       <div class="icon-btn"><%= admin_mode_link %></div>
     <% end %>
 
-    <%# link to edit profile %>
     <div class="icon-btn">
-      <%= link_to(profile_link, edit_user_path(current_user.id)) %>
-    </div>
-
-    <%# logout button %>
-    <div class="icon-btn">
-      <%= link_to(content_tag('i','', {:class => 'fa fa-2x fa-sign-out', :title => t("common.logout")}), logout_path(:mode => nil, :mission_name => nil), :method => :delete, :id => "logout_button") %>
-      <br/><br/>&nbsp;
+      <li class="dropdown">
+        <a href="#" data-target="#" class="user-dropdown-toggle" data-toggle="dropdown">
+          <%= profile_link %><b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li><%= link_to("Edit profile", edit_user_path(current_user.id)) %></li>
+          <li><%= link_to(t("common.logout"), logout_path(:mode => nil, :mission_name => nil), :method => :delete, :id => "logout_button") %></li>
+        </ul>
+      </li>
     </div>
 
   <% else %>
