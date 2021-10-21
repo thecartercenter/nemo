@@ -36,7 +36,7 @@ describe Questions::Export do
       mission_id: mission.id)
   end
 
-  context "export with some translations and some not" do
+  context "export with some translations and some not", :reset_factory_sequences do
     before do
       mission.setting.preferred_locales_str = "en,fr,ht"
       mission.save
