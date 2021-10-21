@@ -92,7 +92,7 @@ class Ability
       can(:update_core, OptionSet, mission_id: nil)
       cannot(:change_status, Form, &:standard?)
 
-      can(%i[read create update update_code update_core export bulk_destroy],
+      can(%i[read create update update_code update_core export bulk_destroy import_standard],
         Question, mission_id: nil)
       can(:destroy, Question) { |q| !q.published? && !q.data? }
 
@@ -173,7 +173,7 @@ class Ability
 
       can(:condition_form, Constraint, mission_id: mission.id)
 
-      can(%i[read create update update_code update_core export bulk_destroy],
+      can(%i[read create update update_code update_core export bulk_destroy import_standard],
         Question, mission_id: mission.id)
       can(:destroy, Question) { |q| q.mission_id == mission.id && !q.published? && !q.data? }
     end
