@@ -28,9 +28,6 @@
 
     // setup submit response dropdown in nav bar
     $('a.dropdown-toggle').on('click', function () { self.show_hide_submit_menu($(this)); return false; });
-    $('a.user-dropdown-toggle').on('click', function () { self.show_hide_user_menu($(this)); console.log("clicked!");
-      return false; });
-
 
     // set session countdown
     self.reset_session_countdown();
@@ -105,12 +102,6 @@
       });
     }
   };
-
-  klass.prototype.show_hide_user_menu = function (link) {
-    const self = this;
-    // if hidden, show drop down
-    if (link.next('ul').is(':hidden')) link.dropdown('toggle');
-  }
 
   // Shows alert at top of page
   // params.type - success, error, notice, alert

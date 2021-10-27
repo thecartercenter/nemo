@@ -47,9 +47,26 @@ header {
       color: $light-yellow;
     }
 
-    ul.dropdown-user-menu {
-      display: none;
+    ul.dropdown-menu {
+      a {
+        font-size: 10pt;
+        font-family: $font-family-sans-serif;
+        color: $gray;
+
+        &:hover,
+        &:focus {
+          background: none;
+          color: $accent-color;
+        }
+      }
+
+      li {
+        padding: 4px 9px 6px 15px;
+        margin-bottom: 0px;
+      }
     }
+
+
   }
 
   div,
