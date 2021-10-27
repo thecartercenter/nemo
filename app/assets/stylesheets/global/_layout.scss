@@ -52,17 +52,20 @@ header {
         font-size: 10pt;
         font-family: $font-family-sans-serif;
         color: $gray;
+      }
 
-        &:hover,
-        &:focus {
-          background: none;
-          color: $accent-color;
-        }
+      a:hover,
+      a:focus {
+        background: none;
+        color: $accent-color;
       }
 
       li {
-        padding: 4px 9px 6px 15px;
-        margin-bottom: 0px;
+        padding-top: 4px;
+        padding-right: 9px;
+        padding-bottom: 6px;
+        padding-left: 15px;
+        margin-bottom: 0;
       }
     }
 
