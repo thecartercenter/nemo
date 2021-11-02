@@ -6,13 +6,8 @@ require "fileutils"
 
 module Utils
   # Utility to support a bulk image download operation
-  class BulkMediaPackager
-    include ActiveModel::Model
-    # Space we want to leave on disk in mib
-    DISK_ALLOWANCE = 2048
+  class BulkMediaPackager < Packager
     TMP_DIR = "tmp/bulk_media"
-
-    attr_accessor :ability, :search, :selected, :operation
 
     def media_objects_scope
       responses = Response.accessible_by(@ability, :export)
@@ -32,14 +27,6 @@ module Utils
 
     def media_size
       @media_size ||= media_objects_scope.sum("active_storage_blobs.byte_size")
-    end
-
-    def space_on_disk?
-      stat = Sys::Filesystem.stat("/")
-      # need to leave space for images, zip file, and copy of zip file while attaching to operation
-      space_left = bytes_to_mib(stat.block_size * stat.blocks_available) -
-        bytes_to_mib(media_size * 2)
-      space_left >= DISK_ALLOWANCE
     end
 
     def download_and_zip_images
@@ -69,10 +56,6 @@ module Utils
       zipfile_name
     end
 
-    def notify_admins(error)
-      Notifier.bug_tracker_warning(error).deliver_now
-    end
-
     def zip_media(attachment, zipfile)
       attachment.open do |file|
         filename = attachment.filename.to_s
@@ -87,12 +70,5 @@ module Utils
       ResponsesSearcher.new(relation: responses, query: search, scope: {mission: mission}).apply
     end
 
-    def bytes_to_mib(bytes)
-      bytes / 1024 / 1024
-    end
-
-    def bytes_to_mb(bytes)
-      ((bytes / 1024.0 / 1024.0) * 1.049).round(2)
-    end
   end
 end

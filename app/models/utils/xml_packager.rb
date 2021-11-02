@@ -36,7 +36,7 @@ module Utils
       zip(zipfile_name, responses_ids)
     end
 
-    def make_human_readable(response)
+    def human_readable_xml(response)
       xml_string = response.odk_xml.download
       questions = response.form.questionings
       # replace qing id with human readable name
@@ -63,7 +63,7 @@ module Utils
     def zip_xml(zipfile, response, rid)
       xml_filename = "nemo-response-#{rid}.xml"
       xml_filepath = Rails.root.join(TMP_DIR, xml_filename)
-      File.write(xml_filepath, make_human_readable(response))
+      File.write(xml_filepath, human_readable_xml(response))
       zip_entry = Utils::ZipEntry.new(xml_filepath, xml_filename)
       zipfile.add(zip_entry, xml_filepath)
     end

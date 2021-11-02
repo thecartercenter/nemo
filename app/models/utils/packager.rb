@@ -5,6 +5,7 @@ require "zip"
 require "fileutils"
 
 module Utils
+  # Parent packager class to support common packaging activities
   class Packager
     include ActiveModel::Model
 
