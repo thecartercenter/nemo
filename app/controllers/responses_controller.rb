@@ -63,8 +63,11 @@ class ResponsesController < ApplicationController
       format.csv do
         authorize!(:export, Response)
         enqueue_csv_export
+        enqueue(ResponseCSVExportOperationJob)
         download_media = params[:response_csv_export_options][:download_media]
-        enqueue_bulk_media_export if download_media.present? && download_media == "1"
+        download_xml = params[:response_csv_export_options][:download_odk_xml]
+        enqueue(BulkMediaDownloadOperationJob) if download_media.present? && download_media == "1"
+        enqueue(XmlDownloadOperationJob) if download_xml.present? && download_xml == "1"
         prep_operation_queued_flash(:response_csv_export)
         redirect_to(responses_path)
       end
@@ -319,6 +322,17 @@ class ResponsesController < ApplicationController
         end
       end
     end
+  end
+
+  def enqueue(klass)
+    operation = Operation.new(
+      creator: current_user,
+      mission: current_mission,
+      job_class: klass,
+      details: t("operation.details.bulk_media_export"),
+      job_params: {search: params[:search], options: extract_export_options}
+    )
+    operation.enqueue
   end
 
   def enqueue_bulk_media_export

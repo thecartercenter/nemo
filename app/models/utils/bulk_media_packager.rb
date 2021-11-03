@@ -69,6 +69,5 @@ module Utils
     def apply_search_scope(responses, search, mission)
       ResponsesSearcher.new(relation: responses, query: search, scope: {mission: mission}).apply
     end
-
   end
 end
