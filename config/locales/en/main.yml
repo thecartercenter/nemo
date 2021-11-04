@@ -623,7 +623,7 @@ en:
         default: |-
           Text entered here will be pre-filled in the answer space (for ODK Collect only).
           You can enter previous question values, repeat group numbers, and XPath expressions. Read more in the
-          <a href="https://getnemo.readthedocs.io/en/latest/content/formsquestions/formsquestions.html#default-answer" _target="blank"> documentation</a>
+          <a href="https://getnemo.readthedocs.io/en/latest/content/formsquestions/formsquestions.html#default-answer" _target="blank">documentation</a>
         display_logic: "Conditions which must be met in order for this question to be shown to the user."
         hidden: "ODK Collect only: Hide question but still collect default answer"
         hidden_more_info: "Read more about hidden questions in the documentation."
@@ -653,6 +653,7 @@ en:
           Enter the <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
 
           This setting determines:
+
           * The default language preference for new users
           * The default language for SMS replies
           * The languages for Questions and Options

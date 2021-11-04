@@ -264,10 +264,10 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     return "" if options[:hint] == false || (options[:hint].blank? && options[:inline_hint].present?)
 
     # If hint text is not given explicitly, look it up.
-    options[:hint] = hint_text(field_name, options) unless options[:hint]
+    options[:hint] = options[:hint] ? simple_format_hint(options[:hint]) : hint_text(field_name, options)
 
     # If we get this far and hint is still blank, return blank.
-    options[:hint].blank? ? "" : format_hint(options[:hint])
+    options[:hint].presence || ""
   end
 
   # Generates html for an inline field hint block.
@@ -283,7 +283,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     options[:inline_hint].presence || ""
   end
 
-  # get the hint text based on the field_name and the form mode
+  # get the translated, formatted hint text based on the field_name and the form mode.
+  #
   # if field is read_only, we first try the field_name name plus read_only,
   # else we try field_name plus 'editable'
   # then we try just field_name
@@ -296,8 +297,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       field_name.to_sym,
       ""
     ]
-    I18n.t(keys_to_try.first, scope: [:activerecord, :hints, @object.class.model_name.i18n_key],
-                              default: keys_to_try.drop(1))
+    @template.t_markdown(keys_to_try.first, scope: [:activerecord, :hints, @object.class.model_name.i18n_key],
+                                            default: keys_to_try.drop(1))
   end
 
   # run the hint text through simple format,
@@ -305,7 +306,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # AND we know this text will not be coming from the user
   # We also need to be careful not to allow any double quotes
   # as this value will be included in a HTML attrib.
-  def format_hint(hint)
+  def simple_format_hint(hint)
     @template.simple_format(hint, {}, sanitize: false).tr('"', "'")
   end
 end
