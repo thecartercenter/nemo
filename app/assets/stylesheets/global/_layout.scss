@@ -46,6 +46,30 @@ header {
     .admin-mode {
       color: $light-yellow;
     }
+
+    ul.dropdown-menu {
+      a {
+        font-size: 10pt;
+        font-family: $font-family-sans-serif;
+        color: $gray;
+      }
+
+      a:hover,
+      a:focus {
+        background: none;
+        color: $accent-color;
+      }
+
+      li {
+        padding-top: 4px;
+        padding-right: 9px;
+        padding-bottom: 6px;
+        padding-left: 15px;
+        margin-bottom: 0;
+      }
+    }
+
+
   }
 
   div,
