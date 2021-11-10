@@ -868,6 +868,7 @@ en:
     about: "About %{site_name}"
     actions: "Actions"
     are_you_sure: "Are you sure?"
+    changelog: "Changelog"
     change_language: "Change Language"
     created_by: "Created by"
     copy_to_clipboard: "Copy to Clipboard"
