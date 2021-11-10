@@ -119,20 +119,23 @@
   </div>
 
   <div id="footer" class="d-print-none">
+    <div class="footer-row">
+      <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
 
-    <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
-
-    <%= form_tag(nil, :id => "locale_form") do %>
-      <%# We can't change language unless the request is GET since no way to redirect browser to POST, etc. %>
-      <%# So we disable with message in that case. %>
-      <%= select_tag(:locale, options_for_select(I18n.available_locales.map{|l| [language_name(l), l]}, I18n.locale),
-        class: 'form-control', disabled: !request.get?, title: request.get? ? '' : I18n.t('layout.locale_change_get_only')) %>
-    <% end %>
-
-    &nbsp;|&nbsp;
-    <%= t("layout.time_zone") %>: <%= Time.zone.to_s %> &nbsp;|&nbsp;
-    <%= t("layout.system_version") %>: <%= Cnfg.system_version %> &nbsp;|&nbsp;
-    <%= link_to(t('layout.about', site_name: current_mission_config.site_name), 'http://getnemo.org') %>
+      <%= form_tag(nil, :id => "locale_form") do %>
+        <%# We can't change language unless the request is GET since no way to redirect browser to POST, etc. %>
+        <%# So we disable with message in that case. %>
+        <%= select_tag(:locale, options_for_select(I18n.available_locales.map{|l| [language_name(l), l]}, I18n.locale),
+          class: 'form-control', disabled: !request.get?, title: request.get? ? '' : I18n.t('layout.locale_change_get_only')) %>
+      <% end %>
+      &nbsp;|&nbsp;
+      <%= t("layout.time_zone") %>: <%= Time.zone.to_s %>
+      &nbsp;|&nbsp;
+      <%= t("layout.system_version") %>: <%= Cnfg.system_version %>
+    </div>
+    <div class="footer-row">
+      <%= link_to(t('layout.about', site_name: current_mission_config.site_name), 'https://getnemo.org') %>
+    </div>
   </div>
 
   <div id="glb-load-ind">
