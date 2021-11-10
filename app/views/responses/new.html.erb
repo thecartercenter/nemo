@@ -1,0 +1,12 @@
+<div id="enketo"></div>
+
+<% transformed = `node "lib/enketo-transformer-service/index.js"`.chomp %>
+<script>
+  let transformed = <%= transformed.html_safe %>;
+  console.debug("Transformed:", transformed);
+
+  window.ENKETO_MODEL_STR = transformed.model;
+  $("#enketo").html(transformed.form);
+</script>
+
+<%= javascript_pack_tag 'enketo' %>
