@@ -74,10 +74,11 @@ class ResponsesController < ApplicationController
   end
 
   def new
-    setup_condition_computer
-    Results::BlankResponseTreeBuilder.new(@response).build
+    # TODO: Restore this
+    # setup_condition_computer
+    # Results::BlankResponseTreeBuilder.new(@response).build
     # render the form template
-    prepare_and_render_form
+    # prepare_and_render_form
   end
 
   def edit

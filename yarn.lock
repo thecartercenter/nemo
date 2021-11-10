@@ -2538,6 +2538,13 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
+bootstrap-datepicker@1.9.x:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-datepicker/-/bootstrap-datepicker-1.9.0.tgz#e4bfce3fcce1967876b21dc6833ec5994aaed090"
+  integrity sha512-9rYYbaVOheGYxjOr/+bJCmRPihfy+LkLSg4fIFMT9Od8WwWB/MB50w0JO1eBgKUMbb7PFHQD5uAfI3ArAxZRXA==
+  dependencies:
+    jquery ">=1.7.1 <4.0.0"
+
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -4028,6 +4035,23 @@ enhanced-resolve@^4.1.1, enhanced-resolve@^4.5.0:
     memory-fs "^0.5.0"
     tapable "^1.0.0"
 
+enketo-core@5.18.0:
+  version "5.18.0"
+  resolved "https://registry.yarnpkg.com/enketo-core/-/enketo-core-5.18.0.tgz#a8fca89b6a26bb291b940e36c799cb2ce7aebe09"
+  integrity sha512-Q2ZR4iyjBwC5KdWwtPw5P5D1Dd3xBp1xnmx0mj4oNzILMlCuHycNPreNsBUiJF5ji+lI4Ku7Qtm08c1pd34pNw==
+  dependencies:
+    bootstrap-datepicker "1.9.x"
+    html5sortable "^0.12.1"
+    jquery "^3.6.0"
+    jquery-touchswipe "^1.6.19"
+    leaflet "^1.7.1"
+    leaflet-draw "github:enketo/Leaflet.draw#ff73078"
+    leaflet.gridlayer.googlemutant "^0.12.1"
+    mergexml "1.2.1"
+    node-forge "^0.10.0"
+    openrosa-xpath-evaluator "^2.0.6"
+    signature_pad "2.3.x"
+
 enquirer@^2.3.5:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/enquirer/-/enquirer-2.3.6.tgz#2a7fe5dd634a1e4125a975ec994ff5456dc3734d"
@@ -4820,6 +4844,11 @@ form-data@^3.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
+formidable@^1.2.1:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.2.6.tgz#d2a51d60162bbc9b4a055d8457a7c75315d1a168"
+  integrity sha512-KcpbcpuLNOwrEjnbpMC0gS+X8ciDoZE1kkqzat4a8vrprf+s9pKNQ/QIwWfbfs4ltgmFl3MD177SNTkve3BwGQ==
+
 forwarded@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.2.0.tgz#2269936428aad4c15c7ebe9779a84bf0b2a81811"
@@ -5269,6 +5298,11 @@ html-tags@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
+
+html5sortable@^0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/html5sortable/-/html5sortable-0.12.1.tgz#265f456ceb5c515727a4075d936ebf002942a551"
+  integrity sha512-bz8BcYwwGoftA/emkgIOM/CfIKE/Xu/HO+kYlvuevKP+7GfCSnlSCa8osXzUQwYjFFYOYROAOeVt2XBMJPsAlg==
 
 htmlparser2@^3.10.0:
   version "3.10.1"
@@ -6430,10 +6464,20 @@ jest@27.4.5:
     import-local "^3.0.2"
     jest-cli "^27.4.5"
 
+jquery-touchswipe@^1.6.19:
+  version "1.6.19"
+  resolved "https://registry.yarnpkg.com/jquery-touchswipe/-/jquery-touchswipe-1.6.19.tgz#dfd5ddaec0b78212dd500d29707129b9c7fd6cd4"
+  integrity sha512-b0BGje9reNRU3u6ksAK9QqnX7yBRgLNe/wYG7DOfyDlhBlYjayIT8bSOHmcuvptIDW/ubM9CTW/mnZf9Rohuow==
+
 jquery@3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"
   integrity sha512-XwIBPqcMn57FxfT+Go5pzySnm4KWkT1Tv7gjrpT1srtf8Weynl6R273VJ5GjkRb51IzMp5nbaPjJXMWeju2MKg==
+
+"jquery@>=1.7.1 <4.0.0", jquery@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
+  integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
@@ -6603,6 +6647,20 @@ last-call-webpack-plugin@^3.0.0:
   dependencies:
     lodash "^4.17.5"
     webpack-sources "^1.1.0"
+
+"leaflet-draw@github:enketo/Leaflet.draw#ff73078":
+  version "1.0.4"
+  resolved "https://codeload.github.com/enketo/Leaflet.draw/tar.gz/ff730785db7fcccbf2485ffcf4dffe1238a7c617"
+
+leaflet.gridlayer.googlemutant@^0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/leaflet.gridlayer.googlemutant/-/leaflet.gridlayer.googlemutant-0.12.1.tgz#147d30108ac42c7a3fcbe488031a22d5774dbe7a"
+  integrity sha512-aa/E6GC+Py4rhbKzZjZWa77KSc3P5M8pMkn/ak3AtCgqX4/yfigZUzkA33nVksW0wIUpHtrBL9f/07lbsOC2WA==
+
+leaflet@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.7.1.tgz#10d684916edfe1bf41d688a3b97127c0322a2a19"
+  integrity sha512-/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw==
 
 leven@^3.1.0:
   version "3.1.0"
@@ -6922,6 +6980,15 @@ merge2@^1.3.0:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
+
+mergexml@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/mergexml/-/mergexml-1.2.1.tgz#462a097de775003d1af13fb89654548536feafed"
+  integrity sha512-IOW62CoY+QfpzsVrDhNG8hKAZnIRhmMldKfbl6/VAUecW6tUNWWtkWroCW4wSXaZp46GRwtUmZjGWCeK4FTS2w==
+  dependencies:
+    formidable "^1.2.1"
+    xmldom "^0.1.27"
+    xpath "0.0.27"
 
 methods@~1.1.2:
   version "1.1.2"
@@ -7514,6 +7581,11 @@ open@^8.0.9:
     define-lazy-prop "^2.0.0"
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
+
+openrosa-xpath-evaluator@^2.0.6:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/openrosa-xpath-evaluator/-/openrosa-xpath-evaluator-2.0.9.tgz#4cc4a79909106509990917d01c2f6575b592d96f"
+  integrity sha512-4EA5IvxQ4dFmxJo4aQ4HjIZZ5aDJmx9bIt/i/pDSPaVN3nVnG4iM8/taBLk546ytXjscps/+9HlwDgFhunXLZA==
 
 optimize-css-assets-webpack-plugin@^5.0.8:
   version "5.0.8"
@@ -9630,6 +9702,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2, signal-exit@^3.0.3:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.6.tgz#24e630c4b0f03fea446a2bd299e62b4a6ca8d0af"
   integrity sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ==
 
+signature_pad@2.3.x:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/signature_pad/-/signature_pad-2.3.2.tgz#ca7230021c89cedeead27b33d8d16ff254e5f04a"
+  integrity sha512-peYXLxOsIY6MES2TrRLDiNg2T++8gGbpP2yaC+6Ohtxr+a2dzoaqWosWDY9sWqTAAk6E/TyQO+LJw9zQwyu5kA==
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
@@ -11152,6 +11229,16 @@ xmlchars@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
+
+xmldom@^0.1.27:
+  version "0.1.31"
+  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.31.tgz#b76c9a1bd9f0a9737e5a72dc37231cf38375e2ff"
+  integrity sha512-yS2uJflVQs6n+CyjHoaBmVSqIDevTAWrzMmjG1Gc7h1qQ7uVozNhEPJAwZXWyGQ/Gafo3fCwrcaokezLPupVyQ==
+
+xpath@0.0.27:
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/xpath/-/xpath-0.0.27.tgz#dd3421fbdcc5646ac32c48531b4d7e9d0c2cfa92"
+  integrity sha512-fg03WRxtkCV6ohClePNAECYsmpKKTv5L8y/X3Dn1hQrec3POx2jHZ/0P2qQ6HvsrU1BmeqXcof3NGGueG6LxwQ==
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"

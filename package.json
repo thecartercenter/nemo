@@ -45,6 +45,7 @@
     "babel-loader": "8.2.3",
     "core-js": "3.6.5",
     "css-loader": "4.2.2",
+    "enketo-core": "5.18.0",
     "ignore-loader": "0.1.2",
     "jquery": "3.5.1",
     "lodash": "4.17.21",
