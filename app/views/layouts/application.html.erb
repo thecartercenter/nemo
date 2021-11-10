@@ -134,11 +134,11 @@
       <%= t("layout.system_version") %>: <%= Cnfg.system_version %>
     </div>
     <div class="footer-row">
-      <%= link_to(t('layout.about', site_name: current_mission_config.site_name), 'https://getnemo.org') %>
+      <%= link_to(t("layout.about", site_name: current_mission_config.site_name), "https://getnemo.org", target: "_blank", rel: "noopener") %>
       &nbsp;|&nbsp;
-      <%= link_to(t('common.docs'), 'https://getnemo.readthedocs.io') %>
+      <%= link_to(t("common.docs"), "https://getnemo.readthedocs.io", target: "_blank", rel: "noopener") %>
       &nbsp;|&nbsp;
-      <%= link_to(t('layout.changelog'), 'https://github.com/thecartercenter/nemo/releases') %>
+      <%= link_to(t("layout.changelog"), "https://github.com/thecartercenter/nemo/releases", target: "_blank", rel: "noopener") %>
     </div>
   </div>
 
