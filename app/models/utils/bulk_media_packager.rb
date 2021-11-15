@@ -9,7 +9,7 @@ module Utils
   class BulkMediaPackager < Packager
     TMP_DIR = "tmp/bulk_media"
 
-    def media_objects_scope
+    def download_scope
       responses = Response.accessible_by(@ability, :export)
       responses = apply_search_scope(responses, @search, @operation.mission) if @search.present?
       responses = responses.where(id: @selected) if @selected.present?
@@ -22,17 +22,13 @@ module Utils
     end
 
     def media_meta
-      {space_on_disk: space_on_disk?, media_size: bytes_to_mb(media_size)}
-    end
-
-    def media_size
-      @media_size ||= media_objects_scope.sum("active_storage_blobs.byte_size")
+      {space_on_disk: space_on_disk?, media_size: bytes_to_mb(download_size)}
     end
 
     def download_and_zip_images
       FileUtils.mkdir_p(Rails.root.join(TMP_DIR))
 
-      media_ids = media_objects_scope.pluck("media_objects.id")
+      media_ids = attachment_scope.pluck("media_objects.id")
 
       filename = "#{@operation.mission.compact_name}-media-#{Time.current.to_s(:filename_datetime)}.zip"
       zipfile_name = Rails.root.join(TMP_DIR, filename)

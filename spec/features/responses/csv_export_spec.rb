@@ -23,7 +23,8 @@ feature "responses csv export" do
   scenario "exporting csv happy path" do
     visit(responses_path(params))
 
-    click_link("Download CSV")
+    click_link("Download")
+    # check("#download_csv")
     # This expectation doesn't work unless :js is enabled (in which case we can't download the resulting CSV).
     # expect(page).to(have_content("#{Response.all.length} responses to be exported"))
 
