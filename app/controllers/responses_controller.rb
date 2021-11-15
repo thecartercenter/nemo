@@ -59,15 +59,10 @@ class ResponsesController < ApplicationController
         render(partial: "table_only", locals: {responses: responses}) if request.xhr?
       end
 
-      # csv output is for exporting responses
+      # csv output is for exporting responses, media, and odk xml files
       format.csv do
         authorize!(:export, Response)
-        enqueue_csv_export
-        enqueue(ResponseCSVExportOperationJob)
-        download_media = params[:response_csv_export_options][:download_media]
-        download_xml = params[:response_csv_export_options][:download_odk_xml]
-        enqueue(BulkMediaDownloadOperationJob) if download_media.present? && download_media == "1"
-        enqueue(XmlDownloadOperationJob) if download_xml.present? && download_xml == "1"
+        enqueue_jobs
         prep_operation_queued_flash(:response_csv_export)
         redirect_to(responses_path)
       end
@@ -133,13 +128,25 @@ class ResponsesController < ApplicationController
   def media_size
     ability = Ability.new(user: current_user, mission: current_mission)
     selected = params[:selectAll].present? ? [] : params[:selected] # Empty selection is equivalent to "all".
-    packager = Utils::BulkMediaPackager.new(
-      ability: ability, search: params[:search], selected: selected, operation: nil
-    )
-    render(json: packager.media_meta)
+    packager = create_packager(ability, selected)
+    render(json: packager.download_meta)
   end
 
   private
+
+  def create_packager(ability, selected)
+    case params[:download_type]
+    when "media"
+      packager = Utils::BulkMediaPackager.new(
+        ability: ability, search: params[:search], selected: selected, operation: nil
+      )
+    when "xml"
+      packager = Utils::XmlPackager.new(
+        ability: ability, search: params[:search], selected: selected, operation: nil
+      )
+    end
+    packager
+  end
 
   def render_possible_users(possible_users)
     possible_users = apply_search(possible_users).by_name
@@ -324,34 +331,24 @@ class ResponsesController < ApplicationController
     end
   end
 
-  def enqueue(klass)
+  def enqueue_jobs
+    download_types = {
+      download_csv: ResponseCSVExportOperationJob,
+      download_media: BulkMediaDownloadOperationJob,
+      download_xml: XmlDownloadOperationJob
+    }
+    download_types.each do |dt, job|
+      download_param = params[:response_csv_export_options][dt]
+      enqueue(job, dt) if download_param.present? && download_param == "1"
+    end
+  end
+
+  def enqueue(klass, msg)
     operation = Operation.new(
       creator: current_user,
       mission: current_mission,
       job_class: klass,
-      details: t("operation.details.bulk_media_export"),
-      job_params: {search: params[:search], options: extract_export_options}
-    )
-    operation.enqueue
-  end
-
-  def enqueue_bulk_media_export
-    operation = Operation.new(
-      creator: current_user,
-      mission: current_mission,
-      job_class: BulkMediaDownloadOperationJob,
-      details: t("operation.details.bulk_media_export"),
-      job_params: {search: params[:search], options: extract_export_options}
-    )
-    operation.enqueue
-  end
-
-  def enqueue_csv_export
-    operation = Operation.new(
-      creator: current_user,
-      mission: current_mission,
-      job_class: ResponseCSVExportOperationJob,
-      details: t("operation.details.response_csv_export"),
+      details: t("operation.details.#{msg}"),
       job_params: {search: params[:search], options: extract_export_options}
     )
     operation.enqueue
@@ -363,6 +360,7 @@ class ResponsesController < ApplicationController
     {
       long_text_behavior: params[:response_csv_export_options][:long_text_behavior],
       download_media: params[:response_csv_export_options][:download_media],
+      download_xml: params[:response_csv_export_options][:download_xml],
       selected: select_all ? [] : selected.keys # Empty selection is equivalent to "all".
     }
   end

@@ -22,8 +22,16 @@ module Utils
       stat = Sys::Filesystem.stat("/")
       # need to leave space for images, zip file, and copy of zip file while attaching to operation
       space_left = bytes_to_mib(stat.block_size * stat.blocks_available) -
-        bytes_to_mib(media_size * 2)
+        bytes_to_mib(download_size * 2)
       space_left >= DISK_ALLOWANCE
+    end
+
+    def download_size
+      @download_size ||= download_scope.sum("active_storage_blobs.byte_size")
+    end
+
+    def download_meta
+      {space_on_disk: space_on_disk?, download_size: bytes_to_mb(download_size)}
     end
 
     private

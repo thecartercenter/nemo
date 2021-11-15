@@ -2,7 +2,8 @@
 ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationView {
   get events() {
     return {
-      'click #response_csv_export_options_download_media': 'calculateMediaSize'
+      'click #response_csv_export_options_download_media': 'calculateDownloadSize',
+      'click #response_csv_export_options_download_xml': 'calculateDownloadSize'
     };
   }
 
@@ -10,13 +11,16 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
     $(".calculating-info").hide();
     $(".error-info").hide();
     $(".media-info").hide();
+    $("input#response_csv_export_options_download_csv")[0].checked = true;
   }
 
-  async calculateMediaSize(event) {
+  async calculateDownloadSize(event) {
+    let downloadType = "";
     if (($(event.target)).is(':checked')) {
       $("input[type=submit]").prop("disabled", true);
-      await this.spaceLeft();
-      $(".media-info").show();
+      downloadType = $(event.target)[0].name.includes("xml") ? "xml" : "media";
+      await this.spaceLeft(downloadType);
+      downloadType == "media" ? $(".media-info").show() : "";
     } else {
       this.enableSubmitButton();
       $(".media-info").hide();
@@ -24,8 +28,8 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
     }
   }
 
-  async spaceLeft() {
-    $(".calculating-info").show();
+  async spaceLeft(downloadType) {
+    downloadType == "media" ? $(".calculating-info").show() : "";
 
     // Read the hidden metadata that was copied earlier.
     let form = $('#new_response_csv_export_options');
@@ -39,10 +43,10 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
     return $.ajax({
       url: ELMO.app.url_builder.build("media-size"),
       method: "get",
-      data: { selected, selectAll },
+      data: { selected, selectAll, download_type: downloadType },
       success: (data) => {
         $(".calculating-info").hide();
-        $("#media-size").html(data.media_size + " MB");
+        $("#media-size").html(data.download_size + " MB");
 
         if (data.space_on_disk) {
           this.enableSubmitButton();

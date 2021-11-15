@@ -9,7 +9,7 @@ module Utils
   class XmlPackager < Packager
     TMP_DIR = "tmp/odk_xml"
 
-    def responses_scope
+    def download_scope
       responses = Response.accessible_by(@ability, :export)
       responses = apply_search_scope(responses, @search, @operation.mission) if @search.present?
 
@@ -19,17 +19,9 @@ module Utils
         active_storage_blobs.id = active_storage_attachments.blob_id")
     end
 
-    def xml_size
-      @xml_size ||= responses_scope.sum("active_storage_blobs.byte_size")
-    end
-
-    def xml_meta
-      {space_on_disk: space_on_disk?, xml_size: bytes_to_mb(xml_size)}
-    end
-
     def download_and_zip_xml
       FileUtils.mkdir_p(Rails.root.join(TMP_DIR))
-      responses_ids = responses_scope.pluck("id")
+      responses_ids = download_scope.pluck("id")
       filename = "#{@operation.mission.compact_name}-xml-responses-"\
         "#{Time.current.to_s(:filename_datetime)}.zip"
       zipfile_name = Rails.root.join(TMP_DIR, filename)

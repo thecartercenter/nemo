@@ -6,10 +6,11 @@ en:
       user_import: "User import from %{file}"
       option_sets_import: "Option Set '%{file}' import"
       questions_import: "Questions '%{file}' import"
-      response_csv_export: "Response CSV export"
+      download_csv: "Response CSV export"
       broadcast: "Broadcast '%{message}'"
       cache_odata: "Refreshing API data"
-      bulk_media_export: "Bulk Media export"
+      download_media: "Bulk Media export"
+      download_xml: "ODK XML original responses"
     notes:
       remaining: "Remaining"
     operations_panel: "Operations Panel"
@@ -47,4 +48,5 @@ en:
     see_error_report: "See error report"
     result_link_text:
       response_csv_export: "Download CSV"
-      bulk_media_download: "Bulk Media Download"
+      bulk_media_download: "Download Media"
+      xml_download: "Download XML"

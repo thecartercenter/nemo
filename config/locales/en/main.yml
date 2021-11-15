@@ -1765,8 +1765,9 @@ en:
   response:
     reviewed: "This response has been reviewed"
     edit_this_response: "Edit This Response"
-    download_csv: "Download CSV"
+    download_csv: "Download"
     connect_odata: "Connect to OData"
+    download: "Download Responses"
     export:
       export: "Export"
       to_csv: "CSV Format"
@@ -1780,8 +1781,11 @@ en:
         few: "%{count} responses to be exported."
         many: "%{count} responses to be exported."
         other: "%{count} responses to be exported."
-      download_media: "Download media attachments?"
+      download_media: "Media attachments"
+      download_xml: "Original XML (ODK)"
+      download_csv: "CSV"
       calculating: "Calculating file size"
+      download_types: "Download the following:"
       mb: "MB"
       no_space: "There is not enough space on disk to export the selected responses. Try a smaller selection."
       media_size: "Total size of media:"
