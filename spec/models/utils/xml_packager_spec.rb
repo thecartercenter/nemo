@@ -69,7 +69,6 @@ describe Utils::XmlPackager do
 
     it "should have the correct xml" do
       human_readable_xml = packager.human_readable_xml(response)
-      puts human_readable_xml
       expect(human_readable_xml).to include("<firstname>Rhys</firstname>")
       expect(human_readable_xml).to include("<firstname>Wynn</firstname>")
     end
