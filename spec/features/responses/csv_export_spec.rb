@@ -20,12 +20,11 @@ feature "responses csv export" do
 
   before { login(user) }
 
-  scenario "exporting csv happy path", :js do
+  # This spec intentionally does not use :js, so that we can verify the download with rspec.
+  scenario "exporting csv happy path" do
     visit(responses_path(params))
 
     click_link("Download")
-    # This expectation doesn't work unless :js is enabled (in which case we can't download the resulting CSV).
-    # expect(page).to(have_content("#{Response.all.length} responses to be exported"))
 
     perform_enqueued_jobs do
       click_button("Export")
@@ -35,6 +34,15 @@ feature "responses csv export" do
     click_link("operations panel")
     expect(page).to(have_content("Response CSV export"))
     expect(page).to(have_content("Success"))
+
+    # From here on requires that :js be disabled.
+    click_link("Response CSV export")
+    click_link("Download")
+
+    result = CSV.parse(page.body)
+    expect(result.size).to(eq(3)) # 2 response rows, 1 header row
+    expect(result[1][9]).to(eq("Animal"))
+    expect(result[2][9]).to(eq("Plant"))
   end
 
   scenario "exporting csv with nothing checked", :js do
