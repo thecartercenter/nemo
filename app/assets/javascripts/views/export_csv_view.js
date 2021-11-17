@@ -10,7 +10,6 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
   initialize() {
     $(".calculating-info").hide();
     this.hideInfo();
-    $("input#response_csv_export_options_download_csv")[0].checked = true;
   }
 
   async calculateDownloadSize(event) {

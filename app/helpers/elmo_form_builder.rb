@@ -191,7 +191,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         @template.content_tag(:div, human_val, class: "ro-val", 'data-val': val != human_val ? val : nil)
 
       else
-        tag_options = options.slice(:id, :data) # Include these attribs with all tags, if given.
+        # TODO: Ideally, any additional options would pass through to all items
+        #   automatically without need to be allowed here explicitly.
+        tag_options = options.slice(:id, :data, :checked) # Include these attribs with all tags, if given.
 
         tag_options[:name] = nil if options[:unnamed]
         tag_options[:class] = "form-control #{options[:class] || ''}".strip
