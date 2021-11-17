@@ -9,8 +9,7 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
 
   initialize() {
     $(".calculating-info").hide();
-    $(".error-info").hide();
-    $(".media-info").hide();
+    this.hideInfo();
     $("input#response_csv_export_options_download_csv")[0].checked = true;
   }
 
@@ -20,16 +19,21 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
       $("input[type=submit]").prop("disabled", true);
       downloadType = $(event.target)[0].name.includes("xml") ? "xml" : "media";
       await this.spaceLeft(downloadType);
-      downloadType == "media" ? $(".media-info").show() : "";
+      $("." + downloadType + "-info").show();
     } else {
       this.enableSubmitButton();
-      $(".media-info").hide();
-      $(".error-info").hide();
+      this.hideInfo();
     }
   }
 
+  hideInfo() {
+    $(".media-info").hide();
+    $(".xml-info").hide();
+    $(".error-info").hide();
+  }
+
   async spaceLeft(downloadType) {
-    downloadType == "media" ? $(".calculating-info").show() : "";
+    $(".calculating-info").show();
 
     // Read the hidden metadata that was copied earlier.
     let form = $('#new_response_csv_export_options');
@@ -46,7 +50,7 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
       data: { selected, selectAll, download_type: downloadType },
       success: (data) => {
         $(".calculating-info").hide();
-        $("#media-size").html(data.download_size + " MB");
+        $("#" + downloadType + "-size").html(data.download_size + " MB");
 
         if (data.space_on_disk) {
           this.enableSubmitButton();

@@ -29,7 +29,7 @@ describe Utils::BulkMediaPackager do
         packager = described_class.new(
           ability: ability, search: nil, selected: [], operation: operation
         )
-        size = packager.media_size
+        size = packager.download_size
         expect(size).to equal(1_819_435)
       end
 
@@ -38,7 +38,7 @@ describe Utils::BulkMediaPackager do
         packager = described_class.new(
           ability: ability, search: "form: foo", selected: [], operation: operation
         )
-        size = packager.media_size
+        size = packager.download_size
         expect(size).to equal(855_939)
       end
 
@@ -47,7 +47,7 @@ describe Utils::BulkMediaPackager do
         packager = described_class.new(
           ability: ability, search: "form: foo", selected: [responses.first.id], operation: operation
         )
-        size = packager.media_size
+        size = packager.download_size
         expect(size).to equal(106_886)
       end
 
