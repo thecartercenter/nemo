@@ -10,6 +10,7 @@ module ActionLinks
         actions << [:pause, {method: :patch}] if form.live?
         actions << [:return_to_draft, {method: :patch}] if form.not_draft?
         actions << [:print, {url: "#", data: {"form-id": form.id}}]
+        actions << [:export_csv, {url: api_url(form)}]
         if form.smsable?
           actions << :sms_guide
           actions << [:sms_console, h.new_sms_test_path] if can?(:create, Sms::Test)
