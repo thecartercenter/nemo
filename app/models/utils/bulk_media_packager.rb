@@ -28,7 +28,7 @@ module Utils
     def download_and_zip_images
       FileUtils.mkdir_p(Rails.root.join(TMP_DIR))
 
-      media_ids = attachment_scope.pluck("media_objects.id")
+      media_ids = download_scope.pluck("media_objects.id")
 
       filename = "#{@operation.mission.compact_name}-media-#{Time.current.to_s(:filename_datetime)}.zip"
       zipfile_name = Rails.root.join(TMP_DIR, filename)

@@ -1789,6 +1789,7 @@ en:
       mb: "MB"
       no_space: "There is not enough space on disk to export the selected responses. Try a smaller selection."
       media_size: "Total size of media:"
+      xml_size: "Total size of XML:"
       try_again: "There was an error. Please try again."
       export_error: "Exporting more than %{threshold} responses is not permitted. Please select fewer responses or use the OData API."
       export_warning: "Exporting more than %{threshold} responses may take a long time. Consider selecting fewer responses or use the OData API."

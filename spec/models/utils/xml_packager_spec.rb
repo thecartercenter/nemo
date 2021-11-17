@@ -35,7 +35,7 @@ describe Utils::XmlPackager do
     end
 
     it "should calculate the size of the files" do
-      expect(packager.xml_size).to eq(674)
+      expect(packager.download_size).to eq(674)
     end
 
     it "should replace the xml file with question names" do

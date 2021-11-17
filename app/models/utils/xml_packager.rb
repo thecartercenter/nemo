@@ -21,29 +21,27 @@ module Utils
 
     def download_and_zip_xml
       FileUtils.mkdir_p(Rails.root.join(TMP_DIR))
-      responses_ids = download_scope.pluck("id")
       filename = "#{@operation.mission.compact_name}-xml-responses-"\
         "#{Time.current.to_s(:filename_datetime)}.zip"
       zipfile_name = Rails.root.join(TMP_DIR, filename)
-      zip(zipfile_name, responses_ids)
+      zip(zipfile_name, download_scope)
     end
 
     def human_readable_xml(response)
       xml_string = response.odk_xml.download
-      questions = response.form.questionings
+      qings = response.form.questionings
       # replace qing id with human readable name
-      questions.each { |q| xml_string.gsub!("qing#{q.id}", q.name) }
+      qings.each { |q| xml_string.gsub!("qing#{q.id}", q.name) }
       xml_string
     end
 
     private
 
-    def zip(zipfile_name, responses_ids)
+    def zip(zipfile_name, download_scope)
       Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-        responses_ids.each do |rid|
-          response = Response.find(rid)
+        download_scope.each do |response|
           next unless response.odk_xml.present?
-          zip_xml(zipfile, response, rid)
+          zip_xml(zipfile, response)
         rescue Zip::EntryExistsError => e
           report_error(e)
           next
@@ -52,8 +50,8 @@ module Utils
       zipfile_name
     end
 
-    def zip_xml(zipfile, response, rid)
-      xml_filename = "nemo-response-#{rid}.xml"
+    def zip_xml(zipfile, response)
+      xml_filename = "nemo-response-#{response.shortcode}.xml"
       xml_filepath = Rails.root.join(TMP_DIR, xml_filename)
       File.write(xml_filepath, human_readable_xml(response))
       zip_entry = Utils::ZipEntry.new(xml_filepath, xml_filename)
