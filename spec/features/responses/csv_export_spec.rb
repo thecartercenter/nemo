@@ -20,10 +20,10 @@ feature "responses csv export" do
 
   before { login(user) }
 
-  scenario "exporting csv happy path" do
+  scenario "exporting csv happy path", :js do
     visit(responses_path(params))
 
-    click_link("Download CSV")
+    click_link("Download")
     # This expectation doesn't work unless :js is enabled (in which case we can't download the resulting CSV).
     # expect(page).to(have_content("#{Response.all.length} responses to be exported"))
 
@@ -35,20 +35,12 @@ feature "responses csv export" do
     click_link("operations panel")
     expect(page).to(have_content("Response CSV export"))
     expect(page).to(have_content("Success"))
-
-    click_link("Response CSV export")
-    click_link("Download CSV")
-
-    result = CSV.parse(page.body)
-    expect(result.size).to(eq(3)) # 2 response rows, 1 header row
-    expect(result[1][9]).to(eq("Animal"))
-    expect(result[2][9]).to(eq("Plant"))
   end
 
   scenario "exporting csv with nothing checked", :js do
     visit(responses_path(params))
 
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("#{Response.all.length} responses to be exported"))
   end
 
@@ -57,7 +49,7 @@ feature "responses csv export" do
 
     check("selected[#{response1.id}]")
 
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("1 response to be exported"))
   end
 
@@ -69,13 +61,13 @@ feature "responses csv export" do
     hidden_selector = "input#selected_#{response1.id}"
     expect(page).not_to have_css(hidden_selector, visible: :hidden)
 
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("1 response to be exported"))
     expect(page).to have_css(hidden_selector, visible: :hidden, count: 1)
 
     find(".close").click
 
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("1 response to be exported"))
     expect(page).to have_css(hidden_selector, visible: :hidden, count: 1)
   end
@@ -88,7 +80,7 @@ feature "responses csv export" do
     check("selected[#{response1.id}]")
     check("selected[#{response2.id}]")
 
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("2 responses to be exported"))
     expect(page).to(have_content("is not permitted"))
     expect(page).to(have_button("Export", disabled: true))
@@ -97,7 +89,7 @@ feature "responses csv export" do
 
     uncheck("selected[#{response2.id}]")
 
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("1 response to be exported"))
     expect(page).not_to(have_content("is not permitted"))
     expect(page).to(have_button("Export", disabled: false))
@@ -114,7 +106,7 @@ feature "responses csv export" do
       check("selected[#{response2.id}]")
       click_link("Select all #{Response.all.length} Responses")
 
-      click_link("Download CSV")
+      click_link("Download")
       expect(page).to(have_content("#{Response.all.length} responses to be exported"))
     end
   end
@@ -122,7 +114,7 @@ feature "responses csv export" do
   scenario "export with threshold warning", :js do
     stub_const("ResponsesController::CSV_EXPORT_WARNING", 1)
     visit(responses_path(params))
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("may take a long time"))
     expect(page).to(have_button("Export", disabled: false))
   end
@@ -130,7 +122,7 @@ feature "responses csv export" do
   scenario "export with threshold limit", :js do
     stub_const("ResponsesController::CSV_EXPORT_LIMIT", 1)
     visit(responses_path(params))
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("is not permitted"))
     expect(page).to(have_button("Export", disabled: true))
   end
@@ -138,7 +130,7 @@ feature "responses csv export" do
   describe "bulk media download", js: true do
     scenario "without a threshold" do
       visit(responses_path(params))
-      click_link("Download CSV")
+      click_link("Download")
       check("response_csv_export_options[download_media]")
       expect(page).to(have_content("Total size of media: 0 MB"))
       expect(page).to(have_button("Export", disabled: false))
@@ -152,7 +144,7 @@ feature "responses csv export" do
 
       scenario "Should see an error" do
         visit(responses_path(params))
-        click_link("Download CSV")
+        click_link("Download")
         check("response_csv_export_options[download_media]")
         expect(page).to(have_content("There is not enough space"))
         expect(page).to(have_button("Export", disabled: true))
@@ -164,7 +156,7 @@ feature "responses csv export" do
 
   scenario "exporting csv with bulk media download", :js do
     visit(responses_path(params))
-    click_link("Download CSV")
+    click_link("Download")
     expect(page).to(have_content("#{Response.all.length} responses to be exported"))
 
     perform_enqueued_jobs do
