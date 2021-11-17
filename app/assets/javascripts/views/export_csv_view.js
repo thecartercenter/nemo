@@ -13,15 +13,14 @@ ELMO.Views.ExportCsvView = class ExportCsvView extends ELMO.Views.ApplicationVie
   }
 
   async calculateDownloadSize(event) {
-    let downloadType = "";
+    let downloadType = $(event.target)[0].name.includes("xml") ? "xml" : "media";
     if (($(event.target)).is(':checked')) {
       $("input[type=submit]").prop("disabled", true);
-      downloadType = $(event.target)[0].name.includes("xml") ? "xml" : "media";
       await this.spaceLeft(downloadType);
       $("." + downloadType + "-info").show();
     } else {
       this.enableSubmitButton();
-      this.hideInfo();
+      $("." + downloadType + "-info").hide();
     }
   }
 
