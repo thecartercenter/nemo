@@ -79,6 +79,11 @@ class FormsController < ApplicationController
       ensure
         response.stream.close
       end
+      format.csv do
+        authorize!(:download, @form)
+        exporter = Forms::Export.new(@form)
+        exporter.to_csv
+      end
     end
   end
 
