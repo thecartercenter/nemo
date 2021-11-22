@@ -88,6 +88,9 @@ class Ability
        OptionNode, Option, OptionSets::Import, Questions::Import, Setting, Tag, Tagging].each do |k|
         can(:manage, k, mission_id: nil)
       end
+
+      can(:condition_form, Constraint, mission_id: nil)
+
       # This is intentionally redundant with `manage` as we're slowly migrating to explicit permissions.
       can(:update_core, OptionSet, mission_id: nil)
       cannot(:change_status, Form, &:standard?)
