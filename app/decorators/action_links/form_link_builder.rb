@@ -4,13 +4,14 @@ module ActionLinks
   # Builds a list of action links for a form.
   class FormLinkBuilder < LinkBuilder
     def initialize(form)
-      actions = %i[show edit clone]
+      actions = %i[show edit clone export]
+
       unless h.admin_mode?
         actions << [:go_live, {method: :patch}] unless form.live?
         actions << [:pause, {method: :patch}] if form.live?
         actions << [:return_to_draft, {method: :patch}] if form.not_draft?
         actions << [:print, {url: "#", data: {"form-id": form.id}}]
-        actions << [:show, {method: :get, format: :csv}] if can?(:download, form)
+
         if form.smsable?
           actions << :sms_guide
           actions << [:sms_console, h.new_sms_test_path] if can?(:create, Sms::Test)

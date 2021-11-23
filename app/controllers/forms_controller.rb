@@ -80,9 +80,8 @@ class FormsController < ApplicationController
         response.stream.close
       end
       format.csv do
-        authorize!(:download, @form)
         exporter = Forms::Export.new(@form)
-        exporter.to_csv
+        send_data(exporter.to_csv, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.csv")
       end
     end
   end
@@ -224,6 +223,11 @@ class FormsController < ApplicationController
       flash[:error] = t("form.clone_error", msg: e.to_s)
     end
     redirect_to(index_url_with_context)
+  end
+
+  def export
+    exporter = Forms::Export.new(@form)
+    send_data(exporter.to_csv, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.csv")
   end
 
   private

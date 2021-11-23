@@ -132,6 +132,7 @@ ELMO::Application.routes.draw do
         put "clone"
         get "choose-questions", as: "choose_questions", action: "choose_questions"
         get "sms-guide", as: "sms_guide", action: "sms_guide"
+        get "export", as: "export", action: "export", defaults: {format: "csv"}
       end
     end
 
