@@ -4,7 +4,8 @@ require "rails_helper"
 
 describe Forms::Export do
   let(:headers) do
-    "Level,Type,Code,Prompt,Required?,Repeatable?,DisplayLogic,Default,Hidden\n"
+    "Level,Type,Code,Prompt,Required?,Repeatable?,SkipLogic,Constraints,DisplayLogic,"\
+    "DisplayConditions,Default,Hidden\n"
   end
 
   context "simple form" do
@@ -17,9 +18,9 @@ describe Forms::Export do
       q3 = simpleform.questionings[2]
       expect(exporter.to_csv).to eq(
         "#{headers}"\
-        "1,text,#{q1.code},#{q1.name},false,false,always,,false\n"\
-        "2,integer,#{q2.code},#{q2.name},false,false,always,,false\n"\
-        "3,text,#{q3.code},#{q3.name},false,false,always,,false\n"
+        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "2,integer,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "3,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"
       )
     end
   end
@@ -40,19 +41,29 @@ describe Forms::Export do
       q32 = repeatgroupform.questionings[3]
       expect(exporter.to_csv).to eq(
         "#{headers}"\
-        "1,text,#{q1.code},#{q1.name},false,false,always,,false\n"\
-        "2,integer,#{q2.code},#{q2.name},false,false,always,,false\n"\
-        "3.1,text,#{q31.code},#{q31.name},false,true,always,,false\n"\
-        "3.2,text,#{q32.code},#{q32.name},false,true,always,,false\n"\
+        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "2,integer,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "3,,Group 1,Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
+        "3.1,text,#{q31.code},#{q31.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "3.2,text,#{q32.code},#{q32.name},false,true,\"\",\"\",always,\"\",,false\n"\
       )
     end
   end
 
   context "skip logic form" do
-    let(:skiplogicform) do
-      create(
-        :form,
-        
+    let!(:form) { create(:form, question_types: %w[text text text]) }
+    let!(:skip_rule) { create(:skip_rule, source_item: form.c[1]) }
+
+    it "should produce the correct csv" do
+      exporter = Forms::Export.new(form)
+      q1 = form.questionings[0]
+      q2 = form.questionings[1]
+      q3 = form.questionings[2]
+      expect(exporter.to_csv).to eq(
+        "#{headers}"\
+        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "2,text,#{q2.code},#{q2.name},false,false,SKIP TO end of form,\"\",always,\"\",,false\n"\
+        "3,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"
       )
     end
   end
