@@ -38,9 +38,8 @@ module ActionLinks
       if params.is_a?(Array)
         if params[1].is_a?(Hash)
           method = params[1][:method] || method_for_action(params[0])
+          url = params[1][:url] || url_for_action(params[0], method)
           data = params[1][:data] || {}
-          format = params[1][:format] || {}
-          url = params[1][:url] || url_for_action(params[0], method, format)
           [params[0], url, method, data]
         else
           params << method_for_action(params[0]) << {}
@@ -57,11 +56,11 @@ module ActionLinks
       end
     end
 
-    def url_for_action(action, method = :get, format = :html)
+    def url_for_action(action, method = :get)
       # Include the source action if the method is non-GET as the receiving controller may use it
       # when deciding where to redirect.
       source = method == :get ? nil : h.controller.action_name
-      h.url_for(controller: controller, action: action, source: source, format: format)
+      h.url_for(controller: controller, action: action, source: source)
     end
 
     def translate_action(action)

@@ -79,10 +79,6 @@ class FormsController < ApplicationController
       ensure
         response.stream.close
       end
-      format.csv do
-        exporter = Forms::Export.new(@form)
-        send_data(exporter.to_csv, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.csv")
-      end
     end
   end
 

@@ -9,7 +9,6 @@ module IconHelper
     drop_pin: "map-marker",
     edit: "pencil",
     export: "download",
-    export_csv: "share-square-o",
     go_live: "play",
     import: "upload",
     index: "list",
