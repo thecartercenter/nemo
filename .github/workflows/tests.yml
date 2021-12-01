@@ -84,6 +84,6 @@ jobs:
           yarn run i18n:export
           yarn run test
           YARN_RESULT=$?
-          bundle exec rspec --format RSpec::Github::Formatter --format documentation
+          bundle exec rspec spec/models/search/multilingual_search_spec.rb --format RSpec::Github::Formatter --format documentation
           RSPEC_RESULT=$?
           exit `expr $RSPEC_RESULT + $YARN_RESULT`
