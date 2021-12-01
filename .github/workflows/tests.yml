@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gems-v2-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-gems-v2-
           # Restore keys will be matched if the main key fails. This may restore older gems to the
           # dir but we don't care because bundle install will check the gems anyway.
           restore-keys: |
