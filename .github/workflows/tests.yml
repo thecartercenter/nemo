@@ -86,5 +86,10 @@ jobs:
           JEST_RESULT=$?
           bundle exec rspec --format RSpec::Github::Formatter --format documentation
           RSPEC_RESULT=$?
+          echo
+          echo "Final results:"
+          echo "LINT_RESULT: $LINT_RESULT"
+          echo "JEST_RESULT: $JEST_RESULT"
+          echo "RSPEC_RESULT: $RSPEC_RESULT"
           # Square each result to make sure they're all positive (and don't cancel each other out).
           exit `expr $LINT_RESULT '*' $LINT_RESULT + $RSPEC_RESULT '*' $RSPEC_RESULT + $JEST_RESULT '*' $JEST_RESULT`
