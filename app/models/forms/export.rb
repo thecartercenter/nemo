@@ -18,7 +18,7 @@ module Forms
         qings = @form.questionings
         prev = nil
         qings.each do |q|
-          csv << row(q.parent) if include_repeat_group?(q, prev)
+          csv << row(q.parent) if include_group?(q, prev)
           csv << row(q)
           prev = q
         end
@@ -27,8 +27,8 @@ module Forms
 
     private
 
-    def include_repeat_group?(qing, prev)
-      qing.parent.repeatable? && (qing.ancestry_depth != prev&.ancestry_depth)
+    def include_group?(qing, prev)
+      (qing&.parent != prev&.parent) && qing.parent.full_dotted_rank.present?
     end
 
     def human_readable(klass, qing)
@@ -39,13 +39,22 @@ module Forms
     end
 
     def row(qing)
-      name = qing.respond_to?(:name) ? qing.name : "Repeat Group"
       [
-        qing.full_dotted_rank, qing.qtype_name, qing.code, name,
+        qing.full_dotted_rank, qing.qtype_name, qing.code, name(qing),
         qing.required, qing.repeatable?, human_readable(SkipRule, qing),
         human_readable(Constraint, qing), qing.display_if, human_readable(Condition, qing),
         qing.default, qing.hidden
       ]
+    end
+
+    def name(qing)
+      if qing.respond_to?(:name)
+        qing.name
+      elsif qing.repeatable?
+        "Repeat Group"
+      else
+        "Group"
+      end
     end
   end
 end
