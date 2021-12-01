@@ -86,4 +86,5 @@ jobs:
           YARN_RESULT=$?
           bundle exec rspec --format RSpec::Github::Formatter --format documentation
           RSPEC_RESULT=$?
-          exit `expr $RSPEC_RESULT + $YARN_RESULT`
+          # Square each result to make sure they're all positive (and don't cancel each other out).
+          exit `expr $RSPEC_RESULT '*' $RSPEC_RESULT + $YARN_RESULT '*' $YARN_RESULT`
