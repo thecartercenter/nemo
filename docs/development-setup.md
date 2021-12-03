@@ -188,7 +188,7 @@ view `log/dj.log` within a few minutes (the log file doesn't always update immed
 See also [ODK docs](https://docs.getodk.org/collect-forms/#loading-forms-directly).
 
 1. Download example form from <https://github.com/opendatakit/sample-forms>
-1. Send to your device: `adb push myform.xml /sdcard/Android/data/org.odk.collect.android/files/forms/`
+1. Send to your device: `adb push myform.xml /sdcard/Android/data/org.odk.collect.android/files/projects/12345/forms/`
 1. Try out form, make changes, repeat.
 
 ### Troubleshooting

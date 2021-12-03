@@ -404,7 +404,7 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
         stub_const(ODK::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
 
         # Generate the itemset file and save with the saved fixture if saving fixtures.
-        # Then if we do: adb push tmp/odk/forms/small_large_multilevel/. /sdcard/Android/data/org.odk.collect.android/files/forms
+        # Then if we do: adb push tmp/odk/forms/small_large_multilevel/. /path/to/forms
         # it will copy the form and the required itemset file for testing.
         if save_fixtures
           itemsets_attachment = ODK::ItemsetsFormAttachment.new(form: form).tap(&:ensure_generated)
