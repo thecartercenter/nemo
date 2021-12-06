@@ -7,7 +7,7 @@ module ODK
       if members.empty?
         negate? ? "false()" : nil
       else
-        conjunction = true_if == "all_met" ? I18n.t("common.and") : I18n.t("common.or")
+        conjunction = true_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
         result = decorated_members.map { |m| "(#{m.to_odk})" }.join(" #{conjunction} ")
         negate? ? "not(#{result})" : result
       end
