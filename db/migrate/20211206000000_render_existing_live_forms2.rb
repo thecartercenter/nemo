@@ -2,6 +2,10 @@
 
 class RenderExistingLiveForms2 < ActiveRecord::Migration[6.1]
   def up
-    Form.published.find_each { |f| ODK::FormRenderJob.perform_now(f) }
+    puts "Rendering #{Form.published.count} forms..."
+    Form.published.find_each do |f|
+      puts "Rendering #{f.name}..."
+      ODK::FormRenderJob.perform_now(f)
+    end
   end
 end
