@@ -169,11 +169,11 @@ describe Forms::Export do
       expect(exporter.to_csv).to eq(
         "#{headers}"\
         "1,,#{q1.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.2,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
         "2,,#{q3.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "2.1,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2.2,text,#{q4.code},#{q4.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "2.1,text,#{q3.code},#{q3.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "2.2,text,#{q4.code},#{q4.name},false,true,\"\",\"\",always,\"\",,false\n"\
       )
     end
   end
@@ -221,5 +221,79 @@ describe Forms::Export do
     end
   end
 
-  context "repeat group"
+  context "repeat group of a group" do
+    let(:groupform) do
+      create(
+        :form,
+        question_types: [{repeating: {items: [%w[text text]]}}]
+      )
+    end
+
+    it "should produce the correct csv" do
+      exporter = Forms::Export.new(groupform)
+      g1 = groupform.preordered_items[0]
+      g2 = groupform.preordered_items[1]
+      q1 = groupform.preordered_items[2]
+      q2 = groupform.preordered_items[3]
+
+      expect(exporter.to_csv).to eq(
+        "#{headers}"\
+        "1,,#{g1.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
+        "1.1,,#{g2.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
+        "1.1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "1.1.2,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
+      )
+    end
+  end
+
+  context "groups of repeat groups" do
+    let(:groupform) do
+      create(
+        :form,
+        question_types: [[{repeating: {items: %w[text text]}}]]
+      )
+    end
+
+    it "should produce the correct csv" do
+      exporter = Forms::Export.new(groupform)
+      g1 = groupform.preordered_items[0]
+      g2 = groupform.preordered_items[1]
+      q1 = groupform.preordered_items[2]
+      q2 = groupform.preordered_items[3]
+
+      expect(exporter.to_csv).to eq(
+        "#{headers}"\
+        "1,,#{g1.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
+        "1.1,,#{g2.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
+        "1.1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
+      )
+    end
+  end
+
+  context "repeat groups of repeat groups" do
+    let(:groupform) do
+      create(
+        :form,
+        question_types: [{repeating: {items: [{repeating: {items: %w[text text]}}]}}]
+      )
+      end
+
+      it "should produce the correct csv" do
+        exporter = Forms::Export.new(groupform)
+        g1 = groupform.preordered_items[0]
+        g2 = groupform.preordered_items[1]
+        q1 = groupform.preordered_items[2]
+        q2 = groupform.preordered_items[3]
+
+        expect(exporter.to_csv).to eq(
+          "#{headers}"\
+          "1,,#{g1.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
+          "1.1,,#{g2.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
+          "1.1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
+          "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        )
+      end
+  end
+
 end
