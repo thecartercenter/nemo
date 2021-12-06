@@ -15,20 +15,21 @@ module Forms
     def to_csv
       CSV.generate do |csv|
         csv << COLUMNS
-        qings = @form.questionings
-        prev = nil
-        qings.each do |q|
-          csv << row(q.parent) if include_group?(q, prev)
+        @form.preordered_items.each do |q|
           csv << row(q)
-          prev = q
         end
       end
     end
 
     private
 
+    def include_ancestors(csv, q, prev)
+      include_ancestors(csv, q.parent, prev) if q.parent.present?
+      csv << row(q.parent) if include_group?(q, prev)
+    end
+
     def include_group?(qing, prev)
-      (qing&.parent != prev&.parent) && qing.parent.full_dotted_rank.present?
+      (qing&.parent != prev&.parent) && qing.parent&.full_dotted_rank.present?
     end
 
     def human_readable(klass, qing)
