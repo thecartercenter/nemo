@@ -191,6 +191,21 @@ See also [ODK docs](https://docs.getodk.org/collect-forms/#loading-forms-directl
 1. Send to your device: `adb push myform.xml /sdcard/Android/data/org.odk.collect.android/files/projects/12345/forms/`
 1. Try out form, make changes, repeat.
 
+#### Viewing Collect error logs
+
+Sometimes, the Collect app has an error downloading/uploading but doesn't display the actual error message to the user.
+These errors can be extremely hard to diagnose. You can find the raw device logs by either:
+
+1. Use a USB cable to physically connect a phone running the production Collect app to your laptop and use `adb logcat` from your terminal
+   1. Note: These logs will be limited and hard to parse without the source code
+2. Run Collect from source by following the instructions at https://github.com/getodk/collect
+   1. In short: clone the repo and run it on an emulator via Android Studio
+   2. Note: It's best to debug from the latest public release (e.g. `git checkout v2021.3.2`) rather than from their main branch which may have active issues
+   3. Note: These logs will be more useful than USB debugging, and point directly to source code with more context. You can also modify the source code in order to provide more context, pause at breakpoints to step through the code, etc.
+
+Note: from one year to another, the Android ecosystem changes and Collect also modifies their architecture. They don't always document upgrade instructions very clearly,
+so ODK's #collect-code Slack channel can be a good place to get help with error messages on upgrade if you can't figure out what's wrong.
+
 ### Troubleshooting
 
 If you ever see `check_yarn_integrity error Integrity check failed` or `Your Yarn packages are out of date!`
