@@ -23,15 +23,6 @@ module Forms
 
     private
 
-    def include_ancestors(csv, q, prev)
-      include_ancestors(csv, q.parent, prev) if q.parent.present?
-      csv << row(q.parent) if include_group?(q, prev)
-    end
-
-    def include_group?(qing, prev)
-      (qing&.parent != prev&.parent) && qing.parent&.full_dotted_rank.present?
-    end
-
     def human_readable(klass, qing)
       plural_method = klass == Condition ? "display_conditions" : klass.model_name.plural
       qing.send(plural_method).map do |item|

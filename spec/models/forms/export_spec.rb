@@ -182,7 +182,7 @@ describe Forms::Export do
     let(:groupform) do
       create(
         :form,
-        question_types: [["text", ["text", "integer"]]]
+        question_types: [["text", %w[text integer]]]
       )
     end
 
@@ -277,23 +277,22 @@ describe Forms::Export do
         :form,
         question_types: [{repeating: {items: [{repeating: {items: %w[text text]}}]}}]
       )
-      end
+    end
 
-      it "should produce the correct csv" do
-        exporter = Forms::Export.new(groupform)
-        g1 = groupform.preordered_items[0]
-        g2 = groupform.preordered_items[1]
-        q1 = groupform.preordered_items[2]
-        q2 = groupform.preordered_items[3]
+    it "should produce the correct csv" do
+      exporter = Forms::Export.new(groupform)
+      g1 = groupform.preordered_items[0]
+      g2 = groupform.preordered_items[1]
+      q1 = groupform.preordered_items[2]
+      q2 = groupform.preordered_items[3]
 
-        expect(exporter.to_csv).to eq(
-          "#{headers}"\
-          "1,,#{g1.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-          "1.1,,#{g2.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-          "1.1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
-          "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        )
-      end
+      expect(exporter.to_csv).to eq(
+        "#{headers}"\
+        "1,,#{g1.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
+        "1.1,,#{g2.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
+        "1.1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
+      )
+    end
   end
-
 end
