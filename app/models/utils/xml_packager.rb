@@ -31,7 +31,10 @@ module Utils
       xml_string = response.odk_xml.download
       qings = response.form.questionings
       # replace qing id with human readable name
-      qings.each { |q| xml_string.gsub!("qing#{q.id}", q.name) }
+      qings.each do |q|
+        human_readable = "code='#{q.code}' question='#{q.name}'"
+        xml_string.gsub!("qing#{q.id}", human_readable)
+      end
       xml_string
     end
 
