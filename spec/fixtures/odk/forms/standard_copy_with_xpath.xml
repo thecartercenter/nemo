@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Dynamic answers for option sets</h:title>
+    <model>
+      <instance>
+        <data id="*form1*" version="*formver1*">
+          <*itemcode1*/>
+          <*itemcode2*/>
+        </data>
+      </instance>
+      <instance id="*optsetcode1*_numeric_values">
+        <root>
+          <item>
+            <itextId>*optcode1*</itextId>
+            <numericValue>1</numericValue>
+          </item>
+          <item>
+            <itextId>*optcode2*</itextId>
+            <numericValue>2</numericValue>
+          </item>
+          <item>
+            <itextId>*optcode3*</itextId>
+            <numericValue>3</numericValue>
+          </item>
+        </root>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="*itemcode1*:label">
+            <value>Select One Question Title 1</value>
+          </text>
+          <text id="*itemcode1*:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="*itemcode2*:label">
+            <value>Integer Question Title 2</value>
+          </text>
+          <text id="*itemcode2*:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="*optcode1*">
+            <value>Excellent</value>
+          </text>
+          <text id="*optcode2*">
+            <value>Good</value>
+          </text>
+          <text id="*optcode3*">
+            <value>Bad</value>
+          </text>
+          <text id="BLANK">
+            <value/>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/*itemcode1*" type="select1"/>
+      <bind nodeset="/data/*itemcode2*" type="int" calculate="(instance('*optsetcode1*_numeric_values')/root/item[itextId=/data/*itemcode1*]/numericValue)"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/data/*itemcode1*">
+      <label ref="jr:itext('*itemcode1*:label')"/>
+      <hint ref="jr:itext('*itemcode1*:hint')"/>
+      <item>
+        <label ref="jr:itext('*optcode1*')"/>
+        <value>*optcode1*</value>
+      </item>
+      <item>
+        <label ref="jr:itext('*optcode2*')"/>
+        <value>*optcode2*</value>
+      </item>
+      <item>
+        <label ref="jr:itext('*optcode3*')"/>
+        <value>*optcode3*</value>
+      </item>
+    </select1>
+    <input ref="/data/*itemcode2*">
+      <label ref="jr:itext('*itemcode2*:label')"/>
+      <hint ref="jr:itext('*itemcode2*:hint')"/>
+    </input>
+  </h:body>
+</h:html>

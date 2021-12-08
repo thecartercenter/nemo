@@ -462,6 +462,29 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
       end
     end
 
+    context "dynamic answer based on standard option set copy" do
+      let(:mission) { create(:mission, name: "abc") }
+      let(:likert_options) do
+        create(:option_set, :standard, option_names: %w[Excellent Good Bad], option_values: [1, 2, 3])
+      end
+      let(:likert_question) do
+        create(:question, :standard, code: "likert1", qtype_name: "select_one", option_set: likert_options)
+      end
+      let(:copy_q) { likert_question.replicate(mode: :to_mission, dest_mission: mission) }
+      let(:score) { create(:question, code: "score1", qtype_name: "integer") }
+      let(:form) do
+        create(:form, :live, name: "Dynamic answers for option sets", questions: [copy_q, score])
+      end
+
+      before do
+        form.c[1].update!(default: "calc($likert1:value)")
+      end
+
+      it "should render proper xml" do
+        expect_xml(renderer, "standard_copy_with_xpath")
+      end
+    end
+
     context "repeat group form with dynamic item names" do
       let!(:form) do
         create(:form, :live,
