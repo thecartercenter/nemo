@@ -39,9 +39,11 @@ describe Utils::XmlPackager do
     end
 
     it "should replace the xml file with question names" do
+      q1 = form.c[0].code
+      q2 = form.c[1].code
       human_readable_xml = packager.human_readable_xml(response)
-      expect(human_readable_xml).to include("<code='TextQ1' question='firstname'>rhys</code='TextQ1' question='firstname'>")
-      expect(human_readable_xml).to include("<code='TextQ2' question='lastname'>dimond</code='TextQ2' question='lastname'>")
+      expect(human_readable_xml).to include("<#{q1} question='firstname'>rhys</#{q1}>")
+      expect(human_readable_xml).to include("<#{q2} question='lastname'>dimond</#{q2}>")
     end
 
     it "should zip one xml response" do
@@ -68,9 +70,10 @@ describe Utils::XmlPackager do
     end
 
     it "should have the correct xml" do
+      q1 = form.c[1].c[0].code
       human_readable_xml = packager.human_readable_xml(response)
-      expect(human_readable_xml).to include("<code='TextQ2' question='firstname'>Rhys</code='TextQ2' question='firstname'>")
-      expect(human_readable_xml).to include("<code='TextQ2' question='firstname'>Wynn</code='TextQ2' question='firstname'>")
+      expect(human_readable_xml).to include("<#{q1} question='firstname'>Wynn</#{q1}>")
+      expect(human_readable_xml).to include("<#{q1} question='firstname'>Rhys</#{q1}>")
     end
   end
 end
