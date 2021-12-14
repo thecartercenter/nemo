@@ -65,7 +65,7 @@ module ODK
       codes = qing.default.scan(ODK::DynamicPatternParser::CODE_ONLY_REGEX)
       mission = qing.mission
       questions = codes.flatten.map { |c| Question.find_by(mission_id: mission.id, code: c) }
-      questions.map { |q| q.option_set.presence }
+      questions.map { |q| q&.option_set.presence }
     end
 
     # returns array of option sets needed for dynamic calculations
