@@ -32,8 +32,9 @@ module Utils
       qings = response.form.questionings
       # replace qing id with human readable name
       qings.each do |q|
-        human_readable = "code='#{q.code}' question='#{q.name}'"
-        xml_string.gsub!("qing#{q.id}", human_readable)
+        human_readable = "<#{q.code} question='#{q.name}'>"
+        xml_string.gsub!("<qing#{q.id}>", human_readable)
+        xml_string.gsub!("</qing#{q.id}>", "</#{q.code}>")
       end
       xml_string
     end
