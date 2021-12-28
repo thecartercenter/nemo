@@ -390,7 +390,7 @@ See the [ActiveStorage Pull Request](https://github.com/thecartercenter/nemo/pul
 We've upgraded our node version to v16. After pulling the latest code:
 
 1. Ensure you're using a recent version of yarn (such as v1.22), found via `yarn -v`
-1. Run ```nvm install `cat .nvmrc```` to upgrade
+1. Run ```nvm install `cat .nvmrc` ``` (including the backticks) to upgrade
 1. Run `nvm use` to switch
 1. Run `rm -rf node_modules` to clean up
 1. Run `yarn install` to install fresh
