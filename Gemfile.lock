@@ -9,20 +9,6 @@ GIT
       railties
 
 GIT
-  remote: https://github.com/mschiller/azure-storage-ruby.git
-  revision: c84806f766b773cdeea72a7f73d79ddab598b256
-  tag: c84806f766b773cdeea72a7f73d79ddab598b256
-  specs:
-    azure-storage-blob (2.0.1)
-      azure-storage-common (~> 2.0)
-      nokogiri (~> 1.12)
-    azure-storage-common (2.0.2)
-      faraday (~> 1.0)
-      faraday_middleware (~> 1.0.0.rc1)
-      net-http-persistent (~> 4.0)
-      nokogiri (~> 1.12)
-
-GIT
   remote: https://github.com/sassafrastech/closure_tree.git
   revision: 531edabe1853a89f13ab595f660bb5926c895e58
   tag: v7.2.0-noReorder-fastInsert
@@ -147,6 +133,14 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.2.2)
       aws-eventstream (~> 1, >= 1.0.2)
+    azure-storage-blob (2.0.3)
+      azure-storage-common (~> 2.0)
+      nokogiri (~> 1, >= 1.10.8)
+    azure-storage-common (2.0.4)
+      faraday (~> 1.0)
+      faraday_middleware (~> 1.0, >= 1.0.0.rc1)
+      net-http-persistent (~> 4.0)
+      nokogiri (~> 1, >= 1.10.8)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -257,7 +251,7 @@ GEM
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
-    faraday_middleware (1.0.0)
+    faraday_middleware (1.2.0)
       faraday (~> 1.0)
     ffi (1.13.1)
     ffi-compiler (1.0.1)
@@ -611,7 +605,7 @@ DEPENDENCIES
   authlogic (~> 6.1)
   awesome_print (~> 1.6)
   aws-sdk-s3 (~> 1.86)
-  azure-storage-blob!
+  azure-storage-blob (~> 2.0)
   binding_of_caller (~> 0.8.0)
   bluecloth (~> 2.2)
   blueprinter (~> 0.25.1)
