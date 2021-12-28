@@ -57,10 +57,7 @@ gem "reverse_markdown", "~> 2.0"
 # Storage
 gem "active_storage_validations", "~> 0.9.3"
 gem "aws-sdk-s3", "~> 1.86", require: false
-# Fork: address nokogiri vuln.
-# https://github.com/Azure/azure-storage-ruby/issues/194
-gem "azure-storage-blob", github: "mschiller/azure-storage-ruby",
-                          tag: "c84806f766b773cdeea72a7f73d79ddab598b256", require: false
+gem "azure-storage-blob", "~> 2.0", require: false
 gem "image_processing", "~> 1.12"
 gem "sys-filesystem", "~> 1.4"
 
