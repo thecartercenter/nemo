@@ -208,7 +208,14 @@ so ODK's #collect-code Slack channel can be a good place to get help with error 
 
 ### Troubleshooting
 
+#### Integrity check failed
+
 If you ever see `check_yarn_integrity error Integrity check failed` or `Your Yarn packages are out of date!`
 simply follow the instructions by running `yarn install --check-files`.
 Note if you previously ran `yarn install` with a different version of Node, the integrity check will fail.
 If you frequently see this error, make sure you execute `nvm use` before `yarn install`.
+
+#### i18n/translations issues
+
+If you ever see `Missing file extension for "../assets/javascripts/i18n/translations"` or similar,
+make sure you've run `rails i18n:js:export` in order to provide the translations files to JS scripts.

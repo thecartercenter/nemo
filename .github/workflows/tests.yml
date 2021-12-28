@@ -79,9 +79,9 @@ jobs:
           NEMO_GOOGLE_MAPS_API_KEY: ${{ secrets.NEMO_GOOGLE_MAPS_API_KEY }}
         shell: bash {0}
         run: |
+          yarn run i18n:export
           yarn run lint:react
           LINT_RESULT=$?
-          yarn run i18n:export
           yarn run test
           JEST_RESULT=$?
           bundle exec rspec --format RSpec::Github::Formatter --format documentation
