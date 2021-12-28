@@ -11,6 +11,7 @@
     "sentry:tag": "if [[ ! -f ~/.sentryclirc ]]; then echo \"Please run sentry:setup first.\"; exit; fi; echo \"Setting v`cat VERSION` on Sentry to current HEAD...\"; sentry-cli releases set-commits \"nemo@`cat VERSION`\" --auto"
   },
   "jest": {
+    "testEnvironment": "jsdom",
     "roots": [
       "<rootDir>/app/javascript"
     ],
@@ -65,11 +66,11 @@
     "@babel/eslint-parser": "7.16.5",
     "@sentry/cli": "1.58.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "26.3.0",
-    "caniuse-lite": "1.0.30001118",
+    "babel-jest": "27.4.5",
+    "caniuse-lite": "1.0.30001294",
     "enzyme": "3.11.0",
-    "enzyme-adapter-react-16": "1.15.3",
-    "enzyme-to-json": "3.5.0",
+    "enzyme-adapter-react-16": "1.15.6",
+    "enzyme-to-json": "3.6.2",
     "eslint": "8.3.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-cooperka": "1.0.4",
@@ -78,7 +79,7 @@
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "4.3.0",
     "i18n-js": "3.8.0",
-    "jest": "26.4.2",
+    "jest": "27.4.5",
     "postcss-flexbugs-fixes": "4.2.1",
     "postcss-import": "12.0.1",
     "postcss-preset-env": "6.7.0",
