@@ -38,22 +38,22 @@ class ConditionFormField extends React.Component {
     condition.leftQingId = leftQingId;
 
     this.getFieldData(leftQingId);
-  }
+  };
 
   handleChangeRightQing = (rightQingId) => {
     const { condition } = this.props;
     condition.rightQingId = rightQingId;
-  }
+  };
 
   handleChangeOp = (op) => {
     const { condition } = this.props;
     condition.op = op;
-  }
+  };
 
   handleChangeRightSideType = (rightSideType) => {
     const { condition } = this.props;
     condition.rightSideType = rightSideType;
-  }
+  };
 
   /**
    * Update the value in the store.
@@ -73,7 +73,7 @@ class ConditionFormField extends React.Component {
     } else {
       condition.value = value;
     }
-  }
+  };
 
   getFieldData = async (leftQingId, preserveOptionNodeId) => {
     const { condition } = this.props;
@@ -111,7 +111,7 @@ class ConditionFormField extends React.Component {
       ELMO.app.loading(false);
       console.error('Failed to getFieldData:', error);
     }
-  }
+  };
 
   buildUrl = (leftQingId) => {
     const {
@@ -127,7 +127,7 @@ class ConditionFormField extends React.Component {
     };
     const url = ELMO.app.url_builder.build('condition-form-data', 'base');
     return `${url}?${queryString.stringify(params)}`;
-  }
+  };
 
   formatRefQingOptions = (qingOptions) => {
     const { conditionSetStore: { showQingRank } } = this.props;
@@ -135,12 +135,12 @@ class ConditionFormField extends React.Component {
       const rank = showQingRank ? `${o.fullDottedRank}. ` : '';
       return { id: o.id, name: `${rank}${o.code}`, key: o.id };
     });
-  }
+  };
 
   handleRemoveClick = () => {
     const { condition } = this.props;
     condition.remove = true;
-  }
+  };
 
   buildValueProps = (namePrefix, idPrefix) => {
     const { condition: { optionSetId, optionNodeId, value, levels, updateLevels } } = this.props;
@@ -169,12 +169,12 @@ class ConditionFormField extends React.Component {
       value: value || '',
       onChange: this.handleChangeValue,
     };
-  }
+  };
 
   shouldDestroy = () => {
     const { conditionSetStore: { hide }, condition: { remove } } = this.props;
     return remove || hide;
-  }
+  };
 
   render() {
     const {

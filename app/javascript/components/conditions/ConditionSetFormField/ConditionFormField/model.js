@@ -8,50 +8,50 @@ import { getLevelsValues, applyDefaultLevelsValues } from '../utils';
  */
 class ConditionModel {
   @observable
-  id;
+    id;
 
   @observable
-  key;
+    key;
 
   @observable
-  optionSetId;
+    optionSetId;
 
   @observable
-  optionNodeId;
+    optionNodeId;
 
   /** Initial string value to represent the current option before `levels` are loaded. */
   @observable
-  optionNodeValue;
+    optionNodeValue;
 
   @observable
-  leftQingId;
+    leftQingId;
 
   @observable
-  rightQingId;
+    rightQingId;
 
   @observable
-  op;
+    op;
 
   @observable
-  rightSideType;
+    rightSideType;
 
   @observable
-  operatorOptions = [];
+    operatorOptions = [];
 
   @observable
-  value;
+    value;
 
   @observable
-  refableQings = [];
+    refableQings = [];
 
   @observable
-  rightQingOptions = [];
+    rightQingOptions = [];
 
   @observable
-  levels = [];
+    levels = [];
 
   @observable
-  remove;
+    remove;
 
   /**
    * Return a string representation of the current value.
@@ -126,36 +126,36 @@ class ConditionModel {
    * nodeId may be null if there is no node selected.
    */
   @action
-  updateLevels = async (changedNodeId = null, changedOptionSetId = null) => {
-    const nodeId = changedNodeId || this.optionNodeId;
-    const optionSetId = changedOptionSetId || this.optionSetId;
+    updateLevels = async (changedNodeId = null, changedOptionSetId = null) => {
+      const nodeId = changedNodeId || this.optionNodeId;
+      const optionSetId = changedOptionSetId || this.optionSetId;
 
-    if (!optionSetId) {
+      if (!optionSetId) {
       // We don't have enough info yet to load values (probably mounting
       // a new component that will be updated momentarily).
-      return;
-    }
+        return;
+      }
 
-    ELMO.app.loading(true);
-    const url = this.buildUrl(nodeId, optionSetId);
-    try {
-      if (process.env.NODE_ENV === 'test') return;
+      ELMO.app.loading(true);
+      const url = this.buildUrl(nodeId, optionSetId);
+      try {
+        if (process.env.NODE_ENV === 'test') return;
 
-      const { levels } = await $.ajax(url);
-      const oldValues = getLevelsValues(this.levels);
-      this.levels = applyDefaultLevelsValues(levels, oldValues);
-    } catch (error) {
-      console.error('Failed to updateLevels:', error);
-    } finally {
-      ELMO.app.loading(false);
-    }
-  }
+        const { levels } = await $.ajax(url);
+        const oldValues = getLevelsValues(this.levels);
+        this.levels = applyDefaultLevelsValues(levels, oldValues);
+      } catch (error) {
+        console.error('Failed to updateLevels:', error);
+      } finally {
+        ELMO.app.loading(false);
+      }
+    };
 
   buildUrl = (nodeId, optionSetId) => {
     const params = { node_id: nodeId || 'null', option_set_id: optionSetId };
     const url = ELMO.app.url_builder.build('condition-form-data', 'option-path');
     return `${url}?${queryString.stringify(params)}`;
-  }
+  };
 }
 
 export default ConditionModel;

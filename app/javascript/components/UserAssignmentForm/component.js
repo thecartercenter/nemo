@@ -25,7 +25,7 @@ class UserAssignmentForm extends React.Component {
       const newAssignments = [{ key: Math.round(Math.random() * 100000000), newRecord: true }];
       return { assignments: curState.assignments.concat(newAssignments) };
     });
-  }
+  };
 
   render() {
     const { missions, roles } = this.props;

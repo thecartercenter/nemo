@@ -27,7 +27,7 @@ class FilterOverlayTrigger extends React.Component {
     if (filtersStore.isDirty) {
       onSubmit();
     }
-  }
+  };
 
   renderPopover = () => {
     const { id, popoverContent, popoverClass, buttonsContainerClass, onSubmit } = this.props;
@@ -42,7 +42,7 @@ class FilterOverlayTrigger extends React.Component {
         {popoverContent}
       </FilterPopover>
     );
-  }
+  };
 
   render() {
     const { id, title, hints, buttonClass } = this.props;

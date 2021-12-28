@@ -27,31 +27,31 @@ export const getEmptySubmitterTypeMap = () => SUBMITTER_TYPES.reduce((reduction,
 class FiltersModel {
   /** Deep copy of this model's original values (e.g. to enable reverting). */
   @observable
-  original = {};
+    original = {};
 
   @observable
-  conditionSetStore = new ConditionSetModel(initialConditionSetData);
+    conditionSetStore = new ConditionSetModel(initialConditionSetData);
 
   @observable
-  allForms = [];
+    allForms = [];
 
   @observable
-  selectedFormIds = [];
+    selectedFormIds = [];
 
   @observable
-  isReviewed = null;
+    isReviewed = null;
 
   @observable
-  selectedSubmittersForType = getEmptySubmitterTypeMap();
+    selectedSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
-  advancedSearchText = '';
+    advancedSearchText = '';
 
   @observable
-  startDate = null;
+    startDate = null;
 
   @observable
-  endDate = null;
+    endDate = null;
 
   @computed
   get selectedFormId() {
@@ -122,41 +122,41 @@ class FiltersModel {
   }
 
   @action
-  updateRefableQings = async () => {
-    ELMO.app.loading(true);
-    const url = ELMO.app.url_builder.build('filter-data', 'qings');
-    try {
-      if (process.env.NODE_ENV === 'test') return;
-      const qings = await $.ajax({ url, data: { form_ids: this.selectedFormIds } });
-      this.conditionSetStore.refableQings = qings;
-    } catch (error) {
-      console.error('Failed to updateRefableQings:', error);
-    } finally {
-      ELMO.app.loading(false);
-    }
-  }
+    updateRefableQings = async () => {
+      ELMO.app.loading(true);
+      const url = ELMO.app.url_builder.build('filter-data', 'qings');
+      try {
+        if (process.env.NODE_ENV === 'test') return;
+        const qings = await $.ajax({ url, data: { form_ids: this.selectedFormIds } });
+        this.conditionSetStore.refableQings = qings;
+      } catch (error) {
+        console.error('Failed to updateRefableQings:', error);
+      } finally {
+        ELMO.app.loading(false);
+      }
+    };
 
   @action
-  handleSelectForm = (event) => {
-    this.selectedFormIds = [event.target.value];
-  }
+    handleSelectForm = (event) => {
+      this.selectedFormIds = [event.target.value];
+    };
 
   @action
-  handleSelectSubmitterForType = (type) => (event) => {
-    const { id, text: name } = event.params.data;
-    this.selectedSubmittersForType[type] = [{ id, name }];
-  }
+    handleSelectSubmitterForType = (type) => (event) => {
+      const { id, text: name } = event.params.data;
+      this.selectedSubmittersForType[type] = [{ id, name }];
+    };
 
   @action
-  handleChangeAdvancedSearch = (event) => {
-    this.advancedSearchText = event.target.value;
-  }
+    handleChangeAdvancedSearch = (event) => {
+      this.advancedSearchText = event.target.value;
+    };
 
   @action
-  handleDateChange = ({ startDate, endDate }) => {
-    this.startDate = startDate;
-    this.endDate = endDate;
-  }
+    handleDateChange = ({ startDate, endDate }) => {
+      this.startDate = startDate;
+      this.endDate = endDate;
+    };
 }
 
 export default FiltersModel;

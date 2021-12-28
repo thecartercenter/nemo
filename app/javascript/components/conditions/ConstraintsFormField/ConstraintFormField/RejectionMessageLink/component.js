@@ -20,11 +20,11 @@ class RejectionMessageLink extends React.Component {
     };
   }
 
-  handleShow = () => this.setState({ show: true })
+  handleShow = () => this.setState({ show: true });
 
   handleClose = () => {
     this.setState({ show: false });
-  }
+  };
 
   render() {
     const { show } = this.state;

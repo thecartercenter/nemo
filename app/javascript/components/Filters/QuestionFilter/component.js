@@ -37,7 +37,7 @@ class QuestionFilter extends React.Component {
         <AddConditionLink />
       </div>
     );
-  }
+  };
 
   render() {
     const { filtersStore: { conditionSetStore }, onSubmit } = this.props;

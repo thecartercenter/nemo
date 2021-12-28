@@ -41,11 +41,11 @@ class Filters extends React.Component {
     const { shouldRenderButtons } = this.state;
     const filterString = shouldRenderButtons ? getFilterString(filtersStore) : advancedSearchText;
     submitSearch(filterString);
-  }
+  };
 
   handleClearFilters = () => {
     submitSearch(null);
-  }
+  };
 
   renderFilterButtons = () => {
     const defaultProps = {
@@ -62,7 +62,7 @@ class Filters extends React.Component {
         <DateFilter {...defaultProps} />
       </ButtonToolbar>
     );
-  }
+  };
 
   render() {
     const { shouldRenderButtons } = this.state;

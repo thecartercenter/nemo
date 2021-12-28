@@ -29,7 +29,7 @@ class FormFilter extends React.Component {
      * https://select2.org/programmatic-control/methods#closing-the-dropdown
      */
     setTimeout(() => this.select2.current.el.select2('close'), 1);
-  }
+  };
 
   renderPopover = () => {
     const { filtersStore } = this.props;
@@ -50,7 +50,7 @@ class FormFilter extends React.Component {
         value={selectedFormId}
       />
     );
-  }
+  };
 
   render() {
     const { filtersStore, onSubmit } = this.props;

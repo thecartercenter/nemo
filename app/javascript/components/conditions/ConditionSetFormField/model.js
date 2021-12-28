@@ -11,42 +11,42 @@ import ConditionModel from './ConditionFormField/model';
 class ConditionSetModel {
   /** Deep copy of this model's original values (e.g. to enable reverting). */
   @observable
-  original = {};
+    original = {};
 
   @observable
-  formId;
+    formId;
 
   @observable
-  namePrefix;
+    namePrefix;
 
   @observable
-  conditions = [];
+    conditions = [];
 
   @observable
-  conditionableId;
+    conditionableId;
 
   @observable
-  conditionableType;
+    conditionableType;
 
   @observable
-  refableQings = [];
+    refableQings = [];
 
   @observable
-  hide;
+    hide;
 
   @observable
-  showQingRank = true;
+    showQingRank = true;
 
   /** If enabled, only allow 'equals' or 'includes' as the operation. */
   @observable
-  forceEqualsOp = false;
+    forceEqualsOp = false;
 
   /** If enabled, only allow literals on right side of all conditions. */
   @observable
-  forceRightSideLiteral = false;
+    forceRightSideLiteral = false;
 
   @observable
-  rejectionMsgTranslations = {};
+    rejectionMsgTranslations = {};
 
   /** Returns the number of non-deleted conditions in the set. */
   @computed
@@ -133,39 +133,39 @@ class ConditionSetModel {
    * Meant to be used by the questions search filter since it gets props separately.
    */
   @action
-  resetConditionsFromQings = (qings) => {
-    this.conditions = [];
+    resetConditionsFromQings = (qings) => {
+      this.conditions = [];
 
-    qings.forEach(({ id, value, option_node_id: optionNodeId, option_node_value: optionNodeValue }) => {
+      qings.forEach(({ id, value, option_node_id: optionNodeId, option_node_value: optionNodeValue }) => {
       // Upon being rendered, any necessary additional data will be fetched.
-      this.addCondition(false, {
-        leftQingId: id,
-        value,
-        optionNodeId,
-        optionNodeValue,
+        this.addCondition(false, {
+          leftQingId: id,
+          value,
+          optionNodeId,
+          optionNodeValue,
+        });
       });
-    });
 
-    // Update original conditions since these came from original props.
-    this.original.conditions = cloneDeep(this.conditions);
-  }
-
-  @action
-  addCondition = (defaultLeftQingToLast = false, params = {}) => {
-    this.conditions.push(new ConditionModel({
-      leftQingId: defaultLeftQingToLast ? this.refableQings[this.refableQings.length - 1].id : null,
-      refableQings: this.refableQings,
-      key: Math.round(Math.random() * 100000000),
-      ...params,
-    }));
-  }
+      // Update original conditions since these came from original props.
+      this.original.conditions = cloneDeep(this.conditions);
+    };
 
   @action
-  handleAddBlankCondition = () => {
-    if (this.conditions.length === 0) {
-      this.addCondition();
-    }
-  }
+    addCondition = (defaultLeftQingToLast = false, params = {}) => {
+      this.conditions.push(new ConditionModel({
+        leftQingId: defaultLeftQingToLast ? this.refableQings[this.refableQings.length - 1].id : null,
+        refableQings: this.refableQings,
+        key: Math.round(Math.random() * 100000000),
+        ...params,
+      }));
+    };
+
+  @action
+    handleAddBlankCondition = () => {
+      if (this.conditions.length === 0) {
+        this.addCondition();
+      }
+    };
 }
 
 export default ConditionSetModel;

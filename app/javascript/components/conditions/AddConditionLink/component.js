@@ -17,7 +17,7 @@ class AddConditionLink extends React.Component {
   handleAddClick = () => {
     const { defaultLeftQingToCurrent, conditionSetStore: { addCondition } } = this.props;
     addCondition(defaultLeftQingToCurrent);
-  }
+  };
 
   render() {
     return (

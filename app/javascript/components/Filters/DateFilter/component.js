@@ -45,7 +45,7 @@ class DateFilter extends React.Component {
         />
       </div>
     );
-  }
+  };
 
   render() {
     const { filtersStore, onSubmit } = this.props;

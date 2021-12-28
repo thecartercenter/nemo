@@ -48,7 +48,7 @@ class UserAssignmentFormField extends React.Component {
         />
       </div>
     );
-  }
+  };
 
   missionOptionTags = () => {
     const { missions } = this.props;
@@ -61,7 +61,7 @@ class UserAssignmentFormField extends React.Component {
         {mission.name}
       </option>
     ));
-  }
+  };
 
   roleOptionTags = () => {
     const { roles } = this.props;
@@ -74,7 +74,7 @@ class UserAssignmentFormField extends React.Component {
         {I18n.t(`role.${option}`)}
       </option>
     ));
-  }
+  };
 
   missionRoleFields = () => {
     const { role, index } = this.props;
@@ -103,11 +103,11 @@ class UserAssignmentFormField extends React.Component {
         </a>
       </div>
     );
-  }
+  };
 
   handleRemoveClick = () => {
     this.setState({ destroy: true });
-  }
+  };
 
   render() {
     const { index, id } = this.props;

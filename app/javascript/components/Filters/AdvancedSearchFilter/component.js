@@ -17,11 +17,11 @@ class AdvancedSearchFilter extends React.Component {
       event.preventDefault();
       callback();
     }
-  }
+  };
 
   showSearchHelp = () => {
     $('#search-help-modal').modal('show');
-  }
+  };
 
   render() {
     const { filtersStore, renderInfoButton, onSubmit } = this.props;

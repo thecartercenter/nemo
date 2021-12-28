@@ -30,7 +30,7 @@ class SkipLogicFormField extends React.Component {
         conditions: [],
       }]),
     }));
-  }
+  };
 
   skipOptionChanged = (event) => {
     const { skipRules } = this.state;
@@ -38,7 +38,7 @@ class SkipLogicFormField extends React.Component {
     if (event.target.value === 'skip' && skipRules.length === 0) {
       this.handleAddClick();
     }
-  }
+  };
 
   skipOptionTags = () => {
     const skipOptions = ['dont_skip', 'skip'];
@@ -50,7 +50,7 @@ class SkipLogicFormField extends React.Component {
         {I18n.t(`form_item.skip_logic_options.${option}`)}
       </option>
     ));
-  }
+  };
 
   render() {
     const { formId, laterItems, type, refableQings } = this.props;

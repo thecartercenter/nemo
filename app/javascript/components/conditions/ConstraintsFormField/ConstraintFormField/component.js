@@ -43,17 +43,17 @@ class ConstraintFormField extends React.Component {
   handleAcceptIfChange = (event) => {
     const acceptIf = event.target.value;
     this.setState({ acceptIf });
-  }
+  };
 
   handleRemoveClick = () => {
     this.setState({ remove: true });
-  }
+  };
 
   shouldDestroy = () => {
     const { hide } = this.props;
     const { remove } = this.state;
     return remove || hide;
-  }
+  };
 
   render() {
     const {

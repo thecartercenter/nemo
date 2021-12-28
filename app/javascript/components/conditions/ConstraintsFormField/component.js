@@ -23,7 +23,7 @@ class ConstraintsFormField extends React.Component {
     if (event.target.value === 'constrain' && constraints.length === 0) {
       this.handleAddClick();
     }
-  }
+  };
 
   constrainOptionTags = () => {
     const constrainOptions = ['dont_constrain', 'constrain'];
@@ -35,7 +35,7 @@ class ConstraintsFormField extends React.Component {
         {I18n.t(`form_item.constrain_options.${option}`)}
       </option>
     ));
-  }
+  };
 
   handleAddClick = () => {
     this.setState(({ constraints }) => ({
@@ -45,7 +45,7 @@ class ConstraintsFormField extends React.Component {
         conditions: [],
       }]),
     }));
-  }
+  };
 
   render() {
     const { type, refableQings } = this.props;

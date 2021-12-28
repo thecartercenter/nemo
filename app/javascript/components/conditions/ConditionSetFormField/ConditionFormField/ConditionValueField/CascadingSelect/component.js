@@ -32,7 +32,7 @@ class CascadingSelect extends React.Component {
     if (!isLastLevel) {
       updateLevels(newNodeId);
     }
-  }
+  };
 
   buildLevelProps = (level, levelIndex) => {
     const { namePrefix } = this.props;
@@ -45,7 +45,7 @@ class CascadingSelect extends React.Component {
       prompt: this.optionPrompt(level),
       onChange: this.nodeChanged(level, levelIndex),
     };
-  }
+  };
 
   buildLevels = () => {
     const { levels } = this.props;
@@ -63,19 +63,19 @@ class CascadingSelect extends React.Component {
       });
     }
     return result;
-  }
+  };
 
   isLastLevel = (i) => {
     const { levels } = this.props;
     return levels && levels.length === (i + 1);
-  }
+  };
 
   optionPrompt = (level) => {
     if (level.name) {
       return I18n.t('option_set.option_prompt_with_level', { level: level.name });
     }
     return I18n.t('option_set.option_prompt');
-  }
+  };
 
   render() {
     return (

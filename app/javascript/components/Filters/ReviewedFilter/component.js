@@ -24,7 +24,7 @@ class FormFilter extends React.Component {
   handleChangeIsReviewed = (value) => {
     const { filtersStore } = this.props;
     filtersStore.isReviewed = value;
-  }
+  };
 
   renderPopover = () => {
     const { filtersStore } = this.props;
@@ -50,7 +50,7 @@ class FormFilter extends React.Component {
         </ButtonGroup>
       </>
     );
-  }
+  };
 
   render() {
     const { filtersStore, onSubmit } = this.props;

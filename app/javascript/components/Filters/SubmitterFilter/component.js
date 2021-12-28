@@ -48,7 +48,7 @@ class SubmitterFilter extends React.Component {
      * https://select2.org/programmatic-control/methods#closing-the-dropdown
      */
     setTimeout(() => this.select2[type].current.el.select2('close'), 1);
-  }
+  };
 
   renderPopover = () => {
     const { filtersStore } = this.props;
@@ -80,7 +80,7 @@ class SubmitterFilter extends React.Component {
         })}
       </>
     );
-  }
+  };
 
   render() {
     const { filtersStore, onSubmit } = this.props;

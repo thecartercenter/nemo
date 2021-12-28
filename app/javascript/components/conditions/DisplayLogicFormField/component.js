@@ -25,7 +25,7 @@ class DisplayLogicFormField extends React.Component {
     const displayIf = event.target.value;
     this.setState({ displayIf });
     conditionSetStore.hide = displayIf === 'always';
-  }
+  };
 
   displayIfOptionTags = () => {
     const { type } = this.props;
@@ -38,7 +38,7 @@ class DisplayLogicFormField extends React.Component {
         {I18n.t(`form_item.display_if_options.${type}.${option}`)}
       </option>
     ));
-  }
+  };
 
   render() {
     const { conditionSetStore, type } = this.props;
