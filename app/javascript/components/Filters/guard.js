@@ -9,10 +9,12 @@ import Injector from './injector';
  * Intended to be generic so it can be used anywhere we have a root
  * React component that gets rendered by Rails.
  */
-const Guard = (props) => (
-  <ErrorBoundary>
-    <Injector {...props} />
-  </ErrorBoundary>
-);
+function Guard(props) {
+  return (
+    <ErrorBoundary>
+      <Injector {...props} />
+    </ErrorBoundary>
+  );
+}
 
 export default Guard;

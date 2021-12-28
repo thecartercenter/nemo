@@ -9,10 +9,12 @@ import Component from './component';
  * Intended to be generic so it can be used anywhere we have a root
  * React component that gets rendered by Rails.
  */
-const Guard = (props) => (
-  <ErrorBoundary>
-    <Component {...props} />
-  </ErrorBoundary>
-);
+function Guard(props) {
+  return (
+    <ErrorBoundary>
+      <Component {...props} />
+    </ErrorBoundary>
+  );
+}
 
 export default Guard;

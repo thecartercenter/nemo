@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as Sentry from '@sentry/react';
 
-const ErrorFallback = ({ message }) => (
-  <div className="alert alert-danger" role="alert">
-    {message}
-  </div>
-);
+function ErrorFallback({ message }) {
+  return (
+    <div className="alert alert-danger" role="alert">
+      {message}
+    </div>
+  );
+}
 
 ErrorFallback.propTypes = {
   message: PropTypes.string,
@@ -22,7 +24,7 @@ class ErrorBoundary extends Component {
     message: I18n.t('common.jsError'),
   };
 
-  render = () => {
+  render() {
     const { message, children } = this.props;
 
     return (
@@ -30,7 +32,7 @@ class ErrorBoundary extends Component {
         {children}
       </Sentry.ErrorBoundary>
     );
-  };
+  }
 }
 
 export default ErrorBoundary;
