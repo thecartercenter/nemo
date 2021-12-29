@@ -1,3 +1,4 @@
 {
+  "README": "This tool is used in NEMO to allow auto-fixing some things that Hound cares about.",
   "extends": "stylelint-config-sass-guidelines"
 }

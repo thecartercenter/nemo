@@ -3,10 +3,10 @@ html {
 }
 
 body {
-  text-align: $left;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  text-align: $left;
 }
 
 header {
@@ -49,9 +49,9 @@ header {
 
     ul.dropdown-menu {
       a {
-        font-size: 10pt;
-        font-family: $font-family-sans-serif;
         color: $gray;
+        font-family: $font-family-sans-serif;
+        font-size: 10pt;
       }
 
       a:hover,
@@ -61,11 +61,11 @@ header {
       }
 
       li {
-        padding-top: 4px;
-        padding-right: 9px;
+        margin-bottom: 0;
         padding-bottom: 6px;
         padding-left: 15px;
-        margin-bottom: 0;
+        padding-right: 9px;
+        padding-top: 4px;
       }
     }
 
