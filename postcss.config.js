@@ -1,12 +1,3 @@
-module.exports = {
-  plugins: [
-    require('postcss-import'),
-    require('postcss-flexbugs-fixes'),
-    require('postcss-preset-env')({
-      autoprefixer: {
-        flexbox: 'no-2009',
-      },
-      stage: 3,
-    }),
-  ],
-};
+// This empty file seems to be a weird implicit dependency of a few modules
+// such as react-select2-wrapper and react-dates.
+module.exports = {};
