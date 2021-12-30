@@ -74,6 +74,10 @@ class ResponsesController < ApplicationController
   end
 
   def new
+    # TODO: Think about security of html_safe here.
+    @transformed = `node '#{Rails.root.join("lib/enketo-transformer-service/index.js")}'`.chomp.html_safe
+    raise RuntimeError unless @transformed.present?
+
     # TODO: Restore this
     # setup_condition_computer
     # Results::BlankResponseTreeBuilder.new(@response).build
