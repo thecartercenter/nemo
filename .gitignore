@@ -57,7 +57,7 @@ vendor/bundle/
 
 /public/packs
 /public/packs-test
-/node_modules
+node_modules/
 yarn-*.log*
 .yarn-integrity
 

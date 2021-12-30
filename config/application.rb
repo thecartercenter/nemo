@@ -32,7 +32,10 @@ module ELMO
     ]
 
     # Overrides are manually required below.
-    Rails.autoloaders.main.ignore(Rails.root.join("app/overrides"))
+    Rails.autoloaders.main.ignore(
+      Rails.root.join("app/overrides"),
+      Rails.root.join("lib/enketo-transformer-service")
+    )
 
     config.eager_load_paths += Dir[
       # Zeitwerk wants us to eager_load lib instead of autoloading.
