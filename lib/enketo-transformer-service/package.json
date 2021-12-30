@@ -1,0 +1,9 @@
+{
+  "name": "enketo-transformer-service",
+  "version": "1.0.0",
+  "description": "Standalone transformer service.",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+  }
+}
