@@ -92,7 +92,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bindings@^1.3.0:
+bindings@^1.3.0, bindings@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
@@ -273,15 +273,15 @@ encodeurl@~1.0.2:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
 
-enketo-transformer@1.43.0:
-  version "1.43.0"
-  resolved "https://registry.yarnpkg.com/enketo-transformer/-/enketo-transformer-1.43.0.tgz#b9bb1f74bb91650875160f7b9861554efb29016b"
-  integrity sha512-9iel+sgSIA13GQ1n/xQLJiXjRSBWEP4yWuT9u9Q60mBz4WRAFL3BVk+oAdB5Sbytc2D8p4cgL2xhQUwKulPWOQ==
+enketo-transformer@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/enketo-transformer/-/enketo-transformer-2.1.1.tgz#7d0a318e46164f85e6da4d77435ded479c13d9b0"
+  integrity sha512-wXpYLPyOGbGs7guymK20gQen7LkqaUvVACEBvCHjfIVImTkd0WTp5GjqdlQX48zg9iu16BfZRXUm48Gda3LK8Q==
   dependencies:
     body-parser "1.19.x"
     express "^5.0.0-alpha.8"
     language-tags "1.0.5"
-    libxslt "0.9.0"
+    libxslt "0.10.0"
     request "^2.88.2"
     string-direction "0.1.x"
 
@@ -604,14 +604,14 @@ language-tags@1.0.5:
   dependencies:
     language-subtag-registry "~0.3.2"
 
-libxslt@0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/libxslt/-/libxslt-0.9.0.tgz#8ee3ba3b72d58558d2ebb7b5c260c85f11daae08"
-  integrity sha512-KEhhIIBefx6CfCo5mxu5iOtXWHUCXVd7NZumwdf21thqaraBkSoyQ/KUEIAtXdQrq/bWJrc/YKN4KQFtzDB9wg==
+libxslt@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/libxslt/-/libxslt-0.10.0.tgz#9b5e4cc074510fe052b81536bf1e46b6bfd0838b"
+  integrity sha512-COIaTGdrgnhZzk8II6vTDiNSI+Z/HcrpXVondyLsy2z9JuIOX5i4NKFsEFyySvYGcv9vgmbQiI8OV8x8R/rTOg==
   dependencies:
-    bindings "^1.3.0"
-    nan "~2.14.0"
-    node1-libxmljsmt "1.0.0"
+    bindings "^1.5.0"
+    nan "~2.14.2"
+    node1-libxmljsmt-myh "1.0.4"
 
 media-typer@0.3.0:
   version "0.3.0"
@@ -694,7 +694,7 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-nan@~2.14.0:
+nan@~2.14.0, nan@~2.14.2:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
   integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
@@ -729,10 +729,10 @@ node-pre-gyp@^0.9.1:
     semver "^5.3.0"
     tar "^4"
 
-node1-libxmljsmt@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/node1-libxmljsmt/-/node1-libxmljsmt-1.0.0.tgz#afbe571a6fe92f57ae558528167a5afae16f29a3"
-  integrity sha512-61//60Isrmk6da073DQeCEzehBln/IASrUS4CcRlxTETQaSrflEY5qAWDbzdR6uOJQ48xj+7YTJgrDTnxAO3SQ==
+node1-libxmljsmt-myh@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/node1-libxmljsmt-myh/-/node1-libxmljsmt-myh-1.0.4.tgz#896235272b026981f9f8a8fa33fbbe9f17e0a253"
+  integrity sha512-2Kncs49q0NDz6MvIS5ipOnbs7TxzFXZSvdcvN6dunwCMixOdwcMqAlzRCsy3WxeoHqeGTlA/gCKj/NiR282kqw==
   dependencies:
     bindings "^1.3.0"
     nan "~2.14.0"
