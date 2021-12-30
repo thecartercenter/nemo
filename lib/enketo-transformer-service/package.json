@@ -4,6 +4,10 @@
   "description": "Standalone transformer service.",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
+    "enketo-transformer": "1.43.0"
   }
 }
