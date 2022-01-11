@@ -1,0 +1,242 @@
+@import "mixins";
+
+$printBaseFontSize: 10px;
+
+.or {
+
+    input:not([type="radio"]):not([type="checkbox"]),
+    .print-input-text,
+    select,
+    textarea {
+        border-bottom: none;
+    }
+}
+
+.or h4 {
+    // the background: white trick doesn't work in prints but looks nicest on screen
+    // so we apply this fix only on prints
+    border-right: 1px solid #ffffff;
+    width: calc(100% + 1px);
+}
+
+.readonly,
+.trigger {
+    //-webkit-print-color-adjust: exact;
+    background: #cccccc;
+}
+
+.or-repeat .repeat-number {
+    top: -20px;
+    font-size: 12px;
+}
+
+.or.print-relevant-only {
+
+    // targeting is getting a little weird here
+    .question.or-branch.disabled,
+    .or-branch.disabled {
+        display: none;
+    }
+}
+
+.or:not(.print-relevant-only) {
+
+    // targeting is getting a little weird here
+    .question.or-branch.disabled,
+    .or-branch.disabled {
+        display: inline-flex;
+    }
+}
+
+.question {
+
+    &.non-select:not(.or-analog-scale-initialized)::after,
+    &.or-appearance-search:after,
+    &.or-appearance-autocomplete:after {
+        content: ' ';
+        display: block;
+        height: 1px;
+        width: 100%;
+        order: 10;
+        margin-bottom: -5px;
+        border-bottom: 1px dotted black;
+    }
+
+    .widget {
+        // not sure if this could apply to all widgets, or just the ones below
+        &.date,
+        &.timepicker,
+        &.datetimepicker{
+            flex: 1;
+        }
+    }
+
+    // just hiding file-feedback so it provides a bit of empty space in the printout
+    .file-feedback {
+        visibility: hidden;
+        display: block !important;
+    }
+}
+
+.question {
+    padding-bottom: 10px;
+
+    textarea {
+        height: 45px;
+    }
+}
+
+.or-repeat {
+    background: #ffffff;
+}
+
+.question:not(.or-appearance-label):not(.or-appearance-compact):not(.or-appearance-quickcompact) {
+    label {
+        $line-h: 15px;
+
+        line-height: $line-h;
+
+        .option-label {
+            line-height: $line-h;
+
+            &::before {
+                font-size: $line-h;
+                width: $line-h;
+            }
+        }
+    }
+}
+
+.geopicker.widget {
+
+    .geo-inputs label.geo:nth-of-type(3),
+    .geo-inputs label.geo:nth-of-type(4) {
+        min-height: 0;
+
+        input {
+            float: none;
+        }
+    }
+}
+
+.bootstrap-select {
+    margin: 0;
+    padding: 0;
+
+    .dropdown-toggle~.dropdown-menu .option-wrapper {
+        padding-left: 0;
+    }
+
+    ul {
+
+        li,
+        li.active {
+            border: none;
+            margin-right: 0;
+
+            a {
+                background: none;
+                padding: 0;
+
+                label {
+                    font-size: $printBaseFontSize !important;
+                    margin: 0;
+                }
+            }
+        }
+
+        li:not(.active) a label::before {
+            font-size: 15px;
+            margin-right: 7px;
+        }
+
+        li.active a label::before {
+            font-size: 15px;
+            margin-right: 7px;
+        }
+    }
+}
+
+// below are (hopefully) temporary adjustments to get page-breaks to work in multi-line flexbox layouts
+// the issue it attemps to solve is described here: http://stackoverflow.com/questions/20408033/how-to-get-page-break-inside-avoid-to-work-nicely-with-flex-wrap-wrap
+.or,
+.or-group,
+.or-group-data,
+.or-repeat {
+    display: block;
+    width: 100%;
+}
+
+.or .question {
+    //default;
+    width: 100%;
+
+    @include display-inline-flex;
+
+    vertical-align: top; //padding: 5px 5px 12px 5px;
+
+    // unfortunately we cannot target actual page-breaks to provide a top-border
+    &:not(.invalid-required):not(.invalid-constraint) {
+        border-top: $grid-border;
+    }
+}
+
+.pages.or [role="page"].current:not(.question) {
+    display: inherit;
+}
+
+@media print,
+screen and (min-width: 700px) {
+    @for $total from 1 through $max-columns {
+        .or-appearance-w#{$total} {
+            display: block;
+            width: 100%;
+
+            &.question {
+                @if $total>=$default-grid-width {
+                    width: 100%;
+                }
+
+                @else {
+                    width: $total / 4 * 100%;
+                }
+            }
+
+            @for $width from 1 through $total {
+                .or-appearance-w#{$width} {
+                    @include display-inline-flex;
+
+                    width: $width / $total * 100%;
+                }
+            }
+        }
+    }
+}
+
+.back-to-screen-view {
+    margin: 10px auto;
+    display: block !important;
+}
+
+@media print {
+    .back-to-screen-view {
+        display: none !important;
+    }
+}
+
+// End of adjustment to get page breaks to work in multi-line flexbox
+
+// Another workaround to get page breaks to works
+// https://github.com/OpenClinica/enketo-express-oc/issues/463
+// TODO: oddly this is only targeting branches, and we don't use display: table for non-branches
+// so likely the bug still exists for non-branches or display:table is not necessary, and we can change to a
+// consistent solution for all branches and non-branches.
+.or {
+    &:not(.print-relevant-only) section.question.or-branch.disabled,
+    &:not(.print-relevant-only) section.or-branch.disabled,
+    &:not(.print-relevant-only) section.question.or-branch:not(.disabled):not(.pre-init),
+    &:not(.print-relevant-only) section.or-branch:not(.disabled):not(.pre-init) {
+        display: table;
+        break-inside: avoid;
+    }
+}

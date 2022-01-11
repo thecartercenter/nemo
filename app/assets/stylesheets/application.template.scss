@@ -23,6 +23,9 @@ $dir: @@@direction@@@;
 @import 'select2';
 @import 'trumbowyg';
 
+@import 'enketo/sass/plain/plain';
+//@import 'enketo/plain/plain-print';
+
 @import 'token-input';
 @import 'jquery-ui-1.12.1-custom';
 @import 'jquery.fileupload';
