@@ -14,7 +14,7 @@ import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 
 const isOnline = !process.env.NEMO_OFFLINE_MODE || process.env.NEMO_OFFLINE_MODE === 'false';
-if (isOnline && process.env.NODE_ENV !== 'test') {
+if (false && isOnline && process.env.NODE_ENV !== 'test') {
   Sentry.init({
     dsn: process.env.NEMO_SENTRY_DSN,
     integrations: [new Integrations.BrowserTracing()],

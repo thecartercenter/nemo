@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Sentry.init do |config|
+  next
+
   # If the Sentry DSN remains nil, Sentry will be disabled.
   next if Rails.env.test? || Cnfg.offline_mode?
 
