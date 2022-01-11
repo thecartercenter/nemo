@@ -1,0 +1,326 @@
+@mixin font-normal {
+    font-family: 'OpenSans', Arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+}
+
+@mixin transition-simple($transition...) {
+    -webkit-transition: $transition;
+    transition: $transition;
+}
+
+@mixin transition-slow($prop: all, $duration: 1s) {
+    -webkit-transition: $prop $duration ease-out;
+    transition: $prop $duration ease-out;
+}
+
+@mixin transition-fast($prop: all) {
+    -webkit-transition: $prop 0.6s ease-out;
+    transition: $prop 0.6s ease-out;
+}
+
+@mixin transition-none($prop: all) {
+    -webkit-transition: all 0.001s ease-out;
+    transition: all 0.001s ease-out;
+}
+
+@mixin transition-background-color {
+    -webkit-transition: background-color 0.2s linear;
+    transition: background-color 0.2s linear;
+}
+
+@mixin rotate($value) {
+    -webkit-transform: rotate($value);
+    -ms-transform: rotate($value);
+    -moz-transform: rotate($value);
+    transform: rotate($value);
+}
+
+@mixin background-size($size...) {
+    -webkit-background-size: $size;
+    -moz-background-size: $size;
+    -o-background-size: $size;
+    background-size: $size;
+}
+
+@mixin paper-border($radius: 7px, $color:#ddd) {
+    border-radius: $radius;
+    border: $radius solid $color;
+}
+
+@mixin border-box {
+    -moz-box-sizing: border-box; //-webkit-box-sizing: border-box;
+    //-ms-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@mixin box-shadow($shadow...) {
+    -webkit-box-shadow: $shadow;
+    box-shadow: $shadow;
+}
+
+// Box sizing
+@mixin box-sizing($boxmodel) {
+    -webkit-box-sizing: $boxmodel;
+    -moz-box-sizing: $boxmodel;
+    box-sizing: $boxmodel;
+}
+
+@mixin box-shadow-touch {
+    //-webkit-box-shadow: inset 0 -1px 0 rgba(90, 90, 90, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
+    //-moz-box-shadow: inset 0 -1px 0 rgba(90, 90, 90, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 -1px 0 rgba(90, 90, 90, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+@mixin tab-focus {
+    // Default
+    outline: thin dotted; // WebKit
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+
+@mixin clearfix {
+
+    &:before,
+    &:after {
+        content: " "; // 1
+        display: table; // 2
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
+@mixin input-as-text {
+    border: none;
+    background: none;
+    width: auto;
+    height: auto;
+    opacity: 1;
+    padding: 0 1em;
+    margin: 0;
+    box-shadow: none;
+    line-height: 1;
+    display: inline;
+    float: none;
+    border-radius: 0;
+    transition: none;
+
+    &:hover {
+        background: none;
+    }
+}
+
+@mixin center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@mixin text-hide {
+    font: #{0 / 0} a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+}
+
+@mixin appearance-none {
+    @include appearance(none)
+}
+
+@mixin appearance($appearance) {
+    appearance: $appearance;
+    -moz-appearance: $appearance;
+    -webkit-appearance: $appearance;
+    -ms-appearance: $appearance;
+}
+
+@mixin display-flex {
+    /*IE10*/
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
+@mixin display-inline-flex {
+    /*IE10*/
+    display: -ms-inline-flexbox;
+    display: -webkit-inline-flex;
+    display: inline-flex;
+}
+
+@mixin flex($value, $total: null) {
+    $flex: 100%;
+
+    @if $total==null {
+        $flex: $value;
+    }
+
+    @else if $total>=$value {
+        $flex: percentage($value / $total);
+    }
+
+    -webkit-flex: $flex;
+    -ms-flex: $flex;
+    flex: $flex;
+}
+
+@mixin flex_IEhack($value, $total: null) {
+    $flex: 100%;
+
+    @if $total==null {
+        $flex: $value;
+    }
+
+    @else if $total>=$value {
+        $flex: percentage($value / $total);
+    }
+
+    flex-grow: 1;
+    flex-shrink: 1;
+    // Internet Explorer 11 has a box-sizing issue with multiline flexboxes
+    // box-sizing: border-box is ignored
+    // 2 x 6px padding + 1 border = 13px adjustment
+    -ms-flex-preferred-size: calc(#{$flex} - 13px);
+    -ms-flex-positive: 1;
+    -ms-flex-negative: 1;
+    // unprefixed
+    flex-basis: calc(#{$flex});
+}
+
+@mixin flex-wrap($wrap: wrap) {
+    -webkit-flex-wrap: $wrap;
+    -ms-flex-wrap: $wrap;
+    -moz-flex-wrap: $wrap;
+    flex-wrap: $wrap;
+}
+
+@mixin flex-direction($dir: row) {
+    -webkit-flex-direction: $dir;
+    -ms-flex-direction: $dir;
+    -moz-flex-direction: $dir;
+    flex-direction: $dir;
+}
+
+@mixin align-content($val: flex-start) {
+    -webkit-align-content: $val;
+    -ms-align-content: $val;
+    -moz-align-content: $val;
+    align-content: $val;
+}
+
+@mixin form-control {
+    // just a placeholder
+}
+
+// Creates two color stops, start and end, by specifying a color and position for each color stop.
+// Color stops are not available in IE9 and below.
+@mixin gradient-vertical($start-color: #555555, $end-color: #333333, $start-percent: 0%, $end-percent: 100%) {
+    background-image: -webkit-linear-gradient(top, $start-color $start-percent, $end-color $end-percent); // Safari 5.1-6, Chrome 10+
+    background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0); // IE9 and down
+}
+
+@mixin gradient-vertical-three-colors($start-color: #00b3ee, $mid-color: #7a43b6, $color-stop: 50%, $end-color: #c3325f) {
+    background-image: -webkit-linear-gradient($start-color, $mid-color $color-stop, $end-color);
+    background-image: linear-gradient($start-color, $mid-color $color-stop, $end-color);
+    background-repeat: no-repeat;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0); // IE9 and down, gets no color-stop at all for proper fallback
+}
+
+@mixin form-footer-margin($padding) {
+    margin: $padding (-$padding) (-$padding) (-$padding);
+}
+
+@mixin form-header-margin($padding) {
+    margin-left: -$padding;
+    margin-right: -$padding;
+    width: calc(100% + (2 * #{$padding}));
+}
+
+@mixin focus-shadow {
+    // just a placeholder
+}
+
+// Moving this styles to a mixin facilitates custom functionality added in OpenClinica with multiple constraints.
+@mixin question-invalid {
+    @include transition-fast;
+
+    background-color: $state-danger-bg;
+    border-color: $state-danger-border;
+    border-radius: $border-radius-small;
+
+    $pad: 10px;
+
+    margin-right: -$pad;
+    margin-left: -$pad;
+    padding-left: $pad;
+    padding-right: $pad;
+    padding-bottom: $pad;
+}
+
+// Moving this styles to a mixin facilitates custom functionality added in OpenClinica with multiple constraints.
+@mixin question-error-message {
+    font-weight: bold;
+    padding-top: 5px;
+    font-size: 0.85em;
+    color: $state-danger-text;
+}
+
+// from https://gist.github.com/JacobDB/0ffffaf8e772c12acf7102edb8a302be
+// Replace letters
+@function str-replace($string, $search, $replace: '') {
+    $index: str-index($string, $search);
+
+    @if $index {
+        @return str-slice($string, 1, $index - 1)+$replace+str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    }
+
+    @return $string;
+}
+
+// from https://gist.github.com/JacobDB/0ffffaf8e772c12acf7102edb8a302be
+// Encode symbols
+@function url-encode($string) {
+    $map: ("%": "%25",
+            "<": "%3C",
+            ">": "%3E",
+            " ": "%20",
+            "!": "%21",
+            "*": "%2A",
+            "'": "%27",
+            '"': "%22",
+            "(": "%28",
+            ")": "%29",
+            ";": "%3B",
+            ":": "%3A",
+            "@": "%40",
+            "&": "%26",
+            "=": "%3D",
+            "+": "%2B",
+            "$": "%24",
+            ",": "%2C",
+            "/": "%2F",
+            "?": "%3F",
+            "#": "%23",
+            "[": "%5B",
+            "]": "%5D"
+        );
+
+    $new: $string;
+
+    @each $search,
+    $replace in $map {
+        $new: str-replace($new, $search, $replace);
+    }
+
+    @return $new;
+}
+
+// Format the SVG as a URL
+@function svg-as-url($string) {
+    @return url('data:image/svg+xml,#{url-encode($string)}');
+}

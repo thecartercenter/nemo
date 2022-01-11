@@ -1,0 +1,126 @@
+@media screen and (max-width: $main-breakpoint) {
+    $form-padding: 45px;
+    $form-header-padding: 16px;
+
+    body {
+        padding: 0 !important;
+        margin: 0;
+    }
+
+    .main {
+        margin: 0;
+        padding: 0;
+    }
+
+    .preview-header {
+        top: -5px;
+    }
+
+    .paper {
+        border-radius: 0;
+        padding-top: 0;
+    } // When the form-header is absolutely positioned, we'd like the height to be 0,
+    // if there is no visible content (e.g. no languages, no print button, no brand)
+    // To do this we give the content a padding, but set padding, min-height and margin of form-header to 0.
+    .form-header {
+        position: relative;
+        top: 0;
+        padding: 0 14px;
+        border-bottom: 1px solid $groupline;
+        min-height: 0;
+
+        @include form-header-margin($form-padding);
+
+        .form-language-selector {
+            padding-top: $form-header-padding;
+            padding-bottom: $form-header-padding;
+
+            span {
+                display: none;
+            }
+        }
+    }
+
+    #form-title {
+        padding-top: 25px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    $form-padding: 30px;
+
+    body {
+        line-height: 1.05 * $line-height-base;
+    }
+
+    .or-group:not(.or-appearance-no-collapse)>h4 {
+        margin-left: 8px;
+    }
+
+    .touch .question.simple-select .option-wrapper>label {
+        padding: 10px 5px;
+    }
+
+    .main {
+        .paper {
+            padding: 0 $form-padding $form-padding $form-padding;
+        }
+    }
+
+    .form-header {
+        @include form-header-margin($form-padding);
+    }
+
+    .form-footer {
+        @include form-footer-margin($form-padding);
+    }
+}
+
+@media screen and (max-width: 400px) {
+    $form-padding: 20px;
+
+    body {
+        line-height: 1.09 * $line-height-base;
+    }
+
+    input {
+        &[type="text"],
+        &[type="password"],
+        &[type="url"],
+        &[type="email"],
+        &[type="date"],
+        &[type="number"],
+        &[type="time"],
+        &[type="datetime-local"],
+        &[type="file"] {
+            width: 100%;
+        }
+    }
+
+    select,
+    textarea {
+        width: 100%;
+    }
+
+    .or-group:not(.or-appearance-no-collapse)>h4 {
+        margin-left: 15px;
+    }
+
+    .main {
+        .paper {
+            padding: 0 $form-padding $form-padding $form-padding;
+        }
+    }
+
+    .form-header {
+        @include form-header-margin($form-padding);
+
+        .form-language-selector {
+            border-right: none;
+        }
+    }
+
+    .form-footer {
+        @include form-footer-margin($form-padding);
+    }
+}

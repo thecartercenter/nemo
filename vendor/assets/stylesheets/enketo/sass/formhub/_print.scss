@@ -1,0 +1,38 @@
+.question {
+    input {
+        &[type=radio], &[type=checkbox] {
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+            border-color: black;
+            border-width: 1px;
+
+            &:checked {
+                border-color: black;
+            }
+        }
+
+        &[type=checkbox]:checked {
+            @include checkbox-checked-style(black, transparent);
+
+            background-position: -1px;
+        }
+
+        &[type=radio]:checked {
+            @include radio-checked-style(black);
+        }
+    }
+}
+
+.bootstrap-select {
+    .option-wrapper > label {
+        padding-left: 35px !important;
+    }
+}
+
+[dir="rtl"] {
+    .bootstrap-select {
+        .option-wrapper > label {
+            padding-right: 35px !important;
+        }
+    }
+}

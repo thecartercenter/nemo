@@ -1,0 +1,90 @@
+@mixin disabled {
+    &:disabled, &[readonly] {
+        @include disabled-radiocheck-style;
+    }
+}
+
+@mixin radiocheck-setup {
+    @include appearance-none;
+
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    margin-bottom: 0;
+    margin-top: 0;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.option-wrapper {
+    line-height: 20px;
+}
+
+.question {
+    input[type=radio] {
+        @include radiocheck-setup;
+
+        @include radio-unchecked-style;
+
+        @include disabled;
+
+        @include radiocheck-focus;
+
+        border-radius: 10px;
+
+        &:checked {
+            @include radio-checked-style;
+
+            @include radiocheck-focus;
+        }
+    }
+
+    input[type=checkbox] {
+        @include radiocheck-setup;
+
+        @include checkbox-unchecked-style;
+
+        @include disabled;
+
+        @include radiocheck-focus;
+
+        &:checked {
+            @include checkbox-checked-style;
+
+            @include radiocheck-focus;
+        }
+    }
+}
+
+// tweak for touchscreens
+.touch .question.simple-select {
+    .option-wrapper {
+        .option-label {
+            //TODO: do not yet know why this correction is necessary
+            margin-left: 35px;
+        }
+    }
+}
+
+// tweaks for rtl display
+.or[dir="rtl"],
+[dir="rtl"] .form-footer {
+    .question {
+        input[type=checkbox], input[type=radio] {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+    }
+}
+
+// tweaks for likert widget
+.or-appearance-likert .option-wrapper {
+    > label {
+        .option-label {
+            margin-top: -11.5px;
+        }
+    }
+}
