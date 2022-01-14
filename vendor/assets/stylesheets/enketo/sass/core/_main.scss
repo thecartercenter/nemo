@@ -277,7 +277,7 @@ $media-margin: 10px;
 // The question label itself is bold already
 // so we emphasize in a different way.
 .question-label strong {
-    font-size: $font-size-base + 1px;
+    font-size: $font-size-base + (1 / $px-per-rem)rem;
 }
 
 .question {

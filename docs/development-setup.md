@@ -109,6 +109,8 @@ git checkout develop
 
 #### Bundle, configure, and load schema
 
+TODO: Make sure `yarn install` detects and installs in `lib/enketo-transformer-service/`
+
 1. Install the required gems by running `bundle install` in the project directory.
 1. Install the required Node modules by running `yarn install` in the project directory.
 1. Run `cp config/database.yml.example config/database.yml`.
