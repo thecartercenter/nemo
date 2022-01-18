@@ -185,8 +185,6 @@ module ODK
     def lookup_and_check_form(id, version)
       raise SubmissionError, "no form id was given" if id.nil?
       raise FormVersionError, "form version must be specified" if version.nil?
-      puts "Form id #{id}"
-      puts "#{Form.where(mission: response.mission).first}"
       form = response.form = Form.where(mission: response.mission).find_by(id: id)
       raise SubmissionError, "form not found in this mission" if form.nil?
 

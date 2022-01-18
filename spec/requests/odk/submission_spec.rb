@@ -155,7 +155,7 @@ describe "odk submissions", :odk, type: :request do
       create(
         :response,
         :with_odk_attachment,
-        odk_xml_path: r1_path,
+        xml_path: r1_path,
         form: form1,
         answer_values: xml_values
       )
