@@ -8,6 +8,21 @@ module ODK
   class ResponseParser
     attr_accessor :response, :raw_odk_xml, :files, :awaiting_media, :odk_hash
 
+    def self.duplicate?(xml)
+      checksum = compute_checksum_in_chunks(File.new(xml))
+      ActiveStorage::Blob.find_by(checksum: checksum).present?
+    end
+
+    # @kevin: should this be moved to some utils?
+    def self.compute_checksum_in_chunks(io)
+      OpenSSL::Digest.new("MD5").tap do |checksum|
+        while chunk = io.read(5.megabytes)
+          checksum << chunk
+        end
+        io.rewind
+      end.base64digest
+    end
+
     def initialize(response: nil, files: nil, awaiting_media: false)
       raise "Submissions must have a mission" if response.mission.nil?
       @response = response
@@ -170,7 +185,8 @@ module ODK
     def lookup_and_check_form(id, version)
       raise SubmissionError, "no form id was given" if id.nil?
       raise FormVersionError, "form version must be specified" if version.nil?
-
+      puts "Form id #{id}"
+      puts "#{Form.where(mission: response.mission).first}"
       form = response.form = Form.where(mission: response.mission).find_by(id: id)
       raise SubmissionError, "form not found in this mission" if form.nil?
 

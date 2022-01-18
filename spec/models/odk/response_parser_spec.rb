@@ -530,4 +530,31 @@ describe ODK::ResponseParser do
       expect(populated).to be_incomplete
     end
   end
+
+  context "duplicate submissions" do
+    let!(:mission1) { create(:mission) }
+    let!(:form1) { create(:form, :live, mission: mission1, question_types: question_types) }
+    let!(:formver) { create(:form_version, code: "abc", number: "202211", form: form1) }
+    let(:r1_path) { "tmp/odk/responses/simple_response/simple_response.xml" }
+    let(:r1) do
+      create(
+        :response,
+        :with_odk_attachment,
+        odk_xml_path: r1_path,
+        form: form1,
+        answer_values: xml_values
+      )
+    end
+    let!(:question_types) { %w[text text text text] }
+    let(:xml_values) { %w[A B C D] }
+
+    it "should not be accepted" do
+      prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
+      r1
+      r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
+      r2_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response2.xml")
+      FileUtils.cp(r1_original_path, r2_path)
+      expect(ODK::ResponseParser.duplicate?(r2_path)).to eq(true)
+    end
+  end
 end

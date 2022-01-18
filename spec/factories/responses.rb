@@ -93,6 +93,7 @@
 # the way parsers treat irrelevant answers.) Use "" as the value for answers that are relevant but blank.
 
 module ResponseFactoryHelper
+
   # Returns a potentially nested array of answers.
   def self.build_answers(response, answer_values)
     root = response.build_root_node({type: "AnswerGroup", form_item: response.form.root_group}
@@ -228,6 +229,18 @@ FactoryBot.define do
       reviewed { true }
       reviewer_notes { Faker::Lorem.paragraphs }
       reviewer { create(:user, name: reviewer_name) }
+    end
+
+    trait :with_odk_attachment do
+      transient do
+        odk_xml_path nil
+      end
+      odk_xml {
+        # fill it with the answer values
+        Rack::Test::UploadedFile.new(
+          Rails.root.join(odk_xml_path), "application/xml"
+        )
+      }
     end
 
     after(:build) do |response, evaluator|

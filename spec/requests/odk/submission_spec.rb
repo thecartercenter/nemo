@@ -145,4 +145,34 @@ describe "odk submissions", :odk, type: :request do
       expect(nemo_response.children.size).to eq(1)
     end
   end
+
+  context "duplicate submission" do
+    let(:xml_values) { %w[A B C D] }
+    let!(:form1) { create(:form, :live, mission: mission, question_types: question_types) }
+    let!(:formver) { create(:form_version, code: "abc", number: "202211", form: form1) }
+    let(:r1_path) { "tmp/odk/responses/simple_response/simple_response.xml" }
+    let(:r1) do
+      create(
+        :response,
+        :with_odk_attachment,
+        odk_xml_path: r1_path,
+        form: form1,
+        answer_values: xml_values
+      )
+    end
+    let!(:question_types) { %w[text text text text] }
+
+    it "should return 200" do
+      prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
+      r1
+      r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
+      r2_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response2.xml")
+      FileUtils.cp(r1_original_path, r2_path)
+
+      upload = Rack::Test::UploadedFile.new(r2_path, "text/xml")
+      request_params = {xml_submission_file: upload, format: "xml"}
+      post(submission_path, params: request_params, headers: auth_header)
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end
