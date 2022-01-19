@@ -162,7 +162,7 @@ describe "odk submissions", :odk, type: :request do
     end
     let!(:question_types) { %w[text text text text] }
 
-    it "should return 200" do
+    it "should return created" do
       prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
       r1
       r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
@@ -172,7 +172,7 @@ describe "odk submissions", :odk, type: :request do
       upload = Rack::Test::UploadedFile.new(r2_path, "text/xml")
       request_params = {xml_submission_file: upload, format: "xml"}
       post(submission_path, params: request_params, headers: auth_header)
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:created)
     end
   end
 end
