@@ -1,0 +1,22 @@
+[Unit]
+Description=delayed_job
+After=syslog.target
+After=postgresql.service
+
+[Service]
+Type=forking
+User=deploy
+Environment=RAILS_ENV=production
+Environment=PATH=/home/deploy/.nvm/versions/node/v16.13.0/bin:/home/deploy/.rbenv/plugins/ruby-build/bin:/home/deploy/.rbenv/shims:/home/deploy/.rbenv/bin:/usr/local/bin:/usr/bin:/bin
+
+WorkingDirectory=/home/deploy/elmo/current
+ExecStart=/home/deploy/elmo/current/bin/delayed_job start -n 1
+ExecStop=/home/deploy/elmo/current/bin/delayed_job stop
+TimeoutSec=120
+
+# Use all resources available, but step back when more important things are running.
+CPUWeight=20
+IOWeight=20
+
+[Install]
+WantedBy=multi-user.target
