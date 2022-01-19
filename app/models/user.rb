@@ -55,7 +55,7 @@ class User < ApplicationRecord
   ROLES = %w[enumerator reviewer staffer coordinator].freeze
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
   GENDER_OPTIONS = %w[man woman no_answer specify].freeze
-  PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/.freeze
+  PASSWORD_FORMAT = /\A.*(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*\z/.freeze
   DEFAULT_RECENT_LOGIN_MAX_AGE = 60.minutes
 
   attr_writer(:reset_password_method)
@@ -109,7 +109,7 @@ class User < ApplicationRecord
   validate :no_duplicate_assignments
   validates :login, format: {with: /\A[[:word:].]+\z/},
                     uniqueness: {case_sensitive: true}
-  validates :email, format: {with: /@/},
+  validates :email, format: {with: /\A\S+@\S+\.\S+\z/},
                     length: {maximum: 100},
                     allow_blank: true
 
