@@ -385,7 +385,7 @@ See the [ActiveStorage Pull Request](https://github.com/thecartercenter/nemo/pul
 1. Run `rake db:seed`.
 1. You may delete the `local_config.rb`, `settings.local.yml`, `.rbenv-vars`, and `/config/settings/themes/custom.yml` files at this point, as everything is unified in `.env.*`.
 
-#### Upgrading to v12.19
+#### Upgrading to v12.21
 
 We've upgraded our node version to v16. After pulling the latest code:
 
@@ -394,7 +394,7 @@ We've upgraded our node version to v16. After pulling the latest code:
 1. Run `nvm use` to switch
 1. Run `rm -rf node_modules` to clean up
 1. Run `yarn install` to install fresh
-1. As the privileged user, run `sudo $EDITOR /etc/systemd/system/delayed-job.service` and completely overwrite it with the new contents of [delayed-job.service](/docs/delayed-job.service)
+1. As the privileged user, run `sudo $EDITOR /etc/systemd/system/delayed-job.service` and completely overwrite it with the new contents of [delayed-job.service](/docs/delayed-job.service), then run `sudo systemctl daemon-reload`
 1. Restart via `sudo systemctl restart delayed-job && sudo systemctl restart nginx` and everything should be working again
 
 #### Upgrading to latest
