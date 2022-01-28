@@ -42,7 +42,7 @@ describe FormsController, :odk, type: :request do
           elements.each do |element|
             form_id = element.to_s.match(%r{:(.+)</formID>})[1]
             assert_select(element, "manifestUrl", form_both_multi.id == form_id ? 1 : 0)
-            assert_select(element, "hash", text: /\A[a-f0-9]{32}\z/)
+            assert_select(element, "hash", text: /\Amd5:[a-f0-9]{32}\z/)
             assert_select(element, "version",
               count: 1, text: forms.detect { |f| f.id == form_id }.number)
           end
@@ -98,7 +98,7 @@ describe FormsController, :odk, type: :request do
           get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: auth_header)
           expect(response).to be_successful
           assert_select("filename", text: "itemsets.csv")
-          assert_select("hash", text: itemsets_attachment.md5)
+          assert_select("hash", text: "md5:#{itemsets_attachment.md5}")
           assert_select("downloadUrl", text: "http://www.example.com/#{itemsets_attachment.path}")
         end
 
@@ -131,7 +131,7 @@ describe FormsController, :odk, type: :request do
 
           assert_select("mediaFile", count: 2) do |elements|
             assert_select(elements[0], "filename", text: "#{form.c[0].question.id}_media_prompt.mp3")
-            assert_select(elements[0], "hash", text: "5/46pAa4tnIJudicDNUKqA==")
+            assert_select(elements[0], "hash", text: "md5:5/46pAa4tnIJudicDNUKqA==")
             assert_select(
               elements[0],
               "downloadUrl",
@@ -139,7 +139,7 @@ describe FormsController, :odk, type: :request do
             )
 
             assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_media_prompt.mp3")
-            assert_select(elements[1], "hash", text: "5/46pAa4tnIJudicDNUKqA==")
+            assert_select(elements[1], "hash", text: "md5:5/46pAa4tnIJudicDNUKqA==")
             assert_select(
               elements[1],
               "downloadUrl",
