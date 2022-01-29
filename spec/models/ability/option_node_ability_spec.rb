@@ -64,6 +64,10 @@ describe "abilities for option nodes" do
         expect(ability).not_to be_able_to(:create, OptionNode)
       end
 
+      it "should be able to get child nodes for multilevel" do
+        expect(ability).to be_able_to(:child_nodes, OptionNode)
+      end
+
       context "for instance" do
         let(:permitted) { [] }
         it_behaves_like "has specified abilities"
