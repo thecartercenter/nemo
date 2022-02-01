@@ -4,7 +4,6 @@ pt-BR:
     details:
       user_import: "Importar usuárias/os de %{file}"
       option_sets_import: "Importar o conjunto de opções '%{file}'"
-      response_csv_export: "Exportar arquivo CSV com as submissões"
       broadcast: "Enviar '%{message}'"
     operations_panel: "Painel de operações"
     status:
@@ -650,13 +649,6 @@ pt-BR:
       response_csv_export_options:
         long_text_behavior: "Alguns programa limitam a quantidade de caracteres e linhas que cada célula de dados pode conter. Você pode, portanto, modificar os dados exportados da seguinte maneira:\n\n&nbsp;&nbsp;&nbsp;<b>Excluir</b>: Exporta todas as respostas de tipo Texto Longo em branco. Esta é a opção mais rápida.\n\n&nbsp;&nbsp;&nbsp;<b>Truncar</b>: Dados serão truncados para não ultrapassar os limites de células do Excel. Isso poderá quebrar HTML contido em respostas exportadas. Esta é a opção mais lenta.\n\n&nbsp;&nbsp;&nbsp;<b>Incluir</b>: Nenhuma modificação será feita."
       setting:
-        preferred_locales_str: |-
-            Insira os <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>códigos de duas letras</a>, separados por vírgulas, para os idiomas usados nesta missão, em ordem de preferência.
-
-            Esta configuração determina:
-            * As preferências padrão de idioma para novas/os usuárias/os
-            * O idioma padrão para respostas SMS
-            * Os idiomas para as questões e opções
         override_code: |-
             Este código deve ser fornecido para preenchedores/as se a habilidade de enviar submissões incompletas for necessária. ODK Collect não permitirá o envio de submissões incompletas sem este código, chamado de código de sobreposição.
 

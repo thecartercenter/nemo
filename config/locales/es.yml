@@ -355,13 +355,6 @@ es:
       response:
         incomplete: "Marque esta casilla si hay preguntas necesarias a las que no puede responder. A continuación, podrá guardar esta respuesta sin responder a estas preguntas y la respuesta será marcada como \"incompleta\"."
       setting:
-        preferred_locales_str: |-
-            Entre el <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>código de dos letras</a>, separado por comas, para el idioma de la misión, en orden de preferencia.
-
-            Esta configuración determina:
-            * El idioma standard de preferencia para nuevos usuarios
-            * El idioma standard para las respuestas por SMS
-            * El idioma para las Preguntas y las Opciones
         external_sql: "El código SQL utilizado para extraer los datos para su uso en aplicaciones externas. Haga click en \"Seleccionar todo\" y, a continuación, presione Ctrl-C para copiar."
         timezone: "La zona horaria que aparece en todo el sitio web."
       sms/test:
