@@ -176,37 +176,23 @@ describe "odk submissions", :odk, type: :request do
     end
 
     context "two threads trying to submit at the same time" do
-      describe "thread test" do
-
-
-        it "should do something weird", thread: true do
-          self.use_transactional_tests = false
-
-          # m = Mission.create!(name: "Mission 2")
-          # puts mission.compact_name
-          puts "Mission from database #{Mission.first.compact_name}"
-          user
+      describe "thread test", database_cleaner: :truncate do
+        it "should not create duplicates", thread: true do
           prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
           r1_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
+          upload = Rack::Test::UploadedFile.new(r1_path, "text/xml")
+          request_params = {xml_submission_file: upload, format: "xml"}
 
-          thread1 = Thread.new do
-            puts "uath header #{auth_header}"
-            upload = Rack::Test::UploadedFile.new(r1_path, "text/xml")
-            request_params = {xml_submission_file: upload, format: "xml"}
-            puts post(submission_path, params: request_params, headers: auth_header)
-          end
-
-          #thread1 = request(r1_path, auth_header, submission_path)
-          # thread2 = request(r1_path, auth_header, submission_path)
-          thread1.join
-          # thread2.join
-          expect(response).to have_http_status(:created)
+          expect do
+            threads = []
+            5.times do
+              threads << Thread.new { post(submission_path, params: request_params, headers: auth_header) }
+              sleep(0.5)
+            end
+            threads.map(&:join)
+          end.to change { Response.all.count }.by(1)
         end
       end
     end
   end
-end
-
-def request(file_path, auth_header, submission_path)
-
 end
