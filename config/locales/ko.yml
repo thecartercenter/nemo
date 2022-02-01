@@ -512,13 +512,6 @@ ko:
       response:
         incomplete: "응답 불가능한 필수 질문이 있다면 이 박스에 체크하십시오. 박스가 체크되면, 해당 질문에 응답하지 않고 질문지를 저장할 수 있습니다. 저장된 질문지는 '미완성'으로 표시됩니다."
       setting:
-        preferred_locales_str: |-
-            이 미션에 사용되길 선호하는 언어들을 <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>두글자 코드</a>와,  쉼표로 구분하여 입력하십시오.
-
-            이 설정은 다음과 같은 항목을 결정합니다.
-            *새 사용자의 기본 선호 언어
-            *SMS 응답 문자의 기본 언어
-            *질문과 선택지에 사용되는 언어
         incoming_sms_numbers_str: "SMS 응답지가 제출 될 전화 번호(들)를 (국가 번호는 쉼표로 구분하여) 입력하십시오. 이 번호는 오직 SMS 제출을 할 때에만 필요합니다.  "
         incoming_sms_token: |-
             이 암호는 SMS 수신번호 매체에 사용된 URL에 포함되어 있습니다. 이는 본인 확인되지 않은 메세지 제출을 방지합니다.

@@ -1,13 +1,16 @@
 fr:
   operation:
     clear_confirm: "Etes vous sûr de vouloir supprimer toutes les opérations terminées?"
+    destroy_confirm: "Êtes-vous sûr de vouloir annuler cette opération?"
     details:
       user_import: "Importation d'utilisateur à partir de %{file}"
       option_sets_import: "Importation de l'ensemble d'options '%{file}' "
-      response_csv_export: "Export des réponses au format CSV"
+      questions_import: "Importation des questions '%{file}'"
+      download_csv: "Export des réponses au format CSV"
       broadcast: "Diffusion '%{message}'"
       cache_odata: "Actualisation des données de  l'API"
-      bulk_media_export: "Exportation des médias en mass"
+      download_media: "Exportation des médias en masse"
+      download_xml: "Résponses originales ODK XML"
     notes:
       remaining: "Restant"
     operations_panel: "Panneau des opérations"
@@ -39,12 +42,14 @@ fr:
     queued_msg:
       broadcast: "Diffusion en attente."
       option_sets_import: "Importation d'ensembles d'options en file d'attente."
+      questions_import: "Importation des questions en file d'attente."
       response_csv_export: "Export de réponses CSV en attente."
       user_import: "Import d'utilisateur en attente."
     see_error_report: "Voir le rapport d'erreur"
     result_link_text:
       response_csv_export: "Télécharger CSV"
-      bulk_media_download: "Téléchargement des médias en mass"
+      bulk_media_download: "Télécharger le média"
+      xml_download: "Télécharger XML"
   locale_name: "Français"
   common:
     accept: "Accepter"
@@ -73,6 +78,7 @@ fr:
     data: "Données"
     delete: "Supprimer"
     design: "Concevoir"
+    docs: "Documentation"
     edit: "Modifier"
     either: 'L''un ou l''autre'
     endDate: "Fin"
@@ -451,6 +457,7 @@ fr:
       option:
         coordinates: "Les coordonnées "
         shortcode: "code court"
+        value: "Valeur"
       option_set:
         allow_coordinates: "avec les coordonnées"
         answers: "Résultats"
@@ -467,7 +474,7 @@ fr:
       qing_group:
         group_name: "Nom"
         group_hint: "Indice"
-        group_item_name: "Répéter le nom de l'objet"
+        group_item_name: "Nom de l'élément à répéter"
         new: "Ajouter groupe"
         edit: "Modifier groupe"
         delete: "Êtes-vous certain de vouloir supprimer le goupe '%{name}'?"
@@ -491,6 +498,8 @@ fr:
         metadata_type: "Type de métadonnée"
         tag_ids: "Tags"
         sms_guide_formatting: "Formatage du guide SMS"
+      questions/import:
+        file: "Fichier à importer"
       questioning:
         name: "Titre"
         condition: "Condition?"
@@ -599,10 +608,10 @@ fr:
         sms_relay: "s'il faut autoriser le transfert de SMS aux utilisateurs et groupes"
         recipient_ids: "Si vous saisissez un utilisateur ou un groupe d'utilisateur ici, les réponses SMS entrant leur seront automatiquement transmises"
         authenticate_sms: "Si coché, l'utilisateur devra entrer son code utilisateur lors de l'envoi de réponse par SMS."
-        allow_incomplete: "Si coché, permet l'envoi des formulaires avec des questions obligatoires sans réponse (seulement par web et ODK). Les observateurs utilisant ODK doivent saisir un code de dérogation (cf. paramètres) pour ce faire."
+        allow_incomplete: "Si coché, permet la soumission des formulaires avec des questions obligatoires sans réponse (seulement par web et ODK). Les observateurs utilisant ODK doivent saisir un code de dérogation (voir page paramètres) pour ce faire."
         current_version_name: "Chaque version du formulaire a un identifiant à 10 chiffres et un code à 3 lettres. Le système de gestion des versions de formulaire est destiné à indiquer de petits changements dans la conception du formulaire afin que les observateurs puissent mettre à jour leurs copies du formulaire."
         access_level: "Public: tous les utilisateurs peuvent accéder aux données via API. Protégé: Seulement les utilisateurs spécifiques peuvent accéder aux donnes via API. Privé: Personne ne peut accéder aux donnes via API."
-        default_response_name: "Le texte entré ici sera utilisé comme nom par défaut des formulaires remplis dans ODK. Vous pouvez saisir $CodeQuestion pour inclure la valeur d'une question dans le formulaire.\n\nPar exemple, entrer:\n\nQuestionnaire pour $NumVillage-$NomDeFamille\n\npourrait nommer le formulaire:\n\nQuestionnaire pour 7-Smith\n\nen supposant que vous avez des questions avec les codes 'NumVillage' et 'NomDeFamille'\n\nVous pouvez également entrer une expression de calcul XPath en l’entourant de la fonction calc():\n\n<code></code>\n<code>calc($NumVillage + 100 / 2)</code>"
+        default_response_name: "Le texte entré ici sera utilisé comme nom par défaut des formulaires remplis dans ODK. Vous pouvez saisir le $CodeQuestion pour inclure la valeur d'une question dans le formulaire.\n\nPar exemple, entrer:\n\n&nbsp;&nbsp;&nbsp;Questionnaire pour $NumVillage-$NomDeFamille\n\npourrait nommer le formulaire:\n\n&nbsp;&nbsp;&nbsp;Questionnaire pour 7-Smith\n\nen supposant que vous avez des questions avec les codes 'NumVillage' et 'NomDeFamille'\n\nVous pouvez également entrer une expression de calcul XPath en l’entourant de la fonction <code>calc()</code>:\n\n&nbsp;&nbsp;&nbsp;<code>calc($NumVillage + 100 / 2)</code>"
       mission:
         name: "Le titre de cette mission doit être unique et contenir un maximum de 32 caractères. Il est recommandé d'inclure l'année si des missions futures utiliseront le même titre."
         locked: "Si une mission est verrouillée, les réponses et les formulaires ne peuvent pas être créés ou modifiés et les utilisateurs ne peuvent pas être ajoutés ou supprimés."
@@ -619,7 +628,7 @@ fr:
         option_levels: "Les titres pour chaque niveau d'options, (p.ex 'Pays', 'Province', 'Ville'). Notez que les titres des niveaux sont différent parmi les options elles-mêmes. "
         sms_guide_formatting: "Les significations des options sont les suivantes: Auto: Determiner automatiquement si il faut utiliser 'inline' ou 'appendix'. Inline: Montre la liste des options dans le guide SMS. Appendix: Inclue la liste des options dans un tableau créé par le coordonnateur. Treat as text: Considere les options comme des textes saisis"
       qing_group:
-        group_item_name: "Vous pouvez saisir $QuestionCode pour inclure la valeur d'une question (pour ODK seulement)\nPar exemple, imaginons que nous créons un groupe répétable où le code de la question est 'HouseholdID' et nous saisissons\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID\n\nVous créez un groupe et répondez '123' pour \"HouseholdID'. En suite vous créez un deuxième groupe et vous répondez '789' pour 'HouseholdID'. Le premier nom du groupe sera 'HouseholdID:123'. Le second groupe sera 'Household:789'"
+        group_item_name: "Vous pouvez saisir $CodeQuestion pour inclure la valeur d'une question (pour ODK seulement)\nPar exemple, imaginons que nous créons un groupe répétable où le code de la question est 'HouseholdID' et nous saisissons\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID\n\nVous créez un groupe et répondez '123' pour \"HouseholdID'. En suite vous créez un deuxième groupe et vous répondez '789' pour 'HouseholdID'. Le premier nom du groupe sera 'HouseholdID:123'. Le second groupe sera 'Household:789'"
       question:
         media_prompt: "Joignez un fichier multimédia que les énumérateurs peuvent visualiser ou écouter lors de la consultation de la question dans ODK. Video (mp4), audio (mp3, ogg, wav, flac), et fichiers image (png, jpg) sont tous acceptés. La taille des fichiers peut être jusqu'à %{max_size_mib}."
         code: "Un nom de code court (entre 2-20 caractères), qui devrait contenir seulement des lettres et des chiffres, par ex. UrneClos, HeureDeDepart."
@@ -635,11 +644,14 @@ fr:
         metadata_type: "Une valeur spéciale qui peut être pré-remplie dans cette question. Si cette option est choisie, cette question sera automatiquement masquée et non requise, et toutes les conditions seront supprimées."
         reference: "Une URL pour complémenter la question. Doit commencer par http: // ou https: //."
       questioning:
-        default: "Le texte saisi ici sera pré-rempli dans l'espace de réponse (pour ODK uniquement). Vous pouvez entrer $CodeQuestion pour inclure la valeur d'une question précédente et $!RepeatNum pour inclure le numéro de l'élément actuel dans un groupe qui se répète..\n\nPar exemple, entrer\n\nID: $Menage-$!RepeatNum\n\nen assumant que vous avez une question avec le code 'Menage', pour la deuxième personne du ménage 176, pré-remplirait la réponse avec\n\nID: 176-2\n\nVous pouvez également entrer une expression de calcul XPath en l’incluant dans la fonction calc():\n\n<code></code>\n<code>calc($NumVillage + 100 / 2)</code>"
+        default: |-
+            Le texte saisi ici sera pré-rempli dans l'espace de réponse (pour ODK Collect uniquement).
+            Vous pouvez saisir les valeurs des questions précédentes, les numéros des groupes à répétition et les expressions XPath. En savoir plus dans le
+            <a href="https://getnemo.readthedocs.io/en/latest/content/formsquestions/formsquestions.html#default-answer" _target="blank">documentation</a>
         display_logic: "Conditions qui doivent être remplies pour que cette question soit visible pour l'utilisateur"
         hidden: "Seulement pour ODK collect:  masque la question mais prend la réponse par défaut."
         hidden_more_info: "Voir plus a propos des questions masquées dans la documentation."
-        disabled: "Masquez la question et ne récoltez aucune réponse."
+        disabled: "Masquer la question et ne rien collecter"
         read_only: "ODK Collect uniquement. Ne peut pas modifier la réponse par défaut."
         required: "Si cette question doit avoir une réponse"
         skip_logic: "Règles pour savoir quelle question afficher après cette question."
@@ -659,7 +671,7 @@ fr:
       response:
         incomplete: "Cochez cette boîte s'il-y-a des réponses obligatoires manquantes. Il sera quand même possible d'enregistrer votre formulaire. La réponse sera simplement marquée comme étant \"incomplète\"."
       response_csv_export_options:
-        long_text_behavior: "Certains logiciels limitent le nombre des caractères pouvant être contenu dans une cellule. Vous pouvez modifier les données exportées de la manière suivant:\n\n&nbsp;&nbsp;&nbsp;<b>Exclude</b>: Exporter toutes les réponses de type Texte Long comme vide.  Ceci est l'option la plus rapide.\n&nbsp;&nbsp;&nbsp <b>Tronquer</b> Les données seront tronquées pour ne pas dépasser la limite des cellules Excel. Ceci peut rompre les lient hypertexte contenu dans les réponses exportées. C'est l'option la plus lente.\n&nbsp;&nbsp;&nbsp <b>Inclure</b>  Aucune modification ne sera faite."
+        long_text_behavior: "Certains programmes limitent le nombre de caractères et de lignes que chaque cellule de données peut contenir. Vous pouvez modifier les données exportées comme suit:\n\n&nbsp;&nbsp;&nbsp;<b>Exclure</b>: Exporter toutes les réponses de type Texte Long comme vide.  Ceci est l'option la plus rapide.\n&nbsp;&nbsp;&nbsp <b>Tronquer</b> Les données seront tronquées pour ne pas dépasser les limites des cellules Excel. Cela peut casser le code HTML contenu dans la réponse exportée. C'est l'option la plus lente.\n&nbsp;&nbsp;&nbsp <b>Inclure</b>  Aucune modification ne sera faite."
       setting:
         preferred_locales_str: |-
             Entrez le <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>code à deux lettres</a> pour les langues préférées de cette mission. Séparez les langues par des virgules.
@@ -671,7 +683,7 @@ fr:
         override_code: |-
             Ce code doit être remis aux observateur si il y a besoin d'envoyer des formulaires incomplets. Les formulaires avec des questions obligatoires sans réponses ne pourront pas être soumis sans ce code.
 
-            Si vous générez un nouveau code, veuillez sauvegarder l'ancien code s'il existe des formulaires non soumis.
+            Si vous générez un nouveau code, veuillez enregistrer l'ancien code s'il existe des formulaires publiés. Le nouveau code ne fonctionnera que pour les formulaires téléchargés après la régénération du code.
         incoming_sms_numbers_str: "Entrez le ou les numéros de téléphone (y compris le code du pays, séparés par des virgules) auxquels les SMS entrants pour les formulaires SMS doivent être envoyés. Nécessaire uniquement si vous utilisez des soumissions SMS."
         incoming_sms_token: |-
             ce jeton est inclu dans l'URL utilisé par le fournisseur de SMS entrant pour eviter l'envoi des messages non autorisés.
@@ -769,6 +781,7 @@ fr:
           at_least_one: "Choisissez au moins une option."
           cant_delete_if_has_questions: "Impossible de supprimer cet ensemble d'options parce qu'une ou plus questions y sont associées."
           cant_delete_if_has_answers: "Impossible de supprimer cet ensemble d'options parce que c'est inclus dans au moins une réponse."
+          duplicate: "Ce nom d'ensemble d'options existe déjà dans cette mission, veuillez entrer un nom unique."
           general: "Il y avait un problème d'enregistrer l'ensemble d'options."
           wrong_depth: "Vous avez %{levels} niveaux d'options mais votre arbre d'options est %{depth} options profonde."
         option_sets/import:
@@ -778,6 +791,9 @@ fr:
           header_too_long: "Erreur dans la ligne %{row_num}: les en-têtes ne peuvent avoir plus de %{limit} caractères."
         question:
           at_least_one_name: "Il faut entrer un titre dans au moins une langue. "
+          code: "Le code de la question est requis"
+          option_set: "L'ensemble d'option n'existe pas"
+          qtype_unrecognized: "Le type de question n'est pas reconnu."
           attributes:
             code:
               invalid: "Commencer par une lettre. Utiliser seulement des lettres et des chiffres et un maximum de 20 caractères."
@@ -870,6 +886,7 @@ fr:
     about: "A propos de %{site_name}"
     actions: "Actions"
     are_you_sure: "Êtes-vous sur?"
+    changelog: "Journal des modifications"
     change_language: "Changer la langue"
     created_by: "Crée par"
     copy_to_clipboard: "Copier dans le presse papier"
@@ -883,7 +900,7 @@ fr:
     no_selection: "Rien n'a été sélectionné."
     reqd_sym_definition: "Les réponses obligatoires sont marqués avec un %{reqd_sym}."
     select_all: "Sélectionner tout"
-    server_contact_error: "Ne peut pas atteindre le serveur"
+    server_contact_error: "Impossible de contacter le serveur."
     system_error: "Erreur de système. L'administrateur a été notifié."
     system_version: "Version du système"
     time_ago: "%{time}"
@@ -891,6 +908,7 @@ fr:
     updated_at: "Mise à jour à"
     no_live_forms: "Pas de formulaires disponibles"
   actions:
+    cancel: "Annuler"
     clone: "Cloner"
     close: "Fermer"
     edit: "Editer"
@@ -907,6 +925,7 @@ fr:
     clone: "Dupliquer"
     import_standard: "Importer des formulaires standard"
     import_from_csv: "Importer au format CSV"
+    export_csv: "Exporter au format CSV"
     export: "Exporter"
     models:
       form:
@@ -917,7 +936,8 @@ fr:
         pause: "Pause"
         return_to_draft: "Retour au statut brouillon"
         print: "Imprimer"
-        re_cache: "Re-cache OData"
+        re_cache: "Remettre en cache OData"
+        view_raw_odata: "Voir OData brute"
       mission:
         new: "Créer une mission"
       operation:
@@ -931,6 +951,8 @@ fr:
       question:
         new: "Créer une nouvelle question"
         add_to_form: "Ajouter au formulaire"
+      questions/import:
+        new: "Importer CSV"
       report/report:
         new: "Créer un Rapport"
         export: "Exporter au format CSV"
@@ -1127,6 +1149,8 @@ fr:
       index: "Questions"
       new: "Nouvelle Question"
       show: "Question: %{code}"
+    question_imports:
+      new: "Importer de nouvelles questions"
     questionings:
       edit: "Modifier la question: %{code}"
       index: "Questions"
@@ -1261,7 +1285,7 @@ fr:
     recent_responses: "Dernières réponses"
     shrink_map: "Réduire la carte"
     response_locations: "Lieu de soumission des réponses"
-    response_locations_truncated: "Seulement les 1%{max} des localisations sont affichées "
+    response_locations_truncated: "Seulement les %{max} localisations les plus récentes sont affichées."
     report_placeholder: "Sélectionner un rapport ci dessus pour explorer les données. Les rapports sont actualisées toutes les 30 secondes."
     summary: "Résumé"
     top_forms: "Formulaires les plus Actifs"
@@ -1334,7 +1358,7 @@ fr:
         other: "Les appendices suivants doivent être inclus avec ce formulaire:"
       auth_code: "Code d'autorisation de l'utilisateur (recquis)"
       header: "Guide SMS"
-      draft_error: "Vous ne pouvez pas voir le guide SMS pour le formulaire %{form_name} parce qu'il est actuellement un brouillon. Publier le formulaire ou l'interrompre pour voir le guide SMS"
+      draft_error: "Vous ne pouvez pas voir le guide SMS pour le formulaire %{form_name} parce qu'il est actuellement un brouillon. Publier le formulaire ou le mettre en pause pour voir le guide SMS."
       for_paper_record: "Pour l'enregistrement sur papier seulement"
       form_code: "Le code unique du formulaire (recquis)"
       multiple_sms_numbers: "Numéro d'envoi multiple de SMS"
@@ -1431,7 +1455,7 @@ fr:
         standard_copy: "Cette question est basée sur une question standard"
         data: "Cette question a des réponses associées"
       option_set:
-        in_use: "Cet ensemble d'options apparaît sur %{count} questions"
+        in_use: "Cet ensemble d'options apparaît sur questions: %{question_list}"
         published: "Cet ensemble d'options apparaît sur au moins un formulaire publié (pas un brouillon)"
         standard_copy: "Cet ensemble d'options est basé sur un standard"
         data: "Cet ensemble d'options a des réponses associées"
@@ -1477,6 +1501,14 @@ fr:
     latitude: "Latitude"
     longitude: "Longitude"
     value: "Valeur numérique"
+  option_set_import:
+    instructions_html: |-
+        Télécharger un fichier CSV avec vos options. Modèles CSV avec <a href="%{csv_url_1}">options à plusieurs niveaux</a> and <a href="%{csv_url_2}">options à un seul niveau avec traduction</a> sont disponibles comme point de départ.
+
+        Notes:
+
+        * Seuls les fichiers CSV sont acceptés. Ils doivent être encodés en UTF-8. Vous pouvez exporter des fichiers XLSX au format CSV à l'aide de n'importe quel tableur standard.
+        * Vous pouvez trouver plus de documentation <a href="https://getnemo.readthedocs.io/en/main/content/formsoptionsets/formsoptionsets.html#import-new-option-set">ici</a>.
   tag:
     none_found: "Aucun tag trouvé "
     searching: "Recherche..."
@@ -1580,7 +1612,7 @@ fr:
     choose_attrib_question: "Choisissez un attribut ou question"
     choose_disagg_qing: "Choisissez une question..."
     choose_form: "Choisissez un formulaire..."
-    choose_report: "Choisissez un rapport"
+    choose_report: "Choisissez un rapport..."
     columns: "Colonnes"
     display_options: "Options "
     edit_report: "Modifier Rapport"
@@ -1698,22 +1730,34 @@ fr:
   response:
     reviewed: "Cette réponse a été revu"
     edit_this_response: "Modifier cette réponse"
-    download_csv: "Télécharger CSV"
+    download_csv: "Télécharger"
     connect_odata: "Connecter aux OData"
+    download: "Télécharger les réponses"
     export:
       export: "Exporter"
       to_csv: "Format CSV"
-      to_odata: "OData via API"
-      odata_prompt_html: "Utiliser l'API de NEMO pour accéder aux données en utilisant un OData standard. Vous pouvez copier cet URL dans votre logiciel de traitement des données comme Power BI."
+      to_odata: "OData via l'API"
+      odata_prompt_html: "Utiliser l'API de NEMO pour accéder aux données en utilisant un le standard OData. Vous pouvez copier cet URL dans votre logiciel de traitement des données, tel que Power BI."
     export_options:
       summary:
         zero: "Aucune réponse a exporter."
         one: "%{count} réponses a exporter"
         two: "%{count} réponses a exporter"
-        few: "%{count} réponses a exporter"
-        many: "%{count} réponses a exporter"
-        other: "%{count} réponses a exporter"
-      download_media: "Télécharger les médias joints"
+        few: "%{count} réponses a exporter."
+        many: "%{count} réponses a exporter."
+        other: "%{count} réponses a exporter."
+      download_media: "Pièces jointes média"
+      download_xml: "XML original (ODK)"
+      download_csv: "CSV"
+      calculating: "Calcul de la taille du fichier"
+      download_types: "Téléchargement de:"
+      mb: "MB"
+      no_space: "Il n'y a pas assez d'espace sur le disque pour exporter les réponses sélectionnées. Essayez une sélection plus petite."
+      media_size: "Taille totale du média:"
+      xml_size: "Taille totale du XML :"
+      try_again: "Il y a eu une erreur. Veuillez réessayer."
+      export_error: "Exporter plus que %{threshold} réponses n'est pas permis. Veuillez sélectionné moins de réponses ou utiliser l'API OData."
+      export_warning: "Exporter plus que %{threshold} réponses pourrait durer longtemps. Pensez à sélectionné moins de réponses ou utiliser l'API OData."
     loading: "Chargement Réponse..."
     observation_time: "Le temps d'Observation"
     save_and_mark_reviewed: "Enregistrer et Marquer comme Revu"
@@ -1758,7 +1802,7 @@ fr:
       many: "%{count} réponses supprimée avec succès."
       other: "%{count} réponses supprimée avec succès."
     long_text_behavior_options:
-      exclude: "exclus"
+      exclude: "Exclu"
       truncate: "Tronquer pour Excel (plus lent)"
       include: "Contient"
   role:
@@ -1804,6 +1848,88 @@ fr:
     help_link: "Aide"
     help_title: "Aide "
     help_text:
+      responses: |-
+          ## Qualificatifs
+
+          Une recherche simple telle que:
+
+          * __romeo juliet__
+
+          cherche les réponses aux questions. Pour rechercher dans les attributs de réponse, utilisez un qualificatif, par exemple.:
+
+          * __form:Widgets__
+
+          affichera uniquement les réponses au formulaire 'Widgets'.
+
+          Combinez les deux éléments ci-dessus pour affiner votre recherche:
+
+          * __romeo juliet form:Widgets__
+
+          affichera les réponses au formulaire 'Widgets' contenant les mots 'romeo' et 'juliet'.
+
+          La liste complète des qualificatifs que vous pouvez utiliser sont les suivant:
+
+          * __form__ Le nom du formulaire
+          * __submitter__ Le nom de l'utilisateur qui a soumis la réponse (correspondances partielles autorisées)
+          * __group__ Le nom d'un groupe d'utilisateurs auquel appartient l'utilisateur qui soumet (correspondances partielles autorisées)
+          * __submit-date__ Date à laquelle la réponse a été soumise (par exemple, 1985-03-22)
+          * __reviewed__ Si la réponse a été marquée 'révisée' (1 = oui ou 0 = non)
+          * __source__ Le moyen par lequel la réponse a été soumise ('web', 'odk' ou 'sms')
+          *__{CodeQuestion} La réponse à une question ayant pour code CodeQuestion
+
+          ## Phrases exactes
+
+          Les phrases exactes peuvent être trouvées en les mettant entre guillemets:
+
+          * __submitter:"John Smith"__
+
+          Les phrases entre guillemets ne peuvent actuellement être utilisées qu'avec des qualificatifs autres que "text".
+
+          ## Tous les termes vs. N'importe quel terme
+
+          Par défaut, tous les termes de la recherche doivent correspondre. Par exemple,
+
+          * __alpha lima peru__
+
+          correspond uniquement aux réponses avec ces trois mots. Utilisez le caractère barre verticale ('|') pour faire correspondre plusieurs mots / phrases:
+
+          * __form:( Lions | "Bears and Sharks" | Tigers )__
+
+          correspond aux réponses pour n'importe lequel des formulaires ci-dessus. Le '|' ne peut être utilisé qu'avec des qualificatifs autres que "text".
+
+          ## Les opérateurs
+
+          Vous pouvez inverser le sens d'une recherche en utilisant l'opérateur de négation:
+
+          * __form != Widgets__
+
+          correspondra aux réponses pour tout formulaire sauf le formulaire 'Widgets'.
+
+          Pour la recherche de réponses, la négation fonctionne différemment:
+
+          * __ballot -box__
+
+          correspondra à toute réponse avec une réponse contenant le mot "ballot" mais pas le mot "box". Il doit y avoir au moins un terme non nié dans une telle recherche.
+
+          Pour certains qualificatifs (par exemple, __submit-date__), les comparaisons supérieures à et inférieures à sont également autorisées.:
+
+          * __submit-date > 2000-01-01__
+
+          Plusieurs de ceux-ci peuvent être combinés pour limiter la recherche à une plage:
+
+          * __submit-date >= 2000-01-01 submit-date < 2000-02-01__
+
+          correspondra aux réponses soumises au mois de janvier 2000.
+
+          ## Format de réponse
+
+          Certains types de questions attendent un format spécifique pour rechercher des réponses : par exemple, la recherche de réponses à une question de type Date avec le code de question DateQ1 peut ressembler à "{DateQ1} : 2021-01-01"
+
+          * Date: AAAA-MM-JJ, ex: "2021-01-01"
+          * Heure: HHhMMmSSs, ex: "13h00m00s"
+          * Date/Heure: AAAA-MM-JJ HHhMMmSSs, ex: "2021-01-01 13h00m00s"
+
+          Ces valeurs sont traitées comme du texte brut, vous pouvez donc par exemple rechercher simplement "13h" pour trouver n'importe quelle réponse basée sur l'heure, la date et l'heure ou le texte qui correspond à ce mot.
       users: |-
           ## Qualificatifs
 
@@ -2135,10 +2261,36 @@ fr:
       wrong_type: "Le fichier téléchargé doit être un fichier de type CSV valide."
       no_rows: "Aucune ligne à importer."
       bad_csv: "Un problème est survenu avec votre fichier CSV: %{msg}"
+  question_import:
+    instructions_html: |-
+        Téléchargez un fichier CSV avec vos questions. Un <a href="%{csv_url}">modéle CSV</a> est disponible comme point de départ.
+
+        Notes:
+
+        * Seuls les fichiers CSV sont acceptés. Ils doivent être encodés en UTF-8. Vous pouvez exporter des fichiers XLSX au format CSV à l'aide de n'importe quel tableur standard.
+        * Le code doit être un nom de code court (entre 2 et 20 caractères). Ne doit contenir que des lettres et des chiffres, par ex. BallotBoxSealed, HeureDepart.
+        * QType doit être un type de question valide, par exemple : entier, selectionner\_un, selection\_multiple, texte, texte\_long, décimale.
+        * Le nom de l'ensemble d'options doit correspondre à un nom d'ensemble d'options existant, s'il est spécifié.
+        * Vous pouvez trouver plus de documentation <a href="https://getnemo.readthedocs.io/en/latest/content/formsquestions/formsquestions.html#import-new-questions">ici</a>.
+    errors:
+      missing_headers: "Il manquait certaines colonnes à votre CSV, veuillez consulter le modèle/la documentation."
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
     expired: "Votre requête a expirée, veuillez réessayer."
+  user_import:
+    instructions_html: |-
+        Télécharger une fichier CSV avec vos utilisateurs. Un <a href="%{csv_url}">modéle CSV</a> est disponible comme point de départ.
+
+        Notes:
+
+        * Seuls les fichiers CSV sont acceptés. Ils doivent être encodés en UTF-8. Vous pouvez exporter des fichiers XLSX au format CSV à l'aide de n'importe quel tableur standard.
+        * Veuillez ne pas modifier la ligne supérieure du modèle de quelque manière que ce soit.
+        * Les numéros de téléphone doivent inclure l'indicatif du pays (par exemple, +17095551212).
+        * Le genre peut être "Homme", "Femme" ou "Refuser de répondre", ou peut être n'importe quelle autre valeur.
+        * La nationalité doit être le nom d'un pays tel que 'Canada' ou 'Bangladesh'.
+        * Les noms de plusieurs groupes d'utilisateurs doivent être séparés par un point-virgule. Si un groupe d'utilisateurs nommé n'existe pas, il sera créé.
+        * You can find more documentation <a href="https://getnemo.readthedocs.io/en/main/content/users/users.html#import-users">ici</a>.
   user:
     add_assignment: "Ajouter Une Tâche"
     api_key:
