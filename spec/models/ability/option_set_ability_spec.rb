@@ -72,20 +72,19 @@ describe "abilities for option sets" do
     end
 
     shared_examples_for "enumerator abilities" do
-      it "shouldn't be able to index or create" do
-        expect(ability).not_to be_able_to(:index, OptionSet)
+      it "shouldn't be able to create" do
         expect(ability).not_to be_able_to(:create, OptionSet)
       end
 
       context "when draft" do
         let(:form) { create(:form, question_types: %w[text]) }
-        let(:permitted) { [] }
+        let(:permitted) { [:show] }
         it_behaves_like "has specified abilities"
       end
 
       context "when live" do
         let(:form) { create(:form, :live, question_types: %w[text]) }
-        let(:permitted) { [] }
+        let(:permitted) { [:show] }
         it_behaves_like "has specified abilities"
       end
     end
