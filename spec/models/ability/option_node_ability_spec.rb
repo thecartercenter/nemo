@@ -59,8 +59,7 @@ describe "abilities for option nodes" do
     end
 
     shared_examples_for "enumerator abilities" do
-      it "shouldn't be able to index or create" do
-        expect(ability).not_to be_able_to(:index, OptionNode)
+      it "shouldn't be able to create" do
         expect(ability).not_to be_able_to(:create, OptionNode)
       end
 
@@ -69,7 +68,7 @@ describe "abilities for option nodes" do
       end
 
       context "for instance" do
-        let(:permitted) { [] }
+        let(:permitted) { [:show] }
         it_behaves_like "has specified abilities"
       end
     end
