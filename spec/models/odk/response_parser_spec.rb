@@ -548,7 +548,7 @@ describe ODK::ResponseParser do
     let!(:question_types) { %w[text text text text] }
     let(:xml_values) { %w[A B C D] }
 
-    it "should not be accepted" do
+    it "should be flagged as a duplicate" do
       prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
       r1
       r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")

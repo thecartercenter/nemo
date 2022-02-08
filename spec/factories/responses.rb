@@ -234,11 +234,11 @@ FactoryBot.define do
       transient do
         xml_path nil
       end
-      odk_xml {
+      odk_xml do
         Rack::Test::UploadedFile.new(
           Rails.root.join(xml_path), "application/xml"
         )
-      }
+      end
     end
 
     after(:build) do |response, evaluator|

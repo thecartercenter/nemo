@@ -171,11 +171,13 @@ describe "odk submissions", :odk, type: :request do
 
       upload = Rack::Test::UploadedFile.new(r2_path, "text/xml")
       request_params = {xml_submission_file: upload, format: "xml"}
-      post(submission_path, params: request_params, headers: auth_header)
+      expect do
+        post(submission_path, params: request_params, headers: auth_header)
+      end.to change { Response.all.count }.by(0)
       expect(response).to have_http_status(:created)
     end
 
-    context "two threads trying to submit at the same time" do
+    context "five threads trying to submit at the same time" do
       describe "thread test", database_cleaner: :truncate do
         it "should not create duplicates", thread: true do
           prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
@@ -187,7 +189,6 @@ describe "odk submissions", :odk, type: :request do
             threads = []
             5.times do
               threads << Thread.new { post(submission_path, params: request_params, headers: auth_header) }
-              sleep(0.5)
             end
             threads.map(&:join)
           end.to change { Response.all.count }.by(1)
