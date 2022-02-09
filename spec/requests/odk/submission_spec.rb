@@ -187,9 +187,17 @@ describe "odk submissions", :odk, type: :request do
 
           expect do
             threads = []
+            # create a thread and have it take a long time
+            # thread1 = Thread.new do
+            #   sleep(1)
+            #   post(submission_path, params: request_params, headers: auth_header)
+            # end
+            # thread2 = Thread.new { post(submission_path, params: request_params, headers: auth_header) }
             5.times do
               threads << Thread.new { post(submission_path, params: request_params, headers: auth_header) }
             end
+            # thread1.join
+            # thread2.join
             threads.map(&:join)
           end.to change { Response.all.count }.by(1)
         end

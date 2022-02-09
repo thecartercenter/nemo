@@ -12,7 +12,7 @@ module ODK
       checksum = compute_checksum_in_chunks(File.new(xml))
       blob = ActiveStorage::Blob.find_by(checksum: checksum)
       return false if blob.blank?
-      
+
       attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
       response = Response.find(attachment.record_id)
       response.user.id == user_id

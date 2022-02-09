@@ -217,6 +217,11 @@ class ResponsesController < ApplicationController
       @response.odk_xml = submission_file
       @response = odk_response_parser.populate_response
       authorize!(:submit_to, @response.form)
+
+      # check here for another dupliciate before saving
+      # if ODK::ResponseParser.duplicate?(submission_file, current_user.id)
+      #   render(body: nil, status: :created) and return
+      # end
       @response.save(validate: false)
       FileUtils.rm(tmp_path)
       render(body: nil, status: :created)
