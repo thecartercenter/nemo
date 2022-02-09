@@ -8,9 +8,14 @@ module ODK
   class ResponseParser
     attr_accessor :response, :raw_odk_xml, :files, :awaiting_media, :odk_hash
 
-    def self.duplicate?(xml)
+    def self.duplicate?(xml, user_id)
       checksum = compute_checksum_in_chunks(File.new(xml))
-      ActiveStorage::Blob.find_by(checksum: checksum).present?
+      blob = ActiveStorage::Blob.find_by(checksum: checksum)
+      return false if blob.blank?
+      
+      attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
+      response = Response.find(attachment.record_id)
+      response.user.id == user_id
     end
 
     # From Rails https://github.com/rails/rails/blob/activestorage/app/models/active_storage/blob.rb#L369

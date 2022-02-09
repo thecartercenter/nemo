@@ -206,7 +206,9 @@ class ResponsesController < ApplicationController
 
     # See config/initializers/http_status_code.rb for custom status definitions
     begin
-      render(body: nil, status: :created) and return if ODK::ResponseParser.duplicate?(submission_file)
+      if ODK::ResponseParser.duplicate?(submission_file, current_user.id)
+        render(body: nil, status: :created) and return
+      end
 
       tmp_path = copy_to_tmp_path(submission_file)
 
