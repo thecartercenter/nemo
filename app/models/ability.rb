@@ -226,7 +226,7 @@ class Ability
     can(:regenerate_sms_auth_code, User) { |u| u == user }
     can(:login_instructions, User, id: user.id)
 
-    can(%i[read show child_nodes], [OptionSet, OptionNode], mission_id: mission.id)
+    can(%i[show child_nodes], [OptionSet, OptionNode], mission_id: mission.id)
 
 
     # only need these abilities if not also a staffer
