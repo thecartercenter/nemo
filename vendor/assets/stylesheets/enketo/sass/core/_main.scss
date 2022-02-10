@@ -1,3 +1,4 @@
+.enketo-form {
 $media-margin: 10px;
 
 /** hide stuff **/
@@ -619,4 +620,5 @@ legend .required {
     &.or-branch.pre-init {
         display: none;
     }
+}
 }

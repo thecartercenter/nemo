@@ -1,3 +1,4 @@
+.enketo-form {
 $geo-main-breakpoint: $main-breakpoint;
 $map-height: 275px;
 $map-width: 65%;
@@ -1450,4 +1451,5 @@ $input-button-border: 2px solid #aaaaaa;
     left: 0;
     margin-left: -12px;
     border-right-color: #fff;
+}
 }

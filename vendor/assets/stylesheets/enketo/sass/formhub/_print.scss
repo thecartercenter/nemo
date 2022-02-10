@@ -1,3 +1,4 @@
+.enketo-form {
 .question {
     input {
         &[type=radio], &[type=checkbox] {
@@ -35,4 +36,5 @@
             padding-right: 35px !important;
         }
     }
+}
 }
