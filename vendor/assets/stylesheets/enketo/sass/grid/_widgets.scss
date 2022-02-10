@@ -1,3 +1,4 @@
+.enketo-form {
 //widget scss overrides
 .question .geopoint.widget {
 
@@ -231,4 +232,5 @@ legend .btn-comment {
 .or-appearance-vertical .range-widget__wrap,
 .or-appearance-distress .range-widget__wrap {
     margin-top: 0;
+}
 }

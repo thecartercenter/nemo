@@ -1,3 +1,4 @@
+.enketo-form {
 @mixin disabled {
     &:disabled, &[readonly] {
         @include disabled-radiocheck-style;
@@ -87,4 +88,5 @@
             margin-top: -11.5px;
         }
     }
+}
 }

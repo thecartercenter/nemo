@@ -1,3 +1,4 @@
+.enketo-form {
 @media screen and (max-width: $main-breakpoint) {
     $form-padding: 45px;
     $form-header-padding: 16px;
@@ -123,4 +124,5 @@
     .form-footer {
         @include form-footer-margin($form-padding);
     }
+}
 }

@@ -1,3 +1,4 @@
+.enketo-form {
 @import "mixins";
 
 $printBaseFontSize: 10px;
@@ -239,4 +240,5 @@ screen and (min-width: 700px) {
         display: table;
         break-inside: avoid;
     }
+}
 }

@@ -1,3 +1,4 @@
+.enketo-form {
 @mixin likert-filler {
     content: '';
     display: block;
@@ -147,4 +148,5 @@
     input[type=checkbox] {
         background-color: $repeat-bg;
     }
+}
 }

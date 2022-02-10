@@ -1,3 +1,4 @@
+.enketo-form {
 * {
     @include box-sizing(border-box);
 }
@@ -92,4 +93,5 @@ h2, h3, h4 {
 
 input, select, textarea {
     font-weight: normal;
+}
 }

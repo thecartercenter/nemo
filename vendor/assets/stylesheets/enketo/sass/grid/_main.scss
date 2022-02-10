@@ -1,3 +1,4 @@
+.enketo-form {
 @import "widgets";
 @import "../formhub/form-controls";
 
@@ -416,4 +417,5 @@ screen and (min-width: 1100px) and (max-width: 1200px) {
     .paper .or .form-logo {
         margin-top: 0;
     }
+}
 }
