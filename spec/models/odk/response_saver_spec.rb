@@ -41,7 +41,12 @@ describe ODK::ResponseSaver do
       e = nil
 
       thread1 = Thread.new do
-        e = ODK::ResponseSaver.save_with_retries!(response: r1, submission_file: upload, user_id: user.id, test: true)
+        e = ODK::ResponseSaver.save_with_retries!(
+          response: r1,
+          submission_file: upload,
+          user_id: user.id,
+          test: true
+        )
       end
 
       thread2 = Thread.new do
@@ -62,10 +67,10 @@ describe ODK::ResponseSaver do
     db = ActiveRecord::Base.connection_pool.checkout
     db.execute("start transaction isolation level serializable;")
     db.execute("select * from active_storage_blobs WHERE checksum='#{checksum}';")
-    db.execute("INSERT INTO active_storage_blobs (checksum, byte_size, content_type, filename, key, service_name, created_at)
-        VALUES ('#{checksum}', 10000, 'application/xml', 'simple_response.xml', 'abc123', 'test', NOW());")
+    db.execute("INSERT INTO active_storage_blobs
+      (checksum, byte_size, content_type, filename, key, service_name, created_at)
+      VALUES ('#{checksum}', 10000, 'application/xml', 'simple_response.xml', 'abc123', 'test', NOW());")
     db.execute("COMMIT;")
     ActiveRecord::Base.connection_pool.checkin(db)
   end
-
 end

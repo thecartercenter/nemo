@@ -239,9 +239,8 @@ class ResponsesController < ApplicationController
       render_xml_submission_failure(e, :form_not_live)
     rescue SubmissionError => e
       render_xml_submission_failure(e, :unprocessable_entity)
-    rescue ActiveRecord::SerializationFailure
-      # TODO: duplicate
-      render_xml_submission_failure(e, :forbidden)
+    rescue ActiveRecord::SerializationFailure => e
+      render_xml_submission_failure(e, :created)
     end
   end
 

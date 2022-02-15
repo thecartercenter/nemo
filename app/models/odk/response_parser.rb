@@ -40,7 +40,6 @@ module ODK
       @response.source = "odk"
       @awaiting_media = awaiting_media
       @answer_parser = nil
-      puts "in init, response object #{@response}"
     end
 
     # populates response tree and saves
@@ -219,7 +218,6 @@ module ODK
       existing_response = Response.find_by(odk_hash: calculate_odk_hash, form_id: response.form_id)
       if existing_response.present?
         self.response = existing_response
-        puts "Existing response"
         true
       else
         false
