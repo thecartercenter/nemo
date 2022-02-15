@@ -12,8 +12,8 @@ module ODK
       checksum = compute_checksum_in_chunks(File.new(xml))
       blob = ActiveStorage::Blob.find_by(checksum: checksum)
       return false if blob.blank?
-
       attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
+      return false if attachment.nil?
       response = Response.find(attachment.record_id)
       response.user.id == user_id
     end
@@ -40,6 +40,7 @@ module ODK
       @response.source = "odk"
       @awaiting_media = awaiting_media
       @answer_parser = nil
+      puts "in init, response object #{@response}"
     end
 
     # populates response tree and saves
@@ -218,6 +219,7 @@ module ODK
       existing_response = Response.find_by(odk_hash: calculate_odk_hash, form_id: response.form_id)
       if existing_response.present?
         self.response = existing_response
+        puts "Existing response"
         true
       else
         false

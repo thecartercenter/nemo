@@ -43,14 +43,14 @@ describe "odk submissions", :odk, type: :request do
   end
 
   context "normal submission" do
-    it "should work and have mission set to current mission" do
+    it "should work and have mission set to current mission", database_cleaner: :truncate do
       post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.mission).to eq(mission)
       expect(nemo_response.device_id).to eq(nil)
     end
 
-    it "should save device ID if present" do
+    it "should save device ID if present", database_cleaner: :truncate do
       post("#{submission_path}?deviceID=test", params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.device_id).to eq("test")
@@ -139,14 +139,14 @@ describe "odk submissions", :odk, type: :request do
       form.c[1].update!(required: true)
     end
 
-    it "should still accept response" do
+    it "should still accept response", database_cleaner: :truncate do
       post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.children.size).to eq(1)
     end
   end
 
-  context "duplicate submission" do
+  context "sequential duplicate submission" do
     let(:xml_values) { %w[A B C D] }
     let!(:form1) { create(:form, :live, mission: mission, question_types: question_types) }
     let!(:formver) { create(:form_version, code: "abc", number: "202211", form: form1) }
@@ -157,12 +157,13 @@ describe "odk submissions", :odk, type: :request do
         :with_odk_attachment,
         xml_path: r1_path,
         form: form1,
-        answer_values: xml_values
+        answer_values: xml_values,
+        user_id: user.id
       )
     end
     let!(:question_types) { %w[text text text text] }
 
-    it "should return created" do
+    it "should return created", database_cleaner: :truncate do
       prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
       r1
       r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
@@ -175,33 +176,6 @@ describe "odk submissions", :odk, type: :request do
         post(submission_path, params: request_params, headers: auth_header)
       end.to change { Response.all.count }.by(0)
       expect(response).to have_http_status(:created)
-    end
-
-    context "five threads trying to submit at the same time" do
-      describe "thread test", database_cleaner: :truncate do
-        it "should not create duplicates", thread: true do
-          prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
-          r1_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
-          upload = Rack::Test::UploadedFile.new(r1_path, "text/xml")
-          request_params = {xml_submission_file: upload, format: "xml"}
-
-          expect do
-            threads = []
-            # create a thread and have it take a long time
-            # thread1 = Thread.new do
-            #   sleep(1)
-            #   post(submission_path, params: request_params, headers: auth_header)
-            # end
-            # thread2 = Thread.new { post(submission_path, params: request_params, headers: auth_header) }
-            5.times do
-              threads << Thread.new { post(submission_path, params: request_params, headers: auth_header) }
-            end
-            # thread1.join
-            # thread2.join
-            threads.map(&:join)
-          end.to change { Response.all.count }.by(1)
-        end
-      end
     end
   end
 end
