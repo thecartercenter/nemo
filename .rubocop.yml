@@ -71,7 +71,7 @@ Metrics/CyclomaticComplexity:
     - db/migrate/*
 
 Metrics/MethodLength:
-  Max: 12
+  Max: 20
   Exclude:
     - db/migrate/*
 
