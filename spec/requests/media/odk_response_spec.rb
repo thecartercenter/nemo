@@ -17,7 +17,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       FileUtils.rm_rf(ResponsesController::TMP_UPLOADS_PATH)
     end
 
-    it "should successfully process the submission and clean up" do
+    it "should successfully process the submission and clean up", database_cleaner: :truncate do
       image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
@@ -49,7 +49,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
   context "with multiple parts" do
     let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
-    it "should successfully process the submission" do
+    it "should successfully process the submission", database_cleaner: :truncate do
       image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
       image2 = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
