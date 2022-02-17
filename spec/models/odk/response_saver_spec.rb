@@ -32,6 +32,11 @@ describe ODK::ResponseSaver do
     end
     let!(:question_types) { %w[text text text text] }
 
+    before do
+      stub_const(ODK::ResponseSaver, "MAX_TRIES", 0)
+      stub_const(ODK::ResponseSaver, "SLEEP_TIMER", 5)
+    end
+
     it "should return a database serialization error", database_cleaner: :truncate do
       # make odk
       prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
@@ -40,26 +45,27 @@ describe ODK::ResponseSaver do
       checksum = ODK::ResponseParser.compute_checksum_in_chunks(upload)
       e = nil
 
-      thread1 = Thread.new do
-        e = ODK::ResponseSaver.save_with_retries!(
-          response: r1,
-          submission_file: upload,
-          user_id: user.id,
-          test: true
-        )
+      begin
+        thread1 = Thread.new do
+          e = ODK::ResponseSaver.save_with_retries!(
+            response: r1,
+            submission_file: upload,
+            user_id: user.id
+          )
+        end
+
+        thread2 = Thread.new do
+          # wait until the first thread is sleepin
+          sleep(3)
+          insert_response_via_second_db_connection(checksum)
+        end
+
+        thread1.join
+        thread2.join
+      rescue ActiveRecord::SerializationFailure => e
+        expect(ActiveStorage::Blob.all.count).to eq(1)
+        expect(e.class).to eq(ActiveRecord::SerializationFailure)
       end
-
-      thread2 = Thread.new do
-        # wait until the first thread is sleepin
-        sleep(2)
-        insert_response_via_second_db_connection(checksum)
-      end
-
-      thread1.join
-      thread2.join
-
-      expect(ActiveStorage::Blob.all.count).to eq(1)
-      expect(e.class).to eq(ActiveRecord::SerializationFailure)
     end
   end
 

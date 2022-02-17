@@ -10,12 +10,14 @@ module ODK
 
     def self.duplicate?(xml, user_id)
       checksum = compute_checksum_in_chunks(File.new(xml))
-      blob = ActiveStorage::Blob.find_by(checksum: checksum)
-      return false if blob.blank?
-      attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
-      return false if attachment.nil?
-      response = Response.find(attachment.record_id)
-      response.user.id == user_id
+      blobs = ActiveStorage::Blob.where(checksum: checksum)
+      blobs.each do |blob|
+        attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
+        next if attachment.nil?
+        response = Response.find(attachment.record_id)
+        return true if response.&user.&id == user_id
+      end
+      false
     end
 
     # From Rails https://github.com/rails/rails/blob/activestorage/app/models/active_storage/blob.rb#L369

@@ -223,8 +223,7 @@ class ResponsesController < ApplicationController
       ODK::ResponseSaver.save_with_retries!(
         response: @response,
         submission_file: submission_file,
-        user_id: current_user.id,
-        test: false
+        user_id: current_user.id
       )
 
       render(body: nil, status: :created)
