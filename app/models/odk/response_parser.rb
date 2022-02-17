@@ -15,7 +15,7 @@ module ODK
         attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
         next if attachment.nil?
         response = Response.find(attachment.record_id)
-        return true if response.&user.&id == user_id
+        return true if response.present? && response.user.id == user_id
       end
       false
     end
