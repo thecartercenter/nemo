@@ -209,6 +209,7 @@ class ResponsesController < ApplicationController
 
       # First duplicate check for existing responses
       if ODK::ResponseParser.duplicate?(submission_file, current_user.id)
+        Sentry.capture_message("Ignored simple duplicate")
         render(body: nil, status: :created) and return
       end
 
@@ -240,6 +241,7 @@ class ResponsesController < ApplicationController
     rescue SubmissionError => e
       render_xml_submission_failure(e, :unprocessable_entity)
     rescue ActiveRecord::SerializationFailure => e
+      Sentry.capture_message("Ignored parallel duplicate")
       render_xml_submission_failure(e, :created)
     end
   end
