@@ -3,7 +3,7 @@
 module ODK
   # Saves responses and is responsible for handling serialization and duplicate errors
   class ResponseSaver
-    MAX_TRIES = 5
+    MAX_TRIES = 10
     # For testing race conditions, stubbed in tests
     SLEEP_TIMER = 0
 
