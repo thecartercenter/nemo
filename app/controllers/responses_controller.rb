@@ -204,18 +204,30 @@ class ResponsesController < ApplicationController
       return render_xml_submission_failure("No XML file attached.", :unprocessable_entity)
     end
 
-    # See config/initializers/http_status_code.rb for custom status definitions
     begin
-      tmp_path = copy_to_tmp_path(submission_file)
+      # See config/initializers/http_status_code.rb for custom status definitions
 
+      # First duplicate check for existing responses
+      if ODK::ResponseParser.duplicate?(submission_file, current_user.id)
+        Sentry.capture_message("Ignored simple duplicate")
+        render(body: nil, status: :created) and return
+      end
+
+      tmp_path = copy_to_tmp_path(submission_file)
       @response.user_id = current_user.id
       @response.device_id = params[:deviceID]
       @response.odk_xml = submission_file
       @response = odk_response_parser.populate_response
       authorize!(:submit_to, @response.form)
-      @response.save(validate: false)
-      FileUtils.rm(tmp_path)
+
+      ODK::ResponseSaver.save_with_retries!(
+        response: @response,
+        submission_file: submission_file,
+        user_id: current_user.id
+      )
+
       render(body: nil, status: :created)
+      FileUtils.rm(tmp_path)
     rescue CanCan::AccessDenied => e
       render_xml_submission_failure(e, :forbidden)
     rescue ActiveRecord::RecordNotFound => e
@@ -227,6 +239,9 @@ class ResponsesController < ApplicationController
       render_xml_submission_failure(e, :form_not_live)
     rescue SubmissionError => e
       render_xml_submission_failure(e, :unprocessable_entity)
+    rescue ActiveRecord::SerializationFailure => e
+      Sentry.capture_message("Ignored parallel duplicate")
+      render_xml_submission_failure(e, :created)
     end
   end
 

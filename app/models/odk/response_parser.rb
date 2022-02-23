@@ -8,6 +8,32 @@ module ODK
   class ResponseParser
     attr_accessor :response, :raw_odk_xml, :files, :awaiting_media, :odk_hash
 
+    def self.duplicate?(xml, user_id)
+      checksum = compute_checksum_in_chunks(File.new(xml))
+      blobs = ActiveStorage::Blob.where(checksum: checksum)
+      blobs.each do |blob|
+        attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
+        next if attachment.nil?
+        response = Response.find(attachment.record_id)
+        return true if response.present? && response.user.id == user_id
+      end
+      false
+    end
+
+    # From Rails https://github.com/rails/rails/blob/activestorage/app/models/active_storage/blob.rb#L369
+    # rubocop:disable Naming/MethodParameterName
+    # rubocop:disable Lint/AssignmentInCondition
+    def self.compute_checksum_in_chunks(io)
+      OpenSSL::Digest.new("MD5").tap do |checksum|
+        while chunk = io.read(5.megabytes)
+          checksum << chunk
+        end
+        io.rewind
+      end.base64digest
+    end
+    # rubocop:enable Naming/MethodParameterName
+    # rubocop:enable Lint/AssignmentInCondition
+
     def initialize(response: nil, files: nil, awaiting_media: false)
       raise "Submissions must have a mission" if response.mission.nil?
       @response = response
@@ -170,7 +196,6 @@ module ODK
     def lookup_and_check_form(id, version)
       raise SubmissionError, "no form id was given" if id.nil?
       raise FormVersionError, "form version must be specified" if version.nil?
-
       form = response.form = Form.where(mission: response.mission).find_by(id: id)
       raise SubmissionError, "form not found in this mission" if form.nil?
 

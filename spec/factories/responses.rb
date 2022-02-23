@@ -230,6 +230,17 @@ FactoryBot.define do
       reviewer { create(:user, name: reviewer_name) }
     end
 
+    trait :with_odk_attachment do
+      transient do
+        xml_path nil
+      end
+      odk_xml do
+        Rack::Test::UploadedFile.new(
+          Rails.root.join(xml_path), "application/xml"
+        )
+      end
+    end
+
     after(:build) do |response, evaluator|
       # If form is draft, it will need a version for use in the shortcode, so create one
       # by going live and then reverting.
