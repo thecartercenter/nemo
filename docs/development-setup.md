@@ -208,6 +208,15 @@ These errors can be extremely hard to diagnose. You can find the raw device logs
 Note: from one year to another, the Android ecosystem changes and Collect also modifies their architecture. They don't always document upgrade instructions very clearly,
 so ODK's #collect-code Slack channel can be a good place to get help with error messages on upgrade if you can't figure out what's wrong.
 
+### Upgrading Enketo
+
+Enketo uses jQuery under the hood, and it's important to keep library versions consistent so there aren't conflicts.
+To upgrade our version of Enketo:
+1. Check their [changelog](https://github.com/enketo/enketo-core/blob/master/CHANGELOG.md)
+2. Update `package.json` (enketo-core, possibly jquery) and `lib/enketo-transformer-service/package.json` (enketo-transformer) as appropriate
+3. Verify that the changes in `yarn.lock` seem valid (e.g. we don't suddenly have TWO different versions of jQuery floating around)
+4. Restart the dev server
+
 ### Troubleshooting
 
 #### Integrity check failed

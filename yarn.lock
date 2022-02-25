@@ -4229,10 +4229,10 @@ enhanced-resolve@^4.1.1, enhanced-resolve@^4.5.0:
     memory-fs "^0.5.0"
     tapable "^1.0.0"
 
-enketo-core@6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/enketo-core/-/enketo-core-6.0.2.tgz#a07ed2e9d5ac32dad5fbea82ce5d8b143975d16f"
-  integrity sha512-OGxftXaQ3UH6qaElPLiX7bLsY8QP664oKvr5NA3Um+2hN7nXIpM8Kf6j+dMgTiYQEfS0uS3EMzLDvUZu1COzKw==
+enketo-core@6.0.4:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/enketo-core/-/enketo-core-6.0.4.tgz#2b4964c6ffdf6a040751c9b6ad97862bea901cf2"
+  integrity sha512-BgUpVbzkaIbGhkR6sDf61LZXwt3fh2rnIU0h0LBWEMuyjHtiFtSpastYUjm+9MVcMBogX6WLK840TJoJzNibrg==
   dependencies:
     bootstrap-datepicker "1.9.x"
     html5sortable "^0.13.3"
@@ -4242,8 +4242,8 @@ enketo-core@6.0.2:
     leaflet-draw "github:enketo/Leaflet.draw#ff73078"
     leaflet.gridlayer.googlemutant "^0.13.4"
     mergexml "github:eyelidlessness/js-merge-xml#upgrade/xmldom"
-    node-forge "^0.10.0"
-    openrosa-xpath-evaluator "^2.0.9"
+    node-forge "^1.2.1"
+    openrosa-xpath-evaluator "^2.0.10"
     signature_pad "2.3.x"
 
 entities@^1.1.1:
@@ -7464,6 +7464,11 @@ node-forge@^0.10.0:
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
 
+node-forge@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-1.2.1.tgz#82794919071ef2eb5c509293325cec8afd0fd53c"
+  integrity sha512-Fcvtbb+zBcZXbTTVwqGA5W+MKBj56UjVRevvchv5XrcyXbmNdesfZL37nlcWOfpgHhgmxApw3tQbTr4CqNmX4w==
+
 node-int64@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
@@ -7736,10 +7741,10 @@ open@^8.0.9:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-openrosa-xpath-evaluator@^2.0.9:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/openrosa-xpath-evaluator/-/openrosa-xpath-evaluator-2.0.9.tgz#4cc4a79909106509990917d01c2f6575b592d96f"
-  integrity sha512-4EA5IvxQ4dFmxJo4aQ4HjIZZ5aDJmx9bIt/i/pDSPaVN3nVnG4iM8/taBLk546ytXjscps/+9HlwDgFhunXLZA==
+openrosa-xpath-evaluator@^2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/openrosa-xpath-evaluator/-/openrosa-xpath-evaluator-2.0.10.tgz#011f9b384cc2af7a9a687eb60f2e59f1bc33eff1"
+  integrity sha512-TI6IBKLqaDWuSdKcL+T2EQDUe06/IUuJXmfUZSkA6Vn90gnWJHeAs+NaG6dJsOn/qu2PwWc/iOWkjxmEKnSbVw==
 
 optimize-css-assets-webpack-plugin@^5.0.8:
   version "5.0.8"
