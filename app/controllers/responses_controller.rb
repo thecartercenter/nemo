@@ -74,17 +74,20 @@ class ResponsesController < ApplicationController
   end
 
   def new
+    return enketo if params[:enketo].present?
+
+    setup_condition_computer
+    Results::BlankResponseTreeBuilder.new(@response).build
+    # render the form template
+    prepare_and_render_form
+  end
+
+  def enketo
     # This is continually a frustration in development; different IDEs have different defaults.
     raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v16")
     # TODO: Think about security of html_safe here.
     @transformed = `node '#{Rails.root.join("lib/enketo-transformer-service/index.js")}'`.chomp.html_safe
     raise RuntimeError unless @transformed.present?
-
-    # TODO: Restore this
-    # setup_condition_computer
-    # Results::BlankResponseTreeBuilder.new(@response).build
-    # render the form template
-    # prepare_and_render_form
   end
 
   def edit

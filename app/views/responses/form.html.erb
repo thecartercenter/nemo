@@ -6,6 +6,8 @@
   ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: ".response-form"});
 <% end %>
 
+<%= link_to(t("response.use_enketo"), params.permit!.merge("enketo": "1")) %>
+
 <div id="response-form-wrapper">
   <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form") do |f| %>
     <%= ActionLinks::LinkBuilder.new(@response, %i[show edit destroy]) %>

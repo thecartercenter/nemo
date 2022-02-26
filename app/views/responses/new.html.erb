@@ -1,3 +1,7 @@
+<!-- Note: this template is only used for Enketo, not regular responses. -->
+
+<%= link_to(t("response.use_nemo"), params.permit!.merge("enketo": "")) %>
+
 <div id="enketo" class="enketo-form"></div>
 
 <script>
