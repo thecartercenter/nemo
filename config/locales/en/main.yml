@@ -1765,6 +1765,8 @@ en:
   response:
     reviewed: "This response has been reviewed"
     edit_this_response: "Edit This Response"
+    use_enketo: "Edit with Enketo"
+    use_nemo: "Edit with NEMO"
     download_csv: "Download"
     connect_odata: "Connect to OData"
     download: "Download Responses"
