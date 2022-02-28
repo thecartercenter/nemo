@@ -1,8 +1,14 @@
 <!-- Note: this template is only used for Enketo, not regular responses. -->
 
+<!-- TODO: This link should be conditional (like edit mode, read-only mode, etc.) -->
 <%= link_to(t("response.use_nemo"), params.permit!.merge("enketo": "")) %>
 
 <div id="enketo" class="enketo-form"></div>
+
+<!-- TODO: This button should be conditional (like edit mode, read-only mode, etc.) -->
+<button id="enketo-submit" type="button" class="btn btn-primary">
+  <%= I18n.t("common.submit") %>
+</button>
 
 <script>
   let transformed = <%= @transformed %>;

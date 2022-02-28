@@ -38,27 +38,42 @@ async function inject() {
   // and aggregate any loadErrors.
   // loadErrors = loadErrors.concat(form.goTo('//repeat[3]/node'));
 
-  // submit button handler for validate button
-  $('#submit')
-    .on('click', async () => {
-      // clear non-relevant questions and validate
-      const valid = await form.validate();
+  $('#enketo-submit').on('click', async () => {
+    // clear non-relevant questions and validate
+    const valid = await form.validate();
 
-      if (!valid) {
-        alert('Form contains errors. Please see fields marked in red.');
-      } else {
-        // Record is valid!
-        const record = form.getDataStr();
+    if (!valid) {
+      // TODO: Convert to DOM element
+      alert('Form contains errors. Please see fields marked in red.');
+    } else {
+      // Record is valid!
+      ELMO.app.loading(true);
 
-        // reset the form view
-        form.resetView();
+      // Convert into a file to upload, like NEMO expects from Collect;
+      // adapted from https://stackoverflow.com/a/34340245/763231.
+      const xml = form.getDataStr();
+      const formData = new FormData();
+      formData.append('xml_submission_file', new File([new Blob([xml])], 'submission.xml'));
 
-        // reinstantiate a new form with the default model and no options
-        form = new Form(formEl, { modelStr }, {});
-
-        // do what you want with the record
-      }
-    });
+      $.ajax({
+        url: ELMO.app.url_builder.build('submission'),
+        method: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: () => {
+          window.location.href = ELMO.app.url_builder.build('responses');
+        },
+        error: ({ status, statusText }) => {
+          // TODO: Convert to DOM element
+          alert(`Error submitting form: ${status} ${statusText}`);
+        },
+        always: () => {
+          ELMO.app.loading(false);
+        },
+      });
+    }
+  });
 }
 
 // Run the async method.

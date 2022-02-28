@@ -6,6 +6,7 @@
   ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: ".response-form"});
 <% end %>
 
+<!-- TODO: This link should be conditional (like edit mode, read-only mode, etc.) -->
 <%= link_to(t("response.use_enketo"), params.permit!.merge("enketo": "1")) %>
 
 <div id="response-form-wrapper">
