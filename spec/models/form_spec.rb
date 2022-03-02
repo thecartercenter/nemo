@@ -83,6 +83,18 @@ describe Form do
           expect(form).to be_valid
         end
       end
+      describe "Form with an underscore" do
+        let(:form) { build(:form, name: "New_form123") }
+        it "should be invalid" do
+          expect(form).to_not(be_valid)
+        end
+      end
+      describe "from with letters with accents" do
+        let(:form) { build(:form, name: "Más rès forma de añoç") }
+        it "should be valid" do
+          expect(form).to be_valid
+        end
+      end
     end
   end
 

@@ -78,8 +78,8 @@ class Form < ApplicationRecord
   after_save :update_minimum
 
   # rubocop:disable Style/RegexpLiteral
-  # Do not allow any slashes, parenthesis, or pipes as this breaks the API
-  validates :name, presence: true, length: {maximum: 32}, format: {without: /[\/()\\|]/}
+  # Do not allow any slashes, parenthesis, underscores, or pipes as this breaks the API
+  validates :name, presence: true, length: {maximum: 32}, format: {without: /[\/()\\|_]/}
   # rubocop:enable Style/RegexpLiteral
 
   validate :name_unique_per_mission
