@@ -18,8 +18,6 @@ module ODK
         break
       rescue ActiveRecord::SerializationFailure => e
         tries += 1
-        Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Tries: #{tries}"))
-        Sentry.capture_message("SerializationFailure for response")
         raise e if tries >= MAX_TRIES
       end
     end
