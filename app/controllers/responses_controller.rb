@@ -83,10 +83,19 @@ class ResponsesController < ApplicationController
   end
 
   def enketo
-    # This is continually a frustration in development; different IDEs have different defaults.
+    # Fail fast if we're on the wrong node version (this happens most often in development).
     raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v16")
-    # TODO: Think about security of html_safe here.
-    @transformed = `node '#{Rails.root.join("lib/enketo-transformer-service/index.js")}'`.chomp.html_safe
+
+    form = @response.form
+    # Terrapin seems to return an ASCII-encoded string, so we must interpret it
+    # as UTF-8 in order for the rest of the page to work for some kinds of forms.
+    command = Terrapin::CommandLine.new("node", ":transformer :xml")
+    @transformed = command.run(
+      transformer: Rails.root.join("lib/enketo-transformer-service/index.js"),
+      xml: form.odk_xml.download
+    ).force_encoding("utf-8").chomp.html_safe # rubocop:disable Rails/OutputSafety
+
+    # Fail fast if something went wrong with the CLI process.
     raise RuntimeError unless @transformed.present?
   end
 
