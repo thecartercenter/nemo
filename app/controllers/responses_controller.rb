@@ -90,15 +90,15 @@ class ResponsesController < ApplicationController
     # Terrapin seems to return an ASCII-encoded string, so we must interpret it
     # as UTF-8 in order for the rest of the page to work for some kinds of forms.
     command = Terrapin::CommandLine.new("node", ":transformer :xml")
-    @transformed = command.run(
+    @transformed_obj = command.run(
       transformer: Rails.root.join("lib/enketo-transformer-service/index.js"),
       xml: form.odk_xml.download
     ).force_encoding("utf-8").chomp.html_safe # rubocop:disable Rails/OutputSafety
 
     # Fail fast if something went wrong with the CLI process.
-    raise RuntimeError unless @transformed.present?
+    raise RuntimeError unless @transformed_obj.present?
 
-    @instance = @response.odk_xml.download
+    @instance_str = @response.odk_xml.download
       .to_json.html_safe # rubocop:disable Rails/OutputSafety
 
     render(:enketo_form)

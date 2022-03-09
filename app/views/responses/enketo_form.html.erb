@@ -13,12 +13,12 @@
 </button>
 
 <script>
-  let transformed = <%= @transformed.presence || "null" %>;
-  window.ENKETO_MODEL_STR = transformed.model;
-  $("#enketo").html(transformed.form);
+  let transformedObj = <%= @transformed_obj.presence || "{}" %>;
+  window.ENKETO_MODEL_STR = transformedObj.model;
+  $("#enketo").html(transformedObj.form);
 
-  let instance = <%= @instance.presence || "null" %>;
-  window.ENKETO_INSTANCE_STR = instance;
+  let instanceStr = <%= @instance_str.presence || "null" %>;
+  window.ENKETO_INSTANCE_STR = instanceStr;
 </script>
 
 <%= javascript_pack_tag 'enketo' %>
