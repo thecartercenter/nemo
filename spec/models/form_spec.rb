@@ -71,25 +71,42 @@ describe Form do
     end
 
     context "form name" do
-      describe "form name with invalid characters" do
-        let(:form) { build(:form, name: "abc|()/") }
+      describe "with slash" do
+        let(:form) { build(:form, name: "abc / 123") }
         it "should be invalid" do
           expect(form).to_not(be_valid)
         end
       end
-      describe "form name with alphanumeric and a space" do
+
+      describe "with symbols only" do
+        let(:form) { build(:form, name: "***") }
+        it "should be invalid" do
+          expect(form).to_not(be_valid)
+        end
+      end
+
+      describe "with symbols and letters" do
+        let(:form) { build(:form, name: "*a*") }
+        it "should be valid" do
+          expect(form).to be_valid
+        end
+      end
+
+      describe "with alphanumeric and a space" do
         let(:form) { build(:form, name: "Bert 123") }
         it "should be valid" do
           expect(form).to be_valid
         end
       end
-      describe "Form with an underscore" do
+
+      describe "with an underscore" do
         let(:form) { build(:form, name: "New_form123") }
         it "should be invalid" do
           expect(form).to_not(be_valid)
         end
       end
-      describe "from with letters with accents" do
+
+      describe "with letters with accents" do
         let(:form) { build(:form, name: "Más rès forma de añoç") }
         it "should be valid" do
           expect(form).to be_valid
