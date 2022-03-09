@@ -97,12 +97,20 @@ class ResponsesController < ApplicationController
 
     # Fail fast if something went wrong with the CLI process.
     raise RuntimeError unless @transformed.present?
+
+    @instance = @response.odk_xml.download
+      .to_json.html_safe # rubocop:disable Rails/OutputSafety
+
+    render(:enketo_form)
   end
 
   def edit
     if @response.checked_out_by_others?(current_user)
       flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
     end
+
+    return enketo if params[:enketo].present?
+
     prepare_and_render_form
   end
 
