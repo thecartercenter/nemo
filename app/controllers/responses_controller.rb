@@ -82,34 +82,6 @@ class ResponsesController < ApplicationController
     prepare_and_render_form
   end
 
-  def enketo
-    # Fail fast if we're on the wrong node version (this happens most often in development).
-    raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v16")
-
-    # This check is here until we have a way to encode legacy editor responses as ODK XML.
-    if action_name == "edit" && !@response.odk_xml.attached?
-      flash[:error] = t("activerecord.errors.models.response.no_xml")
-      return redirect_to(params.permit!.merge("enketo": ""))
-    end
-
-    form = @response.form
-    # Terrapin seems to return an ASCII-encoded string, so we must interpret it
-    # as UTF-8 in order for the rest of the page to work for some kinds of forms.
-    command = Terrapin::CommandLine.new("node", ":transformer :xml")
-    @transformed_obj = command.run(
-      transformer: Rails.root.join("lib/enketo-transformer-service/index.js"),
-      xml: form.odk_xml.download
-    ).force_encoding("utf-8").chomp.html_safe # rubocop:disable Rails/OutputSafety
-
-    # Fail fast if something went wrong with the CLI process.
-    raise RuntimeError unless @transformed_obj.present?
-
-    @instance_str = @response.odk_xml.download
-      .to_json.html_safe # rubocop:disable Rails/OutputSafety
-
-    render(:enketo_form)
-  end
-
   def edit
     if @response.checked_out_by_others?(current_user)
       flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
@@ -299,6 +271,34 @@ class ResponsesController < ApplicationController
   # Returns whether the ODK submission request params indicate that not all attachments are included.
   def odk_awaiting_media?
     params["*isIncomplete*"] == "yes"
+  end
+
+  def enketo
+    # Fail fast if we're on the wrong node version (this happens most often in development).
+    raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v16")
+
+    # This check is here until we have a way to encode legacy editor responses as ODK XML.
+    if action_name == "edit" && !@response.odk_xml.attached?
+      flash[:error] = t("activerecord.errors.models.response.no_xml")
+      return redirect_to(params.permit!.merge("enketo": ""))
+    end
+
+    form = @response.form
+    # Terrapin seems to return an ASCII-encoded string, so we must interpret it
+    # as UTF-8 in order for the rest of the page to work for some kinds of forms.
+    command = Terrapin::CommandLine.new("node", ":transformer :xml")
+    @transformed_obj = command.run(
+      transformer: Rails.root.join("lib/enketo-transformer-service/index.js"),
+      xml: form.odk_xml.download
+    ).force_encoding("utf-8").chomp.html_safe # rubocop:disable Rails/OutputSafety
+
+    # Fail fast if something went wrong with the CLI process.
+    raise RuntimeError unless @transformed_obj.present?
+
+    @instance_str = @response.odk_xml.download
+      .to_json.html_safe # rubocop:disable Rails/OutputSafety
+
+    render(:enketo_form)
   end
 
   # prepares objects for and renders the form template
