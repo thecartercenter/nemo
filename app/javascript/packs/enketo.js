@@ -14,7 +14,7 @@ async function inject() {
     // required string of the default instance defined in the XForm
     modelStr: window.ENKETO_MODEL_STR,
     // optional string of an existing instance to be edited
-    instanceStr: null,
+    instanceStr: window.ENKETO_INSTANCE_STR,
     // optional boolean whether this instance has ever been submitted before
     submitted: false,
     // optional array of external data objects containing:

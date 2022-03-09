@@ -1,5 +1,7 @@
 <!-- Note: this template is only used for Enketo, not regular responses. -->
 
+<% @title_args = {id: @response.decorate.shortcode} %>
+
 <!-- TODO: This link should be conditional (like edit mode, read-only mode, etc.) -->
 <%= link_to(t("response.use_nemo"), params.permit!.merge("enketo": "")) %>
 
@@ -11,11 +13,12 @@
 </button>
 
 <script>
-  let transformed = <%= @transformed %>;
-  console.debug("Transformed:", transformed);
-
+  let transformed = <%= @transformed.presence || "null" %>;
   window.ENKETO_MODEL_STR = transformed.model;
   $("#enketo").html(transformed.form);
+
+  let instance = <%= @instance.presence || "null" %>;
+  window.ENKETO_INSTANCE_STR = instance;
 </script>
 
 <%= javascript_pack_tag 'enketo' %>
