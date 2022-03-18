@@ -20,11 +20,11 @@ describe ODK::ResponseSaver do
     let!(:form1) { create(:form, :live, mission: mission, question_types: question_types) }
     let!(:formver) { create(:form_version, code: "abc", number: "202211", form: form1) }
     let(:r1_path) { "tmp/odk/responses/simple_response/simple_response.xml" }
-    let(:r1) do
+    let!(:r1) do
       build(:response, :with_odk_attachment, xml_path: r1_path, form: form1,
                                              answer_values: xml_values, user_id: user.id)
     end
-    let(:r2) do
+    let!(:r2) do
       # Duplicate.
       build(:response, :with_odk_attachment, xml_path: r1_path, form: form1,
                                              answer_values: xml_values, user_id: user.id)
@@ -33,7 +33,6 @@ describe ODK::ResponseSaver do
 
     before do
       stub_const(ODK::ResponseSaver, "MAX_TRIES", 0)
-      stub_const(ODK::ResponseSaver, "TEST_SLEEP_TIMER", 1)
     end
 
     it "should return a database serialization error", database_cleaner: :truncate do
@@ -51,9 +50,6 @@ describe ODK::ResponseSaver do
         end
 
         thread2 = Thread.new do
-          # wait until the first thread is sleepin
-          sleep(0.5)
-
           ODK::ResponseSaver.save_with_retries!(
             response: r2,
             submission_file: upload,
