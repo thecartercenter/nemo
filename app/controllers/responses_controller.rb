@@ -240,8 +240,7 @@ class ResponsesController < ApplicationController
     rescue SubmissionError => e
       render_xml_submission_failure(e, :unprocessable_entity)
     rescue ActiveRecord::SerializationFailure => e
-      Sentry.capture_message("Ignored parallel duplicate")
-      render_xml_submission_failure(e, :created)
+      render_xml_submission_failure(e, :service_unavailable)
     end
   end
 
