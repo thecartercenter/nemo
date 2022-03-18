@@ -34,7 +34,7 @@ describe ODK::ResponseSaver do
 
     before do
       stub_const(ODK::ResponseSaver, "MAX_TRIES", 0)
-      stub_const(ODK::ResponseSaver, "SLEEP_TIMER", 5)
+      stub_const(ODK::ResponseSaver, "TEST_SLEEP_TIMER", 1)
     end
 
     it "should return a database serialization error", database_cleaner: :truncate do
@@ -56,7 +56,7 @@ describe ODK::ResponseSaver do
 
         thread2 = Thread.new do
           # wait until the first thread is sleepin
-          sleep(3)
+          sleep(0.5)
           insert_response_via_second_db_connection(checksum)
         end
 
