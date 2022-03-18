@@ -35,6 +35,28 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       expect(FileUtils.rm(tmp_files)).to be_empty
     end
 
+    it "should ignore simple duplicates", database_cleaner: :truncate do
+      # Original
+      submission_file = prepare_and_upload_submission_file("single_question.xml")
+      post submission_path, params: {xml_submission_file: submission_file}, headers: auth_header
+      expect(response).to have_http_status(:created)
+
+      # Duplicate
+      submission_file = prepare_and_upload_submission_file("single_question.xml")
+      post submission_path, params: {xml_submission_file: submission_file}, headers: auth_header
+      expect(response).to have_http_status(:created)
+
+      expect(Response.count).to eq(1)
+
+      form_response = Response.last
+      expect(form_response.form).to eq(form)
+      expect(form_response.answers.count).to eq(1)
+      expect(form_response.odk_xml.byte_size).to be > 0
+
+      tmp_files = Dir.glob(ResponsesController::TMP_UPLOADS_PATH.join("*.xml"))
+      expect(FileUtils.rm(tmp_files)).to be_empty
+    end
+
     it "should save a temp file for failures" do
       submission_file = prepare_and_upload_submission_file("no_version.xml")
 
