@@ -8,6 +8,18 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
 
   let(:user) { create(:user, role_name: "enumerator") }
   let(:form) { create(:form, :live, question_types: %w[text image]) }
+  # Complex form that intentionally takes longer to process, to reduce likelihood of flaky specs.
+  let(:form_complex) { create(:form, :live, question_types: complex_question_types) }
+  let(:complex_question_types) do
+    [
+      "integer",
+      {repeating:
+         {items: [
+           "integer",
+           {repeating: {items: %w[integer integer]}}
+         ]}}
+    ]
+  end
   let(:mission) { form.mission }
   let(:tmp_path) { Rails.root.join("tmp/submission.xml") }
   let(:submission_path) { "/m/#{mission.compact_name}/submission" }
@@ -35,7 +47,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       expect(FileUtils.rm(tmp_files)).to be_empty
     end
 
-    it "should ignore simple duplicates", database_cleaner: :truncate do
+    it "should safely ignore simple duplicates", database_cleaner: :truncate do
       # Original
       submission_file = prepare_and_upload_submission_file("single_question.xml")
       post submission_path, params: {xml_submission_file: submission_file}, headers: auth_header
@@ -57,6 +69,83 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       expect(FileUtils.rm(tmp_files)).to be_empty
     end
 
+    it "should safely ignore parallel duplicates", database_cleaner: :truncate do
+      original = nil
+      duplicate = nil
+
+      original_file = prepare_and_upload_submission_file("nested_group_form_response.xml")
+      duplicate_file = prepare_and_upload_submission_file("nested_group_form_response_duplicate.xml")
+
+      thread1 = Thread.new do
+        original = post(submission_path, params: {xml_submission_file: original_file},
+                                         headers: auth_header)
+      end
+
+      thread2 = Thread.new do
+        duplicate = post(submission_path, params: {xml_submission_file: duplicate_file},
+                                          headers: auth_header)
+      end
+
+      thread1.join
+      thread2.join
+
+      expect(original).to be(Rack::Utils::SYMBOL_TO_STATUS_CODE[:created])
+      expect(duplicate).to be(Rack::Utils::SYMBOL_TO_STATUS_CODE[:created])
+
+      expect(Response.count).to eq(1)
+
+      form_response = Response.last
+      expect(form_response.form).to eq(form)
+      expect(form_response.answers.count).to eq(2)
+      expect(form_response.odk_xml.byte_size).to be > 0
+
+      tmp_files = Dir.glob(ResponsesController::TMP_UPLOADS_PATH.join("*.xml"))
+      expect(FileUtils.rm(tmp_files)).to be_empty
+    end
+
+    context "without retries" do
+      before do
+        stub_const(ODK::ResponseSaver, "MAX_TRIES", 0)
+      end
+
+      it "should return error for parallel duplicates", database_cleaner: :truncate do
+        original = nil
+        duplicate = nil
+
+        original_file = prepare_and_upload_submission_file("nested_group_form_response.xml")
+        duplicate_file = prepare_and_upload_submission_file("nested_group_form_response_duplicate.xml")
+
+        thread1 = Thread.new do
+          original = post(submission_path, params: {xml_submission_file: original_file},
+                                           headers: auth_header)
+        end
+
+        thread2 = Thread.new do
+          duplicate = post(submission_path, params: {xml_submission_file: duplicate_file},
+                                            headers: auth_header)
+        end
+
+        thread1.join
+        thread2.join
+
+        # order doesn't matter.
+        expect([original, duplicate]).to contain_exactly(
+          Rack::Utils::SYMBOL_TO_STATUS_CODE[:created],
+          Rack::Utils::SYMBOL_TO_STATUS_CODE[:service_unavailable]
+        )
+
+        expect(Response.count).to eq(1)
+
+        form_response = Response.last
+        expect(form_response.form).to eq(form)
+        expect(form_response.answers.count).to eq(2)
+        expect(form_response.odk_xml.byte_size).to be > 0
+
+        tmp_files = Dir.glob(ResponsesController::TMP_UPLOADS_PATH.join("*.xml"))
+        expect(FileUtils.rm(tmp_files).count).to eq(1)
+      end
+    end
+
     it "should save a temp file for failures" do
       submission_file = prepare_and_upload_submission_file("no_version.xml")
 
@@ -64,7 +153,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       expect(response).not_to have_http_status(:created)
 
       tmp_files = Dir.glob(ResponsesController::TMP_UPLOADS_PATH.join("*.xml"))
-      expect(FileUtils.rm(tmp_files)).not_to be_empty
+      expect(FileUtils.rm(tmp_files).count).to eq(1)
     end
   end
 
