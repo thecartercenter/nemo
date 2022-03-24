@@ -70,6 +70,8 @@ class ResponsesController < ApplicationController
   end
 
   def show
+    return enketo if params[:enketo].present?
+
     prepare_and_render_form
   end
 
