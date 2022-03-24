@@ -7,6 +7,10 @@ module ODK
     MAX_TRIES = 12
 
     def self.save_with_retries!(params)
+      # TODO: Temporarily stubbed so it doesn't actually use retries.
+      params[:response].save!(validate: false)
+      return
+
       tries = 0
       loop do
         ActiveRecord::Base.transaction(isolation: :serializable) do
