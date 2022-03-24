@@ -261,6 +261,7 @@ ELMO::Application.routes.draw do
 
     match "/submission", to: "responses#odk_headers", via: %i[head get], defaults: {format: "xml"}
     post "/submission", to: "responses#create", defaults: {format: "xml"}
+    put "/submission/:id", to: "responses#enketo_update", defaults: {format: "xml"}
   end
 
   # API routes.

@@ -7,7 +7,9 @@
 <div id="enketo" class="enketo-form"></div>
 
 <!-- TODO: This button should be conditional (like edit mode, read-only mode, etc.) -->
-<button id="enketo-submit" type="button" class="btn btn-primary">
+<!-- Button action is handled by Enketo JS. -->
+<button id="enketo-submit" type="button" class="btn btn-primary"
+        data-response-shortcode="<%= @response&.shortcode %>">
   <%= I18n.t("common.submit") %>
 </button>
 

@@ -55,14 +55,16 @@ async function inject() {
       const formData = new FormData();
       formData.append('xml_submission_file', new File([new Blob([xml])], 'submission.xml'));
 
+      const editingResponse = $('#enketo-submit').data('responseShortcode');
+
       $.ajax({
-        url: ELMO.app.url_builder.build('submission'),
-        method: 'post',
+        url: submissionUrl(editingResponse),
+        method: editingResponse ? 'put' : 'post',
         data: formData,
         processData: false,
         contentType: false,
         success: () => {
-          window.location.href = ELMO.app.url_builder.build('responses');
+          redirectAfterEditing(editingResponse);
         },
         error: ({ status, statusText }) => {
           // TODO: Convert to DOM element
@@ -74,6 +76,19 @@ async function inject() {
       });
     }
   });
+}
+
+function submissionUrl(editingResponse) {
+  if (editingResponse) return ELMO.app.url_builder.build('submission', editingResponse);
+  return ELMO.app.url_builder.build('submission');
+}
+
+function redirectAfterEditing(editingResponse) {
+  if (editingResponse) {
+    window.location.reload();
+  } else {
+    window.location.href = ELMO.app.url_builder.build('responses');
+  }
 }
 
 // Run the async method.

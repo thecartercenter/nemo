@@ -107,6 +107,10 @@ class ResponsesController < ApplicationController
     web_create_or_update
   end
 
+  def enketo_update
+    handle_odk_update
+  end
+
   def bulk_destroy
     @responses = restrict_by_search_and_ability_and_selection(@responses)
     result = ResponseDestroyer.new(scope: @responses, ability: current_ability).destroy!
@@ -243,6 +247,11 @@ class ResponsesController < ApplicationController
     rescue ActiveRecord::SerializationFailure => e
       render_xml_submission_failure(e, :service_unavailable)
     end
+  end
+
+  def handle_odk_update
+    # TODO: Delete answer hierarchy and re-parse xml.
+    puts @response
   end
 
   # Copy the uploaded file to a temporary path we control so that if saving the response fails,
