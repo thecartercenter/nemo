@@ -407,7 +407,9 @@ you may want to set some environment variables and re-run the FixPartiallyProces
 to restore any answers that may not have fully processed. For example:
 
 1. Deploy this version so the migration will initially run as a no-op and merely print metrics
-2. `NEMO_START_DATE=2022-02-24 NEMO_FINISH_DATE=2022-03-25 NEMO_REPOPULATE=1 bundle exec rails db:migrate:redo VERSION=20220328224820`
+2. `bundle exec rails db:migrate VERSION=20220328224830` # Rolls back to the necessary point in time
+3. `NEMO_START_DATE=2022-02-24 NEMO_FINISH_DATE=2022-03-25 NEMO_REPOPULATE=1 bundle exec rails db:migrate:redo VERSION=20220328224830` # Migrates the data
+4. `bundle exec rails db:migrate` # Rolls forward as needed
 
 Set the above dates to whatever range is appropriate for your scenario.
 

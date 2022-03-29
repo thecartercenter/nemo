@@ -7,8 +7,8 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
   def up
     # Dates represent midnight UTC at the beginning of the given day.
     # See production-setup.md upgrade instructions for v12.26 for more details.
-    start = Date.parse(ENV["NEMO_START_DATE"] || "2022-02-24")
-    finish = Date.parse(ENV["NEMO_FINISH_DATE"] || "2022-02-35")
+    start = Date.parse(ENV["NEMO_START_DATE"].presence || "2022-02-24")
+    finish = Date.parse(ENV["NEMO_FINISH_DATE"].presence || "2022-03-25")
 
     remaining_responses = run_metrics(start, finish)
     repopulate(remaining_responses) if ENV["NEMO_REPOPULATE"].present? # Skipped by default.
