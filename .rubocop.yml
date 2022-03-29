@@ -183,3 +183,7 @@ Rails/ContentTag:
 # This seems unnecessary to me and kind of ugly.
 Rails/SquishedSQLHeredocs:
   Enabled: false
+
+# Important to see errors on save!
+Rails/SaveBang:
+  Enabled: true
