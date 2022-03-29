@@ -397,6 +397,20 @@ We've upgraded our node version to v16. After pulling the latest code:
 1. As the privileged user, run `sudo $EDITOR /etc/systemd/system/delayed-job.service` and completely overwrite it with the new contents of [delayed-job.service](/docs/delayed-job.service), then run `sudo systemctl daemon-reload`
 1. Restart via `sudo systemctl restart delayed-job && sudo systemctl restart nginx` and everything should be working again
 
+#### Upgrading to v12.26
+
+(optional)
+
+If you deployed the parallel deduplication change (v12.23)
+and accepted ODK Collect responses on that version before deploying the related fix (v12.25),
+you may want to set some environment variables and run the FixPartiallyProcessedResponses migration
+to restore any answers that may not have fully processed. For example:
+
+1. Deploy this version so the migration will initially run as a no-op
+2. `NEMO_START_DATE=2022-02-24 NEMO_FINISH_DATE=2022-03-25 bundle exec rails db:migrate:redo VERSION=20220328224820`
+
+Set the above dates to whatever range is appropriate for your scenario.
+
 #### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.
