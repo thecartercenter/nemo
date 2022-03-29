@@ -35,6 +35,10 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
       .reject { |r| r.odk_xml.attached? }
     puts "WEB responses: #{responses_without_odk_xml.count}"
 
+    edited_responses = total_responses
+      .where("created_at <> updated_at")
+    puts "EDITED responses: #{edited_responses.count}"
+
     processed_responses = total_responses
       .where(temp_processed: true)
     puts "PROCESSED responses: #{processed_responses.count}"
@@ -43,8 +47,12 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
       .where(temp_processed: false).where.not(id: responses_without_odk_xml)
     puts "REMAINING responses: #{remaining_responses.count}"
 
+    num_procs_available = ENV["NUM_PROCS"] ? ENV["NUM_PROCS"].to_i : Etc.nprocessors
+    num_procs_to_use = (num_procs_available / 2.0).ceil
+    puts "Reprocessing #{remaining_responses.count} using #{num_procs_to_use} CPUs..."
+
     total = remaining_responses.count
-    remaining_responses.each_with_index do |response, index|
+    Parallel.each_with_index(remaining_responses, in_processes: num_procs_to_use) do |response, index|
       puts "Repopulating #{response.shortcode} (#{index + 1} / #{total})..."
 
       # Get rid of the answer tree starting from the root AnswerGroup, then repopulate it.
