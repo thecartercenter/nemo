@@ -33,11 +33,17 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
       .joins("LEFT JOIN active_storage_attachments ON active_storage_attachments.record_id = responses.id")
       .where("responses.created_at > ?", start).where("responses.created_at < ?", finish)
       .reject { |r| r.odk_xml.attached? }
-    puts "WEB responses: #{responses_without_odk_xml.count}"
+    puts "NON-XML responses: #{responses_without_odk_xml.count}"
 
+    # Response gets touched when checking it out or adding cached_json,
+    # but answers are more reliable.
+    #
+    # Note: this is a slow n+1 operation.
     edited_responses = total_responses
-      .where("created_at <> updated_at")
-    puts "EDITED responses: #{edited_responses.count}"
+      .select do |r|
+        r.root_node.descendants.where("answers.updated_at - answers.created_at > interval '10 seconds'").present?
+      end
+    puts "EDITED answers responses: #{edited_responses.count}"
 
     processed_responses = total_responses
       .where(temp_processed: true)
