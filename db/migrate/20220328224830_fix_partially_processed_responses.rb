@@ -8,7 +8,13 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
     # Dates represent midnight UTC at the beginning of the given day.
     # See production-setup.md upgrade instructions for v12.26 for more details.
     start = Date.parse(ENV["NEMO_START_DATE"] || "2022-02-24")
-    finish = Date.parse(ENV["NEMO_FINISH_DATE"] || "2022-02-24")
+    finish = Date.parse(ENV["NEMO_FINISH_DATE"] || "2022-02-35")
+
+    remaining_responses = run_metrics(start, finish)
+    repopulate(remaining_responses) if ENV["NEMO_REPOPULATE"].present? # Skipped by default.
+  end
+
+  def run_metrics(start, finish)
     puts "For date range #{start} to #{finish}:"
 
     total_responses = Response
@@ -53,6 +59,10 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
       .where(temp_processed: false).where.not(id: responses_without_odk_xml)
     puts "REMAINING responses: #{remaining_responses.count}"
 
+    remaining_responses
+  end
+
+  def repopulate(remaining_responses)
     num_procs_available = ENV["NUM_PROCS"] ? ENV["NUM_PROCS"].to_i : Etc.nprocessors
     num_procs_to_use = (num_procs_available / 2.0).ceil
     puts "Reprocessing #{remaining_responses.count} using #{num_procs_to_use} CPUs..."

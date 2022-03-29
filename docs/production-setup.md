@@ -403,11 +403,11 @@ We've upgraded our node version to v16. After pulling the latest code:
 
 If you deployed the parallel deduplication change (v12.23)
 and accepted ODK Collect responses on that version before deploying the related fix (v12.25),
-you may want to set some environment variables and run the FixPartiallyProcessedResponses migration
+you may want to set some environment variables and re-run the FixPartiallyProcessedResponses migration
 to restore any answers that may not have fully processed. For example:
 
-1. Deploy this version so the migration will initially run as a no-op
-2. `NEMO_START_DATE=2022-02-24 NEMO_FINISH_DATE=2022-03-25 bundle exec rails db:migrate:redo VERSION=20220328224820`
+1. Deploy this version so the migration will initially run as a no-op and merely print metrics
+2. `NEMO_START_DATE=2022-02-24 NEMO_FINISH_DATE=2022-03-25 NEMO_REPOPULATE=1 bundle exec rails db:migrate:redo VERSION=20220328224820`
 
 Set the above dates to whatever range is appropriate for your scenario.
 
