@@ -47,7 +47,8 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
     # Note: this is a slow n+1 operation.
     edited_responses = total_responses
       .select do |r|
-        r.root_node.descendants.where("answers.updated_at - answers.created_at > interval '10 seconds'").present?
+        r.root_node.descendants
+          .where("answers.updated_at - answers.created_at > interval '10 seconds'").present?
       end
     puts "EDITED answers responses: #{edited_responses.count}"
 
@@ -78,7 +79,7 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
         files: {xml_submission_file: MyFile.new(response.odk_xml.download)}
       ).populate_response
 
-      response.update(temp_processed: true)
+      response.update!(temp_processed: true)
     end
   end
 end
