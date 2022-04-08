@@ -173,11 +173,6 @@ class ResponsesController < ApplicationController
     @condition_computer = Forms::ConditionComputer.new(@response.form)
   end
 
-  # loads the response with its associations
-  def load_with_associations
-    @response = Response.with_basic_assoc.friendly.find(params[:id])
-  end
-
   # when editing a response, set timestamp to show it is being worked on
   def mark_response_as_checked_out
     @response.check_out!(current_user)
