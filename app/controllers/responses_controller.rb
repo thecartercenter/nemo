@@ -247,8 +247,36 @@ class ResponsesController < ApplicationController
   end
 
   def handle_odk_update
-    # TODO: Delete answer hierarchy and re-parse xml.
-    puts @response
+    # TODO: why?
+    check_form_exists_in_mission
+    # TODO: is this a hard fail? is that normal?
+    authorize!(:modify_answers, @response)
+
+    submission_file = params[:xml_submission_file]
+    raise MissingFile unless submission_file
+
+    @response.modifier = "enketo"
+
+    begin
+      # Get rid of the answer tree starting from the root AnswerGroup, then repopulate it,
+      # without overwriting the original odk_xml submission file.
+      @response.root_node&.destroy!
+      ODK::ResponseParser.new(
+        response: @response,
+        files: {xml_submission_file: submission_file}
+      ).populate_response
+
+      @response.save!
+      ajax_response = {
+        msg: success_msg(@response),
+        redirect: index_url_with_context
+      }
+      render_ajax(ajax_response, :created)
+    rescue MissingFile
+      render_ajax({error: I18n.t("activerecord.errors.models.response.missing_xml")}, :unprocessable_entity)
+    rescue ActiveRecord::RecordInvalid, SubmissionError
+      render_ajax({error: I18n.t("activerecord.errors.models.response.general")}, :unprocessable_entity)
+    end
   end
 
   # Copy the uploaded file to a temporary path we control so that if saving the response fails,
@@ -293,7 +321,7 @@ class ResponsesController < ApplicationController
     end
 
     @enketo_form_obj = enketo_form_obj
-    @enketo_instance_str = enketo_enketo_instance_str
+    @enketo_instance_str = enketo_instance_str
 
     # Fail fast if something went wrong with the CLI process.
     raise RuntimeError unless @enketo_form_obj.present?
@@ -313,7 +341,7 @@ class ResponsesController < ApplicationController
   end
 
   # Returns a string that's safe to print in a JS script.
-  def enketo_enketo_instance_str
+  def enketo_instance_str
     @response.odk_xml.download
       .to_json.html_safe # rubocop:disable Rails/OutputSafety
   end
@@ -333,7 +361,12 @@ class ResponsesController < ApplicationController
 
   def render_xml_submission_failure(exception, code)
     Rails.logger.info("XML submission failed: '#{exception}'")
+    # TODO: Render json here too so enketo can display it?
     render(body: nil, status: code)
+  end
+
+  def render_ajax(json, code)
+    render(json: json, status: code, content_type: :json)
   end
 
   def alias_response

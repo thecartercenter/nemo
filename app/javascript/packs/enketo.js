@@ -32,6 +32,7 @@ async function inject() {
   const form = new Form(formEl, data, options);
 
   // Initialize the form and capture any load errors
+  // TODO: Handle loadErrors
   let loadErrors = form.init();
 
   // If desired, scroll to a specific question with any XPath location expression,
@@ -63,12 +64,18 @@ async function inject() {
         data: formData,
         processData: false,
         contentType: false,
-        success: () => {
-          redirectAfterEditing(editingResponse);
+        success: ({ msg, redirect }) => {
+          // TODO: How to flash this success msg?
+          console.log({ msg });
+
+          redirectAfterEditing(redirect);
         },
-        error: ({ status, statusText }) => {
+        error: ({ status, statusText, responseJSON }) => {
           // TODO: Convert to DOM element
           alert(`Error submitting form: ${status} ${statusText}`);
+
+          // TODO: How to flash this error msg?
+          console.log({ error: responseJSON.error });
         },
         always: () => {
           ELMO.app.loading(false);
@@ -83,12 +90,8 @@ function submissionUrl(editingResponse) {
   return ELMO.app.url_builder.build('submission');
 }
 
-function redirectAfterEditing(editingResponse) {
-  if (editingResponse) {
-    window.location.reload();
-  } else {
-    window.location.href = ELMO.app.url_builder.build('responses');
-  }
+function redirectAfterEditing(redirect) {
+  window.location.href = redirect || ELMO.app.url_builder.build('responses');
 }
 
 // Run the async method.

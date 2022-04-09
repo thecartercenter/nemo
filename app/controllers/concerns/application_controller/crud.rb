@@ -25,13 +25,17 @@ module ApplicationController::Crud
     render(body: nil, status: :bad_request)
   end
 
+  # returns a success message based on the given object
+  def success_msg(obj)
+    # get verb (past tense) based on action.
+    # treat sub-actions such as `enketo_update` like the regular `update` action.
+    verb = t("common.#{params[:action].split('_').last}d").downcase
+    "#{obj.class.model_name.human.ucwords} #{verb} #{t('common.successfully').downcase}."
+  end
+
   # sets a success message based on the given object
   def set_success(obj)
-    # get verb (past tense) based on action
-    verb = t("common.#{params[:action]}d").downcase
-
-    # build and set the message
-    flash[:success] = "#{obj.class.model_name.human.ucwords} #{verb} #{t('common.successfully').downcase}."
+    flash[:success] = success_msg(obj)
   end
 
   # sets a success message and redirects
