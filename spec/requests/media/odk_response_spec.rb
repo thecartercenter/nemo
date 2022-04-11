@@ -174,8 +174,10 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
           "*isIncomplete*" => "yes"
         },
         headers: auth_header
+
       expect(response).to have_http_status(:created)
       expect(Response.count).to eq(1)
+      expect(ActiveStorage::Attachment.count).to eq(2)
 
       # Submit second part
       post submission_path,
@@ -186,9 +188,10 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         headers: auth_header
 
       expect(response).to have_http_status(:created)
+      expect(Response.count).to eq(1)
+      expect(ActiveStorage::Attachment.count).to eq(3)
 
       form_response = Response.first
-
       expect(form_response.form).to eq(form)
       expect(form_response.answers.count).to eq(3)
     end
