@@ -20,9 +20,10 @@ module ODK
       false
     end
 
-    # From Rails https://github.com/rails/rails/blob/activestorage/app/models/active_storage/blob.rb#L369
-    # rubocop:disable Naming/MethodParameterName
-    # rubocop:disable Lint/AssignmentInCondition
+    # ActiveStorage checksum; copied from Rails to be identical:
+    # https://github.com/rails/rails/blob/main@{2022-04-01}/activestorage/app/models/active_storage/blob.rb#L369
+    #
+    # rubocop:disable Naming/MethodParameterName, Lint/AssignmentInCondition
     def self.compute_checksum_in_chunks(io)
       OpenSSL::Digest.new("MD5").tap do |checksum|
         while chunk = io.read(5.megabytes)
@@ -31,8 +32,7 @@ module ODK
         io.rewind
       end.base64digest
     end
-    # rubocop:enable Naming/MethodParameterName
-    # rubocop:enable Lint/AssignmentInCondition
+    # rubocop:enable Naming/MethodParameterName, Lint/AssignmentInCondition
 
     def initialize(response: nil, files: nil, awaiting_media: false)
       raise "Submissions must have a mission" if response.mission.nil?
