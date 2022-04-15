@@ -208,7 +208,8 @@ class ResponsesController < ApplicationController
       # See config/initializers/http_status_code.rb for custom status definitions
 
       # First duplicate check for existing responses
-      if ODK::ResponseParser.duplicate?(submission_file, current_user.id)
+      #
+      if ODK::ResponseParser.duplicate?(open_file_params, current_user.id)
         Sentry.capture_message("Ignored simple duplicate")
         render(body: nil, status: :created) and return
       end
@@ -219,12 +220,7 @@ class ResponsesController < ApplicationController
       @response.odk_xml = submission_file
       @response = odk_response_parser.populate_response
       authorize!(:submit_to, @response.form)
-
-      ODK::ResponseSaver.save_with_retries!(
-        response: @response,
-        submission_file: submission_file,
-        user_id: current_user.id
-      )
+      @response.save!(validate: false)
 
       render(body: nil, status: :created)
       FileUtils.rm(tmp_path)
