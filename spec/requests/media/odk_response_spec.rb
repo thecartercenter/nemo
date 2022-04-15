@@ -176,6 +176,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         headers: auth_header
       expect(response).to have_http_status(:created)
       expect(Response.count).to eq(1)
+      expect(ActiveStorage::Attachment.count).to eq(2)
 
       # Submit second part
       post submission_path,
