@@ -17,7 +17,6 @@ module ODK
     end
 
     def self.analyze_checksum(file, file_type, user_id = nil)
-      puts "the file #{file}"
       checksum = compute_checksum_in_chunks(File.new(file))
       blobs = ActiveStorage::Blob.where(checksum: checksum)
       if file_type == :xml
