@@ -11,12 +11,13 @@ module ODK
     def self.duplicate?(files, user_id)
       xml_dupe = analyze_checksum(files[:xml_submission_file], :xml, user_id)
       attachments = files.except(:xml_submission_file)
-      return xml_dupe if attachments.nil?
+      return xml_dupe if attachments.blank?
       attachment_dupe = analyze_checksum(attachments.values[0], :media)
       xml_dupe && attachment_dupe
     end
 
     def self.analyze_checksum(file, file_type, user_id = nil)
+      puts "the file #{file}"
       checksum = compute_checksum_in_chunks(File.new(file))
       blobs = ActiveStorage::Blob.where(checksum: checksum)
       if file_type == :xml
