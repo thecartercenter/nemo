@@ -77,8 +77,13 @@ class Response < ApplicationRecord
 
   has_closure_tree_root :root_node, class_name: "ResponseNode"
 
+  # Original, unmodified.
   has_one_attached :odk_xml
   validates :odk_xml, content_type: %r{\A(text|application)/xml\z}
+
+  # Latest edit.
+  has_one_attached :modified_odk_xml
+  validates :modified_odk_xml, content_type: %r{\A(text|application)/xml\z}
 
   friendly_id :shortcode
 

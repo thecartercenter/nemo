@@ -256,6 +256,7 @@ class ResponsesController < ApplicationController
     raise MissingFile unless submission_file
 
     @response.modifier = "enketo"
+    @response.modified_odk_xml = submission_file
 
     begin
       # Get rid of the answer tree starting from the root AnswerGroup, then repopulate it,
@@ -342,8 +343,8 @@ class ResponsesController < ApplicationController
 
   # Returns a string that's safe to print in a JS script.
   def enketo_instance_str
-    @response.odk_xml.download
-      .to_json.html_safe # rubocop:disable Rails/OutputSafety
+    xml = @response.modified_odk_xml.presence || @response.odk_xml
+    xml.download.to_json.html_safe # rubocop:disable Rails/OutputSafety
   end
 
   # prepares objects for and renders the form template
