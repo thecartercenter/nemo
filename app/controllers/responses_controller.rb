@@ -215,6 +215,7 @@ class ResponsesController < ApplicationController
         render(body: nil, status: :created) and return
       end
 
+      # Temp copy for diagnostics in case of issues.
       tmp_path = copy_to_tmp_path(submission_file)
 
       @response.user_id = current_user.id
@@ -255,6 +256,9 @@ class ResponsesController < ApplicationController
     submission_file = params[:xml_submission_file]
     raise MissingFile unless submission_file
 
+    # Temp copy for diagnostics in case of issues.
+    tmp_path = copy_to_tmp_path(submission_file)
+
     @response.modifier = "enketo"
     @response.modified_odk_xml = submission_file
 
@@ -262,10 +266,7 @@ class ResponsesController < ApplicationController
       # Get rid of the answer tree starting from the root AnswerGroup, then repopulate it,
       # without overwriting the original odk_xml submission file.
       @response.root_node&.destroy!
-      ODK::ResponseParser.new(
-        response: @response,
-        files: {xml_submission_file: submission_file}
-      ).populate_response
+      odk_response_parser.populate_response
 
       @response.save!
       ajax_response = {
@@ -273,6 +274,7 @@ class ResponsesController < ApplicationController
         redirect: index_url_with_context
       }
       render_ajax(ajax_response, :created)
+      FileUtils.rm(tmp_path)
     rescue MissingFile
       render_ajax({error: I18n.t("activerecord.errors.models.response.missing_xml")}, :unprocessable_entity)
     rescue ActiveRecord::RecordInvalid, SubmissionError
