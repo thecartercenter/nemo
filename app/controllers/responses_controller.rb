@@ -263,24 +263,22 @@ class ResponsesController < ApplicationController
     @response.modified_odk_xml = submission_file
     @response.save! # Must save first before destroying answers, otherwise attachment gets lost.
 
-    begin
-      # Get rid of the answer tree starting from the root AnswerGroup, then repopulate it,
-      # without overwriting the original odk_xml submission file.
-      @response.root_node&.destroy!
-      odk_response_parser.populate_response
+    # Get rid of the answer tree starting from the root AnswerGroup, then repopulate it,
+    # without overwriting the original odk_xml submission file.
+    @response.root_node&.destroy!
+    odk_response_parser.populate_response
 
-      @response.save!
-      ajax_response = {
-        msg: success_msg(@response),
-        redirect: index_url_with_context
-      }
-      render_ajax(ajax_response, :created)
-      FileUtils.rm(tmp_path)
-    rescue MissingFile
-      render_ajax({error: I18n.t("activerecord.errors.models.response.missing_xml")}, :unprocessable_entity)
-    rescue ActiveRecord::RecordInvalid, SubmissionError
-      render_ajax({error: I18n.t("activerecord.errors.models.response.general")}, :unprocessable_entity)
-    end
+    @response.save!
+    ajax_response = {
+      msg: success_msg(@response),
+      redirect: index_url_with_context
+    }
+    render_ajax(ajax_response, :created)
+    FileUtils.rm(tmp_path)
+  rescue MissingFile
+    render_ajax({error: I18n.t("activerecord.errors.models.response.missing_xml")}, :unprocessable_entity)
+  rescue ActiveRecord::RecordInvalid, SubmissionError
+    render_ajax({error: I18n.t("activerecord.errors.models.response.general")}, :unprocessable_entity)
   end
 
   # Copy the uploaded file to a temporary path we control so that if saving the response fails,
