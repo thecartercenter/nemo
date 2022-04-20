@@ -28,7 +28,7 @@
 #  persistence_token :string(255)
 #  phone             :string(255)
 #  phone2            :string(255)
-#  pref_lang         :string(255)      not null
+#  pref_lang         :string(255)      default("en"), not null
 #  sms_auth_code     :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null

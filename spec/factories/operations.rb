@@ -6,11 +6,6 @@
 # Table name: operations
 #
 #  id                                                :uuid             not null, primary key
-#  attachment_content_type                           :string
-#  attachment_download_name                          :string
-#  attachment_file_name                              :string
-#  attachment_file_size                              :integer
-#  attachment_updated_at                             :datetime
 #  details                                           :string(255)      not null
 #  job_class                                         :string(255)      not null
 #  job_completed_at                                  :datetime

@@ -20,10 +20,11 @@
 #
 # Indexes
 #
-#  index_option_sets_on_geographic    (geographic)
-#  index_option_sets_on_mission_id    (mission_id)
-#  index_option_sets_on_original_id   (original_id)
-#  index_option_sets_on_root_node_id  (root_node_id) UNIQUE
+#  index_option_sets_on_geographic           (geographic)
+#  index_option_sets_on_mission_id           (mission_id)
+#  index_option_sets_on_name_and_mission_id  (name,mission_id) UNIQUE
+#  index_option_sets_on_original_id          (original_id)
+#  index_option_sets_on_root_node_id         (root_node_id) UNIQUE
 #
 # Foreign Keys
 #

@@ -12,11 +12,11 @@
 #  default_response_name :string
 #  downloads             :integer
 #  name                  :string(255)      not null
+#  published_changed_at  :datetime
 #  sms_relay             :boolean          default(FALSE), not null
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
 #  status                :string           default("draft"), not null
-#  published_changed_at     :datetime
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  mission_id            :uuid

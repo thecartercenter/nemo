@@ -5,30 +5,25 @@
 #
 # Table name: responses
 #
-#  id                   :uuid             not null, primary key
-#  cached_json          :jsonb
-#  checked_out_at       :datetime
-#  dirty_json           :boolean          default(TRUE), not null
-#  incomplete           :boolean          default(FALSE), not null
-#  odk_hash             :string(255)
-#  odk_xml              :text
-#  odk_xml_content_type :string
-#  odk_xml_file_name    :string
-#  odk_xml_file_size    :bigint
-#  odk_xml_updated_at   :datetime
-#  reviewed             :boolean          default(FALSE), not null
-#  reviewer_notes       :text
-#  shortcode            :string(255)      not null
-#  source               :string(255)      not null
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  checked_out_by_id    :uuid
-#  device_id            :string
-#  form_id              :uuid             not null
-#  mission_id           :uuid             not null
-#  old_id               :integer
-#  reviewer_id          :uuid
-#  user_id              :uuid             not null
+#  id                :uuid             not null, primary key
+#  cached_json       :jsonb
+#  checked_out_at    :datetime
+#  dirty_json        :boolean          default(TRUE), not null
+#  incomplete        :boolean          default(FALSE), not null
+#  odk_hash          :string(255)
+#  reviewed          :boolean          default(FALSE), not null
+#  reviewer_notes    :text
+#  shortcode         :string(255)      not null
+#  source            :string(255)      not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  checked_out_by_id :uuid
+#  device_id         :string
+#  form_id           :uuid             not null
+#  mission_id        :uuid             not null
+#  old_id            :integer
+#  reviewer_id       :uuid
+#  user_id           :uuid             not null
 #
 # Indexes
 #

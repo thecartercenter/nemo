@@ -17,6 +17,7 @@
 #  group_name_translations      :jsonb
 #  hidden                       :boolean          default(FALSE), not null
 #  one_screen                   :boolean
+#  preload_last_saved           :boolean          default(FALSE), not null
 #  rank                         :integer          not null
 #  read_only                    :boolean
 #  repeatable                   :boolean

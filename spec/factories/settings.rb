@@ -9,12 +9,12 @@
 #  default_outgoing_sms_adapter :string(255)
 #  frontlinecloud_api_key       :string(255)
 #  generic_sms_config           :jsonb
-#  incoming_sms_numbers         :text
+#  incoming_sms_numbers         :jsonb            not null
 #  incoming_sms_token           :string(255)
 #  override_code                :string(255)
-#  preferred_locales            :string(255)      not null
+#  preferred_locales            :jsonb            not null
 #  theme                        :string           default("nemo"), not null
-#  timezone                     :string(255)      not null
+#  timezone                     :string(255)      default("UTC"), not null
 #  twilio_account_sid           :string(255)
 #  twilio_auth_token            :string(255)
 #  twilio_phone_number          :string(255)
@@ -24,7 +24,8 @@
 #
 # Indexes
 #
-#  index_settings_on_mission_id  (mission_id) UNIQUE
+#  index_settings_on_mission_id          (mission_id) UNIQUE
+#  index_settings_on_mission_id_IS_NULL  (((mission_id IS NULL))) UNIQUE WHERE (mission_id IS NULL)
 #
 # Foreign Keys
 #
