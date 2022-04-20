@@ -64,11 +64,14 @@ async function inject() {
         data: formData,
         processData: false,
         contentType: false,
-        success: ({ msg, redirect }) => {
-          // TODO: How to flash this success msg?
-          console.log({ msg });
+        success: (_data, _status, { status, statusText, responseJSON }) => {
+          // These will be empty on NEW submission, but present on EDIT.
+          const { msg, redirect } = responseJSON || {};
 
-          redirectAfterEditing(redirect);
+          // TODO: How to flash this success msg?
+          console.log({ status, statusText, msg });
+
+          window.location.href = redirect || ELMO.app.url_builder.build('responses');
         },
         error: ({ status, statusText, responseJSON }) => {
           // TODO: Convert to DOM element
@@ -88,10 +91,6 @@ async function inject() {
 function submissionUrl(editingResponse) {
   if (editingResponse) return ELMO.app.url_builder.build('submission', editingResponse);
   return ELMO.app.url_builder.build('submission');
-}
-
-function redirectAfterEditing(redirect) {
-  window.location.href = redirect || ELMO.app.url_builder.build('responses');
 }
 
 // Run the async method.
