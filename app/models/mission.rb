@@ -25,6 +25,7 @@ class Mission < ApplicationRecord
   CODE_LENGTH = 2
 
   has_many :responses, inverse_of: :mission
+  has_many :response_nodes, inverse_of: :mission
   has_many :forms, inverse_of: :mission
   has_many :report_reports, class_name: "Report::Report", inverse_of: :mission
   has_many :broadcasts, inverse_of: :mission
