@@ -261,6 +261,7 @@ class ResponsesController < ApplicationController
 
     @response.modifier = "enketo"
     @response.modified_odk_xml = submission_file
+    @response.save! # Must save first before destroying answers, otherwise attachment gets lost.
 
     begin
       # Get rid of the answer tree starting from the root AnswerGroup, then repopulate it,
