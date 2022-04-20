@@ -206,9 +206,7 @@ class ResponsesController < ApplicationController
 
     begin
       # See config/initializers/http_status_code.rb for custom status definitions
-
-      # First duplicate check for existing responses
-      if ODK::ResponseParser.duplicate?(open_file_params, current_user.id)
+      if ODK::DuplicateChecker.new(open_file_params, current_user).duplicate?
         Sentry.capture_message("Ignored simple duplicate")
         render(body: nil, status: :created) and return
       end

@@ -8,59 +8,6 @@ module ODK
   class ResponseParser
     attr_accessor :response, :raw_odk_xml, :files, :awaiting_media, :odk_hash
 
-    def self.duplicate?(files, user_id)
-      xml_dupe = analyze_checksum(files[:xml_submission_file], :xml, user_id)
-      attachments = files.except(:xml_submission_file)
-      return xml_dupe if attachments.blank?
-      attachment_dupe = analyze_checksum(attachments.values[0], :media)
-      xml_dupe && attachment_dupe
-    end
-
-    def self.analyze_checksum(file, file_type, user_id = nil)
-      checksum = compute_checksum_in_chunks(File.new(file))
-      blobs = ActiveStorage::Blob.where(checksum: checksum)
-      if file_type == :xml
-        compare_response_and_user(blobs, user_id)
-      else
-        # will this always be a media obj?
-        compare_media_obj(blobs)
-      end
-    end
-
-    def self.compare_response_and_user(blobs, user_id)
-      blobs.each do |blob|
-        attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
-        next if attachment.nil?
-        response = Response.find(attachment.record_id)
-        return true if response.present? && response.user.id == user_id
-      end
-      false
-    end
-
-    def self.compare_media_obj(blobs)
-      blobs.each do |blob|
-        attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
-        next if attachment.nil?
-        media_obj = Media::Object.find(attachment.record_id)
-        return true if media_obj.present?
-      end
-      false
-    end
-
-    # ActiveStorage checksum; copied from Rails to be identical:
-    # https://github.com/rails/rails/blob/main@{2022-04-01}/activestorage/app/models/active_storage/blob.rb#L369
-    #
-    # rubocop:disable Naming/MethodParameterName, Lint/AssignmentInCondition
-    def self.compute_checksum_in_chunks(io)
-      OpenSSL::Digest.new("MD5").tap do |checksum|
-        while chunk = io.read(5.megabytes)
-          checksum << chunk
-        end
-        io.rewind
-      end.base64digest
-    end
-    # rubocop:enable Naming/MethodParameterName, Lint/AssignmentInCondition
-
     def initialize(response: nil, files: nil, awaiting_media: false)
       raise "Submissions must have a mission" if response.mission.nil?
       @response = response
