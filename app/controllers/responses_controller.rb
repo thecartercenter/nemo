@@ -212,6 +212,7 @@ class ResponsesController < ApplicationController
       end
 
       tmp_path = copy_to_tmp_path(submission_file)
+
       @response.user_id = current_user.id
       @response.device_id = params[:deviceID]
       @response.odk_xml = submission_file

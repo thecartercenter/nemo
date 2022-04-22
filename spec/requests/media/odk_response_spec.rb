@@ -69,6 +69,22 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       expect(FileUtils.rm(tmp_files)).to be_empty
     end
 
+    it "should not be flagged as duplicate when response is not there" do
+      # Original
+      submission_file = prepare_and_upload_submission_file("single_question.xml")
+      post submission_path, params: {xml_submission_file: submission_file}, headers: auth_header
+      expect(response).to have_http_status(:created)
+
+      Response.first.destroy!
+
+      # Submit same xml again
+      submission_file = prepare_and_upload_submission_file("single_question.xml")
+      post submission_path, params: {xml_submission_file: submission_file}, headers: auth_header
+      expect(response).to have_http_status(:created)
+
+      expect(Response.count).to eq(1)
+    end
+
     it "should save a temp file for failures" do
       submission_file = prepare_and_upload_submission_file("no_version.xml")
 
@@ -102,19 +118,20 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     context "with multiple parts, duplicate submissions for first part" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
-      it "should successfully process the submission", database_cleaner: :truncate do
+      it "should ignore the second submission", database_cleaner: :truncate do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
         image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
+        submission_file3 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
         post_submission(submission_file, "the_swing.jpg", image, true)
         expect_submission(:created, 1, 2)
 
-        post_submission(submission_file, "the_swing.jpg", image, true)
-        expect_submission(:unprocessable_entity, 1, 2)
+        post_submission(submission_file2, "the_swing.jpg", image, true)
+        expect_submission(:created, 1, 2)
 
-        post_submission(submission_file2, "sassafras.jpg", image2, false)
+        post_submission(submission_file3, "sassafras.jpg", image2, false)
         expect_submission(:created, 1, 3)
 
         expect_answers
@@ -124,11 +141,13 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     context "with multiple parts, duplicate submissions for second part" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
-      it "should successfully process the submission", database_cleaner: :truncate do
+      it "should ignore the third submission as it is a duplicate", database_cleaner: :truncate do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
         image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
+        submission_file3 = prepare_and_upload_submission_file("multiple_part_media.xml")
+
 
         post_submission(submission_file, "the_swing.jpg", image, true)
         expect_submission(:created, 1, 2)
@@ -136,8 +155,8 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         post_submission(submission_file2, "sassafras.jpg", image2, false)
         expect_submission(:created, 1, 3)
 
-        post_submission(submission_file2, "sassafras.jpg", image2, false)
-        expect_submission(:unprocessable_entity, 1, 3)
+        post_submission(submission_file3, "sassafras.jpg", image2, false)
+        expect_submission(:created, 1, 3)
 
         expect_answers
       end
@@ -151,6 +170,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
+        submission_file3 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
         post_submission(submission_file, "the_swing.jpg", image, true)
         expect_submission(:created, 1, 2)
@@ -159,31 +179,65 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         expect_submission(:created, 1, 3)
 
         post_submission(submission_file, "the_swing.jpg", image, true)
-        expect_submission(:unprocessable_entity, 1, 3)
+        expect_submission(:created, 1, 3)
 
         expect_answers
       end
     end
 
-    context "with multiple parts, one part from a different user" do
+    # Currently database unique constraint does not allow two responses with the same form_id and odk_xml checksum
+    # We should consider if we want to remove this constraint?
+    # What is the liklihood that two users will submit the exact same response and formid?
+    #
+    # context "with multiple parts, one part from a different user" do
+    #   let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
+    #   let(:user2) { create(:user, role_name: "enumerator") }
+    #   let(:auth_header2) { {"HTTP_AUTHORIZATION" => encode_credentials(user2.login, test_password)} }
+    #
+    #
+    #   it "should not see last submisison as a duplicate because diff user", database_cleaner: :truncate do
+    #     image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
+    #     image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
+    #     submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
+    #     submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
+    #     submission_file3 = prepare_and_upload_submission_file("multiple_part_media.xml")
+    #
+    #     post_submission(submission_file, "the_swing.jpg", image, true)
+    #     expect_submission(:created, 1, 2)
+    #
+    #     post_submission(submission_file2, "sassafras.jpg", image2, false)
+    #     expect_submission(:created, 1, 3)
+    #
+    #     # submission from diff user with same file and same xml
+    #     submission_params = {
+    #       xml_submission_file: submission_file3,
+    #       "the_swing.jpg" => image,
+    #       "*isIncomplete*" => "yes"
+    #     }
+    #     post(submission_path, params: submission_params, headers: auth_header2)
+    #
+    #     expect_submission(:created, 2, 3)
+    #   end
+    # end
+
+    context "with multiple parts, duplicate xml/image and no response" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
       it "should successfully process the submission", database_cleaner: :truncate do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
-        image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
         post_submission(submission_file, "the_swing.jpg", image, true)
         expect_submission(:created, 1, 2)
 
-        post_submission(submission_file2, "sassafras.jpg", image2, false)
-        expect_submission(:created, 1, 3)
+        Response.first.destroy!
+        # Still keep the blobs
+        expect(ActiveStorage::Blob.count).to eq(2)
 
-        post_submission(submission_file, "the_swing.jpg", image, true)
-        expect_submission(:unprocessable_entity, 1, 3)
-
-        expect_answers
+        post_submission(submission_file2, "the_swing.jpg", image, true)
+        expect_submission(:created, 1, 2)
+        expect(ActiveStorage::Blob.count).to eq(4)
       end
     end
   end

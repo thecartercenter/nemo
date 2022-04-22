@@ -42,17 +42,6 @@ module ODK
       false
     end
 
-
-    # def compare_media_obj(blobs)
-    #   blobs.each do |blob|
-    #     attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
-    #     next if attachment.nil?
-    #     media_obj = Media::Object.find(attachment.record_id)
-    #     return true if media_obj.present?
-    #   end
-    #   false
-    # end
-
     # ActiveStorage checksum; copied from Rails to be identical:
     # https://github.com/rails/rails/blob/main@{2022-04-01}/activestorage/app/models/active_storage/blob.rb#L369
     #
