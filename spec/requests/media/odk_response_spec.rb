@@ -178,7 +178,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         post_submission(submission_file2, "sassafras.jpg", image2, false)
         expect_submission(:created, 1, 3)
 
-        post_submission(submission_file, "the_swing.jpg", image, true)
+        post_submission(submission_file3, "the_swing.jpg", image, true)
         expect_submission(:created, 1, 3)
 
         expect_answers
