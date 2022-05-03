@@ -11,7 +11,7 @@ module ODK
     def initialize(response: nil, files: nil, awaiting_media: false)
       raise "Submissions must have a mission" if response.mission.nil?
       @response = response
-      @raw_odk_xml = files[:xml_submission_file].read
+      @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
       @response.source = "odk"
       @awaiting_media = awaiting_media
@@ -191,7 +191,7 @@ module ODK
     end
 
     def existing_response
-      existing_response = Response.find_by(odk_hash: calculate_odk_hash, form_id: response.form_id, user_id: response.user_id)
+      existing_response = Response.find_by(odk_hash: calculate_odk_hash, form_id: response.form_id)
       if existing_response.present?
         self.response = existing_response
         true

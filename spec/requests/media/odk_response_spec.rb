@@ -106,11 +106,11 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
-        post_submission(submission_file, "the_swing.jpg", image, true)
-        expect_submission(:created, 1, 2)
+        post_submission(submission_file, "the_swing.jpg", image, incomplete: true)
+        expect_submission
 
-        post_submission(submission_file2, "sassafras.jpg", image2, false)
-        expect_submission(:created, 1, 3)
+        post_submission(submission_file2, "sassafras.jpg", image2, incomplete: false)
+        expect_submission(num_attachments: 3)
         expect_answers
       end
     end
@@ -125,14 +125,14 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file3 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
-        post_submission(submission_file, "the_swing.jpg", image, true)
-        expect_submission(:created, 1, 2)
+        post_submission(submission_file, "the_swing.jpg", image, incomplete: true)
+        expect_submission
 
-        post_submission(submission_file2, "the_swing.jpg", image, true)
-        expect_submission(:created, 1, 2)
+        post_submission(submission_file2, "the_swing.jpg", image, incomplete: true)
+        expect_submission
 
-        post_submission(submission_file3, "sassafras.jpg", image2, false)
-        expect_submission(:created, 1, 3)
+        post_submission(submission_file3, "sassafras.jpg", image2, incomplete: false)
+        expect_submission(num_attachments: 3)
 
         expect_answers
       end
@@ -148,15 +148,14 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file3 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
+        post_submission(submission_file, "the_swing.jpg", image, incomplete: true)
+        expect_submission
 
-        post_submission(submission_file, "the_swing.jpg", image, true)
-        expect_submission(:created, 1, 2)
+        post_submission(submission_file2, "sassafras.jpg", image2, incomplete: false)
+        expect_submission(num_attachments: 3)
 
-        post_submission(submission_file2, "sassafras.jpg", image2, false)
-        expect_submission(:created, 1, 3)
-
-        post_submission(submission_file3, "sassafras.jpg", image2, false)
-        expect_submission(:created, 1, 3)
+        post_submission(submission_file3, "sassafras.jpg", image2, incomplete: false)
+        expect_submission(num_attachments: 3)
 
         expect_answers
       end
@@ -172,53 +171,18 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file3 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
-        post_submission(submission_file, "the_swing.jpg", image, true)
-        expect_submission(:created, 1, 2)
+        post_submission(submission_file, "the_swing.jpg", image, incomplete: true)
+        expect_submission
 
-        post_submission(submission_file2, "sassafras.jpg", image2, false)
-        expect_submission(:created, 1, 3)
+        post_submission(submission_file2, "sassafras.jpg", image2, incomplete: false)
+        expect_submission(num_attachments: 3)
 
-        post_submission(submission_file3, "the_swing.jpg", image, true)
-        expect_submission(:created, 1, 3)
+        post_submission(submission_file3, "the_swing.jpg", image, incomplete: true)
+        expect_submission(num_attachments: 3)
 
         expect_answers
       end
     end
-
-    # Currently database unique constraint does not allow two responses with the same form_id and odk_xml checksum
-    # We should consider if we want to remove this constraint?
-    # What is the liklihood that two users will submit the exact same response and formid?
-    #
-    # context "with multiple parts, one part from a different user" do
-    #   let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
-    #   let(:user2) { create(:user, role_name: "enumerator") }
-    #   let(:auth_header2) { {"HTTP_AUTHORIZATION" => encode_credentials(user2.login, test_password)} }
-    #
-    #
-    #   it "should not see last submisison as a duplicate because diff user", database_cleaner: :truncate do
-    #     image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
-    #     image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
-    #     submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
-    #     submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
-    #     submission_file3 = prepare_and_upload_submission_file("multiple_part_media.xml")
-    #
-    #     post_submission(submission_file, "the_swing.jpg", image, true)
-    #     expect_submission(:created, 1, 2)
-    #
-    #     post_submission(submission_file2, "sassafras.jpg", image2, false)
-    #     expect_submission(:created, 1, 3)
-    #
-    #     # submission from diff user with same file and same xml
-    #     submission_params = {
-    #       xml_submission_file: submission_file3,
-    #       "the_swing.jpg" => image,
-    #       "*isIncomplete*" => "yes"
-    #     }
-    #     post(submission_path, params: submission_params, headers: auth_header2)
-    #
-    #     expect_submission(:created, 2, 3)
-    #   end
-    # end
 
     context "with multiple parts, duplicate xml/image and no response" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
@@ -228,15 +192,15 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
-        post_submission(submission_file, "the_swing.jpg", image, true)
-        expect_submission(:created, 1, 2)
+        post_submission(submission_file, "the_swing.jpg", image, incomplete: true)
+        expect_submission
 
         Response.first.destroy!
         # Still keep the blobs
         expect(ActiveStorage::Blob.count).to eq(2)
 
-        post_submission(submission_file2, "the_swing.jpg", image, true)
-        expect_submission(:created, 1, 2)
+        post_submission(submission_file2, "the_swing.jpg", image, incomplete: true)
+        expect_submission
         expect(ActiveStorage::Blob.count).to eq(4)
       end
     end
@@ -256,7 +220,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       itemcode: ODK::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code))
   end
 
-  def post_submission(submission_file, image_name, image, incomplete)
+  def post_submission(submission_file, image_name, image, incomplete: true)
     submission_params = {
       xml_submission_file: submission_file,
       image_name => image
@@ -265,7 +229,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     post(submission_path, params: submission_params, headers: auth_header)
   end
 
-  def expect_submission(status, num_response, num_attachments)
+  def expect_submission(status: :created, num_response: 1, num_attachments: 2)
     expect(response).to have_http_status(status)
     expect(Response.count).to eq(num_response)
     expect(ActiveStorage::Attachment.count).to eq(num_attachments)
