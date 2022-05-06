@@ -22,4 +22,8 @@
   window.ENKETO_INSTANCE_STR = enketoInstanceStr;
 </script>
 
+<% content_for(:powered_by) do %>
+  <%= render(partial: "powered_by_enketo") %>
+<% end %>
+
 <%= javascript_pack_tag 'enketo' %>
