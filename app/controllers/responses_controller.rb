@@ -70,13 +70,13 @@ class ResponsesController < ApplicationController
   end
 
   def show
-    return enketo if params[:enketo].present?
+    return enketo if use_enketo?
 
     prepare_and_render_form
   end
 
   def new
-    return enketo if params[:enketo].present?
+    return enketo if use_enketo?
 
     setup_condition_computer
     Results::BlankResponseTreeBuilder.new(@response).build
@@ -89,7 +89,7 @@ class ResponsesController < ApplicationController
       flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
     end
 
-    return enketo if params[:enketo].present?
+    return enketo if use_enketo?
 
     prepare_and_render_form
   end
@@ -144,6 +144,11 @@ class ResponsesController < ApplicationController
   end
 
   private
+
+  # Returns true if the user wants to use Enketo instead of NEMO's webform.
+  def use_enketo?
+    params[:enketo].present?
+  end
 
   def create_packager(ability, selected)
     case params[:download_type]
