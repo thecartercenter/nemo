@@ -224,6 +224,7 @@ class ResponsesController < ApplicationController
 
     @response.user_id = current_user.id
     @response.device_id = params[:deviceID]
+    @response.source = use_enketo? ? "enketo" : "odk"
     @response.odk_xml = submission_file
     @response = odk_response_parser.populate_response
     authorize!(:submit_to, @response.form)

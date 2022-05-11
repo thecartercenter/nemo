@@ -175,7 +175,7 @@ class Response < ApplicationRecord
   # whether the answers should validate themselves
   def validate_answers?
     # ODK and SMS do their own validation
-    %w[odk web].include?(modifier)
+    %w[odk enketo web].include?(modifier)
   end
 
   def check_out_valid?

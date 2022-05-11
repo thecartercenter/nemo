@@ -89,8 +89,10 @@ async function inject() {
 }
 
 function submissionUrl(editingResponse) {
-  if (editingResponse) return ELMO.app.url_builder.build('submission', editingResponse);
-  return ELMO.app.url_builder.build('submission');
+  const base = editingResponse
+    ? ELMO.app.url_builder.build('submission', editingResponse)
+    : ELMO.app.url_builder.build('submission');
+  return `${base}?enketo=1`;
 }
 
 // Run the async method.

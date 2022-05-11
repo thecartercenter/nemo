@@ -13,7 +13,6 @@ module ODK
       @response = response
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
-      @response.source = "odk"
       @awaiting_media = awaiting_media
       @answer_parser = nil
     end
