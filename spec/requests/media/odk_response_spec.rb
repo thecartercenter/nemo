@@ -204,6 +204,43 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         expect(ActiveStorage::Blob.count).to eq(4)
       end
     end
+
+    context "multiple media attachments in multiple responses" do
+      let(:form) { create(:form, :live, question_types: %w[text image sketch image]) }
+
+      it "should successfully process the submission", database_cleaner: :truncate do
+        image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
+        image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
+        image3 = Rack::Test::UploadedFile.new(image_fixture("sassafras2.jpg"), "image/jpeg")
+
+        submission_file = prepare_and_upload_submission_file("multiple_part_media2.xml")
+        submission_file2 = prepare_and_upload_submission_file("multiple_part_media2.xml")
+
+        submission_params = {
+          xml_submission_file: submission_file,
+          "the_swing.jpg" => image,
+          "sassafras.jpg" => image2,
+          "*isIncomplete*" => "yes"
+        }
+
+        post(submission_path, params: submission_params, headers: auth_header)
+        expect(response).to have_http_status(:created)
+        expect(Response.all.count).to eq(1)
+        expect(::Media::Object.all.count).to eq(2)
+
+        submission_params = {
+          xml_submission_file: submission_file2,
+          "the_swing.jpg" => image,
+          "sassafras2.jpg" => image3,
+          "*isIncomplete*" => "no"
+        }
+
+        post(submission_path, params: submission_params, headers: auth_header)
+        expect(response).to have_http_status(:created)
+        expect(Response.all.count).to eq(1)
+        expect(::Media::Object.all.count).to eq(3)
+      end
+    end
   end
 
   def prepare_and_upload_submission_file(template)
