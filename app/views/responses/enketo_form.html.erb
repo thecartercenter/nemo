@@ -9,12 +9,13 @@
 
 <div id="enketo" class="enketo-form"></div>
 
-<!-- TODO: This button should be conditional (like edit mode, read-only mode, etc.) -->
-<!-- Button action is handled by Enketo JS. -->
-<button id="enketo-submit" type="button" class="btn btn-primary"
-        data-response-shortcode="<%= @response&.shortcode %>">
-  <%= I18n.t("common.submit") %>
-</button>
+<% if params[:action] == "edit" %>
+  <!-- Button action is handled by Enketo JS. -->
+  <button id="enketo-submit" type="button" class="btn btn-primary"
+          data-response-shortcode="<%= @response&.shortcode %>">
+    <%= I18n.t("common.submit") %>
+  </button>
+<% end %>
 
 <script>
   let enketoFormObj = <%= @enketo_form_obj.presence || "{}" %>;

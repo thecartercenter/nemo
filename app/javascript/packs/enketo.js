@@ -28,12 +28,13 @@ async function inject() {
   // Form-specific configuration
   const options = {};
 
-  // Instantiate a form, with 2 parameters
+  // Instantiate a form
   const form = new Form(formEl, data, options);
 
   // Initialize the form and capture any load errors
   // TODO: Handle loadErrors
-  let loadErrors = form.init();
+  const loadErrors = form.init();
+  console.error({ loadErrors });
 
   // If desired, scroll to a specific question with any XPath location expression,
   // and aggregate any loadErrors.
