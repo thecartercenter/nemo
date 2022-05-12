@@ -7,6 +7,9 @@
 
 <%= ActionLinks::LinkBuilder.new(@response, %i[show edit destroy].concat([link_divider, nemo_link])) %>
 
+<%#= TODO: Display metadata like NEMO editor does (requires a Rails form instance). %>
+<%#= render("metadata", f: f, context: @context) %>
+
 <div id="enketo" class="enketo-form"></div>
 
 <% if params[:action] == "edit" %>

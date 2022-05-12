@@ -17,6 +17,7 @@
     <%= f.field(:form_id, type: :hidden) %>
 
     <%= render("metadata", f: f, context: @context) %>
+
     <%# root_node can be expected to be nil when there are no questions at all on the form. %>
     <% unless @response.root_node.nil? %>
       <%= render("responses/answers/nodes", nodes: [@response.root_node], context: @context) %>
