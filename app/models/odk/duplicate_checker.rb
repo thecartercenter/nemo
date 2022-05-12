@@ -19,7 +19,7 @@ module ODK
       other_files = @files.except(:xml_submission_file)
       return true if other_files.blank?
 
-      other_files.each do |f|
+      other_files.all? do |f|
         return true if dupe_response_and_user?(find_blobs(f[1]))
       end
       false
@@ -36,7 +36,7 @@ module ODK
       blobs.each do |blob|
         attachment = ActiveStorage::Attachment.find_by(blob_id: blob.id)
         next if attachment.nil?
-        response = Response.find(attachment.record_id)
+        response = Response.find_by(id: attachment.record_id)
         return true if response.present? && response.user.id == @user.id
       end
       false
