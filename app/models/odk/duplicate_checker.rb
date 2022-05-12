@@ -20,9 +20,8 @@ module ODK
       return true if other_files.blank?
 
       other_files.all? do |f|
-        return true if dupe_response_and_user?(find_blobs(f[1]))
+        dupe_response_and_user?(find_blobs(f[1]))
       end
-      false
     end
 
     private
