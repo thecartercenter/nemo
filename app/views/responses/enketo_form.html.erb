@@ -1,8 +1,11 @@
 <% content_for(:per_page_js, google_maps_js) %>
 <% @title_args = {id: @response.decorate.shortcode} %>
 
-<!-- TODO: This link should be conditional (like edit mode, read-only mode, etc.) -->
-<%= link_to(t("response.use_nemo"), params.permit!.merge("enketo": "")) %>
+<% nemo_link = link_to(
+  t(params[:action] == "edit" ? "response.edit_with_nemo" : "response.view_with_nemo"),
+  params.permit!.merge("enketo": "")) %>
+
+<%= ActionLinks::LinkBuilder.new(@response, %i[show edit destroy].concat([link_divider, nemo_link])) %>
 
 <div id="enketo" class="enketo-form"></div>
 

@@ -6,12 +6,13 @@
   ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: ".response-form"});
 <% end %>
 
-<!-- TODO: This link should be conditional (like edit mode, read-only mode, etc.) -->
-<%= link_to(t("response.use_enketo"), params.permit!.merge("enketo": "1")) %>
+<% enketo_link = link_to(
+  t(params[:action] == "edit" ? "response.edit_with_enketo" : "response.view_with_enketo"),
+  params.permit!.merge("enketo": "1")) %>
 
 <div id="response-form-wrapper">
   <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form") do |f| %>
-    <%= ActionLinks::LinkBuilder.new(@response, %i[show edit destroy]) %>
+    <%= ActionLinks::LinkBuilder.new(@response, %i[show edit destroy].concat([link_divider, enketo_link])) %>
     <%= f.base_errors %>
     <%= f.field(:form_id, type: :hidden) %>
 
