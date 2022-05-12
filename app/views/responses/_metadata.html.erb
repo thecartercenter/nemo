@@ -6,6 +6,7 @@
         <%= f.field(:old_id, content: "##{@response.old_id}", read_only: true) if @response.old_id.present? %>
         <%= f.field(:form_id, content: link_to(@response.form.name, @response.form), read_only: true) %>
         <%= f.field(:source, content: @response.source, read_only: true) %>
+        <%= f.field(:modifier, content: @response.modifier.presence || t("common.none"), read_only: true) %>
         <%= f.field(:user_id, content: link_to(@response.user.full_name, @response.user), read_only: true) %>
       <% else %>
         <%= f.field(:old_id, content: "##{@response.old_id}", read_only: true) if @response.old_id.present? %>

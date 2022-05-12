@@ -89,6 +89,12 @@ class ResponsesController < ApplicationController
       flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
     end
 
+    if use_enketo? && @response.modifier == "web"
+      flash.now[:alert] = t("response.modified_by_web", date: @response.updated_at)
+    elsif !use_enketo? && @response.modifier == "enketo"
+      flash.now[:alert] = t("response.modified_by_enketo", date: @response.updated_at)
+    end
+
     return enketo if use_enketo?
 
     prepare_and_render_form
