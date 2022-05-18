@@ -12,7 +12,7 @@
 
 <div id="enketo" class="enketo-form"></div>
 
-<% if params[:action] == "edit" %>
+<% if %w[edit new].include?(params[:action]) %>
   <!-- Button action is handled by Enketo JS. -->
   <button id="enketo-submit" type="button" class="btn btn-primary"
           data-response-shortcode="<%= @response&.shortcode %>">
