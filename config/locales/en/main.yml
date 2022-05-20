@@ -1559,6 +1559,7 @@ en:
     need_mission: "You can't view this without selecting a mission"
     need_login: "You must login to view that page."
     no_permission: "You don't have permission to view that page."
+    no_permission_action: "Your account doesn't have permission to make this change."
     processing_error: "Error processing permission."
     enumerators_cant_change_submitter: "Enumerators can't change the submitter for responses."
     must_be_admin: "You must be an administrator to view that page."

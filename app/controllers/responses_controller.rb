@@ -265,11 +265,8 @@ class ResponsesController < ApplicationController
     render_xml_submission_failure(e, :service_unavailable)
   end
 
-  # TODO: DRY up some shared code from the method above.
   def handle_odk_update
-    # TODO: why?
     check_form_exists_in_mission
-    # TODO: is this a hard fail? is that normal?
     authorize!(:modify_answers, @response)
 
     submission_file = params[:xml_submission_file]
@@ -296,6 +293,8 @@ class ResponsesController < ApplicationController
     FileUtils.rm(tmp_path)
   rescue MissingFile
     render_ajax({error: I18n.t("activerecord.errors.models.response.missing_xml")}, :unprocessable_entity)
+  rescue CanCan::AccessDenied
+    render_ajax({error: I18n.t("permission_error.no_permission_action")}, :forbidden)
   rescue ActiveRecord::RecordInvalid, SubmissionError
     render_ajax({error: I18n.t("activerecord.errors.models.response.general")}, :unprocessable_entity)
   end
