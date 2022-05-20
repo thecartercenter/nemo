@@ -820,6 +820,7 @@ en:
           general: "Response is invalid (see below)."
           checked_out: "This response has been checked out by:"
           no_xml: "Currently, you can only use the Enketo editor for responses submitted via Enketo or ODK."
+          missing_xml: "No XML file attached."
           form_unavailable: "The specified form does not exist in this mission."
         setting:
           attributes:

@@ -206,12 +206,10 @@ class ResponsesController < ApplicationController
   end
 
   def handle_odk_submission
-    unless (submission_file = params[:xml_submission_file])
-      return render_xml_submission_failure("No XML file attached.", :unprocessable_entity)
-    end
+    submission_file = params[:xml_submission_file]
+    raise MissingFile unless submission_file
 
     begin
-      # See config/initializers/http_status_code.rb for custom status definitions
       if ODK::DuplicateChecker.new(open_file_params, current_user).duplicate?
         Sentry.capture_message("Ignored simple duplicate")
         render(body: nil, status: :created) and return
@@ -228,12 +226,16 @@ class ResponsesController < ApplicationController
 
       render(body: nil, status: :created)
       FileUtils.rm(tmp_path)
+    # See config/initializers/http_status_code.rb for custom status definitions.
+    # ODK can't display custom failure messages so these statuses provide a little more info;
+    # the error message is only used for our logging.
+    rescue MissingFile
+      render_xml_submission_failure(I18n.t("activerecord.errors.models.response.missing_xml"), :unprocessable_entity)
     rescue CanCan::AccessDenied => e
       render_xml_submission_failure(e, :forbidden)
     rescue ActiveRecord::RecordNotFound => e
       render_xml_submission_failure(e, :not_found)
     rescue FormVersionError => e
-      # We use this because ODK can't display custom failure messages so this provides a little more info.
       render_xml_submission_failure(e, :upgrade_required)
     rescue FormStatusError => e
       render_xml_submission_failure(e, :form_not_live)
