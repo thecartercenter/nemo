@@ -30,7 +30,7 @@ $dir: @@@direction@@@;
 @import 'dropzone/basic';
 
 @import 'enketo/sass/plain/plain';
-//@import 'enketo/plain/plain-print';
+@import 'enketo/sass/plain/plain-print';
 
 @import 'global/**/*';
 @import 'local/**/*';
