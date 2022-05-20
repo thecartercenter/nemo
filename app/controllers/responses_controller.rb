@@ -342,6 +342,7 @@ class ResponsesController < ApplicationController
 
     @enketo_form_obj = enketo_form_obj
     @enketo_instance_str = enketo_instance_str
+    @read_only = read_only?
 
     # Fail fast if something went wrong with the CLI process.
     raise RuntimeError unless @enketo_form_obj.present?
@@ -368,15 +369,17 @@ class ResponsesController < ApplicationController
 
   # prepares objects for and renders the form template
   def prepare_and_render_form
-    @context = Results::ResponseFormContext.new(
-      read_only: action_name == "show" || cannot?(:modify_answers, @response)
-    )
+    @context = Results::ResponseFormContext.new(read_only: read_only?)
 
     # The blank response is used for rendering placeholders for repeat groups
     @blank_response = Response.new(form: @response.form)
     Results::BlankResponseTreeBuilder.new(@blank_response).build
 
     render(:form)
+  end
+
+  def read_only?
+    action_name == "show" || cannot?(:modify_answers, @response)
   end
 
   def render_xml_submission_failure(exception, code)
