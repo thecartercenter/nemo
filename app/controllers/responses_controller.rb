@@ -209,44 +209,43 @@ class ResponsesController < ApplicationController
     submission_file = params[:xml_submission_file]
     raise MissingFile unless submission_file
 
-    begin
-      if ODK::DuplicateChecker.new(open_file_params, current_user).duplicate?
-        Sentry.capture_message("Ignored simple duplicate")
-        render(body: nil, status: :created) and return
-      end
-
-      # Temp copy for diagnostics in case of issues.
-      tmp_path = copy_to_tmp_path(submission_file)
-
-      @response.user_id = current_user.id
-      @response.device_id = params[:deviceID]
-      @response.odk_xml = submission_file
-      @response = odk_response_parser.populate_response
-      authorize!(:submit_to, @response.form)
-      @response.save!(validate: false)
-
-      render(body: nil, status: :created)
-      FileUtils.rm(tmp_path)
-    # See config/initializers/http_status_code.rb for custom status definitions.
-    # ODK can't display custom failure messages so these statuses provide a little more info;
-    # the error message is only used for our logging.
-    rescue MissingFile
-      render_xml_submission_failure(I18n.t("activerecord.errors.models.response.missing_xml"), :unprocessable_entity)
-    rescue CanCan::AccessDenied => e
-      render_xml_submission_failure(e, :forbidden)
-    rescue ActiveRecord::RecordNotFound => e
-      render_xml_submission_failure(e, :not_found)
-    rescue FormVersionError => e
-      render_xml_submission_failure(e, :upgrade_required)
-    rescue FormStatusError => e
-      render_xml_submission_failure(e, :form_not_live)
-    rescue SubmissionError => e
-      render_xml_submission_failure(e, :unprocessable_entity)
-    rescue ActiveRecord::SerializationFailure => e
-      render_xml_submission_failure(e, :service_unavailable)
+    if ODK::DuplicateChecker.new(open_file_params, current_user).duplicate?
+      Sentry.capture_message("Ignored simple duplicate")
+      render(body: nil, status: :created) and return
     end
+
+    # Temp copy for diagnostics in case of issues.
+    tmp_path = copy_to_tmp_path(submission_file)
+
+    @response.user_id = current_user.id
+    @response.device_id = params[:deviceID]
+    @response.odk_xml = submission_file
+    @response = odk_response_parser.populate_response
+    authorize!(:submit_to, @response.form)
+    @response.save!(validate: false)
+
+    render(body: nil, status: :created)
+    FileUtils.rm(tmp_path)
+  # See config/initializers/http_status_code.rb for custom status definitions.
+  # ODK can't display custom failure messages so these statuses provide a little more info;
+  # the error message is only used for our logging.
+  rescue MissingFile
+    render_xml_submission_failure(I18n.t("activerecord.errors.models.response.missing_xml"), :unprocessable_entity)
+  rescue CanCan::AccessDenied => e
+    render_xml_submission_failure(e, :forbidden)
+  rescue ActiveRecord::RecordNotFound => e
+    render_xml_submission_failure(e, :not_found)
+  rescue FormVersionError => e
+    render_xml_submission_failure(e, :upgrade_required)
+  rescue FormStatusError => e
+    render_xml_submission_failure(e, :form_not_live)
+  rescue SubmissionError => e
+    render_xml_submission_failure(e, :unprocessable_entity)
+  rescue ActiveRecord::SerializationFailure => e
+    render_xml_submission_failure(e, :service_unavailable)
   end
 
+  # TODO: DRY up some shared code from the method above.
   def handle_odk_update
     # TODO: why?
     check_form_exists_in_mission
