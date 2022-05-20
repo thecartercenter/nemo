@@ -109,10 +109,10 @@ git checkout develop
 
 #### Bundle, configure, and load schema
 
-TODO: Make sure `yarn install` detects and installs in `lib/enketo-transformer-service/`
-
 1. Install the required gems by running `bundle install` in the project directory.
 1. Install the required Node modules by running `yarn install` in the project directory.
+1. Install Enketo's required Node modules by running `yarn install` in the `lib/enketo-transformer-service/` directory.
+    1. TODO: Make this happen automatically during the previous step, maybe with Yarn workspaces.
 1. Run `cp config/database.yml.example config/database.yml`.
 1. (Optional) Create a `.env.development.local` file and override any settings from `.env` as you see fit. Note that a valid Google Maps API key must be present for certain tests to pass.
 1. Setup the UUID postgres extension:
