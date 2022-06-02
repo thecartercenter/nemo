@@ -116,11 +116,11 @@ To switch to the `deploy` user, do:
 
 ### Install rbenv, Ruby, and Bundler
 
-    git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
+    git clone https://github.com/rbenv/rbenv.git ~/.rbenv
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
     echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 
-    git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+    git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
     echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
     exec $SHELL
 
