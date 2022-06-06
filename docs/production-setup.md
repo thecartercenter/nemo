@@ -137,6 +137,8 @@ To switch to the `deploy` user, do:
     nvm install
     npm install -g yarn
 
+Make sure to follow the instructions printed out by nvm related to putting the `NVM_DIR` lines in `.bashrc`.
+
 ### Configure the App
 
     cp config/database.yml.example config/database.yml
