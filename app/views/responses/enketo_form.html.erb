@@ -2,10 +2,11 @@
 <% @title_args = {id: @response.decorate.shortcode} %>
 
 <% nemo_link = link_to(
-  t(params[:action] == "edit" ? "response.edit_with_nemo" : "response.view_with_nemo"),
+  t(%(new edit).include?(params[:action]) ? "response.edit_with_nemo" : "response.view_with_nemo"),
   params.permit!.merge("enketo": "")) %>
+<% action_links = @response.new_record? ? [nemo_link] : %i[show edit destroy].concat([link_divider, nemo_link]) %>
 
-<%= ActionLinks::LinkBuilder.new(@response, %i[show edit destroy].concat([link_divider, nemo_link])) %>
+<%= ActionLinks::LinkBuilder.new(@response, action_links, show_on_new: true) %>
 
 <%#= TODO: Display metadata like NEMO editor does (requires a Rails form instance). %>
 <%#= render("metadata", f: f, context: @context) %>
