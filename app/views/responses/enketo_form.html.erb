@@ -26,6 +26,8 @@
   window.ENKETO_MODEL_STR = enketoFormObj.model;
   $("#enketo").html(enketoFormObj.form);
 
+  // Note: The way we render this in Rails causes `XML Parsing Error: unclosed token`
+  // in the Firefox browser console, but it seems to work fine.
   let enketoInstanceStr = <%= @enketo_instance_str.presence || "null" %>;
   window.ENKETO_INSTANCE_STR = enketoInstanceStr;
 </script>

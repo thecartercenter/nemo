@@ -34,7 +34,9 @@ async function inject() {
   // Initialize the form and capture any load errors
   // TODO: Handle loadErrors
   const loadErrors = form.init();
-  console.error({ loadErrors });
+  if (loadErrors.length > 0) {
+    console.error('NEMO encountered Enketo loadErrors:', loadErrors);
+  }
 
   // If desired, scroll to a specific question with any XPath location expression,
   // and aggregate any loadErrors.
