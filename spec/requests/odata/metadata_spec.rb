@@ -20,4 +20,9 @@ describe "OData $metadata" do
     include_context "odata with nested groups"
     it { expect_fixture("nested_groups_metadata.xml", forms: [form]) }
   end
+
+  context "with i18n", :reset_factory_sequences do
+    include_context "odata with multilingual forms"
+    it { expect_fixture("multilingual_metadata.xml", forms: [form]) }
+  end
 end
