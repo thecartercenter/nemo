@@ -30,13 +30,6 @@ module Results
 
     delegate :form, :user, to: :response
 
-    def in_locale(locale)
-      original_locale = I18n.locale
-      I18n.locale = locale
-      yield
-      I18n.locale = original_locale
-    end
-
     def add_metadata(json)
       json["ResponseID"] = response.id
       json["ResponseShortcode"] = response.shortcode
