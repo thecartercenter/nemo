@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="NEMO" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Custom" OpenType="true">
+      </EntityType>
+      <EntityType Name="Geographic" OpenType="true">
+        <Property Name="Latitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Longitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Altitude" Type="Edm.Decimal" Nullable="true"/>
+        <Property Name="Accuracy" Type="Edm.Decimal" Nullable="true"/>
+      </EntityType>
+      <EntityType Name="Group.Sample Form 1.G1" OpenType="true">
+        <Property Name="*q_code1*" Type="Edm.String" Nullable="true"/>
+      </EntityType>
+      <EntityType Name="Response" OpenType="true">
+        <Key>
+          <PropertyRef Name="ResponseID"/>
+        </Key>
+        <Property Name="ResponseSubmitDate" Type="Edm.DateTimeOffset" Nullable="true"/>
+        <Property Name="ResponseSubmitterName" Type="Edm.String" Nullable="true"/>
+        <Property Name="ResponseID" Type="Edm.Guid" Nullable="true"/>
+        <Property Name="ResponseShortcode" Type="Edm.String" Nullable="true"/>
+        <Property Name="ResponseReviewed" Type="Edm.Boolean" Nullable="true"/>
+        <Property Name="FormName" Type="Edm.String" Nullable="true"/>
+      </EntityType>
+      <EntityType Name="Responses: *form1*" OpenType="true" BaseType="NEMO.Response">
+        <Property Name="Groupe Un" Type="NEMO.Group.Sample Form 1.G1" Nullable="true"/>
+      </EntityType>
+      <EntityContainer Name="NEMOService">
+        <EntitySet Name="Custom" EntityType="NEMO.Custom">
+        </EntitySet>
+        <EntitySet Name="Geographic" EntityType="NEMO.Geographic">
+        </EntitySet>
+        <EntitySet Name="Group.Sample Form 1.G1" EntityType="NEMO.Group.Sample Form 1.G1">
+        </EntitySet>
+        <EntitySet Name="Response" EntityType="NEMO.Response">
+        </EntitySet>
+        <EntitySet Name="Responses: *form1*" EntityType="NEMO.Responses: *form1*">
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

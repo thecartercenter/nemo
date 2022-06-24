@@ -71,7 +71,7 @@ describe "OData resource" do
         "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
           "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
         value: [
-          json_for(form, responses[0], "SelectOneQ1": "Chat")
+          json_for(form, responses[0], "Groupe Un": {"SelectOneQ1": "Chat"})
         ]
       )
     end

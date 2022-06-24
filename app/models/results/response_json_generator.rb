@@ -30,11 +30,13 @@ module Results
 
     delegate :form, :user, to: :response
 
+    # Performs an action in the given locale, resetting to the original locale after finishing.
     def in_locale(locale)
       original_locale = I18n.locale
       I18n.locale = locale
-      yield
+      result = yield
       I18n.locale = original_locale
+      result
     end
 
     def add_metadata(json)

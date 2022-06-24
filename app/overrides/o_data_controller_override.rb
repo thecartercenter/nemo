@@ -34,7 +34,9 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
   end
 
   def transform_schema_for_metadata(_schema)
-    OData::SimpleSchema.new(distinct_forms)
+    in_locale(current_mission.default_locale) do
+      OData::SimpleSchema.new(distinct_forms)
+    end
   end
 
   def transform_json_for_collection(json)
@@ -99,5 +101,14 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     def entity.plural_name
       name
     end
+  end
+
+  # Performs an action in the given locale, resetting to the original locale after finishing.
+  def in_locale(locale)
+    original_locale = I18n.locale
+    I18n.locale = locale
+    result = yield
+    I18n.locale = original_locale
+    result
   end
 end
