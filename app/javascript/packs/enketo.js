@@ -26,7 +26,12 @@ async function inject() {
   };
 
   // Form-specific configuration
-  const options = {};
+  const options = {
+    // if true or not set at all, printing the form only includes what is visible.
+    printRelevantOnly: true,
+    // optional default language. required in nemo since we hide the enketo language picker.
+    language: window.ENKETO_DEFAULT_LANG,
+  };
 
   // Instantiate a form
   const form = new Form(formEl, data, options);
