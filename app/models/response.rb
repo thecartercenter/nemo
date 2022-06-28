@@ -8,9 +8,12 @@
 #  id                :uuid             not null, primary key
 #  cached_json       :jsonb
 #  checked_out_at    :datetime
+#  dirty_dupe        :boolean          default(TRUE), not null
 #  dirty_json        :boolean          default(TRUE), not null
 #  incomplete        :boolean          default(FALSE), not null
+#  modifier          :string
 #  odk_hash          :string(255)
+#  possible_dupe     :boolean          default(TRUE)
 #  reviewed          :boolean          default(FALSE), not null
 #  reviewer_notes    :text
 #  shortcode         :string(255)      not null
@@ -99,7 +102,8 @@ class Response < ApplicationRecord
   scope :created_after, ->(date) { where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
   scope :latest_first, -> { order(created_at: :desc) }
-  scope :dirty, -> { where(dirty_json: true) }
+  scope :dirty_json, -> { where(dirty_json: true) }
+  scope :dirty_dupe, -> { where(dirty_dupe: true) }
   scope :published, -> { joins(:form).merge(Form.published) }
 
   # loads basic belongs_to associations
