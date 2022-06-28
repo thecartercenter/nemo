@@ -10,7 +10,7 @@ namespace :db do
     mission = Mission.create(name: mission_name)
 
     puts "Creating forms"
-    sample_form = create(:form, :live, mission: mission, question_types: [
+    sample_form = FactoryBot.create(:form, :live, mission: mission, question_types: [
       "text",
       "long_text",
       "integer",
@@ -47,11 +47,15 @@ namespace :db do
       FactoryBot.create(:user, mission: mission, role_name: User::ROLES.sample)
     end
 
+    puts "Creating groups"
     FactoryBot.create_list(:user_group, 5, mission: mission)
 
+    puts "Assigning users to groups"
     50.times do
       uga = UserGroupAssignment.new(user_group: UserGroup.all.sample, user: User.all.sample)
-      uga.save if uga.valid?
+      uga.save!
+    rescue ActiveRecord::RecordNotUnique
+      # Ignore
     end
 
     # Define media paths
@@ -59,13 +63,12 @@ namespace :db do
     audio_path = Rails.root.join("spec/fixtures/media/audio/powerup.mp3")
     video_path = Rails.root.join("spec/fixtures/media/video/jupiter.mp4")
 
-    print "Creating responses"
-
-    mission.users.find_each do |user|
+    print "Creating 30 responses"
+    mission.users.sample(10).each do |user|
       3.times do
         print "."
         answer_values = [
-          Faker::Pokemon.name, # text
+          Faker::Games::Pokemon.name, # text
           Faker::Hipster.paragraphs(number: 3).join("\n\n"), # long_text
           rand(1000..5000), # integer
           rand(1..100), # counter
@@ -77,13 +80,13 @@ namespace :db do
           %w[Cat Dog], # select_multiple
           Faker::Time.backward(days: 365), # datetime
           Faker::Date.birthday, # date
-          Faker::Time.between(from: 1.year.ago, to: Time.zone.today, format: :evening), # time
-          FactoryBot.build(:media_image, file: File.open(image_path)), # image
-          FactoryBot.build(:media_image, item: File.open(image_path)), # annotated image
-          FactoryBot.build(:media_image, item: File.open(image_path)), # signature
-          FactoryBot.build(:media_image, item: File.open(image_path)), # sketch
-          FactoryBot.build(:media_audio, item: File.open(audio_path)), # audio
-          FactoryBot.build(:media_video, item: File.open(video_path)) # video
+          Faker::Time.between_dates(from: 1.year.ago, to: Time.zone.today, period: :evening), # time
+          FactoryBot.build(:media_image, fixture: File.open(image_path)), # image
+          FactoryBot.build(:media_image, fixture: File.open(image_path)), # annotated image
+          FactoryBot.build(:media_image, fixture: File.open(image_path)), # signature
+          FactoryBot.build(:media_image, fixture: File.open(image_path)), # sketch
+          FactoryBot.build(:media_audio, fixture: File.open(audio_path)), # audio
+          FactoryBot.build(:media_video, fixture: File.open(video_path)) # video
         ]
 
         FactoryBot.create(:response,
@@ -96,6 +99,6 @@ namespace :db do
     end
     print "\n"
 
-    puts "Created #{mission_name}"
+    puts "Done creating #{mission.name} (#{mission.compact_name})"
   end
 end
