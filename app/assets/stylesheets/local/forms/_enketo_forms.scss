@@ -3,12 +3,13 @@
 // This causes all sorts of errors when used to change languages, but defaulting
 // to a language instead works fine.
 #form-languages {
-  display: none !important;
+  display: none !important; // scss-lint:disable ImportantRule
 }
 
 // Hide some functionality when read-only.
 .responses_show .enketo-form {
-  button.add-repeat-btn, button.remove {
+  button.add-repeat-btn,
+  button.remove {
     visibility: hidden;
   }
 }
