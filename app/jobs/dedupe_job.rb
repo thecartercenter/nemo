@@ -2,7 +2,6 @@
 
 # Removes duplicate stragglers
 class DedupeJob < ApplicationJob
-
   TMP_DUPE_BACKUPS_PATH = Rails.root.join("tmp/odk_dupes_backup")
 
   def perform
