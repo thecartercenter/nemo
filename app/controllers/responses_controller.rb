@@ -7,7 +7,6 @@ class ResponsesController < ApplicationController
   REFRESH_INTERVAL = 30_000 # ms
 
   TMP_UPLOADS_PATH = Rails.root.join("tmp/odk_uploads")
-  TMP_DOWNLOADS_PATH = Rails.root.join("tmp/form_downloads")
   CSV_EXPORT_LIMIT = 100_000
   CSV_EXPORT_WARNING = 5_000
 
@@ -353,18 +352,13 @@ class ResponsesController < ApplicationController
 
   # Returns a string that's safe to print in a JS script.
   def enketo_form_obj
-    # Save XML to disk instead of trying to pass a massive string
-    # via command line (can fail with exceptionally large forms).
-    FileUtils.mkdir_p(TMP_DOWNLOADS_PATH)
-    @response.form.odk_xml.open(tmpdir: TMP_DOWNLOADS_PATH) do |file|
-      # Terrapin seems to return an ASCII-encoded string, so we must interpret it
-      # as UTF-8 in order for the rest of the page to work for some kinds of forms.
-      command = Terrapin::CommandLine.new("node", ":transformer_path :xml_path")
-      return command.run(
-        transformer_path: Rails.root.join("lib/enketo-transformer-service/index.js"),
-        xml_path: file.path
-      ).force_encoding("utf-8").chomp.html_safe # rubocop:disable Rails/OutputSafety
-    end
+    # Terrapin seems to return an ASCII-encoded string, so we must interpret it
+    # as UTF-8 in order for the rest of the page to work for some kinds of forms.
+    command = Terrapin::CommandLine.new("node", ":transformer :xml")
+    command.run(
+      transformer: Rails.root.join("lib/enketo-transformer-service/index.js"),
+      xml: @response.form.odk_xml.download
+    ).force_encoding("utf-8").chomp.html_safe # rubocop:disable Rails/OutputSafety
   end
 
   # Returns a string that's safe to print in a JS script.
