@@ -60,7 +60,6 @@ class DedupeJob < ApplicationJob
   end
 
   def destroy_duplicates!
-    puts "Destroying #{dupe_codes}"
     ResponseDestroyer.new(scope: Response.where(shortcode: dupe_codes)).destroy!
   end
 
