@@ -19,3 +19,7 @@ end
 every 1.minute do
   runner "CacheODataJob.perform_later"
 end
+
+every 5.minutes do
+  runner "DedupeJob.perform_later"
+end
