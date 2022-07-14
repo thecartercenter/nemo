@@ -29,6 +29,7 @@ module ActionLinks
     private
 
     def api_url(form)
+      return nil unless form.persisted? # Fixes a crash; this URL is meaningless for the 'new' route anyway.
       base_path = "#{h.request.base_url}#{h.current_root_path}#{OData::BASE_PATH}"
       responses_path = OData::FormDecorator.new(form).responses_url
       "#{base_path}/#{responses_path}"
