@@ -5,22 +5,22 @@ class DedupeJob < ApplicationJob
   TMP_DUPE_BACKUPS_PATH = Rails.root.join("tmp/odk_dupes_backup")
 
   def perform
-    backup_duplicate_xml
-    destroy_duplicates!
+    dupe_codes = find_dupe_codes
+    backup_duplicate_xml(dupe_codes)
+    destroy_duplicates!(dupe_codes)
     clean_up
   end
 
   private
 
-  def dupe_codes
-    return false if Response.dirty_dupe.empty?
+  def find_dupe_codes
     # Make hashtable with checksum as key, reject sets where there is only 1
-    @dupe_checksums ||= tuples.group_by { |t| t[3] }.values.reject { |set| set.size < 2 }
-    @dupe_codes ||= check_unique_users
+    dupe_checksum_tuples = dirty_attachment_tuples.group_by { |t| t[3] }.values.reject { |set| set.size < 2 }
+    ensure_unique_users(dupe_checksum_tuples)
   end
 
-  def check_unique_users
-    @dupe_checksums.map do |dc|
+  def ensure_unique_users(dupe_checksum_tuples)
+    dupe_checksum_tuples.map do |dc|
       # Build hash table with user key (need unique users)
       user_sets = dc.group_by { |t| t[2] }.values.reject { |set| set.size < 2 }
       # Get the sets that were submitted later and only get the code
@@ -28,8 +28,8 @@ class DedupeJob < ApplicationJob
     end.flatten
   end
 
-  def tuples
-    @tuples ||= ActiveStorage::Attachment.where(record_id: Response.dirty_dupe.map(&:id))
+  def dirty_attachment_tuples
+    ActiveStorage::Attachment.where(record_id: Response.dirty_dupe.map(&:id))
       .where(record_type: "Response")
       .includes(record: :user)
       .order(created_at: :desc)
@@ -39,7 +39,7 @@ class DedupeJob < ApplicationJob
     end.compact
   end
 
-  def backup_duplicate_xml
+  def backup_duplicate_xml(dupe_codes)
     # see submission error, save to tmp/duplicates
     dupe_responses = Response.where(shortcode: dupe_codes).map(&:id)
     attachments = ActiveStorage::Attachment.where(record_id: dupe_responses)
@@ -53,19 +53,13 @@ class DedupeJob < ApplicationJob
     File.open("#{TMP_DUPE_BACKUPS_PATH}/#{attachment.filename}", "w") do |f|
       attachment.download { |chunk| f.write(chunk) }
     end
-  rescue StandardError => e
-    Rails.logger.debug(e.message)
-    ExceptionNotifier.notify_exception(e, data: {response: attachment.filename.to_s})
   end
 
-  def destroy_duplicates!
+  def destroy_duplicates!(dupe_codes)
     ResponseDestroyer.new(scope: Response.where(shortcode: dupe_codes)).destroy!
   end
 
   def clean_up
-    Response.dirty_dupe.each do |r|
-      r.dirty_dupe = false
-      r.save!
-    end
+    Response.dirty_dupe.update_all(dirty_dupe: false)
   end
 end

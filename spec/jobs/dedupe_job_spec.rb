@@ -17,10 +17,6 @@ describe DedupeJob do
 
   let(:xml_values) { [1, 2, 3, 4] }
 
-  before(:all) do
-    Delayed::Worker.delay_jobs = false
-  end
-
   after(:all) do
     FileUtils.rm_rf(DedupeJob::TMP_DUPE_BACKUPS_PATH)
   end
@@ -31,8 +27,11 @@ describe DedupeJob do
     let!(:r3) { create(:response, dirty_dupe: false) }
 
     it "should not do anything" do
-      described_class.perform_later
+      described_class.perform_now
       expect(Response.all.count).to eq(3)
+      expect(Response.find(r1.id)).to be_present
+      expect(Response.find(r2.id)).to be_present
+      expect(Response.find(r3.id)).to be_present
     end
   end
 
@@ -43,13 +42,15 @@ describe DedupeJob do
 
     it "should change the dirty dupe flag but not delete" do
       expect(Response.dirty_dupe.count).to eq(3)
-      described_class.perform_later
+      described_class.perform_now
       expect(Response.dirty_dupe.count).to eq(0)
+      expect(Response.find(r1.id)).to be_present
+      expect(Response.find(r2.id)).to be_present
+      expect(Response.find(r3.id)).to be_present
     end
   end
 
   context "simple dedupe" do
-    # create two identical responses (with same xml)
     let!(:r1) do
       create(
         :response,
@@ -78,7 +79,7 @@ describe DedupeJob do
 
     it "should remove a duplicate and create a copy" do
       expect(Response.dirty_dupe.count).to eq(3)
-      described_class.perform_later
+      described_class.perform_now
       expect(Response.all.count).to eq(2)
       expect(Response.dirty_dupe.count).to eq(0)
       expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
@@ -163,7 +164,7 @@ describe DedupeJob do
 
     it "should remove two duplicates and create two copies" do
       expect(Response.dirty_dupe.count).to eq(6)
-      described_class.perform_later
+      described_class.perform_now
       expect(Response.all.count).to eq(4)
       expect(Response.dirty_dupe.count).to eq(0)
       expect(Response.find_by(shortcode: r1.shortcode)).to eq(nil)
