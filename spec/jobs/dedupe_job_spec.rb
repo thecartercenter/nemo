@@ -8,7 +8,6 @@ describe DedupeJob do
   let(:user) { create(:user, role_name: "enumerator", mission: mission) }
   let!(:question_types) { %w[text text text text] }
   let(:form1) { create(:form, :live, mission: mission, question_types: question_types) }
-  let(:formver) { nil } # Don't override the version by default
   let(:fixture_name) { "single_question" }
   let(:nemo_response) { Response.first }
   let(:save_fixtures) { true }
@@ -16,6 +15,8 @@ describe DedupeJob do
   let(:r2_path) { "tmp/odk/responses/simple_response/simple_response2.xml" }
 
   let(:xml_values) { [1, 2, 3, 4] }
+  let(:xml_values2) { [5, 6, 7, 8] }
+
 
   after(:all) do
     FileUtils.rm_rf(DedupeJob::TMP_DUPE_BACKUPS_PATH)
@@ -87,8 +88,96 @@ describe DedupeJob do
     end
   end
 
+  context "dedupe over time" do
+    let!(:form2) { create(:form, :live, mission: mission, question_types: question_types) }
+    let(:user2) { create(:user, role_name: "enumerator", mission: mission) }
+
+    let!(:original_dupe1) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: form1,
+        answer_values: xml_values,
+        user_id: user.id,
+        dirty_dupe: false
+      )
+    end
+
+    let!(:original_dupe2) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: form1,
+        answer_values: xml_values,
+        user_id: user.id,
+        dirty_dupe: false
+      )
+    end
+
+    let(:new_dupe1) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: form1,
+        answer_values: xml_values,
+        user_id: user.id
+      )
+    end
+
+    let(:new_orig1) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: form1,
+        answer_values: xml_values2,
+        user_id: user.id
+      )
+    end
+
+    let(:new_dupe2) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: form1,
+        answer_values: xml_values,
+        user_id: user.id
+      )
+    end
+
+    it "should dedupe correctly" do
+      described_class.perform_now
+      expect(Response.all.count).to eq(2)
+      # One new duplicate response that is dirty
+      new_dupe1.created_at = DateTime.now
+      new_dupe1.save!
+
+      expect(Response.all.count).to eq(3)
+      described_class.perform_now
+      expect(Response.all.count).to eq(2)
+
+
+      new_orig1.created_at = DateTime.now
+      new_orig1.save!
+      described_class.perform_now
+
+      expect(Response.all.count).to eq(3)
+      expect(Response.find(new_orig1.id)).to be_present
+
+      new_dupe2.created_at = DateTime.now
+      new_dupe2.save!
+
+      expect(Response.all.count).to eq(4)
+      described_class.perform_now
+      expect(Response.all.count).to eq(3)
+    end
+  end
+
   context "more complex dedupe with different users" do
-    # create two identical responses (with same xml)
     let!(:form2) { create(:form, :live, mission: mission, question_types: question_types) }
     let!(:form3) { create(:form, :live, mission: mission, question_types: question_types) }
     let(:user2) { create(:user, role_name: "enumerator", mission: mission) }

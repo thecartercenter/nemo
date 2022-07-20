@@ -15,7 +15,10 @@ class DedupeJob < ApplicationJob
 
   def find_dupe_codes
     # Make hashtable with checksum as key, reject sets where there is only 1
-    dupe_checksum_tuples = dirty_attachment_tuples.group_by { |t| t[3] }.values.reject { |set| set.size < 2 }
+
+    puts "all potential dupes: #{all_potential_dupes}"
+    dupe_checksum_tuples = all_potential_dupes.group_by { |t| t[3] }.values.reject { |set| set.size < 2 }
+    # puts "dupe checksum tuples: #{dupe_checksum_tuples}"
     ensure_unique_users(dupe_checksum_tuples)
   end
 
@@ -28,6 +31,10 @@ class DedupeJob < ApplicationJob
     end.flatten
   end
 
+  def all_potential_dupes
+    check_clean_checksums(dirty_attachment_tuples)
+  end
+
   def dirty_attachment_tuples
     ActiveStorage::Attachment.where(record_id: Response.dirty_dupe.map(&:id))
       .where(record_type: "Response")
@@ -37,6 +44,28 @@ class DedupeJob < ApplicationJob
       response = attachment.record
       [response.shortcode, response.created_at, response.user.name, attachment.checksum, response.mission_id]
     end.compact
+  end
+
+  def check_clean_checksums(dirty_tuples)
+    clean_and_dirty_tuples = []
+    dirty_tuples.each do |dt|
+      clean_and_dirty_tuples << dt
+      dupe = dupe_response_for_checksum(dt[3])
+      next if dupe.nil?
+      clean_and_dirty_tuples << dupe
+    end
+    clean_and_dirty_tuples
+  end
+
+  def dupe_response_for_checksum(checksum)
+    # we only need to check if one matches
+    blob = ActiveStorage::Blob.where(checksum: checksum).first
+    return if blob.nil?
+    attachment = ActiveStorage::Attachment.where(blob_id: blob.id).first
+    return if attachment.nil?
+    response = Response.where(id: attachment.record_id).first
+    return if response.nil?
+    [response.shortcode, response.created_at, response.user.name, attachment.checksum, response.mission_id]
   end
 
   def backup_duplicate_xml(dupe_codes)
