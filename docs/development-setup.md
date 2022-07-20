@@ -176,7 +176,7 @@ view `log/dj.log` within a few minutes (the log file doesn't always update immed
 1. Make your form live in NEMO
 1. Point Collect to your development server
     - In Collect, go to `General Settings > Platform Settings > URL`
-    - For the URL put: `http://YOUR_IP:8443/m/your_mission` or `https://YOUR_ID.ngrok.io/m/your_mission`
+    - For the URL put: `http://YOUR_IP:8443/m/your_mission` or `https://YOUR_ID.ngrok.io/m/your_mission`, replacing `YOUR_IP` with `0.0.0.0` or equivalent (from option A), or `YOUR_ID` with the ID provided by ngrok (from option B)
     - Put in your username and password
 1. Retrieve Form
     - In Collect, you should now be able to go to `Get Blank Form` to download the forms from NEMO
