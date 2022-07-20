@@ -70,6 +70,8 @@ class ResponsesController < ApplicationController
   end
 
   def show
+    flash_recently_modified_warnings
+
     save_editor_preference
     return enketo if use_enketo?
 
@@ -91,11 +93,7 @@ class ResponsesController < ApplicationController
       flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
     end
 
-    if use_enketo? && @response.modifier == "web"
-      flash.now[:alert] = t("response.modified_by_web", date: @response.updated_at)
-    elsif !use_enketo? && @response.modifier == "enketo"
-      flash.now[:alert] = t("response.modified_by_enketo", date: @response.updated_at)
-    end
+    flash_recently_modified_warnings
 
     save_editor_preference
     return enketo if use_enketo?
@@ -162,6 +160,15 @@ class ResponsesController < ApplicationController
 
   def save_editor_preference
     current_user.update!(editor_preference: use_enketo? ? "enketo" : "nemo")
+  end
+
+  # Warn the user if they're viewing possibly-stale data.
+  def flash_recently_modified_warnings
+    if use_enketo? && @response.modifier == "web"
+      flash.now[:alert] = t("response.modified_by_web", date: @response.updated_at)
+    elsif !use_enketo? && @response.modifier == "enketo"
+      flash.now[:alert] = t("response.modified_by_enketo", date: @response.updated_at)
+    end
   end
 
   def create_packager(ability, selected)
