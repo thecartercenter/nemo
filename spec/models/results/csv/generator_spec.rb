@@ -341,6 +341,36 @@ describe Results::CSV::Generator, :reset_factory_sequences do
     end
   end
 
+  context "with multilingual cascading selects in non-default locale" do
+    let(:form) { create(:form, question_types: [{repeating: {items: ["multilevel_select_one"]}}]) }
+    let(:group) { form.c[0] }
+    let(:option_set) { form.c[0].c[0].option_set }
+    let(:option1) { option_set.c[0].option }
+    let(:option2) { option_set.c[0].c[0].option }
+
+    before do
+      # Avoid missing translation errors for headers. We're not testing those here as
+      # those are picked up with standard I18n.translate. In production this isn't an issue
+      # because fallbacks are enabled.
+      I18n.backend.store_translations(:fr, response: {csv_headers: I18n.t("response.csv_headers")})
+
+      get_mission.setting.update!(preferred_locales_str: "fr,en")
+      I18n.locale = :en # Non-default locale
+      group.update!(group_name_fr: "Groupe")
+      option_set.update!(level_names: [{en: "Kingdom", fr: "Royaume"}, {en: "Species", fr: "Espèce"}])
+      option1.update!(name_fr: "Animale")
+      option2.update!(name_fr: "Chat")
+
+      Timecop.freeze(submission_time) do
+        create_response(form: form, answer_values: [{repeating: [[[option1.name_en, option2.name_en]]]}])
+      end
+    end
+
+    it "uses french names when appropriate" do
+      is_expected.to match_user_facing_csv(prepare_response_csv_expectation("multilingual_cascading_en.csv"))
+    end
+  end
+
   context "with numeric values for select_one and select_multiple questions" do
     let(:form) { create(:form, question_types: %w[select_one select_multiple]) }
 
