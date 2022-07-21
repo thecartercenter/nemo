@@ -79,7 +79,8 @@ module Results
 
       def add_level_headers(code, level_names)
         JSON.parse(level_names).each do |level|
-          key = locales.detect { |l| level[l.to_s].present? } || level.keys.first
+          # Check every locale, starting with user preference, to see where the level has a real name defined.
+          key = ([I18n.locale] + locales).detect { |l| level[l.to_s].present? } || level.keys.first
           add(code, suffix: level[key.to_s])
         end
       end

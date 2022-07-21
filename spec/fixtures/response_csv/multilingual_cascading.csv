@@ -1,0 +1,3 @@
+ResponseID,Shortcode,Form,Submitter,DateSubmitted,Reviewed,GroupName,GroupLevel,SelectOneQ1:Royaume,SelectOneQ1:Espèce
+*id1*,*shortcode1*,Sample Form 1,A User 1,2015-11-20 06:30:00 -0600,false,,0,,
+*id1*,*shortcode1*,Sample Form 1,A User 1,2015-11-20 06:30:00 -0600,false,Groupe,1,Animale,Chat
