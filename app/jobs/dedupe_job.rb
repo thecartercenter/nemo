@@ -15,7 +15,7 @@ class DedupeJob < ApplicationJob
 
   def find_dupe_codes
     # Make hashtable with checksum as key, reject sets where there is only 1
-
+    puts "dirty attachment tuples #{dirty_attachment_tuples}"
     puts "all potential dupes: #{all_potential_dupes}"
     dupe_checksum_tuples = all_potential_dupes.group_by { |t| t[3] }.values.reject { |set| set.size < 2 }
     # puts "dupe checksum tuples: #{dupe_checksum_tuples}"
@@ -59,12 +59,20 @@ class DedupeJob < ApplicationJob
 
   def dupe_response_for_checksum(checksum)
     # we only need to check if one matches
-    blob = ActiveStorage::Blob.where(checksum: checksum).first
-    return if blob.nil?
+    blobs = ActiveStorage::Blob.where(checksum: checksum)
+    blobs.each do |blob|
+      # iterate each blob and see if there is a response, since we could have hanging blobs/attachments with no resposne
+    end
+
+
+    puts "Found some blobs!"
     attachment = ActiveStorage::Attachment.where(blob_id: blob.id).first
     return if attachment.nil?
-    response = Response.where(id: attachment.record_id).first
+    puts "found the attachment! looking for response with id: #{attachment.record_id}"
+    response = Response.where(id: attachment.record_id, dirty_dupe: false)
     return if response.nil?
+    puts "foudn the response!"
+
     [response.shortcode, response.created_at, response.user.name, attachment.checksum, response.mission_id]
   end
 

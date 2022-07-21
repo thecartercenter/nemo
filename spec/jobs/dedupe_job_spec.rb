@@ -153,13 +153,13 @@ describe DedupeJob do
       described_class.perform_now
       expect(Response.all.count).to eq(2)
       # One new duplicate response that is dirty
+      # maybeuse timecop bleh
       new_dupe1.created_at = DateTime.now
       new_dupe1.save!
 
       expect(Response.all.count).to eq(3)
       described_class.perform_now
       expect(Response.all.count).to eq(2)
-
 
       new_orig1.created_at = DateTime.now
       new_orig1.save!
@@ -171,6 +171,7 @@ describe DedupeJob do
       new_dupe2.created_at = DateTime.now
       new_dupe2.save!
 
+      puts "last round, new dupe"
       expect(Response.all.count).to eq(4)
       described_class.perform_now
       expect(Response.all.count).to eq(3)
