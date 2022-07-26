@@ -17,7 +17,6 @@ describe DedupeJob do
   let(:xml_values) { [1, 2, 3, 4] }
   let(:xml_values2) { [5, 6, 7, 8] }
 
-
   after(:all) do
     FileUtils.rm_rf(DedupeJob::TMP_DUPE_BACKUPS_PATH)
   end
@@ -131,9 +130,9 @@ describe DedupeJob do
       create(
         :response,
         :with_odk_attachment,
-        xml_path: r1_path,
+        xml_path: r2_path,
         form: form1,
-        answer_values: xml_values2,
+        answer_values: %w[cat dog bark meow],
         user_id: user.id
       )
     end
@@ -150,31 +149,37 @@ describe DedupeJob do
     end
 
     it "should dedupe correctly" do
+      # Start with two existing dupes, but are clean
       described_class.perform_now
       expect(Response.all.count).to eq(2)
+
       # One new duplicate response that is dirty
-      # maybeuse timecop bleh
-      new_dupe1.created_at = DateTime.now
+      new_dupe1.created_at = DateTime.now + 10.minutes
       new_dupe1.save!
 
       expect(Response.all.count).to eq(3)
       described_class.perform_now
       expect(Response.all.count).to eq(2)
+      expect(Response.where(id: new_dupe1.id)).to_not(be_present)
 
-      new_orig1.created_at = DateTime.now
+      # New original response (note a duplicate)
+      new_orig1.created_at = DateTime.now + 20.minutes
       new_orig1.save!
+
       described_class.perform_now
 
       expect(Response.all.count).to eq(3)
       expect(Response.find(new_orig1.id)).to be_present
+      expect(Response.find(new_orig1.id).dirty_dupe).to be(false)
 
+      # A new duplicate to the original ones
       new_dupe2.created_at = DateTime.now
       new_dupe2.save!
 
-      puts "last round, new dupe"
       expect(Response.all.count).to eq(4)
       described_class.perform_now
       expect(Response.all.count).to eq(3)
+      expect(Response.where(id: new_dupe2.id)).to_not(be_present)
     end
   end
 
@@ -265,6 +270,14 @@ describe DedupeJob do
       expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
       expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/simple_response.xml")).to eq(true)
       expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/simple_response2.xml")).to eq(true)
+    end
+  end
+
+  private
+
+  def print_responses
+    Response.all.each do |r|
+      puts "#{r.shortcode}:#{r.id}:#{r.created_at}:#{r.dirty_dupe}:#{r.blob_checksum}, \n"
     end
   end
 end

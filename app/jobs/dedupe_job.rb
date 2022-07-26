@@ -14,11 +14,8 @@ class DedupeJob < ApplicationJob
   private
 
   def find_dupe_codes
-    # Make hashtable with checksum as key, reject sets where there is only 1
-    puts "dirty attachment tuples #{dirty_attachment_tuples}"
-    puts "all potential dupes: #{all_potential_dupes}"
+    # Make hashtable with checksum as key, reject sets where there is only 1, aka no dupes
     dupe_checksum_tuples = all_potential_dupes.group_by { |t| t[3] }.values.reject { |set| set.size < 2 }
-    # puts "dupe checksum tuples: #{dupe_checksum_tuples}"
     ensure_unique_users(dupe_checksum_tuples)
   end
 
@@ -49,10 +46,10 @@ class DedupeJob < ApplicationJob
   def check_clean_checksums(dirty_tuples)
     clean_and_dirty_tuples = []
     dirty_tuples.each do |dt|
-      clean_and_dirty_tuples << dt
       dupe = dupe_response_for_checksum(dt[3])
-      next if dupe.nil?
-      clean_and_dirty_tuples << dupe
+      # want to order clean or older record first
+      clean_and_dirty_tuples << dupe unless dupe.nil?
+      clean_and_dirty_tuples << dt
     end
     clean_and_dirty_tuples
   end
@@ -60,20 +57,22 @@ class DedupeJob < ApplicationJob
   def dupe_response_for_checksum(checksum)
     # we only need to check if one matches
     blobs = ActiveStorage::Blob.where(checksum: checksum)
-    blobs.each do |blob|
-      # iterate each blob and see if there is a response, since we could have hanging blobs/attachments with no resposne
+    # could have dangling blobs
+    response = nil
+    blob = nil
+    blobs.each do |b|
+      attachment = ActiveStorage::Attachment.where(blob_id: b.id).first
+      next if attachment.nil?
+      r = Response.where(id: attachment.record_id, dirty_dupe: false).first
+      response = r unless r.nil?
+      blob = b
     end
-
-
-    puts "Found some blobs!"
-    attachment = ActiveStorage::Attachment.where(blob_id: blob.id).first
-    return if attachment.nil?
-    puts "found the attachment! looking for response with id: #{attachment.record_id}"
-    response = Response.where(id: attachment.record_id, dirty_dupe: false)
     return if response.nil?
-    puts "foudn the response!"
+    # puts "foudn the response!"
+    # puts "REsponse: #{response.inspect}"
+    # puts "BLob #{blob.inspect}"
 
-    [response.shortcode, response.created_at, response.user.name, attachment.checksum, response.mission_id]
+    [response.shortcode, response.created_at, response.user.name, blob.checksum, response.mission_id]
   end
 
   def backup_duplicate_xml(dupe_codes)
