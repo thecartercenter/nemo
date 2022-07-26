@@ -222,6 +222,12 @@ class Response < ApplicationRecord
     end
   end
 
+  def blob_checksum
+    blob = ActiveStorage::Blob.where(id: odk_xml.blob_id)
+    return nil if blob.first.nil?
+    blob.first.checksum
+  end
+
   private
 
   def normalize_reviewed
