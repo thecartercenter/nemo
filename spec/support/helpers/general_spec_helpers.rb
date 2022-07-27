@@ -64,7 +64,8 @@ module GeneralSpecHelpers
     {io: fixture, filename: File.basename(fixture)}
   end
 
-  # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
+  # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk.
+  # TODO: Possibly combine with similar odk_submissions#prepare_odk_response_fixture context.
   def prepare_odk_fixture(name:, type:, form:, **options)
     items = form.preordered_items.map { |i| ODK::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten

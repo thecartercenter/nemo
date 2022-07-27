@@ -21,7 +21,6 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     ]
   end
   let(:mission) { form.mission }
-  let(:tmp_path) { Rails.root.join("tmp/submission.xml") }
   let(:submission_path) { "/m/#{mission.compact_name}/submission" }
 
   context "with single part" do
@@ -241,29 +240,6 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         expect(::Media::Object.all.count).to eq(3)
       end
     end
-  end
-
-  def prepare_and_upload_submission_file(template)
-    File.open(tmp_path, "w") do |f|
-      f.write(prepare_odk_media_upload_fixture(template, form))
-    end
-    Rack::Test::UploadedFile.new(tmp_path, "text/xml")
-  end
-
-  def prepare_odk_media_upload_fixture(filename, form)
-    prepare_fixture("odk/responses/#{filename}",
-      form: [form.id],
-      formver: [form.number],
-      itemcode: ODK::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code))
-  end
-
-  def post_submission(submission_file, image_name, image, incomplete: true)
-    submission_params = {
-      xml_submission_file: submission_file,
-      image_name => image
-    }
-    submission_params["*isIncomplete*"] = "yes" if incomplete
-    post(submission_path, params: submission_params, headers: auth_header)
   end
 
   def expect_submission(status: :created, num_response: 1, num_attachments: 2)
