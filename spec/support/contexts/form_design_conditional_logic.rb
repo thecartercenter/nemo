@@ -56,6 +56,11 @@ shared_context "form design conditional logic" do
     expect(page).to have_field(input[:name], with: value)
   end
 
+  def expect_filled_in_enketo_value(value)
+    input = find('input[name*="/data/qing"]')
+    expect(page).to have_field(input[:name], with: value)
+  end
+
   def click_add_condition
     find("a", text: "Add Condition").click
   end
