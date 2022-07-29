@@ -57,9 +57,9 @@ module ApplicationController::Crud
 
   # gets the url to an index action, ensuring the appropriate page is returned to
   # target_controller - the controller whose index should be used. defaults to current controller
-  def index_url_with_context(target_controller = nil)
+  def index_url_with_context(target_controller = nil, **extra_params)
     target_controller ||= controller_name
-    url_params = {controller: target_controller, action: :index}.merge(get_last_context)
+    url_params = {controller: target_controller, action: :index}.merge(get_last_context).merge(extra_params)
     url_for(url_params)
   end
 

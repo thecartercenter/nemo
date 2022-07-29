@@ -42,6 +42,11 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
+        # Manually show success message after AJAX request.
+        if params[:enketo_success].present?
+          flash.now[:success] = params[:enketo_success]
+        end
+
         searcher = build_searcher(@responses)
         @responses = apply_searcher_safely(searcher)
         @searcher_serializer = ResponsesSearcherSerializer
@@ -251,7 +256,8 @@ class ResponsesController < ApplicationController
     authorize!(:submit_to, @response.form)
     @response.save!(validate: false)
 
-    render(body: nil, status: :created)
+    enketo_response = use_enketo? ? {redirect: enketo_redirect} : {}
+    render_ajax(enketo_response, :created)
     FileUtils.rm(tmp_path)
   # See config/initializers/http_status_code.rb for custom status definitions.
   # ODK can't display custom failure messages so these statuses provide a little more info;
@@ -292,11 +298,9 @@ class ResponsesController < ApplicationController
     odk_response_parser.populate_response
 
     @response.save!
-    ajax_response = {
-      msg: success_msg(@response),
-      redirect: index_url_with_context
-    }
-    render_ajax(ajax_response, :created)
+
+    enketo_response = use_enketo? ? {redirect: enketo_redirect} : {}
+    render_ajax(enketo_response, :ok)
     FileUtils.rm(tmp_path)
   rescue MissingFile
     render_ajax({error: I18n.t("activerecord.errors.models.response.missing_xml")}, :unprocessable_entity)
@@ -378,6 +382,11 @@ class ResponsesController < ApplicationController
   def enketo_instance_str
     xml = @response.modified_odk_xml.presence || @response.odk_xml
     xml.download.to_json.html_safe # rubocop:disable Rails/OutputSafety
+  end
+
+  # Generates a redirect path that can be returned to JS via AJAX.
+  def enketo_redirect
+    index_url_with_context(enketo_success: success_msg(@response))
   end
 
   # prepares objects for and renders the form template

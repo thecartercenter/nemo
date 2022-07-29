@@ -77,7 +77,7 @@ async function inject() {
           const { msg, redirect } = responseJSON || {};
 
           // TODO: How to flash this success msg?
-          console.log({ status, statusText, msg });
+          console.log({ status, statusText, msg, redirect });
 
           window.location.href = redirect || ELMO.app.url_builder.build('responses');
         },
