@@ -82,8 +82,8 @@ module GeneralSpecHelpers
       optsetcode: option_sets.map(&:odk_code),
       questionid: items.map { |i| i.question&.id },
       value: options[:values].presence || [])
-    write_fixture_to_file(name: name, type: type, xml: xml) if save_fixtures
-    xml
+    path = write_fixture_to_file(name: name, type: type, xml: xml) if save_fixtures
+    options[:return_file] ? Rack::Test::UploadedFile.new(path, "text/xml") : xml
   end
 
   def write_fixture_to_file(name:, type:, xml:)
@@ -92,6 +92,7 @@ module GeneralSpecHelpers
     FileUtils.mkdir_p(dir)
     puts "Saving fixture to #{path}"
     File.open(path, "w") { |f| f.write(xml) }
+    path
   end
 
   def saved_fixture_dir(name:, type:)
