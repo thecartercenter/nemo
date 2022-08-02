@@ -86,46 +86,45 @@ describe DedupeJob do
     end
   end
 
-  # context "Duplicates with different missions" do
-  #   let!(:mission1) { create(:mission) }
-  #   let!(:mission2) { create(:mission) }
-  #   let!(:formabc) { create(:form, :live, mission: mission1, question_types: question_types) }
-  #   let!(:formxyz) { create(:form, :live, mission: mission2, question_types: question_types) }
-  #
-  #   let!(:r1) do
-  #     create(
-  #       :response,
-  #       :with_odk_attachment,
-  #       xml_path: r1_path,
-  #       form: formabc,
-  #       answer_values: xml_values,
-  #       user_id: user.id,
-  #       dirty_dupe: false
-  #     )
-  #   end
-  #
-  #   let(:r2) do
-  #     create(
-  #       :response,
-  #       :with_odk_attachment,
-  #       xml_path: r1_path,
-  #       form: formxyz,
-  #       answer_values: xml_values,
-  #       user_id: user.id
-  #     )
-  #   end
-  #
-  #   it "should not delete the responses" do
-  #     expect(Response.count).to eq(1)
-  #
-  #     r2.created_at = DateTime.now + 20.minutes
-  #     r2.save!
-  #
-  #     expect(Response.count).to eq(2)
-  #     described_class.perform_now
-  #     expect(Response.count).to eq(1)
-  #   end
-  # end
+  context "Duplicates with different missions" do
+    let(:mission_abc) { create(:mission) }
+    let(:form_abc) { create(:form, :live, mission: mission_abc, question_types: question_types) }
+    let(:user_abc) { create(:user, role_name: "enumerator", mission: mission_abc) }
+
+    let(:mission_xyz) { create(:mission) }
+    let(:form_xyz) { create(:form, :live, mission: mission_xyz, question_types: question_types) }
+    let(:user_xyz) { create(:user, role_name: "enumerator", mission: mission_xyz) }
+
+    let!(:r1) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: form_abc,
+        answer_values: xml_values,
+        user_id: user_abc.id,
+        dirty_dupe: false
+      )
+    end
+
+    let!(:r2) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: form_xyz,
+        answer_values: xml_values,
+        user_id: user_xyz.id,
+        dirty_dupe: false
+      )
+    end
+
+    it "should not delete the responses" do
+      expect(Response.count).to eq(2)
+      described_class.perform_now
+      expect(Response.count).to eq(2)
+    end
+  end
 
   context "dedupe over time" do
     let!(:form2) { create(:form, :live, mission: mission, question_types: question_types) }
@@ -159,10 +158,8 @@ describe DedupeJob do
       # Start with two existing dupes, but are clean
       described_class.perform_now
       expect(Response.all.count).to eq(2)
-      puts "first test"
 
       # One new duplicate response that is dirty
-
       new_dupe1 = create(
         :response,
         :with_odk_attachment,
@@ -299,6 +296,47 @@ describe DedupeJob do
       expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
       expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/simple_response.xml")).to eq(true)
       expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/simple_response2.xml")).to eq(true)
+    end
+  end
+
+  context "Responses with multiple media attachments" do
+    let(:question_types) { %w[text image image image] }
+    let(:media_form) { create(:form, :live, mission: mission, question_types: question_types) }
+    let(:media4) { create(:media_image) }
+    let(:media5) { create(:media_image) }
+    let(:media6) { create(:media_image) }
+
+    let!(:r1) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: media_form,
+        answer_values: ["Cat", create(:media_image), create(:media_image), create(:media_image)],
+        user_id: user.id
+      )
+    end
+
+    let!(:r2) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: media_form,
+        answer_values: ["Cat", media4, media5, media6],
+        user_id: user.id
+      )
+    end
+
+    it "should not remove response with multi attachments but same response" do
+      expect(Response.all.count).to eq(2)
+      described_class.perform_now
+      expect(Response.all.count).to eq(1)
+      expect(Media::Object.all.count).to eq(3)
+      expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
+      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{media4.item.filename}")).to eq(true)
+      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{media5.item.filename}")).to eq(true)
+      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{media6.item.filename}")).to eq(true)
     end
   end
 

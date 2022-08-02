@@ -9,7 +9,7 @@ class DedupeJob < ApplicationJob
       response = Response.order(created_at: :asc).dirty_dupe.first
       duplicate_code = duplicate_shortcode(response)
       if duplicate_code.present?
-        backup_duplicate_xml(duplicate_code)
+        backup_duplicate_attachments(duplicate_code)
         destroy_duplicate!(duplicate_code)
       else
         clean_up(response)
@@ -20,19 +20,18 @@ class DedupeJob < ApplicationJob
   private
 
   def duplicate_shortcode(response)
-    blobs = ActiveStorage::Blob.where(checksum: response.blob_checksum).where.not(id: response.odk_xml.blob_id)
+    blobs = ActiveStorage::Blob.where(checksum: response.blob_checksum)
+      .where.not(id: response.odk_xml.blob_id)
     return false if blobs.blank?
     blob = ensure_clean_response(blobs)
-    return nil if blob.blank?
-    return nil if unique_user_and_mission?(blob.first, response)
+    return nil if blob.blank? || unique_user_and_mission?(blob.first, response)
     response.shortcode
   end
 
   def ensure_clean_response(blobs)
     blobs.map do |b|
       r = Response.where(id: ActiveStorage::Attachment.where(blob_id: b.id).first.record_id)
-      next if r.first.blank?
-      next if r.first.dirty_dupe
+      next if r.first.blank? || r.first.dirty_dupe
       b
     end.compact
   end
@@ -40,23 +39,29 @@ class DedupeJob < ApplicationJob
   def unique_user_and_mission?(blob, dirty_response)
     r = Response.find(ActiveStorage::Attachment.where(blob_id: blob.id).first.record_id)
     return if r.nil?
-    if (r.user_id == dirty_response.user_id) && (r.mission_id == dirty_response.mission_id)
-      return false
-    end
+    return false if (r.user_id == dirty_response.user_id) && (r.mission_id == dirty_response.mission_id)
     true
   end
 
-  def backup_duplicate_xml(dupe_code)
-    # see submission error, save to tmp/duplicates
+  def backup_duplicate_attachments(dupe_code)
     dupe_response = Response.where(shortcode: dupe_code).first
     attachment = ActiveStorage::Attachment.where(record_id: dupe_response.id).first
     FileUtils.mkdir_p(TMP_DUPE_BACKUPS_PATH)
-    copy_attachment(attachment)
+
+    media_objects = Media::Object.where(answer_id: dupe_response.answer_ids)
+
+    copy_files(xml: attachment, media: media_objects)
   end
 
-  def copy_attachment(attachment)
-    File.open("#{TMP_DUPE_BACKUPS_PATH}/#{attachment.filename}", "w") do |f|
-      attachment.download { |chunk| f.write(chunk) }
+  def copy_files(files)
+    File.open("#{TMP_DUPE_BACKUPS_PATH}/#{files[:xml].filename}", "w") do |f|
+      files[:xml].download { |chunk| f.write(chunk) }
+    end
+
+    files[:media].each do |m|
+      File.open("#{TMP_DUPE_BACKUPS_PATH}/#{m.item.filename}", "wb") do |f|
+        m.item.download { |chunk| f.write(chunk) }
+      end
     end
   end
 
