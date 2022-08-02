@@ -70,7 +70,6 @@ class DedupeJob < ApplicationJob
   end
 
   def clean_up(response)
-    response.dirty_dupe = false
-    response.save!
+    response.update!(dirty_dupe: false)
   end
 end
