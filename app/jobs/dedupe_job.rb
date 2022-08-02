@@ -5,84 +5,53 @@ class DedupeJob < ApplicationJob
   TMP_DUPE_BACKUPS_PATH = Rails.root.join("tmp/odk_dupes_backup")
 
   def perform
-    dupe_codes = find_dupe_codes
-    backup_duplicate_xml(dupe_codes)
-    destroy_duplicates!(dupe_codes)
-    clean_up
+    while Response.dirty_dupe.count.positive?
+      response = Response.order(created_at: :asc).dirty_dupe.first
+      duplicate_code = duplicate_shortcode(response)
+      if duplicate_code.present?
+        backup_duplicate_xml(duplicate_code)
+        destroy_duplicate!(duplicate_code)
+      else
+        clean_up(response)
+      end
+    end
   end
 
   private
 
-  def find_dupe_codes
-    # Make hashtable with checksum as key, reject sets where there is only 1, aka no dupes
-    dupe_checksum_tuples = all_potential_dupes.group_by { |t| t[3] }.values.reject { |set| set.size < 2 }
-    ensure_unique_users(dupe_checksum_tuples)
+  def duplicate_shortcode(response)
+    blobs = ActiveStorage::Blob.where(checksum: response.blob_checksum).where.not(id: response.odk_xml.blob_id)
+    return false if blobs.blank?
+    blob = ensure_clean_response(blobs)
+    return nil if blob.blank?
+    return nil if unique_user_and_mission?(blob.first, response)
+    response.shortcode
   end
 
-  def ensure_unique_users(dupe_checksum_tuples)
-    dupe_checksum_tuples.map do |dc|
-      # Build hash table with user key (need unique users)
-      user_sets = dc.group_by { |t| t[2] }.values.reject { |set| set.size < 2 }
-      # Get the sets that were submitted later and only get the code
-      user_sets.map { |set| set[1..].map { |t| t[0] } }.flatten
-    end.flatten
-  end
-
-  def all_potential_dupes
-    check_clean_checksums(dirty_attachment_tuples)
-  end
-
-  def dirty_attachment_tuples
-    ActiveStorage::Attachment.where(record_id: Response.dirty_dupe.map(&:id))
-      .where(record_type: "Response")
-      .includes(record: :user)
-      .order(created_at: :desc)
-      .filter { |attachment| attachment.record.presence }.map do |attachment|
-      response = attachment.record
-      [response.shortcode, response.created_at, response.user.name, attachment.checksum, response.mission_id]
+  def ensure_clean_response(blobs)
+    blobs.map do |b|
+      r = Response.where(id: ActiveStorage::Attachment.where(blob_id: b.id).first.record_id)
+      next if r.first.blank?
+      next if r.first.dirty_dupe
+      b
     end.compact
   end
 
-  def check_clean_checksums(dirty_tuples)
-    clean_and_dirty_tuples = []
-    dirty_tuples.each do |dt|
-      dupe = dupe_response_for_checksum(dt[3])
-      # want to order clean or older record first
-      clean_and_dirty_tuples << dupe unless dupe.nil?
-      clean_and_dirty_tuples << dt
+  def unique_user_and_mission?(blob, dirty_response)
+    r = Response.find(ActiveStorage::Attachment.where(blob_id: blob.id).first.record_id)
+    return if r.nil?
+    if (r.user_id == dirty_response.user_id) && (r.mission_id == dirty_response.mission_id)
+      return false
     end
-    clean_and_dirty_tuples
+    true
   end
 
-  def dupe_response_for_checksum(checksum)
-    # we only need to check if one matches
-    blobs = ActiveStorage::Blob.where(checksum: checksum)
-    # could have dangling blobs
-    response = nil
-    blob = nil
-    blobs.each do |b|
-      attachment = ActiveStorage::Attachment.where(blob_id: b.id).first
-      next if attachment.nil?
-      r = Response.where(id: attachment.record_id, dirty_dupe: false).first
-      response = r unless r.nil?
-      blob = b
-    end
-    return if response.nil?
-    # puts "foudn the response!"
-    # puts "REsponse: #{response.inspect}"
-    # puts "BLob #{blob.inspect}"
-
-    [response.shortcode, response.created_at, response.user.name, blob.checksum, response.mission_id]
-  end
-
-  def backup_duplicate_xml(dupe_codes)
+  def backup_duplicate_xml(dupe_code)
     # see submission error, save to tmp/duplicates
-    dupe_responses = Response.where(shortcode: dupe_codes).map(&:id)
-    attachments = ActiveStorage::Attachment.where(record_id: dupe_responses)
+    dupe_response = Response.where(shortcode: dupe_code).first
+    attachment = ActiveStorage::Attachment.where(record_id: dupe_response.id).first
     FileUtils.mkdir_p(TMP_DUPE_BACKUPS_PATH)
-    attachments.each do |a|
-      copy_attachment(a)
-    end
+    copy_attachment(attachment)
   end
 
   def copy_attachment(attachment)
@@ -91,11 +60,12 @@ class DedupeJob < ApplicationJob
     end
   end
 
-  def destroy_duplicates!(dupe_codes)
-    ResponseDestroyer.new(scope: Response.where(shortcode: dupe_codes)).destroy!
+  def destroy_duplicate!(dupe_code)
+    ResponseDestroyer.new(scope: Response.where(shortcode: dupe_code)).destroy!
   end
 
-  def clean_up
-    Response.dirty_dupe.update_all(dirty_dupe: false)
+  def clean_up(response)
+    response.dirty_dupe = false
+    response.save!
   end
 end
