@@ -49,7 +49,7 @@ describe DedupeJob do
     end
   end
 
-  context "simple dedupe" do
+  context "Simple dedupe" do
     let!(:r1) do
       create(
         :response,
@@ -87,15 +87,15 @@ describe DedupeJob do
   end
 
   context "Duplicates with different missions" do
-    let(:mission_abc) { create(:mission) }
-    let(:form_abc) { create(:form, :live, mission: mission_abc, question_types: question_types) }
+    let!(:mission_abc) { create(:mission) }
+    let!(:form_abc) { create(:form, :live, mission: mission_abc, question_types: question_types) }
     let(:user_abc) { create(:user, role_name: "enumerator", mission: mission_abc) }
 
-    let(:mission_xyz) { create(:mission) }
-    let(:form_xyz) { create(:form, :live, mission: mission_xyz, question_types: question_types) }
+    let!(:mission_xyz) { create(:mission) }
+    let!(:form_xyz) { create(:form, :live, mission: mission_xyz, question_types: question_types) }
     let(:user_xyz) { create(:user, role_name: "enumerator", mission: mission_xyz) }
 
-    let!(:r1) do
+    let(:r1) do
       create(
         :response,
         :with_odk_attachment,
@@ -107,7 +107,7 @@ describe DedupeJob do
       )
     end
 
-    let!(:r2) do
+    let(:r2) do
       create(
         :response,
         :with_odk_attachment,
@@ -120,13 +120,17 @@ describe DedupeJob do
     end
 
     it "should not delete the responses" do
+      puts "Form abc mission: #{form_abc.mission_id}"
+      puts "Form xyz mission #{form_xyz.mission_id}"
+      r1
+      r2
       expect(Response.count).to eq(2)
       described_class.perform_now
       expect(Response.count).to eq(2)
     end
   end
 
-  context "dedupe over time" do
+  context "Dedupe over time" do
     let!(:form2) { create(:form, :live, mission: mission, question_types: question_types) }
     let(:user2) { create(:user, role_name: "enumerator", mission: mission) }
 
@@ -209,7 +213,7 @@ describe DedupeJob do
     end
   end
 
-  context "more complex dedupe with different users" do
+  context "More complex dedupe with different users" do
     let!(:form2) { create(:form, :live, mission: mission, question_types: question_types) }
     let!(:form3) { create(:form, :live, mission: mission, question_types: question_types) }
     let(:user2) { create(:user, role_name: "enumerator", mission: mission) }
