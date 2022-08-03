@@ -4,6 +4,8 @@ require "rails_helper"
 require "json"
 
 describe DedupeJob do
+  include_context "odk submissions"
+
   let(:mission) { create(:mission) }
   let(:user) { create(:user, role_name: "enumerator", mission: mission) }
   let!(:question_types) { %w[text text text text] }
@@ -95,7 +97,7 @@ describe DedupeJob do
     let!(:form_xyz) { create(:form, :live, mission: mission_xyz, question_types: question_types) }
     let(:user_xyz) { create(:user, role_name: "enumerator", mission: mission_xyz) }
 
-    let(:r1) do
+    let!(:r1) do
       create(
         :response,
         :with_odk_attachment,
@@ -107,7 +109,7 @@ describe DedupeJob do
       )
     end
 
-    let(:r2) do
+    let!(:r2) do
       create(
         :response,
         :with_odk_attachment,
@@ -115,15 +117,12 @@ describe DedupeJob do
         form: form_xyz,
         answer_values: xml_values,
         user_id: user_xyz.id,
-        dirty_dupe: false
+        dirty_dupe: false,
+        mission: mission_xyz
       )
     end
 
     it "should not delete the responses" do
-      puts "Form abc mission: #{form_abc.mission_id}"
-      puts "Form xyz mission #{form_xyz.mission_id}"
-      r1
-      r2
       expect(Response.count).to eq(2)
       described_class.perform_now
       expect(Response.count).to eq(2)
@@ -158,7 +157,8 @@ describe DedupeJob do
       )
     end
 
-    it "should dedupe correctly" do
+    it "should dedupe correctly", database_cleaner: :truncate do
+
       # Start with two existing dupes, but are clean
       described_class.perform_now
       expect(Response.all.count).to eq(2)
@@ -178,6 +178,12 @@ describe DedupeJob do
       described_class.perform_now
       expect(Response.all.count).to eq(2)
       expect(Response.where(id: new_dupe1.id)).to_not(be_present)
+
+      # prepare another xml file
+      prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
+      r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
+      r2_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response2.xml")
+      FileUtils.cp(r1_original_path, r2_path)
 
       # New original response (note a duplicate)
       new_orig1 =
@@ -232,6 +238,7 @@ describe DedupeJob do
       )
     end
 
+    # duplicate
     let!(:r2) do
       create(
         :response,
@@ -243,7 +250,7 @@ describe DedupeJob do
       )
     end
 
-    let!(:r3) do
+    let(:r3) do
       create(
         :response,
         :with_odk_attachment,
@@ -254,7 +261,8 @@ describe DedupeJob do
       )
     end
 
-    let!(:r4) do
+    # duplicate
+    let(:r4) do
       create(
         :response,
         :with_odk_attachment,

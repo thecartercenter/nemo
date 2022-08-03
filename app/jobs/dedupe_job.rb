@@ -5,55 +5,45 @@ class DedupeJob < ApplicationJob
   TMP_DUPE_BACKUPS_PATH = Rails.root.join("tmp/odk_dupes_backup")
 
   def perform
-    while Response.dirty_dupe.count.positive?
-      response = Response.order(created_at: :asc).dirty_dupe.first
-      duplicate_code = duplicate_shortcode(response)
-      if duplicate_code.present?
-        backup_duplicate_attachments(duplicate_code)
-        destroy_duplicate!(duplicate_code)
-      else
-        clean_up(response)
+    dirty_responses = Response.order(created_at: :desc).dirty_dupe.to_a
+
+    dirty_responses.each do |response|
+      if duplicate?(response)
+        backup_duplicate_attachments(response)
+        destroy_duplicate!(response)
       end
     end
+
+    clean_up(dirty_responses)
   end
 
   private
 
-  def duplicate_shortcode(response)
-    blobs = ActiveStorage::Blob.where(checksum: response.blob_checksum)
-      .where.not(id: response.odk_xml.blob_id)
-    return false if blobs.blank?
-    blob = ensure_clean_response(blobs)
-    return nil if blob.blank? || unique_user_and_mission?(blob.first, response)
-    response.shortcode
-  end
+  def duplicate?(response)
+    blob = ActiveStorage::Blob.where(checksum: response.odk_xml.checksum)
+      .where.not(id: response.odk_xml.blob_id).first
 
-  def ensure_clean_response(blobs)
-    blobs.map do |b|
-      r = Response.where(id: ActiveStorage::Attachment.where(blob_id: b.id).first.record_id)
-      next if r.first.blank? || r.first.dirty_dupe
-      b
-    end.compact
+    return false if blob.blank?
+    return nil if blob.blank? || unique_user_and_mission?(blob, response)
+    true
   end
 
   def unique_user_and_mission?(blob, dirty_response)
-    r = Response.find(ActiveStorage::Attachment.where(blob_id: blob.id).first.record_id)
-    return if r.nil?
+    r = Response.find_by(id: ActiveStorage::Attachment.where(blob_id: blob.id).first.record_id)
+    return true if r.nil?
     return false if (r.user_id == dirty_response.user_id) && (r.mission_id == dirty_response.mission_id)
     true
   end
 
-  def backup_duplicate_attachments(dupe_code)
-    dupe_response = Response.where(shortcode: dupe_code).first
-    attachment = ActiveStorage::Attachment.where(record_id: dupe_response.id).first
-    FileUtils.mkdir_p(TMP_DUPE_BACKUPS_PATH)
-
-    media_objects = Media::Object.where(answer_id: dupe_response.answer_ids)
-
+  def backup_duplicate_attachments(dupe)
+    attachment = ActiveStorage::Attachment.find_by(record_id: dupe.id)
+    media_objects = Media::Object.where(answer_id: dupe.answer_ids)
     copy_files(xml: attachment, media: media_objects)
   end
 
   def copy_files(files)
+    FileUtils.mkdir_p(TMP_DUPE_BACKUPS_PATH)
+
     File.open("#{TMP_DUPE_BACKUPS_PATH}/#{files[:xml].filename}", "w") do |f|
       files[:xml].download { |chunk| f.write(chunk) }
     end
@@ -65,11 +55,13 @@ class DedupeJob < ApplicationJob
     end
   end
 
-  def destroy_duplicate!(dupe_code)
-    ResponseDestroyer.new(scope: Response.where(shortcode: dupe_code)).destroy!
+  def destroy_duplicate!(dupe)
+    dupe.odk_xml.purge
+    ResponseDestroyer.new(scope: Response.where(shortcode: dupe.shortcode)).destroy!
+    Sentry.capture_message("Destroyed duplicate response in DedupeJob")
   end
 
-  def clean_up(response)
-    response.update!(dirty_dupe: false)
+  def clean_up(responses)
+    Response.where(id: responses).update_all(dirty_dupe: false)
   end
 end
