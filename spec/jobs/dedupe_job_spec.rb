@@ -10,16 +10,19 @@ describe DedupeJob do
   let(:user) { create(:user, role_name: "enumerator", mission: mission) }
   let!(:question_types) { %w[text text text text] }
   let(:form1) { create(:form, :live, mission: mission, question_types: question_types) }
-  let(:fixture_name) { "single_question" }
+  let(:formver) { nil } # Don't override the version by default
+  let(:fixture_name) { "simple_response" }
+  let!(:xml) { prepare_odk_response_fixture(fixture_name, form1, values: xml_values, formver: formver) }
   let(:save_fixtures) { true }
   let(:r1_path) { "tmp/odk/responses/simple_response/simple_response.xml" }
   let(:r2_path) { "tmp/odk/responses/simple_response/simple_response2.xml" }
 
+
   let(:xml_values) { [1, 2, 3, 4] }
-  let(:xml_values2) { [5, 6, 7, 8] }
 
   after(:all) do
     FileUtils.rm_rf(DedupeJob::TMP_DUPE_BACKUPS_PATH)
+    FileUtils.rm_rf(Rails.root.join("tmp/odk/responses/simple_response/"))
   end
 
   context "No dirty responses" do
@@ -105,7 +108,8 @@ describe DedupeJob do
         form: form_abc,
         answer_values: xml_values,
         user_id: user_abc.id,
-        dirty_dupe: false
+        dirty_dupe: false,
+        mission: mission_abc
       )
     end
 
@@ -179,13 +183,13 @@ describe DedupeJob do
       expect(Response.all.count).to eq(2)
       expect(Response.where(id: new_dupe1.id)).to_not(be_present)
 
-      # prepare another xml file
-      prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
+      # prepare another unique xml file
+      prepare_odk_response_fixture("simple_response", form1, values: %w[cat dog bark meow], formver: "202211")
       r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
-      r2_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response2.xml")
+      r2_path = Rails.root.join("tmp/odk/responses/simple_response/not_duplicate.xml")
       FileUtils.cp(r1_original_path, r2_path)
 
-      # New original response (note a duplicate)
+      # New original response (not a duplicate)
       new_orig1 =
         create(
           :response,
@@ -226,6 +230,8 @@ describe DedupeJob do
     let(:user3) { create(:user, role_name: "enumerator", mission: mission) }
     let(:user4) { create(:user, role_name: "enumerator", mission: mission) }
     let(:user5) { create(:user, role_name: "enumerator", mission: mission) }
+    let(:r2_path) { "tmp/odk/responses/simple_response/simple_response2.xml" }
+
 
     let!(:r1) do
       create(
@@ -273,32 +279,14 @@ describe DedupeJob do
       )
     end
 
-    let!(:r5) do
-      create(
-        :response,
-        :with_odk_attachment,
-        xml_path: r1_path,
-        form: form2,
-        answer_values: ["test", 2, "test", 4],
-        user_id: user3.id
-      )
-    end
+    it "should remove two duplicates and create two copies", database_cleaner: :truncate do
+      prepare_unique_xml(form2, xml_values, "simple_response2")
+      r3
+      r4
 
-    let!(:r6) do
-      create(
-        :response,
-        :with_odk_attachment,
-        xml_path: r1_path,
-        form: form2,
-        answer_values: [2, 2, 3, 4],
-        user_id: user4.id
-      )
-    end
-
-    it "should remove two duplicates and create two copies" do
-      expect(Response.dirty_dupe.count).to eq(6)
+      expect(Response.dirty_dupe.count).to eq(4)
       described_class.perform_now
-      expect(Response.all.count).to eq(4)
+      expect(Response.all.count).to eq(2)
       expect(Response.dirty_dupe.count).to eq(0)
       expect(Response.find_by(shortcode: r2.shortcode)).to eq(nil)
       expect(Response.find_by(shortcode: r1.shortcode)).to_not(eq(nil))
@@ -358,5 +346,13 @@ describe DedupeJob do
     Response.all.each do |r|
       puts "#{r.shortcode}:#{r.id}:#{r.created_at}:#{r.dirty_dupe}:#{r.blob_checksum}, \n"
     end
+  end
+
+  def prepare_unique_xml(form, values, filename)
+    # prepare another unique xml file
+    prepare_odk_response_fixture("simple_response", form, values: values, formver: "202211")
+    r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
+    r2_path = Rails.root.join("tmp/odk/responses/simple_response/#{filename}.xml")
+    FileUtils.cp(r1_original_path, r2_path)
   end
 end
