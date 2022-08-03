@@ -22,19 +22,20 @@ class DedupeJob < ApplicationJob
   def duplicate?(response)
     blob = ActiveStorage::Blob.where(checksum: response.odk_xml.checksum)
       .where.not(id: response.odk_xml.blob_id).first
-
     return false if blob.blank?
-    return nil if blob.blank? || unique_user_and_mission?(blob, response)
+    blob_response = Response.find_by(id: ActiveStorage::Attachment.find_by(blob_id: blob.id).record_id)
+
+    return false if blob_response.blank? || unique_user_and_mission?(blob_response, response)
     true
   end
 
-  def unique_user_and_mission?(blob, dirty_response)
-    r = Response.find_by(id: ActiveStorage::Attachment.where(blob_id: blob.id).first.record_id)
-    return true if r.nil?
-    return false if (r.user_id == dirty_response.user_id) && (r.mission_id == dirty_response.mission_id)
+  def unique_user_and_mission?(blob_response, dirty_response)
+    return false if blob_response.user_id == dirty_response.user_id
+    return false if blob_response.mission_id == dirty_response.mission_id
     true
   end
 
+  # create
   def backup_duplicate_attachments(dupe)
     attachment = ActiveStorage::Attachment.find_by(record_id: dupe.id)
     media_objects = Media::Object.where(answer_id: dupe.answer_ids)
@@ -42,6 +43,7 @@ class DedupeJob < ApplicationJob
   end
 
   def copy_files(files)
+    # write to json
     FileUtils.mkdir_p(TMP_DUPE_BACKUPS_PATH)
 
     File.open("#{TMP_DUPE_BACKUPS_PATH}/#{files[:xml].filename}", "w") do |f|
@@ -56,7 +58,7 @@ class DedupeJob < ApplicationJob
   end
 
   def destroy_duplicate!(dupe)
-    dupe.odk_xml.purge
+    # dupe.odk_xml.purge
     ResponseDestroyer.new(scope: Response.where(shortcode: dupe.shortcode)).destroy!
     Sentry.capture_message("Destroyed duplicate response in DedupeJob")
   end
