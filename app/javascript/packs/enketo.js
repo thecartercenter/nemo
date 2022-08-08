@@ -76,10 +76,14 @@ async function inject() {
           // These will be empty on NEW submission, but present on EDIT.
           const { msg, redirect } = responseJSON || {};
 
-          // TODO: How to flash this success msg?
           console.log({ status, statusText, msg, redirect });
 
-          window.location.href = redirect || ELMO.app.url_builder.build('responses');
+          // Timeout is messy test logic for rspec to reliably detect the loading indicator.
+          const timeout = process.env.RAILS_ENV === 'test' ? 100 : 0;
+          setTimeout(() => {
+            ELMO.app.loading(false); // Dismiss the load indicator BEFORE redirecting otherwise rspec gets confused.
+            window.location.href = redirect || ELMO.app.url_builder.build('responses');
+          }, timeout);
         },
         error: ({ status, statusText, responseJSON }) => {
           // TODO: Convert to DOM element

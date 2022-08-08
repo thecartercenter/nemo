@@ -49,7 +49,7 @@ feature "enketo form rendering and submission", js: true do
       expect_enketo_content
 
       fill_in_value("new answer")
-      click_button("Save")
+      save_and_wait
       expect(page).to have_content("Success: Response created successfully")
 
       visit(edit_response_path(latest_response_params))
@@ -62,11 +62,58 @@ feature "enketo form rendering and submission", js: true do
       expect_filled_in_value("enketo answer")
 
       fill_in_value("edited answer")
-      click_button("Save")
+      save_and_wait
       expect(page).to have_content("Success: Response updated successfully")
 
       visit(response_path(r1_params))
       expect_filled_in_value("edited answer")
+    end
+  end
+
+  context "skip logic" do
+    let(:form) { create(:form, :live, question_types: %w[text text text text]) }
+    let(:qings) { form.questionings }
+    let(:response) { create(:response, form: form, answer_values: []) } # Answers filled in via XML below.
+
+    # skip over a required question to a later questioning
+    before do
+      qings[1].update!(required: true)
+
+      # Skip from [0] to [2] if [0] is equal to "skip"
+      create(
+        :skip_rule,
+        source_item: qings[0],
+        destination: "item",
+        dest_item_id: qings[2].id,
+        conditions_attributes: [{left_qing_id: qings[0].id, op: "eq", value: "skip"}]
+      )
+
+      ODK::FormRenderJob.perform_now(form)
+
+      submission_file = prepare_odk_response_fixture("enketo_skip_logic", form, return_file: true, values: [
+        "skip", nil, "bar", "baz"
+      ])
+      response.update!(odk_xml: submission_file, source: "odk")
+    end
+
+    it "works even when editing retroactively" do
+      # Make sure the form is valid as-is.
+      visit(edit_response_path(latest_response_params))
+      within(all(".question")[0]) { expect_filled_in_value("skip") }
+      save_and_wait
+      expect(page).to have_content("Success: Response updated successfully")
+
+      # Make sure the skip logic validates new edits.
+      visit(edit_response_path(latest_response_params))
+      within(all(".question")[0]) { expect_filled_in_value("skip") }
+      within(all(".question")[0]) { fill_in_value("unskip") }
+      save_only
+      page.driver.browser.switch_to.alert.accept
+      expect(page).to have_content("This field is required")
+      within(all(".question")[1]) { fill_in_value("not blank anymore") }
+      expect(page).not_to have_content("This field is required")
+      save_and_wait
+      expect(page).to have_content("Success: Response updated successfully")
     end
   end
 
