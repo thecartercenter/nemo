@@ -16,8 +16,6 @@ describe DedupeJob do
   let(:save_fixtures) { true }
   let(:r1_path) { "tmp/odk/responses/simple_response/simple_response.xml" }
   let(:r2_path) { "tmp/odk/responses/simple_response/simple_response2.xml" }
-
-
   let(:xml_values) { [1, 2, 3, 4] }
 
   after(:all) do
@@ -87,7 +85,11 @@ describe DedupeJob do
       expect(Response.all.count).to eq(2)
       expect(Response.dirty_dupe.count).to eq(0)
       expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
-      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/simple_response.xml")).to eq(true)
+      r2_json_path = "#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{r2.id}.json"
+      r2_json = File.read(r2_json_path)
+      expected_json = "{\"form_id\":\"#{r2.form_id}\",\"odk_xml\":\"#{r2.odk_xml.blob_id}\"}"
+      expect(File.file?(r2_json_path)).to eq(true)
+      expect(r2_json).to eq(expected_json)
     end
   end
 
@@ -162,7 +164,6 @@ describe DedupeJob do
     end
 
     it "should dedupe correctly", database_cleaner: :truncate do
-
       # Start with two existing dupes, but are clean
       described_class.perform_now
       expect(Response.all.count).to eq(2)
@@ -183,11 +184,7 @@ describe DedupeJob do
       expect(Response.all.count).to eq(2)
       expect(Response.where(id: new_dupe1.id)).to_not(be_present)
 
-      # prepare another unique xml file
-      prepare_odk_response_fixture("simple_response", form1, values: %w[cat dog bark meow], formver: "202211")
-      r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")
-      r2_path = Rails.root.join("tmp/odk/responses/simple_response/not_duplicate.xml")
-      FileUtils.cp(r1_original_path, r2_path)
+      prepare_unique_xml(form1, %w[cat dog bark meow], "simple_response2")
 
       # New original response (not a duplicate)
       new_orig1 =
@@ -231,7 +228,6 @@ describe DedupeJob do
     let(:user4) { create(:user, role_name: "enumerator", mission: mission) }
     let(:user5) { create(:user, role_name: "enumerator", mission: mission) }
     let(:r2_path) { "tmp/odk/responses/simple_response/simple_response2.xml" }
-
 
     let!(:r1) do
       create(
@@ -279,7 +275,7 @@ describe DedupeJob do
       )
     end
 
-    it "should remove two duplicates and create two copies", database_cleaner: :truncate do
+    it "should remove two duplicates and create two copies" do
       prepare_unique_xml(form2, xml_values, "simple_response2")
       r3
       r4
@@ -293,9 +289,21 @@ describe DedupeJob do
       expect(Response.find_by(shortcode: r4.shortcode)).to eq(nil)
       expect(Response.find_by(shortcode: r3.shortcode)).to_not(eq(nil))
       # Check for backups
+      r2_json_path = "#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{r2.id}.json"
+      r4_json_path = "#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{r4.id}.json"
+
       expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
-      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/simple_response.xml")).to eq(true)
-      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/simple_response2.xml")).to eq(true)
+      expect(File.file?(r2_json_path)).to eq(true)
+      expect(File.file?(r4_json_path)).to eq(true)
+
+      r2_json = File.read(r2_json_path)
+      r4_json = File.read(r4_json_path)
+
+      expected_json2 = "{\"form_id\":\"#{r2.form_id}\",\"odk_xml\":\"#{r2.odk_xml.blob_id}\"}"
+      expect(r2_json).to eq(expected_json2)
+
+      expected_json4 = "{\"form_id\":\"#{r4.form_id}\",\"odk_xml\":\"#{r4.odk_xml.blob_id}\"}"
+      expect(r4_json).to eq(expected_json4)
     end
   end
 
@@ -328,15 +336,28 @@ describe DedupeJob do
       )
     end
 
-    it "should not remove response with multi attachments but same response" do
+    it "should remove dupe response and create approriate backup file" do
       expect(Response.all.count).to eq(2)
       described_class.perform_now
       expect(Response.all.count).to eq(1)
       expect(Media::Object.all.count).to eq(3)
       expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
-      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{media4.item.filename}")).to eq(true)
-      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{media5.item.filename}")).to eq(true)
-      expect(File.file?("#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{media6.item.filename}")).to eq(true)
+      r2_json_path = "#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{r2.id}.json"
+
+      expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
+      expect(File.file?(r2_json_path)).to eq(true)
+
+      # Ensure the dupe media blobs still exist
+      expect(ActiveStorage::Blob.find_by(id: media4.item.blob_id)).to be_present
+      expect(ActiveStorage::Blob.find_by(id: media5.item.blob_id)).to be_present
+      expect(ActiveStorage::Blob.find_by(id: media6.item.blob_id)).to be_present
+
+      r2_json = File.read(r2_json_path)
+      expected_json2 = "{\"form_id\":\"#{r2.form_id}\",\"odk_xml\":\"#{r2.odk_xml.blob_id}\","\
+        "\"qing#{media4.answer.questioning_id}\":\"#{media4.item.blob_id}\","\
+        "\"qing#{media5.answer.questioning_id}\":\"#{media5.item.blob_id}\","\
+        "\"qing#{media6.answer.questioning_id}\":\"#{media6.item.blob_id}\"}"
+      expect(r2_json).to eq(expected_json2)
     end
   end
 
