@@ -238,7 +238,7 @@ class ResponsesController < ApplicationController
 
   def handle_odk_submission
     submission_file = params[:xml_submission_file]
-    raise MissingFile unless submission_file
+    raise ActionController::MissingFile unless submission_file
 
     if ODK::DuplicateChecker.new(open_file_params, current_user).duplicate?
       Sentry.capture_message("Ignored simple duplicate")
@@ -262,7 +262,7 @@ class ResponsesController < ApplicationController
   # See config/initializers/http_status_code.rb for custom status definitions.
   # ODK can't display custom failure messages so these statuses provide a little more info;
   # the error message is only used for our logging.
-  rescue MissingFile
+  rescue ActionController::MissingFile
     render_xml_submission_failure(I18n.t("activerecord.errors.models.response.missing_xml"), :unprocessable_entity)
   rescue CanCan::AccessDenied => e
     render_xml_submission_failure(e, :forbidden)
@@ -283,7 +283,7 @@ class ResponsesController < ApplicationController
     authorize!(:modify_answers, @response)
 
     submission_file = params[:xml_submission_file]
-    raise MissingFile unless submission_file
+    raise ActionController::MissingFile unless submission_file
 
     # Temp copy for diagnostics in case of issues.
     tmp_path = copy_to_tmp_path(submission_file)
@@ -302,7 +302,7 @@ class ResponsesController < ApplicationController
     enketo_response = use_enketo? ? {redirect: enketo_redirect} : {}
     render_ajax(enketo_response, :ok)
     FileUtils.rm(tmp_path)
-  rescue MissingFile
+  rescue ActionController::MissingFile
     render_ajax({error: I18n.t("activerecord.errors.models.response.missing_xml")}, :unprocessable_entity)
   rescue CanCan::AccessDenied
     render_ajax({error: I18n.t("permission_error.no_permission_action")}, :forbidden)
