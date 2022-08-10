@@ -13,7 +13,6 @@
 #  incomplete        :boolean          default(FALSE), not null
 #  modifier          :string
 #  odk_hash          :string(255)
-#  possible_dupe     :boolean          default(TRUE)
 #  reviewed          :boolean          default(FALSE), not null
 #  reviewer_notes    :text
 #  shortcode         :string(255)      not null

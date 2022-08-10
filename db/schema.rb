@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_28_224840) do
+ActiveRecord::Schema.define(version: 2022_06_21_161053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -436,10 +436,12 @@ ActiveRecord::Schema.define(version: 2022_03_28_224840) do
     t.uuid "checked_out_by_id"
     t.datetime "created_at", null: false
     t.string "device_id"
+    t.boolean "dirty_dupe", default: true, null: false
     t.boolean "dirty_json", default: true, null: false
     t.uuid "form_id", null: false
     t.boolean "incomplete", default: false, null: false
     t.uuid "mission_id", null: false
+    t.string "modifier"
     t.string "odk_hash", limit: 255
     t.integer "old_id"
     t.boolean "reviewed", default: false, null: false
