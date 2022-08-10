@@ -175,8 +175,9 @@ class Response < ApplicationRecord
 
   # whether the answers should be validated
   def validate_answers?
-    # ODK/Enketo and SMS do their own validation
-    %w[web].include?(modifier)
+    # ODK/Enketo and SMS do their own validation.
+    # We want to validate any NEW response or newly EDITED response if nemo was the editor.
+    (modifier.blank? && %w[web].include?(source)) || %w[web].include?(modifier)
   end
 
   def check_out_valid?
