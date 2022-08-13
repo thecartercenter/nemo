@@ -36,25 +36,25 @@ class DedupeJob < ApplicationJob
 
   # create
   def backup_duplicate_attachments(dupe)
-    attachment = ActiveStorage::Attachment.find_by(record_id: dupe.id)
+    xml_attachment = ActiveStorage::Attachment.find_by(record_id: dupe.id)
     media_objects = Media::Object.where(answer_id: dupe.answer_ids)
-    copy_files(response: dupe, xml: attachment, media: media_objects)
+    copy_files(response: dupe, xml: xml_attachment, media: media_objects)
   end
 
-  def copy_files(params)
+  def copy_files(response:, xml:, media:)
     FileUtils.mkdir_p(TMP_DUPE_BACKUPS_PATH)
 
     dupe_json = {
-      form_id: params[:response].form_id,
-      odk_xml: params[:xml].blob_id
+      form_id: response.form_id,
+      odk_xml: xml.blob_id
     }
 
-    params[:media].each do |m|
+    media.each do |m|
       qing_id = m.answer.questioning_id
       dupe_json["qing#{qing_id}"] = m.item.blob_id if qing_id.present?
     end
 
-    File.open("#{TMP_DUPE_BACKUPS_PATH}/#{params[:response].id}.json", "w") do |file|
+    File.open("#{TMP_DUPE_BACKUPS_PATH}/#{response.id}.json", "w") do |file|
       file.write(dupe_json.to_json)
     end
   end
