@@ -46,13 +46,13 @@ class DedupeJob < ApplicationJob
     FileUtils.mkdir_p(TMP_DUPE_BACKUPS_PATH)
 
     dupe_json = {
-      form_id: params[:response].form_id.to_s,
-      odk_xml: params[:xml].blob_id.to_s
+      form_id: params[:response].form_id,
+      odk_xml: params[:xml].blob_id
     }
 
     params[:media].each do |m|
       qing_id = m.answer.questioning_id
-      dupe_json["qing#{qing_id}"] = m.item.blob_id.to_s if qing_id.present?
+      dupe_json["qing#{qing_id}"] = m.item.blob_id if qing_id.present?
     end
 
     File.open("#{TMP_DUPE_BACKUPS_PATH}/#{params[:response].id}.json", "w") do |file|

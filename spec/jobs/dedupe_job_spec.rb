@@ -86,10 +86,10 @@ describe DedupeJob do
       expect(Response.dirty_dupe.count).to eq(0)
       expect(File.directory?(DedupeJob::TMP_DUPE_BACKUPS_PATH)).to eq(true)
       r2_json_path = "#{DedupeJob::TMP_DUPE_BACKUPS_PATH}/#{r2.id}.json"
-      r2_json = File.read(r2_json_path)
-      expected_json = "{\"form_id\":\"#{r2.form_id}\",\"odk_xml\":\"#{r2.odk_xml.blob_id}\"}"
+      r2_json = JSON.parse(File.read(r2_json_path))
+      expected_json = {form_id: r2.form_id, odk_xml: r2.odk_xml.blob_id}.to_json
       expect(File.file?(r2_json_path)).to eq(true)
-      expect(r2_json).to eq(expected_json)
+      expect(r2_json).to match_json(expected_json)
     end
   end
 
@@ -296,14 +296,14 @@ describe DedupeJob do
       expect(File.file?(r2_json_path)).to eq(true)
       expect(File.file?(r4_json_path)).to eq(true)
 
-      r2_json = File.read(r2_json_path)
-      r4_json = File.read(r4_json_path)
+      r2_json = JSON.parse(File.read(r2_json_path))
+      r4_json = JSON.parse(File.read(r4_json_path))
 
-      expected_json2 = "{\"form_id\":\"#{r2.form_id}\",\"odk_xml\":\"#{r2.odk_xml.blob_id}\"}"
-      expect(r2_json).to eq(expected_json2)
+      expected_json2 = {form_id: r2.form_id, odk_xml: r2.odk_xml.blob_id}.to_json
+      expect(r2_json).to match_json(expected_json2)
 
-      expected_json4 = "{\"form_id\":\"#{r4.form_id}\",\"odk_xml\":\"#{r4.odk_xml.blob_id}\"}"
-      expect(r4_json).to eq(expected_json4)
+      expected_json4 = {form_id: r4.form_id, odk_xml: r4.odk_xml.blob_id}.to_json
+      expect(r4_json).to match_json(expected_json4)
     end
   end
 
@@ -352,12 +352,15 @@ describe DedupeJob do
       expect(ActiveStorage::Blob.find_by(id: media5.item.blob_id)).to be_present
       expect(ActiveStorage::Blob.find_by(id: media6.item.blob_id)).to be_present
 
-      r2_json = File.read(r2_json_path)
-      expected_json2 = "{\"form_id\":\"#{r2.form_id}\",\"odk_xml\":\"#{r2.odk_xml.blob_id}\","\
-        "\"qing#{media4.answer.questioning_id}\":\"#{media4.item.blob_id}\","\
-        "\"qing#{media5.answer.questioning_id}\":\"#{media5.item.blob_id}\","\
-        "\"qing#{media6.answer.questioning_id}\":\"#{media6.item.blob_id}\"}"
-      expect(r2_json).to eq(expected_json2)
+      r2_json = JSON.parse(File.read(r2_json_path))
+      expected_json2 = {
+        form_id: r2.form_id,
+        odk_xml: r2.odk_xml.blob_id,
+        "qing#{media4.answer.questioning_id}": media4.item.blob_id,
+        "qing#{media5.answer.questioning_id}": media5.item.blob_id,
+        "qing#{media6.answer.questioning_id}": media6.item.blob_id
+      }.to_json
+      expect(r2_json).to match_json(expected_json2)
     end
   end
 
