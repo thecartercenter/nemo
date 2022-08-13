@@ -25,14 +25,13 @@ class DedupeJob < ApplicationJob
     return false if blob.blank?
     blob_response = Response.find_by(id: ActiveStorage::Attachment.find_by(blob_id: blob.id).record_id)
 
-    return false if blob_response.blank? || unique_user_and_mission?(blob_response, response)
-    true
+    return false if blob_response.blank?
+    duplicate_user_and_mission?(blob_response, response)
   end
 
-  def unique_user_and_mission?(blob_response, dirty_response)
-    return false if blob_response.user_id == dirty_response.user_id
-    return false if blob_response.mission_id == dirty_response.mission_id
-    true
+  def duplicate_user_and_mission?(blob_response, dirty_response)
+    blob_response.user_id == dirty_response.user_id &&
+      blob_response.mission_id == dirty_response.mission_id
   end
 
   # create
