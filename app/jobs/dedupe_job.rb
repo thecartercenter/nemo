@@ -51,7 +51,7 @@ class DedupeJob < ApplicationJob
 
     media.each do |m|
       qing_id = m.answer.questioning_id
-      dupe_json["qing#{qing_id}"] = m.item.blob_id if qing_id.present?
+      dupe_json["qing#{qing_id}"] = m.item.blob_id
     end
 
     File.open("#{TMP_DUPE_BACKUPS_PATH}/#{response.id}.json", "w") do |file|
