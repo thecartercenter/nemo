@@ -60,9 +60,9 @@ class DedupeJob < ApplicationJob
   end
 
   def destroy_duplicate!(dupe)
-    # dupe.odk_xml.purge
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Shortcode: #{dupe.shortcode}"))
+    Sentry.capture_message("Destroying duplicate response")
     ResponseDestroyer.new(scope: Response.where(shortcode: dupe.shortcode)).destroy!
-    Sentry.capture_message("Destroyed duplicate response in DedupeJob")
   end
 
   def clean_up(responses)
