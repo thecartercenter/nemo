@@ -367,12 +367,6 @@ describe DedupeJob do
 
   private
 
-  def print_responses
-    Response.all.each do |r|
-      puts "#{r.shortcode}:#{r.id}:#{r.created_at}:#{r.dirty_dupe}:#{r.blob_checksum}, \n"
-    end
-  end
-
   def prepare_unique_xml(form, values, filename)
     # prepare another unique xml file
     prepare_odk_response_fixture("simple_response", form, values: values, formver: "202211")
