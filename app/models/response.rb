@@ -11,7 +11,6 @@
 #  dirty_dupe        :boolean          default(TRUE), not null
 #  dirty_json        :boolean          default(TRUE), not null
 #  incomplete        :boolean          default(FALSE), not null
-#  modifier          :string
 #  odk_hash          :string(255)
 #  reviewed          :boolean          default(FALSE), not null
 #  reviewer_notes    :text

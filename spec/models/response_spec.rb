@@ -8,6 +8,7 @@
 #  id                :uuid             not null, primary key
 #  cached_json       :jsonb
 #  checked_out_at    :datetime
+#  dirty_dupe        :boolean          default(TRUE), not null
 #  dirty_json        :boolean          default(TRUE), not null
 #  incomplete        :boolean          default(FALSE), not null
 #  odk_hash          :string(255)

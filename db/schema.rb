@@ -441,7 +441,6 @@ ActiveRecord::Schema.define(version: 2022_06_21_161053) do
     t.uuid "form_id", null: false
     t.boolean "incomplete", default: false, null: false
     t.uuid "mission_id", null: false
-    t.string "modifier"
     t.string "odk_hash", limit: 255
     t.integer "old_id"
     t.boolean "reviewed", default: false, null: false
