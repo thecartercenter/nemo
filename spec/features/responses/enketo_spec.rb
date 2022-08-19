@@ -2,6 +2,15 @@
 
 require "rails_helper"
 
+# Developer note:
+#
+# These full integration specs are SLOW to run (several seconds each), so
+# please consider writing lower-level specs when possible, or at least minimize page navigation.
+#
+# Please also consider that enketo is an external library with its own test suite,
+# so the nemo codebase cannot be responsible for ensuring that enketo continues functioning as advertised.
+# These specs should be limited to ensuring that the interaction BETWEEN nemo and enketo continues working.
+#
 feature "enketo form rendering and submission", js: true do
   include_context "form design conditional logic for Enketo"
   include_context "odk submissions"
@@ -12,7 +21,12 @@ feature "enketo form rendering and submission", js: true do
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, enketo: 1} }
   let(:form_params) { params.merge(form_id: form.id) }
   let(:latest_response_params) { params.merge(id: Response.order(:created_at).last.shortcode) }
+
+  # Note: "nemo answer" will appear in NEMO, and "enketo answer"
+  # will appear in Enketo via the XML attached below.
+  let(:r1) { create(:response, form: form, answer_values: "nemo answer") }
   let(:r1_params) { params.merge(id: r1.shortcode) }
+  let(:nemo_r1_params) { r1_params.merge(enketo: nil) }
 
   before do
     login(user)
@@ -20,16 +34,8 @@ feature "enketo form rendering and submission", js: true do
   end
 
   context "happy path" do
-    # Note: "nemo answer" will appear in NEMO, and "enketo answer"
-    # will appear in Enketo via the XML attached below.
-    let(:r1) { create(:response, form: form, answer_values: "nemo answer") }
-
     before do
-      # Make it seem like it was submitted by ODK in the first place.
-      submission_file = prepare_odk_response_fixture("single_question", form, return_file: true, values: [
-        "enketo answer"
-      ])
-      r1.update!(odk_xml: submission_file, source: "odk")
+      mock_submission(r1)
     end
 
     it "renders blank" do
@@ -103,7 +109,8 @@ feature "enketo form rendering and submission", js: true do
       save_and_wait
       expect(page).to have_content("Success: Response updated successfully")
 
-      # Make sure the skip logic validates new edits.
+      # Make sure the skip logic validates new edits,
+      # e.g. after the required questioning relevant again.
       visit(edit_response_path(latest_response_params))
       within(all(".question")[0]) { expect_filled_in_value("skip") }
       within(all(".question")[0]) { fill_in_value("unskip") }
@@ -119,11 +126,26 @@ feature "enketo form rendering and submission", js: true do
 
   private
 
+  # Make it seem like the response was submitted by ODK in the first place.
+  def mock_submission(response)
+    submission_file = prepare_odk_response_fixture("single_question", form, return_file: true, values: [
+      "enketo answer"
+    ])
+    response.update!(odk_xml: submission_file, source: "odk")
+  end
+
   # Make sure we're actually using Enketo, not the NEMO editor by default.
   def expect_enketo_content(action: "Edit")
     expect(page).to have_content(form.name)
     expect(page).to have_content(form.c[0].name)
     expect(page).to have_content("#{action} with NEMO")
     expect(page).to have_content("Powered by") # suffix "Enketo" is an image, not text.
+  end
+
+  def expect_nemo_content(action: "Edit")
+    expect(page).to have_content(form.name)
+    expect(page).to have_content(form.c[0].name)
+    expect(page).to have_content("#{action} with Enketo")
+    expect(page).not_to have_content("Powered by") # suffix "Enketo" is an image, not text.
   end
 end
