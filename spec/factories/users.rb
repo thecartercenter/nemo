@@ -12,6 +12,7 @@
 #  birth_year        :integer
 #  crypted_password  :string(255)      not null
 #  current_login_at  :datetime
+#  editor_preference :string
 #  email             :string(255)
 #  experience        :text
 #  gender            :string(255)

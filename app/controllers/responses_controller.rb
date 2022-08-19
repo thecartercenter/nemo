@@ -70,12 +70,14 @@ class ResponsesController < ApplicationController
   end
 
   def show
+    save_editor_preference
     return enketo if use_enketo?
 
     prepare_and_render_form
   end
 
   def new
+    save_editor_preference
     return enketo if use_enketo?
 
     setup_condition_computer
@@ -95,6 +97,7 @@ class ResponsesController < ApplicationController
       flash.now[:alert] = t("response.modified_by_enketo", date: @response.updated_at)
     end
 
+    save_editor_preference
     return enketo if use_enketo?
 
     prepare_and_render_form
@@ -153,7 +156,12 @@ class ResponsesController < ApplicationController
 
   # Returns true if the user wants to use Enketo instead of NEMO's webform.
   def use_enketo?
-    params[:enketo].present?
+    # We check for nil, not blank, because blank means it was intentionally unset and they want to use NEMO.
+    params[:enketo].present? || (params[:enketo].nil? && current_user.editor_preference == "enketo")
+  end
+
+  def save_editor_preference
+    current_user.update!(editor_preference: use_enketo? ? "enketo" : "nemo")
   end
 
   def create_packager(ability, selected)
