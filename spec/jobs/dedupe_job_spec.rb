@@ -297,8 +297,6 @@ describe DedupeJob do
       )
     end
 
-    # TODO: Spec where a response is destroyed, then new response is submitted and NOT flagged duplicate.
-
     it "should remove two duplicates and create two copies" do
       prepare_unique_xml(form2, xml_values, "simple_response2")
       # Now that simple_response2.xml exists, create the other responses.
@@ -361,7 +359,7 @@ describe DedupeJob do
       )
     end
 
-    it "should remove dupe response and create approriate backup file" do
+    it "should remove dupe response and create appropriate backup file" do
       expect(Response.all.count).to eq(2)
       described_class.perform_now
       expect(Response.all.count).to eq(1)

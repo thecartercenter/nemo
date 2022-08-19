@@ -25,20 +25,11 @@ class DedupeJob < ApplicationJob
     return false if matching_blobs.blank?
 
     matching_attachments = ActiveStorage::Attachment.where(blob_id: matching_blobs.pluck(:id))
-    matching_responses = Response.where(id: matching_attachments.pluck(:record_id))
-    return false if matching_responses.blank?
-
-    matching_responses.any? do |matching_response|
-      duplicate_user_and_mission?(matching_response, response)
-    end
+    matching_responses = Response.where(id: matching_attachments.pluck(:record_id),
+                                        mission_id: response.mission_id, user_id: response.user_id)
+    matching_responses.present?
   end
 
-  def duplicate_user_and_mission?(response_a, response_b)
-    response_a.user_id == response_b.user_id &&
-      response_a.mission_id == response_b.mission_id
-  end
-
-  # create
   def backup_duplicate_attachments(dupe)
     xml_attachment = ActiveStorage::Attachment.find_by(record_id: dupe.id)
     media_objects = Media::Object.where(answer_id: dupe.answer_ids)
