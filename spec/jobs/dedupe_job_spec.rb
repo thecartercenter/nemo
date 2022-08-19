@@ -79,6 +79,17 @@ describe DedupeJob do
       create(:response)
     end
 
+    let(:optional_dupe) do
+      create(
+        :response,
+        :with_odk_attachment,
+        xml_path: r1_path,
+        form: form1,
+        answer_values: xml_values,
+        user_id: user.id
+      )
+    end
+
     it "should remove a duplicate and create a copy" do
       expect(Response.dirty_dupe.count).to eq(3)
       described_class.perform_now
@@ -90,6 +101,17 @@ describe DedupeJob do
       expected_json = {form_id: r2.form_id, odk_xml: r2.odk_xml.blob_id}.to_json
       expect(File.file?(r2_json_path)).to eq(true)
       expect(r2_json).to match_json(expected_json)
+    end
+
+    it "should reject a new duplicate even if an earlier one was previously destroyed" do
+      optional_dupe # 3rd duplicate
+      expect(Response.dirty_dupe.count).to eq(4)
+      # Delete the FIRST duplicate but not the second
+      ResponseDestroyer.new(scope: Response.where(id: r1.id)).destroy!
+      expect(Response.all.count).to eq(3)
+      described_class.perform_now
+      expect(Response.all.count).to eq(2)
+      expect(Response.dirty_dupe.count).to eq(0)
     end
   end
 
