@@ -297,6 +297,8 @@ describe DedupeJob do
       )
     end
 
+    # TODO: Spec where a response is destroyed, then new response is submitted and NOT flagged duplicate.
+
     it "should remove two duplicates and create two copies" do
       prepare_unique_xml(form2, xml_values, "simple_response2")
       # Now that simple_response2.xml exists, create the other responses.
