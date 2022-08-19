@@ -20,18 +20,22 @@ class DedupeJob < ApplicationJob
   private
 
   def duplicate?(response)
-    blob = ActiveStorage::Blob.where(checksum: response.odk_xml.checksum)
-      .where.not(id: response.odk_xml.blob_id).first
-    return false if blob.blank?
-    blob_response = Response.find_by(id: ActiveStorage::Attachment.find_by(blob_id: blob.id).record_id)
+    matching_blobs = ActiveStorage::Blob.where(checksum: response.odk_xml.checksum)
+      .where.not(id: response.odk_xml.blob_id)
+    return false if matching_blobs.blank?
 
-    return false if blob_response.blank?
-    duplicate_user_and_mission?(blob_response, response)
+    matching_attachments = ActiveStorage::Attachment.where(blob_id: matching_blobs.pluck(:id))
+    matching_responses = Response.where(id: matching_attachments.pluck(:record_id))
+    return false if matching_responses.blank?
+
+    matching_responses.any? do |matching_response|
+      duplicate_user_and_mission?(matching_response, response)
+    end
   end
 
-  def duplicate_user_and_mission?(blob_response, dirty_response)
-    blob_response.user_id == dirty_response.user_id &&
-      blob_response.mission_id == dirty_response.mission_id
+  def duplicate_user_and_mission?(response_a, response_b)
+    response_a.user_id == response_b.user_id &&
+      response_a.mission_id == response_b.mission_id
   end
 
   # create
