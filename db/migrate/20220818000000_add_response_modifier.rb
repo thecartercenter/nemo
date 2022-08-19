@@ -8,6 +8,7 @@ class AddResponseModifier < ActiveRecord::Migration[6.1]
 
     reversible do |dir|
       dir.up do
+        # Note: update_all intentionally does NOT update the updated_at field.
         Response.where("updated_at > (created_at + INTERVAL '10 seconds')").update_all(modifier: "web")
       end
     end
