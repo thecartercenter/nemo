@@ -113,6 +113,18 @@ describe DedupeJob do
       expect(Response.all.count).to eq(2)
       expect(Response.dirty_dupe.count).to eq(0)
     end
+
+    it "should work even when the queue piles up" do
+      optional_dupe # 3rd duplicate
+      expect(Response.all.count).to eq(4)
+      # Seems like DelayedJob ensures these run one at a time serially, so this is pretty trivial.
+      described_class.perform_later
+      described_class.perform_later
+      described_class.perform_later
+      Delayed::Worker.new.work_off
+      expect(Response.all.count).to eq(2)
+      expect(Response.dirty_dupe.count).to eq(0)
+    end
   end
 
   context "Duplicates with different missions" do
