@@ -64,15 +64,28 @@ feature "enketo form rendering and submission", js: true do
 
     it "edits existing response" do
       visit(edit_response_path(r1_params))
+
+      expect(r1.source).to eq("odk")
+      expect(r1.modifier).to eq(nil)
+      expect(r1.odk_xml.attached?).to be(true)
+      original_checksum = r1.odk_xml.checksum
+      expect(r1.modified_odk_xml.attached?).to be(false)
+
       expect_enketo_content
       expect_filled_in_value("enketo answer")
-
       fill_in_value("edited answer")
       save_and_wait
       expect(page).to have_content("Success: Response updated successfully")
 
       visit(response_path(r1_params))
       expect_filled_in_value("edited answer")
+
+      r1.reload
+      expect(r1.source).to eq("odk")
+      expect(r1.modifier).to eq("enketo")
+      expect(r1.odk_xml.attached?).to be(true)
+      expect(r1.odk_xml.checksum).to eq(original_checksum)
+      expect(r1.modified_odk_xml.attached?).to be(true)
     end
   end
 

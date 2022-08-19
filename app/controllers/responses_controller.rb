@@ -244,6 +244,7 @@ class ResponsesController < ApplicationController
     end
   end
 
+  # For Collect or Enketo submissions.
   def handle_odk_submission
     submission_file = params[:xml_submission_file]
     raise ActionController::MissingFile unless submission_file
@@ -286,6 +287,7 @@ class ResponsesController < ApplicationController
     render_xml_submission_failure(e, :service_unavailable)
   end
 
+  # For Enketo edits.
   def handle_odk_update
     check_form_exists_in_mission
     authorize!(:modify_answers, @response)
