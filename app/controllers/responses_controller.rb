@@ -189,7 +189,7 @@ class ResponsesController < ApplicationController
 
     # set source/modifier to web
     @response.source = "web" if params[:action] == "create"
-    @response.modifier = "web"
+    @response.modifier = "web" if params[:action] == "update"
 
     # check for "update and mark as reviewed"
     @response.reviewed = true if params[:commit_and_mark_reviewed]
