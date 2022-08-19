@@ -332,6 +332,7 @@ describe DedupeJob do
 
   context "Responses with multiple media attachments" do
     let(:question_types) { %w[text image image image] }
+    let(:question_types) { ["text", "image", ["image"], {repeating: {items: %w[image]}}] }
     let(:media_form) { create(:form, :live, mission: mission, question_types: question_types) }
     let(:media4) { create(:media_image) }
     let(:media5) { create(:media_image) }
@@ -343,7 +344,7 @@ describe DedupeJob do
         :with_odk_attachment,
         xml_path: r1_path,
         form: media_form,
-        answer_values: ["Cat", create(:media_image), create(:media_image), create(:media_image)],
+        answer_values: ["Cat", create(:media_image), [create(:media_image)], [create(:media_image)]],
         user_id: user.id
       )
     end
@@ -354,7 +355,7 @@ describe DedupeJob do
         :with_odk_attachment,
         xml_path: r1_path,
         form: media_form,
-        answer_values: ["Cat", media4, media5, media6],
+        answer_values: ["Cat", media4, [media5], [media6]],
         user_id: user.id
       )
     end
