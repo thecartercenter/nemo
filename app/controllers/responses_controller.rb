@@ -169,11 +169,19 @@ class ResponsesController < ApplicationController
 
   # Warn the user if they're viewing possibly-stale data.
   def flash_recently_modified_warnings
-    if use_enketo? && @response.modifier == "web"
+    if use_enketo? && last_modified_by_nemo?
       flash.now[:alert] = t("response.modified_by_web", date: @response.updated_at)
-    elsif !use_enketo? && @response.modifier == "enketo"
+    elsif !use_enketo? && last_modified_by_enketo?
       flash.now[:alert] = t("response.modified_by_enketo", date: @response.updated_at)
     end
+  end
+
+  def last_modified_by_nemo?
+    @response.modifier == "web" || (@response.source == "web" && @response.modifier.nil?)
+  end
+
+  def last_modified_by_enketo?
+    @response.modifier == "enketo" || (@response.source == "enketo" && @response.modifier.nil?)
   end
 
   def create_packager(ability, selected)

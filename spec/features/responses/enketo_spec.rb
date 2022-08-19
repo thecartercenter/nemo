@@ -124,6 +124,48 @@ feature "enketo form rendering and submission", js: true do
     end
   end
 
+  context "warnings and errors" do
+    before do
+      mock_submission(r1)
+    end
+
+    context "when submitted by enketo" do
+      before do
+        r1.update!(source: "enketo")
+      end
+
+      it "shows alert in nemo" do
+        visit(response_path(nemo_r1_params))
+        expect_nemo_content(action: "View")
+        expect(page).to have_content("response was most recently created or modified by the Enketo editor")
+      end
+    end
+
+    context "when edited previously with nemo" do
+      before do
+        r1.update!(modifier: "web")
+      end
+
+      it "shows alert in enketo" do
+        visit(response_path(r1_params))
+        expect_enketo_content(action: "View")
+        expect(page).to have_content("response was most recently modified by the NEMO editor")
+      end
+    end
+
+    context "when edited previously with enketo" do
+      before do
+        r1.update!(modifier: "enketo")
+      end
+
+      it "shows alert in nemo" do
+        visit(response_path(nemo_r1_params))
+        expect_nemo_content(action: "View")
+        expect(page).to have_content("response was most recently created or modified by the Enketo editor")
+      end
+    end
+  end
+
   private
 
   # Make it seem like the response was submitted by ODK in the first place.
