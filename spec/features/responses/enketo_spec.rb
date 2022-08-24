@@ -137,6 +137,20 @@ feature "enketo form rendering and submission", js: true do
     end
   end
 
+  context "internationalization" do
+    before do
+      get_mission.setting.update!(preferred_locales_str: "en,fr")
+      form.c[0].question.update!(name_fr: "La Question En Français")
+      ODK::FormRenderJob.perform_now(form)
+    end
+
+    it "renders in french" do
+      visit(new_response_path(form_params.merge(locale: :fr)))
+      expect(page).to have_content("Modifier avec NEMO")
+      expect(page).to have_content("La Question En Français")
+    end
+  end
+
   context "warnings and errors" do
     before do
       mock_submission(r1)
