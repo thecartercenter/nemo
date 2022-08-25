@@ -17,7 +17,6 @@ shared_context "form design conditional logic for Enketo" do
   # (unreliable unless you know there will be validation errors instead of a redirect).
   def save_only
     blur
-    # click_button("Save")
     find("#enketo-submit").click
   end
 
@@ -30,6 +29,5 @@ shared_context "form design conditional logic for Enketo" do
   # Trigger a JS blur event, e.g. to make sure the form performs validation logic.
   def blur
     page.document.find("body").click
-    sleep(1)
   end
 end

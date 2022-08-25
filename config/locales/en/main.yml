@@ -820,7 +820,7 @@ en:
           general: "Response is invalid (see below)."
           checked_out: "This response has been checked out by:"
           no_form_xml: "This form is not yet rendered, so it can't be viewed in Enketo. Try publishing it first."
-          no_response_xml: "Currently, you can only use the Enketo editor for responses submitted via Enketo or ODK."
+          no_response_xml: "Currently, you can only use the Enketo editor for responses submitted via Enketo or ODK Collect."
           missing_xml: "No XML file attached."
           form_unavailable: "The specified form does not exist in this mission."
         setting:

@@ -1,10 +1,10 @@
 import { Form } from 'enketo-core';
 
-// The XSL transformation result contains a HTML Form and XML instance.
-// These can be obtained dynamically on the client, or at the server/
-// In this example we assume the HTML was injected at the server and modelStr
-// was injected as a global variable inside a <script> tag.
-
+// Simply include this script and Enketo will be rendered
+// directly in the including page's DOM.
+//
+// See https://enketo.github.io/enketo-core/tutorial-00-getting-started.html
+// for more details.
 async function inject() {
   // required HTML Form DOM element
   const formEl = document.querySelector('#enketo form');
@@ -37,7 +37,7 @@ async function inject() {
   const form = new Form(formEl, data, options);
 
   // Initialize the form and capture any load errors
-  // TODO: Handle loadErrors
+  // TODO: Handle errors more gracefully
   const loadErrors = form.init();
   if (loadErrors.length > 0) {
     console.error('NEMO encountered Enketo loadErrors:', loadErrors);
@@ -52,13 +52,13 @@ async function inject() {
     const valid = await form.validate();
 
     if (!valid) {
-      // TODO: Convert to DOM element
+      // TODO: Convert to a less-intrusive DOM element
       alert('Form contains errors. Please see fields marked in red.');
     } else {
       // Record is valid!
       ELMO.app.loading(true);
 
-      // Convert into a file to upload, like NEMO expects from Collect;
+      // Convert string into a file to upload, like NEMO expects from Collect;
       // adapted from https://stackoverflow.com/a/34340245/763231.
       const xml = form.getDataStr();
       const formData = new FormData();
@@ -86,10 +86,10 @@ async function inject() {
           }, timeout);
         },
         error: ({ status, statusText, responseJSON }) => {
-          // TODO: Convert to DOM element
+          // TODO: Convert to a less-intrusive DOM element
           alert(`Error submitting form: ${status} ${statusText}`);
 
-          // TODO: How to flash this error msg?
+          // TODO: Handle errors more gracefully
           console.log({ error: responseJSON.error });
         },
         always: () => {
@@ -107,5 +107,5 @@ function submissionUrl(editingResponse) {
   return `${base}?enketo=1`;
 }
 
-// Run the async method.
+// Run the async method automatically.
 inject();

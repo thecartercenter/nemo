@@ -43,9 +43,7 @@ class ResponsesController < ApplicationController
         end
 
         # Manually show success message after AJAX request.
-        if params[:enketo_success].present?
-          flash.now[:success] = params[:enketo_success]
-        end
+        flash.now[:success] = params[:enketo_success] if params[:enketo_success].present?
 
         searcher = build_searcher(@responses)
         @responses = apply_searcher_safely(searcher)
@@ -272,7 +270,8 @@ class ResponsesController < ApplicationController
   # ODK can't display custom failure messages so these statuses provide a little more info;
   # the error message is only used for our logging.
   rescue ActionController::MissingFile
-    render_xml_submission_failure(I18n.t("activerecord.errors.models.response.missing_xml"), :unprocessable_entity)
+    msg = I18n.t("activerecord.errors.models.response.missing_xml")
+    render_xml_submission_failure(msg, :unprocessable_entity)
   rescue CanCan::AccessDenied => e
     render_xml_submission_failure(e, :forbidden)
   rescue ActiveRecord::RecordNotFound => e
@@ -377,6 +376,7 @@ class ResponsesController < ApplicationController
     render(:enketo_form)
   end
 
+  # The blank form template.
   # Returns a string that's safe to print in a JS script.
   def enketo_form_obj
     # Terrapin seems to return an ASCII-encoded string, so we must interpret it
@@ -388,8 +388,10 @@ class ResponsesController < ApplicationController
     ).force_encoding("utf-8").chomp.html_safe # rubocop:disable Rails/OutputSafety
   end
 
+  # The submission for a given form.
   # Returns a string that's safe to print in a JS script.
   def enketo_instance_str
+    # Determine the most recently modified attachment.
     xml = @response.modified_odk_xml.presence || @response.odk_xml
     xml.download.to_json.html_safe # rubocop:disable Rails/OutputSafety
   end

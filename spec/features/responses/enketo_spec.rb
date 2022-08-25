@@ -123,7 +123,7 @@ feature "enketo form rendering and submission", js: true do
       expect(page).to have_content("Success: Response updated successfully")
 
       # Make sure the skip logic validates new edits,
-      # e.g. after the required questioning relevant again.
+      # e.g. after the required questioning becomes relevant again.
       visit(edit_response_path(latest_response_params))
       within(all(".question")[0]) { expect_filled_in_value("skip") }
       within(all(".question")[0]) { fill_in_value("unskip") }
@@ -151,7 +151,7 @@ feature "enketo form rendering and submission", js: true do
     end
   end
 
-  context "warnings and errors" do
+  context "warnings" do
     before do
       mock_submission(r1)
     end
