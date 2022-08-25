@@ -193,6 +193,20 @@ feature "enketo form rendering and submission", js: true do
     end
   end
 
+  # Permissions are largely tested in response_ability_spec.
+  context "permissions" do
+    let(:user) { create(:user, role_name: "enumerator") }
+
+    before do
+      mock_submission(r1)
+    end
+
+    it "disallows viewing existing response" do
+      visit(response_path(r1_params))
+      expect(page).to have_content("You are not authorized")
+    end
+  end
+
   private
 
   # Make it seem like the response was submitted by ODK in the first place.
