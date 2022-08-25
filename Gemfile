@@ -21,6 +21,7 @@ gem "responders", "~> 3.0"
 gem "rqrcode", "~> 1.1"
 gem "rubyzip", "~> 2.3"
 gem "term-ansicolor", "~> 1.3"
+gem "terrapin", "~> 0.6.0"
 gem "thor", "~> 1.0"
 gem "twilio-ruby", "~> 4.2" # Does not use semver after v5, watch out!
 

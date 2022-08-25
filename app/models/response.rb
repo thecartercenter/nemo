@@ -11,6 +11,7 @@
 #  dirty_dupe        :boolean          default(TRUE), not null
 #  dirty_json        :boolean          default(TRUE), not null
 #  incomplete        :boolean          default(FALSE), not null
+#  modifier          :string
 #  odk_hash          :string(255)
 #  reviewed          :boolean          default(FALSE), not null
 #  reviewer_notes    :text
@@ -61,7 +62,7 @@ class Response < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 5
 
-  attr_accessor :modifier, :awaiting_media
+  attr_accessor :awaiting_media
 
   belongs_to :form, inverse_of: :responses
   belongs_to :checked_out_by, class_name: "User"
@@ -77,8 +78,13 @@ class Response < ApplicationRecord
 
   has_closure_tree_root :root_node, class_name: "ResponseNode"
 
+  # Original, unmodified.
   has_one_attached :odk_xml
   validates :odk_xml, content_type: %r{\A(text|application)/xml\z}
+
+  # Latest edit.
+  has_one_attached :modified_odk_xml
+  validates :modified_odk_xml, content_type: %r{\A(text|application)/xml\z}
 
   friendly_id :shortcode
 
@@ -167,10 +173,11 @@ class Response < ApplicationRecord
     "##{id}"
   end
 
-  # whether the answers should validate themselves
+  # whether the answers should be validated
   def validate_answers?
-    # ODK and SMS do their own validation
-    %w[odk web].include?(modifier)
+    # ODK/Enketo and SMS do their own validation.
+    # We want to validate any NEW response or newly EDITED response if nemo was the editor.
+    (modifier.blank? && %w[web].include?(source)) || %w[web].include?(modifier)
   end
 
   def check_out_valid?

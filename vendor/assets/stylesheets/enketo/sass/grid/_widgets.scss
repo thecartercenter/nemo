@@ -1,0 +1,236 @@
+.enketo-form {
+//widget scss overrides
+.question .geopoint.widget {
+
+    input[type=number],
+    input[type=text] {
+
+        &[name=alt],
+        &[name=acc] {
+            width: 40%;
+        }
+    }
+}
+
+.widget.date,
+.widget.timepicker,
+.widget.datetimepicker {
+    @include display-flex;
+
+    @include flex-wrap(nowrap);
+
+    @include flex-direction(row);
+}
+
+.question .widget.datetimepicker {
+
+    .date,
+    .timepicker {
+        @include display-flex;
+        @include flex(1);
+    }
+
+    .timepicker {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+
+.or-appearance-likert .option-wrapper {
+
+    margin-top: 10px;
+
+    >label {
+        @include flex-direction(column-reverse);
+        justify-content: flex-end;
+    }
+
+}
+
+// tables
+.question.or-appearance-list-nolabel,
+.question.or-appearance-label {
+    margin: 0; // TODO: still a problem if the list-nolabel is followed by a regular select
+
+    &:not(:last-of-type) {
+        border-bottom: none;
+    }
+}
+
+.or-appearance-label {
+    padding-bottom: 0;
+}
+
+.touch {
+    .question:not(.or-appearance-compact):not(.or-appearance-quickcompact):not(.or-appearance-label):not(.or-appearance-list-nolabel):not(.or-appearance-likert) {
+
+        // touch radio buttons and checkboxes
+        .option-wrapper>label {
+            border: none;
+
+            border-radius: 0;
+        }
+    }
+}
+
+// geopoint widget
+.question .geopicker.widget {
+
+    input[type=text],
+    input[type=number],
+    textarea {
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        border-bottom: 1px dotted #cccccc;
+        background-color: transparent;
+    }
+
+    input[type=text][name=search] {
+        width: 80%;
+    }
+
+    textarea {
+        // because textarea has placeholder
+        padding-top: 10px;
+    }
+
+    label.geo.alt {
+        border-top: none;
+    }
+
+    .btn:not(.close-chain-btn) {
+        background: transparent;
+        //border: none;
+
+        &:hover {
+            opacity: 0.6;
+        }
+    }
+
+    .map-canvas-wrapper,
+    .search-bar {
+        border-left: none;
+    }
+
+    &:not(.full-screen).hide-input {
+        &.wide {
+            .map-canvas {
+                height: 450px;
+            }
+        }
+    }
+
+    .toggle-input-btn:not(.open) {
+        left: 0;
+    }
+}
+
+html:not(.touch) .question .geopoint.widget {
+    .search-bar {
+        button.btn {
+            border: none;
+            background: transparent;
+            border-radius: 0;
+
+            &:hover {
+                background: transparent;
+                color: #aaaaaa;
+            }
+        }
+
+        [name=search]~.input-group-btn .btn {
+            border-bottom: 1px dotted #cccccc;
+        }
+    }
+}
+
+// comment widget
+.or-comment-widget {
+    &__content {
+        padding-top: 60px;
+    }
+
+    &__overlay+.question {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .question {
+        border: $grid-border;
+
+        input,
+        textarea {
+            order: 4;
+        }
+    }
+}
+
+.btn-comment {
+    position: absolute;
+    top: $q-pad-top;
+    right: 0; //left: $q-pad-right;
+    margin: 0;
+}
+
+legend .btn-comment {
+    top: 0; // undo legend hack
+    right: -$q-pad-side;
+
+    .icon {
+        position: static;
+    }
+}
+
+.or[dir="rtl"] {
+    .btn-comment {
+        left: 0;
+        right: auto;
+    }
+
+    legend .btn-comment {
+        left: -$q-pad-side;
+    }
+}
+
+// select picker
+.bootstrap-select {
+
+    .dropdown-toggle,
+    .dropdown-menu {
+        width: 100%;
+    }
+}
+
+.draw-widget__body__canvas {
+    border: 1px solid $gray-light;
+}
+
+.file-picker {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .file-feedback,
+    .file-preview {
+        width: 100%;
+    }
+
+    .btn-download {
+        margin-right: 10px;
+
+        .icon {
+            vertical-align: middle;
+            margin-top: 1px;
+        }
+    }
+
+}
+
+// range/distress/analog-scale pickers vertical
+.or-appearance-vertical .range-widget__wrap,
+.or-appearance-distress .range-widget__wrap {
+    margin-top: 0;
+}
+}

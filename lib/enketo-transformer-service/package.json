@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "nemo-enketo-transformer-service",
+  "version": "1.0.0",
+  "description": "Standalone transformer service for NEMO.",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "enketo-transformer": "2.1.2"
+  }
+}

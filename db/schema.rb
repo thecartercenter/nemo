@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_21_161053) do
+ActiveRecord::Schema.define(version: 2022_08_18_000008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -441,6 +441,7 @@ ActiveRecord::Schema.define(version: 2022_06_21_161053) do
     t.uuid "form_id", null: false
     t.boolean "incomplete", default: false, null: false
     t.uuid "mission_id", null: false
+    t.string "modifier"
     t.string "odk_hash", limit: 255
     t.integer "old_id"
     t.boolean "reviewed", default: false, null: false
@@ -573,6 +574,7 @@ ActiveRecord::Schema.define(version: 2022_06_21_161053) do
     t.datetime "created_at", null: false
     t.string "crypted_password", limit: 255, null: false
     t.datetime "current_login_at"
+    t.string "editor_preference"
     t.string "email", limit: 255
     t.text "experience"
     t.string "gender", limit: 255

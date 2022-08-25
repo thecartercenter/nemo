@@ -1,0 +1,624 @@
+.enketo-form {
+$media-margin: 10px;
+
+/** hide stuff **/
+
+.or [lang]:not(.active),
+.or-option-translations,
+.or-appearance-page-break,
+.or-constraint-msg,
+.or-required-msg,
+.or-relevant-msg,
+.option-wrapper .itemset-template,
+.itemset-labels {
+    display: none;
+}
+
+.or,
+.or-group {
+    >h3 {
+        padding: 5px 0 15px 0;
+        word-wrap: break-word;
+        color: $brand-primary-color;
+        text-align: center;
+    }
+
+    >h4 {
+        text-align: inherit;
+        margin-top: 9px;
+        margin-bottom: 9px;
+        color: $brand-primary-color;
+
+        strong {
+            font-size: inherit;
+        }
+    }
+}
+
+.or.hide {
+    display: none;
+}
+
+.or {
+
+    .question-label,
+    .or-hint {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .question-label {
+        word-break: break-word;
+        display: inline-block; // to ensure that comment icons are displayed next to multi-line labels and not below
+    }
+}
+
+
+
+/** hints **/
+
+.or-hint.active {
+    @include font-normal;
+
+    color: #888888;
+    display: block;
+    line-height: 16px;
+    font-weight: normal;
+    font-size: 11px;
+    font-style: italic;
+    padding-top: 5px;
+
+    ~br {
+        display: none;
+    }
+}
+
+.or-form-guidance.active {
+    margin: 5px 0;
+    color: $brand-primary-color;
+
+    summary {
+        color: #888888;
+    }
+}
+
+.or .form-logo {
+    display: block;
+    text-align: center;
+    width: 100%;
+
+    img {
+        float: none;
+        display: inline;
+        max-height: 200px;
+        max-width: 120px;
+    }
+}
+
+.or-repeat {
+    background-color: $repeat-bg;
+    margin: 0 0 3px 0;
+    padding: 20px 10px 10px 10px;
+    position: relative;
+
+    &.empty {
+        // calculation-only repeats
+        padding: 0;
+
+        .repeat-number {
+            display: none;
+        }
+    }
+
+    .repeat-number {
+        display: block;
+        position: absolute;
+        top: 7px;
+        right: 10px;
+        color: $brand-primary-color;
+
+        +.or-group {
+            border-top: none;
+        }
+    }
+
+    .or-repeat {
+        background-color: $question-bg;
+
+        .or-repeat {
+            background-color: $repeat-bg;
+
+            .or-repeat {
+                background-color: $question-bg;
+            }
+        }
+    }
+}
+
+.or-group {
+    border-top: $line;
+    margin: 1.5em 0 0.4em 0;
+
+    .or-group {
+        margin: 1.5em 0 0.5em 0;
+
+        >h4 .active {
+            &::before {
+                content: "\00BB  ";
+            }
+
+            font-size: 80%;
+        }
+
+        .or-group {
+            >h4 .active::before {
+                content: "\00BB  \00BB  ";
+            }
+
+            .or-group {
+                >h4 .active::before {
+                    content: "\00BB  \00BB  \00BB  ";
+                }
+
+                .or-group {
+                    >h4 .active::before {
+                        content: "\00BB  \00BB  \00BB  \00BB";
+                    }
+
+                    .or-group {
+                        >h4 .active::before {
+                            content: "\00BB  \00BB  \00BB  \00BB  \00BB";
+                        }
+
+                        .or-group {
+                            >h4 .active::before {
+                                content: "\00BB  \00BB  \00BB  \00BB  \00BB  \00BB";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// collapse icon for group labels
+.or-group:not(.or-appearance-no-collapse) {
+    >h4 {
+        position: relative;
+        pointer-events: none;
+
+        &::before {
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 12px solid $brand-primary-color;
+            border-bottom: 0;
+            display: block;
+            position: absolute;
+            content: '';
+            top: 5px;
+            left: -30px;
+            right: -30px;
+            pointer-events: all;
+        }
+    }
+
+    &.or-appearance-compact {
+        >h4 {
+            &::before {
+                width: 0;
+                height: 0;
+                border-top: 12px solid transparent;
+                border-bottom: 12px solid transparent;
+                border-left: 12px solid $brand-primary-color;
+                border-right: 0;
+                left: -22px;
+                right: -22px;
+                top: 0;
+            }
+
+            ~* {
+                // !important is added to battle pages rules
+                display: none !important;
+            }
+        }
+    }
+}
+
+[dir="rtl"] {
+    .or-group:not(.or-appearance-no-collapse).or-appearance-compact>h4::before {
+        border-left: 0;
+        border-right: 12px solid $brand-primary-color;
+    }
+}
+
+
+#stats+.or-group,
+#or-preload-items+.or-group,
+#form-languages+.or-group {
+    border-top: none;
+}
+
+.question:not(.readonly) {
+    font-weight: bold;
+}
+
+.question {
+    display: block;
+    margin: 0 0 9px 0;
+    padding-top: 15px;
+    border: none;
+    position: relative;
+
+    >fieldset {
+        padding: 0;
+        margin: 0;
+        border: none;
+    }
+}
+
+// The question label itself is bold already
+// so we emphasize in a different way.
+.question-label strong {
+    font-size: $font-size-base + (1 / $px-per-rem)rem;
+}
+
+.question {
+
+    >img,
+    >video,
+    >audio {
+        margin: $media-margin auto $media-margin;
+    }
+}
+
+.question.readonly {
+
+    input[readonly].empty,
+    select[readonly].empty,
+    textarea[readonly].empty{
+        display: none;
+    }
+
+    strong {
+        font-size: inherit;
+    }
+}
+
+label,
+legend {
+    font-size: $font-size-base;
+}
+
+.or {
+
+    img,
+    audio,
+    video {
+        display: block;
+        max-height: 300px;
+        max-width: 70%;
+    }
+
+    video {
+        max-width: 100%;
+    }
+}
+
+legend {
+    display: block;
+    position: relative;
+    border: none;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 12px;
+}
+
+//works in safari, some other webkit browsers
+.option-wrapper {
+    // this flexiness is required for appearance="random"
+    @include display-flex;
+
+    @include flex-direction(column);
+
+    >label {
+        @include font-normal;
+
+        display: block;
+        margin: 0;
+        cursor: pointer;
+        padding: 4px;
+        margin: 0 8px 1px 10px; // TODO: remove hover rule for tables (in likert already done)
+
+        &:hover:not(.filler) {
+            background-color: $brand-secondary-color;
+        }
+
+        // clearfix with small adjustments to not mess up radio buttons.
+        &:before,
+        &:after {
+            content: " ";
+            display: table;
+        }
+
+        &:after {
+            clear: both;
+        }
+    }
+
+    .option-label {
+        margin-left: 30px; // input is floated to deal with multi-line labels
+        display: block;
+        word-break: break-word;
+    }
+
+    img,
+    video,
+    audio {
+        float: right;
+        margin: $media-margin 0 $media-margin $media-margin;
+    }
+}
+
+.or[dir="rtl"] {
+    .option-wrapper {
+        .option-label {
+            margin-right: 30px;
+        }
+
+        img,
+        video,
+        audio {
+            float: left;
+            margin: $media-margin $media-margin $media-margin 0;
+        }
+    }
+}
+
+.touch {
+    .question.simple-select {
+
+        // touch radio buttons and checkboxes
+        .option-wrapper>label {
+            background-color: transparent;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            //width: auto;
+            margin: 0 1px 6.4px 1px;
+            padding: 10px;
+
+            input[type="radio"],
+            input[type="checkbox"] {
+                //slight variation between grid and fh theme for default radio/checkbox
+                margin-left: 5px;
+            }
+
+            &:focus,
+            &:hover,
+            &:active {
+                background-color: $brand-secondary-color;
+            }
+        }
+    }
+
+    input[type=text],
+    .print-input-text,
+    input[type=tel],
+    input[type=password],
+    input[type=url],
+    input[type=email],
+    input[type=file],
+    input[type=date],
+    input[type=month],
+    input[type=time],
+    input[type=datetime-local],
+    input[type=number],
+    textarea,
+    select {
+        margin: 10px 0 10px 0;
+        color: #104b66;
+    }
+
+    input[type=text],
+    .print-input-text,
+    input[type=tel],
+    input[type=password],
+    input[type=url],
+    input[type=email],
+    input[type=file],
+    input[type=date],
+    input[type=month],
+    input[type=time],
+    input[type=datetime-local],
+    input[type=number],
+    textarea {
+        border: 1px solid #ddd8ce;
+    }
+
+    select {
+        width: 100%;
+    }
+}
+
+input[type=text],
+.print-input-text,
+input[type=tel],
+input[type=password],
+input[type=url],
+input[type=email],
+input[type=file],
+input[type=date],
+input[type=month],
+input[type=time],
+input[type=datetime-local],
+input[type=number],
+input[type=range],
+textarea,
+select,
+.widget {
+    display: block;
+    margin: 8px 0 8px 0;
+}
+
+input:not([type="radio"]):not([type="checkbox"]),
+textarea,
+.print-input-text {
+    height: $input-height;
+}
+
+select {
+    width: $input-max-width;
+}
+
+.question input {
+
+    &[type=text],
+    &[type=tel],
+    &[type=password],
+    &[type=url],
+    &[type=email],
+    &[type=file] {
+        width: $input-max-width;
+    }
+
+    &[type=date],
+    &[type=month],
+    &[type=datetime-local],
+    &[type=number],
+    &[type=time],
+    &[type=text].mask-date {
+        width: $input-min-width;
+    }
+
+    &[type="radio"],
+    &[type=checkbox] {
+        // input is floated to deal with multi-line labels
+        float: left;
+        display: block;
+        margin-top: 2px;
+    }
+}
+
+.question .print-input-text {
+    width: $input-max-width;
+}
+
+.or[dir="rtl"] {
+    .question input {
+
+        &[type=radio],
+        &[type=checkbox] {
+            // input is floated to deal with multi-line labels
+            float: right;
+        }
+    }
+}
+
+.question textarea {
+    width: $input-max-width;
+    resize: vertical;
+    min-height: 9em;
+}
+
+.or-repeat {
+    .repeat-buttons {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+    }
+
+    .remove {
+        margin-bottom: 0;
+        margin-right: 0;
+    }
+}
+
+.or-repeat-info:not(:empty) {
+    padding-top: 10px;
+}
+
+.add-repeat-btn {
+    display: block;
+    margin: 0 auto 10px auto;
+    min-width: 150px;
+}
+
+.or[dir="rtl"] {
+    .remove {
+        float: left;
+    }
+}
+
+.alert {
+    margin-bottom: 4px;
+}
+
+.required {
+    position: absolute;
+    top: 10px;
+    left: -10px;
+    color: $brand-primary-color;
+}
+
+legend .required {
+    top: 0;
+}
+
+.or[dir="rtl"] {
+    .required {
+        left: auto;
+        right: -10px;
+    }
+}
+
+.disabled {
+    opacity: 0.6;
+}
+
+.invalid-constraint,
+.invalid-required,
+.invalid-relevant {
+    @include question-invalid;
+}
+
+.invalid-constraint .or-constraint-msg.active,
+.invalid-required .or-required-msg.active,
+.question.invalid-relevant .or-relevant-msg.active {
+    display: block;
+}
+
+.or-required-msg.active,
+.or-constraint-msg.active,
+.or-relevant-msg.active {
+    @include question-error-message;
+}
+
+// this may have a very significant positive impact on performance
+.or-branch {
+
+    &.disabled,
+    &.or-branch.pre-init {
+        display: none;
+    }
+}
+}

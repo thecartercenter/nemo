@@ -1,0 +1,468 @@
+@media print {
+.enketo-form {
+/** CORE **/
+
+$printBaseFontSize: 12px;
+
+* {
+    float: none;
+}
+
+body {
+    display: block;
+    overflow: visible;
+    background: none;
+
+    .main {
+        overflow: visible;
+        display: block;
+        margin: 0;
+        padding: 0;
+
+        .paper {
+            padding: 3px;
+            display: block;
+        }
+    }
+
+    .paper {
+        overflow: visible;
+        border: none;
+        margin: 0;
+        box-shadow: none;
+    }
+}
+
+.print-hide,
+.side-slider,
+.side-slider__toggle,
+#feedback-bar,
+#dialog-alert,
+#dialog-confirm,
+#dialog-save,
+#form-languages,
+.form-header,
+.form-logo,
+.form-footer,
+.or-appearance-no-print,
+.notification,
+.paper #submit-form,
+h4::before {
+    display: none !important;
+}
+
+.or {
+
+    .hint,
+    .or-appearance-no-print,
+    .geopoint .search-bar,
+    .or-constraint-msg,
+    .add-on,
+    .file-feedback,
+    video,
+    audio,
+    button,
+    .invalid-required .or-required-msg.active,
+    .invalid-constraint .or-constraint-msg.active {
+        display: none;
+    }
+
+    &:not(.print-relevant-only) .or-branch.disabled {
+        display: block;
+    }
+
+    input[type="file"] {
+        // still let it take up space
+        visibility: hidden;
+    }
+
+    input[type="number"] {
+        appearance: textfield !important;
+        -moz-appearance: textfield !important;
+        -webkit-appearance: textfield !important;
+        -ms-appearance: textfield !important;
+    }
+}
+
+// font sizes  & line heights
+h3 {
+    font-size: 2 * $printBaseFontSize;
+}
+
+h4,
+h4>.question-label {
+    font-size: 1.5 * $printBaseFontSize;
+}
+
+label,
+legend,
+.trigger,
+.readonly {
+    font-size: $printBaseFontSize;
+}
+
+.question-label,
+.option-label,
+label.geo {
+    font-size: $printBaseFontSize;
+}
+
+.question input:not([type=radio]):not([type=checkbox]) {
+    font-size: $printBaseFontSize;
+}
+
+// We can not rely on cross-browser printing of CSS background images
+// so to be sure that a box is correctly shown to be "checked", we use the default appearance.
+input[type=radio] {
+    @include appearance(radio !important);
+}
+
+input[type=checkbox] {
+    @include appearance(checkbox !important);
+}
+
+.or {
+
+    h2,
+    h3,
+    h4,
+    .required {
+        color: black;
+    }
+
+    h3,
+    h4 {
+        margin: 0;
+    }
+
+    h3 {}
+
+    .question {
+        margin-bottom: 0;
+    }
+
+    legend {
+        margin-bottom: 5px;
+
+        ~label {
+            padding: 0;
+        }
+
+        span:not(.or-output) {
+            display: block;
+        }
+    }
+
+    .readonly,
+    .trigger {
+        font-weight: normal;
+        background: none;
+        color: black;
+        padding: 5px 5px 12px 5px;
+    }
+
+    .required {
+        float: right;
+    }
+
+    .or-repeat {
+        background: none;
+    }
+
+    input[type=text],
+    .print-input-text,
+    input[type=tel],
+    input[type=password],
+    input[type=url],
+    input[type=email],
+    input[type=file],
+    input[type=date],
+    input[type=time],
+    input[type=datetime-local],
+    input[type=number],
+    select,
+    textarea {
+        border-radius: 0px;
+        box-shadow: none;
+
+        @include appearance-none;
+
+        border: none;
+        background: none;
+        border-bottom: 1px solid black;
+    }
+
+    input[type="file"] {
+        display: none !important;
+    }
+
+    .print-input-text {
+        height: auto;
+    }
+
+    .or-hint.active {
+        color: black;
+        display: block;
+        padding-top: 5px;
+        margin-top: 0;
+        line-height: 1em;
+    }
+
+    .or-hint.or-form-guidance.active {
+        border: 1px dotted black;
+        padding: 1px;
+        margin-top: 5px;
+
+        summary {
+            display: none;
+        }
+    }
+
+}
+
+.invalid-constraint,
+.invalid-required {
+    background: none;
+    border: 1px solid red;
+}
+
+.geopicker.widget {
+    margin-top: 10px;
+
+    .geo-inputs {
+        width: 100%;
+
+        label.geo {
+            display: inline-block;
+            width: 25%;
+            padding: 0 !important;
+            margin: 7px 0 0 0 !important;
+
+            &:nth-of-type(3),
+            &:nth-of-type(4) {
+                vertical-align: top;
+                margin-top: 0;
+                padding-top: 12px;
+                font-size: inherit;
+                border-top: none;
+                font-size: auto;
+            }
+
+            &.kml {
+                display: none;
+            }
+
+            input {
+                width: 100% !important;
+                margin-top: 8px !important;
+                padding-top: 0px !important;
+            }
+        }
+    }
+
+    .points {
+        display: none;
+    }
+
+    .search-bar {
+        display: none;
+    }
+
+    .leaflet-popup-pane,
+    .leaflet-control {
+        display: none;
+    }
+}
+
+
+
+.bootstrap-select {
+    @include clearfix;
+
+    .dropdown-toggle {
+        display: none;
+
+        ~.dropdown-menu {
+            @include display-flex;
+
+            @include flex-wrap(wrap);
+
+            @include flex-direction(row);
+
+            display: block;
+            position: static;
+            border: none;
+            box-shadow: none;
+            list-style-type: circle;
+            max-height: none;
+            padding-top: 0;
+            min-width: auto;
+
+            li,
+            li.active {
+                flex: 1;
+                min-width: 30%;
+                display: inline-block;
+                margin-right: 8px;
+
+                .option-wrapper {
+                    white-space: normal;
+                    padding: 0;
+
+                    label {
+                        padding-left: 4px !important;
+
+                        .option-label {
+                            word-break: break-word;
+                        }
+                    }
+                }
+            }
+
+            a {
+                background: none;
+                color: black;
+            }
+        }
+    }
+}
+
+.datalist.widget {
+    display: none;
+}
+
+.or-appearance-likert .option-wrapper>label .option-label {
+    border-top: 1px solid black;
+}
+
+.question.or-appearance-compact input:checked~img,
+.question.or-appearance-quickcompact input:checked~img {
+    border-color: black;
+}
+
+.or-appearance-distress {
+    .slider-vertical .slider {
+        border: none;
+    }
+
+    .bulb {
+        display: none;
+    }
+
+    .slider-handle {
+        border: 1px solid black;
+    }
+
+    .slider-vertical .slider-track {
+        border: 1px solid black;
+    }
+}
+
+.or-appearance-analog-scale {
+
+    // if analog-scale widget is a non-current page the display is set to block
+    // which moves the vertical widget below the label instead of next to it.
+    &:not(.or-appearance-horizontal) {
+        display: flex !important;
+        flex-wrap: nowrap;
+    }
+
+    .scale__ticks {
+        display: none;
+    }
+
+    .slider-vertical .slider-track {
+        border-right: 1px solid black;
+        margin-left: -8.5px;
+    }
+
+    .slider-horizontal .slider-track {
+        border-bottom: 1px solid black;
+        margin-top: -10px;
+    }
+
+    .slider-handle {
+        border: 1px solid black;
+    }
+
+    .slider-vertical .slider-handle {
+        margin-left: -1px;
+    }
+
+    .slider-horizontal .slider-handle {
+        margin-top: -1px;
+    }
+
+    .slider-vertical .min-label {
+        margin-top: 10px;
+    }
+}
+
+.draw-widget__colorpicker {
+    display: none;
+}
+
+.or-appearance-comment.hide {
+    display: block !important;
+}
+
+// pages mode
+.pages.or {
+    &.print-relevant-only .disabled[role="page"] {
+        display: none;
+    }
+
+    [role="page"] {
+        display: inherit;
+    }
+
+    .or-group,
+    .or-group-data,
+    .or-repeat {
+        display: inherit;
+    }
+}
+
+// pagebreak management, keep it simple to avoid complex issues
+.question {
+    page-break-inside: avoid;
+}
+
+// the below rules do not have an effect in Chrome and Opera
+// but work fine in IE10, IE11 and Safari
+h3,
+h4 {
+    page-break-after: avoid;
+
+    +.question {
+        page-break-before: avoid;
+    }
+}
+
+/*.page-break {
+    display: block;
+    //border: 1px dashed blue;
+    width: 100%;
+    margin: 0;
+    color: transparent;
+    border-bottom: none;
+    page-break-after: always !important;
+}*/
+
+[type=range] {
+    &:not(.empty) {
+        &::-webkit-slider-thumb {
+            border-color: black !important;
+        }
+
+        &::-moz-range-thumb {
+            border-color: black !important;
+        }
+
+        &::-ms-thumb {
+            border-color: black !important;
+        }
+    }
+}
+}
+}

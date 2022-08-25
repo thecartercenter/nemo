@@ -1,0 +1,123 @@
+.enketo-form {
+$form-padding: 45px;
+
+html {
+    height: 100%;
+}
+
+body {
+    @include display-flex;
+
+    @include flex-direction(column);
+
+    @include flex-wrap(nowrap);
+
+    position: relative;
+    min-height: 100%;
+}
+
+.paper {
+    @include paper-border;
+    background-color: #fff;
+    position: relative;
+    min-height: 100%;
+}
+
+.or {
+    @include flex(1);
+
+    margin-bottom: 20px;
+}
+
+.main {
+    @include flex(1);
+
+    @include display-flex;
+
+    @include flex-direction(column);
+
+    @include flex-wrap(nowrap);
+
+    margin: 0 auto;
+    padding: 100px 0 70px 0;
+    position: relative;
+    width: 100%;
+    max-width: $max-content-width;
+}
+
+.paper {
+    @include flex(1);
+
+    @include display-flex;
+
+    @include flex-direction(column);
+
+    @include flex-wrap(nowrap);
+
+    padding: $form-padding;
+    position: relative;
+    min-height: 100%;
+}
+
+.form-header {
+    @include border-box;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    position: absolute;
+    left: 0;
+    top: -76px;
+
+    width: 100%;
+    min-height: 69px;
+    padding: 16px 0;
+}
+
+.form-language-selector {
+    padding: 0;
+    margin-left: 10px;
+    font-size: 0.8em;
+}
+
+#form-languages {
+    display: inline;
+    width: auto;
+    height: 36px;
+    background: none;
+    min-width: 11em;
+    border: 1px solid #ccc;
+    margin: 0 0 0 16px;
+    font-size: 0.9em;
+}
+
+[dir="rtl"] #form-languages {
+    margin: 0 16px 0 0;
+}
+
+.form-footer {
+    @include form-footer-margin($form-padding);
+}
+
+.enketo-power {
+    position: relative;
+    left: 50%;
+    margin: 30px 0 0 -100px;
+    width: 200px;
+    font-size: 16px;
+    line-height: 23px;
+    text-align: center;
+
+    a {
+        font-style: italic;
+    }
+
+    img {
+        float: none;
+        vertical-align: top;
+        width: 48px;
+    }
+}
+}

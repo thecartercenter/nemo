@@ -42,6 +42,9 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
+        # Manually show success message after AJAX request.
+        flash.now[:success] = params[:enketo_success] if params[:enketo_success].present?
+
         searcher = build_searcher(@responses)
         @responses = apply_searcher_safely(searcher)
         @searcher_serializer = ResponsesSearcherSerializer
@@ -70,10 +73,18 @@ class ResponsesController < ApplicationController
   end
 
   def show
+    flash_recently_modified_warnings
+
+    save_editor_preference
+    return enketo if use_enketo?
+
     prepare_and_render_form
   end
 
   def new
+    save_editor_preference
+    return enketo if use_enketo?
+
     setup_condition_computer
     Results::BlankResponseTreeBuilder.new(@response).build
     # render the form template
@@ -84,6 +95,12 @@ class ResponsesController < ApplicationController
     if @response.checked_out_by_others?(current_user)
       flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
     end
+
+    flash_recently_modified_warnings
+
+    save_editor_preference
+    return enketo if use_enketo?
+
     prepare_and_render_form
   end
 
@@ -98,6 +115,10 @@ class ResponsesController < ApplicationController
   def update
     @response.assign_attributes(response_params)
     web_create_or_update
+  end
+
+  def enketo_update
+    handle_odk_update
   end
 
   def bulk_destroy
@@ -134,6 +155,33 @@ class ResponsesController < ApplicationController
 
   private
 
+  # Returns true if the user wants to use Enketo instead of NEMO's webform.
+  def use_enketo?
+    # We check for nil, not blank, because blank means it was intentionally unset and they want to use NEMO.
+    params[:enketo].present? || (params[:enketo].nil? && current_user.editor_preference == "enketo")
+  end
+
+  def save_editor_preference
+    current_user.update!(editor_preference: use_enketo? ? "enketo" : "nemo")
+  end
+
+  # Warn the user if they're viewing possibly-stale data.
+  def flash_recently_modified_warnings
+    if use_enketo? && last_modified_by_nemo?
+      flash.now[:alert] = t("response.modified_by_web", date: @response.updated_at)
+    elsif !use_enketo? && last_modified_by_enketo?
+      flash.now[:alert] = t("response.modified_by_enketo", date: @response.updated_at)
+    end
+  end
+
+  def last_modified_by_nemo?
+    @response.modifier == "web" || (@response.source == "web" && @response.modifier.nil?)
+  end
+
+  def last_modified_by_enketo?
+    @response.modifier == "enketo" || (@response.source == "enketo" && @response.modifier.nil?)
+  end
+
   def create_packager(ability, selected)
     case params[:download_type]
     when "media"
@@ -162,11 +210,6 @@ class ResponsesController < ApplicationController
     @condition_computer = Forms::ConditionComputer.new(@response.form)
   end
 
-  # loads the response with its associations
-  def load_with_associations
-    @response = Response.with_basic_assoc.friendly.find(params[:id])
-  end
-
   # when editing a response, set timestamp to show it is being worked on
   def mark_response_as_checked_out
     @response.check_out!(current_user)
@@ -178,7 +221,7 @@ class ResponsesController < ApplicationController
 
     # set source/modifier to web
     @response.source = "web" if params[:action] == "create"
-    @response.modifier = "web"
+    @response.modifier = "web" if params[:action] == "update"
 
     # check for "update and mark as reviewed"
     @response.reviewed = true if params[:commit_and_mark_reviewed]
@@ -199,43 +242,81 @@ class ResponsesController < ApplicationController
     end
   end
 
+  # For Collect or Enketo submissions.
   def handle_odk_submission
-    unless (submission_file = params[:xml_submission_file])
-      return render_xml_submission_failure("No XML file attached.", :unprocessable_entity)
+    submission_file = params[:xml_submission_file]
+    raise ActionController::MissingFile unless submission_file
+
+    if ODK::DuplicateChecker.new(open_file_params, current_user).duplicate?
+      Sentry.capture_message("Ignored simple duplicate")
+      render(body: nil, status: :created) and return
     end
 
-    begin
-      # See config/initializers/http_status_code.rb for custom status definitions
-      if ODK::DuplicateChecker.new(open_file_params, current_user).duplicate?
-        Sentry.capture_message("Ignored simple duplicate")
-        render(body: nil, status: :created) and return
-      end
+    # Temp copy for diagnostics in case of issues.
+    tmp_path = copy_to_tmp_path(submission_file)
 
-      tmp_path = copy_to_tmp_path(submission_file)
+    @response.user_id = current_user.id
+    @response.device_id = params[:deviceID]
+    @response.source = use_enketo? ? "enketo" : "odk"
+    @response.odk_xml = submission_file
+    @response = odk_response_parser.populate_response
+    authorize!(:submit_to, @response.form)
+    @response.save!(validate: false)
 
-      @response.user_id = current_user.id
-      @response.device_id = params[:deviceID]
-      @response.odk_xml = submission_file
-      @response = odk_response_parser.populate_response
-      authorize!(:submit_to, @response.form)
-      @response.save!(validate: false)
+    enketo_response = use_enketo? ? {redirect: enketo_redirect} : {}
+    render_ajax(enketo_response, :created)
+    FileUtils.rm(tmp_path)
+  # See config/initializers/http_status_code.rb for custom status definitions.
+  # ODK can't display custom failure messages so these statuses provide a little more info;
+  # the error message is only used for our logging.
+  rescue ActionController::MissingFile
+    msg = I18n.t("activerecord.errors.models.response.missing_xml")
+    render_xml_submission_failure(msg, :unprocessable_entity)
+  rescue CanCan::AccessDenied => e
+    render_xml_submission_failure(e, :forbidden)
+  rescue ActiveRecord::RecordNotFound => e
+    render_xml_submission_failure(e, :not_found)
+  rescue FormVersionError => e
+    render_xml_submission_failure(e, :upgrade_required)
+  rescue FormStatusError => e
+    render_xml_submission_failure(e, :form_not_live)
+  rescue SubmissionError => e
+    render_xml_submission_failure(e, :unprocessable_entity)
+  rescue ActiveRecord::SerializationFailure => e
+    render_xml_submission_failure(e, :service_unavailable)
+  end
 
-      render(body: nil, status: :created)
-      FileUtils.rm(tmp_path)
-    rescue CanCan::AccessDenied => e
-      render_xml_submission_failure(e, :forbidden)
-    rescue ActiveRecord::RecordNotFound => e
-      render_xml_submission_failure(e, :not_found)
-    rescue FormVersionError => e
-      # We use this because ODK can't display custom failure messages so this provides a little more info.
-      render_xml_submission_failure(e, :upgrade_required)
-    rescue FormStatusError => e
-      render_xml_submission_failure(e, :form_not_live)
-    rescue SubmissionError => e
-      render_xml_submission_failure(e, :unprocessable_entity)
-    rescue ActiveRecord::SerializationFailure => e
-      render_xml_submission_failure(e, :service_unavailable)
-    end
+  # For Enketo edits.
+  def handle_odk_update
+    check_form_exists_in_mission
+    authorize!(:modify_answers, @response)
+
+    submission_file = params[:xml_submission_file]
+    raise ActionController::MissingFile unless submission_file
+
+    # Temp copy for diagnostics in case of issues.
+    tmp_path = copy_to_tmp_path(submission_file)
+
+    @response.modifier = "enketo"
+    @response.modified_odk_xml = submission_file
+    @response.save! # Must save first before destroying answers, otherwise attachment gets lost.
+
+    # Get rid of the answer tree starting from the root AnswerGroup, then repopulate it,
+    # without overwriting the original odk_xml submission file.
+    @response.root_node&.destroy!
+    odk_response_parser.populate_response
+
+    @response.save!
+
+    enketo_response = use_enketo? ? {redirect: enketo_redirect} : {}
+    render_ajax(enketo_response, :ok)
+    FileUtils.rm(tmp_path)
+  rescue ActionController::MissingFile
+    render_ajax({error: I18n.t("activerecord.errors.models.response.missing_xml")}, :unprocessable_entity)
+  rescue CanCan::AccessDenied
+    render_ajax({error: I18n.t("permission_error.no_permission_action")}, :forbidden)
+  rescue ActiveRecord::RecordInvalid, SubmissionError
+    render_ajax({error: I18n.t("activerecord.errors.models.response.general")}, :unprocessable_entity)
   end
 
   # Copy the uploaded file to a temporary path we control so that if saving the response fails,
@@ -268,11 +349,61 @@ class ResponsesController < ApplicationController
     params["*isIncomplete*"] == "yes"
   end
 
+  # Renders an Enketo form instead of a NEMO form.
+  def enketo
+    # Fail fast if we're on the wrong node version (this happens most often in development).
+    raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v16")
+
+    # Enketo can't render anything if we haven't rendered it to XML (e.g. unpublished draft).
+    if @response.form.odk_xml.blank?
+      flash[:error] = t("activerecord.errors.models.response.no_form_xml")
+      return redirect_to(params.permit!.merge("enketo": ""))
+    end
+
+    # This check is here until we have a way to encode legacy editor responses as ODK XML.
+    if action_name == "edit" && !@response.odk_xml.attached?
+      flash[:error] = t("activerecord.errors.models.response.no_response_xml")
+      return redirect_to(params.permit!.merge("enketo": ""))
+    end
+
+    @enketo_form_obj = enketo_form_obj
+    @enketo_instance_str = enketo_instance_str
+    @read_only = read_only?
+
+    # Fail fast if something went wrong with the CLI process.
+    raise RuntimeError unless @enketo_form_obj.present?
+
+    render(:enketo_form)
+  end
+
+  # The blank form template.
+  # Returns a string that's safe to print in a JS script.
+  def enketo_form_obj
+    # Terrapin seems to return an ASCII-encoded string, so we must interpret it
+    # as UTF-8 in order for the rest of the page to work for some kinds of forms.
+    command = Terrapin::CommandLine.new("node", ":transformer :xml")
+    command.run(
+      transformer: Rails.root.join("lib/enketo-transformer-service/index.js"),
+      xml: @response.form.odk_xml.download
+    ).force_encoding("utf-8").chomp.html_safe # rubocop:disable Rails/OutputSafety
+  end
+
+  # The submission for a given form.
+  # Returns a string that's safe to print in a JS script.
+  def enketo_instance_str
+    # Determine the most recently modified attachment.
+    xml = @response.modified_odk_xml.presence || @response.odk_xml
+    xml.download.to_json.html_safe # rubocop:disable Rails/OutputSafety
+  end
+
+  # Generates a redirect path that can be returned to JS via AJAX.
+  def enketo_redirect
+    index_url_with_context(enketo_success: success_msg(@response))
+  end
+
   # prepares objects for and renders the form template
   def prepare_and_render_form
-    @context = Results::ResponseFormContext.new(
-      read_only: action_name == "show" || cannot?(:modify_answers, @response)
-    )
+    @context = Results::ResponseFormContext.new(read_only: read_only?)
 
     # The blank response is used for rendering placeholders for repeat groups
     @blank_response = Response.new(form: @response.form)
@@ -281,9 +412,18 @@ class ResponsesController < ApplicationController
     render(:form)
   end
 
+  def read_only?
+    action_name == "show" || cannot?(:modify_answers, @response)
+  end
+
   def render_xml_submission_failure(exception, code)
     Rails.logger.info("XML submission failed: '#{exception}'")
+    # TODO: Render json here too so enketo can display it?
     render(body: nil, status: code)
+  end
+
+  def render_ajax(json, code)
+    render(json: json, status: code, content_type: :json)
   end
 
   def alias_response

@@ -111,6 +111,8 @@ git checkout develop
 
 1. Install the required gems by running `bundle install` in the project directory.
 1. Install the required Node modules by running `yarn install` in the project directory.
+1. Install Enketo's required Node modules by running `yarn install` in the `lib/enketo-transformer-service/` directory.
+    1. TODO: Make this happen automatically during the previous step, maybe with Yarn workspaces.
 1. Run `cp config/database.yml.example config/database.yml`.
 1. (Optional) Create a `.env.development.local` file and override any settings from `.env` as you see fit. Note that a valid Google Maps API key must be present for certain tests to pass.
 1. Setup the UUID postgres extension:
@@ -205,6 +207,15 @@ These errors can be extremely hard to diagnose. You can find the raw device logs
 
 Note: from one year to another, the Android ecosystem changes and Collect also modifies their architecture. They don't always document upgrade instructions very clearly,
 so ODK's #collect-code Slack channel can be a good place to get help with error messages on upgrade if you can't figure out what's wrong.
+
+### Upgrading Enketo
+
+Enketo uses jQuery under the hood, and it's important to keep library versions consistent so there aren't conflicts.
+To upgrade our version of Enketo:
+1. Check their [changelog](https://github.com/enketo/enketo-core/blob/master/CHANGELOG.md)
+2. Update `package.json` (enketo-core, possibly jquery) and `lib/enketo-transformer-service/package.json` (enketo-transformer) as appropriate
+3. Verify that the changes in `yarn.lock` seem valid (e.g. we don't suddenly have TWO different versions of jQuery floating around)
+4. Restart the dev server
 
 ### Troubleshooting
 

@@ -13,7 +13,8 @@ module ODK
       @response = response
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
-      @response.source = "odk"
+      # Default to odk for legacy usage; newer code may explicitly specify "enketo" instead.
+      @response.source ||= "odk"
       @awaiting_media = awaiting_media
       @answer_parser = nil
     end

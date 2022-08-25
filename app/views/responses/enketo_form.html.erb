@@ -1,0 +1,44 @@
+<% content_for(:per_page_js, google_maps_js) %>
+<% @title_args = {id: @response.decorate.shortcode} %>
+
+<% nemo_link = link_to(
+  t(%(new edit).include?(params[:action]) ? "response.edit_with_nemo" : "response.view_with_nemo"),
+  params.permit!.merge("enketo": "")) %>
+<% action_links = @response.new_record? ? [nemo_link] : %i[show edit destroy].concat([link_divider, nemo_link]) %>
+
+<%= ActionLinks::LinkBuilder.new(@response, action_links, show_on_new: true) %>
+
+<%#= TODO: Display metadata like NEMO editor does (requires a Rails form instance). %>
+<%#= render("metadata", f: f, context: @context) %>
+
+<div id="enketo" class="enketo-form"></div>
+
+<% unless @read_only %>
+  <!-- Button action is handled by Enketo JS. -->
+  <button id="enketo-submit" type="button" class="btn btn-primary"
+          data-response-shortcode="<%= @response&.shortcode %>">
+    <%= I18n.t("common.save") %>
+  </button>
+<% end %>
+
+<script>
+  // Inject the form template.
+  let enketoFormObj = <%= @enketo_form_obj.presence || "{}" %>;
+  window.ENKETO_MODEL_STR = enketoFormObj.model;
+  $("#enketo").html(enketoFormObj.form);
+
+  // Inject the response data (optional).
+  // Note: The way we render this string in Rails causes `XML Parsing Error: unclosed token`
+  // in the Firefox browser console, but it seems to work fine.
+  let enketoInstanceStr = <%= @enketo_instance_str.presence || "null" %>;
+  window.ENKETO_INSTANCE_STR = enketoInstanceStr;
+
+  // Pass in additional configs.
+  window.ENKETO_DEFAULT_LANG = "<%= language_name(I18n.locale) %>";
+</script>
+
+<% content_for(:powered_by) do %>
+  <%= render(partial: "powered_by_enketo") %>
+<% end %>
+
+<%= javascript_pack_tag 'enketo' %>

@@ -1730,6 +1730,7 @@ fr:
   response:
     reviewed: "Cette réponse a été revu"
     edit_this_response: "Modifier cette réponse"
+    edit_with_nemo: "Modifier avec NEMO"
     download_csv: "Télécharger"
     connect_odata: "Connecter aux OData"
     download: "Télécharger les réponses"

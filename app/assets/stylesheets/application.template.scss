@@ -17,17 +17,20 @@ $dir: @@@direction@@@;
 @import 'themes/@@@theme@@@';
 @import 'variables/bootstrap';
 
-// Vendor
 @import 'bootstrap';
 @import 'font-awesome';
 @import 'select2';
-@import 'trumbowyg';
 
+@import 'trumbowyg';
 @import 'token-input';
 @import 'jquery-ui-1.12.1-custom';
+
 @import 'jquery.fileupload';
 @import 'jquery.fileupload-ui';
 @import 'dropzone/basic';
+
+@import 'enketo/sass/plain/plain';
+@import 'enketo/sass/plain/plain-print';
 
 @import 'global/**/*';
 @import 'local/**/*';
