@@ -409,6 +409,16 @@ to restore any answers that may not have fully processed. For example:
 
 Set the above dates to whatever range is appropriate for your scenario.
 
+#### Upgrading to v13.0
+
+This is the first version of NEMO to include the option of using Enketo to submit/view/edit responses.
+This includes a nested Node library to transform XML into JSON which must be installed separately:
+
+1. `cd lib/enketo-transformer-service/`
+2. `yarn install`
+3. `cd ../..`
+4. `bundle exec rake theme:preprocess` # Re-process CSS so things look right.
+
 #### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.
