@@ -194,7 +194,10 @@ If this email also ends up in your spam folder, you should raise the issue with 
 
 ### Create a Delayed Job service
 
-Delayed Job handles background tasks. It is best to create a `systemd` service wrapper for it so that it will start
+Delayed Job handles background tasks, such as data exports, SMS broadcasts, response deduplication,
+and DB performance-related operations.
+
+It is best to create a `systemd` service wrapper for it so that it will start
 when the system is rebooted. (Nginx/Passenger handle starting the main web service).
 
 To do so:
