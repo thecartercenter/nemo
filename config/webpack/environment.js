@@ -13,4 +13,7 @@ environment.loaders.append('ignore', {
 
 environment.loaders.delete('nodeModules');
 
+// For debugging:
+// console.log('---\nWebpack config:\n', JSON.stringify(environment.toWebpackConfig(), null, 2), '\n---');
+
 module.exports = environment;
