@@ -1,5 +1,3 @@
-const { moduleExists } = require('@rails/webpacker')
-
 // See also Ruby config/webpack/environment.js
 //
 // See docs at https://babeljs.io/docs/en/options
@@ -35,13 +33,16 @@ module.exports = function config(api) {
           exclude: ['transform-typeof-symbol']
         }
       ],
-      moduleExists('@babel/preset-typescript') && [
-        '@babel/preset-typescript',
-        { allExtensions: true, isTSX: true }
-      ]
+      '@babel/preset-react',
     ].filter(Boolean),
     plugins: [
-      ['@babel/plugin-transform-runtime', { helpers: false }]
+      ['@babel/plugin-transform-runtime', { helpers: false }],
+      '@babel/syntax-dynamic-import',
+      '@babel/plugin-proposal-nullish-coalescing-operator',
+      '@babel/plugin-proposal-object-rest-spread',
+      '@babel/plugin-proposal-optional-chaining',
+      ['@babel/plugin-proposal-decorators', { legacy: true }],
+      ['@babel/plugin-proposal-class-properties', { loose: true }],
     ].filter(Boolean)
   }
 }
