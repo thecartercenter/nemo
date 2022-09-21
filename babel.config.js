@@ -1,57 +1,47 @@
+const { moduleExists } = require('@rails/webpacker')
+
 // See also Ruby config/webpack/environment.js
 //
 // See docs at https://babeljs.io/docs/en/options
-module.exports = function (api) {
-  const validEnv = ['development', 'test', 'production'];
-  const currentEnv = api.env();
-  const isDevelopmentEnv = api.env('development');
-  const isProductionEnv = api.env('production');
-  const isTestEnv = api.env('test');
+//
+// Initialized based on default config from webpacker at
+// https://github.com/rails/webpacker/blob/master/package/babel/preset.js
+module.exports = function config(api) {
+  const validEnv = ['development', 'test', 'production']
+  const currentEnv = api.env()
+  const isDevelopmentEnv = api.env('development')
+  const isProductionEnv = api.env('production')
+  const isTestEnv = api.env('test')
 
   if (!validEnv.includes(currentEnv)) {
     throw new Error(
-      `${'Please specify a valid `NODE_ENV` or '
-      + '`BABEL_ENV` environment variables. Valid values are "development", '
-      + '"test", and "production". Instead, received: '}${
-        JSON.stringify(currentEnv)
-      }.`,
-    );
+      `Please specify a valid NODE_ENV or BABEL_ENV environment variable. Valid values are "development", "test", and "production". Instead, received: "${JSON.stringify(
+        currentEnv
+      )}".`
+    )
   }
 
   return {
     presets: [
-      isTestEnv && [
-        '@babel/preset-env',
-        {
-          targets: {
-            node: 'current'
-          }
-        }
-      ],
+      isTestEnv && ['@babel/preset-env', { targets: { node: 'current' } }],
       (isProductionEnv || isDevelopmentEnv) && [
         '@babel/preset-env',
         {
-          // targets: specified in .browserslistrc
-          forceAllTransforms: true,
           useBuiltIns: 'entry',
-          corejs: 3,
+          corejs: '3.8',
           modules: 'auto',
+          bugfixes: true,
+          loose: true,
           exclude: ['transform-typeof-symbol']
         }
       ],
-      '@babel/react',
+      moduleExists('@babel/preset-typescript') && [
+        '@babel/preset-typescript',
+        { allExtensions: true, isTSX: true }
+      ]
     ].filter(Boolean),
     plugins: [
-      '@babel/syntax-dynamic-import',
-      '@babel/transform-runtime',
-      '@babel/plugin-proposal-nullish-coalescing-operator',
-      '@babel/plugin-proposal-object-rest-spread',
-      '@babel/plugin-proposal-optional-chaining',
-      ['@babel/plugin-proposal-decorators', { legacy: true }],
-      ['@babel/plugin-proposal-class-properties', { loose: true }],
-      // proposal-private-property needs to come AFTER proposal-decorators.
-      ['@babel/plugin-proposal-private-methods', { loose: true }],
-      ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
-    ],
-  };
-};
+      ['@babel/plugin-transform-runtime', { helpers: false }]
+    ].filter(Boolean)
+  }
+}
