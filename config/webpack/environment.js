@@ -1,9 +1,11 @@
 const { environment } = require('@rails/webpacker');
 
-// This file is effectively the same as what you'd normally have
+// This file is similar to what what you'd have
 // inside webpack.config.js for a Node project.
 //
-// See also https://webpack.js.org/configuration/
+// See also babel.config.js
+//
+// See docs at https://webpack.js.org/configuration/
 
 // Ignore JS test files.
 environment.loaders.append('ignore', {
