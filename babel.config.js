@@ -1,3 +1,6 @@
+// See also Ruby config/webpack/environment.js
+//
+// See docs at https://babeljs.io/docs/en/options
 module.exports = function (api) {
   const validEnv = ['development', 'test', 'production'];
   const currentEnv = api.env();
@@ -41,6 +44,8 @@ module.exports = function (api) {
       '@babel/syntax-dynamic-import',
       '@babel/transform-runtime',
       '@babel/plugin-proposal-object-rest-spread',
+      ['@babel/plugin-proposal-private-methods', { loose: true }],
+      ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
       [
         '@babel/plugin-proposal-decorators',
         {
