@@ -13,6 +13,12 @@ environment.loaders.append('ignore', {
   loader: 'ignore-loader',
 });
 
+// Transpile Enketo files.
+environment.loaders.append('enketo', {
+  test: /node_modules\/(enketo-core|openrosa-xpath-evaluator)\//,
+  loader: 'babel-loader',
+});
+
 environment.loaders.delete('nodeModules');
 
 // For debugging:
