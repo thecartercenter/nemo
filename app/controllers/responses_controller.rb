@@ -393,7 +393,12 @@ class ResponsesController < ApplicationController
   def enketo_instance_str
     # Determine the most recently modified attachment.
     xml = @response.modified_odk_xml.presence || @response.odk_xml
-    xml.download.to_json.html_safe # rubocop:disable Rails/OutputSafety
+    reencode_xml(xml.download).to_json.html_safe # rubocop:disable Rails/OutputSafety
+  end
+
+  # Take some XML from our database and return it as UTF-8 so it can be converted to JSON.
+  def reencode_xml(xml)
+    xml&.force_encoding("utf-8")
   end
 
   # Generates a redirect path that can be returned to JS via AJAX.

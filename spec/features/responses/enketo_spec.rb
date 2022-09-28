@@ -22,7 +22,7 @@ feature "enketo form rendering and submission", js: true do
   let(:form_params) { params.merge(form_id: form.id) }
   let(:latest_response_params) { params.merge(id: Response.order(:created_at).last.shortcode) }
 
-  # Note: "nemo answer" will appear in NEMO, and "enketo answer"
+  # Note: "nemo answer" will appear in NEMO, and "enketo ånswer"
   # will appear in Enketo via the XML attached below.
   let(:r1) { create(:response, form: form, answer_values: "nemo answer") }
   let(:r1_params) { params.merge(id: r1.shortcode) }
@@ -47,7 +47,7 @@ feature "enketo form rendering and submission", js: true do
       visit(response_path(r1_params))
       expect_enketo_content(action: "View")
 
-      expect_filled_in_value("enketo answer")
+      expect_filled_in_value("enketo ånswer")
     end
 
     it "submits new response" do
@@ -72,7 +72,7 @@ feature "enketo form rendering and submission", js: true do
       expect(r1.modified_odk_xml.attached?).to be(false)
 
       expect_enketo_content
-      expect_filled_in_value("enketo answer")
+      expect_filled_in_value("enketo ånswer")
       fill_in_value("edited answer")
       save_and_wait
       expect(page).to have_content("Success: Response updated successfully")
@@ -212,7 +212,7 @@ feature "enketo form rendering and submission", js: true do
   # Make it seem like the response was submitted by ODK in the first place.
   def mock_submission(response)
     submission_file = prepare_odk_response_fixture("single_question", form, return_file: true, values: [
-      "enketo answer"
+      "enketo ånswer" # Unicode character å for testing.
     ])
     response.update!(odk_xml: submission_file, source: "odk")
   end
