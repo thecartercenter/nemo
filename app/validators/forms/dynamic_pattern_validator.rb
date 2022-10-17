@@ -12,6 +12,7 @@ module Forms
     def validate(record)
       calc_must_wrap_all_of_default_response_name(record)
       force_calc_for_dollar_refs(record) if force_calc_if&.call(record)
+      refd_option_set_must_exist(record)
     end
 
     private
@@ -32,6 +33,20 @@ module Forms
       return if record[field_name].blank? || record[field_name].start_with?("calc(") ||
         !record[field_name].match?(ODK::DynamicPatternParser::CODE_REGEX)
       record.errors.add(field_name, :must_use_calc)
+    end
+
+    # Makes sure all $QuestionCode:value expressions refer to a question with a valid option set.
+    def refd_option_set_must_exist(record)
+      question_codes = record[field_name].scan(ODK::DynamicPatternParser::CODE_ONLY_REGEX).flatten
+      errors = question_codes.map { |code| validate_option_set(code) }.compact
+      errors.each { |error| record.errors.add(field_name, error) }
+    end
+
+    # Returns an error translation key if there's an error, or nil if valid.
+    def validate_option_set(question_code)
+      q = Question.find_by(code: question_code)
+      return :value_ref_nonexistent if q.nil?
+      return :value_ref_wrong_type if q.qtype_name != "select_one"
     end
   end
 end
