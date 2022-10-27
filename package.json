@@ -29,6 +29,9 @@
       "\\.css$": "<rootDir>/app/javascript/__mocks__/style-mock.js"
     }
   },
+  "resolutions": {
+    "@xmldom/xmldom": "0.7.6"
+  },
   "dependencies": {
     "@babel/core": "7.19.0",
     "@babel/helper-string-parser": "7.18.10",
