@@ -37,16 +37,19 @@ module Forms
 
     # Makes sure all $QuestionCode:value expressions refer to a question with a valid option set.
     def refd_option_set_must_exist(record)
+      return if record[field_name].blank?
       question_codes = record[field_name].scan(ODK::DynamicPatternParser::CODE_ONLY_REGEX).flatten
-      errors = question_codes.map { |code| validate_option_set(code) }.compact
-      errors.each { |error| record.errors.add(field_name, error) }
+      question_codes.each { |code| validate_option_set(code, record) }
     end
 
-    # Returns an error translation key if there's an error, or nil if valid.
-    def validate_option_set(question_code)
+    # Adds an error, if relevant.
+    def validate_option_set(question_code, record)
       q = Question.find_by(code: question_code)
-      return :value_ref_nonexistent if q.nil?
-      return :value_ref_wrong_type if q.qtype_name != "select_one"
+      if q.nil?
+        record.errors.add(field_name, :value_ref_nonexistent, code: question_code)
+      elsif q.qtype_name != "select_one"
+        record.errors.add(field_name, :value_ref_wrong_type, code: question_code)
+      end
     end
   end
 end

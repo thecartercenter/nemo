@@ -79,4 +79,61 @@ describe Forms::DynamicPatternValidator do
       end
     end
   end
+
+  describe "option set :value references" do
+    describe "question default" do
+      let(:option_set) { create(:option_set) }
+      let(:question) { create(:question, qtype_name: "select_one") }
+      let(:qing) { create(:questioning, question: question, option_set: option_set) }
+
+      let(:integer_question) { create(:question, qtype_name: "integer") }
+      let(:integer_qing) { create(:questioning, question: integer_question) }
+
+      it "with option set question" do
+        qing.update(default: "Foo $#{qing.code}:value") # rubocop:disable Rails/SaveBang
+        expect(qing).to be_valid
+      end
+
+      it "with integer question" do
+        integer_qing.update(default: "Foo $#{integer_qing.code}:value") # rubocop:disable Rails/SaveBang
+        expect(integer_qing).not_to be_valid
+        expect(integer_qing.errors[:default].join)
+          .to match("question '#{integer_qing.code}' does not have an option set")
+      end
+
+      it "with non-existent question" do
+        integer_qing.update(default: "Foo $Invalid:value") # rubocop:disable Rails/SaveBang
+        expect(integer_qing).not_to be_valid
+        expect(integer_qing.errors[:default].join)
+          .to match("question 'Invalid' does not exist")
+      end
+    end
+  end
+
+  describe "form name" do
+    let(:option_set) { create(:option_set) }
+    let(:question) { create(:question, qtype_name: "select_one") }
+    let(:form) { create(:form) }
+
+    let(:integer_question) { create(:question, qtype_name: "integer") }
+
+    it "with option set question" do
+      form.update(default_response_name: "Foo $#{question.code}:value") # rubocop:disable Rails/SaveBang
+      expect(form).to be_valid
+    end
+
+    it "with integer question" do
+      form.update(default_response_name: "Foo $#{integer_question.code}:value") # rubocop:disable Rails/SaveBang
+      expect(form).not_to be_valid
+      expect(form.errors[:default_response_name].join)
+        .to match("question '#{integer_question.code}' does not have an option set")
+    end
+
+    it "with non-existent question" do
+      form.update(default_response_name: "Foo $Invalid:value") # rubocop:disable Rails/SaveBang
+      expect(form).not_to be_valid
+      expect(form.errors[:default_response_name].join)
+        .to match("question 'Invalid' does not exist")
+    end
+  end
 end
