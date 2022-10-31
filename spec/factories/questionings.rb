@@ -50,6 +50,8 @@
 
 FactoryBot.define do
   factory :questioning do
+    # TODO: Trying to set qtype_name on nested question when creating a qing doesn't seem to work,
+    #   e.g. in Forms::DynamicPatternValidator spec.
     question
     form
     parent { form.root_group }
