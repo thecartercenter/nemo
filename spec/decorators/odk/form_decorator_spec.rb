@@ -65,18 +65,6 @@ describe ODK::FormDecorator, :odk do
     let(:form) { create(:form, :live, name: "Dynamic answers for option sets", questions: [likert_question, likert_question2, score]) }
     let(:decorated_form) { decorate(form) }
 
-    describe "with invalid question code" do
-      before do
-        qing = form.questionings.last
-        qing.default = "calc($likertbad:value)"
-        qing.save!
-      end
-
-      it "should return zero option sets" do
-        expect(decorated_form.option_sets_for_instances).to eq([])
-      end
-    end
-
     describe "with value question code" do
       before do
         qing = form.questionings.last
