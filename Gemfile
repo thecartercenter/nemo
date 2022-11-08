@@ -75,7 +75,7 @@ gem "api-pagination", "~> 4.1.1"
 gem "versionist", "~> 1.4.1"
 # To use local clone: bundle config local.odata_server ../odata_server
 # To stop using local clone: bundle config --delete local.odata_server
-gem "odata_server", github: "sassafrastech/odata_server", branch: "sassafras"
+gem "odata_server", github: "sassafrastech/odata_server", tag: "v0.1.0-legacy2"
 
 # Configuration
 gem "config", "~> 2.2"

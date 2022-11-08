@@ -28,10 +28,10 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/odata_server.git
-  revision: c94de409b0d969e5b82189dcdb646fe2f5fb995b
-  branch: sassafras
+  revision: d36cc4c817bf956770f0b5e93ea9740fb38df97a
+  tag: v0.1.0-legacy2
   specs:
-    odata_server (0.1.0)
+    odata_server (0.1.0.pre.legacy2)
       rails (>= 5.2)
 
 GIT
@@ -336,7 +336,9 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2020.0512)
-    mimemagic (0.3.5)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.14.1)
