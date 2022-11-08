@@ -478,4 +478,13 @@ Then load the site in your browser. You should see the new version number in the
 
 ### Troubleshooting
 
-If the above is not successful, contact info@getnemo.org for assistance.
+In general, if the above is not successful, contact info@getnemo.org for assistance.
+
+#### Bundle install fails with "version could not be found"
+
+If you see messages such as `Your bundle is locked to mimemagic (0.3.5), but that version could not be found in any of the sources listed in your Gemfile.`,
+that version was likely yanked retroactively by a third party and no longer exists.
+
+Here are a few common versions that you may come across:
+* `mimemagic`: 0.3.5 yanked, use `0.3.7` or higher: `bundle update mimemagic`
+* `odata_server`: 0.1.0 legacy commit overwritten, use `tag: v0.1.0-legacy2` instead of `branch: "sassafras"` in Gemfile then `bundle install`
