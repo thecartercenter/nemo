@@ -137,7 +137,7 @@ feature "form status and version display and changes", js: true do
     click_link("Pause")
     click_link("Myform")
     fill_in("Name", with: "Beep boop")
-    expect(ODK::FormRenderJob).to_not receive(:perform_later)
+    expect(ODK::FormRenderJob).to_not(receive(:perform_later))
     click_button("Save")
   end
 

@@ -325,13 +325,11 @@ describe Form do
 
     context "going from pause to live" do
       let(:initial_status) { :paused }
-      
       it "enqueues the job" do
         expect(ODK::FormRenderJob).to receive(:perform_later)
         form.update_status(:live)
       end
     end
-
   end
 
   describe "destroy" do
