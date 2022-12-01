@@ -131,12 +131,12 @@ class FormsController < ApplicationController
       @form.assign_attributes(form_params)
       authorize!(:rename, @form) if @form.name_changed?
       @form.save!
-      ODK::FormRenderJob.perform_later(@form) if @form.live?
 
       if params[:save_and_go_live].present?
-        @form.update_status(:live)
+        @form.update_status(:live) # Will automatically call FormRenderJob.
         set_success_and_redirect(@form, to: forms_path)
       else
+        ODK::FormRenderJob.perform_later(@form) if @form.live?
         set_success_and_redirect(@form, to: edit_form_path(@form))
       end
     end
