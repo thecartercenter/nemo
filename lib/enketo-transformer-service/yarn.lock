@@ -314,10 +314,10 @@ encodeurl@~1.0.2:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==
 
-enketo-transformer@2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/enketo-transformer/-/enketo-transformer-2.1.5.tgz#c1a66a8e61cf8aaaf61cfed81da8b249a31a1ed5"
-  integrity sha512-9zTyWTX7d5tKoh1vi4ahN11TP22fcrxyvN5KDEdO6Fhrxe1zyeCmtipiMxp4eoj7bPA/8o47eKhzw9KW5BhkOw==
+enketo-transformer@2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/enketo-transformer/-/enketo-transformer-2.1.6.tgz#1f80656e254fd3d65cf7a154dda059462fce781d"
+  integrity sha512-FYCA7ESxgnU/7g9K/AzELeYdvYKINJ/E7sF0H7KYIc1p004Lad4GIpr3XYrX9R3kZkVJvpF0l320YfL9xrarUg==
   dependencies:
     body-parser "^1.20.0"
     express "^5.0.0-beta.1"
