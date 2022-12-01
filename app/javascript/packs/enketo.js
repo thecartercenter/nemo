@@ -41,6 +41,7 @@ async function inject() {
   const loadErrors = form.init();
   if (loadErrors.length > 0) {
     console.error('NEMO encountered Enketo loadErrors:', loadErrors);
+    // TODO: Log to sentry (requires JS plugin)
   }
 
   // If desired, scroll to a specific question with any XPath location expression,
