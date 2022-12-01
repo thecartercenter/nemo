@@ -5,14 +5,14 @@ module TemplateHelper
   def profile_link
     # show mission and role info only if not in admin mode
     if admin_mode?
-      role = tag("br")
+      role_html = tag("br")
     elsif current_mission
-      # get current role
-      role = "(" + t(current_user.admin? ? :admin : current_user.role(current_mission), scope: :role) + ")"
+      role = current_user.admin? ? :admin : current_user.role(current_mission)
+      role_html = "(#{t(role, scope: :role)})"
     end
 
-    content_tag(:i, "", class: "fa fa-2x fa-user", title: t("page_titles.users.edit_profile")) + tag("br") +
-      current_user.login + tag("br") + role
+    content_tag(:i, "", class: "fa fa-2x fa-user", title: t("page_titles.users.edit_profile")) +
+      tag("br") + current_user.login + tag("br") + role_html
   end
 
   def admin_mode_link
