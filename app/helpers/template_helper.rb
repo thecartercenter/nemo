@@ -3,14 +3,12 @@
 module TemplateHelper
   # gets html for profile icon, username, and role in header
   def profile_link
-    # if not in admin mode, show mission and role info
-    if !admin_mode?
-      # get current role
-      if current_mission
-        role = "(" + t(current_user.admin? ? :admin : current_user.role(current_mission), scope: :role) + ")"
-      end
-    else
+    # show mission and role info only if not in admin mode
+    if admin_mode?
       role = tag("br")
+    elsif current_mission
+      # get current role
+      role = "(" + t(current_user.admin? ? :admin : current_user.role(current_mission), scope: :role) + ")"
     end
 
     content_tag(:i, "", class: "fa fa-2x fa-user", title: t("page_titles.users.edit_profile")) + tag("br") +
