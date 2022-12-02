@@ -85,7 +85,7 @@ gem "acts_as_list"
 # Caching
 gem "actionpack-page_caching", "~> 1.1"
 gem "bootsnap", "~> 1.4", require: false
-gem "dalli", "~> 2.7"
+gem "dalli", "~> 3.2"
 
 # DB
 gem "hairtrigger", "~> 0.2.20"
