@@ -19,7 +19,7 @@ gem "random_data", "~> 1.6" # Deprecated: Use Faker instead
 gem "recaptcha", "~> 3.4", require: "recaptcha/rails" # Small change in v4, we should upgrade eventually.
 gem "responders", "~> 3.0"
 gem "rqrcode", "~> 1.1"
-gem "rubyzip", "~> 2.3"
+gem "rubyzip", "~> 2.3", require: "zip" # Explicitly specify name (https://stackoverflow.com/a/32740666/763231)
 gem "term-ansicolor", "~> 1.3"
 gem "terrapin", "~> 0.6.0"
 gem "thor", "~> 1.0"
