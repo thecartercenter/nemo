@@ -120,6 +120,7 @@ feature "form status and version display and changes", js: true do
     click_link("Myform")
     expect(ODK::FormRenderJob).to receive(:perform_later)
     accept_confirm { click_link("Increment Version") }
+    visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
   end
 
   scenario "changing the name of the form when live should enqueue" do
