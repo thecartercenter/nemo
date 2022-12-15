@@ -113,4 +113,42 @@ feature "form status and version display and changes", js: true do
     click_link("Yourform")
     expect(page).to have_css("div#status", text: /Status\n Live/)
   end
+
+  scenario "changing version when live should enqueue the render form xml job for odk" do
+    visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+    click_link("Go Live")
+    click_link("Myform")
+    expect(ODK::FormRenderJob).to receive(:perform_later)
+    accept_confirm { click_link("Increment Version") }
+    visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+  end
+
+  scenario "changing the name of the form when live should enqueue" do
+    visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+    click_link("Go Live")
+    click_link("Myform")
+    fill_in("Name", with: "Beep boop")
+    expect(ODK::FormRenderJob).to receive(:perform_later)
+    click_button("Save")
+  end
+
+  scenario "changing the name of the form when paused should not enqueue" do
+    visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+    click_link("Go Live")
+    click_link("Pause")
+    click_link("Myform")
+    fill_in("Name", with: "Beep boop")
+    expect(ODK::FormRenderJob).to_not(receive(:perform_later))
+    click_button("Save")
+  end
+
+  scenario "live, pause, increment version, go live should enqueue the job" do
+    visit(forms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
+    click_link("Go Live")
+    click_link("Pause")
+    click_link("Myform")
+    accept_confirm { click_link("Increment Version") }
+    expect(ODK::FormRenderJob).to receive(:perform_later)
+    click_button("Save and Go Live")
+  end
 end

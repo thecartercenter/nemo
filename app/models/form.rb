@@ -259,7 +259,7 @@ class Form < ApplicationRecord
     # Ensure the form has a version if it's becoming live.
     increment_version if live? && current_version.nil?
 
-    ODK::FormRenderJob.perform_later(self) if live? && old_status == :draft
+    ODK::FormRenderJob.perform_later(self) if live?
   end
 
   def live?
