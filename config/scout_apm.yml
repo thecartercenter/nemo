@@ -22,6 +22,10 @@ common: &defaults
   # - Valid Options: true, false
   monitor: true
 
+  # prepend is a more modern approach (https://github.com/scoutapp/scout_apm_ruby/pull/448), but is not the default.
+  # Fixes https://github.com/scoutapp/scout_apm_ruby/issues/460
+  use_prepend: true
+
 production:
   <<: *defaults
 
