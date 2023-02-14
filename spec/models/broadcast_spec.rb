@@ -60,7 +60,7 @@ describe Broadcast do
           .and_raise(Net::SMTPAuthenticationError.new("Auth failed"))
         expect(broadcaster).to receive(:deliver)
         expect { broadcast.deliver }.to raise_error(Net::SMTPAuthenticationError)
-        expect(broadcast.send_errors).to eq("Email Error: Auth failed")
+        expect(broadcast.send_errors).to eq("Email Error: Net::SMTPAuthenticationError")
       end
     end
 
@@ -79,7 +79,7 @@ describe Broadcast do
           .and_raise(Net::SMTPAuthenticationError.new("Auth failed"))
         expect(broadcaster).to receive(:deliver).and_raise(Sms::Error.new("Failure 1\nFailure 2"))
         expect { broadcast.deliver }.to raise_error(Net::SMTPAuthenticationError)
-        expect(broadcast.send_errors).to eq("Email Error: Auth failed\n"\
+        expect(broadcast.send_errors).to eq("Email Error: Net::SMTPAuthenticationError\n"\
           "SMS Error: Failure 1\nSMS Error: Failure 2")
       end
     end
