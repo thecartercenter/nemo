@@ -923,6 +923,7 @@ en:
         new: "Create Form"
         sms_guide: "SMS Guide"
         sms_console: "SMS Test Console"
+        export_all: "Export All (Published)"
         go_live: "Go Live"
         pause: "Pause"
         return_to_draft: "Return to Draft Status"
