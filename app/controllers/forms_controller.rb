@@ -255,9 +255,8 @@ class FormsController < ApplicationController
   def zip_all(zipfile_path, forms)
     Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
       forms.each do |form|
-        form_name = "form-#{form.name.dasherize}-#{Time.zone.today}.csv"
-        form_csv = Forms::Export.new(form).to_csv
-        zipfile.get_output_stream(form_name) { |f| f.write(form_csv) }
+        form_name = "form-#{form.name.dasherize}-#{Time.zone.today}.xml"
+        zipfile.get_output_stream(form_name) { |f| f.write(form.odk_xml.download) }
       rescue Zip::EntryExistsError => e
         Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Form: #{form.id}"))
         notify_admins(e)
