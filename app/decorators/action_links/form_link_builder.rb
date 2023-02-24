@@ -4,7 +4,9 @@ module ActionLinks
   # Builds a list of action links for a form.
   class FormLinkBuilder < LinkBuilder
     def initialize(form)
-      actions = %i[show edit clone export]
+      actions = %i[show edit clone]
+      actions << [:export_csv, {url: h.export_form_path(form)}]
+      actions << [:export_xml, {url: h.export_xml_form_path(form)}]
 
       unless h.admin_mode?
         actions << [:go_live, {method: :patch}] unless form.live?

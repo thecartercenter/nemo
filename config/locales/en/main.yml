@@ -917,6 +917,7 @@ en:
     import_standard: "Import Standard"
     import_from_csv: "Import from CSV"
     export_csv: "Export CSV"
+    export_xml: "Export XML"
     export: "Export"
     models:
       form:

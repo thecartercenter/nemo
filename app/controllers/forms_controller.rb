@@ -224,11 +224,18 @@ class FormsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
+  # Standard CSV export.
   def export
     exporter = Forms::Export.new(@form)
     send_data(exporter.to_csv, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.csv")
   end
 
+  # ODK XML export.
+  def export_xml
+    send_data(@form.odk_xml.download, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.xml")
+  end
+
+  # ODK XML export for all forms in mission/admin mode.
   def export_all
     forms = Form.where(mission: current_mission) # Mission could be nil for standard forms.
     forms = forms.published if current_mission.present?
