@@ -230,10 +230,12 @@ class FormsController < ApplicationController
   end
 
   def export_all
-    forms = Form.where(mission: current_mission).published
-    zipfile_path = Rails.root.join("tmp/forms-#{current_mission.compact_name}-#{Time.zone.today}.zip")
+    forms = Form.where(mission: current_mission) # Mission could be nil for standard forms.
+    forms = forms.published if current_mission.present?
+    forms_group = current_mission&.compact_name || "standard"
+    zipfile_path = Rails.root.join("tmp/forms-#{forms_group}-#{Time.zone.today}.zip")
     zip_all(zipfile_path, forms)
-    send_file(zipfile_path)
+
     # Use send_data (not send_file) in order to block until it's finished before deleting.
     File.open(zipfile_path, "r") { |f| send_data(f.read, filename: File.basename(zipfile_path)) }
     FileUtils.rm(zipfile_path)
@@ -254,7 +256,6 @@ class FormsController < ApplicationController
     Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
       forms.each do |form|
         form_name = "form-#{form.name.dasherize}-#{Time.zone.today}.csv"
-        pp form_name
         form_csv = Forms::Export.new(form).to_csv
         zipfile.get_output_stream(form_name) { |f| f.write(form_csv) }
       rescue Zip::EntryExistsError => e
