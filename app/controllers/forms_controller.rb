@@ -235,7 +235,8 @@ class FormsController < ApplicationController
     send_data(@form.odk_xml.download, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.xml")
   end
 
-  # ODK XML export for all forms in mission/admin mode.
+  # ODK XML export for all published forms.
+  # Theoretically works for standard forms too, but they have no XML so can't be exported at this time.
   def export_all
     forms = Form.where(mission: current_mission) # Mission could be nil for standard forms.
     forms = forms.published if current_mission.present?

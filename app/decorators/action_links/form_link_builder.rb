@@ -5,8 +5,10 @@ module ActionLinks
   class FormLinkBuilder < LinkBuilder
     def initialize(form)
       actions = %i[show edit clone]
-      actions << [:export_csv, {url: h.export_form_path(form)}]
-      actions << [:export_xml, {url: h.export_xml_form_path(form)}]
+      unless new_action?
+        actions << [:export_csv, {url: h.export_form_path(form)}]
+        actions << [:export_xml, {url: h.export_xml_form_path(form)}] if form.odk_xml.attached?
+      end
 
       unless h.admin_mode?
         actions << [:go_live, {method: :patch}] unless form.live?

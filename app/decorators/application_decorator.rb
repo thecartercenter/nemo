@@ -12,6 +12,10 @@ class ApplicationDecorator < Draper::Decorator
     "&nbsp;".html_safe # rubocop:disable Rails/OutputSafety
   end
 
+  def new_action?
+    %w[create new].include?(h.controller.action_name)
+  end
+
   def show_action?
     h.controller.action_name == "show"
   end
