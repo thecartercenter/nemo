@@ -917,12 +917,14 @@ en:
     import_standard: "Import Standard"
     import_from_csv: "Import from CSV"
     export_csv: "Export CSV"
+    export_xml: "Export XML"
     export: "Export"
     models:
       form:
         new: "Create Form"
         sms_guide: "SMS Guide"
         sms_console: "SMS Test Console"
+        export_all: "Export XML"
         go_live: "Go Live"
         pause: "Pause"
         return_to_draft: "Return to Draft Status"

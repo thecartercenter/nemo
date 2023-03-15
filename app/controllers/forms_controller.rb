@@ -224,9 +224,29 @@ class FormsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
+  # Standard CSV export.
   def export
     exporter = Forms::Export.new(@form)
     send_data(exporter.to_csv, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.csv")
+  end
+
+  # ODK XML export.
+  def export_xml
+    send_data(@form.odk_xml.download, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.xml")
+  end
+
+  # ODK XML export for all published forms.
+  # Theoretically works for standard forms too, but they have no XML so can't be exported at this time.
+  def export_all
+    forms = Form.where(mission: current_mission) # Mission could be nil for standard forms.
+    forms = forms.published if current_mission.present?
+    forms_group = current_mission&.compact_name || "standard"
+    zipfile_path = Rails.root.join("tmp/forms-#{forms_group}-#{Time.zone.today}.zip")
+    zip_all(zipfile_path, forms)
+
+    # Use send_data (not send_file) in order to block until it's finished before deleting.
+    File.open(zipfile_path, "r") { |f| send_data(f.read, filename: File.basename(zipfile_path)) }
+    FileUtils.rm(zipfile_path)
   end
 
   private
@@ -237,6 +257,20 @@ class FormsController < ApplicationController
     # which doesn't work here because we're not paginating.
     @decorated_questions ||= # rubocop:disable Naming/MemoizedInstanceVariableName
       Draper::CollectionDecorator.decorate(@questions, with: QuestionDecorator)
+  end
+
+  # Given a set of forms, put them all in a zip file for download.
+  def zip_all(zipfile_path, forms)
+    Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
+      forms.each do |form|
+        form_name = "form-#{form.name.dasherize}-#{Time.zone.today}.xml"
+        zipfile.get_output_stream(form_name) { |f| f.write(form.odk_xml.download) }
+      rescue Zip::EntryExistsError => e
+        Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Form: #{form.id}"))
+        notify_admins(e)
+        next
+      end
+    end
   end
 
   def setup_condition_computer

@@ -6,6 +6,7 @@ module FormsHelper
     links = []
     links << create_link(Form) if can?(:create, Form)
     add_import_standard_link_if_appropriate(links)
+    links << link_to(t("action_links.models.form.export_all"), export_all_forms_path) unless admin_mode?
     links << link_to(t("action_links.models.form.sms_console"), new_sms_test_path) if can?(:create, Sms::Test)
     links
   end

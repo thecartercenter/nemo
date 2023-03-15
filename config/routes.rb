@@ -127,12 +127,17 @@ ELMO::Application.routes.draw do
                                          mission_name: /[a-z][a-z0-9]*/ do
     # the rest of these routes can have admin mode or not
     resources :forms, constraints: ->(req) { req.format == :html } do
+      collection do
+        get "export_all"
+      end
+
       member do
         post "add-questions", as: "add_questions", action: "add_questions"
         put "clone"
         get "choose-questions", as: "choose_questions", action: "choose_questions"
         get "sms-guide", as: "sms_guide", action: "sms_guide"
         get "export"
+        get "export_xml"
       end
     end
 
