@@ -109,6 +109,7 @@ def build_item(item, form, parent, evaluator)
     item = {items: item} if item.is_a?(Array)
     attribs = {parent: parent, form: form, group_item_name: item[:item_name], repeatable: true}
     attribs[:group_name_en] = attribs[:group_hint_en] = item[:name] if item[:name].present?
+    attribs[:repeat_count] = item[:count] if item[:count].present?
     group = create(:qing_group, attribs)
     item[:items].each { |c| build_item(c, form, group, evaluator) }
   elsif item.is_a?(Array)

@@ -110,6 +110,11 @@ module ODK
       group_hint_translations.nil? || group_hint_translations.values.all?(&:blank?)
     end
 
+    # Number of times to repeat the repeat group if specified
+    def count
+      @count ||= object.repeat_count.present? ? ODK::ResponsePatternParser.new(repeat_count, src_item: self).to_odk : nil
+    end
+
     # Checks if there are any conditions in this group that refer to other questions in this group.
     def internal_conditions?
       children.each do |item|
@@ -127,10 +132,10 @@ module ODK
         yield
       else
         # Groups should get wrapped in a group tag and include the label.
-        # Also a repeat tag if the group is repeatable
+        # Also a repeat tag if the group is repeatable with number of repeats if provided
         content_tag(:group, ref: xpath) do
           tag(:label, ref: "jr:itext('#{odk_code}:label')") <<
-            conditional_tag(:repeat, repeatable?, nodeset: xpath, &block)
+            conditional_tag(:repeat, repeatable?, nodeset: xpath, "jr:count": count, &block)
         end
       end
     end

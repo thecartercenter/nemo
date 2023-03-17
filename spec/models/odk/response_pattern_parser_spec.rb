@@ -144,6 +144,32 @@ describe ODK::ResponsePatternParser do
     end
   end
 
+  context "repeat group count handling" do
+    let(:form) do
+      create(:form,
+        questions:
+          [
+            q1,
+            {repeating: {name: "Grp1", item_name: "Family", count: count, items: [q2, q3]}}
+          ])
+    end
+    let(:q1) { create(:question, code: "numfamilies", qtype_name: "integer") }
+    let(:q2) { create(:question, code: "lastName", qtype_name: "text") }
+    let(:q3) { create(:question, code: "numppl", qtype_name: "text") }
+
+    let(:group1) { ODK::QingGroupDecorator.decorate(form.c[1]) }
+    let(:src_item) { group1 }
+    let(:pattern) { group1.repeat_count }
+
+    context "Reference to another question" do
+      let(:count) { "$numfamilies" }
+
+      it "should parse correctly" do
+        is_expected.to eq("/data/qing#{form.c[0].id}")
+      end
+    end
+  end
+
   # rubocop:disable Layout/LineLength
   describe "Dynamic question value $questionCode:value" do
     context "should not recognize the pattern as a token" do
