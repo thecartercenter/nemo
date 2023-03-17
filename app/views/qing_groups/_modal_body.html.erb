@@ -23,5 +23,7 @@
     <%= f.field(:display_logic,
           partial: "questionings/display_logic",
           locals: {form_item: @qing_group}) %>
+    
+    <%= f.field(:repeat_count) if @qing_group.repeatable? %>
   <% end %>
 </div>

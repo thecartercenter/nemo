@@ -514,6 +514,40 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
         expect_xml(renderer, "repeat_group")
       end
     end
+
+    context "repeat group form with dynamic item names and count limit" do
+      let!(:form) do
+        create(:form, :live,
+          name: "Repeat Group",
+          question_types: [
+            "integer",
+            {repeating: {name: "Grp1", item_name: %(Hi' "$Name"), items: %w[text text text], count: "3"}},
+
+            # Include a normal group to ensure differentiated properly.
+            %w[text text],
+
+            # Second repeat group, one_screen false. Item name includes escapable chars (>).
+            {repeating: {
+              name: "Grp2",
+              item_name: %{calc(if($Age > 18, 'A’"yeah"', 'C'))},
+              items: %w[integer text],
+              count: nil
+            }}
+          ])
+      end
+
+      before do
+        form.c[0].question.update!(code: "Numfamilies")
+        form.c[1].c[0].question.update!(code: "Name")
+        form.c[3].update!(one_screen: false)
+        form.c[3].c[0].question.update!(code: "Age")
+      end
+
+      it "should render proper xml" do
+        puts "REPEAT GROUP COUNT!!!!!!!! #{form.c[1].repeat_count}"
+        expect_xml(renderer, "repeat_group_count")
+      end
+    end
   end
 
   describe "preload_last_saved" do

@@ -20,6 +20,7 @@
 #  preload_last_saved           :boolean          default(FALSE), not null
 #  rank                         :integer          not null
 #  read_only                    :boolean
+#  repeat_count                 :string
 #  repeatable                   :boolean
 #  required                     :boolean          default(FALSE), not null
 #  type                         :string(255)      not null
