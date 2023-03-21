@@ -24,6 +24,8 @@
           partial: "questionings/display_logic",
           locals: {form_item: @qing_group}) %>
     
-    <%= f.field(:repeat_count) if @qing_group.repeatable? %>
+    <%= f.field(:repeat_count,
+      label: t("qing_group.repeat_count"),
+      hint: t("activerecord.hints.qing_group.repeat_count")) if @qing_group.repeatable? %>
   <% end %>
 </div>
