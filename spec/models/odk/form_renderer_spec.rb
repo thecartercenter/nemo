@@ -521,7 +521,7 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
           name: "Repeat Group",
           question_types: [
             "integer",
-            {repeating: {name: "Grp1", item_name: %(Hi' "$Name"), items: %w[text text text], count: "3"}},
+            {repeating: {name: "Grp1", item_name: %(Hi' "$Name"), items: %w[text text text], count: "$Numfamilies"}},
 
             # Include a normal group to ensure differentiated properly.
             %w[text text],

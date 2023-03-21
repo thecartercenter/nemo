@@ -128,7 +128,7 @@
     </input>
     <group ref="/data/*itemcode2*">
       <label ref="jr:itext('*itemcode2*:label')"/>
-      <repeat nodeset="/data/*itemcode2*" jr:count="3">
+      <repeat nodeset="/data/*itemcode2*" jr:count="/data/*itemcode1*">
         <group appearance="field-list">
           <label ref="jr:itext('*itemcode2*:itemname')"/>
           <input ref="/data/*itemcode2*/header">
