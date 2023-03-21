@@ -112,7 +112,12 @@ module ODK
 
     # Number of times to repeat the repeat group if specified
     def count
-      @count ||= object.repeat_count.present? ? ODK::ResponsePatternParser.new(repeat_count, src_item: self).to_odk : nil
+      @count ||=
+        if object.repeat_count.present?
+          ODK::ResponsePatternParser.new(repeat_count, src_item: self).to_odk
+        else
+          nil
+        end
     end
 
     # Checks if there are any conditions in this group that refer to other questions in this group.
