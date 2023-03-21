@@ -66,7 +66,6 @@ jobs:
         run: |
           cp config/database.yml.ci config/database.yml
           bin/rails db:setup
-          bin/rails db:migrate
       - name: Install Chromedriver
         uses: nanasess/setup-chromedriver@master
       - name: Configure Chromedriver
