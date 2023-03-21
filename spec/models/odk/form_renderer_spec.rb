@@ -544,7 +544,6 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        puts "REPEAT GROUP COUNT!!!!!!!! #{form.c[1].repeat_count}"
         expect_xml(renderer, "repeat_group_count")
       end
     end
