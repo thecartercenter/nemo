@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_18_000008) do
-
+ActiveRecord::Schema.define(version: 2023_03_14_140916) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -211,6 +210,7 @@ ActiveRecord::Schema.define(version: 2022_08_18_000008) do
     t.integer "question_old_id"
     t.integer "rank", null: false
     t.boolean "read_only"
+    t.string "repeat_count"
     t.boolean "repeatable"
     t.boolean "required", default: false, null: false
     t.string "type", limit: 255, null: false
@@ -678,10 +678,9 @@ ActiveRecord::Schema.define(version: 2022_08_18_000008) do
   add_foreign_key "user_groups", "missions", name: "user_groups_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "users", "missions", column: "last_mission_id", name: "users_last_mission_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "whitelistings", "users", name: "whitelistings_user_id_fkey", on_update: :restrict, on_delete: :restrict
-  create_trigger("answers_before_insert_update_row_tr", :generated => true, :compatibility => 1).
-      on("answers").
-      before(:insert, :update) do
+  create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
+    .on("answers")
+    .before(:insert, :update) do
     "new.tsv := TO_TSVECTOR('simple', COALESCE( new.value, to_char(new.date_value, 'YYYY-MM-DD'), to_char(new.time_value, 'HH24hMImSSs'), to_char(new.datetime_value, 'YYYY-MM-DD HH24hMImSSs'), (SELECT STRING_AGG(opt_name_translation.value, ' ') FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation WHERE options.id = option_nodes.option_id AND (option_nodes.id = new.option_node_id OR option_nodes.id IN (SELECT option_node_id FROM choices WHERE answer_id = new.id))), '' ));"
   end
-
 end
