@@ -20,7 +20,6 @@
 #  preload_last_saved           :boolean          default(FALSE), not null
 #  rank                         :integer          not null
 #  read_only                    :boolean
-#  repeat_count                 :string
 #  repeatable                   :boolean
 #  required                     :boolean          default(FALSE), not null
 #  type                         :string(255)      not null
@@ -32,6 +31,7 @@
 #  old_id                       :integer
 #  question_id                  :uuid
 #  question_old_id              :integer
+#  repeat_count_qing_id         :uuid
 #
 # Indexes
 #

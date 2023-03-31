@@ -210,7 +210,7 @@ ActiveRecord::Schema.define(version: 2023_03_14_140916) do
     t.integer "question_old_id"
     t.integer "rank", null: false
     t.boolean "read_only"
-    t.string "repeat_count"
+    t.uuid "repeat_count_qing_id"
     t.boolean "repeatable"
     t.boolean "required", default: false, null: false
     t.string "type", limit: 255, null: false
