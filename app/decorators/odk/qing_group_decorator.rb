@@ -110,11 +110,14 @@ module ODK
       group_hint_translations.nil? || group_hint_translations.values.all?(&:blank?)
     end
 
-    # Number of times to repeat the repeat group if specified
+    # Number of times to repeat the repeat group, if specified;
+    # must be a $QingCode (not a calculation or number).
     def count
       @count ||=
-        if object.repeat_count.present?
-          ODK::ResponsePatternParser.new(repeat_count, src_item: self).to_odk
+        if object.repeat_count_qing_id.present?
+          qing = Questioning.find_by(id: repeat_count_qing_id)
+          return nil unless qing
+          ODK::ResponsePatternParser.new("$#{qing.code}", src_item: self).to_odk
         else
           nil
         end

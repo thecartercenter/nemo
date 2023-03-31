@@ -109,6 +109,6 @@ ELMO.Views.GroupModalView = class GroupModalView extends ELMO.Views.FormView {
   toggle_item_name() {
     const isRepeat = this.$('#qing_group_repeatable')[0].checked;
     this.showField('group_item_name_', isRepeat, { prefix: true });
-    this.showField('repeat_count', isRepeat, { prefix: true });
+    this.showField('repeat_count_qing_id', isRepeat, { prefix: true });
   }
 };

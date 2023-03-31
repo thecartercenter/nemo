@@ -107,9 +107,14 @@ def build_item(item, form, parent, evaluator)
   if item.is_a?(Hash) && item.key?(:repeating)
     item = item[:repeating]
     item = {items: item} if item.is_a?(Array)
-    attribs = {parent: parent, form: form, group_item_name: item[:item_name], repeatable: true}
+    attribs = {
+      parent: parent,
+      form: form,
+      group_item_name: item[:item_name],
+      repeatable: true,
+      repeat_count_qing_id: Questioning.find_by(shortcode: item[:repeat_count_code])
+    }
     attribs[:group_name_en] = attribs[:group_hint_en] = item[:name] if item[:name].present?
-    attribs[:repeat_count] = item[:count] if item[:count].present?
     group = create(:qing_group, attribs)
     item[:items].each { |c| build_item(c, form, group, evaluator) }
   elsif item.is_a?(Array)

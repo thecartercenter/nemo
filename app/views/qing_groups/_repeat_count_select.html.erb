@@ -1,3 +1,3 @@
-<%= form.select(:repeat_count,
+<%= form.select(:repeat_count_qing_id,
     [["[#{t("common.none")}]", nil]] +
       User::ROLES.map { |r| [t(r, scope: :role), r] }) %>

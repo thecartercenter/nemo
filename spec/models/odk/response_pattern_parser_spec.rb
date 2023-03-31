@@ -150,7 +150,12 @@ describe ODK::ResponsePatternParser do
         questions:
           [
             q1,
-            {repeating: {name: "Grp1", item_name: "Family", count: count, items: [q2, q3]}}
+            {repeating: {
+              name: "Grp1",
+              item_name: "Family",
+              repeat_count_code: repeat_count_code,
+              items: [q2, q3]
+            }}
           ])
     end
     let(:q1) { create(:question, code: "numfamilies", qtype_name: "integer") }
@@ -159,10 +164,10 @@ describe ODK::ResponsePatternParser do
 
     let(:group1) { ODK::QingGroupDecorator.decorate(form.c[1]) }
     let(:src_item) { group1 }
-    let(:pattern) { group1.repeat_count }
+    let(:pattern) { group1.repeat_count_code }
 
     context "Reference to another question" do
-      let(:count) { "$numfamilies" }
+      let(:repeat_count_code) { "$numfamilies" }
 
       it "should parse correctly" do
         is_expected.to eq("/data/qing#{form.c[0].id}")
