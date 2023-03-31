@@ -4,6 +4,7 @@
     <%= f.base_errors %>
     <%= f.field(:form_id, type: :hidden) %>
     <%= f.field(:repeatable, type: :check_box) %>
+
     <% current_mission_config.preferred_locales.each do |locale| %>
       <% lang_suffix = " (#{language_name(locale)})" %>
       <%= f.field(:"group_name_#{locale}",
@@ -14,18 +15,19 @@
           label: QingGroup.human_attribute_name("group_item_name") + lang_suffix,
           hint: t("activerecord.hints.qing_group.group_item_name")) %>
     <% end %>
+
     <% if @one_screen_disabled %>
       <%= f.field(:one_screen, content: t("qing_group.one_screen_disabled")) %>
       <%= f.hidden_field(:one_screen) %>
     <% else %>
       <%= f.field(:one_screen, type: :check_box) %>
     <% end %>
+
     <%= f.field(:display_logic,
           partial: "questionings/display_logic",
           locals: {form_item: @qing_group}) %>
-    
     <%= f.field(:repeat_count,
       label: t("qing_group.repeat_count"),
-      hint: t("activerecord.hints.qing_group.repeat_count")) if @qing_group.repeatable? %>
+      hint: t("activerecord.hints.qing_group.repeat_count")) %>
   <% end %>
 </div>
