@@ -521,7 +521,13 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
           name: "Repeat Group",
           question_types: [
             "integer",
-            {repeating: {name: "Grp1", item_name: %(Hi' "$Name"), items: %w[text text text], count: "$Numfamilies"}},
+
+            {repeating: {
+              name: "Grp1",
+              item_name: %(Hi' "$Name"),
+              items: %w[text text text],
+              repeat_count_code: "$Numfamilies"
+            }},
 
             # Include a normal group to ensure differentiated properly.
             %w[text text],
@@ -531,7 +537,7 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
               name: "Grp2",
               item_name: %{calc(if($Age > 18, 'A’"yeah"', 'C'))},
               items: %w[integer text],
-              count: nil
+              repeat_count_code: nil
             }}
           ])
       end
