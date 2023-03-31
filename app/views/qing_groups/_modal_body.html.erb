@@ -24,10 +24,11 @@
     <% end %>
 
     <%= f.field(:display_logic,
-          partial: "questionings/display_logic",
-          locals: {form_item: @qing_group}) %>
+        partial: "questionings/display_logic",
+        locals: {form_item: @qing_group}) %>
     <%= f.field(:repeat_count,
-      label: t("qing_group.repeat_count"),
-      hint: t("activerecord.hints.qing_group.repeat_count")) %>
+        partial: "repeat_count_select",
+        label: t("qing_group.repeat_count"),
+        hint: t("activerecord.hints.qing_group.repeat_count")) %>
   <% end %>
 </div>
