@@ -11,6 +11,10 @@ body {
 
 header {
   background-color: $header-background-color;
+
+  &.admin {
+    background-color: $gray;
+  }
 }
 
 #userinfo {

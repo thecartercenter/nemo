@@ -36,7 +36,7 @@
   <%= yield(:per_page_js) %>
 </head>
 <body class="<%= controller_name %>">
-  <header>
+  <header class="<%= 'admin' if admin_mode? %>">
     <%= render('layouts/userinfo') %>
 
     <%# Logo and mission if selected %>
