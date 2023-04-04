@@ -63,7 +63,7 @@ ELMO.Views.QuestioningFormView = class QuestioningFormView extends ELMO.Views.Qu
   }
 
   showHidden() {
-    return super.metadataTypeBlank();
+    return super.metadataTypeBlank() && this.fieldValue('qtype_name') !== 'counter';
   }
 
   showDisabled() {
