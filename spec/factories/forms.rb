@@ -111,10 +111,15 @@ def build_item(item, form, parent, evaluator)
       parent: parent,
       form: form,
       group_item_name: item[:item_name],
-      repeatable: true,
-      repeat_count_qing_id: Questioning.find_by(shortcode: item[:repeat_count_code])
+      repeatable: true
     }
     attribs[:group_name_en] = attribs[:group_hint_en] = item[:name] if item[:name].present?
+    if item[:repeat_count_code].present?
+      code = item[:repeat_count_code]&.sub(/^\$/, "")
+      question = Question.find_by!(code: code)
+      qing = Questioning.find_by!(form: form, question: question)
+      attribs[:repeat_count_qing_id] = qing.id
+    end
     group = create(:qing_group, attribs)
     item[:items].each { |c| build_item(c, form, group, evaluator) }
   elsif item.is_a?(Array)
