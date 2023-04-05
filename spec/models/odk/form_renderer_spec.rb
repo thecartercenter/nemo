@@ -526,7 +526,7 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
               name: "Grp1",
               item_name: %(Hi' "$Name"),
               items: %w[text text text],
-              repeat_count_code: "$Numfamilies"
+              repeat_count_code: "$IntegerQ1"
             }},
 
             # Include a normal group to ensure differentiated properly.
@@ -543,7 +543,6 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
       end
 
       before do
-        form.c[0].question.update!(code: "Numfamilies")
         form.c[1].c[0].question.update!(code: "Name")
         form.c[3].update!(one_screen: false)
         form.c[3].c[0].question.update!(code: "Age")
