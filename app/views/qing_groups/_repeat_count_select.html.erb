@@ -1,3 +1,5 @@
 <%= form.select(:repeat_count_qing_id,
     [["[#{t("common.none")}]", nil]] +
-      User::ROLES.map { |r| [t(r, scope: :role), r] }) %>
+      @qing_group.form.questionings
+        .select { |qing| %w[integer counter].include?(qing.question.qtype_name) }
+        .map { |qing| [qing.code, qing.id] }) %>
