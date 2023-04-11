@@ -419,6 +419,13 @@ This includes a nested Node library to transform XML into JSON which must be ins
 3. `cd ../..`
 4. `bundle exec rake theme:preprocess` # Re-process CSS so things look right.
 
+#### Upgrading to v13.12
+
+The underlying Ruby version has changed.
+
+1. Check out the current version
+1. `rbenv install`
+
 #### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.
