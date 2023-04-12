@@ -36,31 +36,27 @@
   }
 }
 
-.dz-preview {
-  display: block;
-  height: 100px;
+// Custom styles for dropzone area
+.dz-preview-nemo {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 5px;
+  width: 100%;
   margin: 0;
-  width: inherit;
 
   &.dz-success .dz-progress .dz-upload {
     background: $darker-accent-color;
   }
 
   img {
-    display: block;
     float: left;
     height: 100px;
-    margin-right: 5px;
     width: 100px;
   }
 
   i.fa {
     font-size: 16px;
     margin-bottom: 5px;
-  }
-
-  .dz-details {
-    margin-left: 105px;
   }
 
   .dz-size {
@@ -71,15 +67,22 @@
     }
   }
 
-  .dz-progress {
-    background: $lighter-gray;
-    height: 5px;
-    width: 100%;
+  .dz-details {
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 5px;
 
-    .dz-upload {
-      background: $darker-accent-color;
-      display: block;
+    .dz-progress {
+      background: $lighter-gray;
       height: 5px;
+      margin-bottom: 10px;
+  
+      .dz-upload {
+        background: $darker-accent-color;
+        display: block;
+        height: 1rem;
+      }
     }
   }
 
