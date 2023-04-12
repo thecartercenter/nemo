@@ -4,6 +4,6 @@
     <div class="dz-filename"><span data-dz-name></span></div>
     <div class="dz-size" data-dz-size></div>
     <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-    <%= link_to(content_tag(:i, "", class: 'fa fa-trash-o'), "#", data: { "dz-remove" => "" }) %>
+    <%= link_to(content_tag(:i, "", class: 'fa fa-trash-o'), "#", 'aria-label': 'Delete this file', data: { "dz-remove" => "" }) %>
   </div>
 </div>
