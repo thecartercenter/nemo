@@ -77,14 +77,14 @@ gem "dotenv-rails", "~> 2.7"
 gem "ancestry", "~> 4.1"
 # Fork: Performance improvements.
 # https://github.com/sassafrastech/closure_tree/commits/master
-gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.2.0-noReorder-fastInsert"
+gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.4.0-noReorder-fastInsert"
 
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"
 
 # Caching
 gem "actionpack-page_caching", "~> 1.1"
-gem "bootsnap", "~> 1.4", require: false
+gem "bootsnap", "1.16", require: false
 gem "dalli", "~> 3.2"
 
 # DB
@@ -122,7 +122,7 @@ gem "faker", "~> 2.2"
 gem "ruby-jmeter", "~> 3.1"
 
 group :development do
-  gem "binding_of_caller", "~> 0.8.0"
+  gem "binding_of_caller", "~> 1.0.0"
   gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4"
   gem "listen", "~> 3.0"

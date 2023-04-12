@@ -10,11 +10,11 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/closure_tree.git
-  revision: 531edabe1853a89f13ab595f660bb5926c895e58
-  tag: v7.2.0-noReorder-fastInsert
+  revision: 1000b5d9089c3a2e829bbde1371dbe3886ee28ff
+  tag: v7.4.0-noReorder-fastInsert
   specs:
-    closure_tree (7.2.0)
-      activerecord (>= 4.2.10)
+    closure_tree (8.0.0)
+      activerecord (>= 6.0.0)
       with_advisory_lock (>= 4.0.0)
 
 GIT
@@ -148,7 +148,7 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
-    binding_of_caller (0.8.0)
+    binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
     bluecloth (2.2.0)
     blueprinter (0.25.3)
@@ -341,7 +341,7 @@ GEM
     mini_portile2 (2.8.1)
     minitest (5.17.0)
     mocha (1.16.1)
-    msgpack (1.6.0)
+    msgpack (1.7.0)
     multi_json (1.15.0)
     multipart-post (2.3.0)
     net-http-persistent (4.0.1)
@@ -636,10 +636,10 @@ DEPENDENCIES
   awesome_print (~> 1.6)
   aws-sdk-s3 (~> 1.86)
   azure-storage-blob (~> 2.0)
-  binding_of_caller (~> 0.8.0)
+  binding_of_caller (~> 1.0.0)
   bluecloth (~> 2.2)
   blueprinter (~> 0.25.1)
-  bootsnap (~> 1.4)
+  bootsnap (= 1.16)
   bootstrap (~> 4.3)
   bullet (~> 6.1)
   cancancan (~> 3.1)
@@ -738,4 +738,4 @@ DEPENDENCIES
   wisper-activerecord (~> 1.0)
 
 BUNDLED WITH
-   2.1.4
+   2.2.33
