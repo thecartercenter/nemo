@@ -38,14 +38,14 @@ shared_context "response tree" do
   end
 
   # Builds a hash for an answer node in a web response's hash representation of an answer heirarchy
-  def web_answer_hash(q_id, values, relevant: "true", destroy: nil, id: "")
+  def web_answer_hash(q_id, values, opts = {relevant: "true", destroy: nil, id: ""})
     hash = {
-      id: id,
+      id: opts[:id],
       type: "Answer",
       questioning_id: q_id,
-      _relevant: relevant
+      _relevant: opts[:relevant]
     }.merge(values)
-    hash[:_destroy] = destroy unless destroy.nil?
+    hash[:_destroy] = opts[:destroy] unless opts[:destroy].nil?
     hash
   end
 
