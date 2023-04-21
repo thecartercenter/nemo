@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>*formname1*</h:title>
+    <model>
+      <instance>
+        <data id="*form1*" version="*formver1*">
+          <*itemcode1*>
+            <header/>
+            <*itemcode2*/>
+          </*itemcode1*>
+          <*itemcode3* jr:template="">
+            <header/>
+            <*itemcode4*/>
+            <*itemcode5*/>
+            <*itemcode6*/>
+          </*itemcode3*>
+          <*itemcode7*>
+            <header/>
+            <*itemcode8*/>
+            <*itemcode9*/>
+          </*itemcode7*>
+          <*itemcode10* jr:template="">
+            <header/>
+            <*itemcode11*/>
+            <*itemcode12*/>
+          </*itemcode10*>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="*itemcode1*:label">
+            <value>Group 1</value>
+          </text>
+          <text id="*itemcode1*:hint">
+            <value>Group Hint 1</value>
+          </text>
+          <text id="*itemcode3*:label">
+            <value>Grp1</value>
+          </text>
+          <text id="*itemcode3*:hint">
+            <value>Grp1</value>
+          </text>
+          <text id="*itemcode3*:itemname">
+            <value>Hi’ "<output value="/data/*itemcode3*/*itemcode4*"/>"</value>
+          </text>
+          <text id="*itemcode7*:label">
+            <value>Group 3</value>
+          </text>
+          <text id="*itemcode7*:hint">
+            <value>Group Hint 3</value>
+          </text>
+          <text id="*itemcode10*:label">
+            <value>Grp2</value>
+          </text>
+          <text id="*itemcode10*:hint">
+            <value>Grp2</value>
+          </text>
+          <text id="*itemcode10*:itemname">
+            <value>
+              <output value="if((/data/*itemcode10*/*itemcode11*) &gt; 18, 'A’&quot;yeah&quot;', 'C')"/>
+            </value>
+          </text>
+          <text id="*itemcode2*:label">
+            <value>Integer Question Title 1</value>
+          </text>
+          <text id="*itemcode2*:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="*itemcode4*:label">
+            <value>Text Question Title 2</value>
+          </text>
+          <text id="*itemcode4*:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="*itemcode5*:label">
+            <value>Text Question Title 3</value>
+          </text>
+          <text id="*itemcode5*:hint">
+            <value>Question Hint 3</value>
+          </text>
+          <text id="*itemcode6*:label">
+            <value>Text Question Title 4</value>
+          </text>
+          <text id="*itemcode6*:hint">
+            <value>Question Hint 4</value>
+          </text>
+          <text id="*itemcode8*:label">
+            <value>Text Question Title 5</value>
+          </text>
+          <text id="*itemcode8*:hint">
+            <value>Question Hint 5</value>
+          </text>
+          <text id="*itemcode9*:label">
+            <value>Text Question Title 6</value>
+          </text>
+          <text id="*itemcode9*:hint">
+            <value>Question Hint 6</value>
+          </text>
+          <text id="*itemcode11*:label">
+            <value>Integer Question Title 7</value>
+          </text>
+          <text id="*itemcode11*:hint">
+            <value>Question Hint 7</value>
+          </text>
+          <text id="*itemcode12*:label">
+            <value>Text Question Title 8</value>
+          </text>
+          <text id="*itemcode12*:hint">
+            <value>Question Hint 8</value>
+          </text>
+          <text id="BLANK">
+            <value/>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/*itemcode1*"/>
+      <bind nodeset="/data/*itemcode1*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode2*" type="int"/>
+      <bind nodeset="/data/*itemcode3*"/>
+      <bind nodeset="/data/*itemcode3*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode3*/*itemcode4*" type="string"/>
+      <bind nodeset="/data/*itemcode3*/*itemcode5*" type="string"/>
+      <bind nodeset="/data/*itemcode3*/*itemcode6*" type="string"/>
+      <bind nodeset="/data/*itemcode7*"/>
+      <bind nodeset="/data/*itemcode7*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode7*/*itemcode8*" type="string"/>
+      <bind nodeset="/data/*itemcode7*/*itemcode9*" type="string"/>
+      <bind nodeset="/data/*itemcode10*"/>
+      <bind nodeset="/data/*itemcode10*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode10*/*itemcode11*" type="int"/>
+      <bind nodeset="/data/*itemcode10*/*itemcode12*" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group ref="/data/*itemcode1*">
+      <label ref="jr:itext('*itemcode1*:label')"/>
+      <group appearance="field-list">
+        <input ref="/data/*itemcode1*/header">
+          <hint ref="jr:itext('*itemcode1*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode1*/*itemcode2*">
+          <label ref="jr:itext('*itemcode2*:label')"/>
+          <hint ref="jr:itext('*itemcode2*:hint')"/>
+        </input>
+      </group>
+    </group>
+    <group ref="/data/*itemcode3*">
+      <label ref="jr:itext('*itemcode3*:label')"/>
+      <repeat nodeset="/data/*itemcode3*" jr:count="/data/*itemcode1*/*itemcode2*">
+        <group appearance="field-list">
+          <label ref="jr:itext('*itemcode3*:itemname')"/>
+          <input ref="/data/*itemcode3*/header">
+            <hint ref="jr:itext('*itemcode3*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode3*/*itemcode4*">
+            <label ref="jr:itext('*itemcode4*:label')"/>
+            <hint ref="jr:itext('*itemcode4*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode3*/*itemcode5*">
+            <label ref="jr:itext('*itemcode5*:label')"/>
+            <hint ref="jr:itext('*itemcode5*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode3*/*itemcode6*">
+            <label ref="jr:itext('*itemcode6*:label')"/>
+            <hint ref="jr:itext('*itemcode6*:hint')"/>
+          </input>
+        </group>
+      </repeat>
+    </group>
+    <group ref="/data/*itemcode7*">
+      <label ref="jr:itext('*itemcode7*:label')"/>
+      <group appearance="field-list">
+        <input ref="/data/*itemcode7*/header">
+          <hint ref="jr:itext('*itemcode7*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode7*/*itemcode8*">
+          <label ref="jr:itext('*itemcode8*:label')"/>
+          <hint ref="jr:itext('*itemcode8*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode7*/*itemcode9*">
+          <label ref="jr:itext('*itemcode9*:label')"/>
+          <hint ref="jr:itext('*itemcode9*:hint')"/>
+        </input>
+      </group>
+    </group>
+    <group ref="/data/*itemcode10*">
+      <label ref="jr:itext('*itemcode10*:label')"/>
+      <repeat nodeset="/data/*itemcode10*">
+        <group>
+          <label ref="jr:itext('*itemcode10*:itemname')"/>
+          <input ref="/data/*itemcode10*/header">
+            <hint ref="jr:itext('*itemcode10*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode10*/*itemcode11*">
+            <label ref="jr:itext('*itemcode11*:label')"/>
+            <hint ref="jr:itext('*itemcode11*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode10*/*itemcode12*">
+            <label ref="jr:itext('*itemcode12*:label')"/>
+            <hint ref="jr:itext('*itemcode12*:hint')"/>
+          </input>
+        </group>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>
