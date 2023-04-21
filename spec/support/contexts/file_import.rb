@@ -63,12 +63,12 @@ shared_context "file import" do
   end
 
   def expect_preview(node = page)
-    expect(node).to have_selector(".dz-preview")
+    expect(node).to have_selector(".dz-preview-nemo")
     expect(node).not_to have_content("The uploaded file was not an accepted format.")
   end
 
   def expect_no_preview(node = page)
-    expect(node).not_to have_selector(".dz-preview")
+    expect(node).not_to have_selector(".dz-preview-nemo")
   end
 
   def delete_file(node)
