@@ -99,4 +99,8 @@ class QingGroup < FormItem
     self.group_item_name_translations = {} unless repeatable?
     true
   end
+
+  def repeat_count?
+    repeat_count_qing_id.present?
+  end
 end
