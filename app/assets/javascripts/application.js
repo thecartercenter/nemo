@@ -37,6 +37,7 @@
 //= require trumbowyg/langs/es.min
 //= require trumbowyg/langs/fr.min
 //= require trumbowyg/langs/ko.min
+//= require flatpickr
 
 // Global
 //= require core_ext/jquery_ext

@@ -39,6 +39,7 @@ gem "select2-rails", "~> 4.0"
 gem "spinjs-rails", "~> 1.3.0" # Breaking changes in v1.4 (spin.js v2.0).
 gem "uglifier", "~> 4.2"
 gem "webpacker", "~> 5.4"
+gem "flatpickr"
 
 # Authz and Authn
 gem "authlogic", "~> 6.1"

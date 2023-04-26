@@ -21,17 +21,47 @@
                collection: answer.all_choices,
                class: "form-control") %>
 
-  <% when "datetime", "date", "time" %>
+  <% when "time" %>
     <% date = answer.datetime_value ? answer.datetime_value : answer.date_value %>
 
-    <% if date && (date.year < Time.current.year - 125 || date.year > Time.current.year + 125) %>
-      <%= text_field_tag(context.input_name("#{type}_value"), date, class: "form-control") %>
-    <% else %>
-      <%= send("#{type}_select", context.input_name, :"#{type}_value",
-          {include_blank: true, include_seconds: true, object: answer, use_short_month: true,
-            start_year: Time.current.year - 125, end_year: Time.current.year + 125},
-          class: "form-control") %>
+    <%= javascript_tag do %>
+      document.addEventListener('DOMContentLoaded', function() {
+        flatpickr('.flatpickr-time-only', {
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: "H:i",
+          time_24hr: true
+        })
+      })
     <% end %>
+
+    <%= text_field_tag(context.input_name("#{type}_text"), date, class: "flatpickr-time-only form-control") %>
+
+  <% when "date" %>
+
+    <%= javascript_tag do %>
+      document.addEventListener('DOMContentLoaded', function() {
+        flatpickr('.flatpickr-date-only', {
+          dateFormat: "Y-m-d",
+        })
+      })
+    <% end %>
+
+    <%= text_field_tag(context.input_name("#{type}_text"), date, class: "flatpickr-date-only form-control") %>
+
+  <% when "datetime" %>
+
+    <%= javascript_tag do %>
+      document.addEventListener('DOMContentLoaded', function() {
+        flatpickr('.flatpickr-date-time', {
+          enableTime: true,
+          dateFormat: "Y-m-d H:i",
+          time_24hr: true
+        })
+      })
+    <% end %>
+
+    <%= text_field_tag(context.input_name("#{type}_text"), date, class: "flatpickr-date-time form-control") %>
 
   <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 
