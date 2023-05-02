@@ -35,7 +35,7 @@
       })
     <% end %>
 
-    <%= text_field_tag(context.input_name("#{type}_text"), answer.date_value, class: "flatpickr-time-only form-control", placeholder: "Select a time...") %>
+    <%= text_field_tag(context.input_name("#{type}_value"), answer.date_value, class: "flatpickr-time-only form-control", placeholder: "Select a time...") %>
 
   <% when "date" %>
 
@@ -47,7 +47,7 @@
       })
     <% end %>
 
-    <%= text_field_tag(context.input_name("#{type}_text"), answer.date_value, class: "flatpickr-date-only form-control" , placeholder: "Select a date...") %>
+    <%= text_field_tag(context.input_name("#{type}_value"), answer.date_value, class: "flatpickr-date-only form-control" , placeholder: "Select a date...") %>
 
   <% when "datetime" %>
 
@@ -61,7 +61,7 @@
       })
     <% end %>
 
-    <%= text_field_tag(context.input_name("#{type}_text"), answer.datetime_value, class: "flatpickr-date-time form-control" , placeholder: "Select a date and time...") %>
+    <%= text_field_tag(context.input_name("#{type}_value"), answer.datetime_value, class: "flatpickr-date-time form-control" , placeholder: "Select a date and time...") %>
 
   <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 
