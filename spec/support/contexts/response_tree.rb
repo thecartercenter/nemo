@@ -191,11 +191,7 @@ shared_context "response tree" do
     expect(el).to have_content(value)
   end
 
-  def temporal_mapping
-    {year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i"}
-  end
-
   def control_for_temporal(path, type, subfield)
-    find("##{path_selector(path, "#{type}_value_#{temporal_mapping[subfield]}")}")
+    find("##{path_selector(path, "#{type}_value")}")
   end
 end

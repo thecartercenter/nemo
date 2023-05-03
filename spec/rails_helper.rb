@@ -18,8 +18,7 @@ require "webdrivers/chromedriver"
 
 Capybara.register_driver(:selenium_chrome_headless) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
-    args: %w[disable-gpu no-sandbox] + (ENV["HEADED"] ? [] : ["headless"]),
-    loggingPrefs: {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
+    args: %w[disable-gpu no-sandbox] + (ENV["HEADED"] ? [] : ["headless"])
   )
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
@@ -110,14 +109,14 @@ RSpec.configure do |config|
 
   # Print browser logs to console if they are non-empty.
   # You MUST use console.warn or console.error for this to work.
-  config.after(:each, type: :feature, js: true) do
-    logs = page.driver.browser.manage.logs.get(:browser).join("\n")
-    unless logs.strip.empty?
-      puts "------------ BROWSER LOGS -------------"
-      puts logs
-      puts "---------------------------------------"
-    end
-  end
+  #config.after(:each, type: :feature, js: true) do
+  #  logs = page.driver.browser.manage.logs.get(:browser).join("\n")
+  #  unless logs.strip.empty?
+  #    puts "------------ BROWSER LOGS -------------"
+  #    puts logs
+  #    puts "---------------------------------------"
+  #  end
+  #end
 
   ActionMailer::Base.default_url_options = Cnfg.url_options
 
