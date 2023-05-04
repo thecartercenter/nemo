@@ -158,8 +158,8 @@ group :development, :test do
   gem "capybara-screenshot", "~> 1.0"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
   gem "puma", "~> 5.6"
-  gem "selenium-webdriver", "~> 4.0" # Testing updating for dev testing on m1
-  gem "webdrivers", "~> 5.2.0" # Testing updating for dev testing on m1
+  gem "selenium-webdriver", "~> 4.0" # This version or higher is required to run unit tests on Apple Silicon
+  gem "webdrivers", "~> 5.2.0" # Same as above
 
   # Debugging
   gem "pry", "~> 0.13"
