@@ -29,6 +29,7 @@ gem "twilio-ruby", "~> 4.2" # Does not use semver after v5, watch out!
 gem "bootstrap", "~> 4.3"
 gem "clipboard-rails", "~> 1.7"
 gem "dropzonejs-rails", "~> 0.8.5"
+gem "flatpickr"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 1.0"
 gem "jquery-rails", "~> 4.3"
@@ -39,7 +40,6 @@ gem "select2-rails", "~> 4.0"
 gem "spinjs-rails", "~> 1.3.0" # Breaking changes in v1.4 (spin.js v2.0).
 gem "uglifier", "~> 4.2"
 gem "webpacker", "~> 5.4"
-gem "flatpickr"
 
 # Authz and Authn
 gem "authlogic", "~> 6.1"
