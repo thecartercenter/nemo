@@ -22,20 +22,23 @@
                class: "form-control") %>
 
   <% when "time" %>
-    <%# date = answer.datetime_value ? answer.datetime_value : answer.date_value %>
 
     <%= javascript_tag do %>
       document.addEventListener('DOMContentLoaded', function() {
         flatpickr('.flatpickr-time-only', {
           enableTime: true,
+          enableSeconds: true,
+          dateFormat: "H:i:S",
           noCalendar: true,
-          dateFormat: "H:i",
           time_24hr: true
         })
       })
     <% end %>
+  
+    <% time_val = answer.send("#{type}_value") %>
+    <% if time_val.nil? then time_val = answer.time_value else time_val = l(time_val, format: :time_only) end %>
 
-    <%= text_field_tag(context.input_name("#{type}_value"), answer.date_value, class: "flatpickr-time-only form-control", placeholder: "Select a time...") %>
+    <%= text_field_tag(context.input_name("#{type}_value"), time_val, class: "flatpickr-time-only form-control", placeholder: "Select a time...") %>
 
   <% when "date" %>
 
@@ -55,7 +58,8 @@
       document.addEventListener('DOMContentLoaded', function() {
         flatpickr('.flatpickr-date-time', {
           enableTime: true,
-          dateFormat: "Y-m-d H:i",
+          enableSeconds: true,
+          dateFormat: "Y-m-d H:i:S",
           time_24hr: true
         })
       })
