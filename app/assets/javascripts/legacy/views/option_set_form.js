@@ -290,7 +290,7 @@
         } else if (jqxhr.status == 500) {
           self.add_error(
             '.option_set_options',
-            "This option is in use and cannot be deleted"
+            I18n.t('activerecord.errors.models.option_set.cant_delete_option_in_use')
           );
         } else {
           $('.elmo-form-wrapper').replaceWith('Server Error');

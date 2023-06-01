@@ -721,6 +721,7 @@ en:
         must_be_group: "Parent must be a group."
         invalid_password: "Password must include at least one number, one lowercase letter, and one capital letter."
         all_required: "All fields are required."
+
       models:
         answer:
           required: "Please enter a value."
@@ -767,6 +768,7 @@ en:
           duplicate: "That option set name already exists in this mission, please enter a unique name."
           general: "There was a problem saving the option set."
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
+          cant_delete_option_in_use: "You can't delete this option because it is in use."
         option_sets/import:
           general: "Option Set import is invalid (see below)."
           blank_interior_cell: "Error on row %{row_num}: blank interior cell."
