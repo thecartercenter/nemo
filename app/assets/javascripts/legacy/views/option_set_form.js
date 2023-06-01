@@ -287,6 +287,11 @@
             '.option_set_name',
             I18n.t('activerecord.errors.models.option_set.duplicate')
           );
+        } else if (jqxhr.status == 500) {
+          self.add_error(
+            '.option_set_options',
+            "This option is in use and cannot be deleted"
+          );
         } else {
           $('.elmo-form-wrapper').replaceWith('Server Error');
         }
