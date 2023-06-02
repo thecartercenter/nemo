@@ -133,8 +133,8 @@ class OptionSetsController < ApplicationController
 
   # creates/updates the option set
   def create_or_update
-    @option_set.save
-    if @option_set.errors?.attribute_names[0] == :name then raise StandardError end
+    @option_set.save!
+    raise StandardError if @option_set.errors?.attribute_names[0] == :name
   rescue ActiveRecord::DeleteRestrictionError
     render(json: "error", status: :conflict)
   rescue StandardError
