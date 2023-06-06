@@ -1603,6 +1603,9 @@ en:
       strictly_lt: "Strictly less than"
       strictly_gt: "Strictly greater than"
     opt_set_warning: "Changing the option set will cause one or more conditions to be deleted."
+    date_picker_placeholder: "Select a date..."
+    time_picker_placeholder: "Select a time..."
+    datetime_picker_placeholder: "Select a date and time..."
 
   qing_group:
     repeat_count_qing_id: "Limit repeat count to specific value"
