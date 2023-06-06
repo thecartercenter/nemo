@@ -34,11 +34,10 @@
         })
       })
     <% end %>
-  
-    <% time_val = answer.send("#{type}_value") %>
-    <% if time_val.nil? then time_val = answer.time_value else time_val = l(time_val, format: :time_only) end %>
 
-    <%= text_field_tag(context.input_name("#{type}_value"), time_val, class: "flatpickr-time-only form-control", placeholder: "Select a time...") %>
+    <%# Rails always has a default date of 2000-01-01 for time-only, so truncate first. %>
+    <% time_value = answer.time_value.present? ? localize(answer.time_value, format: :time_only) : nil %>
+    <%= text_field_tag(context.input_name("#{type}_value"), time_value, class: "flatpickr-time-only form-control", placeholder: "Select a time...") %>
 
   <% when "date" %>
 
