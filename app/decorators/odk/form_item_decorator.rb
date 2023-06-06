@@ -17,6 +17,7 @@ module ODK
       return "current()" if object == dest.object && prepend_current
       return "." if object == dest.object
       return dest.absolute_xpath if dest.top_level?
+      return dest.absolute_xpath if object.type == "QingGroup" && object.repeat_count?
 
       current_prefix = prepend_current ? +"current()/" : +""
 

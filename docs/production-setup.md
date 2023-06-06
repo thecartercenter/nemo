@@ -426,6 +426,13 @@ The underlying Ruby version has changed.
 1. Check out the current version
 1. `rbenv install`
 
+#### Upgrading to v13.16
+
+The underlying Ruby version has changed.
+
+1. Check out the current version
+1. `rbenv install`
+
 #### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.
