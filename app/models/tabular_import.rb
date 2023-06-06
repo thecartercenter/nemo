@@ -61,7 +61,23 @@ class TabularImport
     errors.each { |e| add_run_error(*e) }
   end
 
+  def foo(k: 1)
+    k
+  end
+
+  def failz
+    # This method call passes a positional Hash argument
+    # In Ruby 2.7: The Hash is automatically converted to a keyword argument
+    # In Ruby 3.0: This call raises an ArgumentError
+    h = {k: 42}
+    foo(h)
+  end
+
   def copy_validation_errors_for_row(row_number, errors)
+    # TODO: called but not a deprecation log
+    failz
+
+    # errors.attribute_names.each do |attribute|
     errors.keys.each do |attribute|
       errors.full_messages_for(attribute).each do |error|
         add_run_error(I18n.t("operation.row_error", row: row_number, error: error))

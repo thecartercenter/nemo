@@ -25,8 +25,22 @@ class ResponsesController < ApplicationController
 
   before_action :mark_response_as_checked_out, only: [:edit]
 
+  def foo(k: 1)
+    k
+  end
+
+  def failz
+    # This method call passes a positional Hash argument
+    # In Ruby 2.7: The Hash is automatically converted to a keyword argument
+    # In Ruby 3.0: This call raises an ArgumentError
+    h = {k: 42}
+    foo(h)
+  end
+
   def index
     @responses = Response.accessible_by(current_ability)
+
+    failz
 
     # handle different formats
     respond_to do |format|

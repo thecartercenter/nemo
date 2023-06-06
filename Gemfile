@@ -143,7 +143,7 @@ end
 
 group :development, :test do
   # Test framework
-  gem "jasmine-rails", "~> 0.15.0" # Deprecated: Barely used.
+  gem "jasmine-rails", "~> 0.15.0" # Deprecated: Barely used. Needed for things like page.current_path
   gem "rails-controller-testing", "~> 1.0" # Deprecated: Use request or feature specs instead.
   gem "rspec-collection_matchers", "~> 1.1"
   gem "rspec-rails", "~> 3.9"
