@@ -136,9 +136,9 @@ class OptionSetsController < ApplicationController
     @option_set.save!
     raise StandardError if @option_set.errors?.attribute_names[0] == :name
   rescue ActiveRecord::DeleteRestrictionError
-    render(json: "error", status: :conflict)
+    create_or_update_error(:conflict)
   rescue StandardError
-    render(json: "error", status: :bad_request)
+    create_or_update_error(:bad_request)
   else
     create_or_update_success
   end
@@ -155,6 +155,10 @@ class OptionSetsController < ApplicationController
       # render where we should redirect
       render(json: option_sets_path.to_json)
     end
+  end
+
+  def create_or_update_error(err)
+    render(json: "error", status: err)
   end
 
   def generate_csv
