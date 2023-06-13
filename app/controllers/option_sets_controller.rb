@@ -134,11 +134,12 @@ class OptionSetsController < ApplicationController
   # creates/updates the option set
   def create_or_update
     @option_set.save!
-    raise StandardError if @option_set.errors?.attribute_names[0] == :name
   rescue ActiveRecord::DeleteRestrictionError
     create_or_update_error(:conflict)
   rescue StandardError
-    create_or_update_error(:bad_request)
+    if @option_set.errors[:name].any?
+      create_or_update_error(:bad_request)
+    end
   else
     create_or_update_success
   end
