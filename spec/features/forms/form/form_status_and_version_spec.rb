@@ -92,7 +92,7 @@ feature "form status and version display and changes", js: true do
     expect(page).to have_select("Minimum Accepted Version", selected: version1)
   end
 
-  scenario "changing status via save and go live button" do
+  scenario "changing status via save and go live button", flapping: true do
     visit(new_form_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
     expect(page).to have_css("div#status", text: /Status\nDraft/)
     fill_in("Name", with: "Yourform")

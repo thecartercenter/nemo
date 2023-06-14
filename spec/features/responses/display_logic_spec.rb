@@ -167,7 +167,7 @@ feature "response form display logic", js: true do
       )
     end
 
-    scenario "various conditions on questionings should work" do
+    scenario "various conditions on questionings should work", flapping: true do
       visit_new_response_page
 
       visible = [[0], [4], [14]]

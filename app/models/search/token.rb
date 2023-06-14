@@ -199,6 +199,6 @@ class Search::Token
   end
 
   def raise_error_with_qualifier(err_name, qual, params = {})
-    raise Search::ParseError, I18n.t("search.#{err_name}", params.merge(qualifier: qual))
+    raise Search::ParseError, I18n.t("search.#{err_name}", **params.merge(qualifier: qual))
   end
 end

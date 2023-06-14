@@ -184,7 +184,7 @@ module FeatureSpecHelpers
     results.find("li", text: /\A#{value}\z/).click
 
     # assert that the original select field was updated with the intended value
-    select(value, options)
+    select(value, **options)
   end
 
   # Returns all emails sent by the given block.

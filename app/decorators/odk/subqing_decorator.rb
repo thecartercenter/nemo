@@ -11,7 +11,7 @@ module ODK
     # If options[:previous] is true, returns the code for the
     # immediately previous subqing (multilevel only).
     def odk_code(options = {})
-      CodeMapper.instance.code_for_item(object, options)
+      CodeMapper.instance.code_for_item(object, **options)
     end
 
     def absolute_xpath

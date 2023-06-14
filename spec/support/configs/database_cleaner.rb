@@ -27,7 +27,7 @@ RSpec.configure do |config|
     DatabaseCleaner.start if example.metadata[:database_cleaner] != :all
   end
 
-  config.after(:each) do |example|
+  config.append_after(:each) do |example|
     DatabaseCleaner.clean if example.metadata[:database_cleaner] != :all
   end
 end

@@ -26,10 +26,10 @@
               result_cols: result_cols) %>
             <% cluster.summaries.each do |summary| %>
               <% if cluster.display_type == :full_width %>
-                <%= render("reports/standard_form_report/full_width_summary_row.html.erb",
+                <%= render("reports/standard_form_report/full_width_summary_row",
                   cluster: cluster, summary: summary, result_cols: result_cols) %>
               <% else %>
-                <%= render("reports/standard_form_report/summary_row.html.erb",
+                <%= render("reports/standard_form_report/summary_row",
                   cluster: cluster, summary: summary, result_cols: result_cols) %>
               <% end %>
             <% end %>

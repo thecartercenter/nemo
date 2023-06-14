@@ -62,7 +62,7 @@ feature "dashboard", js: true do
 
     scenario "it should redirect to responses page" do
       visit(dashboard_path)
-      expect(page).to have_css(:h1, text: "Responses")
+      expect(page).to have_css("h1", text: "Responses")
     end
   end
 

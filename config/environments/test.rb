@@ -57,4 +57,5 @@ ELMO::Application.configure do
   # but disable it until needed.
   config.middleware.use(Rack::Attack)
   Rack::Attack.enabled = false
+  Warning[:deprecated] = true
 end
