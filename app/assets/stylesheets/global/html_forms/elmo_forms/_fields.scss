@@ -139,6 +139,6 @@
   font-size: 14px; // App-wide size is smaller than this.
 
   &:read-only {
-    background-color: white;
+    background-color: $white;
   }
 }
