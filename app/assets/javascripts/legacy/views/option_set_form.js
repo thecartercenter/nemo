@@ -287,6 +287,11 @@
             '.option_set_name',
             I18n.t('activerecord.errors.models.option_set.duplicate')
           );
+        } else if (jqxhr.status == 409) {
+          self.add_error(
+            '.option_set_options',
+            I18n.t('activerecord.errors.models.option_set.cant_delete_option_in_use')
+          );
         } else {
           $('.elmo-form-wrapper').replaceWith('Server Error');
         }

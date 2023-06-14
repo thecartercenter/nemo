@@ -133,16 +133,13 @@ class OptionSetsController < ApplicationController
 
   # creates/updates the option set
   def create_or_update
-    if @option_set.save
-      create_or_update_success
-    else
-      error = if @option_set.errors.attribute_names[0] == :name
-                :bad_request
-              else
-                :internal_server_error
-              end
-      render(json: "error", status: error)
-    end
+    @option_set.save! # the bang (!) raises exceptions for invalid saves
+  rescue ActiveRecord::DeleteRestrictionError
+    create_or_update_error(:conflict) # when an in-use option is being deleted
+  rescue StandardError
+    create_or_update_error(:bad_request) if @option_set.errors[:name].any? # when an option set name is taken
+  else
+    create_or_update_success
   end
 
   def create_or_update_success
@@ -157,6 +154,10 @@ class OptionSetsController < ApplicationController
       # render where we should redirect
       render(json: option_sets_path.to_json)
     end
+  end
+
+  def create_or_update_error(err)
+    render(json: "error", status: err)
   end
 
   def generate_csv
