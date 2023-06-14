@@ -271,6 +271,7 @@ GEM
       rake
     fix-db-schema-conflicts (3.1.0)
       rubocop (>= 0.38.0)
+    flatpickr (4.6.11.0)
     font-awesome-rails (4.7.0.8)
       railties (>= 3.2, < 8.0)
     friendly_id (5.5.0)
@@ -663,6 +664,7 @@ DEPENDENCIES
   factory_bot_rails (~> 4.11)
   faker (~> 2.2)
   fix-db-schema-conflicts (~> 3.0)
+  flatpickr
   font-awesome-rails (~> 4.7)
   friendly_id (~> 5.1)
   hairtrigger (~> 0.2.20)

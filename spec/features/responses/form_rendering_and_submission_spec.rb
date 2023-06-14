@@ -3,6 +3,15 @@
 require "rails_helper"
 
 feature "response form rendering and submission", js: true do
+  let(:submission_time) { Time.zone.parse("2020-04-20 12:30 UTC") }
+
+  around do |example|
+    # Specify timezone
+    in_timezone("Saskatchewan") do
+      Timecop.freeze(submission_time) { example.run }
+    end
+  end
+
   include_context "response tree"
   include_context "file import"
   include_context "trumbowyg"
@@ -74,8 +83,8 @@ feature "response form rendering and submission", js: true do
             "barcode answer",
             "Dog",
             %w[Dog Cat],
-            "Mar 12 #{Time.current.year} 18:32:44",
-            "Oct 26 #{Time.current.year}",
+            "#{Time.current.year}-03-12 18:32:44",
+            "#{Time.current.year}-10-26",
             "03:08:23"
           ]
         )
@@ -116,6 +125,14 @@ feature "response form rendering and submission", js: true do
         expect(page).to have_css("a.add-repeat", count: 2)
         expect(page).to have_css("a.remove-repeat", count: 3)
       end
+
+      scenario "renders date, time, and datetime fields correctly" do
+        visit(edit_response_path(params.merge(id: response.shortcode)))
+
+        expect_value([9], "#{Time.current.year}-03-12 18:32:44")
+        expect_value([10], "#{Time.current.year}-10-26")
+        expect_value([11], "03:08:23")
+      end
     end
   end
 
@@ -150,9 +167,6 @@ feature "response form rendering and submission", js: true do
       fill_in_question([6], with: "barcode answer")
       fill_in_question([7], with: "Dog")
       fill_in_question([8], with: %w[Dog Cat])
-      fill_in_question([9], with: "Mar 12 #{Time.current.year} 18:32:44")
-      fill_in_question([10], with: "Apr 4 #{Time.current.year}")
-      fill_in_question([11], with: "03:08:23")
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
@@ -171,9 +185,6 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], %w[Dog Cat])
-      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
-      expect_value([10], "Apr 4 #{Time.current.year}")
-      expect_value([11], "03:08:23")
 
       # remove second inner repeat
       all("a.remove-repeat")[2].click
@@ -202,9 +213,7 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], %w[Dog Cat])
-      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
-      expect_value([10], "Apr 4 #{Time.current.year}")
-      expect_value([11], "03:08:23")
+
       # update a value
       fill_in_question([0, 0], with: "1234")
 
@@ -229,9 +238,6 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], %w[Dog Cat])
-      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
-      expect_value([10], "Apr 4 #{Time.current.year}")
-      expect_value([11], "03:08:23")
     end
 
     context "with conditional logic" do

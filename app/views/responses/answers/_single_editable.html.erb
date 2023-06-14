@@ -21,17 +21,50 @@
                collection: answer.all_choices,
                class: "form-control") %>
 
-  <% when "datetime", "date", "time" %>
-    <% date = answer.datetime_value ? answer.datetime_value : answer.date_value %>
+  <% when "time" %>
 
-    <% if date && (date.year < Time.current.year - 125 || date.year > Time.current.year + 125) %>
-      <%= text_field_tag(context.input_name("#{type}_value"), date, class: "form-control") %>
-    <% else %>
-      <%= send("#{type}_select", context.input_name, :"#{type}_value",
-          {include_blank: true, include_seconds: true, object: answer, use_short_month: true,
-            start_year: Time.current.year - 125, end_year: Time.current.year + 125},
-          class: "form-control") %>
+    <%= javascript_tag do %>
+      document.addEventListener('DOMContentLoaded', function() {
+        flatpickr('.flatpickr-time-only', {
+          enableTime: true,
+          enableSeconds: true,
+          dateFormat: "H:i:S",
+          noCalendar: true,
+          time_24hr: true
+        })
+      })
     <% end %>
+
+    <%# Rails always has a default date of 2000-01-01 for time-only, so truncate first. %>
+    <% time_value = answer.time_value.present? ? localize(answer.time_value, format: :time_only) : nil %>
+    <%= text_field_tag(context.input_name("#{type}_value"), time_value, class: "flatpickr-time-only form-control", placeholder: I18n.t("question.#{type}_picker_placeholder")) %>
+
+  <% when "date" %>
+
+    <%= javascript_tag do %>
+      document.addEventListener('DOMContentLoaded', function() {
+        flatpickr('.flatpickr-date-only', {
+          dateFormat: "Y-m-d",
+        })
+      })
+    <% end %>
+
+    <%= text_field_tag(context.input_name("#{type}_value"), answer.date_value, class: "flatpickr-date-only form-control" , placeholder: I18n.t("question.#{type}_picker_placeholder")) %>
+
+  <% when "datetime" %>
+
+    <%= javascript_tag do %>
+      document.addEventListener('DOMContentLoaded', function() {
+        flatpickr('.flatpickr-date-time', {
+          enableTime: true,
+          enableSeconds: true,
+          dateFormat: "Y-m-d H:i:S",
+          time_24hr: true
+        })
+      })
+    <% end %>
+
+    <%= text_field_tag(context.input_name("#{type}_value"), answer.datetime_value, class: "flatpickr-date-time form-control" , placeholder: I18n.t("question.#{type}_picker_placeholder")) %>
 
   <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 

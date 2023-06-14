@@ -29,6 +29,7 @@ gem "twilio-ruby", "~> 4.2" # Does not use semver after v5, watch out!
 gem "bootstrap", "~> 4.3"
 gem "clipboard-rails", "~> 1.7"
 gem "dropzonejs-rails", "~> 0.8.5"
+gem "flatpickr"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 1.0"
 gem "jquery-rails", "~> 4.3"

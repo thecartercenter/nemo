@@ -90,18 +90,8 @@ shared_context "response tree" do
         value.include?(o.name) ? check(id) : uncheck(id)
       end
     when "datetime", "date", "time"
-      t = Time.zone.parse(value)
       qtype_name = qing(path).qtype_name
-      unless qtype_name == "time"
-        control_for_temporal(path, qtype_name, :year).select(t.strftime("%Y"))
-        control_for_temporal(path, qtype_name, :month).select(t.strftime("%b"))
-        control_for_temporal(path, qtype_name, :day).select(t.day.to_s)
-      end
-      unless qtype_name == "date"
-        control_for_temporal(path, qtype_name, :hour).select(t.strftime("%H"))
-        control_for_temporal(path, qtype_name, :minute).select(t.strftime("%M"))
-        control_for_temporal(path, qtype_name, :second).select(t.strftime("%S"))
-      end
+      fill_in(path_selector(path, "#{qtype_name}_value"), with: value)
     else
       fill_in(selector, opts)
     end
@@ -124,18 +114,7 @@ shared_context "response tree" do
       end
     when "datetime", "date", "time"
       qtype_name = qing(path).qtype_name
-      t = Time.zone.parse(expected_value)
-      unless qtype_name == "time"
-        expect(control_for_temporal(path, qtype_name, :year).value).to eq(t.strftime("%Y"))
-        expect(control_for_temporal(path, qtype_name, :month)
-          .find("option[selected]").text).to eq(t.strftime("%b"))
-        expect(control_for_temporal(path, qtype_name, :day).value).to eq(t.day.to_s)
-      end
-      unless qtype_name == "date"
-        expect(control_for_temporal(path, qtype_name, :hour).value).to eq(t.strftime("%H"))
-        expect(control_for_temporal(path, qtype_name, :minute).value).to eq(t.strftime("%M"))
-        expect(control_for_temporal(path, qtype_name, :second).value).to eq(t.strftime("%S"))
-      end
+      expect(page.find("##{path_selector(path, "#{qtype_name}_value")}").value).to eq(expected_value)
     when "select_one"
       el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
       OptionNode.find(el.value).name if el.value
@@ -189,13 +168,5 @@ shared_context "response tree" do
   def expect_read_only_value(path, value)
     el = page.find("[data-path='#{path.join('-')}']")
     expect(el).to have_content(value)
-  end
-
-  def temporal_mapping
-    {year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i"}
-  end
-
-  def control_for_temporal(path, type, subfield)
-    find("##{path_selector(path, "#{type}_value_#{temporal_mapping[subfield]}")}")
   end
 end
