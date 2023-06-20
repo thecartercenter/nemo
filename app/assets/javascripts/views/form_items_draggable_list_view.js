@@ -82,6 +82,7 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   // would invalidate any conditions.
   // Returns false if invalid.
   check_condition_order(placeholder, item) {
+    
     // If item or any children refer to questions, the placeholder must be after all the referred questions.
     for (const c of Array.from(item.find('.refd-qing'))) {
       const refd = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
@@ -105,8 +106,9 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   compare_ranks(a, b) {
     const ar = this.get_full_rank(a);
     const br = this.get_full_rank(b);
+    console.log("a rank " + ar + " " + "b rank " + br)
+
     for (let i = 0; i < ar.length; i++) {
-      const _ = ar[i];
       if (ar[i] > br[i]) {
         return 1;
       } else if (ar[i] < br[i]) {
