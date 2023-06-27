@@ -82,12 +82,12 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   // would invalidate any conditions.
   // Returns false if invalid.
   check_condition_order(placeholder, item) {
-    console.log("check_condition_order called", placeholder, item)
+    //console.log("check_condition_order called", placeholder, item)
 
     // If item or any children refer to questions, the placeholder must be after all the referred questions.
     for (const c of Array.from(item.find('.refd-qing'))) {
       const refd = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
-      console.log("FIRST compare_ranks called", placeholder, refd)
+      //console.log("FIRST compare_ranks called", placeholder, refd)
 
       if (this.compare_ranks(placeholder, refd) !== 1) { 
         console.log("move denied")
@@ -95,6 +95,17 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
       }
     }
 
+    console.log(Array.from(item.find('.skip-rule-link')))
+    for (const c of Array.from(item.find('.skip-rule-link'))) {
+      const target = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
+      console.log("skip rule link for loop!", placeholder, target)
+
+      if (this.compare_ranks(placeholder, target) !== -1) { 
+        console.log("move denied")
+        return false;
+      }
+    }
+    
     // If item, or any children, are referred to by one or more questions,
     // the placeholder must be before all the referring questions.
     const child_ids = item.find('.form-item').andSelf().map(function () { return $(this).data('id'); });
