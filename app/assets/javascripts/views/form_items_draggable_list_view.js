@@ -82,11 +82,17 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   // would invalidate any conditions.
   // Returns false if invalid.
   check_condition_order(placeholder, item) {
-    
+    console.log("check_condition_order called", placeholder, item)
+
     // If item or any children refer to questions, the placeholder must be after all the referred questions.
     for (const c of Array.from(item.find('.refd-qing'))) {
       const refd = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
-      if (this.compare_ranks(placeholder, refd) !== 1) { return false; }
+      console.log("FIRST compare_ranks called", placeholder, refd)
+
+      if (this.compare_ranks(placeholder, refd) !== 1) { 
+        console.log("move denied")
+        return false;
+      }
     }
 
     // If item, or any children, are referred to by one or more questions,
@@ -94,11 +100,17 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
     const child_ids = item.find('.form-item').andSelf().map(function () { return $(this).data('id'); });
     for (const id of Array.from(child_ids.get())) {
       for (const refd_qing of Array.from(this.$(`.refd-qing[data-ref-id=${id}]`))) { // Loop over all matching refd_qings
-        const referrer = $(refd_qing.closest('li.form-item'));
-        if (this.compare_ranks(placeholder, referrer) !== -1) { return false; }
+        const referrer = $(refd_qing.closest('li.form-item')); 
+
+        console.log("SECOND compare_ranks called", placeholder, referrer)
+        if (this.compare_ranks(placeholder, referrer) !== -1) { 
+          console.log("move denied")
+          return false;
+        }
       }
     }
 
+    console.log("move allowed")
     return true;
   }
 
@@ -106,12 +118,14 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   compare_ranks(a, b) {
     const ar = this.get_full_rank(a);
     const br = this.get_full_rank(b);
-    console.log("a rank " + ar + " " + "b rank " + br)
+    console.log("a rank ", ar,", b rank", br)
 
     for (let i = 0; i < ar.length; i++) {
       if (ar[i] > br[i]) {
+        console.log("compare_ranks RETURNING 1")
         return 1;
       } else if (ar[i] < br[i]) {
+        console.log("compare_ranks RETURNING -1")
         return -1;
       }
     }
