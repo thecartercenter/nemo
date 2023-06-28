@@ -908,6 +908,7 @@ en:
     pause: "Pause"
     print: "Print"
     sms_guide: "SMS Guide"
+    destroy: "Delete"
 
   action_links:
     show: "View"

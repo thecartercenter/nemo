@@ -110,7 +110,7 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
         }
       }
 
-      // If item is a skip rule target, it cannot be moved before the question whose value triggers the skip.
+      // If item is a skip rule target, it cannot be moved before the question that refers to it.
       for (const skip_targets of Array.from(this.$(`.skip-rule-link[data-ref-id=${id}]`))) {
         const skip_referrer = $(skip_targets.closest('li.form-item'));
 
