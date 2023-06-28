@@ -18,6 +18,7 @@ NOTES
 frpc.ini
 
 # IDE
+.vscode/*
 .idea/*
 !/.idea/runConfigurations/
 
