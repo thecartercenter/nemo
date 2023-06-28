@@ -78,50 +78,48 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
     });
   }
 
-  // Checks if the given position (indicated by placeholder) for the given item, or any of its children,
-  // would invalidate any conditions.
+  // Checks if the given position (indicated by placeholder) for the given item, or any of its children, would invalidate any conditions.
   // Returns false if invalid.
   check_condition_order(placeholder, item) {
-    //console.log("check_condition_order called", placeholder, item)
-
-    // If item or any children refer to questions, the placeholder must be after all the referred questions.
+    // If item has a rule that depends on one more questions, it cannot be moved before any of the referred questions.
     for (const c of Array.from(item.find('.refd-qing'))) {
       const refd = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
-      //console.log("FIRST compare_ranks called", placeholder, refd)
 
       if (this.compare_ranks(placeholder, refd) !== 1) { 
-        console.log("move denied")
         return false;
       }
     }
 
-    console.log(Array.from(item.find('.skip-rule-link')))
+    // If item contains a skip rule, it cannot be moved after the skip rule target.
     for (const c of Array.from(item.find('.skip-rule-link'))) {
       const target = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
-      console.log("skip rule link for loop!", placeholder, target)
 
       if (this.compare_ranks(placeholder, target) !== -1) { 
-        console.log("move denied")
         return false;
       }
     }
     
-    // If item, or any children, are referred to by one or more questions,
-    // the placeholder must be before all the referring questions.
+    // If item's value triggers any skip rules, it cannot be moved after any of the questions whose rules would refer to it.
     const child_ids = item.find('.form-item').andSelf().map(function () { return $(this).data('id'); });
     for (const id of Array.from(child_ids.get())) {
       for (const refd_qing of Array.from(this.$(`.refd-qing[data-ref-id=${id}]`))) { // Loop over all matching refd_qings
         const referrer = $(refd_qing.closest('li.form-item')); 
 
-        console.log("SECOND compare_ranks called", placeholder, referrer)
         if (this.compare_ranks(placeholder, referrer) !== -1) { 
-          console.log("move denied")
+          return false;
+        }
+      }
+
+      // If item is a skip rule target, it cannot be moved before the question whose value triggers the skip.
+      for (const skip_targets of Array.from(this.$(`.skip-rule-link[data-ref-id=${id}]`))) {
+        const skip_referrer = $(skip_targets.closest('li.form-item'));
+
+        if (this.compare_ranks(placeholder, skip_referrer) !== 1) { 
           return false;
         }
       }
     }
 
-    console.log("move allowed")
     return true;
   }
 
@@ -129,14 +127,11 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   compare_ranks(a, b) {
     const ar = this.get_full_rank(a);
     const br = this.get_full_rank(b);
-    console.log("a rank ", ar,", b rank", br)
 
     for (let i = 0; i < ar.length; i++) {
       if (ar[i] > br[i]) {
-        console.log("compare_ranks RETURNING 1")
         return 1;
       } else if (ar[i] < br[i]) {
-        console.log("compare_ranks RETURNING -1")
         return -1;
       }
     }
