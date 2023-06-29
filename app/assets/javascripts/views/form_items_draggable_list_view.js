@@ -114,7 +114,7 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
       for (const skip_targets of Array.from(this.$(`.skip-rule-link[data-ref-id=${id}]`))) {
         const skip_referrer = $(skip_targets.closest('li.form-item'));
 
-        if (this.compare_ranks(placeholder, skip_referrer) !== 1) { 
+        if (this.compare_ranks(placeholder, skip_referrer) !== 1) {
           return false;
         }
       }
