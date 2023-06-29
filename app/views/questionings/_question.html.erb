@@ -39,8 +39,7 @@
     <div class="actions">
 
       <%# Ranks of questions to which this question refers, by either display or skip logic.
-          Used to inform the user, and data in data-ref-id used by the drag-drop system for constraint
-          enforcement. %>
+          Used to inform the user, and data in data-ref-id used by the drag-drop system for constraint enforcement. %>
       <% if qing.refd_qings.any? %>
         <div class="refd-qing-links">
           <i class="fa fa-link"></i>
@@ -53,17 +52,18 @@
       <% if qing.skip_rules.any? %>
         <div class="skip-rule-links">
           <i class="fa fa-mail-forward"></i>
+          
+          <%# For every skip rule, either display the word "end" or the full rank of the question. As long as it's not a skip to the end of the form, also attach a data-ref-id to prevent invalid drag-and-drops. %>
           <% qing.skip_rule_targets.each do |t| %>
-              <% if t == :end %>
-                <div class="skip-rule-end">
-                  <%= t("skip_rule.end") %>
-                </div>
-              <% else %>
-                <div class="skip-rule-link" data-ref-id="<%= t.id %>">
-                  <%= "##{t.full_dotted_rank}" %>
-                </div>
-              <% end %>
-
+            <% if t == :end %>
+              <div class="skip-rule-end">
+                <%= t("skip_rule.end") %>
+              </div>
+            <% else %>
+              <div class="skip-rule-link" data-ref-id="<%= t.id %>">
+                <%= "##{t.full_dotted_rank}" %>
+              </div>
+            <% end %>
           <% end %>
         </div>
       <% end %>
