@@ -115,7 +115,7 @@
       }
 
       .refd-qing,
-      .skip-rule-link {
+      .skip-rule-link, .skip-rule-end {
         display: inline-block;
 
         &:not(:last-of-type)::after {

@@ -53,16 +53,17 @@
       <% if qing.skip_rules.any? %>
         <div class="skip-rule-links">
           <i class="fa fa-mail-forward"></i>
-              <% Rails.logger.debug("-----------------------------------")%>
-              <% Rails.logger.debug(qing.skip_rule_targets) %>
           <% qing.skip_rule_targets.each do |t| %>
-            <div class="skip-rule-link" data-ref-id="<%= t.id %>">
-              <% Rails.logger.debug("-----------------------------------")%>
-              <% Rails.logger.debug(t.id) %>
-              <span>
-                <%= t == :end ? h.t("skip_rule.end") : "##{t.full_dotted_rank}" %>
-              </span>
-            </div>
+              <% if t == :end %>
+                <div class="skip-rule-end">
+                  <%= t("skip_rule.end") %>
+                </div>
+              <% else %>
+                <div class="skip-rule-link" data-ref-id="<%= t.id %>">
+                  <%= "##{t.full_dotted_rank}" %>
+                </div>
+              <% end %>
+
           <% end %>
         </div>
       <% end %>
