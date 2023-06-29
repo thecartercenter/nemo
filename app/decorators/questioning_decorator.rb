@@ -19,7 +19,6 @@ class QuestioningDecorator < FormItemDecorator
   def skip_rule_targets
     targets = skip_rules.map { |r| r.dest_item || :end }.uniq
     targets.sort_by! { |t| t == :end ? [1e9] : t.full_rank }
-    # targets.map { |t| t == :end ? h.t("skip_rule.end") : "##{t.full_dotted_rank}" }
   end
 
   def name_and_rank
