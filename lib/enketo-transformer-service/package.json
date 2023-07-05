@@ -12,6 +12,6 @@
     "qs": "6.10.3"
   },
   "dependencies": {
-    "enketo-transformer": "2.1.6"
+    "enketo-transformer": "2.3.0"
   }
 }
