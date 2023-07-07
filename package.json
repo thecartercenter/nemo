@@ -91,7 +91,7 @@
     "jest": "27.4.5",
     "react-dom": "16.13.0",
     "react-refresh": "0.14.0",
-    "stylelint": "13.6.1",
+    "stylelint": "15.10.1",
     "stylelint-config-sass-guidelines": "7.0.0",
     "webpack-dev-server": "4.11.0"
   }
