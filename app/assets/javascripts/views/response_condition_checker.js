@@ -137,24 +137,6 @@ ELMO.Views.ResponseConditionChecker = class ResponseConditionChecker extends ELM
             .val();
         }).get();
 
-      case 'datetime': case 'date': case 'time':
-        var selects = this.rqElement.find('div.control select');
-        if (selects.map(function () { return $(this).val() === ''; }).get().indexOf(true) !== -1) {
-          return null;
-        }
-        // Figure out if this is a datetime, date, or time field
-        // this is based on the known ID naming scheme for the rails date controls
-        const type = selects.attr('id').match(/([a-z]+)_value_\di$/)[1];
-
-        // Get array of select values and pad any single digit values with a zero
-        const vals = selects.map(function () { return $(this).val().lpad('0', 2); }).get();
-
-        const str_bits = [];
-        if ((type === 'datetime') || (type === 'date')) { str_bits.push(vals.slice(0, 3).join('-')); }
-        if ((type === 'datetime') || (type === 'time')) { str_bits.push(vals.slice(-3).join(':')); }
-        return str_bits.join(' ');
-
-
       default:
         return this.rqElement.find("div.control input[type='text']").val();
     }

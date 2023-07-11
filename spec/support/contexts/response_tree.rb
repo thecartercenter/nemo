@@ -114,6 +114,10 @@ shared_context "response tree" do
       end
     when "datetime", "date", "time"
       qtype_name = qing(path).qtype_name
+      Rails.logger.debug("---------------------------- VALUE")
+      Rails.logger.debug(page.find("##{path_selector(path, "#{qtype_name}_value")}").value)
+      Rails.logger.debug("---------------------------- EXPECTED VALUE")
+      Rails.logger.debug(expected_value)
       expect(page.find("##{path_selector(path, "#{qtype_name}_value")}").value).to eq(expected_value)
     when "select_one"
       el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
