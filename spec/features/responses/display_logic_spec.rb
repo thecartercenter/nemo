@@ -10,8 +10,6 @@ feature "response form display logic", js: true do
   let(:qings) { form.root_group.c }
 
   describe "different question types" do
-    let(:year) { Time.zone.now.year - 2 }
-
     let!(:form) do
       create(:form, :live,
         question_types: [
@@ -122,23 +120,23 @@ feature "response form display logic", js: true do
       qings[11].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {left_qing_id: qings[10].id, op: "lt", value: "#{year}-01-01 5:00:21"}
+          {left_qing_id: qings[10].id, op: "lt", value: "2020-05-01 5:01:00"}
         ]
       )
 
-      #qings[12].update!(
-      #  display_if: "all_met",
-      #  display_conditions_attributes: [
-      #    {left_qing_id: qings[11].id, op: "eq", value: "#{year}-01-01"}
-      #  ]
-      #)
+      qings[12].update!(
+        display_if: "all_met",
+        display_conditions_attributes: [
+          {left_qing_id: qings[11].id, op: "eq", value: "2020-01-01"}
+        ]
+      )
 
-      #qings[13].update!(
-      #  display_if: "all_met",
-      #  display_conditions_attributes: [
-      #    {left_qing_id: qings[12].id, op: "geq", value: "15:00:00"}
-      #  ]
-      #)
+      qings[13].update!(
+        display_if: "all_met",
+        display_conditions_attributes: [
+          {left_qing_id: qings[12].id, op: "geq", value: "15:00:00"}
+        ]
+      )
 
       qings[15].c[0].update!(
         display_if: "all_met",
@@ -198,10 +196,10 @@ feature "response form display logic", js: true do
       fill_and_expect_visible([8], %w[Canada Ottawa], visible)
       fill_and_expect_visible([9], %w[Dog], visible)
       fill_and_expect_visible([9], %w[Dog Cat], visible << [10])
-      fill_and_expect_visible([10], "#{year}-01-01 5:00:21", visible)
-      fill_and_expect_visible([10], "#{year}-01-01 15:00:20", visible << [11])
-      fill_and_expect_visible([11], "#{year}-03-21", visible)
-      fill_and_expect_visible([11], "#{year}-12-01", visible << [12])
+      fill_and_expect_visible([10], "2020-05-01 5:01:01", visible)
+      fill_and_expect_visible([10], "2019-05-01 5:01:00", visible << [11])
+      fill_and_expect_visible([11], "2019-01-01", visible)
+      fill_and_expect_visible([11], "2020-01-01", visible << [12])
       fill_and_expect_visible([12], "6:00:00", visible)
       fill_and_expect_visible([12], "15:00:00", visible << [13])
       fill_and_expect_visible([13], "baz", visible << [15, 0])
