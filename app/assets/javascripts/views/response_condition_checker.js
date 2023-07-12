@@ -88,7 +88,7 @@ ELMO.Views.ResponseConditionChecker = class ResponseConditionChecker extends ELM
 
   // Uses a special array comparison method if appropriate.
   testEquality(a, b) {
-    if ($.isArray(a) && $.isArray(b)) {
+    if (Array.isArray(a) && Array.isArray(b)) {
       return a.equalsArray(b);
     }
     return a === b;
@@ -98,7 +98,7 @@ ELMO.Views.ResponseConditionChecker = class ResponseConditionChecker extends ELM
   // unless null is the value being checked by the condition
   // improves UX for appearing/disappearing questions.
   testInequality(refValue, expected) {
-    if ($.isArray(refValue) && $.isArray(expected)) {
+    if (Array.isArray(refValue) && Array.isArray(expected)) {
       if (refValue.equalsArray([]) && !expected.equalsArray([])) {
         return false;
       }
