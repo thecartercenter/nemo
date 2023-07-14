@@ -81,13 +81,10 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   // Checks if the given position (indicated by placeholder) for the given item, or any of its children, would invalidate any conditions.
   // Returns false if invalid.
   check_condition_order(placeholder, item) {
-    console.log('@@@ ---');
-
     // If item has a rule that depends on one more questions, it cannot be moved before any of the referred questions.
     for (const c of Array.from(item.find('.refd-qing'))) {
       const refd = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
       const isSelf = $(refd).data('id') === item.data('id');
-      console.log('@@@ 1', { isSelf });
 
       if (!isSelf && this.compare_ranks(placeholder, refd) !== 1) {
         return false;
@@ -98,7 +95,6 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
     for (const c of Array.from(item.find('.skip-rule-link'))) {
       const target = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
       const isSelf = $(target).data('id') === item.data('id');
-      console.log('@@@ 2', { isSelf });
 
       if (!isSelf && this.compare_ranks(placeholder, target) !== -1) {
         return false;
@@ -111,7 +107,6 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
       for (const refd_qing of Array.from(this.$(`.refd-qing[data-ref-id=${id}]`))) {
         const referrer = $(refd_qing.closest('li.form-item'));
         const isSelf = $(referrer).data('id') === item.data('id');
-        console.log('@@@ 3', { isSelf });
 
         if (!isSelf && this.compare_ranks(placeholder, referrer) !== -1) {
           return false;
@@ -122,7 +117,6 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
       for (const skip_targets of Array.from(this.$(`.skip-rule-link[data-ref-id=${id}]`))) {
         const skip_referrer = $(skip_targets.closest('li.form-item'));
         const isSelf = $(skip_referrer).data('id') === item.data('id');
-        console.log('@@@ 4', { isSelf });
 
         if (!isSelf && this.compare_ranks(placeholder, skip_referrer) !== 1) {
           return false;
