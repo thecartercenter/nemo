@@ -11,7 +11,7 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
   initialize(params) {
     this.parent_view = params.parent_view;
 
-    return $('.item-list').nestedSortable({
+    return $('.form-items-list').nestedSortable({
       handle: 'div',
       items: 'li',
       toleranceElement: '> div',
