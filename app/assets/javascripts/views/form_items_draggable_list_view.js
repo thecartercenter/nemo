@@ -84,8 +84,9 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
     // If item has a rule that depends on one more questions, it cannot be moved before any of the referred questions.
     for (const c of Array.from(item.find('.refd-qing'))) {
       const refd = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
+      const isSelf = $(refd).data('id') === item.data('id');
 
-      if (this.compare_ranks(placeholder, refd) !== 1) { 
+      if (!isSelf && this.compare_ranks(placeholder, refd) !== 1) {
         return false;
       }
     }
@@ -93,19 +94,21 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
     // If item contains a skip rule, it cannot be moved after the skip rule target.
     for (const c of Array.from(item.find('.skip-rule-link'))) {
       const target = this.$(`li.form-item[data-id=${$(c).data('ref-id')}]`);
+      const isSelf = $(target).data('id') === item.data('id');
 
-      if (this.compare_ranks(placeholder, target) !== -1) { 
+      if (!isSelf && this.compare_ranks(placeholder, target) !== -1) {
         return false;
       }
     }
-    
+
     // If item's value triggers any skip rules, it cannot be moved after any of the questions whose rules would refer to it.
     const child_ids = item.find('.form-item').andSelf().map(function () { return $(this).data('id'); });
     for (const id of Array.from(child_ids.get())) {
-      for (const refd_qing of Array.from(this.$(`.refd-qing[data-ref-id=${id}]`))) { // Loop over all matching refd_qings
-        const referrer = $(refd_qing.closest('li.form-item')); 
+      for (const refd_qing of Array.from(this.$(`.refd-qing[data-ref-id=${id}]`))) {
+        const referrer = $(refd_qing.closest('li.form-item'));
+        const isSelf = $(referrer).data('id') === item.data('id');
 
-        if (this.compare_ranks(placeholder, referrer) !== -1) { 
+        if (!isSelf && this.compare_ranks(placeholder, referrer) !== -1) {
           return false;
         }
       }
@@ -113,8 +116,9 @@ ELMO.Views.FormItemsDraggableListView = class FormItemsDraggableListView extends
       // If item is a skip rule target, it cannot be moved before the question that refers to it.
       for (const skip_targets of Array.from(this.$(`.skip-rule-link[data-ref-id=${id}]`))) {
         const skip_referrer = $(skip_targets.closest('li.form-item'));
+        const isSelf = $(skip_referrer).data('id') === item.data('id');
 
-        if (this.compare_ranks(placeholder, skip_referrer) !== 1) {
+        if (!isSelf && this.compare_ranks(placeholder, skip_referrer) !== 1) {
           return false;
         }
       }
