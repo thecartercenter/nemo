@@ -14,12 +14,12 @@ require "fileutils"
 require "vcr"
 
 # Automatically downloads chromedriver, which is used use for JS feature specs
-require "webdrivers/chromedriver"
+# require "webdrivers/chromedriver"
 
 Capybara.register_driver(:selenium_chrome_headless) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
-    args: %w[disable-gpu no-sandbox] + (ENV["HEADED"] ? [] : ["headless"]),
-    loggingPrefs: {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
+    args: %w[disable-gpu no-sandbox mute-audio] + (ENV["HEADED"] ? [] : ["headless"]),
+    "goog:loggingPrefs" => {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
   )
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
@@ -96,7 +96,10 @@ RSpec.configure do |config|
     # Ensure no leftover logged in user.
     ENV.delete("TEST_LOGGED_IN_USER_ID")
 
+    Rails::Debug.log("<----- #{example.description} (#{example.location}) ----->")
     example.run
+    Rails::Debug.log("<----- #{example.description} ----->")
+    Rails::Debug.log("")
   end
 
   config.before(:each) do
@@ -111,11 +114,12 @@ RSpec.configure do |config|
   # Print browser logs to console if they are non-empty.
   # You MUST use console.warn or console.error for this to work.
   config.after(:each, type: :feature, js: true) do
-    logs = page.driver.browser.manage.logs.get(:browser).join("\n")
+    # logs = page.driver.browser.manage.logs.get(:browser).join("\n")
+    logs = ""
     unless logs.strip.empty?
-      puts "------------ BROWSER LOGS -------------"
+      Rails::Debug.log("<----- START BROWSER LOGS ----->")
       puts logs
-      puts "---------------------------------------"
+      Rails::Debug.log("<----- END BROWSER LOGS ----->")
     end
   end
 

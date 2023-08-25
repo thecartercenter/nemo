@@ -51,10 +51,11 @@ ELMO::Application.configure do
   # config.active_record.verbose_query_logs = true
 
   # Raises error for missing translations.
-  config.action_view.raise_on_missing_translations = false
+  config.i18n.raise_on_missing_translations = false
 
   # Enable rack-attack middleware for protecting against brute-force login attempts,
   # but disable it until needed.
   config.middleware.use(Rack::Attack)
   Rack::Attack.enabled = false
+  Warning[:deprecated] = true
 end

@@ -229,7 +229,7 @@ FactoryBot.define do
 
     trait :with_odk_attachment do
       transient do
-        xml_path nil
+        xml_path { nil }
       end
       odk_xml do
         Rack::Test::UploadedFile.new(

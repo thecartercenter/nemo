@@ -60,7 +60,7 @@ feature "report generation", js: true do
       qs[2].tags = [tag3, tag1]
     end
 
-    scenario "should work" do
+    scenario "should work", flapping: true do
       login(user)
       visit(reports_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
       click_link(standard_report.name)

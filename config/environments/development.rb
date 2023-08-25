@@ -64,7 +64,7 @@ ELMO::Application.configure do
   config.assets.quiet = true
 
   # Raises error for missing translations.
-  config.action_view.raise_on_missing_translations = false
+  config.i18n.raise_on_missing_translations = false
   config.i18n.fallbacks = false
 
   # Enable rack-attack middleware for protecting against brute-force login attempts

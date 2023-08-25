@@ -6,7 +6,7 @@ module ODK
     extend ActiveSupport::Concern
 
     # video/ogg is needed for audio OGG files for some weird reason.
-    ODK_MEDIA_MIME_TYPES = %w[audio/mpeg audio/ogg audio/wave audio/wav audio/x-wav audio/x-pn-wav
+    ODK_MEDIA_MIME_TYPES = %w[audio/mpeg audio/ogg audio/vorbis audio/wave audio/wav audio/x-wav audio/x-pn-wav
                               audio/flac video/ogg application/ogg video/mp4 image/png image/jpeg].freeze
     ODK_MEDIA_EXTS = {audio: %w[mp3 ogg wav flac], video: %w[mp4], image: %w[png jpg jpeg]}.freeze
     ODK_EXTS_REGEX = /\.(#{ODK_MEDIA_EXTS.values.flatten.join('|')})\z/i.freeze

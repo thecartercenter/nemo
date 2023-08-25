@@ -93,13 +93,13 @@ shared_context "response tree" do
       qtype_name = qing(path).qtype_name
       fill_in(path_selector(path, "#{qtype_name}_value"), with: value)
     else
-      fill_in(selector, opts)
+      fill_in(selector, **opts)
     end
   end
 
   def expect_path(path, options = {})
     selector = path.join(" .children ")
-    expect(page).to have_selector(selector, options)
+    expect(page).to have_selector(selector, **options)
   end
 
   def expect_value(path, expected_value)

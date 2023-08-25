@@ -27,8 +27,8 @@ class Sms::Adapters::Adapter
     @@deliveries ||= [] # rubocop:disable Style/ClassVars
   end
 
-  def initialize(config:)
-    @config = config
+  def initialize(params)
+    @config = params[:config]
   end
 
   def service_name

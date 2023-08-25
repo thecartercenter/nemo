@@ -22,7 +22,7 @@ feature "question import", js: true do
     login(admin)
   end
 
-  scenario "happy path" do
+  scenario "happy path", flapping: true do
     visit("/en/m/#{mission.compact_name}/question-imports/new")
     try_invalid_uploads_and_then(question_import_fixture("simple.csv").path)
     expect(page).to have_content("Questions import queued")

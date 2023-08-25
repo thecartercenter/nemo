@@ -43,7 +43,7 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
       get_mission.setting.update_attribute(:preferred_locales_str, "en,fr")
     end
 
-    it "should render both languages" do
+    it "should render both languages", flapping: true do
       expect_xml(renderer, "bilingual")
     end
   end

@@ -8,7 +8,8 @@ describe Notifier do
     let(:mission) { create(:mission) }
     let(:user) { create(:user, mission: mission, role_name: :enumerator) }
     let(:args) { [user] }
-    let(:mail) { described_class.intro(*args).deliver_now }
+    let(:options) { {} }
+    let(:mail) { described_class.intro(*args, **options).deliver_now }
 
     context "no mission given" do
       let(:args) { [user] }
@@ -24,7 +25,8 @@ describe Notifier do
     end
 
     context "mission given" do
-      let(:args) { [user, {mission: mission}] }
+      let(:args) { [user] }
+      let(:options) { {mission: mission} }
 
       it do
         expect(mail.subject).to eq("Welcome to NEMO!")
@@ -52,8 +54,7 @@ describe Notifier do
   context "password reset email" do
     let(:mission) { create(:mission) }
     let(:user) { create(:user, mission: mission, role_name: :enumerator) }
-    let(:args) { [user] }
-    let(:mail) { described_class.password_reset_instructions(*args).deliver_now }
+    let(:mail) { described_class.password_reset_instructions(user).deliver_now }
 
     it do
       mail = described_class.password_reset_instructions(user, mission: mission).deliver_now
@@ -66,8 +67,7 @@ describe Notifier do
 
   context "sms token change email" do
     let(:mission) { create(:mission) }
-    let(:args) { [mission] }
-    let(:mail) { described_class.sms_token_change_alert(*args).deliver_now }
+    let(:mail) { described_class.sms_token_change_alert(mission).deliver_now }
 
     context "mission has coordinators" do
       let!(:coordinator1) { create(:user, role_name: :coordinator, mission: mission) }

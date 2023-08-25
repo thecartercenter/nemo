@@ -20,7 +20,7 @@ class PasswordResetsController < ApplicationController
 
   # Sends the password reset instructions
   def create
-    @password_reset = PasswordReset.new(password_reset_params)
+    @password_reset = PasswordReset.new(**password_reset_params)
     if (users = @password_reset.matches).any?
       if users.count > 1
         flash.now[:error] = t("password_reset.multiple_accounts")

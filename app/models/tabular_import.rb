@@ -51,7 +51,7 @@ class TabularImport
   def add_run_error(message, opts = {})
     if message.is_a?(Symbol)
       opts = opts.merge(default: :"tabular_import.errors.#{message}")
-      message = I18n.t("activerecord.errors.models.#{model_name.i18n_key}.#{message}", opts)
+      message = I18n.t("activerecord.errors.models.#{model_name.i18n_key}.#{message}", **opts)
     end
     run_errors << message
     false
