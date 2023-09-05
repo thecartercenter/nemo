@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Note: Documented in "Server to Server Copy" wiki page.
+# TODO: This class needs tests.
 module Cloning
   # Expands a given set of relations to include all necessary related objects.
   class RelationExpander

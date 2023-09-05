@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-# TODO: This class needs tests
+# Note: Documented in "Server to Server Copy" wiki page.
+# TODO: This class needs tests.
 module Cloning
   # Imports from CSV ZIP bundle.
   class Importer
