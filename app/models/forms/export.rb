@@ -16,8 +16,6 @@ module Forms
       CSV.generate do |csv|
         csv << COLUMNS
         @form.preordered_items.each do |q|
-          Rails.logger.debug("*****************")
-          Rails.logger.debug(q)
           csv << row(q)
         end
       end
@@ -31,25 +29,25 @@ module Forms
       choices = book.create_worksheet :name => "choices"
       settings = book.create_worksheet :name => "settings"
 
-      # Questions
-      questions.row(0).push "type", "name", "label", "required", "relevant"
-      questions.row(1).push "integer", "age", "How old are you?", "yes", ""
-      questions.row(2).push "select_one yes_no","likes_pizza", "Do you like pizza?", "", ""
+      # Write sheet headings at row index 0
+      questions.row(0).push("type", "name", "label", "required", "relevant")
+      choices.row(0).push("list_name", "name", "label")
+      settings.row(0).push("form_title", "form_id", "version", "default_language")
 
-      # Choices
-      choices.row(0).push "list_name", "name", "label"
-      choices.row(1).push "yes_no", "yes"
-      choices.row(1).push "Yes" # Try adding onto the end of a row
-      choices.row(2).push "yes_no", "no", "No"
+      @form.preordered_items.each_with_index do |q, i|
+        questions.row(i+1).push(q.qtype.name, q.code, q.name, q.required.to_s, "TODO")
+      end
+
+      # Choices TODO
+      choices.row(1).push("yes_no", "yes", "YES")
+      choices.row(2).push("yes_no", "no", "NO")
 
       # Settings
-      settings.row(0).push "form_title", "form_id", "version", "default_language"
-      settings.row(1).push "Test Form", 1, Time.now.strftime("%Y%m%d"), "English (en)"
+      settings.row(1).push(@form.name, @form.id, @form.updated_at.to_s, "English (en)")
 
       # Write
       file = StringIO.new
       book.write(file)
-
       file.string.html_safe
     end
 
