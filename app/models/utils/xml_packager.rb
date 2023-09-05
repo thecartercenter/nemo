@@ -47,7 +47,7 @@ module Utils
           next unless response.odk_xml.present?
           zip_xml(zipfile, response)
         rescue Zip::EntryExistsError => e
-          report_error(e)
+          report_error(e, response)
           next
         end
       end
@@ -62,9 +62,9 @@ module Utils
       zipfile.add(zip_entry, xml_filepath)
     end
 
-    def report_error(error)
+    def report_error(error, response)
       Sentry.add_breadcrumb(Sentry::Breadcrumb.new(
-        message: "Mission: #{@operation.mission.compact_name}. Response ID: #{rid}"
+        message: "Mission: #{@operation.mission.compact_name}. Response ID: #{response.id}"
       ))
       notify_admins(error)
     end
