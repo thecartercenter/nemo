@@ -138,6 +138,7 @@ ELMO::Application.routes.draw do
         get "sms-guide", as: "sms_guide", action: "sms_guide"
         get "export"
         get "export_xml"
+        get "export_xls"
       end
     end
 

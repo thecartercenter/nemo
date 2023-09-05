@@ -8,6 +8,7 @@ module ActionLinks
       unless new_action?
         actions << [:export_csv, {url: h.export_form_path(form)}]
         actions << [:export_xml, {url: h.export_xml_form_path(form)}] if form.odk_xml.attached?
+        actions << [:export_xls, {url: h.export_xls_form_path(form)}]
       end
 
       unless h.admin_mode?
