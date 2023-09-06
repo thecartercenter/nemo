@@ -35,7 +35,8 @@ module Forms
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_tracker = 1 # assume base level
-      index_mod = 1; # begin writing rows after headings
+      index_mod = 1
+      choices_index_mod = 1
       @form.preordered_items.each_with_index do |q, i|
         if q.group?
           questions.row(i+index_mod).push("begin group", q.code)
@@ -54,13 +55,26 @@ module Forms
             index_mod += 1 
           end
 
-          questions.row(i+index_mod).push(q.qtype_name, q.full_dotted_rank + "_" + q.code, q.name, q.required.to_s, "TODO")
+          # do we have an option set?
+          if q.option_set_id.present?
+            os = OptionSet.find(q.option_set_id)
+            os_name = " " + os.name # to respect XLSForm format
+
+            os.option_nodes.each_with_index do |node, x|
+              if node.option.present?
+                choices.row(x + choices_index_mod).push(os.name, node.option.canonical_name, node.option.canonical_name)
+              end
+            end
+
+            # increment the choices index by how many nodes there are, so we start at this row next time
+            choices_index_mod += os.option_nodes.length
+          else 
+            os_name = ""
+          end
+
+          questions.row(i+index_mod).push(q.qtype_name + os_name, q.full_dotted_rank + "_" + q.code, q.name, q.required.to_s, "TODO")
         end
       end
-
-      # Choices TODO
-      choices.row(1).push("yes_no", "yes", "YES")
-      choices.row(2).push("yes_no", "no", "NO")
 
       # Settings
       settings.row(1).push(@form.name, @form.id, @form.updated_at.to_s, "English (en)")
