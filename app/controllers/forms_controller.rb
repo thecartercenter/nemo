@@ -238,7 +238,7 @@ class FormsController < ApplicationController
   # XLSForm export.
   def export_xls
     exporter = Forms::Export.new(@form)
-    send_data(exporter.to_xls, filename: "test.xlsx")
+    send_data(exporter.to_xls, filename: "xlsform-#{@form.name.dasherize}-#{Time.zone.today}.xlsx")
     # send_file ...
   end
 

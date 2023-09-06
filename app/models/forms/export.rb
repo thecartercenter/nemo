@@ -34,8 +34,28 @@ module Forms
       choices.row(0).push("list_name", "name", "label")
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
+      group_tracker = false
+      index_mod = 1;
       @form.preordered_items.each_with_index do |q, i|
-        questions.row(i+1).push(q.qtype.name, q.code, q.name, q.required.to_s, "TODO")
+        if q.group?
+          questions.row(i+index_mod).push("begin group", q.code)
+
+          # Toggle group tracker so we know we are in a group
+          group_tracker = true
+        else
+          # did a group just end? if so, the rank will be a whole number
+          if group_tracker && !q.full_dotted_rank.include?(".")
+
+            # end the group and stop tracking it with the counter
+            questions.row(i+index_mod).push("end group")
+            group_tracker = false
+
+            # increment our index modifier
+            index_mod += 1 
+          end
+
+          questions.row(i+index_mod).push(q.qtype_name, q.full_dotted_rank + "_" + q.code, q.name, q.required.to_s, "TODO")
+        end
       end
 
       # Choices TODO
@@ -77,6 +97,11 @@ module Forms
       else
         "Group"
       end
+    end
+
+    def to_number(value)
+      return if value.blank?
+      (value.to_f % 1).positive? ? value.to_f : value.to_i
     end
   end
 end
