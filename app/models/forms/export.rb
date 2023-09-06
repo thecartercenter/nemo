@@ -34,21 +34,21 @@ module Forms
       choices.row(0).push("list_name", "name", "label")
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
-      group_tracker = false
-      index_mod = 1;
+      group_tracker = 1 # assume base level
+      index_mod = 1; # begin writing rows after headings
       @form.preordered_items.each_with_index do |q, i|
         if q.group?
           questions.row(i+index_mod).push("begin group", q.code)
 
-          # Toggle group tracker so we know we are in a group
-          group_tracker = true
+          # Increment our group tracker
+          group_tracker += 1
         else
-          # did a group just end? if so, the rank will be a whole number
-          if group_tracker && !q.full_dotted_rank.include?(".")
+          # did a group just end? if so, the ancestry depth will be smaller than the tracker
+          if q.ancestry_depth < group_tracker
 
-            # end the group and stop tracking it with the counter
+            # end the group and decrement the tracker
             questions.row(i+index_mod).push("end group")
-            group_tracker = false
+            group_tracker -= 1
 
             # increment our index modifier
             index_mod += 1 
