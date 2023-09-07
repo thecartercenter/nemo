@@ -21,44 +21,63 @@ module Forms
       end
     end
 
+    # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity
     def to_xls
+      # TODO
+      # Repeat groups with nested "begin/end repeat" and "begin/end group" lines
+      # skip logic with formatted info in "relevant" column using ${name} = ... syntax
+
       book = Spreadsheet::Workbook.new
 
       # Create sheets
-      questions = book.create_worksheet :name => "survey"
-      choices = book.create_worksheet :name => "choices"
-      settings = book.create_worksheet :name => "settings"
+      questions = book.create_worksheet(name: "survey")
+      choices = book.create_worksheet(name: "choices")
+      settings = book.create_worksheet(name: "settings")
 
       # Write sheet headings at row index 0
       questions.row(0).push("type", "name", "label", "required", "relevant")
       choices.row(0).push("list_name", "name", "label")
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
-      group_tracker = 1 # assume base level
-      index_mod = 1
-      choices_index_mod = 1
+      group_depth = 1 # assume base level
+      repeat_depth = 0 # assume no repeat
+      index_mod = 1 # start at row index 1
+      choices_index_mod = 1 # start at row index 1
+
       @form.preordered_items.each_with_index do |q, i|
         if q.group?
-          questions.row(i+index_mod).push("begin group", q.code)
+          if q.repeatable?
+            questions.row(i + index_mod).push("begin repeat", q.code)
+            repeat_depth += 1
+          else
+            questions.row(i + index_mod).push("begin group", q.code)
+          end
 
-          # Increment our group tracker
-          group_tracker += 1
+          # update counters
+          group_depth += 1
         else
-          # did a group just end? if so, the ancestry depth will be smaller than the tracker
-          if q.ancestry_depth < group_tracker
+          # did a group just end?
+          # if so, the qing's depth will be smaller than the depth counter
+          if q.ancestry_depth < group_depth
+            # are we in a repeat group?
+            # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
+            if repeat_depth.positive?
+              questions.row(i + index_mod).push("end repeat")
+              repeat_depth -= 1
+            else
+              # end the group
+              questions.row(i + index_mod).push("end group")
+            end
 
-            # end the group and decrement the tracker
-            questions.row(i+index_mod).push("end group")
-            group_tracker -= 1
-
-            # increment our index modifier
-            index_mod += 1 
+            # update counters
+            group_depth -= 1
+            index_mod += 1
           end
 
           # do we have an option set?
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
-            os_name = " " + os.name # to respect XLSForm format
+            os_name = " #{os.name}" # to respect XLSForm format
 
             os.option_nodes.each_with_index do |node, x|
               if node.option.present?
@@ -68,11 +87,15 @@ module Forms
 
             # increment the choices index by how many nodes there are, so we start at this row next time
             choices_index_mod += os.option_nodes.length
-          else 
+          else
             os_name = ""
           end
 
-          questions.row(i+index_mod).push(q.qtype_name + os_name, q.full_dotted_rank + "_" + q.code, q.name, q.required.to_s, "TODO")
+          type_to_push = "#{q.qtype_name}#{os_name}"
+          code_to_push = "#{q.full_dotted_rank}_#{q.code}"
+
+          # Write the question row
+          questions.row(i + index_mod).push(type_to_push, code_to_push, q.name, q.required.to_s, "TODO")
         end
       end
 
@@ -84,6 +107,7 @@ module Forms
       book.write(file)
       file.string.html_safe
     end
+    # rubocop:enable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity
 
     private
 
