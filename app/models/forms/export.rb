@@ -40,9 +40,9 @@ module Forms
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_depth = 1 # assume base level
-      repeat_depth = 0 # assume no repeat
+      repeat_depth = 1
       index_mod = 1 # start at row index 1
-      choices_index_mod = 1 # start at row index 1
+      choices_index_mod = 1
 
       @form.preordered_items.each_with_index do |q, i|
         if q.group?
@@ -61,7 +61,8 @@ module Forms
           if q.ancestry_depth < group_depth
             # are we in a repeat group?
             # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
-            if repeat_depth.positive?
+            # e.g., if group depth is deeper than repeat depth
+            if repeat_depth > 1 && repeat_depth >= group_depth
               questions.row(i + index_mod).push("end repeat")
               repeat_depth -= 1
             else
