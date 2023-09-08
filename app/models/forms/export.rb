@@ -45,7 +45,25 @@ module Forms
       choices_index_mod = 1
 
       @form.preordered_items.each_with_index do |q, i|
-        if q.group?
+        # did one or more groups just end?
+        # if so, the qing's depth will be smaller than the depth counter
+        while group_depth > q.ancestry_depth
+          # are we in a repeat group?
+          # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
+          if repeat_depth > 1 && repeat_depth >= group_depth
+            questions.row(i + index_mod).push("end repeat")
+            repeat_depth -= 1
+          else
+            # end the group
+            questions.row(i + index_mod).push("end group")
+          end
+
+          # update counters
+          group_depth -= 1
+          index_mod += 1
+        end
+
+        if q.group? #is this a group?
           if q.repeatable?
             questions.row(i + index_mod).push("begin repeat", q.code)
             repeat_depth += 1
@@ -55,26 +73,7 @@ module Forms
 
           # update counters
           group_depth += 1
-        else
-          # did a group just end?
-          # if so, the qing's depth will be smaller than the depth counter
-          if q.ancestry_depth < group_depth
-            # are we in a repeat group?
-            # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
-            # e.g., if group depth is deeper than repeat depth
-            if repeat_depth > 1 && repeat_depth >= group_depth
-              questions.row(i + index_mod).push("end repeat")
-              repeat_depth -= 1
-            else
-              # end the group
-              questions.row(i + index_mod).push("end group")
-            end
-
-            # update counters
-            group_depth -= 1
-            index_mod += 1
-          end
-
+        else # is this a question?
           # do we have an option set?
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
