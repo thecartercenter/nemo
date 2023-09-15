@@ -101,58 +101,15 @@ module Forms
 
         # if we have any relevant conditions, add them to the end of the row
         if q.display_conditions.any?
-          # start building string of conditions to print
-          relevant_to_push = ""
-          concatenator = q.display_if == "all_met" ? "and" : "or"
-
-          # how many conditions?
-          dc_length = q.display_conditions.length
-
-          q.display_conditions.each_with_index do |dc, i|
-            # prep left side of expression
-            left_qing = Questioning.find(dc.left_qing_id)
-            left_to_push = "${#{left_qing.full_dotted_rank}_#{left_qing.code}}"
-
-            # prep right side of expression
-            if dc.right_side_is_qing?
-              right_qing = Questioning.find(dc.right_qing_id)
-              right_to_push = "${#{right_qing.full_dotted_rank}_#{right_qing.code}}"
-            else
-              # to respect XLSform rules, surround with single quotes unless it's a number
-              if Float(dc.value, exception: false).nil? # it's not a number
-                right_to_push = "'#{dc.value}'"
-              else
-                right_to_push = "#{dc.value}"
-              end
-            end
-
-            case dc.op
-            when "eq"
-              op = "="
-            when "neq"
-              op = "!="
-            when "lt"
-              op = "<"
-            when "leq"
-              op = "<="
-            when "gt"
-              op = ">"
-            when "geq"
-              op = ">="
-            end
-
-            # omit the concatenator on the last condition only
-            if i + 1 == dc_length
-              relevant_to_push = "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push}"
-            else
-              relevant_to_push = "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push} #{concatenator} "
-            end
-          end
-          questions.row(i + index_mod).push(relevant_to_push)
+          questions.row(i + index_mod).push(conditions_to_xls(q.display_conditions, q.display_if))
+        else
+          questions.row(i + index_mod).push("")
         end
 
         if q.constraints.any?
-          #TODO
+          q.constraints.each do |c|
+            questions.row(i + index_mod).push(conditions_to_xls(c.conditions, c.accept_if))
+          end
         end
       end
 
@@ -197,6 +154,58 @@ module Forms
     def to_number(value)
       return if value.blank?
       (value.to_f % 1).positive? ? value.to_f : value.to_i
+    end
+
+    # Takes an array of conditions and outputs a single string
+    # concatenates by either "and" or "or" depending on form settings
+    def conditions_to_xls(conditions, true_if)
+      relevant_to_push = ""
+      concatenator = true_if == "all_met" ? "and" : "or"
+
+      # how many conditions?
+      dc_length = conditions.length
+
+      conditions.each_with_index do |dc, i|
+        # prep left side of expression
+        left_qing = Questioning.find(dc.left_qing_id)
+        left_to_push = "${#{left_qing.full_dotted_rank}_#{left_qing.code}}"
+
+        # prep right side of expression
+        if dc.right_side_is_qing?
+          right_qing = Questioning.find(dc.right_qing_id)
+          right_to_push = "${#{right_qing.full_dotted_rank}_#{right_qing.code}}"
+        else
+          # to respect XLSform rules, surround with single quotes unless it's a number
+          if Float(dc.value, exception: false).nil? # it's not a number
+            right_to_push = "'#{dc.value}'"
+          else
+            right_to_push = "#{dc.value}"
+          end
+        end
+
+        case dc.op
+        when "eq"
+          op = "="
+        when "neq"
+          op = "!="
+        when "lt"
+          op = "<"
+        when "leq"
+          op = "<="
+        when "gt"
+          op = ">"
+        when "geq"
+          op = ">="
+        end
+
+        # omit the concatenator on the last condition only
+        if i + 1 == dc_length
+          relevant_to_push = "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push}"
+        else
+          relevant_to_push = "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push} #{concatenator} "
+        end
+      end
+      return relevant_to_push
     end
   end
 end
