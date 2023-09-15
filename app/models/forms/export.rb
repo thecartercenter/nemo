@@ -24,9 +24,8 @@ module Forms
     # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity
     def to_xls
       # TODO
-      # - Constraints
-      # - option set "levels"?
-      # - Make question types compatible with XLSForm, e.g., "long_text" should just be "text", "counter" does not exist, etc.
+      # option set "levels"?
+      # Make question types compatible with XLSForm, e.g., "long_text" should just be "text", "counter" does not exist, etc.
 
       book = Spreadsheet::Workbook.new
 
@@ -43,7 +42,7 @@ module Forms
       group_depth = 1 # assume base level
       repeat_depth = 1
       index_mod = 1 # start at row index 1
-      choices_index_mod = 1
+      choices_index_mod = 0
 
       @form.preordered_items.each_with_index do |q, i|
         # did one or more groups just end?
@@ -64,7 +63,7 @@ module Forms
           index_mod += 1
         end
 
-        if q.group? #is this a group?
+        if q.group? # is this a group?
           if q.repeatable?
             questions.row(i + index_mod).push("begin repeat", q.code)
             repeat_depth += 1
@@ -174,35 +173,33 @@ module Forms
         if dc.right_side_is_qing?
           right_qing = Questioning.find(dc.right_qing_id)
           right_to_push = "${#{right_qing.full_dotted_rank}_#{right_qing.code}}"
-        else
+        elsif Float(dc.value, exception: false).nil? # it's not a number
           # to respect XLSform rules, surround with single quotes unless it's a number
-          if Float(dc.value, exception: false).nil? # it's not a number
-            right_to_push = "'#{dc.value}'"
-          else
-            right_to_push = "#{dc.value}"
-          end
+          right_to_push = "'#{dc.value}'"
+        else
+          right_to_push = dc.value.to_s
         end
 
-        case dc.op
+        op = case dc.op
         when "eq"
-          op = "="
+          "="
         when "neq"
-          op = "!="
+          "!="
         when "lt"
-          op = "<"
+          "<"
         when "leq"
-          op = "<="
+          "<="
         when "gt"
-          op = ">"
+          ">"
         when "geq"
-          op = ">="
+          ">="
         end
 
         # omit the concatenator on the last condition only
-        if i + 1 == dc_length
-          relevant_to_push = "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push}"
+        relevant_to_push = if i + 1 == dc_length
+          "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push}"
         else
-          relevant_to_push = "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push} #{concatenator} "
+          "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push} #{concatenator} "
         end
       end
       return relevant_to_push

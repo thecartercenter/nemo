@@ -20,11 +20,11 @@ gem "recaptcha", "~> 3.4", require: "recaptcha/rails" # Small change in v4, we s
 gem "responders", "~> 3.0"
 gem "rqrcode", "~> 1.1"
 gem "rubyzip", "~> 2.3", require: "zip" # Explicitly specify name (https://stackoverflow.com/a/32740666/763231)
+gem "spreadsheet" # For XLSForm export
 gem "term-ansicolor", "~> 1.3"
 gem "terrapin", "~> 0.6.0"
 gem "thor", "~> 1.0"
 gem "twilio-ruby", "~> 4.2" # Does not use semver after v5, watch out!
-gem "spreadsheet" # For XLSForm export
 
 # JS/CSS
 gem "bootstrap", "~> 4.3"
