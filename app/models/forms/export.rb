@@ -15,7 +15,7 @@ module Forms
       "leq" => "<=",
       "gt" => ">",
       "geq" => ">="
-    }
+    }.freeze
 
     def initialize(form)
       @form = form
