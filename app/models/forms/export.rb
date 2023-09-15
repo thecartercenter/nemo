@@ -8,6 +8,15 @@ module Forms
       DisplayLogic DisplayConditions Default Hidden
     ].freeze
 
+    OPERATIONS = {
+      "eq" => "=",
+      "neq" => "!=",
+      "lt" => "<",
+      "leq" => "<=",
+      "gt" => ">",
+      "geq" => ">="
+    }
+
     def initialize(form)
       @form = form
     end
@@ -180,27 +189,14 @@ module Forms
           right_to_push = dc.value.to_s
         end
 
-        op = case dc.op
-        when "eq"
-          "="
-        when "neq"
-          "!="
-        when "lt"
-          "<"
-        when "leq"
-          "<="
-        when "gt"
-          ">"
-        when "geq"
-          ">="
-        end
+        op = OPERATIONS[dc.op]
 
         # omit the concatenator on the last condition only
         relevant_to_push = if i + 1 == dc_length
-          "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push}"
-        else
-          "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push} #{concatenator} "
-        end
+                             "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push}"
+                           else
+                             "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push} #{concatenator} "
+                           end
       end
       return relevant_to_push
     end
