@@ -921,6 +921,7 @@ en:
     import_from_csv: "Import from CSV"
     export_csv: "Export CSV"
     export_xml: "Export XML"
+    export_xls: "Export XLSForm"
     export: "Export"
     models:
       form:
