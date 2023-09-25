@@ -238,8 +238,7 @@ class FormsController < ApplicationController
   # XLSForm export.
   def export_xls
     exporter = Forms::Export.new(@form)
-    send_data(exporter.to_xls, filename: "xlsform-#{@form.name.dasherize}-#{Time.zone.today}.xlsx")
-    # send_file ...
+    send_data(exporter.to_xls, filename: "xlsform-#{@form.name.dasherize}-#{Time.zone.today}.xls")
   end
 
   # ODK XML export for all published forms.
