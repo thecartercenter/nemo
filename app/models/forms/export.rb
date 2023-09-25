@@ -17,6 +17,34 @@ module Forms
       "geq" => ">="
     }.freeze
 
+    QTYPE_TO_XLS = {
+      # conversions
+      "location" => "geopoint",
+      "long_text" => "text",
+      "datetime" => "dateTime",
+      "annotated_image" => "image",
+      "counter" => "integer",
+
+      # no change
+      "text" => "text",
+      "select_one" => "select_one",
+      "select_multiple" => "select_multiple",
+      "decimal" => "decimal",
+      "time" => "time",
+      "date" => "date",
+      "image" => "image",
+      "barcode" => "barcode",
+      "audio" => "audio",
+      "video" => "video",
+      "integer" => "integer",
+
+      # Not supported in XLSForm
+      "sketch" => "sketch (WARNING: not supported)",
+      "signature" => "signature (WARNING: not supported)",
+
+      # XLSForm qtypes not supported in NEMO: range, geotrace, geoshape, note, file, select_one_from_file, select_multiple_from_file, background-audio, calculate, acknowledge, hidden, xml-external
+    }.freeze
+
     def initialize(form)
       @form = form
     end
@@ -100,7 +128,10 @@ module Forms
             os_name = ""
           end
 
-          type_to_push = "#{q.qtype_name}#{os_name}"
+          # convert question types
+          qtype_converted = QTYPE_TO_XLS[q.qtype_name]
+
+          type_to_push = "#{qtype_converted}#{os_name}"
           code_to_push = "#{q.full_dotted_rank}_#{q.code}"
 
           # Write the question row
