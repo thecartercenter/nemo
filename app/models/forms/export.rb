@@ -40,7 +40,7 @@ module Forms
 
       # Not supported in XLSForm
       "sketch" => "sketch (WARNING: not supported)",
-      "signature" => "signature (WARNING: not supported)",
+      "signature" => "signature (WARNING: not supported)"
 
       # XLSForm qtypes not supported in NEMO: range, geotrace, geoshape, note, file, select_one_from_file, select_multiple_from_file, background-audio, calculate, acknowledge, hidden, xml-external
     }.freeze
@@ -60,9 +60,7 @@ module Forms
 
     # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity
     def to_xls
-      # TODO
-      # option set "levels"?
-      # Make question types compatible with XLSForm, e.g., "long_text" should just be "text", "counter" does not exist, etc.
+      # TODO: option set "levels"?
 
       book = Spreadsheet::Workbook.new
 
