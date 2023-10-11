@@ -174,6 +174,8 @@ module ODK
     end
 
     def main_body_tags(xpath)
+      return +"" unless visible_children.present?
+
       # If this is a multilevel fragment, we are supposed to render just one of the subqings. %>
       if multilevel_fragment?
         visible_children[0].body_tags(group: self, xpath_prefix: xpath)
