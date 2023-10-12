@@ -105,25 +105,6 @@ class FormItem < ApplicationRecord
   accepts_nested_attributes_for :skip_rules, allow_destroy: true
   accepts_nested_attributes_for :constraints, allow_destroy: true
 
-  def self.rank_gaps?
-    SqlRunner.instance.run("
-      SELECT id FROM form_items fi1
-      WHERE fi1.rank > 1 AND NOT EXISTS (
-        SELECT id FROM form_items fi2
-        WHERE fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)
-    ").any?
-  end
-
-  def self.duplicate_ranks?
-    SqlRunner.instance.run("
-      SELECT ancestry, rank
-      FROM form_items
-      WHERE ancestry is NOT NULL AND ancestry != ''
-      GROUP BY ancestry, rank
-      HAVING COUNT(id) > 1
-    ").any?
-  end
-
   def self.terminate_sub_relationships(form_item_ids)
     Form.where(root_id: form_item_ids).update_all(root_id: nil)
     SkipRule.where(source_item_id: form_item_ids).delete_all
