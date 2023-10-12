@@ -238,7 +238,7 @@ class FormsController < ApplicationController
   # XLSForm export.
   def export_xls
     exporter = Forms::Export.new(@form)
-    send_data(exporter.to_xls, filename: "xlsform-#{@form.name.dasherize}-#{Time.zone.today}.xls")
+    send_data(exporter.to_xls.html_safe, filename: "xlsform-#{@form.name.dasherize}-#{Time.zone.today}.xls") # rubocop:disable Rails/OutputSafety
   end
 
   # ODK XML export for all published forms.

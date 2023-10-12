@@ -38,11 +38,13 @@ module Forms
       "video" => "video",
       "integer" => "integer",
 
-      # Not supported in XLSForm
-      "sketch" => "sketch (WARNING: not supported)",
-      "signature" => "signature (WARNING: not supported)"
+      # TODO: Not yet supported in our XLSForm exporter
+      "sketch" => "sketch (WARNING: not yet supported)",
+      "signature" => "signature (WARNING: not yet supported)"
 
-      # XLSForm qtypes not supported in NEMO: range, geotrace, geoshape, note, file, select_one_from_file, select_multiple_from_file, background-audio, calculate, acknowledge, hidden, xml-external
+      # Note: XLSForm qtypes not supported in NEMO:
+      #   range, geotrace, geoshape, note, file, select_one_from_file, select_multiple_from_file,
+      #   background-audio, calculate, acknowledge, hidden, xml-external
     }.freeze
 
     def initialize(form)
@@ -58,7 +60,7 @@ module Forms
       end
     end
 
-    # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Style/Next
     def to_xls
       # TODO: option set "levels"?
 
@@ -116,7 +118,9 @@ module Forms
 
             os.option_nodes.each_with_index do |node, x|
               if node.option.present?
-                choices.row(x + choices_index_mod).push(os.name, node.option.canonical_name, node.option.canonical_name)
+                choices
+                  .row(x + choices_index_mod)
+                  .push(os.name, node.option.canonical_name, node.option.canonical_name)
               end
             end
 
@@ -156,9 +160,9 @@ module Forms
       # Write
       file = StringIO.new
       book.write(file)
-      file.string.html_safe
+      file.string
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Style/Next
 
     private
 
@@ -227,7 +231,8 @@ module Forms
                              "#{relevant_to_push}#{left_to_push} #{op} #{right_to_push} #{concatenator} "
                            end
       end
-      return relevant_to_push
+
+      relevant_to_push
     end
   end
 end
