@@ -36,15 +36,13 @@ namespace :rank do
     end
 
     puts "Re-ranking #{form.descendants.count} descendants..."
-    rank_tree = []
+    ranks = {}
     FormItem.where(form: form).ordered_by_ancestry_and(:rank).each do |form_item|
-      depth = form_item.depth
-      next if depth.zero? # This is the root node.
-      rank_tree += [0] if depth > rank_tree.count
-      rank_tree.pop if depth < rank_tree.count
-      rank_tree[-1] += 1
-      puts "#{form_item.full_dotted_rank}: #{form_item.rank} => #{rank_tree.last}"
-      form_item.update!(rank: rank_tree.last)
+      next if form_item.depth.zero? # This is the root node.
+      ranks[form_item.ancestry] ||= 0
+      ranks[form_item.ancestry] += 1
+      puts "#{form_item.full_dotted_rank}: #{form_item.rank} => #{ranks[form_item.ancestry]}"
+      form_item.update!(rank: ranks[form_item.ancestry])
     end
   end
 end
