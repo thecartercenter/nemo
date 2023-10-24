@@ -80,6 +80,7 @@ module Forms
       repeat_depth = 1
       index_mod = 1 # start at row index 1
       choices_index_mod = 0
+      option_sets_used = Array.new
 
       @form.preordered_items.each_with_index do |q, i|
         # did one or more groups just end?
@@ -114,18 +115,23 @@ module Forms
           # do we have an option set?
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
-            os_name = " #{os.name}" # to respect XLSForm format
+            os_name = " #{os.name}"
+            os_already_logged = option_sets_used.include? q.option_set_id
 
-            os.option_nodes.each_with_index do |node, x|
-              if node.option.present?
-                choices
+            # log the option set to the spreadsheet if we haven't yet
+            unless os_already_logged
+              os.option_nodes.each_with_index do |node, x|
+                if node.option.present?
                   .row(x + choices_index_mod)
                   .push(os.name, node.option.canonical_name, node.option.canonical_name)
+                end
               end
-            end
 
-            # increment the choices index by how many nodes there are, so we start at this row next time
-            choices_index_mod += os.option_nodes.length
+              # increment the choices index by how many nodes there are, so we start at this row next time
+              choices_index_mod += os.option_nodes.length
+
+              option_sets_used.push(q.option_set_id)
+            end
           else
             os_name = ""
           end
