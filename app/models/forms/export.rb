@@ -80,7 +80,7 @@ module Forms
       repeat_depth = 1
       index_mod = 1 # start at row index 1
       choices_index_mod = 0
-      option_sets_used = Array.new
+      option_sets_used = []
 
       @form.preordered_items.each_with_index do |q, i|
         # did one or more groups just end?
@@ -116,7 +116,7 @@ module Forms
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
             os_name = " #{os.name}"
-            os_already_logged = option_sets_used.include? q.option_set_id
+            os_already_logged = option_sets_used.include?(q.option_set_id)
 
             # log the option set to the spreadsheet if we haven't yet
             unless os_already_logged
