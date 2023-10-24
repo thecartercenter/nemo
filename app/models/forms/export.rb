@@ -122,8 +122,9 @@ module Forms
             unless os_already_logged
               os.option_nodes.each_with_index do |node, x|
                 if node.option.present?
-                  .row(x + choices_index_mod)
-                  .push(os.name, node.option.canonical_name, node.option.canonical_name)
+                  choices
+                    .row(x + choices_index_mod)
+                    .push(os.name, node.option.canonical_name, node.option.canonical_name)
                 end
               end
 
