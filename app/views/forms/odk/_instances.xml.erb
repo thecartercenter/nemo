@@ -1,6 +1,5 @@
 <instance>
   <%= content_tag(:data, id: @form.id, version: @form.number) do %>
-    <%= @form.default_response_name_instance_tag %>
     <%= render("forms/odk/instance_node", node: @form.root_group) %>
 
     <%# Incomplete response question nodes %>
@@ -9,9 +8,7 @@
       <%= tag(ODK::FormDecorator::IR_CODE) %>
     <% end %>
 
-    <orx:meta>
-      <orx:instanceID/>
-    </orx:meta>
+    <%= @form.meta_tags %>
   <% end %>
 </instance>
 

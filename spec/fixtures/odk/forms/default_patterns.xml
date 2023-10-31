@@ -5,9 +5,6 @@
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
-          <meta>
-            <instanceName/>
-          </meta>
           <*itemcode1*>
             <header/>
             <*itemcode2*/>
@@ -19,6 +16,7 @@
           <*itemcode6*/>
           <orx:meta>
             <orx:instanceID/>
+            <orx:instanceName/>
           </orx:meta>
         </data>
       </instance>
