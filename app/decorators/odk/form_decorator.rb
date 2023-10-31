@@ -9,11 +9,10 @@ module ODK
     IR_QUESTION = "ir01"
     IR_CODE = "ir02"
 
-    def default_response_name_instance_tag
-      if default_response_name.present?
-        content_tag(:meta, tag(:instanceName))
-      else
-        ""
+    def meta_tags
+      content_tag("orx:meta") do
+        h.concat(tag("orx:instanceID"))
+        h.concat(tag("orx:instanceName")) if default_response_name.present?
       end
     end
 
