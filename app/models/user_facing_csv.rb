@@ -5,7 +5,7 @@ class UserFacingCSV
   BOM = "\xEF\xBB\xBF"
 
   def self.generate(**options, &block)
-    CSV.generate(BOM.dup, defaults.merge(options), &block)
+    CSV.generate(BOM.dup, **defaults.merge(options), &block)
   end
 
   def self.open(filename, mode = "rb", **options, &block)
@@ -15,7 +15,7 @@ class UserFacingCSV
         f << BOM
       end
     end
-    CSV.open(filename, "ab", defaults.merge(options), &block)
+    CSV.open(filename, "ab", **defaults.merge(options), &block)
   end
 
   def self.defaults

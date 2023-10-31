@@ -43,7 +43,7 @@ module Forms
 
       def text(warning)
         key = "integrity_warnings.reasons.#{object.model_name.i18n_key}.#{warning[:reason]}"
-        t(key, warning[:i18n_params] || {})
+        t(key, **warning[:i18n_params] || {})
       end
     end
   end

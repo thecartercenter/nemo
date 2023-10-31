@@ -79,7 +79,7 @@ gem "dotenv-rails", "~> 2.7"
 gem "ancestry", "~> 4.1"
 # Fork: Performance improvements.
 # https://github.com/sassafrastech/closure_tree/commits/master
-gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.2.0-noReorder-fastInsert"
+gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.4.0-noReorder-fastInsert"
 
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"
@@ -92,7 +92,7 @@ gem "dalli", "~> 3.2"
 # DB
 gem "hairtrigger", "~> 0.2.20"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
-gem "pg", "~> 1.2"
+gem "pg", "~> 1.4.6"
 gem "pg_search", "~> 2.1"
 gem "postgres-copy", "~> 1.0"
 gem "wisper", "~> 2.0"
@@ -124,7 +124,7 @@ gem "faker", "~> 2.2"
 gem "ruby-jmeter", "~> 3.1"
 
 group :development do
-  gem "binding_of_caller", "~> 0.8.0"
+  gem "binding_of_caller", "~> 1.0.0"
   gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4"
   gem "listen", "~> 3.0"
@@ -159,8 +159,7 @@ group :development, :test do
   gem "capybara-screenshot", "~> 1.0"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
   gem "puma", "~> 5.6"
-  gem "selenium-webdriver", "~> 3.9"
-  gem "webdrivers", "~> 4.0"
+  gem "selenium-webdriver"
 
   # Debugging
   gem "pry", "~> 0.13"
@@ -188,4 +187,5 @@ end
 
 group :test do
   gem "rspec-github", require: false
+  gem "warning"
 end

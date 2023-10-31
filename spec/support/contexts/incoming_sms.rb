@@ -41,9 +41,14 @@ shared_context "incoming sms" do
     reply
   end
 
-  # Builds and sends the request.
   def do_incoming_request(params)
-    send(*build_incoming_request(params))
+    method, url, params = build_incoming_request(params)
+    case method
+    when :post
+      post(url, **params)
+    when :get
+      get(url, **params)
+    end
   end
 
   # Builds the method, url, params, and headers for the incoming request to mimic the incoming adapter.

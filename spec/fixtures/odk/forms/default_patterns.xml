@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:orx="https://openrosa.org/xforms">
   <h:head>
     <h:title>*formname1*</h:title>
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
-          <meta>
-            <instanceName/>
-          </meta>
           <*itemcode1*>
             <header/>
             <*itemcode2*/>
@@ -17,6 +14,10 @@
             <*itemcode5*_2/>
           </*itemcode1*>
           <*itemcode6*/>
+          <orx:meta>
+            <orx:instanceID/>
+            <orx:instanceName/>
+          </orx:meta>
         </data>
       </instance>
       <instance id="*optsetcode2*_level2">

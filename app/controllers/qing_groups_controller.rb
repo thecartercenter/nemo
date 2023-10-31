@@ -74,8 +74,10 @@ class QingGroupsController < ApplicationController
     # Alternatively, we could map the errors into new hash keys, adding each locale as a suffix.
     #
     # Currently, only group_name has validations.
-    @qing_group.errors[:base] << @qing_group.errors.details[:group_name].map do |error:|
-      "#{t('attributes.name')}: #{t("activerecord.errors.messages.#{error}")}"
+    @qing_group.errors.details[:group_name].map do |_, error|
+      @qing_group.errors.add(:base, 
+        "#{t('attributes.name')}: #{t("activerecord.errors.messages.#{error}")}"
+      )
     end
     render(partial: "modal_body", locals: {qing_group: @qing_group.decorate}, status: :unprocessable_entity)
   end

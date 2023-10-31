@@ -419,16 +419,26 @@ This includes a nested Node library to transform XML into JSON which must be ins
 3. `cd ../..`
 4. `bundle exec rake theme:preprocess` # Re-process CSS so things look right.
 
+You may need to `yarn install` inside the transformer directory any time Enketo dependencies change.
+We plan to address this automatically in a future release.
+
 #### Upgrading to v13.12
 
-The underlying Ruby version has changed.
+The underlying Ruby version has changed to a minor new version.
 
 1. Check out the current version
 1. `rbenv install`
 
 #### Upgrading to v13.16
 
-The underlying Ruby version has changed.
+The underlying Ruby version has changed to a minor new version.
+
+1. Check out the current version
+1. `rbenv install`
+
+#### Upgrading to v13.21
+
+The underlying Ruby version has changed to a MAJOR new version.
 
 1. Check out the current version
 1. `rbenv install`

@@ -116,7 +116,7 @@ class Sms::Processor
     lang = options[:user]&.pref_lang ? options[:user].pref_lang.to_sym : I18n.default_locale
 
     # do the translation, raising error on failure
-    I18n.t(key, options.merge(locale: lang, raise: true))
+    I18n.t(key, **options.merge(locale: lang, raise: true))
   end
 
   def strip_auth_code(message, form)

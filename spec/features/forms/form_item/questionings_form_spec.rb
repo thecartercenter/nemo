@@ -205,9 +205,9 @@ describe "questionings form", js: true  do
   # `value` can be one of :hidden, :read_only, :editable
   def expect_field_visibility(field, value, **options)
     case value
-    when :hidden then expect_visible(field, false) && expect_editable(field, false, options)
-    when :read_only then expect_visible(field, true) && expect_editable(field, false, options)
-    when :editable then expect_visible(field, true) && expect_editable(field, true, options)
+    when :hidden then expect_visible(field, false) && expect_editable(field, false, **options)
+    when :read_only then expect_visible(field, true) && expect_editable(field, false, **options)
+    when :editable then expect_visible(field, true) && expect_editable(field, true, **options)
     else raise ArgumentError
     end
   end

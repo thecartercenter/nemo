@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:orx="https://openrosa.org/xforms">
   <h:head>
     <h:title>*formname1*</h:title>
     <model>
@@ -12,6 +12,9 @@
           <*itemcode5*/>
           <*itemcode6*/>
           <*itemcode7*/>
+          <orx:meta>
+            <orx:instanceID/>
+          </orx:meta>
         </data>
       </instance>
       <itext>

@@ -83,7 +83,7 @@ describe Setting do
         Thread.new do
           Setting.for_mission(nil)
           expect { 3.times { Setting.for_mission(nil) } }.to make_database_queries(count: 3)
-        end
+        end.join
       end
     end
   end

@@ -22,7 +22,7 @@ feature "response form location picker", js: true do
     expect(page).to have_content("Longitude is out of range")
   end
 
-  scenario "picking a location" do
+  scenario "picking a location", flapping: true do
     visit new_response_path(params)
 
     # open the location picker

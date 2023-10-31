@@ -9,10 +9,10 @@ class ApplicationMailer < ActionMailer::Base
 
   private
 
-  def mail(**params)
+  def mail(params)
     # @mission has to be set by the mailer method for theme settings to be respected.
     params[:from] ||= site_email_with_name
-    super(**params)
+    super(params)
   end
 
   def mission_config

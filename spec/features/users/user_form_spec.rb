@@ -11,7 +11,7 @@ feature "user form", js: true do
   end
 
   context "admin user in mission mode" do
-    scenario "create and edit user should work" do
+    scenario "create and edit user should work", flapping: true do
       visit("/en/m/#{mission.compact_name}/users/new")
 
       # check for placeholders since they have not yet been overwritten

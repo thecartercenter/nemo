@@ -1,4 +1,6 @@
-require: rubocop-rails
+require: 
+  - rubocop-rails
+  - ./lib/rubocop/rubocop
 
 # Disable defaults
 AllCops:
@@ -45,13 +47,16 @@ Layout/SpaceInsideHashLiteralBraces:
 
 Layout/LineLength:
   Enabled: true
-  Max: 110
+  Max: 120
   IgnoredPatterns:
     # Test descriptors
     - ^\s*(describe|it|context|scenario) ".+" do$
 
 Lint/RedundantCopDisableDirective:
   Enabled: false
+
+Lint/LastKeywordArgument:
+  Enabled: true
 
 Lint/UnusedMethodArgument:
   # Otherwise we have to remove named args from the method signature altogether which seems to reduce

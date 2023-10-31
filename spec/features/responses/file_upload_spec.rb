@@ -105,7 +105,7 @@ feature "response form file upload", js: true do
 
     location = res["location"]
     if location
-      warn("Redirected to #{location}")
+      Rails::Debug.log("Redirected to #{location}")
       return expect_download(location)
     end
 

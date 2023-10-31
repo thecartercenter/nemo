@@ -42,13 +42,13 @@ feature "SMS Guide", js: true do
     end
 
     around do |example|
-      bool = Rails.configuration.action_view.raise_on_missing_translations
+      bool = Rails.configuration.i18n.raise_on_missing_translations
       ELMO::Application.configure do
-        config.action_view.raise_on_missing_translations = false
+        config.i18n.raise_on_missing_translations = false
       end
       example.run
       ELMO::Application.configure do
-        config.action_view.raise_on_missing_translations = bool
+        config.i18n.raise_on_missing_translations = bool
       end
     end
 
