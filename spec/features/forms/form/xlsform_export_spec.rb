@@ -13,12 +13,12 @@ feature "xlsform export" do
       login(user)
     end
 
-    it "XML exports successfully" do
+    it "exports to XLSForm successfully" do
       visit(form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
       click_link("Export XLSForm")
 
       expect(page.current_url).to match("export_xls")
-      expect(page.body).to match("#{form.name}")
+      expect(page.body).to match(form.name.to_s)
       expect(page.body).to match("text")
     end
   end
