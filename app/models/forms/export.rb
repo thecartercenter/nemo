@@ -78,9 +78,14 @@ module Forms
 
       group_depth = 1 # assume base level
       repeat_depth = 1
+      option_sets_used = []
+
+      # Define the below "index modifiers" which keep track of the line of the spreadsheet we are writing to.
+        # The for loop below (tracked by index i) loops through the list of form items, and so the index does not take into account rows that we need to write for when groups end. In XLSForm, these are written to a row all to themselves.
+        # This causes the index i to be de-synchronized with the row of the spreadsheet that we are writing to.
+        # Hence, we push to the row (i + index_mod)
       index_mod = 1 # start at row index 1
       choices_index_mod = 0
-      option_sets_used = []
 
       @form.preordered_items.each_with_index do |q, i|
         # did one or more groups just end?
@@ -115,6 +120,9 @@ module Forms
           # do we have an option set?
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
+
+            # include leading space to respect XLSForm format
+            # question name should be followed by the option set name (if applicable) separated by a space
             os_name = " #{os.name}"
             os_already_logged = option_sets_used.include?(q.option_set_id)
 
@@ -141,7 +149,7 @@ module Forms
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
           type_to_push = "#{qtype_converted}#{os_name}"
-          code_to_push = "#{q.full_dotted_rank}_#{q.code}"
+          code_to_push = "#{q.code}_#{q.full_dotted_rank}"
 
           # Write the question row
           questions.row(i + index_mod).push(type_to_push, code_to_push, q.name, q.required.to_s)
@@ -197,11 +205,6 @@ module Forms
       else
         "Group"
       end
-    end
-
-    def to_number(value)
-      return if value.blank?
-      (value.to_f % 1).positive? ? value.to_f : value.to_i
     end
 
     # Takes an array of conditions and outputs a single string
