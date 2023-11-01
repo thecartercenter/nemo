@@ -123,7 +123,8 @@ module Forms
 
             # include leading space to respect XLSForm format
             # question name should be followed by the option set name (if applicable) separated by a space
-            os_name = " #{os.name}"
+            # replace any spaces in the option set name with underscores to ensure the form is parsed correctly
+            os_name = " #{os.name.tr(" ", "_")}"
             os_already_logged = option_sets_used.include?(q.option_set_id)
 
             # log the option set to the spreadsheet if we haven't yet
