@@ -158,8 +158,6 @@ module Forms
         # if we have any relevant conditions, add them to the end of the row
         if q.display_conditions.any?
           questions.row(i + index_mod).push(conditions_to_xls(q.display_conditions, q.display_if))
-        else
-          questions.row(i + index_mod).push("")
         end
 
         if q.constraints.any?
@@ -170,7 +168,7 @@ module Forms
       end
 
       # Settings
-      settings.row(1).push(@form.name, @form.id, @form.updated_at.to_s, "English (en)")
+      settings.row(1).push(@form.name, @form.id, @form.current_version.decorate.name, "English (en)")
 
       # Write
       file = StringIO.new
