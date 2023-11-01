@@ -128,11 +128,14 @@ module Forms
             os_already_logged = option_sets_used.include?(q.option_set_id)
 
             # log the option set to the spreadsheet if we haven't yet
+            # ni = index for the option nodes loop
+            # node = the current option node
+            # TODO: support option set "levels" by creating a cascading sheet here
             unless os_already_logged
-              os.option_nodes.each_with_index do |node, x|
+              os.option_nodes.each_with_index do |node, ni|
                 if node.option.present?
                   choices
-                    .row(x + choices_index_mod)
+                    .row(ni + choices_index_mod)
                     .push(os.name, node.option.canonical_name, node.option.canonical_name)
                 end
               end
