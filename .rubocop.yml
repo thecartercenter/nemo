@@ -1,6 +1,5 @@
-require: 
+require:
   - rubocop-rails
-  - ./lib/rubocop/rubocop
 
 # Disable defaults
 AllCops:
