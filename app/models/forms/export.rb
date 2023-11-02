@@ -107,11 +107,13 @@ module Forms
         end
 
         if q.group? # is this a group?
+          group_name = q.code.tr(" ", "_")
+
           if q.repeatable?
-            questions.row(i + index_mod).push("begin repeat", q.code)
+            questions.row(i + index_mod).push("begin repeat", group_name, q.code)
             repeat_depth += 1
           else
-            questions.row(i + index_mod).push("begin group", q.code)
+            questions.row(i + index_mod).push("begin group", group_name, q.code)
           end
 
           # update counters
@@ -124,7 +126,7 @@ module Forms
             # include leading space to respect XLSForm format
             # question name should be followed by the option set name (if applicable) separated by a space
             # replace any spaces in the option set name with underscores to ensure the form is parsed correctly
-            os_name = " #{os.name.tr(" ", "_")}"
+            os_name = os.name.tr(" ", "_")
             os_already_logged = option_sets_used.include?(q.option_set_id)
 
             # log the option set to the spreadsheet if we haven't yet
@@ -136,7 +138,7 @@ module Forms
                 if node.option.present?
                   choices
                     .row(ni + choices_index_mod)
-                    .push(os.name, node.option.canonical_name, node.option.canonical_name)
+                    .push(os_name, node.option.canonical_name, node.option.canonical_name)
                 end
               end
 
@@ -152,7 +154,7 @@ module Forms
           # convert question types
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
-          type_to_push = "#{qtype_converted}#{os_name}"
+          type_to_push = "#{qtype_converted} #{os_name}"
           code_to_push = "#{q.code}_#{q.full_dotted_rank}"
 
           # Write the question row
@@ -221,12 +223,12 @@ module Forms
       conditions.each_with_index do |dc, i|
         # prep left side of expression
         left_qing = Questioning.find(dc.left_qing_id)
-        left_to_push = "${#{left_qing.full_dotted_rank}_#{left_qing.code}}"
+        left_to_push = "${#{left_qing.code}_#{left_qing.full_dotted_rank}}"
 
         # prep right side of expression
         if dc.right_side_is_qing?
           right_qing = Questioning.find(dc.right_qing_id)
-          right_to_push = "${#{right_qing.full_dotted_rank}_#{right_qing.code}}"
+          right_to_push = "${#{right_qing.code}_#{right_qing.full_dotted_rank}}"
         elsif Float(dc.value, exception: false).nil? # it's not a number
           # to respect XLSform rules, surround with single quotes unless it's a number
           right_to_push = "'#{dc.value}'"
