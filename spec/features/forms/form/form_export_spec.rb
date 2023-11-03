@@ -19,6 +19,15 @@ feature "form export" do
       click_link("Export XML")
       expect(page.body).to match("<h:title>#{form.name}</h:title>")
     end
+
+    it "XLSForm exports successfully" do
+      visit(form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+      click_link("Export XLSForm")
+
+      expect(page.current_url).to match("export_xls")
+      expect(page.body).to match(form.name.to_s)
+      expect(page.body).to match("text")
+    end
   end
 
   context "multiple forms" do

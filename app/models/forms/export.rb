@@ -174,7 +174,8 @@ module Forms
       end
 
       # Settings
-      settings.row(1).push(@form.name, @form.id, @form.current_version.decorate.name, "English (en)")
+      lang = @form.mission.setting.preferred_locales[0].to_s
+      settings.row(1).push(@form.name, @form.id, @form.current_version.decorate.name, lang)
 
       # Write
       file = StringIO.new
