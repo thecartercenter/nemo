@@ -8,15 +8,6 @@ module Forms
       DisplayLogic DisplayConditions Default Hidden
     ].freeze
 
-    OPERATIONS = {
-      "eq" => "=",
-      "neq" => "!=",
-      "lt" => "<",
-      "leq" => "<=",
-      "gt" => ">",
-      "geq" => ">="
-    }.freeze
-
     QTYPE_TO_XLS = {
       # conversions
       "location" => "geopoint",
@@ -81,9 +72,9 @@ module Forms
       option_sets_used = []
 
       # Define the below "index modifiers" which keep track of the line of the spreadsheet we are writing to.
-        # The for loop below (tracked by index i) loops through the list of form items, and so the index does not take into account rows that we need to write for when groups end. In XLSForm, these are written to a row all to themselves.
-        # This causes the index i to be de-synchronized with the row of the spreadsheet that we are writing to.
-        # Hence, we push to the row (i + index_mod)
+      # The for loop below (tracked by index i) loops through the list of form items, and so the index does not take into account rows that we need to write for when groups end. In XLSForm, these are written to a row all to themselves.
+      # This causes the index i to be de-synchronized with the row of the spreadsheet that we are writing to.
+      # Hence, we push to the row (i + index_mod)
       index_mod = 1 # start at row index 1
       choices_index_mod = 0
 
@@ -237,7 +228,8 @@ module Forms
           right_to_push = dc.value.to_s
         end
 
-        op = OPERATIONS[dc.op]
+        op = ODK::ConditionDecorator::OP_XPATH[dc.op.to_sym]
+        raise "Operation not found: #{dc.op}" if op.blank?
 
         # omit the concatenator on the last condition only
         relevant_to_push = if i + 1 == dc_length

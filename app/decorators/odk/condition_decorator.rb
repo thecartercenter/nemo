@@ -38,6 +38,10 @@ module ODK
       decorate(object.right_qing)
     end
 
+    def convert_op(operation)
+      OP_XPATH[operation]
+    end
+
     private
 
     def select_multiple_to_odk
