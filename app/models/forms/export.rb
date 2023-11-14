@@ -76,35 +76,39 @@ module Forms
       # This causes the index i to be de-synchronized with the row of the spreadsheet that we are writing to.
       # Hence, we push to the row (i + index_mod)
       index_mod = 1 # start at row index 1
-      choices_index_mod = 0
+      choices_index_mod = 1
 
       @form.preordered_items.each_with_index do |q, i|
+        # this variable keeps track of the spreadsheet row to be written during this loop iteration
+        row_index = i + index_mod
+
         # did one or more groups just end?
         # if so, the qing's depth will be smaller than the depth counter
         while group_depth > q.ancestry_depth
           # are we in a repeat group?
           # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
           if repeat_depth > 1 && repeat_depth >= group_depth
-            questions.row(i + index_mod).push("end repeat")
+            questions.row(row_index).push("end repeat")
             repeat_depth -= 1
           else
             # end the group
-            questions.row(i + index_mod).push("end group")
+            questions.row(row_index).push("end group")
           end
 
-          # update counters
+          # update counters to accomodate additional "end group" lines
           group_depth -= 1
           index_mod += 1
+          row_index += 1
         end
 
         if q.group? # is this a group?
           group_name = q.code.tr(" ", "_")
 
           if q.repeatable?
-            questions.row(i + index_mod).push("begin repeat", group_name, q.code)
+            questions.row(row_index).push("begin repeat", group_name, q.code)
             repeat_depth += 1
           else
-            questions.row(i + index_mod).push("begin group", group_name, q.code)
+            questions.row(row_index).push("begin group", group_name, q.code)
           end
 
           # update counters
@@ -138,28 +142,25 @@ module Forms
 
               option_sets_used.push(q.option_set_id)
             end
-          else
-            os_name = ""
           end
 
           # convert question types
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
           type_to_push = "#{qtype_converted} #{os_name}"
-          code_to_push = "#{q.code}_#{q.full_dotted_rank}"
 
           # Write the question row
-          questions.row(i + index_mod).push(type_to_push, code_to_push, q.name, q.required.to_s)
+          questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s, filter_to_push)
         end
 
         # if we have any relevant conditions, add them to the end of the row
         if q.display_conditions.any?
-          questions.row(i + index_mod).push(conditions_to_xls(q.display_conditions, q.display_if))
+          questions.row(row_index).push(conditions_to_xls(q.display_conditions, q.display_if))
         end
 
         if q.constraints.any?
           q.constraints.each do |c|
-            questions.row(i + index_mod).push(conditions_to_xls(c.conditions, c.accept_if))
+            questions.row(row_index).push(conditions_to_xls(c.conditions, c.accept_if))
           end
         end
       end
