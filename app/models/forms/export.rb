@@ -150,7 +150,7 @@ module Forms
           type_to_push = "#{qtype_converted} #{os_name}"
 
           # Write the question row
-          questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s, filter_to_push)
+          questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s)
         end
 
         # if we have any relevant conditions, add them to the end of the row
