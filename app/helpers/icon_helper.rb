@@ -11,6 +11,7 @@ module IconHelper
     export: "download",
     export_csv: "download",
     export_xml: "download",
+    export_xls: "download",
     go_live: "play",
     import: "upload",
     index: "list",

@@ -54,9 +54,6 @@ Layout/LineLength:
 Lint/RedundantCopDisableDirective:
   Enabled: false
 
-Lint/LastKeywordArgument:
-  Enabled: true
-
 Lint/UnusedMethodArgument:
   # Otherwise we have to remove named args from the method signature altogether which seems to reduce
   # clarity of the code.
