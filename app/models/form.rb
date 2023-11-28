@@ -159,14 +159,6 @@ class Form < ApplicationRecord
     "odk-form/#{id}-#{published_changed_at}"
   end
 
-  def api_user_id_can_see?(api_user_id)
-    access_level == "public" || access_level == "protected" &&
-      whitelistings.pluck(:user_id).include?(api_user_id)
-  end
-
-  def api_visible_questions
-    questions.select { |q| q.access_level == "inherit" }
-  end
 
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899_999_999) + 100_000_000}"

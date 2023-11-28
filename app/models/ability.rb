@@ -73,10 +73,6 @@ class Ability
 
     cannot(:change_assignments, User, id: user.id) unless user.admin?
 
-    # Can only modify own API key.
-    cannot(:regenerate_api_key, User)
-    can(:regenerate_api_key, User) { |u| u == user }
-
     can(:create, Media::Object)
     can(:destroy, Media::Object) { |obj| obj.response.nil? || can?(:edit, obj.response) }
   end

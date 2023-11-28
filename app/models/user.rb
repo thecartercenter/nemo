@@ -95,7 +95,6 @@ class User < ApplicationRecord
   before_validation :normalize_fields
   before_validation :generate_password_if_none
   before_save :clear_assignments_without_roles
-  before_create :regenerate_api_key
   before_create :regenerate_sms_auth_code
   # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
@@ -341,14 +340,6 @@ class User < ApplicationRecord
   # returns hash of missions to roles
   def roles
     Hash[*assignments.map { |a| [a.mission, a.role] }.flatten]
-  end
-
-  def regenerate_api_key
-    # loop if necessary till unique token generated
-    loop do
-      self.api_key = SecureRandom.hex
-      break unless User.exists?(api_key: api_key)
-    end
   end
 
   def regenerate_sms_auth_code
