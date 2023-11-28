@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 6.1.1"
+gem "rails", "~> 7.0"
 
 # Misc
 gem "attribute_normalizer", "~> 1.2"
@@ -106,7 +106,7 @@ gem "whenever", "~> 1.0", require: false
 gem "i18n-country-translations", "~> 1.0"
 gem "i18n-js", "~> 3.0"
 gem "iso-639", "~> 0.3.5"
-gem "rails-i18n", "~> 6.0"
+gem "rails-i18n", "~> 7.0"
 
 # Analytics
 gem "scout_apm", "~> 5.0"
@@ -130,7 +130,7 @@ group :development do
   gem "rails-erd", "~> 1.6"
 
   # N+1 detection. Config is in environments/development.rb
-  gem "bullet", "~> 6.1"
+  gem "bullet", "~> 7.1"
 
   # Great for debugging i18n paths (uncomment temporarily when needed).
   # gem "i18n-debug", "~> 1.1"
