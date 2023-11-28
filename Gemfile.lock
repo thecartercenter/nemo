@@ -339,7 +339,7 @@ GEM
     mini_magick (4.12.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.4)
-    minitest (5.19.0)
+    minitest (5.20.0)
     mocha (1.16.1)
     msgpack (1.7.2)
     multi_json (1.15.0)
@@ -502,15 +502,14 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.30.0)
       parser (>= 3.2.1.0)
-    rubocop-rails (2.9.1)
+    rubocop-rails (2.15.2)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
-      rubocop (>= 0.90.0, < 2.0)
-    rubocop-rake (0.5.1)
-      rubocop
-    rubocop-rspec (2.4.0)
+      rubocop (>= 1.7.0, < 2.0)
+    rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-      rubocop-ast (>= 1.1.0)
+    rubocop-rspec (2.11.1)
+      rubocop (~> 1.19)
     ruby-graphviz (1.2.5)
       rexml
     ruby-jmeter (3.1.08)
@@ -571,7 +570,7 @@ GEM
       climate_control (>= 0.0.3, < 1.0)
     thor (1.2.2)
     tilt (2.2.0)
-    timecop (0.9.6)
+    timecop (0.9.8)
     timeout (0.4.0)
     tins (1.32.1)
       sync
@@ -621,7 +620,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.34)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.12)
 
 PLATFORMS
   ruby
@@ -711,7 +710,7 @@ DEPENDENCIES
   rspec-rails (~> 3.9)
   rubocop (= 1.22.1)
   rubocop-rails (~> 2.8)
-  rubocop-rake (~> 0.5.1)
+  rubocop-rake (~> 0.6.0)
   rubocop-rspec (~> 2.0)
   ruby-jmeter (~> 3.1)
   rubyzip (~> 2.3)
