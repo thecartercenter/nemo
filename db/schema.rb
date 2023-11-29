@@ -569,7 +569,6 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "admin", default: false, null: false
-    t.string "api_key", limit: 255
     t.integer "birth_year"
     t.datetime "created_at", null: false
     t.string "crypted_password", limit: 255, null: false

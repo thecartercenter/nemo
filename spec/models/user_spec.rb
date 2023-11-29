@@ -8,7 +8,6 @@
 #  id                :uuid             not null, primary key
 #  active            :boolean          default(TRUE), not null
 #  admin             :boolean          default(FALSE), not null
-#  api_key           :string(255)
 #  birth_year        :integer
 #  crypted_password  :string(255)      not null
 #  current_login_at  :datetime
