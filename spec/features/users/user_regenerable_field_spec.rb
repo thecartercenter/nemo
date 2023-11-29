@@ -12,13 +12,6 @@ feature "user regenerable fields", js: true do
     login(user)
   end
 
-  describe "api key" do
-    scenario "can regenerate" do
-      visit("/en/m/#{mission.compact_name}/users/#{user.id}/edit")
-      expect_token_regenerated(".user_api_key")
-    end
-  end
-
   describe "sms auth code" do
     scenario "can regenerate" do
       visit("/en/m/#{mission.compact_name}/users/#{user.id}/edit")

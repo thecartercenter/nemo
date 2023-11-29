@@ -44,22 +44,6 @@ describe Form do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
 
-  context "API User" do
-    before do
-      form.access_level = "protected"
-      form.whitelistings.create(user_id: user.id)
-    end
-
-    it "should return true for user in whitelist" do
-      expect(form.api_user_id_can_see?(user.id)).to be_truthy
-    end
-
-    it "should return false for user not in whitelist" do
-      other_user = create(:user)
-      expect(form.api_user_id_can_see?(other_user.id)).to be_falsey
-    end
-  end
-
   describe "validation" do
     describe "DynamicPatternValidator" do
       let(:form) { build(:form, default_response_name: "Item: calc($Foo + 4) ") }
