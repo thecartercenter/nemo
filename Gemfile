@@ -159,7 +159,7 @@ group :development, :test do
   gem "capybara-screenshot", "~> 1.0"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
   gem "puma", "~> 5.6"
-  gem "selenium-webdriver"
+  gem "selenium-webdriver", "~> 4.11"
 
   # Debugging
   gem "pry", "~> 0.13"
@@ -178,14 +178,14 @@ group :development, :test do
   gem "awesome_print", "~> 1.6"
   gem "database_cleaner", "~> 1.7"
   gem "db-query-matchers", "~> 0.10"
-  gem "rubocop", "1.5.2" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
+  gem "rubocop", "1.22.1" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
   gem "rubocop-rails", "~> 2.8"
-  gem "rubocop-rake", "~> 0.5.1"
+  gem "rubocop-rake", "~> 0.6.0"
   gem "rubocop-rspec", "~> 2.0"
-  gem "timecop", "~> 0.9.2"
+  gem "timecop", "0.9.6" # Timecop 0.9.8 breaks selenium (Selenium::WebDriver::Error::NoSuchWindowError).
 end
 
 group :test do
-  gem "rspec-github", require: false
-  gem "warning"
+  gem "rspec-github", "~> 2.4", require: false
+  gem "warning", "~> 1.3"
 end
