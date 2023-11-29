@@ -8,7 +8,6 @@
 #  id                :uuid             not null, primary key
 #  active            :boolean          default(TRUE), not null
 #  admin             :boolean          default(FALSE), not null
-#  api_key           :string(255)
 #  birth_year        :integer
 #  crypted_password  :string(255)      not null
 #  current_login_at  :datetime
@@ -147,10 +146,6 @@ describe User do
 
   describe "creation" do
     let(:user) { create(:user, email: "foo@bar.com") }
-
-    it "should have an api_key generated" do
-      expect(user.api_key).to_not(be_blank)
-    end
 
     it "should have an SMS auth code generated" do
       expect(user.sms_auth_code).to_not(be_blank)

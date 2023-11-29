@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_02_211012) do
-
+ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -570,7 +569,6 @@ ActiveRecord::Schema.define(version: 2023_11_02_211012) do
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "admin", default: false, null: false
-    t.string "api_key", limit: 255
     t.integer "birth_year"
     t.datetime "created_at", null: false
     t.string "crypted_password", limit: 255, null: false
@@ -601,16 +599,6 @@ ActiveRecord::Schema.define(version: 2023_11_02_211012) do
     t.index ["login"], name: "index_users_on_login", unique: true
     t.index ["name"], name: "index_users_on_name"
     t.index ["sms_auth_code"], name: "index_users_on_sms_auth_code", unique: true
-  end
-
-  create_table "whitelistings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id"
-    t.uuid "whitelistable_id"
-    t.string "whitelistable_type", limit: 255
-    t.index ["user_id"], name: "index_whitelistings_on_user_id"
-    t.index ["whitelistable_id"], name: "index_whitelistings_on_whitelistable_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -678,11 +666,9 @@ ActiveRecord::Schema.define(version: 2023_11_02_211012) do
   add_foreign_key "user_group_assignments", "users", name: "user_group_assignments_user_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "user_groups", "missions", name: "user_groups_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "users", "missions", column: "last_mission_id", name: "users_last_mission_id_fkey", on_update: :restrict, on_delete: :nullify
-  add_foreign_key "whitelistings", "users", name: "whitelistings_user_id_fkey", on_update: :restrict, on_delete: :restrict
-  create_trigger("answers_before_insert_update_row_tr", :generated => true, :compatibility => 1).
-      on("answers").
-      before(:insert, :update) do
+  create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
+    .on("answers")
+    .before(:insert, :update) do
     "new.tsv := TO_TSVECTOR('simple', COALESCE( new.value, to_char(new.date_value, 'YYYY-MM-DD'), to_char(new.time_value, 'HH24hMImSSs'), to_char(new.datetime_value, 'YYYY-MM-DD HH24hMImSSs'), (SELECT STRING_AGG(opt_name_translation.value, ' ') FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation WHERE options.id = option_nodes.option_id AND (option_nodes.id = new.option_node_id OR option_nodes.id IN (SELECT option_node_id FROM choices WHERE answer_id = new.id))), '' ));"
   end
-
 end

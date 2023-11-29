@@ -270,16 +270,5 @@ ELMO::Application.routes.draw do
     put "/submission/:id", to: "responses#enketo_update", defaults: {format: "xml"}
   end
 
-  # API routes.
-  namespace :api, defaults: {format: :json} do
-    api_version module: "v1", path: {value: "v1"} do
-      scope "/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: {mode: "m"} do
-        resources :forms, only: %i[index show]
-        resources :responses, only: :index
-        resources :answers, only: :index
-      end
-    end
-  end
-
   root to: redirect("/#{I18n.default_locale}")
 end

@@ -47,9 +47,6 @@
       <%= f.field(:password_confirmation, type: :password) %>
     </div>
   <% end %>
-  <% if !@user.new_record? && can?(:regenerate_api_key, @user) %>
-    <%= f.regenerable_field(:api_key, confirm: t("setting.api_key_warning")) %>
-  <% end %>
   <% if !@user.new_record? && can?(:regenerate_sms_auth_code, @user) %>
     <%= f.regenerable_field(:sms_auth_code, confirm: t("setting.sms_auth_code_warning")) %>
   <% end %>
