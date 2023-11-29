@@ -54,7 +54,6 @@ class Form < ApplicationRecord
   has_many :responses, inverse_of: :form, dependent: :destroy
   has_many :versions, -> { order(:number) }, class_name: "FormVersion", inverse_of: :form,
                                              dependent: :destroy
-  has_many :whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy
   has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
   # For some reason dependent: :destroy doesn't work with this assoc. See destroy_items for workaround.

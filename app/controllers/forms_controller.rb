@@ -116,7 +116,6 @@ class FormsController < ApplicationController
   end
 
   def create
-    set_api_users
     if @form.save
       set_success_and_redirect(@form, to: edit_form_path(@form))
     else
@@ -127,7 +126,6 @@ class FormsController < ApplicationController
 
   def update
     Form.transaction do
-      set_api_users
       @form.assign_attributes(form_params)
       authorize!(:rename, @form) if @form.name_changed?
       @form.save!
@@ -281,16 +279,6 @@ class FormsController < ApplicationController
 
   def setup_condition_computer
     @condition_computer = Forms::ConditionComputer.new(@form)
-  end
-
-  def set_api_users
-    return unless params[:form][:access_level] == "protected"
-
-    @form.whitelistings.destroy_all if action_name == "update"
-
-    (params[:whitelistings] || []).each do |api_user|
-      @form.whitelistings.new(user_id: api_user)
-    end
   end
 
   # prepares objects and renders the form template
