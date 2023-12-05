@@ -63,8 +63,7 @@ module Forms
       settings = book.create_worksheet(name: "settings")
 
       # Write sheet headings at row index 0
-      questions.row(0).push("type", "name", "label", "required", "relevant", "constraint")
-      choices.row(0).push("list_name", "name", "label")
+      questions.row(0).push("type", "name", "label", "required", "choice_filter", "relevant", "constraint")
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_depth = 1 # assume base level
@@ -115,6 +114,8 @@ module Forms
           group_depth += 1
         else # is this a question?
           # do we have an option set?
+          os_name = ""
+          filter_to_push = ""
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
 
@@ -124,22 +125,7 @@ module Forms
             os_name = os.name.tr(" ", "_")
             os_already_logged = option_sets_used.include?(q.option_set_id)
 
-            # log the option set to the spreadsheet if we haven't yet
-            # ni = index for the option nodes loop
-            # node = the current option node
-            # TODO: support option set "levels" by creating a cascading sheet here
             unless os_already_logged
-              os.option_nodes.each_with_index do |node, ni|
-                if node.option.present?
-                  choices
-                    .row(ni + choices_index_mod)
-                    .push(os_name, node.option.canonical_name, node.option.canonical_name)
-                end
-              end
-
-              # increment the choices index by how many nodes there are, so we start at this row next time
-              choices_index_mod += os.option_nodes.length
-
               option_sets_used.push(q.option_set_id)
             end
           end
@@ -164,6 +150,13 @@ module Forms
           end
         end
       end
+
+      # Choices
+      # return an array to write to the spreadsheet
+      option_matrix = options_to_xls(option_sets_used)
+      # Loop through matrix array and write to options spreadsheet
+      # options.row(...)
+      # note: also need to split questions with option set levels into multiple questions, one for each level, and increment the row_index accordingly
 
       # Settings
       lang = @form.mission.setting.preferred_locales[0].to_s
@@ -241,6 +234,55 @@ module Forms
       end
 
       relevant_to_push
+    end
+
+    # This function traverses the option nodes and outputs data to write to the options sheet
+    # Should include cascading levels as additional columns if they exist
+    # option_sets = array of unique option set IDs used in the exported form
+    # https://docs.getodk.org/form-logic/#filtering-options-in-select-questions
+    def options_to_xls(option_sets)
+      # initialize option set matrix
+      os_matrix = []
+      header_row = []
+      header_row.push("list_name", "name", "label")
+
+      # for each unique option set in the list, loop through the nodes and extract the options
+      option_sets.each do |id|
+        # get the option set from id
+        os = OptionSet.find(id)
+
+        # node = the current option node
+        os.option_nodes.each do |node|
+          # do we have levels?
+          level_to_push = ""
+          if node.level.present?
+            list_name_to_push = node.level.name
+
+            # check if top level first and write to header in reverse order?
+
+            if node.children.present?
+              # push to header row
+              unless header_row.contains?(node.level.name)
+                header_row.push(node.level.name)
+              end
+            else
+              # Q: will this work if there is more than one cascading level?
+              # e.g., country -> state -> city
+              level_to_push = node.parent.name
+            end
+          end
+
+          if node.option.present?
+            option_row = []
+            option_row.push(os.name.tr(" ", "_"), node.option.canonical_name, node.option.canonical_name, level_to_push)
+            os_matrix.push(option_row)
+          end
+        end
+      end
+
+      # Prepend header row
+      os_matrix.insert(0, header_row)
+      Rails.logger.debug(os_matrix)
     end
   end
 end
