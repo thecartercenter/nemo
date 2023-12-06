@@ -133,6 +133,7 @@ module Forms
           # convert question types
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
+          # TODO if there's an option set then os_name has to be replaced with level name
           type_to_push = "#{qtype_converted} #{os_name}"
 
           # Write the question row
@@ -154,8 +155,13 @@ module Forms
       # Choices
       # return an array to write to the spreadsheet
       option_matrix = options_to_xls(option_sets_used)
-      # Loop through matrix array and write to options spreadsheet
-      # options.row(...)
+
+      # Loop through matrix array and write to "choices" tab of the XLSForm
+      option_matrix.each_with_index do | option_row, row_index |
+        option_row.each_with_index do | row_to_write, column_index |
+          choices.row(row_index).push(row_to_write)
+        end
+      end
       # note: also need to split questions with option set levels into multiple questions, one for each level, and increment the row_index accordingly
 
       # Settings
@@ -262,7 +268,7 @@ module Forms
 
             if node.children.present?
               # push to header row
-              unless header_row.contains?(node.level.name)
+              unless header_row.include?(node.level.name)
                 header_row.push(node.level.name)
               end
             else
@@ -282,7 +288,6 @@ module Forms
 
       # Prepend header row
       os_matrix.insert(0, header_row)
-      Rails.logger.debug(os_matrix)
     end
   end
 end
