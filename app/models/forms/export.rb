@@ -71,11 +71,12 @@ module Forms
       option_sets_used = []
 
       # Define the below "index modifiers" which keep track of the line of the spreadsheet we are writing to.
-      # The for loop below (tracked by index i) loops through the list of form items, and so the index does not take into account rows that we need to write for when groups end. In XLSForm, these are written to a row all to themselves.
+      # The for loop below (tracked by index i) loops through the list of form items, and so the index does not
+      # take into account rows that we need to write for when groups end.
+      # In XLSForm, these are written to a row all to themselves.
       # This causes the index i to be de-synchronized with the row of the spreadsheet that we are writing to.
       # Hence, we push to the row (i + index_mod)
       index_mod = 1 # start at row index 1
-      choices_index_mod = 1
 
       @form.preordered_items.each_with_index do |q, i|
         # this variable keeps track of the spreadsheet row to be written during this loop iteration
@@ -115,7 +116,6 @@ module Forms
         else # is this a question?
           # do we have an option set?
           os_name = ""
-          filter_to_push = ""
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
 
@@ -125,15 +125,13 @@ module Forms
             os_name = os.name.tr(" ", "_")
             os_already_logged = option_sets_used.include?(q.option_set_id)
 
-            unless os_already_logged
-              option_sets_used.push(q.option_set_id)
-            end
+            option_sets_used.push(q.option_set_id) unless os_already_logged
           end
 
           # convert question types
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
-          # TODO if there's an option set then os_name has to be replaced with level name
+          # TODO: if there's an option set then os_name has to be replaced with level name
           type_to_push = "#{qtype_converted} #{os_name}"
 
           # Write the question row
@@ -157,12 +155,13 @@ module Forms
       option_matrix = options_to_xls(option_sets_used)
 
       # Loop through matrix array and write to "choices" tab of the XLSForm
-      option_matrix.each_with_index do | option_row, row_index |
-        option_row.each_with_index do | row_to_write, column_index |
+      option_matrix.each_with_index do |option_row, row_index|
+        option_row.each_with_index do |row_to_write, _column_index|
           choices.row(row_index).push(row_to_write)
         end
       end
-      # note: also need to split questions with option set levels into multiple questions, one for each level, and increment the row_index accordingly
+      # TODO: also need to split questions with option set levels into multiple questions, one for each level,
+      # and increment the row_index accordingly
 
       # Settings
       lang = @form.mission.setting.preferred_locales[0].to_s
@@ -262,15 +261,11 @@ module Forms
           # do we have levels?
           level_to_push = ""
           if node.level.present?
-            list_name_to_push = node.level.name
-
-            # check if top level first and write to header in reverse order?
+            # TODO: check if top level first and write to header in reverse order?
 
             if node.children.present?
               # push to header row
-              unless header_row.include?(node.level.name)
-                header_row.push(node.level.name)
-              end
+              header_row.push(node.level.name) unless header_row.include?(node.level.name)
             else
               # Q: will this work if there is more than one cascading level?
               # e.g., country -> state -> city
@@ -278,7 +273,7 @@ module Forms
             end
           end
 
-          if node.option.present?
+          if node.option.present? # rubocop:disable Style/Next
             option_row = []
             option_row.push(os.name.tr(" ", "_"), node.option.canonical_name, node.option.canonical_name, level_to_push)
             os_matrix.push(option_row)
