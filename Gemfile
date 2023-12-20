@@ -24,7 +24,7 @@ gem "spreadsheet" # For XLSForm export
 gem "term-ansicolor", "~> 1.3"
 gem "terrapin", "~> 0.6.0"
 gem "thor", "~> 1.0"
-gem "twilio-ruby", "~> 4.2" # Does not use semver after v5, watch out!
+gem "twilio-ruby", "~> 6.9.0" # Does not use semver after v5, watch out!
 
 # JS/CSS
 gem "bootstrap", "~> 4.3"
