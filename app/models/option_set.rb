@@ -242,7 +242,9 @@ class OptionSet < ApplicationRecord
 
       if multilevel?
         # use the level names as column headings for a multi-level option set
-        headers.concat(levels.map(&:name))
+        names = levels.map(&:name)
+        raise MissingTranslationError if names.any?(&:blank?)
+        headers.concat(names)
       else
         # the human-readable name for the Option.name attribute otherwise (e.g. "Name")
         headers << Option.human_attribute_name(:name)

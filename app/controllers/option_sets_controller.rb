@@ -58,6 +58,9 @@ class OptionSetsController < ApplicationController
 
   def export
     send_data(generate_csv, filename: "#{@option_set.name}.csv")
+  rescue MissingTranslationError
+    flash[:error] = t("activerecord.errors.models.option.missing_level_translation", locale_name: I18n.locale)
+    redirect_to(request.referer) # Reload page.
   end
 
   # always via AJAX
