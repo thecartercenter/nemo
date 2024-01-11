@@ -155,9 +155,9 @@ module Forms
       option_matrix = options_to_xls(option_sets_used)
 
       # Loop through matrix array and write to "choices" tab of the XLSForm
-      option_matrix.each_with_index do | option_row, row_index |
-        option_row.each do | row_to_push |
-          choices.row(row_index).push(row_to_push)
+      option_matrix.each_with_index do |option_row, row_index|
+        option_row.each_with_index do |row_to_write, _column_index|
+          choices.row(row_index).push(row_to_write)
         end
       end
 
@@ -278,7 +278,7 @@ module Forms
           end
         end
       end
-      os_matrix.insert(0,header_row)
+      os_matrix.insert(0, header_row)
     end
   end
 end
