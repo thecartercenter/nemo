@@ -155,13 +155,11 @@ module Forms
       option_matrix = options_to_xls(option_sets_used)
 
       # Loop through matrix array and write to "choices" tab of the XLSForm
-      option_matrix.each_with_index do |option_row, row_index|
-        option_row.each_with_index do |row_to_write, _column_index|
-          choices.row(row_index).push(row_to_write)
+      option_matrix.each_with_index do | option_row, row_index |
+        option_row.each do | row_to_push |
+          choices.row(row_index).push(row_to_push)
         end
       end
-      # TODO: also need to split questions with option set levels into multiple questions, one for each level,
-      # and increment the row_index accordingly
 
       # Settings
       lang = @form.mission.setting.preferred_locales[0].to_s
@@ -256,21 +254,19 @@ module Forms
         # get the option set from id
         os = OptionSet.find(id)
 
+        # prep header row
+        os.level_names&.each do |l|
+          header_row.push(l.values[0])
+        end
+
         # node = the current option node
         os.option_nodes.each do |node|
           # do we have levels?
           level_to_push = ""
-          if node.level.present?
-            # TODO: check if top level first and write to header in reverse order?
-
-            if node.children.present?
-              # push to header row
-              header_row.push(node.level.name) unless header_row.include?(node.level.name)
-            else
-              # Q: will this work if there is more than one cascading level?
-              # e.g., country -> state -> city
-              level_to_push = node.parent.name
-            end
+          if node.level.present? && node.children.present?
+            # Q: will this work if there is more than one cascading level?
+            # e.g., country -> state -> city
+            level_to_push = node.parent.name
           end
 
           if node.option.present? # rubocop:disable Style/Next
@@ -280,9 +276,7 @@ module Forms
           end
         end
       end
-
-      # Prepend header row
-      os_matrix.insert(0, header_row)
+      os_matrix.insert(0,header_row)
     end
   end
 end
