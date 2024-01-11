@@ -261,19 +261,25 @@ module Forms
 
         # node = the current option node
         os.option_nodes.each do |node|
-          # do we have levels?
           level_to_push = ""
+          listname_to_push = ""
           if node.level.present?
+            # option sets with levels need to have the list_name replaced with the level name
+            listname_to_push = node.level_name
+
             if node.ancestry_depth > 1
               # Q: will this work if there is more than one cascading level?
+              # A: it should, but have to confirm
               # e.g., country -> state -> city
               level_to_push = node.parent.name
             end
+          else
+            listname_to_push = os.name.tr(" ", "_")
           end
 
           if node.option.present? # rubocop:disable Style/Next
             option_row = []
-            option_row.push(os.name.tr(" ", "_"), node.option.canonical_name, node.option.canonical_name, level_to_push)
+            option_row.push(listname_to_push, node.option.canonical_name, node.option.canonical_name, level_to_push)
             os_matrix.push(option_row)
           end
         end
