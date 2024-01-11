@@ -263,10 +263,12 @@ module Forms
         os.option_nodes.each do |node|
           # do we have levels?
           level_to_push = ""
-          if node.level.present? && node.children.present?
-            # Q: will this work if there is more than one cascading level?
-            # e.g., country -> state -> city
-            level_to_push = node.parent.name
+          if node.level.present?
+            if node.ancestry_depth > 1
+              # Q: will this work if there is more than one cascading level?
+              # e.g., country -> state -> city
+              level_to_push = node.parent.name
+            end
           end
 
           if node.option.present? # rubocop:disable Style/Next
