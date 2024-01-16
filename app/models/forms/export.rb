@@ -63,7 +63,7 @@ module Forms
       settings = book.create_worksheet(name: "settings")
 
       # Write sheet headings at row index 0
-      questions.row(0).push("type", "name", "label", "required", "choice_filter", "relevant", "constraint")
+      questions.row(0).push("type", "name", "label", "required", "relevant", "constraint", "choice_filter")
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_depth = 1 # assume base level
@@ -141,16 +141,20 @@ module Forms
         # if we have any relevant conditions, add them to the end of the row
         if q.display_conditions.any?
           questions.row(row_index).push(conditions_to_xls(q.display_conditions, q.display_if))
+        else
+          questions.row(row_index).push("") # push an empty cell
         end
 
         if q.constraints.any?
           q.constraints.each do |c|
             questions.row(row_index).push(conditions_to_xls(c.conditions, c.accept_if))
           end
+        else
+          questions.row(row_index).push("") # push an empty cell
         end
       end
 
-      # Choices
+      ## Choices
       # return an array to write to the spreadsheet
       option_matrix = options_to_xls(option_sets_used)
 
@@ -161,11 +165,11 @@ module Forms
         end
       end
 
-      # Settings
+      ## Settings
       lang = @form.mission.setting.preferred_locales[0].to_s
       settings.row(1).push(@form.name, @form.id, @form.current_version.decorate.name, lang)
 
-      # Write
+      ## Write
       file = StringIO.new
       book.write(file)
       file.string
@@ -212,12 +216,12 @@ module Forms
       conditions.each_with_index do |dc, i|
         # prep left side of expression
         left_qing = Questioning.find(dc.left_qing_id)
-        left_to_push = "${#{left_qing.code}_#{left_qing.full_dotted_rank}}"
+        left_to_push = "${#{left_qing.code}}"
 
         # prep right side of expression
         if dc.right_side_is_qing?
           right_qing = Questioning.find(dc.right_qing_id)
-          right_to_push = "${#{right_qing.code}_#{right_qing.full_dotted_rank}}"
+          right_to_push = "${#{right_qing.code}}"
         elsif Float(dc.value, exception: false).nil? # it's not a number
           # to respect XLSform rules, surround with single quotes unless it's a number
           right_to_push = "'#{dc.value}'"
@@ -269,7 +273,6 @@ module Forms
 
             if node.ancestry_depth > 1
               # Q: will this work if there is more than one cascading level?
-              # A: it should, but have to confirm
               # e.g., country -> state -> city
               level_to_push = node.parent.name
             end
