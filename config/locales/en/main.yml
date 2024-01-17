@@ -758,6 +758,7 @@ en:
         option:
           cant_delete_if_has_response: "You can't delete this Option because it is included in at least one Response."
           names_cant_be_all_blank: "At least one name translation must be given for each option."
+          missing_level_translation: "Missing default '%{locale_name}' translation for option level names."
           names_too_long: "Names must be at most 30 characters in length."
           invalid_coordinates: "The provided coordinates are not valid."
         option_set:
