@@ -53,7 +53,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
 
   def validate(request)
     params = request.request_parameters.merge(request.query_parameters)
-    validator = Twilio::Util::RequestValidator.new(config.twilio_auth_token)
+    validator = Twilio::Security::RequestValidator.new(config.twilio_auth_token)
     return if Rails.env.test?
     return if validator.validate(request.original_url, params, request.headers["X-Twilio-Signature"])
     raise Sms::Error, "Could not validate incoming Twilio message from #{params[:From]}"
@@ -79,7 +79,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     errors = []
     (numbers = message.recipient_numbers).each_with_index do |number, index|
       send_message(number, message.body)
-    rescue Twilio::REST::RequestError => e
+    rescue Twilio::REST::RestError => e
       errors << e.to_s
       # Check if creating the first 3 messages, or ALL the messages, all failed
       if errors.size == numbers.size || errors.size == 3 && index == 2

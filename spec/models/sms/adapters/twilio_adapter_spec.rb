@@ -13,9 +13,16 @@ describe Sms::Adapters::TwilioAdapter, :sms do
            twilio_auth_token: "12121212121212121212121212121212", incoming_sms_numbers: [])
   end
   let(:adapter) { Sms::Adapters::Factory.instance.create("Twilio", config: mission_config) }
+  let(:fake_response) { {} }
+  let(:fake_body) { {} }
+  let(:twilio_error_msg) { "[HTTP 123] Stub : A Twilio error\nStub\nStub\nStub\n\n" }
 
   before do
     allow(adapter).to receive(:client).and_return(client)
+
+    allow(fake_response).to receive(:status_code).and_return(123)
+    allow(fake_response).to receive(:body).and_return(fake_body)
+    allow(fake_body).to receive(:fetch).and_return("Stub")
   end
 
   it_behaves_like "all adapters that can deliver messages"
@@ -69,7 +76,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
     before do
       allow(msg).to receive(:recipient_numbers) { numbers }
       allow(messages).to receive(:create) do |params|
-        raise Twilio::REST::RequestError, "A Twilio error" if failing_numbers.include?(params[:to])
+        raise Twilio::REST::RestError.new("A Twilio error", fake_response) if failing_numbers.include?(params[:to])
       end
     end
 
@@ -78,8 +85,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
 
       it "has at least one success and raises Sms::Adapters::PartialSendError" do
         expect(messages).to receive(:create).with(hash_including(to: "+34"))
-        expect { delivery }.to raise_error(Sms::Adapters::PartialSendError,
-          "A Twilio error\nA Twilio error\nA Twilio error")
+        expect { delivery }.to raise_error(Sms::Adapters::PartialSendError, repeated_error_msg(3))
       end
     end
 
@@ -88,8 +94,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
 
       it "raises Sms::Adapters::FatalSendError" do
         expect(messages).not_to receive(:create).with(hash_including(to: "+78"))
-        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError,
-          "A Twilio error\nA Twilio error\nA Twilio error")
+        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError, repeated_error_msg(3))
       end
     end
 
@@ -98,7 +103,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
       let(:failing_numbers) { ["+12", "+34"] }
 
       it "raises Sms::Adapters::FatalSendError" do
-        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError, "A Twilio error\nA Twilio error")
+        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError, repeated_error_msg(2))
       end
     end
 
@@ -107,7 +112,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
       let(:failing_numbers) { ["+12"] }
 
       it "raises Sms::Adapters::FatalSendError" do
-        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError, "A Twilio error")
+        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError, repeated_error_msg(1))
       end
     end
   end
@@ -119,7 +124,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
     params = (options[:params] || {}).with_indifferent_access
 
     signature = options[:signature] || begin
-      validator = Twilio::Util::RequestValidator.new(mission_config.twilio_auth_token)
+      validator = Twilio::Security::RequestValidator.new(mission_config.twilio_auth_token)
       validator.build_signature_for(url, params)
     end
 
@@ -128,5 +133,10 @@ describe Sms::Adapters::TwilioAdapter, :sms do
 
     double(headers: headers, params: params, original_url: url,
            request_parameters: params, query_parameters: {}.freeze)
+  end
+
+  # Return the error message N times joined with "\n".
+  def repeated_error_msg(times)
+    ("#{twilio_error_msg}\n" * (times - 1)) + twilio_error_msg
   end
 end
