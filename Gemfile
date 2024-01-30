@@ -7,7 +7,7 @@ gem "rails", "~> 6.1.1"
 # Misc
 gem "attribute_normalizer", "~> 1.2"
 gem "daemons", "~> 1.2"
-gem "descriptive_statistics", "~> 2.5", require: "descriptive_statistics/safe" # mean, median, etc.
+gem "descriptive_statistics", "~> 2.5", require: "descriptive_statistics/safe" # For mean, median, etc.
 gem "draper", "~> 4.0"
 gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
@@ -16,7 +16,7 @@ gem "phony", "~> 2.15"
 gem "rack-attack", "~> 6.3"
 gem "rake", "~> 13.0"
 gem "random_data", "~> 1.6" # Deprecated: Use Faker instead
-gem "recaptcha", "~> 3.4", require: "recaptcha/rails" # Small change in v4, we should upgrade eventually.
+gem "recaptcha", "~> 3.4", require: "recaptcha/rails" # TODO: Small change in v4, we should upgrade eventually.
 gem "responders", "~> 3.0"
 gem "rqrcode", "~> 1.1"
 gem "rubyzip", "~> 2.3", require: "zip" # Explicitly specify name (https://stackoverflow.com/a/32740666/763231)
@@ -24,7 +24,10 @@ gem "spreadsheet" # For XLSForm export
 gem "term-ansicolor", "~> 1.3"
 gem "terrapin", "~> 0.6.0"
 gem "thor", "~> 1.0"
-gem "twilio-ruby", "~> 6.9.0" # Does not use semver after v5, watch out!
+gem "twilio-ruby", "~> 6.9.0" # Note: Does not use semver after v5, watch out!
+
+# Force Sprockets to stay on v3 for now.
+gem "sprockets", "~> 3"
 
 # JS/CSS
 gem "bootstrap", "~> 4.3" # Note: each version contains significant UI changes.
@@ -34,11 +37,13 @@ gem "flatpickr"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 1.0"
 gem "jquery-rails", "~> 4.3"
+# TODO: Breaking changes in v2 https://popper.js.org/docs/v2/migration-guide/
+#   and is now called "Floating UI" in new v1.
 gem "popper_js", "~> 1.14"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 2.4"
 gem "select2-rails", "~> 4.0"
-gem "spinjs-rails", "~> 1.3.0" # Breaking changes in v1.4 (spin.js v2.0).
+gem "spinjs-rails", "~> 1.3.0" # TODO: Breaking changes in v1.4 (spin.js v2.0).
 gem "uglifier", "~> 4.2"
 gem "webpacker", "~> 5.4"
 
@@ -76,13 +81,11 @@ gem "odata_server", github: "sassafrastech/odata_server", branch: "sassafras"
 gem "dotenv-rails", "~> 2.7"
 
 # Tree modelling
+gem "acts_as_list" # Auto rank maintenance for sorted lists.
 gem "ancestry", "~> 4.1"
 # Fork: Performance improvements.
 # https://github.com/sassafrastech/closure_tree/commits/master
 gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.4.0-noReorder-fastInsert"
-
-# Auto rank maintenance for sorted lists.
-gem "acts_as_list"
 
 # Caching
 gem "actionpack-page_caching", "~> 1.1"
@@ -114,9 +117,6 @@ gem "scout_apm", "~> 5.0"
 gem "sentry-ruby", "~> 5.0"
 gem "sentry-rails", "~> 5.0" # rubocop:disable Bundler/OrderedGems
 
-# Force Sprockets to stay on v3 for now.
-gem "sprockets", "~> 3"
-
 # The below are used for building load test plans.
 # Needed in prod because test plans are built on prod instances.
 # Faker is also used in specs.
@@ -132,9 +132,6 @@ group :development do
 
   # N+1 detection. Config is in environments/development.rb
   gem "bullet", "~> 7.1"
-
-  # Great for debugging i18n paths (uncomment temporarily when needed).
-  # gem "i18n-debug", "~> 1.1"
 
   # Profiling. Config is in environments/development.rb (uncomment temporarily when needed).
   # gem "rack-mini-profiler", "~> 2.0" # Automatically adds UI to the top left of all webpages.
@@ -162,6 +159,7 @@ group :development, :test do
   gem "selenium-webdriver", "~> 4.15.0" # TODO: Can't upgrade to 4.17 until Rails 7 + Ruby 3.3
 
   # Debugging
+  # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
   gem "pry", "~> 0.13"
   gem "pry-byebug", "~> 3.9"
   gem "pry-rails", "~> 0.3"
@@ -170,19 +168,17 @@ group :development, :test do
   gem "vcr", "~> 6.0"
   gem "webmock", "~> 3.10"
 
-  # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
-
   # Misc
   gem "annotate", "~> 3.1"
   gem "assert_difference", "~> 1.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6"
   gem "database_cleaner", "~> 2.0"
   gem "db-query-matchers", "~> 0.10"
-  gem "rubocop", "1.22.3" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
+  gem "rubocop", "1.22.3" # Note: Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
   gem "rubocop-rails", "~> 2.8"
   gem "rubocop-rake", "~> 0.6.0"
   gem "rubocop-rspec", "~> 2.0"
-  gem "timecop", "0.9.6" # Timecop 0.9.8 breaks selenium (Selenium::WebDriver::Error::NoSuchWindowError).
+  gem "timecop", "0.9.6" # TODO: Timecop 0.9.8 breaks selenium (Selenium::WebDriver::Error::NoSuchWindowError).
 end
 
 group :test do
