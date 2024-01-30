@@ -58,15 +58,15 @@ gem "rdiscount", "~> 2.1"
 gem "reverse_markdown", "~> 2.0"
 
 # Storage
-gem "active_storage_validations", "~> 1.1.4"
+gem "active_storage_validations", "~> 1.1"
 gem "aws-sdk-s3", "~> 1.86", require: false
 gem "azure-storage-blob", "~> 2.0", require: false
 gem "image_processing", "~> 1.12"
 gem "sys-filesystem", "~> 1.4"
 
 # API
-gem "api-pagination", "~> 5.0.0"
-gem "blueprinter", "~> 1.0.1"
+gem "api-pagination", "~> 5.0"
+gem "blueprinter", "~> 1.0"
 gem "versionist", "~> 2.0"
 # To use local clone: bundle config local.odata_server ../odata_server
 # To stop using local clone: bundle config --delete local.odata_server
@@ -92,7 +92,7 @@ gem "dalli", "~> 3.2"
 # DB
 gem "hairtrigger", "~> 0.2.20"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
-gem "pg", "~> 1.4.6"
+gem "pg", "~> 1.4"
 gem "pg_search", "~> 2.1"
 gem "postgres-copy", "~> 1.0"
 gem "wisper", "~> 2.0"
