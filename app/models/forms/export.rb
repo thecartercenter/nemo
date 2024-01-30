@@ -114,8 +114,26 @@ module Forms
           # update counters
           group_depth += 1
         else # is this a question?
-          # do we have an option set?
+          # convert question types to ODK style
+          qtype_converted = QTYPE_TO_XLS[q.qtype_name]
+
+          conditions_to_push = ""
+          constraints_to_push = ""
+          # if we have any relevant conditions or constraints, save them now
+          if q.display_conditions.any?
+            conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
+          end
+
+          if q.constraints.any?
+            q.constraints.each do |c|
+              constraints_to_push += conditions_to_xls(c.conditions, c.accept_if)
+            end
+          end
+
+          # if we have an option set, identify and save it so that we can add it to the choices sheet later.
+          # then, write the question, splitting it into multiple questions if there are option set levels.
           os_name = ""
+          choice_filter = ""
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
 
@@ -126,32 +144,41 @@ module Forms
             os_already_logged = option_sets_used.include?(q.option_set_id)
 
             option_sets_used.push(q.option_set_id) unless os_already_logged
+
+            # is the option set multilevel?
+            if os.level_names.present?
+              os.level_names.each_with_index do |l, l_index|
+                level_name = l.values[0]
+
+                # Append level name to qtype
+                type_to_push = "#{qtype_converted} #{level_name}"
+
+                # Modify question name
+                name_to_push = "#{q.code}_#{level_name}"
+
+                # push a row for each level
+                questions.row(row_index + l_index).push(type_to_push, name_to_push, q.name, q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+
+                # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
+                choice_filter = "#{level_name}=${#{name_to_push}}"
+              end
+
+              # increase index modifier by the number of levels so we start on the correct row next time
+              index_mod += os.level_names.length
+            else # it's a single-level select question
+              # Append option set name to qtype
+              type_to_push = "#{qtype_converted} #{os_name}"
+
+              # Write the question row
+              questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+            end
+          else # no option set present
+            # Write the question row as normal
+            questions.row(row_index).push(qtype_converted, q.code, q.name, q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
           end
-
-          # convert question types
-          qtype_converted = QTYPE_TO_XLS[q.qtype_name]
-
-          # TODO: if there's an option set then os_name has to be replaced with level name
-          type_to_push = "#{qtype_converted} #{os_name}"
-
-          # Write the question row
-          questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s)
         end
 
-        # if we have any relevant conditions, add them to the end of the row
-        if q.display_conditions.any?
-          questions.row(row_index).push(conditions_to_xls(q.display_conditions, q.display_if))
-        else
-          questions.row(row_index).push("") # push an empty cell
-        end
 
-        if q.constraints.any?
-          q.constraints.each do |c|
-            questions.row(row_index).push(conditions_to_xls(c.conditions, c.accept_if))
-          end
-        else
-          questions.row(row_index).push("") # push an empty cell
-        end
       end
 
       ## Choices
