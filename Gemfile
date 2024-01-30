@@ -65,7 +65,7 @@ gem "image_processing", "~> 1.12"
 gem "sys-filesystem", "~> 1.4"
 
 # API
-gem "api-pagination", "~> 4.1"
+gem "api-pagination", "~> 5.0.0"
 gem "blueprinter", "~> 0.25.1"
 gem "versionist", "~> 2.0"
 # To use local clone: bundle config local.odata_server ../odata_server

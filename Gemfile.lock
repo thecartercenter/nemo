@@ -107,7 +107,7 @@ GEM
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
-    api-pagination (4.8.2)
+    api-pagination (5.0.0)
     assert_difference (1.0.0)
       activesupport (>= 3.0.0)
     ast (2.4.2)
@@ -633,7 +633,7 @@ DEPENDENCIES
   acts_as_list
   ancestry (~> 4.1)
   annotate (~> 3.1)
-  api-pagination (~> 4.1)
+  api-pagination (~> 5.0.0)
   assert_difference (~> 1.0)
   attribute_normalizer (~> 1.2)
   authlogic (~> 6.1)
