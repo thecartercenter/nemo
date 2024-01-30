@@ -156,8 +156,12 @@ module Forms
                 # Modify question name
                 name_to_push = "#{q.code}_#{level_name}"
 
+                # Modify question label
+                # NOTE: the question "label" (what NEMO calls "name") will have to be manually edited in XLS by the user so that it makes grammatical sense. The below line simply makes the label unique
+                label_to_push = "#{q.name}_#{level_name}"
+
                 # push a row for each level
-                questions.row(row_index + l_index).push(type_to_push, name_to_push, q.name, q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+                questions.row(row_index + l_index).push(type_to_push, name_to_push, label_to_push, q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
