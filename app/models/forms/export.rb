@@ -255,7 +255,7 @@ module Forms
       os_matrix = []
       header_row = []
       header_row.push("list_name", "name", "label")
-      column_counter = 0;
+      column_counter = 0
 
       # for each unique option set in the list, loop through the nodes and extract the options
       option_sets.each do |id|
@@ -276,7 +276,7 @@ module Forms
               column_counter.times { level_to_push.push("") }
 
               # Obtain array of all ancestor nodes (except for the root, which is nameless)
-              level_to_push = level_to_push + node.ancestors[1..].map(&:name)
+              level_to_push += node.ancestors[1..].map(&:name)
             end
           else
             listname_to_push = os.name.tr(" ", "_")
@@ -287,7 +287,7 @@ module Forms
 
             # change level_to_push to an array of potentially multiple parent levels
             option_row.push(listname_to_push, node.option.canonical_name, node.option.canonical_name)
-            option_row = option_row + level_to_push
+            option_row += level_to_push
             os_matrix.push(option_row)
           end
         end
