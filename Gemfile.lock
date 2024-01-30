@@ -245,7 +245,7 @@ GEM
     factory_bot_rails (6.4.3)
       factory_bot (~> 6.4)
       railties (>= 5.0.0)
-    faker (2.23.0)
+    faker (3.2.3)
       i18n (>= 1.8.11, < 2)
     faraday (1.10.3)
       faraday-em_http (~> 1.0)
@@ -669,7 +669,7 @@ DEPENDENCIES
   eventmachine (~> 1.2)
   exception_notification (~> 4.2)
   factory_bot_rails (~> 6.4)
-  faker (~> 2.2)
+  faker (~> 3.2)
   fix-db-schema-conflicts (~> 3.0)
   flatpickr
   font-awesome-rails (~> 4.7)

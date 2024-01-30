@@ -120,7 +120,7 @@ gem "sprockets", "~> 3"
 # The below are used for building load test plans.
 # Needed in prod because test plans are built on prod instances.
 # Faker is also used in specs.
-gem "faker", "~> 2.2"
+gem "faker", "~> 3.2"
 gem "ruby-jmeter", "~> 3.1"
 
 group :development do
