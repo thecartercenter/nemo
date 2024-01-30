@@ -161,10 +161,7 @@ module Forms
       # Loop through matrix array and write to "choices" tab of the XLSForm
       option_matrix.each_with_index do |option_row, row_index|
         option_row.each_with_index do |row_to_write, _column_index|
-          choices.row(row_index).push(row_to_write) #only push first 3 columns
-          # reference a hash based on list_name and returns a number of spaces
-          # X.times { choices.row(row_index).push("") }
-          # push level names (the rest of row_to_write) [3..-1] = third position to the end; [0..2] = first 3 items
+          choices.row(row_index).push(row_to_write)
         end
       end
 
