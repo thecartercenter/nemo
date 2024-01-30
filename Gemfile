@@ -27,7 +27,7 @@ gem "thor", "~> 1.0"
 gem "twilio-ruby", "~> 6.9.0" # Does not use semver after v5, watch out!
 
 # JS/CSS
-gem "bootstrap", "~> 4.3"
+gem "bootstrap", "~> 4.3" # Note: each version contains significant UI changes.
 gem "clipboard-rails", "~> 1.7"
 gem "dropzonejs-rails", "~> 0.8.5"
 gem "flatpickr"
@@ -131,7 +131,7 @@ group :development do
   gem "rails-erd", "~> 1.6"
 
   # N+1 detection. Config is in environments/development.rb
-  gem "bullet", "~> 6.1"
+  gem "bullet", "~> 7.1"
 
   # Great for debugging i18n paths (uncomment temporarily when needed).
   # gem "i18n-debug", "~> 1.1"
