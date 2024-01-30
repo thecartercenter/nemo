@@ -58,7 +58,7 @@ gem "rdiscount", "~> 2.1"
 gem "reverse_markdown", "~> 2.0"
 
 # Storage
-gem "active_storage_validations", "~> 0.9.3"
+gem "active_storage_validations", "~> 1.1.4"
 gem "aws-sdk-s3", "~> 1.86", require: false
 gem "azure-storage-blob", "~> 2.0", require: false
 gem "image_processing", "~> 1.12"
