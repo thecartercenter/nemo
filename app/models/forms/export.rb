@@ -161,7 +161,10 @@ module Forms
       # Loop through matrix array and write to "choices" tab of the XLSForm
       option_matrix.each_with_index do |option_row, row_index|
         option_row.each_with_index do |row_to_write, _column_index|
-          choices.row(row_index).push(row_to_write)
+          choices.row(row_index).push(row_to_write) #only push first 3 columns
+          # reference a hash based on list_name and returns a number of spaces
+          # X.times { choices.row(row_index).push("") }
+          # push level names (the rest of row_to_write) [3..-1] = third position to the end; [0..2] = first 3 items
         end
       end
 
@@ -252,29 +255,28 @@ module Forms
       os_matrix = []
       header_row = []
       header_row.push("list_name", "name", "label")
+      column_counter = 0;
 
       # for each unique option set in the list, loop through the nodes and extract the options
       option_sets.each do |id|
         # get the option set from id
         os = OptionSet.find(id)
 
-        # prep header row
-        os.level_names&.each do |l|
-          header_row.push(l.values[0])
-        end
-
         # node = the current option node
         os.option_nodes.each do |node|
-          level_to_push = ""
+          level_to_push = []
           listname_to_push = ""
           if node.level.present?
             # option sets with levels need to have the list_name replaced with the level name
             listname_to_push = node.level_name
 
+            # Only attempt to access node ancestors if they exist
             if node.ancestry_depth > 1
-              # Q: will this work if there is more than one cascading level?
-              # e.g., country -> state -> city
-              level_to_push = node.parent.name
+              # Add a buffer of blank cells to accomodate columns used up by prior option sets
+              column_counter.times { level_to_push.push("") }
+
+              # Obtain array of all ancestor nodes (except for the root, which is nameless)
+              level_to_push = level_to_push + node.ancestors[1..].map(&:name)
             end
           else
             listname_to_push = os.name.tr(" ", "_")
@@ -282,8 +284,22 @@ module Forms
 
           if node.option.present? # rubocop:disable Style/Next
             option_row = []
-            option_row.push(listname_to_push, node.option.canonical_name, node.option.canonical_name, level_to_push)
+
+            # change level_to_push to an array of potentially multiple parent levels
+            option_row.push(listname_to_push, node.option.canonical_name, node.option.canonical_name)
+            option_row = option_row + level_to_push
             os_matrix.push(option_row)
+          end
+        end
+
+        # prep header row
+        # omit last entry (lowest level)
+        unless os.level_names.blank?
+          os.level_names[0..-2].each do |l|
+            header_row.push(l.values[0])
+
+            # increment column counter
+            column_counter += 1
           end
         end
       end
