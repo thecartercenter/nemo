@@ -105,7 +105,7 @@ gem "whenever", "~> 1.0", require: false
 
 # I18n
 gem "i18n-country-translations", "~> 1.0"
-gem "i18n-js", "~> 3.0"
+gem "i18n-js", "~> 3.0" # TODO: v4 is a major breaking upgrade: https://github.com/fnando/i18n-js/blob/main/MIGRATING_FROM_V3_TO_V4.md
 gem "iso-639", "~> 0.3.5"
 gem "rails-i18n", "~> 6.0"
 
@@ -152,7 +152,7 @@ group :development, :test do
 
   # Mocking/stubbing/factories
   gem "factory_bot_rails", "~> 6.4"
-  gem "mocha", "~> 1.1"
+  gem "mocha", "~> 2.1"
 
   # Feature specs
   gem "capybara", "~> 3.30"
