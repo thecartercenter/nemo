@@ -157,11 +157,14 @@ module Forms
                 name_to_push = "#{q.code}_#{level_name}"
 
                 # Modify question label
-                # NOTE: the question "label" (what NEMO calls "name") will have to be manually edited in XLS by the user so that it makes grammatical sense. The below line simply makes the label unique
+                # NOTE: the question "label" (what NEMO calls "name") will have to be manually edited
+                # in the exported XLSForm by the user so that it makes grammatical sense.
+                # The below line simply makes the label unique.
                 label_to_push = "#{q.name}_#{level_name}"
 
                 # push a row for each level
-                questions.row(row_index + l_index).push(type_to_push, name_to_push, label_to_push, q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+                questions.row(row_index + l_index).push(type_to_push, name_to_push, label_to_push,
+                  q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
@@ -174,15 +177,15 @@ module Forms
               type_to_push = "#{qtype_converted} #{os_name}"
 
               # Write the question row
-              questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+              questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s,
+                conditions_to_push, constraints_to_push, choice_filter)
             end
           else # no option set present
             # Write the question row as normal
-            questions.row(row_index).push(qtype_converted, q.code, q.name, q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+            questions.row(row_index).push(qtype_converted, q.code, q.name, q.required.to_s,
+              conditions_to_push, constraints_to_push, choice_filter)
           end
         end
-
-
       end
 
       ## Choices
