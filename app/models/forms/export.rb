@@ -283,7 +283,8 @@ module Forms
       header_row.push("list_name", "name", "label")
       column_counter = 0
 
-      # for each unique option set in the list, loop through the nodes and extract the options
+      # for each unique option set in the list:
+      # loop through the nodes and extract the options
       option_sets.each do |id|
         # get the option set from id
         os = OptionSet.find(id)
@@ -293,7 +294,8 @@ module Forms
           level_to_push = [] # array to be filled with parent levels if needed
           listname_to_push = ""
           if node.level.present?
-            # per XLSform style, option sets with levels need to have the list_name replaced with the level name to distinguish each row.
+            # per XLSform style, option sets with levels need to have the
+            # list_name replaced with the level name to distinguish each row.
             listname_to_push = node.level_name
 
             # Only attempt to access node ancestors if they exist
