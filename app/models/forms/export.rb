@@ -117,17 +117,11 @@ module Forms
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
-          conditions_to_push = ""
           constraints_to_push = ""
           # if we have any relevant conditions or constraints, save them now
-          if q.display_conditions.any?
-            conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
-          end
-
-          if q.constraints.any?
-            q.constraints.each do |c|
-              constraints_to_push += conditions_to_xls(c.conditions, c.accept_if)
-            end
+          conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
+          q.constraints.each do |c|
+            constraints_to_push += conditions_to_xls(c.conditions, c.accept_if)
           end
 
           # if we have an option set, identify and save it so that we can add it to the choices sheet later.
@@ -136,19 +130,17 @@ module Forms
           choice_filter = ""
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
+            option_sets_used.push(q.option_set_id)
 
             # include leading space to respect XLSForm format
             # question name should be followed by the option set name (if applicable) separated by a space
             # replace any spaces in the option set name with underscores to ensure the form is parsed correctly
             os_name = os.name.tr(" ", "_")
-            os_already_logged = option_sets_used.include?(q.option_set_id)
-
-            option_sets_used.push(q.option_set_id) unless os_already_logged
 
             # is the option set multilevel?
             if os.level_names.present?
-              os.level_names.each_with_index do |l, l_index|
-                level_name = l.values[0]
+              os.level_names.each_with_index do |level, l_index|
+                level_name = level.values[0]
 
                 # Append level name to qtype
                 type_to_push = "#{qtype_converted} #{level_name}"
@@ -189,8 +181,9 @@ module Forms
       end
 
       ## Choices
-      # return an array to write to the spreadsheet
-      option_matrix = options_to_xls(option_sets_used)
+      # return an array of option set data to write to the spreadsheet
+      # only pass in unique option set IDs
+      option_matrix = options_to_xls(option_sets_used.uniq)
 
       # Loop through matrix array and write to "choices" tab of the XLSForm
       option_matrix.each_with_index do |option_row, row_index|
@@ -241,6 +234,8 @@ module Forms
     # Takes an array of conditions and outputs a single string
     # concatenates by either "and" or "or" depending on form settings
     def conditions_to_xls(conditions, true_if)
+      return "" unless conditions.any?
+
       relevant_to_push = ""
       concatenator = true_if == "all_met" ? "and" : "or"
 
@@ -278,7 +273,7 @@ module Forms
     end
 
     # This function traverses the option nodes and outputs data to write to the options sheet
-    # Should include cascading levels as additional columns if they exist
+    # Include cascading levels as additional columns if they exist
     # option_sets = array of unique option set IDs used in the exported form
     # https://docs.getodk.org/form-logic/#filtering-options-in-select-questions
     def options_to_xls(option_sets)
@@ -295,10 +290,10 @@ module Forms
 
         # node = the current option node
         os.option_nodes.each do |node|
-          level_to_push = []
+          level_to_push = [] # array to be filled with parent levels if needed
           listname_to_push = ""
           if node.level.present?
-            # option sets with levels need to have the list_name replaced with the level name
+            # per XLSform style, option sets with levels need to have the list_name replaced with the level name to distinguish each row.
             listname_to_push = node.level_name
 
             # Only attempt to access node ancestors if they exist
@@ -315,10 +310,8 @@ module Forms
 
           if node.option.present? # rubocop:disable Style/Next
             option_row = []
-
-            # change level_to_push to an array of potentially multiple parent levels
             option_row.push(listname_to_push, node.option.canonical_name, node.option.canonical_name)
-            option_row += level_to_push
+            option_row += level_to_push # append levels, if any, to rightmost columns
             os_matrix.push(option_row)
           end
         end
@@ -326,14 +319,19 @@ module Forms
         # prep header row
         # omit last entry (lowest level)
         unless os.level_names.blank?
-          os.level_names[0..-2].each do |l|
-            header_row.push(l.values[0])
+          os.level_names[0..-2].each do |level|
+            header_row.push(level.values[0])
 
             # increment column counter
             column_counter += 1
           end
         end
+
+        # push an empty array after each option set, translating to a row of space on the XLSform, for readability
+        os_matrix.push([])
       end
+
+      # return os_matrix with prepended header_row
       os_matrix.insert(0, header_row)
     end
   end
