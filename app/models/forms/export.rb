@@ -53,8 +53,6 @@ module Forms
 
     # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Style/Next
     def to_xls
-      # TODO: option set "levels"?
-
       book = Spreadsheet::Workbook.new
 
       # Create sheets
