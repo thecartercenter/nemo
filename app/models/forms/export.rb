@@ -125,9 +125,7 @@ module Forms
             constraints_to_push += "(#{conditions_to_xls(c.conditions, c.accept_if)})"
 
             # add "and" unless we're at the end
-            unless c_index + 1 == q.constraints.length
-              constraints_to_push += " and "
-            end
+            constraints_to_push += " and " unless c_index + 1 == q.constraints.length
           end
 
           # if we have an option set, identify and save it so that we can add it to the choices sheet later.
