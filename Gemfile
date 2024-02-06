@@ -159,9 +159,7 @@ group :development, :test do
   gem "capybara-screenshot", "~> 1.0"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
   gem "puma", "~> 5.6"
-  # TODO: v4.17.0 requires base64 (~> 0.2) which conflicts with something in production.
-  #   Try again on Rails 7?
-  gem "selenium-webdriver", "~> 4.16.0"
+  gem "selenium-webdriver", "~> 4.11"
 
   # Debugging
   gem "pry", "~> 0.13"
