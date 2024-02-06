@@ -53,8 +53,6 @@ module Forms
 
     # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Style/Next
     def to_xls
-      # TODO: option set "levels"?
-
       book = Spreadsheet::Workbook.new
 
       # Create sheets
@@ -63,8 +61,7 @@ module Forms
       settings = book.create_worksheet(name: "settings")
 
       # Write sheet headings at row index 0
-      questions.row(0).push("type", "name", "label", "required", "relevant", "constraint")
-      choices.row(0).push("list_name", "name", "label")
+      questions.row(0).push("type", "name", "label", "required", "relevant", "constraint", "choice_filter")
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_depth = 1 # assume base level
@@ -72,11 +69,12 @@ module Forms
       option_sets_used = []
 
       # Define the below "index modifiers" which keep track of the line of the spreadsheet we are writing to.
-      # The for loop below (tracked by index i) loops through the list of form items, and so the index does not take into account rows that we need to write for when groups end. In XLSForm, these are written to a row all to themselves.
+      # The for loop below (tracked by index i) loops through the list of form items, and so the index does not
+      # take into account rows that we need to write for when groups end.
+      # In XLSForm, these are written to a row all to themselves.
       # This causes the index i to be de-synchronized with the row of the spreadsheet that we are writing to.
       # Hence, we push to the row (i + index_mod)
       index_mod = 1 # start at row index 1
-      choices_index_mod = 1
 
       @form.preordered_items.each_with_index do |q, i|
         # this variable keeps track of the spreadsheet row to be written during this loop iteration
@@ -102,7 +100,7 @@ module Forms
         end
 
         if q.group? # is this a group?
-          group_name = q.code.tr(" ", "_")
+          group_name = vanillify(q.code)
 
           if q.repeatable?
             questions.row(row_index).push("begin repeat", group_name, q.code)
@@ -114,62 +112,102 @@ module Forms
           # update counters
           group_depth += 1
         else # is this a question?
-          # do we have an option set?
+          # convert question types to ODK style
+          qtype_converted = QTYPE_TO_XLS[q.qtype_name]
+
+          # if we have any relevant conditions or constraints, save them now
+          conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
+
+          constraints_to_push = ""
+          q.constraints.each_with_index do |c, c_index|
+            # constraint rules should be placed in parentheses and separated by "and"
+            # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
+            constraints_to_push += "(#{conditions_to_xls(c.conditions, c.accept_if)})"
+
+            # add "and" unless we're at the end
+            constraints_to_push += " and " unless c_index + 1 == q.constraints.length
+
+            # TODO: add support for constraint messages ("rejection_msg" in NEMO)
+            # https://xlsform.org/en/#constraint-message
+          end
+
+          # if we have an option set, identify and save it so that we can add it to the choices sheet later.
+          # then, write the question, splitting it into multiple questions if there are option set levels.
+          os_name = ""
+          choice_filter = ""
           if q.option_set_id.present?
             os = OptionSet.find(q.option_set_id)
+            option_sets_used.push(q.option_set_id)
 
             # include leading space to respect XLSForm format
             # question name should be followed by the option set name (if applicable) separated by a space
             # replace any spaces in the option set name with underscores to ensure the form is parsed correctly
-            os_name = os.name.tr(" ", "_")
-            os_already_logged = option_sets_used.include?(q.option_set_id)
+            os_name = vanillify(os.name)
 
-            # log the option set to the spreadsheet if we haven't yet
-            # ni = index for the option nodes loop
-            # node = the current option node
-            # TODO: support option set "levels" by creating a cascading sheet here
-            unless os_already_logged
-              os.option_nodes.each_with_index do |node, ni|
-                if node.option.present?
-                  choices
-                    .row(ni + choices_index_mod)
-                    .push(os_name, node.option.canonical_name, node.option.canonical_name)
-                end
+            # is the option set multilevel?
+            if os.level_names.present?
+              os.level_names.each_with_index do |level, l_index|
+                level_name = level.values[0]
+
+                # Append level name to qtype
+                type_to_push = "#{qtype_converted} #{level_name}"
+
+                # Modify question name
+                name_to_push = "#{q.code}_#{level_name}"
+
+                # Modify question label
+                # NOTE: the question "label" (what NEMO calls "name") will have to be manually edited
+                # in the exported XLSForm by the user so that it makes grammatical sense.
+                label_to_push = "#{q.name}_#{level_name}"
+
+                # push a row for each level
+                questions.row(row_index + l_index).push(type_to_push, name_to_push, label_to_push,
+                  q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+
+                # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
+                choice_filter = "#{level_name}=${#{name_to_push}}"
               end
 
-              # increment the choices index by how many nodes there are, so we start at this row next time
-              choices_index_mod += os.option_nodes.length
+              # increase index modifier by the number of levels so we start on the correct row next time
+              index_mod += os.level_names.length
+            else # it's a single-level select question
+              # Append option set name to qtype
+              type_to_push = "#{qtype_converted} #{os_name}"
 
-              option_sets_used.push(q.option_set_id)
+              # Write the question row
+              questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s,
+                conditions_to_push, constraints_to_push, choice_filter)
             end
-          end
-
-          # convert question types
-          qtype_converted = QTYPE_TO_XLS[q.qtype_name]
-
-          type_to_push = "#{qtype_converted} #{os_name}"
-
-          # Write the question row
-          questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s)
-        end
-
-        # if we have any relevant conditions, add them to the end of the row
-        if q.display_conditions.any?
-          questions.row(row_index).push(conditions_to_xls(q.display_conditions, q.display_if))
-        end
-
-        if q.constraints.any?
-          q.constraints.each do |c|
-            questions.row(row_index).push(conditions_to_xls(c.conditions, c.accept_if))
+          else # no option set present
+            # Write the question row as normal
+            questions.row(row_index).push(qtype_converted, q.code, q.name, q.required.to_s,
+              conditions_to_push, constraints_to_push, choice_filter)
           end
         end
       end
 
-      # Settings
-      lang = @form.mission.setting.preferred_locales[0].to_s
-      settings.row(1).push(@form.name, @form.id, @form.current_version.decorate.name, lang)
+      ## Choices
+      # return an array of option set data to write to the spreadsheet
+      # only pass in unique option set IDs
+      option_matrix = options_to_xls(option_sets_used.uniq)
 
-      # Write
+      # Loop through matrix array and write to "choices" tab of the XLSForm
+      option_matrix.each_with_index do |option_row, row_index|
+        option_row.each_with_index do |row_to_write, _column_index|
+          choices.row(row_index).push(row_to_write)
+        end
+      end
+
+      ## Settings
+      lang = @form.mission.setting.preferred_locales[0].to_s
+      version = if @form.current_version.present?
+                  @form.current_version.decorate.name
+                else
+                  "1"
+                end
+      settings.row(1).push(@form.name, @form.id, version, lang)
+
+      ## Write
       file = StringIO.new
       book.write(file)
       file.string
@@ -207,6 +245,8 @@ module Forms
     # Takes an array of conditions and outputs a single string
     # concatenates by either "and" or "or" depending on form settings
     def conditions_to_xls(conditions, true_if)
+      return "" unless conditions.any?
+
       relevant_to_push = ""
       concatenator = true_if == "all_met" ? "and" : "or"
 
@@ -216,12 +256,12 @@ module Forms
       conditions.each_with_index do |dc, i|
         # prep left side of expression
         left_qing = Questioning.find(dc.left_qing_id)
-        left_to_push = "${#{left_qing.code}_#{left_qing.full_dotted_rank}}"
+        left_to_push = "${#{left_qing.code}}"
 
         # prep right side of expression
         if dc.right_side_is_qing?
           right_qing = Questioning.find(dc.right_qing_id)
-          right_to_push = "${#{right_qing.code}_#{right_qing.full_dotted_rank}}"
+          right_to_push = "${#{right_qing.code}}"
         elsif Float(dc.value, exception: false).nil? # it's not a number
           # to respect XLSform rules, surround with single quotes unless it's a number
           right_to_push = "'#{dc.value}'"
@@ -241,6 +281,76 @@ module Forms
       end
 
       relevant_to_push
+    end
+
+    # This function traverses the option nodes and outputs data to write to the options sheet
+    # Include cascading levels as additional columns if they exist
+    # option_sets = array of unique option set IDs used in the exported form
+    # https://docs.getodk.org/form-logic/#filtering-options-in-select-questions
+    def options_to_xls(option_sets)
+      # initialize option set matrix
+      os_matrix = []
+      header_row = []
+      header_row.push("list_name", "name", "label")
+      column_counter = 0
+
+      # for each unique option set in the list:
+      # loop through the nodes and extract the options
+      option_sets.each do |id|
+        # get the option set from id
+        os = OptionSet.find(id)
+
+        # node = the current option node
+        os.option_nodes.each do |node|
+          level_to_push = [] # array to be filled with parent levels if needed
+          listname_to_push = ""
+          if node.level.present?
+            # per XLSform style, option sets with levels need to have the
+            # list_name replaced with the level name to distinguish each row.
+            listname_to_push = node.level_name
+
+            # Only attempt to access node ancestors if they exist
+            if node.ancestry_depth > 1
+              # Add a buffer of blank cells to accomodate columns used up by prior option sets
+              column_counter.times { level_to_push.push("") }
+
+              # Obtain array of all ancestor nodes (except for the root, which is nameless)
+              level_to_push += node.ancestors[1..].map(&:name)
+            end
+          else
+            listname_to_push = vanillify(os.name)
+          end
+
+          if node.option.present? # rubocop:disable Style/Next
+            option_row = []
+            option_row.push(listname_to_push, node.option.canonical_name, node.option.canonical_name)
+            option_row += level_to_push # append levels, if any, to rightmost columns
+            os_matrix.push(option_row)
+          end
+        end
+
+        # prep header row
+        # omit last entry (lowest level)
+        unless os.level_names.blank?
+          os.level_names[0..-2].each do |level|
+            header_row.push(level.values[0])
+
+            # increment column counter
+            column_counter += 1
+          end
+        end
+
+        # push an empty array after each option set, translating to a row of space on the XLSform, for readability
+        os_matrix.push([])
+      end
+
+      # return os_matrix with prepended header_row
+      os_matrix.insert(0, header_row)
+    end
+
+    def vanillify(input)
+      out = input.vanilla # remove extra characters
+      out.tr(" ", "_") # replace spaces with underscores
     end
   end
 end

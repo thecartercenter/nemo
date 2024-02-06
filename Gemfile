@@ -180,7 +180,7 @@ group :development, :test do
   gem "awesome_print", "~> 1.6"
   gem "database_cleaner", "~> 1.7"
   gem "db-query-matchers", "~> 0.10"
-  gem "rubocop", "1.22.1" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
+  gem "rubocop", "1.22.3" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
   gem "rubocop-rails", "~> 2.8"
   gem "rubocop-rake", "~> 0.6.0"
   gem "rubocop-rspec", "~> 2.0"
