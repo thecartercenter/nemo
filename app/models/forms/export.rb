@@ -126,6 +126,9 @@ module Forms
 
             # add "and" unless we're at the end
             constraints_to_push += " and " unless c_index + 1 == q.constraints.length
+
+            # TODO: add support for constraint messages ("rejection_msg" in NEMO)
+            # https://xlsform.org/en/#constraint-message
           end
 
           # if we have an option set, identify and save it so that we can add it to the choices sheet later.
