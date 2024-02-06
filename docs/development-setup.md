@@ -136,7 +136,7 @@ git checkout develop
 
 #### Start the server
 
-For a development setup, run `nvm use && rails s`.
+For a development setup, run `nvm use && bundle exec rails s`.
 You may want to run `bundle exec rake db:create_fake_data` to create a sample mission.
 
 #### Login
@@ -144,6 +144,15 @@ You may want to run `bundle exec rake db:create_fake_data` to create a sample mi
 1. Navigate to http://localhost:3000
 1. Login with username **admin** and use the random password that was generated when you ran `bundle exec rake db:create_admin` (make sure to change the password after login).
 1. Create a new Mission and get started making forms!
+
+### Running locally in production mode
+
+After initial configuration using the development steps above:
+
+1. Re-process the SCSS files as well as webpacker assets: `RAILS_ENV=production bundle exec rake assets:precompile`
+1. Run in production mode, and allow Rails to serve static files instead of nginx: `RAILS_ENV=production RAILS_SERVE_STATIC_FILES=1 bundle exec rails s`
+
+In production mode, logs won't show up in the console like usual; they can be found in `logs/production.log`.
 
 ### Dealing with JavaScript
 
