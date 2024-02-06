@@ -115,19 +115,19 @@ module Forms
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
-          # TODO: "Constraints" in NEMO have a different definition than in XLSForm
-          # NEMO allows multiple constraint rules to be in effect that refer to different
-          # questions in addition to that question itself.
-          # In XLSForm, constraints are usually described in terms of the form response to
-          # that particular question, which is denoted by a period "."
-          # Also, if there are multiple constraint rules, it appears that they should be
-          # placed in parentheses () and separated by "and"
-          # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
-          constraints_to_push = ""
           # if we have any relevant conditions or constraints, save them now
           conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
-          q.constraints.each do |c|
-            constraints_to_push += conditions_to_xls(c.conditions, c.accept_if)
+
+          constraints_to_push = ""
+          q.constraints.each_with_index do |c, c_index|
+            # constraint rules should be placed in parentheses and separated by "and"
+            # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
+            constraints_to_push += "(#{conditions_to_xls(c.conditions, c.accept_if)})"
+
+            # add "and" unless we're at the end
+            unless c_index + 1 == q.constraints.length
+              constraints_to_push += " and "
+            end
           end
 
           # if we have an option set, identify and save it so that we can add it to the choices sheet later.
