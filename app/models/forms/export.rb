@@ -102,7 +102,7 @@ module Forms
         end
 
         if q.group? # is this a group?
-          group_name = q.code.tr(" ", "_")
+          group_name = vanillify(q.code)
 
           if q.repeatable?
             questions.row(row_index).push("begin repeat", group_name, q.code)
@@ -117,6 +117,14 @@ module Forms
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
+          # TODO: "Constraints" in NEMO have a different definition than in XLSForm
+          # NEMO allows multiple constraint rules to be in effect that refer to different
+          # questions in addition to that question itself.
+          # In XLSForm, constraints are usually described in terms of the form response to
+          # that particular question, which is denoted by a period "."
+          # Also, if there are multiple constraint rules, it appears that they should be
+          # placed in parentheses () and separated by "and"
+          # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
           constraints_to_push = ""
           # if we have any relevant conditions or constraints, save them now
           conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
@@ -135,7 +143,7 @@ module Forms
             # include leading space to respect XLSForm format
             # question name should be followed by the option set name (if applicable) separated by a space
             # replace any spaces in the option set name with underscores to ensure the form is parsed correctly
-            os_name = os.name.tr(" ", "_")
+            os_name = vanillify(os.name)
 
             # is the option set multilevel?
             if os.level_names.present?
@@ -151,7 +159,6 @@ module Forms
                 # Modify question label
                 # NOTE: the question "label" (what NEMO calls "name") will have to be manually edited
                 # in the exported XLSForm by the user so that it makes grammatical sense.
-                # The below line simply makes the label unique.
                 label_to_push = "#{q.name}_#{level_name}"
 
                 # push a row for each level
@@ -194,7 +201,12 @@ module Forms
 
       ## Settings
       lang = @form.mission.setting.preferred_locales[0].to_s
-      settings.row(1).push(@form.name, @form.id, @form.current_version.decorate.name, lang)
+      version = if @form.current_version.present?
+                  @form.current_version.decorate.name
+                else
+                  "1"
+                end
+      settings.row(1).push(@form.name, @form.id, version, lang)
 
       ## Write
       file = StringIO.new
@@ -307,7 +319,7 @@ module Forms
               level_to_push += node.ancestors[1..].map(&:name)
             end
           else
-            listname_to_push = os.name.tr(" ", "_")
+            listname_to_push = vanillify(os.name)
           end
 
           if node.option.present? # rubocop:disable Style/Next
@@ -335,6 +347,11 @@ module Forms
 
       # return os_matrix with prepended header_row
       os_matrix.insert(0, header_row)
+    end
+
+    def vanillify(input)
+      out = input.vanilla # remove extra characters
+      out.tr(" ", "_") # replace spaces with underscores
     end
   end
 end
