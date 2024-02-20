@@ -303,7 +303,8 @@ module Forms
         # node = the current option node
         os.option_nodes.each do |node|
           level_to_push = [] # array to be filled with parent levels if needed
-          listname_to_push = ""
+          listname_to_push = "" # name of the option set
+
           if node.level.present?
             # per XLSform style, option sets with levels need to have the
             # list_name replaced with the level name to distinguish each row.
@@ -323,7 +324,11 @@ module Forms
 
           if node.option.present? # rubocop:disable Style/Next
             option_row = []
-            option_row.push(listname_to_push, node.option.canonical_name, node.option.canonical_name)
+
+            # remove extra chars and spaces from choice name
+            choicename_to_push = vanillify(node.option.canonical_name)
+
+            option_row.push(listname_to_push, choicename_to_push, choicename_to_push)
             option_row += level_to_push # append levels, if any, to rightmost columns
             os_matrix.push(option_row)
           end
