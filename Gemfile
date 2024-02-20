@@ -95,7 +95,7 @@ gem "dalli", "~> 3.2"
 # DB
 gem "hairtrigger", "~> 1.1"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
-gem "pg", "~> 1.4"
+gem "pg", "~> 1.4.6" # TODO: v1.5 breaks something with closure_tree (and our fork is not the cause as of Jul 2023).
 gem "pg_search", "~> 2.1"
 gem "postgres-copy", "~> 1.0"
 gem "wisper", "~> 2.0"
