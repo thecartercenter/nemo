@@ -3,6 +3,8 @@
 module Forms
   # Exports a form to a human readable format for science!
   class Export
+    include LanguageHelper
+
     COLUMNS = %w[
       Level Type Code Prompt Required? Repeatable? SkipLogic Constraints
       DisplayLogic DisplayConditions Default Hidden
@@ -60,9 +62,17 @@ module Forms
       choices = book.create_worksheet(name: "choices")
       settings = book.create_worksheet(name: "settings")
 
+      # Get languages
+      locales = @form.mission.setting.preferred_locales
+
       # Write sheet headings at row index 0
       questions.row(0).push("type", "name", "label", "required", "relevant", "constraint", "choice_filter")
       settings.row(0).push("form_title", "form_id", "version", "default_language")
+
+      # write translation column(s) to header row
+      locales.each do |locale|
+        questions.row(0).push("label::#{language_name(locale)}")
+      end
 
       group_depth = 1 # assume base level
       repeat_depth = 1
@@ -183,6 +193,10 @@ module Forms
             questions.row(row_index).push(qtype_converted, q.code, q.name, q.required.to_s,
               conditions_to_push, constraints_to_push, choice_filter)
           end
+
+          # do we have translations?
+
+          # write translated label::language (xx) columns
         end
       end
 
