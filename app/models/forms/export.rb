@@ -65,14 +65,14 @@ module Forms
       # Get languages
       locales = @form.mission.setting.preferred_locales
 
-      # Write sheet headings at row index 0
-      questions.row(0).push("type", "name", "label", "required", "relevant", "constraint", "choice_filter")
-      settings.row(0).push("form_title", "form_id", "version", "default_language")
-
       # write translation column(s) to header row
       locales.each do |locale|
-        questions.row(0).push("label::#{language_name(locale)}")
+        questions.row(0).push("label::#{language_name(locale)} (#{locale.to_s})", "hint::#{language_name(locale)} (#{locale.to_s})")
       end
+
+      # Write sheet headings at row index 0
+      questions.row(0).push("type", "name", "required", "relevant", "constraint", "choice_filter")
+      settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_depth = 1 # assume base level
       repeat_depth = 1
@@ -110,18 +110,28 @@ module Forms
         end
 
         if q.group? # is this a group?
+           # write translated label and hint columns
+          locales.each do |locale|
+            questions.row(row_index).push(q.group_name_translations[locale.to_s], q.group_hint_translations[locale.to_s])
+          end
+
           group_name = vanillify(q.code)
 
           if q.repeatable?
-            questions.row(row_index).push("begin repeat", group_name, q.code)
+            questions.row(row_index).push("begin repeat", group_name)
             repeat_depth += 1
           else
-            questions.row(row_index).push("begin group", group_name, q.code)
+            questions.row(row_index).push("begin group", group_name)
           end
 
           # update counters
           group_depth += 1
         else # is this a question?
+           # write translated label and hint columns
+          locales.each do |locale|
+            questions.row(row_index).push(q.question.name_translations[locale.to_s], q.question.hint_translations[locale.to_s])
+          end
+
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
@@ -185,25 +195,21 @@ module Forms
               type_to_push = "#{qtype_converted} #{os_name}"
 
               # Write the question row
-              questions.row(row_index).push(type_to_push, q.code, q.name, q.required.to_s,
+              questions.row(row_index).push(type_to_push, q.code, q.required.to_s,
                 conditions_to_push, constraints_to_push, choice_filter)
             end
           else # no option set present
             # Write the question row as normal
-            questions.row(row_index).push(qtype_converted, q.code, q.name, q.required.to_s,
+            questions.row(row_index).push(qtype_converted, q.code, q.required.to_s,
               conditions_to_push, constraints_to_push, choice_filter)
           end
-
-          # do we have translations?
-
-          # write translated label::language (xx) columns
         end
       end
 
       ## Choices
       # return an array of option set data to write to the spreadsheet
       # only pass in unique option set IDs
-      option_matrix = options_to_xls(option_sets_used.uniq)
+      option_matrix = options_to_xls(option_sets_used.uniq, locales)
 
       # Loop through matrix array and write to "choices" tab of the XLSForm
       option_matrix.each_with_index do |option_row, row_index|
@@ -300,8 +306,9 @@ module Forms
     # This function traverses the option nodes and outputs data to write to the options sheet
     # Include cascading levels as additional columns if they exist
     # option_sets = array of unique option set IDs used in the exported form
+    # locales = list of possible translations
     # https://docs.getodk.org/form-logic/#filtering-options-in-select-questions
-    def options_to_xls(option_sets)
+    def options_to_xls(option_sets, locales)
       # initialize option set matrix
       os_matrix = []
       header_row = []
