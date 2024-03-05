@@ -65,13 +65,15 @@ module Forms
       # Get languages
       locales = @form.mission.setting.preferred_locales
 
-      # write translation column(s) to header row
+      # Write sheet headings at row index 0
+      questions.row(0).push("type")
+
+      # translation columns
       locales.each do |locale|
         questions.row(0).push("label::#{language_name(locale)} (#{locale.to_s})", "hint::#{language_name(locale)} (#{locale.to_s})")
       end
 
-      # Write sheet headings at row index 0
-      questions.row(0).push("type", "name", "required", "relevant", "constraint", "choice_filter")
+      questions.row(0).push("name", "required", "relevant", "constraint", "choice_filter")
       settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_depth = 1 # assume base level
@@ -110,28 +112,23 @@ module Forms
         end
 
         if q.group? # is this a group?
+          group_name = vanillify(q.code)
+
+          if q.repeatable?
+            questions.row(row_index).push("begin repeat")
+            repeat_depth += 1
+          else
+            questions.row(row_index).push("begin group")
+          end
+
            # write translated label and hint columns
           locales.each do |locale|
             questions.row(row_index).push(q.group_name_translations[locale.to_s], q.group_hint_translations[locale.to_s])
           end
 
-          group_name = vanillify(q.code)
-
-          if q.repeatable?
-            questions.row(row_index).push("begin repeat", group_name)
-            repeat_depth += 1
-          else
-            questions.row(row_index).push("begin group", group_name)
-          end
-
           # update counters
           group_depth += 1
         else # is this a question?
-           # write translated label and hint columns
-          locales.each do |locale|
-            questions.row(row_index).push(q.question.name_translations[locale.to_s], q.question.hint_translations[locale.to_s])
-          end
-
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
 
@@ -181,7 +178,14 @@ module Forms
                 label_to_push = "#{q.name}_#{level_name}"
 
                 # push a row for each level
-                questions.row(row_index + l_index).push(type_to_push, name_to_push, label_to_push,
+                questions.row(row_index + l_index).push(type_to_push)
+
+                # write translated label and hint columns
+                locales.each do |locale|
+                  questions.row(row_index + l_index).push(q.question.name_translations[locale.to_s], q.question.hint_translations[locale.to_s])
+                end
+
+                questions.row(row_index + l_index).push(name_to_push,
                   q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
@@ -189,22 +193,56 @@ module Forms
               end
 
               # increase index modifier by the number of levels so we start on the correct row next time
-              index_mod += os.level_names.length
+              index_mod += os.level_names.length - 1
             else # it's a single-level select question
               # Append option set name to qtype
               type_to_push = "#{qtype_converted} #{os_name}"
 
               # Write the question row
-              questions.row(row_index).push(type_to_push, q.code, q.required.to_s,
+              questions.row(row_index).push(type_to_push)
+              # write translated label and hint columns
+              locales.each do |locale|
+                questions.row(row_index).push(q.question.name_translations[locale.to_s], q.question.hint_translations[locale.to_s])
+              end
+              questions.row(row_index).push(q.code, q.required.to_s,
                 conditions_to_push, constraints_to_push, choice_filter)
             end
           else # no option set present
             # Write the question row as normal
-            questions.row(row_index).push(qtype_converted, q.code, q.required.to_s,
+            questions.row(row_index).push(qtype_converted)
+            # write translated label and hint columns
+            locales.each do |locale|
+              questions.row(row_index).push(q.question.name_translations[locale.to_s], q.question.hint_translations[locale.to_s])
+            end
+            questions.row(row_index).push(q.code, q.required.to_s,
               conditions_to_push, constraints_to_push, choice_filter)
           end
         end
-      end
+
+        # are we at the end of the form?
+        if i == @form.preordered_items.size - 1
+          row_index += 1
+
+          # did one or more groups just end?
+          # if so, the qing's depth will be smaller than the depth counter
+          while group_depth > 1
+            # are we in a repeat group?
+            # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
+            if repeat_depth > 1 && repeat_depth >= group_depth
+              questions.row(row_index).push("end repeat")
+              repeat_depth -= 1
+            else
+              # end the group
+              questions.row(row_index).push("end group")
+            end
+
+            # update counters to accomodate additional "end group" lines
+            group_depth -= 1
+            index_mod += 1
+            row_index += 1
+          end
+        end
+      end # end of form loop
 
       ## Choices
       # return an array of option set data to write to the spreadsheet
@@ -311,8 +349,14 @@ module Forms
     def options_to_xls(option_sets, locales)
       # initialize option set matrix
       os_matrix = []
+
+      # push header row column titles
       header_row = []
-      header_row.push("list_name", "name", "label")
+      header_row.push("list_name", "name")
+      locales.each do |locale|
+        header_row.push("label::#{language_name(locale)} (#{locale.to_s})")
+      end
+
       column_counter = 0
 
       # for each unique option set in the list:
@@ -349,7 +393,13 @@ module Forms
             # remove extra chars and spaces from choice name
             choicename_to_push = vanillify(node.option.canonical_name)
 
-            option_row.push(listname_to_push, choicename_to_push, choicename_to_push)
+            option_row.push(listname_to_push, choicename_to_push)
+
+            # push translated label columns
+            locales.each do |locale|
+              option_row.push(node.option.name_translations[locale.to_s])
+            end
+
             option_row += level_to_push # append levels, if any, to rightmost columns
             os_matrix.push(option_row)
           end
