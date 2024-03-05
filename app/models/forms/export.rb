@@ -112,8 +112,7 @@ module Forms
         end
 
         if q.group? # is this a group?
-          group_name = vanillify(q.code)
-
+          # write begin group line
           if q.repeatable?
             questions.row(row_index).push("begin repeat")
             repeat_depth += 1
@@ -125,6 +124,9 @@ module Forms
           locales.each do |locale|
             questions.row(row_index).push(q.group_name_translations[locale.to_s], q.group_hint_translations[locale.to_s])
           end
+
+          # write group name
+          questions.row(row_index).push(vanillify(q.code))
 
           # update counters
           group_depth += 1
@@ -164,7 +166,7 @@ module Forms
             # is the option set multilevel?
             if os.level_names.present?
               os.level_names.each_with_index do |level, l_index|
-                level_name = level.values[0]
+                level_name = vanillify(level.values[0])
 
                 # Append level name to qtype
                 type_to_push = "#{qtype_converted} #{level_name}"
@@ -381,16 +383,17 @@ module Forms
               column_counter.times { level_to_push.push("") }
 
               # Obtain array of all ancestor nodes (except for the root, which is nameless)
-              level_to_push += node.ancestors[1..].map(&:name)
+              level_to_push += vanillify(node.ancestors[1..].map(&:name)) # VANILLIFY THIS
             end
           else
-            listname_to_push = vanillify(os.name)
+            listname_to_push = os.name
           end
 
           if node.option.present? # rubocop:disable Style/Next
             option_row = []
 
-            # remove extra chars and spaces from choice name
+            # remove extra chars and spaces
+            listname_to_push = vanillify(listname_to_push)
             choicename_to_push = vanillify(node.option.canonical_name)
 
             option_row.push(listname_to_push, choicename_to_push)
@@ -409,7 +412,7 @@ module Forms
         # omit last entry (lowest level)
         unless os.level_names.blank?
           os.level_names[0..-2].each do |level|
-            header_row.push(level.values[0])
+            header_row.push(vanillify(level.values[0]))
 
             # increment column counter
             column_counter += 1
@@ -425,8 +428,15 @@ module Forms
     end
 
     def vanillify(input)
-      out = input.vanilla # remove extra characters
-      out.tr(" ", "_") # replace spaces with underscores
+      # remove extra characters and replace spaces with underscores
+      # for XLSForm compatibility
+      if input.class == String
+        out = input.vanilla.tr(" ", "_")
+      elsif input.class == Array
+        out = input.map { |n| n.vanilla.tr(" ", "_") }
+      else
+        raise "Unallowed type passed to vanillify: #{input.class}"
+      end
     end
   end
 end
