@@ -70,7 +70,8 @@ module Forms
 
       # translation columns
       locales.each do |locale|
-        questions.row(0).push("label::#{language_name(locale)} (#{locale.to_s})", "hint::#{language_name(locale)} (#{locale.to_s})")
+        questions.row(0).push("label::#{language_name(locale)} (#{locale})",
+          "hint::#{language_name(locale)} (#{locale})")
       end
 
       questions.row(0).push("name", "required", "relevant", "constraint", "choice_filter")
@@ -120,9 +121,10 @@ module Forms
             questions.row(row_index).push("begin group")
           end
 
-           # write translated label and hint columns
+          # write translated label and hint columns
           locales.each do |locale|
-            questions.row(row_index).push(q.group_name_translations[locale.to_s], q.group_hint_translations[locale.to_s])
+            questions.row(row_index).push(q.group_name_translations[locale.to_s],
+              q.group_hint_translations[locale.to_s])
           end
 
           # write group name
@@ -184,7 +186,8 @@ module Forms
 
                 # write translated label and hint columns
                 locales.each do |locale|
-                  questions.row(row_index + l_index).push(q.question.name_translations[locale.to_s], q.question.hint_translations[locale.to_s])
+                  questions.row(row_index + l_index).push(q.question.name_translations[locale.to_s],
+                    q.question.hint_translations[locale.to_s])
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
@@ -204,7 +207,8 @@ module Forms
               questions.row(row_index).push(type_to_push)
               # write translated label and hint columns
               locales.each do |locale|
-                questions.row(row_index).push(q.question.name_translations[locale.to_s], q.question.hint_translations[locale.to_s])
+                questions.row(row_index).push(q.question.name_translations[locale.to_s],
+                  q.question.hint_translations[locale.to_s])
               end
               questions.row(row_index).push(q.code, q.required.to_s,
                 conditions_to_push, constraints_to_push, choice_filter)
@@ -356,7 +360,7 @@ module Forms
       header_row = []
       header_row.push("list_name", "name")
       locales.each do |locale|
-        header_row.push("label::#{language_name(locale)} (#{locale.to_s})")
+        header_row.push("label::#{language_name(locale)} (#{locale})")
       end
 
       column_counter = 0
@@ -383,7 +387,7 @@ module Forms
               column_counter.times { level_to_push.push("") }
 
               # Obtain array of all ancestor nodes (except for the root, which is nameless)
-              level_to_push += vanillify(node.ancestors[1..].map(&:name)) # VANILLIFY THIS
+              level_to_push += vanillify(node.ancestors[1..].map(&:name))
             end
           else
             listname_to_push = os.name
@@ -430,10 +434,10 @@ module Forms
     def vanillify(input)
       # remove extra characters and replace spaces with underscores
       # for XLSForm compatibility
-      if input.class == String
-        out = input.vanilla.tr(" ", "_")
-      elsif input.class == Array
-        out = input.map { |n| n.vanilla.tr(" ", "_") }
+      if input.instance_of?(String)
+        input.vanilla.tr(" ", "_")
+      elsif input.instance_of?(Array)
+        input.map { |n| n.vanilla.tr(" ", "_") }
       else
         raise "Unallowed type passed to vanillify: #{input.class}"
       end
