@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/MethodLength
 module Forms
   # Exports a form to a human readable format for science!
-  class Export
+  class Export # rubocop:disable Metrics/ClassLength
     include LanguageHelper
 
     COLUMNS = %w[
@@ -53,7 +54,7 @@ module Forms
       end
     end
 
-    # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Style/Next
+    # rubocop:disable Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Style/Next
     def to_xls
       book = Spreadsheet::Workbook.new
 
@@ -176,11 +177,6 @@ module Forms
                 # Modify question name
                 name_to_push = "#{q.code}_#{level_name}"
 
-                # Modify question label
-                # NOTE: the question "label" (what NEMO calls "name") will have to be manually edited
-                # in the exported XLSForm by the user so that it makes grammatical sense.
-                label_to_push = "#{q.name}_#{level_name}"
-
                 # push a row for each level
                 questions.row(row_index + l_index).push(type_to_push)
 
@@ -218,7 +214,8 @@ module Forms
             questions.row(row_index).push(qtype_converted)
             # write translated label and hint columns
             locales.each do |locale|
-              questions.row(row_index).push(q.question.name_translations[locale.to_s], q.question.hint_translations[locale.to_s])
+              questions.row(row_index).push(q.question.name_translations[locale.to_s],
+                q.question.hint_translations[locale.to_s])
             end
             questions.row(row_index).push(q.code, q.required.to_s,
               conditions_to_push, constraints_to_push, choice_filter)
@@ -248,7 +245,8 @@ module Forms
             row_index += 1
           end
         end
-      end # end of form loop
+      end
+      # end of giant @form loop
 
       ## Choices
       # return an array of option set data to write to the spreadsheet
@@ -276,7 +274,7 @@ module Forms
       book.write(file)
       file.string
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Style/Next
+    # rubocop:enable Metrics/BlockLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Style/Next
 
     private
 
@@ -414,7 +412,7 @@ module Forms
 
         # prep header row
         # omit last entry (lowest level)
-        unless os.level_names.blank?
+        if os.level_names.present?
           os.level_names[0..-2].each do |level|
             header_row.push(vanillify(level.values[0]))
 
@@ -444,3 +442,4 @@ module Forms
     end
   end
 end
+# rubocop:enable Metrics/MethodLength
