@@ -124,8 +124,8 @@ module Forms
 
           # write translated label and hint columns
           locales.each do |locale|
-            questions.row(row_index).push(q.group_name_translations[locale.to_s],
-              q.group_hint_translations[locale.to_s])
+            questions.row(row_index).push(q.group_name_translations&.dig(locale.to_s),
+              q.group_hint_translations&.dig(locale.to_s))
           end
 
           # write group name
@@ -182,8 +182,8 @@ module Forms
 
                 # write translated label and hint columns
                 locales.each do |locale|
-                  questions.row(row_index + l_index).push(q.question.name_translations[locale.to_s],
-                    q.question.hint_translations[locale.to_s])
+                  questions.row(row_index + l_index).push(q.question.name_translations&.dig(locale.to_s),
+                    q.question.hint_translations&.dig(locale.to_s))
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
@@ -203,8 +203,8 @@ module Forms
               questions.row(row_index).push(type_to_push)
               # write translated label and hint columns
               locales.each do |locale|
-                questions.row(row_index).push(q.question.name_translations[locale.to_s],
-                  q.question.hint_translations[locale.to_s])
+                questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s),
+                  q.question.hint_translations&.dig(locale.to_s))
               end
               questions.row(row_index).push(q.code, q.required.to_s,
                 conditions_to_push, constraints_to_push, choice_filter)
@@ -214,8 +214,8 @@ module Forms
             questions.row(row_index).push(qtype_converted)
             # write translated label and hint columns
             locales.each do |locale|
-              questions.row(row_index).push(q.question.name_translations[locale.to_s],
-                q.question.hint_translations[locale.to_s])
+              questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s),
+                q.question.hint_translations&.dig(locale.to_s))
             end
             questions.row(row_index).push(q.code, q.required.to_s,
               conditions_to_push, constraints_to_push, choice_filter)
@@ -402,7 +402,7 @@ module Forms
 
             # push translated label columns
             locales.each do |locale|
-              option_row.push(node.option.name_translations[locale.to_s])
+              option_row.push(node.option.name_translations&.dig(locale.to_s))
             end
 
             option_row += level_to_push # append levels, if any, to rightmost columns
@@ -429,9 +429,11 @@ module Forms
       os_matrix.insert(0, header_row)
     end
 
+    # recursively remove pesky characters and replace spaces with underscores
+    # for XLSForm compatibility
     def vanillify(input)
-      # remove extra characters and replace spaces with underscores
-      # for XLSForm compatibility
+      return "" if input.nil?
+
       if input.instance_of?(String)
         input.vanilla.tr(" ", "_")
       elsif input.instance_of?(Array)
