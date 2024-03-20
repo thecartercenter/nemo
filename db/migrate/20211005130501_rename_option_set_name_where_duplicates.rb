@@ -7,7 +7,7 @@ class RenameOptionSetNameWhereDuplicates < ActiveRecord::Migration[6.1]
       next if sets.count < 2
       sets.each do |set|
         puts "Renaming duplicate option set ##{set.id}: #{set.name}"
-        next if set.update(name: "#{set.name} #{set.created_at.to_s(:std_datetime)}")
+        next if set.update(name: "#{set.name} #{set.created_at.to_fs(:std_datetime)}")
         # Some may have been created at the same second, e.g. if imported or created from the terminal;
         # if so, append a random string also.
         set.update!(name: "#{set.name} #{SecureRandom.alphanumeric(4)}")

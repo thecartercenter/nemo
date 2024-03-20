@@ -155,7 +155,7 @@ describe Form do
     context "for mission with forms" do
       it "should be correct" do
         expect(Form.odk_index_cache_key(mission: get_mission)).to eq(
-          "odk-form-list/mission-#{get_mission.id}/#{form2.published_changed_at.utc.to_s(:cache_datetime)}"
+          "odk-form-list/mission-#{get_mission.id}/#{form2.published_changed_at.utc.to_fs(:cache_datetime)}"
         )
       end
     end

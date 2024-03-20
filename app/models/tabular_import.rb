@@ -62,7 +62,7 @@ class TabularImport
   end
 
   def copy_validation_errors_for_row(row_number, errors)
-    errors.keys.each do |attribute|
+    errors.details.each do |attribute, _|
       errors.full_messages_for(attribute).each do |error|
         add_run_error(I18n.t("operation.row_error", row: row_number, error: error))
       end

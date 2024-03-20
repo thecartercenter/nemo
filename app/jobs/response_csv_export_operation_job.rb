@@ -8,7 +8,7 @@ class ResponseCSVExportOperationJob < OperationJob
       responses(ability, search, selected: options[:selected]),
       long_text_behavior: options[:long_text_behavior]
     )
-    timestamp = Time.current.to_s(:filename_datetime)
+    timestamp = Time.current.to_fs(:filename_datetime)
     save_attachment(attachment, "#{mission.compact_name}-responses-#{timestamp}.csv")
   rescue Search::ParseError => e
     operation_failed(e.to_s)

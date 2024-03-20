@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 6.1.7"
+gem "rails", "~> 7.1.0"
 
 # Misc
 gem "attribute_normalizer", "~> 1.2"
@@ -107,7 +107,7 @@ gem "whenever", "~> 1.0", require: false
 gem "i18n-country-translations", "~> 1.0"
 gem "i18n-js", "~> 3.0"
 gem "iso-639", "~> 0.3.5"
-gem "rails-i18n", "~> 6.0"
+gem "rails-i18n", "~> 7.0"
 
 # Analytics
 gem "scout_apm", "~> 5.0"
@@ -131,7 +131,7 @@ group :development do
   gem "rails-erd", "~> 1.6"
 
   # N+1 detection. Config is in environments/development.rb
-  gem "bullet", "~> 6.1"
+  gem "bullet", "~> 7.1"
 
   # Great for debugging i18n paths (uncomment temporarily when needed).
   # gem "i18n-debug", "~> 1.1"
@@ -145,10 +145,9 @@ end
 
 group :development, :test do
   # Test framework
-  gem "jasmine-rails", "~> 0.15.0" # Deprecated: Barely used.
   gem "rails-controller-testing", "~> 1.0" # Deprecated: Use request or feature specs instead.
   gem "rspec-collection_matchers", "~> 1.1"
-  gem "rspec-rails", "~> 3.9"
+  gem "rspec-rails", "~> 6.0"
 
   # Mocking/stubbing/factories
   gem "factory_bot_rails", "~> 4.11"
@@ -176,7 +175,7 @@ group :development, :test do
   gem "annotate", "~> 3.1"
   gem "assert_difference", "~> 1.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6"
-  gem "database_cleaner", "~> 1.7"
+  gem "database_cleaner", "~> 2.0"
   gem "db-query-matchers", "~> 0.10"
   gem "rubocop", "1.22.3" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
   gem "rubocop-rails", "~> 2.8"

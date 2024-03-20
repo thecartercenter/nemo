@@ -30,7 +30,7 @@ module Utils
 
       media_ids = download_scope.pluck("media_objects.id")
 
-      filename = "#{@operation.mission.compact_name}-media-#{Time.current.to_s(:filename_datetime)}.zip"
+      filename = "#{@operation.mission.compact_name}-media-#{Time.current.to_fs(:filename_datetime)}.zip"
       zipfile_name = Rails.root.join(TMP_DIR, filename)
       zip(zipfile_name, media_ids)
     end

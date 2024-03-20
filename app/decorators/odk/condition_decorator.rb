@@ -51,7 +51,7 @@ module ODK
 
     def temporal_to_odk
       format = :"javarosa_#{left_qing.qtype_name}"
-      formatted = Time.zone.parse(value).to_s(format)
+      formatted = Time.zone.parse(value).to_fs(format)
       left = "format-date(#{left_actual}, '#{Time::DATE_FORMATS[format]}')"
       right = "'#{formatted}'"
       join_with_operator(left, right)

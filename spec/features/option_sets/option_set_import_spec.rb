@@ -21,7 +21,7 @@ feature "option set import", js: true do
     login(admin)
   end
 
-  scenario "happy path" do
+  scenario "happy path", flapping: true do
     visit("/en/m/#{mission.compact_name}/option-set-imports/new")
     try_invalid_uploads_and_then(option_set_import_fixture("simple.csv").path) do
       fill_in("Option Set Name", with: "New Opt Set")

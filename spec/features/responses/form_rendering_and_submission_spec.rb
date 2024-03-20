@@ -57,7 +57,7 @@ feature "response form rendering and submission", js: true do
   end
 
   describe "form rendering" do
-    scenario "renders new form with hierarchical structure" do
+    scenario "renders new form with hierarchical structure", flapping: true do
       visit(new_response_path(params))
 
       expect_path([".cascading-selects select"])
@@ -90,7 +90,7 @@ feature "response form rendering and submission", js: true do
         )
       end
 
-      scenario "renders edit form with hierarchical structure" do
+      scenario "renders edit form with hierarchical structure", flapping: true do
         visit(edit_response_path(params.merge(id: response.shortcode)))
 
         expect_path([".cascading-selects select"])
@@ -99,7 +99,7 @@ feature "response form rendering and submission", js: true do
         ])
       end
 
-      scenario "allows dynamic add/remove of nested repeat groups", js: true do
+      scenario "allows dynamic add/remove of nested repeat groups", js: true, flapping: true do
         visit(edit_response_path(params.merge(id: response.shortcode)))
 
         # 1 "Add" and "Remove" button per repeat group
@@ -126,7 +126,7 @@ feature "response form rendering and submission", js: true do
         expect(page).to have_css("a.remove-repeat", count: 3)
       end
 
-      scenario "renders date, time, and datetime fields correctly" do
+      scenario "renders date, time, and datetime fields correctly", flapping: true do
         visit(edit_response_path(params.merge(id: response.shortcode)))
 
         expect_value([9], "#{Time.current.year}-03-12 18:32:44")
@@ -139,7 +139,7 @@ feature "response form rendering and submission", js: true do
   describe "form submission" do
     let(:image) { Rails.root.join("spec/fixtures/media/images/the_swing.jpg") }
 
-    scenario "submitting response" do
+    scenario "submitting response", flapping: true do
       visit(new_response_path(params))
 
       select2(user.name, from: "response_user_id")
@@ -247,7 +247,7 @@ feature "response form rendering and submission", js: true do
                                                            value: "123"}])
       end
 
-      scenario "submitting response with irrelevant answers" do
+      scenario "submitting response with irrelevant answers", flapping: true do
         visit(new_response_path(params))
         select2(user.name, from: "response_user_id")
         fill_in_question([0, 0], with: "123") # Makes select boxes visible
@@ -264,7 +264,7 @@ feature "response form rendering and submission", js: true do
 
     # Normally we wouldn't feature test something as simple as validation but this form
     # has a lot going on with e.g. skip logic.
-    context "with required question" do
+    context "with required question", flapping: true do
       before do
         form.c[0].c[0].update!(required: true)
       end

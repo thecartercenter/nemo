@@ -15,7 +15,7 @@ module ActionLinks
     end
 
     def to_s
-      return nil if object.new_record? && !options[:show_on_new]
+      return safe_str if object.new_record? && !options[:show_on_new]
 
       h.content_tag(:div, class: "top-action-links d-print-none") do
         safe_str << actions.map do |action|
