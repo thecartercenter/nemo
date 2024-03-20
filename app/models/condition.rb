@@ -163,7 +163,7 @@ class Condition < ApplicationRecord
   def clean_times
     return unless !destroyed? && temporal_ref_question? && value.present?
     begin
-      self.value = Time.zone.parse(value).to_s(:"std_#{left_qing.qtype_name}")
+      self.value = Time.zone.parse(value).to_fs(:"std_#{left_qing.qtype_name}")
     rescue ArgumentError
       self.value = nil
     end

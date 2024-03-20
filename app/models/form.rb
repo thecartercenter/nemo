@@ -125,7 +125,7 @@ class Form < ApplicationRecord
         [
           for_mission(options[:mission]).maximum(:published_changed_at),
           for_mission(options[:mission]).live.maximum(:updated_at)
-        ].max.utc.to_s(:cache_datetime)
+        ].max.utc.to_fs(:cache_datetime)
       else
         "no-pubd-forms"
       end
