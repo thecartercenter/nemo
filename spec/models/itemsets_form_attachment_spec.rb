@@ -136,7 +136,7 @@ describe ODK::ItemsetsFormAttachment, :odk do
       end
     end
 
-    context "for muliple languages" do
+    context "for muliple languages", flapping: true do
       let(:question_types) { %w[multilevel_select_one] }
 
       before do

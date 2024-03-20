@@ -38,7 +38,7 @@ module Cloning
     end
 
     def zipfile_path
-      @zipfile_path ||= export_dir.join("#{Time.zone.now.to_s(:filename_datetime)}.zip")
+      @zipfile_path ||= export_dir.join("#{Time.zone.now.to_fs(:filename_datetime)}.zip")
     end
   end
 end
