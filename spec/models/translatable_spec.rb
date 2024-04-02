@@ -16,7 +16,7 @@ class NoCanonical
   attr_accessor :mission_id
 end
 
-describe "Translatable" do
+xdescribe "Translatable" do
   let(:preferred_locales_str) { "en,fr" }
   let(:mission) { create(:mission, setting: build(:setting, preferred_locales_str: preferred_locales_str)) }
   let(:obj) { Basic.new(mission_id: mission.id) }

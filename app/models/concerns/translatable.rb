@@ -5,38 +5,40 @@ module Translatable
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def translates(*args)
-      # Shave off the optional options hash at the end and merge with defaults.
-      options = args[-1].is_a?(Hash) ? args.delete_at(-1) : {}
+    # define methods like name_en, etc.
+    # possible forms:
+    # name
+    # name_en
+    # name("en")
+    # name(:en)
+    # name(:en, fallbacks: true)
+    # name=
+    # name_en=
+    #
+    # the :fallbacks option defines what will happen if the desired translation is not found
+    #   if false (which is the default when an explicit locale is given), nil is returned
+    #   if true, then if the following locales will be tried: I18n.locale, I18n.default_locale,
+    #   any locale with a non-blank translation.
+    #     if all these are undefined then nil will be returned
+    def translates(*fields)
+      fields.each do |field|
+        define_method(field.to_s) do |locale = nil, **kwargs|
+          fallbacks = kwargs.fetch(:fallbacks, true)
+          get_translation(field, locale, fallbacks: fallbacks)
+        end
 
-      # Tidy options if given.
-      options[:locales] = options[:locales].map(&:to_s) if options[:locales].is_a?(Array)
+        define_method("#{field}=") { |locale = nil, value| set_translation(field, locale, value) }
 
-      class_variable_set("@@translate_options", options)
-      class_variable_set("@@translated_fields", args)
+        attr_accessor("#{field}_translations") unless ancestors.include?(ActiveRecord::Base)
 
-      # Setup an accessor if not present.
-      translated_fields.each do |f|
-        attr_accessor("#{f}_translations") unless ancestors.include?(ActiveRecord::Base)
+        # we must override these setters because of the canonical_name setup
+        define_method("#{field}_translations=") { |value| set_translation_hash(field, value) }
+
+        I18n.available_locales.each do |locale|
+          define_method("#{field}_#{locale}") { get_translation(field, locale, fallbacks: false) }
+          define_method("#{field}_#{locale}=") { |value| set_translation(field, locale, value) }
+        end
       end
-
-      # Setup *_translations assignment handlers for each field.
-      translated_fields.each do |field|
-        class_eval %{
-          def #{field}_translations=(val)
-            translatable_set_hash('#{field}', val)
-          end
-        }
-      end
-    end
-
-    # special accessors that we have to use for class vars in concerns
-    def translated_fields
-      class_variable_defined?("@@translated_fields") ? class_variable_get("@@translated_fields") : nil
-    end
-
-    def translate_options
-      class_variable_defined?("@@translate_options") ? class_variable_get("@@translate_options") : nil
     end
 
     def validates_translated_length_of(*attr_names)
@@ -47,178 +49,75 @@ module Translatable
     end
   end
 
-  # define methods like name_en, etc.
-  # possible forms:
-  # name
-  # name_en
-  # name("en")
-  # name(:en)
-  # name(:en, fallbacks: true)
-  # name=
-  # name_en=
-  #
-  # the :fallbacks option defines what will happen if the desired translation is not found
-  #   if false (which is the default when an explicit locale is given), nil is returned
-  #   if true, then if the following locales will be tried: I18n.locale, I18n.default_locale,
-  #   any locale with a non-blank translation.
-  #     if all these are undefined then nil will be returned
-  def method_missing(*args)
-    # check if this is a translation method and get the pieces
-    action, field, locale, is_setter, options = translatable_parse_method(args[0], args[1], args[2])
-
-    # do the action if we found one
-    if action
-      send("translatable_#{action}", field, locale, is_setter, options, args)
-    else
-      super
-    end
-  end
-
-  def respond_to?(symbol, *)
-    !self.class.translated_fields.nil? && translatable_parse_method(symbol) || super
-  end
-
-  def respond_to_missing?(symbol, include_private)
-    !self.class.translated_fields.nil? && translatable_parse_method(symbol) || super
-  end
-
-  # Sets field_translations value internally.
-  def translatable_set_hash(field, value)
-    unless value.nil?
-      # Remove any blank values and stringify.
-      value = value.reject { |_, v| v.blank? }.stringify_keys
-
-      # Set back to nil if empty
-      value = nil if value.empty?
-    end
-
-    translatable_set(field, value)
-    translatable_set_canonical(field)
-  end
-
-  # Assigns the canonical_xxx attrib if applicable
-  def translatable_set_canonical(field)
-    # Set canonical_name if appropriate
-    return unless respond_to?("canonical_#{field}=")
-    trans = translatable_get(field) || {}
-    send("canonical_#{field}=", trans[I18n.default_locale.to_s] || trans.values.first)
-  end
-
-  def translatable_translate(field, locale, is_setter, options, args)
-    # if we're setting the value
-    if is_setter
-      cur_hash = translatable_get(field) || {}
-
-      # set the value in the appropriate translation hash
-      # we use the merge method because otherwise the _changed? method doesn't work right
-      translatable_set_hash(field, cur_hash.merge(locale => args[1]))
-
-    # otherwise just return what we have
-    else
-      translations = translatable_get(field)
-      return nil if translations.nil?
-
-      to_try = [locale.to_s]
-      to_try += [I18n.locale.to_s, I18n.default_locale.to_s] + translations.keys if options[:fallbacks]
-
-      # If allowed locales are given, restrict attempted locales to those.
-      allowed = Setting.for_mission(mission_id)&.preferred_locales
-      to_try &= allowed.map(&:to_s) if allowed.present?
-
-      to_try.each do |l|
-        if (found = translations[l])
-          return found
-        end
-      end
-
-      nil
-    end
-  end
-
-  # checks if all the translations are blank for the given field
-  def translatable_all_blank?(field, _locale, _is_setter, _options, _args)
-    translatable_get(field).nil? || !translatable_get(field).detect { |_l, t| t.present? }
-  end
-
-  def translatable_parse_method(symbol, arg1 = nil, arg2 = nil)
-    return nil if self.class.translated_fields.nil?
-
-    fields = self.class.translated_fields.join("|")
-    if symbol.to_s =~ /\A(#{fields})(_([a-z]{2}))?(_before_type_cast)?(=?)\z/
-
-      # get bits
-      action = :translate
-      field = Regexp.last_match(1)
-      locale = Regexp.last_match(3)
-      is_setter = Regexp.last_match(5) == "="
-      options = arg1.is_a?(Hash) ? arg1 : (arg2.is_a?(Hash) ? arg2 : {})
-
-      # if locale is nil, we need to figure out what it is
-      if locale.nil?
-        # if it's a setter method (e.g. name = "foo")
-        # then we need to use the current system locale, b/c the locale is not specified
-        if is_setter
-          locale = I18n.locale
-
-        # otherwise (it's a getter), we can assume that the locale is in the 1st argument
-        # (e.g. name(:en), name(:en, fallbacks: true))
-        # (unless that first arg was a hash (e.g. name(fallbacks: true)))
-        else
-          locale = arg1 unless arg1.is_a?(Hash)
-        end
-      end
-
-      # if locale is still not set (can only be true for getters),
-      # default to current locale, but turn on fallbacks
-      if locale.blank?
-        locale = I18n.locale
-        options[:fallbacks] = true
-      else
-        # otherwise, default fallbacks to false unless expressly set to true by user
-        options[:fallbacks] = false unless options[:fallbacks] == true
-      end
-
-      # if we get this far, return the bits (locale should always be a string)
-      [action, field, locale.to_s, is_setter, options]
-
-    elsif symbol.to_s =~ /\A(#{fields})_all_blank\?\z/
-      action = :all_blank?
-      field = Regexp.last_match(1)
-
-      [action, field]
-    end
-  end
-
-  def translatable_get(field)
-    if is_a?(ActiveRecord::Base)
-      self[:"#{field}_translations"]
+  def get_translation_hash(field)
+    hash = if is_a?(ActiveRecord::Base)
+      send("#{field}_translations")
     else
       instance_variable_get("@#{field}_translations")
     end
+    return nil if hash.empty?
+    hash
   end
 
-  def translatable_set(field, value)
+  def set_translation_hash(field, hash)
+    hash = hash.compact
+
+    canonical_translation = hash[I18n.default_locale.to_s] || hash.values.first
+    set_canonical_translation(field, canonical_translation) if canonical_translation.present?
+
     if is_a?(ActiveRecord::Base)
-      self[:"#{field}_translations"] = value
+      # this weird construct is necessary because we override the `field_translations` setters
+      self[:"#{field}_translations"] = hash
     else
-      instance_variable_set("@#{field}_translations", value)
+      instance_variable_set("@#{field}_translations", hash)
     end
   end
 
-  def available_locales(options = {})
-    # get union of all locales of all translated fields, and convert to symbol
-    locales = self.class.translated_fields.inject([]) do |union, field|
-      trans = translatable_get(field)
-      union |= trans.keys unless trans.nil?
-      union
-    end.map(&:to_sym)
+  def get_translation(field, locale, fallbacks:) # rubocop:disable Metrics/PerceivedComplexity
+    # locale specified
+    if locale
+      translation = get_translation_hash(field)&.dig(locale.to_s)
+      return translation if translation.present?
+    elsif fallbacks
+      locales_to_try = []
+      locales_to_try << I18n.locale
+      locales_to_try << Setting.for_mission(mission_id).preferred_locales
+      locales_to_try << I18n.default_locale
 
-    # honor :except_current option
-    locales -= [I18n.locale] if options[:except_current]
+      locales_to_try.map(&:to_s).uniq.each do |l|
+        translation = get_translation_hash(field)&.dig(l.to_s)
+        return translation if translation.present?
+      end
 
-    locales
+      get_translation_hash(field).each do |_locale, t|
+        return t if t.present?
+      end
+    end
+
+    nil
+  end
+
+  def set_translation(field, locale, value)
+    locale ||= I18n.locale
+
+    current_hash = get_translation_hash(field) || {}
+    current_hash[locale.to_s] = value
+    set_translation_hash(field, current_hash)
+  end
+
+  def set_canonical_translation(field, value)
+    return unless respond_to?("canonical_#{field}=")
+    send("canonical_#{field}=", value)
+  end
+
+  def method_missing(*args)
+    Rails::Debug.log("METHOD MISSING")
+    Rails::Debug.log("\t#{args.awesome_inspect}")
+    Rails::Debug.log("END METHOD MISSING")
+    super
   end
 end
+
 module Translatable
   class TranslatableLengthValidator < ActiveModel::Validations::LengthValidator
     # The tokenizer determines how to split up an attribute value
