@@ -24,9 +24,6 @@ ELMO::Application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
-  # Compress CSS using a preprocessor.
-  # config.assets.css_compressor = :sass
-
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
@@ -43,7 +40,13 @@ ELMO::Application.configure do
                                           value_max_bytes: 16.megabytes}
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = Uglifier.new(harmony: true)
+  #
+  # Normally we would want to enable Harmony, but this seems to work regardless:
+  # https://github.com/lautis/uglifier/issues/185#issuecomment-1138334525
+  config.assets.configure do |env|
+    env.js_compressor  = :uglifier
+    env.css_compressor = :sass
+  end
 
   # For nginx:
   config.action_dispatch.x_sendfile_header = "X-Accel-Redirect"
