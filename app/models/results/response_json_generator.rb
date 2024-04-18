@@ -118,8 +118,8 @@ module Results
     def value_for(answer)
       return media_value(answer) if answer.multimedia?
       case answer.qtype_name
-      when "date" then answer.date_value&.to_s(:std_date)
-      when "time" then answer.time_value&.to_s(:std_time)
+      when "date" then answer.date_value&.to_fs(:std_date)
+      when "time" then answer.time_value&.to_fs(:std_time)
       when "datetime" then answer.datetime_value&.iso8601
       when "integer", "counter" then answer.value&.to_i
       when "decimal" then answer.value&.to_f

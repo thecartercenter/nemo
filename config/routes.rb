@@ -3,8 +3,6 @@
 # For details on the DSL available within this file,
 # see https://guides.rubyonrails.org/routing.html
 ELMO::Application.routes.draw do
-  mount(JasmineRails::Engine => "/specs") if defined?(JasmineRails)
-
   # Special shortcut for simulating login in feature specs.
   get("test-login", to: "user_sessions#test_login") if Rails.env.test?
 

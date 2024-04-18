@@ -11,7 +11,7 @@ module Forms
       end
 
       def to_s
-        [warnings_of_type(:careful_with_changes), warnings_of_type(:features_disabled)].compact.reduce(:<<)
+        [warnings_of_type(:careful_with_changes), warnings_of_type(:features_disabled)].compact.reduce(:<<) || safe_str
       end
 
       private

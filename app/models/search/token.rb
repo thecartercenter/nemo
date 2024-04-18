@@ -140,7 +140,7 @@ class Search::Token
     if qualifier.type == :date
       begin
         time = Time.zone.parse(value_sql)
-        value_sql = time.to_s(:std_datetime)
+        value_sql = time.to_fs(:std_datetime)
       rescue ArgumentError
         raise_error_with_qualifier("invalid_date", qualifier, value: value_sql)
       end
