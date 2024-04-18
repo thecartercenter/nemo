@@ -321,9 +321,13 @@ module Forms
         left_to_push = "${#{left_qing.code}}"
 
         # prep right side of expression
-        if dc.right_side_is_qing?
+        # operation will vary based on what we are comparing to
+        if dc.right_side_is_qing? # it's another question's value
           right_qing = Questioning.find(dc.right_qing_id)
           right_to_push = "${#{right_qing.code}}"
+        elsif dc.option_node_id.present? # it's an option set choice
+          right_node_value = OptionNode.find(dc.option_node_id).option.canonical_name
+          right_to_push = "'#{right_node_value}'"
         elsif Float(dc.value, exception: false).nil? # it's not a number
           # to respect XLSform rules, surround with single quotes unless it's a number
           right_to_push = "'#{dc.value}'"
