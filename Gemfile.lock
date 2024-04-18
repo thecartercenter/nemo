@@ -469,7 +469,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rdiscount (2.2.7.3)
-    rdoc (6.6.2)
+    rdoc (6.6.3.1)
       psych (>= 4.0.0)
     react-rails (2.7.1)
       babel-transpiler (>= 0.7.0)
