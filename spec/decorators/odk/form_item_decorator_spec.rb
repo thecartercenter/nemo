@@ -3,7 +3,7 @@
 require "rails_helper"
 
 module ODK
-  describe FormItemDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
+  describe FormItemDecorator, :odk, :reset_factory_sequences do
     include_context "odk rendering"
 
     describe "xpath methods" do

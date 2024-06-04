@@ -28,7 +28,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       FileUtils.rm_rf(ResponsesController::TMP_UPLOADS_PATH)
     end
 
-    it "should successfully process the submission and clean up", database_cleaner: :truncate do
+    it "should successfully process the submission and clean up" do
       image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
@@ -46,7 +46,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       expect(FileUtils.rm(tmp_files)).to be_empty
     end
 
-    it "should safely ignore simple duplicates", database_cleaner: :truncate do
+    it "should safely ignore simple duplicates" do
       # Original
       submission_file = prepare_and_upload_submission_file("single_question.xml")
       post submission_path, params: {xml_submission_file: submission_file}, headers: auth_header
@@ -99,7 +99,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     context "with multiple parts" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
-      it "should successfully process the submission", database_cleaner: :truncate do
+      it "should successfully process the submission" do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
         image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
@@ -117,7 +117,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     context "with multiple parts, duplicate submissions for first part" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
-      it "should ignore the second submission", database_cleaner: :truncate do
+      it "should ignore the second submission" do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
         image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
@@ -140,7 +140,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     context "with multiple parts, duplicate submissions for second part" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
-      it "should ignore the third submission as it is a duplicate", database_cleaner: :truncate do
+      it "should ignore the third submission as it is a duplicate" do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
         image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
@@ -163,7 +163,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     context "with multiple parts, duplicate first submission at the end" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
-      it "should successfully process the submission", database_cleaner: :truncate do
+      it "should successfully process the submission" do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
         image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
@@ -186,7 +186,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     context "with multiple parts, duplicate xml/image and no response" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch]) }
 
-      it "should successfully process the submission", database_cleaner: :truncate do
+      it "should successfully process the submission" do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
         submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
         submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
@@ -207,7 +207,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
     context "multiple media attachments in multiple responses" do
       let(:form) { create(:form, :live, question_types: %w[text image sketch image]) }
 
-      it "should successfully process the submission", database_cleaner: :truncate do
+      it "should successfully process the submission" do
         image = Rack::Test::UploadedFile.new(image_fixture("the_swing.jpg"), "image/jpeg")
         image2 = Rack::Test::UploadedFile.new(image_fixture("sassafras.jpg"), "image/jpeg")
         image3 = Rack::Test::UploadedFile.new(image_fixture("sassafras2.jpg"), "image/jpeg")
