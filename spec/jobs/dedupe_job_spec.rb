@@ -197,7 +197,7 @@ describe DedupeJob do
       )
     end
 
-    it "should dedupe correctly", database_cleaner: :truncate do
+    it "should dedupe correctly" do
       # Start with two existing dupes, but are clean
       described_class.perform_now
       expect(Response.all.count).to eq(2)
