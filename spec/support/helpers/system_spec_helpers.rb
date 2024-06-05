@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Collection of helper methods for integration testing.
 module SystemSpecHelpers
   ALERT_CLASSES = {
     notice: "alert-info",
@@ -53,7 +54,8 @@ module SystemSpecHelpers
     unless options[:dont_pick]
       if options[:pick]
         textual_numbers = %i[first second third fourth fifth]
-        if index = textual_numbers.index(options[:pick])
+        index = textual_numbers.index(options[:pick])
+        if index
           selector = ":nth-child(#{index + 1})"
         elsif options[:pick].class == String
           selector = ":contains(\"#{options[:pick]}\")"
