@@ -147,7 +147,7 @@ describe "responses csv export" do
     context "No space on disk for bulk media export" do
       before do
         stub = double(block_size: 0, blocks_available: 0)
-        allow(Sys::Filedescribe).to receive(:stat).and_return(stub)
+        allow(Sys::Filesystem).to receive(:stat).and_return(stub)
       end
 
       scenario "Should see an error" do

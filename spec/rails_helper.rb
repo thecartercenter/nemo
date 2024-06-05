@@ -98,9 +98,9 @@ RSpec.configure do |config|
     ENV.delete("TEST_LOGGED_IN_USER_ID")
 
     Rails::Debug.log("<----- #{example.description} (#{example.location}) ----->")
-    @setting = create(:setting, mission: nil)
+    @_setting = create(:setting, mission: nil)
     example.run
-    @setting.destroy!
+    @_setting.destroy!
     Rails::Debug.log("<----- #{example.description} ----->")
     Rails::Debug.log("")
   end
