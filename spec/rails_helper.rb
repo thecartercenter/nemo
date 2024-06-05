@@ -100,7 +100,7 @@ RSpec.configure do |config|
     Rails::Debug.log("<----- #{example.description} (#{example.location}) ----->")
     @_setting = create(:setting, mission: nil)
     example.run
-    @_setting.destroy!
+    Setting.destroy_all
     Rails::Debug.log("<----- #{example.description} ----->")
     Rails::Debug.log("")
   end
