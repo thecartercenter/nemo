@@ -26,7 +26,7 @@ gem "spreadsheet" # For XLSForm export
 gem "term-ansicolor", "~> 1.3"
 gem "terrapin", "~> 0.6.0"
 gem "thor", "~> 1.0"
-gem "twilio-ruby", "~> 6.9.0" # Does not use semver after v5, watch out!
+gem "twilio-ruby", "~> 7.2.0" # Does not use semver after v5, watch out!
 
 # JS/CSS
 gem "bootstrap", "~> 4.3"
@@ -88,7 +88,7 @@ gem "acts_as_list"
 
 # Caching
 gem "actionpack-page_caching", "~> 1.1"
-gem "bootsnap", "~> 1.4", require: false, group: [:production]
+gem "bootsnap", "~> 1.4", require: false
 gem "dalli", "~> 3.2"
 
 # DB
@@ -117,7 +117,7 @@ gem "sentry-ruby", "~> 5.0"
 gem "sentry-rails", "~> 5.0" # rubocop:disable Bundler/OrderedGems
 
 # Force Sprockets to stay on v3 for now.
-gem "sprockets", "~> 3"
+gem "sprockets"
 
 # The below are used for building load test plans.
 # Needed in prod because test plans are built on prod instances.
@@ -177,7 +177,7 @@ group :development, :test do
   gem "assert_difference", "~> 1.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6"
   gem "db-query-matchers", "~> 0.10"
-  gem "rubocop", "1.22.3" # Hound supported versions: http://help.houndci.com/en/articles/2461415-supported-linters
+  gem "rubocop"
   gem "rubocop-rails", "~> 2.8"
   gem "rubocop-rake", "~> 0.6.0"
   gem "rubocop-rspec", "~> 2.0"
