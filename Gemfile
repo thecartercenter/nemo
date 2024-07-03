@@ -4,19 +4,16 @@ source "http://rubygems.org"
 
 gem "rails", "~> 7.1.0"
 
-# Force some gems to older versions to prevent error in prod:
-# "You have already activated base64 0.1.1, but your Gemfile requires base64 0.2.0. Since base64 is a default gem"
-gem "base64", "0.1.1"
-gem "stringio", "3.0.1.1"
-
 # Misc
 gem "attribute_normalizer", "~> 1.2"
+gem "csv"
 gem "daemons", "~> 1.2"
 gem "descriptive_statistics", "~> 2.5", require: "descriptive_statistics/safe" # mean, median, etc.
 gem "draper", "~> 4.0"
 gem "eventmachine", "~> 1.2", platform: :ruby
 gem "exception_notification", "~> 4.2"
 gem "friendly_id", "~> 5.1"
+gem "observer"
 gem "phony", "~> 2.15"
 gem "rack-attack", "~> 6.3"
 gem "rake", "~> 13.0"
@@ -91,7 +88,7 @@ gem "acts_as_list"
 
 # Caching
 gem "actionpack-page_caching", "~> 1.1"
-gem "bootsnap", "~> 1.4", require: false
+gem "bootsnap", "~> 1.4", require: false, group: [:production]
 gem "dalli", "~> 3.2"
 
 # DB
