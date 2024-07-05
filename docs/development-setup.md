@@ -219,6 +219,8 @@ so ODK's #collect-code Slack channel can be a good place to get help with error 
 
 ### Upgrading Enketo
 
+See [here](../lib/enketo-transformer-service/README.md) for a birds-eye overview of Enketo in NEMO.
+
 Enketo uses jQuery under the hood, and it's important to keep library versions consistent so there aren't conflicts.
 To upgrade our version of Enketo:
 1. Check their [changelog](https://github.com/enketo/enketo-core/blob/master/CHANGELOG.md)
