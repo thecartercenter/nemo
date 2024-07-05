@@ -443,6 +443,13 @@ The underlying Ruby version has changed to a MAJOR new version.
 1. Check out the current version
 1. `rbenv install`
 
+#### Upgrading to v14.7
+
+The underlying Ruby version has changed to a minor new version.
+
+1. Check out the current version
+1. `rbenv install`
+
 #### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.
