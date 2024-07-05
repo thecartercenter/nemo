@@ -353,7 +353,7 @@ class ResponsesController < ApplicationController
   # Renders an Enketo form instead of a NEMO form.
   def enketo
     # Fail fast if we're on the wrong node version (this happens most often in development).
-    raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v16")
+    # raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v16")
 
     # Enketo can't render anything if we haven't rendered it to XML (e.g. unpublished draft).
     if @response.form.odk_xml.blank?
