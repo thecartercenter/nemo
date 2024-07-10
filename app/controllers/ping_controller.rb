@@ -6,6 +6,7 @@ class PingController < ApplicationController
 
   # Used by uptime checker
   def show
+    @site_name = current_mission_config.site_name
     @tests = {}
     @tests[:dj_running] = Utils::DelayedJobChecker.instance.ok?
     @ok = @tests.values.all?
