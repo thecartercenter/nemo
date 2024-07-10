@@ -9,7 +9,7 @@ class PingController < ApplicationController
     @tests = {}
     @tests[:dj_running] = Utils::DelayedJobChecker.instance.ok?
     @ok = @tests.values.all?
-    @version = Cnfg.system_version
+    @version = Cnfg.system_version(detailed: true)
     render(layout: nil, formats: :text, status: @ok ? :ok : :service_unavailable)
   end
 end
