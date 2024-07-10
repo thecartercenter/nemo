@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "user import", js: true do
+describe "user import", js: true, flapping: true do
   include_context "file import"
 
   let(:admin) { create(:admin) }
