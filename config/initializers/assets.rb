@@ -21,3 +21,6 @@ Rails.application.config.assets.precompile.concat(%w[
 ])
 
 Rails.application.config.assets.precompile << "disable_bootstrap_modal_transitions.css" if Rails.env.test?
+
+# Add node_modules folder to the asset load path.
+Rails.application.config.assets.paths << Rails.root.join("node_modules")
