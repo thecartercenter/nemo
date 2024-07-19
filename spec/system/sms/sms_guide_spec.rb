@@ -43,11 +43,11 @@ describe "SMS Guide", js: true do
 
     around do |example|
       bool = Rails.configuration.i18n.raise_on_missing_translations
-      ELMO::Application.configure do
+      Rails.application.configure do
         config.i18n.raise_on_missing_translations = false
       end
       example.run
-      ELMO::Application.configure do
+      Rails.application.configure do
         config.i18n.raise_on_missing_translations = bool
       end
     end
