@@ -36,13 +36,13 @@ gem "flatpickr"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 1.0"
 gem "jquery-rails", "~> 4.3"
+gem "jsbundling-rails", "~> 1.0"
 gem "popper_js", "~> 1.14"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 2.4"
 gem "select2-rails", "~> 4.0"
 gem "spinjs-rails", "~> 1.3.0" # Breaking changes in v1.4 (spin.js v2.0).
 gem "uglifier", "~> 4.2"
-gem "webpacker", "~> 5.4"
 
 # Authz and Authn
 gem "authlogic", "~> 6.1"
