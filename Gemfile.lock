@@ -593,6 +593,11 @@ GEM
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
     sexp_processor (4.17.3)
+    shakapacker (6.0.2)
+      activesupport (>= 5.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.2)
+      semantic_range (>= 2.3.0)
     spinjs-rails (1.3)
       rails (>= 3.1)
     spreadsheet (1.3.3)
@@ -648,6 +653,7 @@ GEM
       rack-proxy (>= 0.6.1)
       railties (>= 5.2)
       semantic_range (>= 2.3.0)
+    webrick (1.8.1)
     websocket (1.2.11)
     websocket-driver (0.7.7)
       base64
@@ -765,6 +771,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.17)
   sentry-rails (~> 5.0)
   sentry-ruby (~> 5.0)
+  shakapacker (~> 6.0.0)
   spinjs-rails (~> 1.3.0)
   spreadsheet
   sprockets
@@ -780,7 +787,6 @@ DEPENDENCIES
   versionist (~> 2.0)
   warning (~> 1.3)
   webmock (~> 3.10)
-  webpacker (= 6.0.0.rc.6)
   whenever (~> 1.0)
   will_paginate (~> 3.1)
   will_paginate-bootstrap4 (~> 0.2.2)
