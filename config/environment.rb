@@ -4,7 +4,7 @@
 require_relative("application")
 
 # Initialize the Rails application.
-ELMO::Application.initialize!
+Rails.application.initialize!
 
 # Standard date-time format
 Time::DATE_FORMATS[:std_datetime_with_tz] = "%Y-%m-%d %H:%M:%S %Z"
