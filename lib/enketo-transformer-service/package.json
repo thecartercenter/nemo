@@ -8,9 +8,9 @@
   "scripts": {
     "start": "node index.js"
   },
-  "resolutions": {
-  },
+  "resolutions": {},
   "dependencies": {
-    "enketo-transformer": "2.3.0"
+    "enketo-transformer": "~4.0.0",
+    "libxslt": "^0.10.2"
   }
 }

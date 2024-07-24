@@ -41,4 +41,4 @@
   <%= render(partial: "powered_by_enketo") %>
 <% end %>
 
-<%= javascript_pack_tag 'enketo' %>
+<%= content_for(:per_page_packs, 'enketo') %>
