@@ -1,4 +1,4 @@
-const { webpackConfig, merge } = require('@rails/webpacker')
+const { webpackConfig, merge } = require('shakapacker')
 
 // webpackConfig.loaders.append('ignore', {
 //   test: /\.test\.js$/,
