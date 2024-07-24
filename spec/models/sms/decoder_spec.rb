@@ -619,7 +619,7 @@ describe Sms::Decoder, :sms do
     end
   end
 
-  describe "complex hierarchy construction", database_cleaner: :truncate do
+  describe "complex hierarchy construction" do
     it "builds response tree for nested groups with repeat" do
       # QingGroup (root)
       #   QingGroup

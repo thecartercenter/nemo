@@ -43,14 +43,14 @@ describe "odk submissions", :odk, type: :request do
   end
 
   context "normal submission" do
-    it "should work and have mission set to current mission", database_cleaner: :truncate do
+    it "should work and have mission set to current mission" do
       post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.mission).to eq(mission)
       expect(nemo_response.device_id).to eq(nil)
     end
 
-    it "should save device ID if present", database_cleaner: :truncate do
+    it "should save device ID if present" do
       post("#{submission_path}?deviceID=test", params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.device_id).to eq("test")
@@ -139,7 +139,7 @@ describe "odk submissions", :odk, type: :request do
       form.c[1].update!(required: true)
     end
 
-    it "should still accept response", database_cleaner: :truncate do
+    it "should still accept response" do
       post(submission_path, params: request_params, headers: auth_header)
       expect(response).to have_http_status(:created)
       expect(nemo_response.children.size).to eq(1)
@@ -163,7 +163,7 @@ describe "odk submissions", :odk, type: :request do
     end
     let!(:question_types) { %w[text text text text] }
 
-    it "should return created", database_cleaner: :truncate do
+    it "should return created" do
       prepare_odk_response_fixture("simple_response", form1, values: xml_values, formver: "202211")
       r1
       r1_original_path = Rails.root.join("tmp/odk/responses/simple_response/simple_response.xml")

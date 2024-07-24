@@ -86,6 +86,10 @@ Metrics/PerceivedComplexity:
   Exclude:
     - db/migrate/*
 
+Metrics/ModuleLength:
+  Exclude:
+    - spec/**/*
+
 Metrics/ParameterLists:
   CountKeywordArgs: false
 

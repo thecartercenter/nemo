@@ -8,7 +8,6 @@ require "rspec/collection_matchers"
 require "capybara/rspec"
 require "capybara/rails"
 require "selenium-webdriver"
-require "capybara-screenshot/rspec"
 require "cancan/matchers"
 require "fileutils"
 require "vcr"
@@ -25,13 +24,6 @@ Capybara.register_driver(:selenium_chrome_headless) do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
     driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(1280, 2048)
   end
-end
-
-Capybara.javascript_driver = :selenium_chrome_headless
-
-# Add support for Headless Chrome screenshots.
-Capybara::Screenshot.register_driver(:selenium_chrome_headless) do |driver, path|
-  driver.browser.save_screenshot(path)
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -53,7 +45,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = false
+  config.use_transactional_fixtures = true
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -72,7 +64,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.include(AssertDifference)
-  config.include(FeatureSpecHelpers, type: :feature)
+  config.include(SystemSpecHelpers, type: :system)
   config.include(GeneralSpecHelpers)
   config.include(ModelSpecHelpers, type: :model)
   config.include(RequestSpecHelpers, type: :request)
@@ -88,6 +80,15 @@ RSpec.configure do |config|
     FileUtils.mkdir_p(Rails.root.join("tmp"))
   end
 
+  # Set up system tests
+  config.before(:each, type: :system) do
+    driven_by(:rack_test)
+  end
+
+  config.before(:each, type: :system, js: true) do
+    driven_by :selenium_chrome_headless
+  end
+
   # We have to use around so that this block runs before arounds and befores in actual specs.
   config.around(:each) do |example|
     # Previous specs might leave locale set to something else, which can cause issues.
@@ -97,23 +98,16 @@ RSpec.configure do |config|
     ENV.delete("TEST_LOGGED_IN_USER_ID")
 
     Rails::Debug.log("<----- #{example.description} (#{example.location}) ----->")
+    @_setting = create(:setting, mission: nil)
     example.run
+    @_setting.destroy!
     Rails::Debug.log("<----- #{example.description} ----->")
     Rails::Debug.log("")
   end
 
-  config.before(:each) do
-    # This is the root setting, which is seed data so it should always be available.
-    # It's in a before block because it needs to come after DatabaseCleaners things, which
-    # are in before blocks. If it goes in the above around block, it runs too early and doesn't get cleaned.
-    # If this causes issues, a solution might be to change the DatabaseCleaner initializer to use
-    # around blocks.
-    create(:setting, mission: nil)
-  end
-
   # Print browser logs to console if they are non-empty.
   # You MUST use console.warn or console.error for this to work.
-  config.after(:each, type: :feature, js: true) do
+  config.after(:each, type: :system, js: true) do
     # logs = page.driver.browser.manage.logs.get(:browser).join("\n")
     logs = ""
     unless logs.strip.empty?
