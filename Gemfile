@@ -116,7 +116,6 @@ gem "scout_apm", "~> 5.0"
 gem "sentry-ruby", "~> 5.0"
 gem "sentry-rails", "~> 5.0" # rubocop:disable Bundler/OrderedGems
 
-# Force Sprockets to stay on v3 for now.
 gem "sprockets"
 
 # The below are used for building load test plans.
