@@ -81,8 +81,6 @@ class ConditionFormField extends React.Component {
     ELMO.app.loading(true);
     const url = this.buildUrl(leftQingId);
     try {
-      if (process.env.NODE_ENV === 'test') return;
-
       // TODO: Decompose magical `response` before setting state.
       const response = await $.ajax(url);
 
