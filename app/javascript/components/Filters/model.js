@@ -126,7 +126,6 @@ class FiltersModel {
       ELMO.app.loading(true);
       const url = ELMO.app.url_builder.build('filter-data', 'qings');
       try {
-        if (process.env.NODE_ENV === 'test') return;
         const qings = await $.ajax({ url, data: { form_ids: this.selectedFormIds } });
         this.conditionSetStore.refableQings = qings;
       } catch (error) {
