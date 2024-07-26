@@ -6,7 +6,7 @@ default: &default
   public_root_path: public
   public_output_path: packs
   check_yarn_integrity: false
-  cache_path: tmp/webpacker
+  cache_path: tmp/shakapacker
   webpack_compile_output: true
   ensure_consistent_versioning: true
 

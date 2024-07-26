@@ -1,9 +1,4 @@
-const { webpackConfig, merge } = require('shakapacker')
-
-// webpackConfig.loaders.append('ignore', {
-//   test: /\.test\.js$/,
-//   loader: 'ignore-loader',
-// });
+const { globalMutableWebpackConfig: webpackConfig, merge } = require('shakapacker')
 
 module.exports = merge(
   webpackConfig,
@@ -20,11 +15,5 @@ module.exports = merge(
     ]
   }
 )
-
-// Transpile Enketo files.
-// webpackConfig.loaders.append('enketo', {
-//   test: /node_modules\/(enketo-core|openrosa-xpath-evaluator)\//,
-//   loader: 'babel-loader',
-// });
 
 module.exports = webpackConfig
