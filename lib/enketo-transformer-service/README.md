@@ -17,3 +17,7 @@ architecture/flow:
 - user types in info and hits submit
 - enketo submits XML to nemo's existing ODK `/submission` (`responses#create`) route
 - on edit, nemo saves the edited XML to `modified_odk_xml` attachment so as to preserve the original `odk_xml` as required by some orgs
+
+## Troubleshooting
+
+If you get errors trying to `yarn install`, make sure you are using the correct node version: the one specified in [../../.nvmrc](.nvmrc).
