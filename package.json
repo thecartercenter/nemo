@@ -67,7 +67,7 @@
     "react_ujs": "2.6.1",
     "regenerator-runtime": "0.13.9",
     "style-loader": "1.2.1",
-    "webpack": "4.*",
+    "webpack": "5.*",
     "webpack-cli": "4.10.0"
   },
   "devDependencies": {
