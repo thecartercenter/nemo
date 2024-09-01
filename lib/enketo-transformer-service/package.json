@@ -11,6 +11,6 @@
   "resolutions": {
   },
   "dependencies": {
-    "enketo-transformer": "2.3.0"
+    "enketo-transformer": "3.0.0"
   }
 }
