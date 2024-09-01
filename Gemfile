@@ -29,7 +29,7 @@ gem "thor", "~> 1.0"
 gem "twilio-ruby", "~> 7.2.0" # Does not use semver after v5, watch out!
 
 # JS/CSS
-gem "bootstrap", "~> 4.3"
+gem "bootstrap", "~> 5.0", ">= 5.0.0"
 gem "clipboard-rails", "~> 1.7"
 gem "dropzonejs-rails", "~> 0.8.5"
 gem "flatpickr"
