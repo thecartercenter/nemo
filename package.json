@@ -50,7 +50,7 @@
     "@sentry/tracing": "6.16.1",
     "babel-loader": "8.2.5",
     "core-js": "3.25.1",
-    "css-loader": "4.2.2",
+    "css-loader": "5.0.0",
     "enketo-core": "6.1.2",
     "ignore-loader": "0.1.2",
     "jquery": "3.6.0",
@@ -67,7 +67,7 @@
     "react_ujs": "2.6.1",
     "regenerator-runtime": "0.13.9",
     "style-loader": "1.2.1",
-    "webpack": "4.*",
+    "webpack": "5.94.0",
     "webpack-cli": "4.10.0"
   },
   "devDependencies": {
