@@ -61,7 +61,7 @@
     "prop-types": "15.8.0",
     "query-string": "6.13.1",
     "react": "16.13.0",
-    "react-bootstrap": "1.3.0",
+    "react-bootstrap": "1.6.8",
     "react-dates": "21.8.0",
     "react-select2-wrapper": "sassafrastech/react-select2-wrapper#2019-03-08-select2Full",
     "react_ujs": "2.6.1",
