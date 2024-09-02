@@ -161,10 +161,10 @@ encodeurl@~1.0.2:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==
 
-enketo-transformer@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/enketo-transformer/-/enketo-transformer-3.0.0.tgz#b21715fec4a9afcd00defa0763e3317fe21daeb5"
-  integrity sha512-brLYxOY0oEGsXKJnlaTK6phoLHjbQ0EnEgcZkPCCfwTq0Pb9P5OnqaXOMJxXiuQw8AVf8NDg/9ZC4dZ38zr0AA==
+enketo-transformer@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/enketo-transformer/-/enketo-transformer-3.0.1.tgz#7ff65e9962fc1ff47e2a43b4c6c8d46f55916851"
+  integrity sha512-2dRPjIpnfRrk4cNR8mOFwhH/MPagqe3t4d4A/0BRjf2HWj//g5+nviRz1ZzulvMi6XtvT5gbsSEeBbrb8Z6PdA==
   dependencies:
     body-parser "^1.20.2"
     css.escape "^1.5.1"
@@ -173,7 +173,7 @@ enketo-transformer@3.0.0:
     linkedom "^0.14.26"
     prettier "^2.8.8"
     string-direction "0.1.x"
-    undici "^5.22.1"
+    undici "^5.23.0"
     xpath-to-css "^1.1.0"
 
 entities@^4.2.0, entities@^4.4.0:
@@ -541,7 +541,7 @@ uhyphen@^0.2.0:
   resolved "https://registry.yarnpkg.com/uhyphen/-/uhyphen-0.2.0.tgz#8fdf0623314486e020a3c00ee5cc7a12fe722b81"
   integrity sha512-qz3o9CHXmJJPGBdqzab7qAYuW8kQGKNEuoHFYrBwV6hWIMcpAmxDLXojcHfFr9US1Pe6zUswEIJIbLI610fuqA==
 
-undici@^5.22.1:
+undici@^5.23.0:
   version "5.28.4"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.28.4.tgz#6b280408edb6a1a604a9b20340f45b422e373068"
   integrity sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==
