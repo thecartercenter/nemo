@@ -49,7 +49,7 @@
     "@sentry/react": "6.16.1",
     "@sentry/tracing": "6.19.7",
     "babel-loader": "8.2.5",
-    "core-js": "3.25.1",
+    "core-js": "3.38.0",
     "css-loader": "5.0.0",
     "enketo-core": "6.1.2",
     "ignore-loader": "0.1.2",
