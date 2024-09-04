@@ -46,7 +46,7 @@
     "@babel/preset-react": "7.24.7",
     "@babel/runtime": "7.25.0",
     "@rails/webpacker": "5.4.3",
-    "@sentry/react": "6.16.1",
+    "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
     "babel-loader": "8.2.5",
     "core-js": "3.38.0",
