@@ -20,4 +20,6 @@ architecture/flow:
 
 ## Troubleshooting
 
-If you get errors trying to `yarn install`, make sure you are using the correct node version: the one specified in [../../.nvmrc](.nvmrc).
+If you get errors trying to `yarn install`:
+- Make sure you are using the correct node version: the one specified in [../../.nvmrc](.nvmrc)
+- Try explicitly specifying the C++ compiler used by Enketo dependencies: `yarn install -std=c++17`
