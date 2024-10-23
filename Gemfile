@@ -96,7 +96,7 @@ gem "dalli", "~> 3.2"
 # DB
 gem "hairtrigger", "~> 0.2.20"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
-gem "pg", "~> 1.4.6"
+gem "pg", "~> 1.5"
 gem "pg_search", "~> 2.1"
 gem "postgres-copy", "~> 1.0"
 gem "wisper", "~> 2.0"
