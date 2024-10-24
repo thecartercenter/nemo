@@ -11,7 +11,7 @@ Note to install the software below we recommend the following package managers:
 
 1. Ruby
     - Use of [rbenv](https://github.com/rbenv/rbenv) is recommended.
-    - Running `rbenv install` in the project root will install the version you need. Note: on Mac M1 and later, this may require `arch -x86_64 rbenv install`.
+    - Running `rbenv install` in the project root will install the version you need.
     - If not using `rbenv`, see the `.ruby-version` file in the project root to get the required version number.
     - Bundler is expected to be available. Run `gem install bundler` to install it.
 1. Node
