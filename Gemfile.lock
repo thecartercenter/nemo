@@ -492,7 +492,7 @@ GEM
       netrc (~> 0.8)
     reverse_markdown (2.1.1)
       nokogiri
-    rexml (3.3.8)
+    rexml (3.3.9)
     rqrcode (1.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 0.2)
