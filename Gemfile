@@ -94,7 +94,7 @@ gem "bootsnap", "~> 1.4", require: false
 gem "dalli", "~> 3.2"
 
 # DB
-gem "hairtrigger", "~> 0.2.20"
+gem "hairtrigger", "~> 1.2"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
 gem "pg", "~> 1.5"
 gem "pg_search", "~> 2.1"
