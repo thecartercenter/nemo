@@ -4638,10 +4638,9 @@ enhanced-resolve@^4.1.1, enhanced-resolve@^4.5.0:
     memory-fs "^0.5.0"
     tapable "^1.0.0"
 
-enketo-core@8.3.1:
+enketo-core@sassafrastech/enketo#enketo-core-8.3.1-fixGetters2:
   version "8.3.1"
-  resolved "https://registry.yarnpkg.com/enketo-core/-/enketo-core-8.3.1.tgz#02110f5bee7485b6f4948323061b62fa73c16d2c"
-  integrity sha512-z0mI9hlynoCGMX97m3z3iY5uGq+x2QX2FTVyO0IDcQcGvI8HqaLeb1FLrdrkBpRCB9tndrOoEQxuyAS/xvCQLA==
+  resolved "https://codeload.github.com/sassafrastech/enketo/tar.gz/545dacfa11cb4975eb48ab6911ef939e30dce8f7"
   dependencies:
     bootstrap-datepicker "^1.10.0"
     drag-drop-touch "^1.3.1"
