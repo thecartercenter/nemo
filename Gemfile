@@ -162,11 +162,6 @@ group :development, :test do
   gem "puma", "~> 6.4"
   gem "selenium-webdriver", "~> 4.15.0" # TODO: Can't upgrade to 4.17 until Rails 7 + Ruby 3.3
 
-  # Debugging
-  gem "pry", "~> 0.13"
-  gem "pry-byebug", "~> 3.9"
-  gem "pry-rails", "~> 0.3"
-
   # External request capture
   gem "vcr", "~> 6.0"
   gem "webmock", "~> 3.10"
