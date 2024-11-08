@@ -94,7 +94,7 @@ gem "bootsnap", "~> 1.4", require: false
 gem "dalli", "~> 3.2"
 
 # DB
-gem "hairtrigger", "~> 0.2.20"
+gem "hairtrigger", "~> 1.2"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
 gem "pg", "~> 1.5"
 gem "pg_search", "~> 2.1"
@@ -161,11 +161,6 @@ group :development, :test do
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
   gem "puma", "~> 6.4"
   gem "selenium-webdriver", "~> 4.15.0" # TODO: Can't upgrade to 4.17 until Rails 7 + Ruby 3.3
-
-  # Debugging
-  gem "pry", "~> 0.13"
-  gem "pry-byebug", "~> 3.9"
-  gem "pry-rails", "~> 0.3"
 
   # External request capture
   gem "vcr", "~> 6.0"
