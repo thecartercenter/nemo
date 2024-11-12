@@ -9,8 +9,10 @@
     "start": "node index.js"
   },
   "resolutions": {
+    "nan": "2.22.0"
   },
   "dependencies": {
-    "enketo-transformer": "2.3.0"
+    "enketo-transformer": "4.1.1",
+    "libxslt": "0.10.2"
   }
 }
