@@ -76,7 +76,6 @@
     "@sentry/cli": "1.71.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "27.4.5",
-    "caniuse-lite": "1.0.30001582",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.6",
     "enzyme-to-json": "3.6.2",
