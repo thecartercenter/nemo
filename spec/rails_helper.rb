@@ -12,14 +12,13 @@ require "cancan/matchers"
 require "fileutils"
 require "vcr"
 
-# Automatically downloads chromedriver, which is used use for JS feature specs
-# require "webdrivers/chromedriver"
-
 Capybara.register_driver(:selenium_chrome_headless) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     args: %w[disable-gpu no-sandbox mute-audio] + (ENV["HEADED"] ? [] : ["headless"]),
     "goog:loggingPrefs" => {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
   )
+
+  options.add_preference(:download, default_directory: Capybara.save_path.to_s)
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
     driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(1280, 2048)
@@ -78,6 +77,17 @@ RSpec.configure do |config|
   # Make sure we have a tmp dir as some specs rely on it.
   config.before(:suite) do
     FileUtils.mkdir_p(Rails.root.join("tmp"))
+  end
+
+  # Make sure we have a downloads directory for the browser.
+  config.before(:suite) do
+    Capybara.save_path = Rails.root.join("tmp/downloads")
+    FileUtils.mkdir_p(Capybara.save_path)
+  end
+
+  # Clean up downloads directory.
+  config.after(:suite) do
+    FileUtils.rm_rf(Capybara.save_path)
   end
 
   # Set up system tests

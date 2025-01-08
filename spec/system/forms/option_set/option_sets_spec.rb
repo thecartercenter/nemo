@@ -64,7 +64,7 @@ describe "option set" do
 
     click_on("Export")
     sleep(1) # CI takes time to download and save the file.
-    export = CSV.open("Foo.csv").read
+    export = CSV.open("#{Capybara.save_path}/Foo.csv").read
     expect(export[0][0]).to eq("Id")
     expect(export[1][1]).to eq("Banana")
   end
