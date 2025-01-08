@@ -160,7 +160,7 @@ group :development, :test do
   gem "capybara", "~> 3.30"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
   gem "puma", "~> 6.4"
-  gem "selenium-webdriver", "~> 4.15.0" # TODO: Can't upgrade to 4.17 until Rails 7 + Ruby 3.3
+  gem "selenium-webdriver", "~> 4.17"
 
   # External request capture
   gem "vcr", "~> 6.0"
