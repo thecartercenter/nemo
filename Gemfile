@@ -4,6 +4,10 @@ source "http://rubygems.org"
 
 gem "rails", "~> 7.1.0"
 
+# Force some gems to older versions to prevent error in prod:
+# "You have already activated base64 0.1.1, but your Gemfile requires base64 0.2.0. Since base64 is a default gem, ..."
+gem "stringio", "3.1.1"
+
 # Misc
 gem "attribute_normalizer", "~> 1.2"
 gem "csv"
