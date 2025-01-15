@@ -145,7 +145,7 @@ module Forms
           conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
 
           constraints_to_push = ""
-          constraint_msg_to_push = []
+          constraint_msg_to_push = Array.new(locales.length, "")
           q.constraints.each_with_index do |c, c_index|
             # constraint rules should be placed in parentheses and separated by "and"
             # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
@@ -157,10 +157,15 @@ module Forms
             # Write translated constraint message columns ("rejection_msg" in NEMO)
             # https://xlsform.org/en/#constraint-message
             # NEMO allows multiple constraint messages for each rule, whereas XLSForm only supports one message per row.
-            # To account for this, if there are multiple constraint rules, we only take the message from the first.
-            if c_index == 0
-              locales.each do |locale|
-                constraint_msg_to_push.push(c.rejection_msg_translations&.dig(locale.to_s))
+            # Thus, if there are multiple constraints or rules for this question, combine all provided messages into one string (per locale), separated by a semicolon
+            locales.each_with_index do |locale, locale_index|
+              # Attempt to get a message for that constraint for that language (may be nil if a translation is not provided)
+              constraint_message = c.rejection_msg_translations&.dig(locale.to_s)
+
+              if constraint_message.present?
+                constraint_msg_to_push[locale_index] += constraint_message
+                # Add semicolon concatenator, unless at the end
+                constraint_msg_to_push[locale_index] += "; " unless c_index + 1 == q.constraints.length
               end
             end
           end
