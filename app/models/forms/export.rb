@@ -169,7 +169,9 @@ module Forms
             # is the option set multilevel?
             if os.level_names.present?
               os.level_names.each_with_index do |level, l_index|
-                level_name = vanillify(level.values[0])
+                # prepend option set name so that level names are unique
+                # this avoids duplicate header errors
+                level_name = os_name + "_" + vanillify(level.values[0])
 
                 # Append level name to qtype
                 type_to_push = "#{qtype_converted} #{level_name}"
@@ -381,7 +383,8 @@ module Forms
           if node.level.present?
             # per XLSform style, option sets with levels need to have the
             # list_name replaced with the level name to distinguish each row.
-            listname_to_push = node.level_name
+            # prepend unique identifier to avoid duplicate header errors
+            listname_to_push = vanillify(os.name) + "_" + node.level_name
 
             # Only attempt to access node ancestors if they exist
             if node.ancestry_depth > 1
@@ -418,7 +421,9 @@ module Forms
         # omit last entry (lowest level)
         if os.level_names.present?
           os.level_names[0..-2].each do |level|
-            header_row.push(vanillify(level.values[0]))
+
+            # prepend unique identifier
+            header_row.push(vanillify(os.name) + '_' + vanillify(level.values[0]))
 
             # increment column counter
             column_counter += 1
