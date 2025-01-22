@@ -76,7 +76,6 @@ module Forms
       end
 
       questions.row(0).push("name", "required", "relevant", "constraint", "choice_filter")
-      settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_depth = 1 # assume base level
       repeat_depth = 1
@@ -263,13 +262,15 @@ module Forms
       end
 
       ## Settings
+      settings.row(0).push("form_title", "form_id", "version", "default_language", "allow_choice_duplicates")
+
       lang = @form.mission.setting.preferred_locales[0].to_s
       version = if @form.current_version.present?
                   @form.current_version.decorate.name
                 else
                   "1"
                 end
-      settings.row(1).push(@form.name, @form.id, version, lang)
+      settings.row(1).push(@form.name, @form.id, version, lang, "yes")
 
       ## Write
       file = StringIO.new
