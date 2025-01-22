@@ -154,10 +154,9 @@ module Forms
 
           # if we have an option set, identify and save it so that we can add it to the choices sheet later.
           # then, write the question, splitting it into multiple questions if there are option set levels.
-          os_name = ""
           choice_filter = ""
           if q.option_set_id.present?
-            os = OptionSet.find(q.option_set_id)
+            os = q.option_set
             option_sets_used.push(q.option_set_id)
 
             # include leading space to respect XLSForm format
@@ -168,9 +167,7 @@ module Forms
             # is the option set multilevel?
             if os.level_names.present?
               os.level_names.each_with_index do |level, l_index|
-                # prepend option set name so that level names are unique
-                # this avoids duplicate header errors
-                level_name = os_name + "_" + vanillify(level.values[0])
+                level_name = unique_level_name(os_name, level.values[0])
 
                 # Append level name to qtype
                 type_to_push = "#{qtype_converted} #{level_name}"
@@ -384,8 +381,7 @@ module Forms
           if node.level.present?
             # per XLSform style, option sets with levels need to have the
             # list_name replaced with the level name to distinguish each row.
-            # prepend unique identifier to avoid duplicate header errors
-            listname_to_push = vanillify(os.name) + "_" + node.level_name
+            listname_to_push = unique_level_name(os.name, node.level_name)
 
             # Only attempt to access node ancestors if they exist
             if node.ancestry_depth > 1
@@ -422,9 +418,7 @@ module Forms
         # omit last entry (lowest level)
         if os.level_names.present?
           os.level_names[0..-2].each do |level|
-
-            # prepend unique identifier
-            header_row.push(vanillify(os.name) + '_' + vanillify(level.values[0]))
+            header_row.push(unique_level_name(os.name, level.values[0]))
 
             # increment column counter
             column_counter += 1
@@ -437,6 +431,12 @@ module Forms
 
       # return os_matrix with prepended header_row
       os_matrix.insert(0, header_row)
+    end
+
+    # prepend option set name so that level names are unique
+    # this avoids duplicate header errors
+    def unique_level_name(os_name, level_name)
+      "#{vanillify(os_name)}_#{vanillify(level_name)}"
     end
 
     # recursively remove pesky characters and replace spaces with underscores
