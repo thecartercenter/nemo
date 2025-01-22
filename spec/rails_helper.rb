@@ -75,19 +75,10 @@ RSpec.configure do |config|
   end
 
   # Make sure we have a tmp dir as some specs rely on it.
+  # Test failure screenshots and browser downloads will be saved here.
   config.before(:suite) do
-    FileUtils.mkdir_p(Rails.root.join("tmp"))
-  end
-
-  # Make sure we have a downloads directory for the browser.
-  config.before(:suite) do
-    Capybara.save_path = Rails.root.join("tmp/downloads")
+    Capybara.save_path = Rails.root.join("tmp/capybara")
     FileUtils.mkdir_p(Capybara.save_path)
-  end
-
-  # Clean up downloads directory.
-  config.after(:suite) do
-    FileUtils.rm_rf(Capybara.save_path)
   end
 
   # Set up system tests
