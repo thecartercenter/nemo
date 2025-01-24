@@ -80,8 +80,6 @@ module Forms
         questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
       end
 
-      settings.row(0).push("form_title", "form_id", "version", "default_language")
-
       group_depth = 1 # assume base level
       repeat_depth = 1
       option_sets_used = []
