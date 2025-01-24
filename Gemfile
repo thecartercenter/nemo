@@ -4,6 +4,10 @@ source "http://rubygems.org"
 
 gem "rails", "~> 7.1.0"
 
+# Force some gems to older versions to prevent error in prod:
+# "You have already activated base64 0.1.1, but your Gemfile requires base64 0.2.0. Since base64 is a default gem, ..."
+gem "stringio", "3.1.1"
+
 # Misc
 gem "attribute_normalizer", "~> 1.2"
 gem "csv"
@@ -160,7 +164,7 @@ group :development, :test do
   gem "capybara", "~> 3.30"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
   gem "puma", "~> 6.4"
-  gem "selenium-webdriver", "~> 4.15.0" # TODO: Can't upgrade to 4.17 until Rails 7 + Ruby 3.3
+  gem "selenium-webdriver", "~> 4.17"
 
   # External request capture
   gem "vcr", "~> 6.0"
