@@ -69,13 +69,18 @@ module Forms
       # Write sheet headings at row index 0
       questions.row(0).push("type")
 
-      # translation columns
       locales.each do |locale|
         questions.row(0).push("label::#{language_name(locale)} (#{locale})",
           "hint::#{language_name(locale)} (#{locale})")
       end
 
-      questions.row(0).push("name", "required", "relevant", "constraint", "choice_filter")
+      questions.row(0).push("name", "required", "relevant", "choice_filter", "constraint")
+
+      locales.each do |locale|
+        questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
+      end
+
+      settings.row(0).push("form_title", "form_id", "version", "default_language")
 
       group_depth = 1 # assume base level
       repeat_depth = 1
@@ -139,18 +144,30 @@ module Forms
           # if we have any relevant conditions or constraints, save them now
           conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
 
-          constraints_to_push = ""
+          # declare constraint arrays
+          constraints_to_push = []
+          constraint_msg_to_push = Array.new(locales.length, [])
+
           q.constraints.each_with_index do |c, c_index|
-            # constraint rules should be placed in parentheses and separated by "and"
-            # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
-            constraints_to_push += "(#{conditions_to_xls(c.conditions, c.accept_if)})"
+            constraints_to_push.push("(#{conditions_to_xls(c.conditions, c.accept_if)})")
 
-            # add "and" unless we're at the end
-            constraints_to_push += " and " unless c_index + 1 == q.constraints.length
-
-            # TODO: add support for constraint messages ("rejection_msg" in NEMO)
+            # Write translated constraint message columns ("rejection_msg" in NEMO)
             # https://xlsform.org/en/#constraint-message
+            # NEMO allows multiple constraint messages for each rule, whereas XLSForm only supports one message per row.
+            # Thus, if there are multiple constraints or rules for this question, combine all provided messages into one string (per locale)
+            locales.each_with_index do |locale, locale_index|
+              # Attempt to get a message for that constraint for that language (may be nil if a translation is not provided)
+              constraint_message = c.rejection_msg_translations&.dig(locale.to_s)
+              constraint_msg_to_push[locale_index] += [constraint_message] unless constraint_message.blank?
+            end
           end
+
+          # convert arrays into concatenated strings in XLSForm format
+          # constraint rules should be placed in parentheses and separated by "and"
+          # constraint message will still be an array, but contain a string for each locale
+          # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
+          constraints_to_push = constraints_to_push.join(" and ")
+          constraint_msg_to_push.map! { |n| n.join("; ") }
 
           # if we have an option set, identify and save it so that we can add it to the choices sheet later.
           # then, write the question, splitting it into multiple questions if there are option set levels.
@@ -185,7 +202,7 @@ module Forms
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
-                  q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+                  q.required.to_s, conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
@@ -204,8 +221,9 @@ module Forms
                 questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s),
                   q.question.hint_translations&.dig(locale.to_s))
               end
+
               questions.row(row_index).push(q.code, q.required.to_s,
-                conditions_to_push, constraints_to_push, choice_filter)
+                conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
             end
           else # no option set present
             # Write the question row as normal
@@ -215,8 +233,9 @@ module Forms
               questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s),
                 q.question.hint_translations&.dig(locale.to_s))
             end
+
             questions.row(row_index).push(q.code, q.required.to_s,
-              conditions_to_push, constraints_to_push, choice_filter)
+              conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
           end
         end
 
