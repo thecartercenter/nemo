@@ -84,7 +84,7 @@ module Forms
           "hint::#{language_name(locale)} (#{locale})")
       end
 
-      questions.row(0).push("name", "required", "relevant", "choice_filter", "constraint")
+      questions.row(0).push("name", "required", "appearance", "relevant", "choice_filter", "constraint")
 
       locales.each do |locale|
         questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
@@ -148,6 +148,7 @@ module Forms
         else # is this a question?
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
+          appearance_to_push = QTYPE_TO_APPEARANCE[q.qtype_name] || ""
 
           # if we have any relevant conditions or constraints, save them now
           conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
@@ -210,7 +211,7 @@ module Forms
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
-                  q.required.to_s, conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+                  q.required.to_s, appearance_to_push, conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
@@ -230,7 +231,7 @@ module Forms
                   q.question.hint_translations&.dig(locale.to_s))
               end
 
-              questions.row(row_index).push(q.code, q.required.to_s,
+              questions.row(row_index).push(q.code, q.required.to_s, appearance_to_push,
                 conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
             end
           else # no option set present
@@ -242,7 +243,7 @@ module Forms
                 q.question.hint_translations&.dig(locale.to_s))
             end
 
-            questions.row(row_index).push(q.code, q.required.to_s,
+            questions.row(row_index).push(q.code, q.required.to_s, appearance_to_push,
               conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
           end
         end
