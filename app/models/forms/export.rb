@@ -12,12 +12,17 @@ module Forms
     ].freeze
 
     QTYPE_TO_XLS = {
-      # conversions
-      "location" => "geopoint",
-      "long_text" => "text",
+      # direct conversions
       "datetime" => "dateTime",
-      "annotated_image" => "image",
-      "counter" => "integer",
+
+      # conversions with added "appearance" column
+      # https://xlsform.org/en/#appearance
+      "long_text" => "text", # "multiline"
+      "annotated_image" => "image", # "annotate"
+      "counter" => "integer", # "counter"
+      "sketch" => "image", # "draw"
+      "signature" => "image", # "signature"
+      "location" => "geopoint", # "placement-map"
 
       # no change
       "text" => "text",
@@ -30,15 +35,20 @@ module Forms
       "barcode" => "barcode",
       "audio" => "audio",
       "video" => "video",
-      "integer" => "integer",
-
-      # TODO: Not yet supported in our XLSForm exporter
-      "sketch" => "sketch (WARNING: not yet supported)",
-      "signature" => "signature (WARNING: not yet supported)"
+      "integer" => "integer"
 
       # Note: XLSForm qtypes not supported in NEMO:
       #   range, geotrace, geoshape, note, file, select_one_from_file, select_multiple_from_file,
       #   background-audio, calculate, acknowledge, hidden, xml-external
+    }.freeze
+
+    QTYPE_TO_APPEARANCE = {
+      "long_text" => "multiline",
+      "annotated_image" => "annotate",
+      "counter" => "counter",
+      "sketch" => "draw",
+      "signature" => "signature",
+      "location" => "placement-map",
     }.freeze
 
     def initialize(form)
