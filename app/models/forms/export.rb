@@ -143,6 +143,10 @@ module Forms
           # write group name
           questions.row(row_index).push(vanillify(q.code))
 
+          # check and write "show on one screen" appearance (add an empty string to skip the unused "required" column)
+          appearance_to_push = ODK::DecoratorFactory.decorate(q).one_screen_appropriate? ? "field-list" : ""
+          questions.row(row_index).push("", appearance_to_push)
+
           # update counters
           group_depth += 1
         else # is this a question?
