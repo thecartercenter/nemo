@@ -468,7 +468,7 @@ GEM
     rdiscount (2.2.7.3)
     rdoc (6.11.0)
       psych (>= 4.0.0)
-    react-rails (3.0.0)
+    react-rails (3.2.1)
       babel-transpiler (>= 0.7.0)
       connection_pool
       execjs
@@ -750,7 +750,7 @@ DEPENDENCIES
   rake (~> 13.0)
   random_data (~> 1.6)
   rdiscount (~> 2.1)
-  react-rails (~> 3.0.0)
+  react-rails (~> 3.0)
   recaptcha (~> 3.4)
   responders (~> 3.0)
   reverse_markdown (~> 2.0)
