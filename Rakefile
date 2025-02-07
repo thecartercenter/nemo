@@ -6,4 +6,4 @@
 require File.expand_path("config/application", __dir__)
 require "rake"
 
-ELMO::Application.load_tasks
+Rails.application.load_tasks
