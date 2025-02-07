@@ -12,12 +12,17 @@ module Forms
     ].freeze
 
     QTYPE_TO_XLS = {
-      # conversions
-      "location" => "geopoint",
-      "long_text" => "text",
+      # direct conversions
       "datetime" => "dateTime",
-      "annotated_image" => "image",
-      "counter" => "integer",
+
+      # conversions with added "appearance" column
+      # https://xlsform.org/en/#appearance
+      "long_text" => "text", # "multiline"
+      "annotated_image" => "image", # "annotate"
+      "counter" => "integer", # "counter"
+      "sketch" => "image", # "draw"
+      "signature" => "image", # "signature"
+      "location" => "geopoint", # "placement-map"
 
       # no change
       "text" => "text",
@@ -30,15 +35,20 @@ module Forms
       "barcode" => "barcode",
       "audio" => "audio",
       "video" => "video",
-      "integer" => "integer",
-
-      # TODO: Not yet supported in our XLSForm exporter
-      "sketch" => "sketch (WARNING: not yet supported)",
-      "signature" => "signature (WARNING: not yet supported)"
+      "integer" => "integer"
 
       # Note: XLSForm qtypes not supported in NEMO:
       #   range, geotrace, geoshape, note, file, select_one_from_file, select_multiple_from_file,
       #   background-audio, calculate, acknowledge, hidden, xml-external
+    }.freeze
+
+    QTYPE_TO_APPEARANCE = {
+      "long_text" => "multiline",
+      "annotated_image" => "annotate",
+      "counter" => "counter",
+      "sketch" => "draw",
+      "signature" => "signature",
+      "location" => "placement-map",
     }.freeze
 
     def initialize(form)
@@ -74,7 +84,7 @@ module Forms
           "hint::#{language_name(locale)} (#{locale})")
       end
 
-      questions.row(0).push("name", "required", "relevant", "choice_filter", "constraint")
+      questions.row(0).push("name", "required", "appearance", "relevant", "choice_filter", "constraint")
 
       locales.each do |locale|
         questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
@@ -133,11 +143,16 @@ module Forms
           # write group name
           questions.row(row_index).push(vanillify(q.code))
 
+          # check and write "show on one screen" appearance (add an empty string to skip the unused "required" column)
+          appearance_to_push = ODK::DecoratorFactory.decorate(q).one_screen_appropriate? ? "field-list" : ""
+          questions.row(row_index).push("", appearance_to_push)
+
           # update counters
           group_depth += 1
         else # is this a question?
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
+          appearance_to_push = QTYPE_TO_APPEARANCE[q.qtype_name] || ""
 
           # if we have any relevant conditions or constraints, save them now
           conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
@@ -200,7 +215,7 @@ module Forms
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
-                  q.required.to_s, conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+                  q.required.to_s, appearance_to_push, conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
@@ -220,7 +235,7 @@ module Forms
                   q.question.hint_translations&.dig(locale.to_s))
               end
 
-              questions.row(row_index).push(q.code, q.required.to_s,
+              questions.row(row_index).push(q.code, q.required.to_s, appearance_to_push,
                 conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
             end
           else # no option set present
@@ -232,7 +247,7 @@ module Forms
                 q.question.hint_translations&.dig(locale.to_s))
             end
 
-            questions.row(row_index).push(q.code, q.required.to_s,
+            questions.row(row_index).push(q.code, q.required.to_s, appearance_to_push,
               conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
           end
         end
