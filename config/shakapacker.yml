@@ -1,4 +1,4 @@
-# Note: You must restart bin/webpack-dev-server for changes to take effect
+# Note: You must restart bin/shakapacker-dev-server for changes to take effect
 
 default: &default
   source_path: app/javascript
@@ -16,6 +16,10 @@ default: &default
 
   # Reload manifest.json on all requests so we reload latest compiled packs
   cache_manifest: false
+
+  # Pull in styles from libraries such as react-dates and select2.
+  # TODO: This doesn't seem to work (see app/javascript/components/Filters/DateFilter/component.js)
+  #  extract_css: true
 
 development:
   <<: *default
