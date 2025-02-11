@@ -56,6 +56,7 @@ routes.txt
 # Bundle installs
 vendor/bundle/
 
+# shakapacker & node
 /public/packs
 /public/packs-test
 node_modules/
