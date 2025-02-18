@@ -90,8 +90,14 @@ module Forms
         questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
       end
 
-      group_depth = 1 # assume base level
-      repeat_depth = 1
+      # array for tracking nested groups.
+      # push :group when a regular group is encountered, :repeat if repeat group.
+      # when a group ends, we check .last, write "end group" or "end repeat" ,and then pop the last item out.
+      # length of this array = current group depth
+      group_tracker = []
+
+      # array for tracking the option sets used by a form.
+      # is later used by the method "options_to_xls" below to write the "choices" tab of the XLSForm.
       option_sets_used = []
 
       # Define the below "index modifiers" which keep track of the line of the spreadsheet we are writing to.
@@ -107,31 +113,29 @@ module Forms
         row_index = i + index_mod
 
         # did one or more groups just end?
-        # if so, the qing's depth will be smaller than the depth counter
-        while group_depth > q.ancestry_depth
-          # are we in a repeat group?
-          # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
-          if repeat_depth > 1 && repeat_depth >= group_depth
+        # if so, the qing's ancestry_depth will be smaller than the length of
+        # the group tracker array (plus 1, because base ancestry_depth is 1)
+        while group_tracker.length + 1 > q.ancestry_depth
+          if group_tracker.pop == :repeat
             questions.row(row_index).push("end repeat")
-            repeat_depth -= 1
           else
             # end the group
             questions.row(row_index).push("end group")
           end
 
           # update counters to accomodate additional "end group" lines
-          group_depth -= 1
           index_mod += 1
           row_index += 1
         end
 
         if q.group? # is this a group?
-          # write begin group line
+          # write begin group line and update group_tracker array
           if q.repeatable?
             questions.row(row_index).push("begin repeat")
-            repeat_depth += 1
+            group_tracker.push(:repeat)
           else
             questions.row(row_index).push("begin group")
+            group_tracker.push(:group)
           end
 
           # write translated label and hint columns
@@ -146,9 +150,6 @@ module Forms
           # check and write "show on one screen" appearance (add an empty string to skip the unused "required" column)
           appearance_to_push = ODK::DecoratorFactory.decorate(q).one_screen_appropriate? ? "field-list" : ""
           questions.row(row_index).push("", appearance_to_push)
-
-          # update counters
-          group_depth += 1
         else # is this a question?
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
@@ -256,21 +257,17 @@ module Forms
         if i == @form.preordered_items.size - 1
           row_index += 1
 
-          # did one or more groups just end?
-          # if so, the qing's depth will be smaller than the depth counter
-          while group_depth > 1
-            # are we in a repeat group?
-            # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
-            if repeat_depth > 1 && repeat_depth >= group_depth
+          # do we still have unclosed groups in the tracker array?
+          # if so, close those groups from last to first.
+          while group_tracker.present?
+            if group_tracker.pop == :repeat
               questions.row(row_index).push("end repeat")
-              repeat_depth -= 1
             else
               # end the group
               questions.row(row_index).push("end group")
             end
 
             # update counters to accomodate additional "end group" lines
-            group_depth -= 1
             index_mod += 1
             row_index += 1
           end
