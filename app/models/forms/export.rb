@@ -91,7 +91,7 @@ module Forms
       end
 
       # array for tracking nested groups.
-      # push 1 when a regular group is encountered, 2 if repeat group.
+      # push :group when a regular group is encountered, :repeat if repeat group.
       # when a group ends, we check .last, write "end group" or "end repeat" ,and then pop the last item out.
       # length of this array = current group depth
       group_tracker = []
@@ -116,7 +116,7 @@ module Forms
         # if so, the qing's ancestry_depth will be smaller than the length of
         # the group tracker array (plus 1, because base ancestry_depth is 1)
         while group_tracker.length + 1 > q.ancestry_depth
-          if group_tracker.pop == 2
+          if group_tracker.pop == :repeat
             questions.row(row_index).push("end repeat")
           else
             # end the group
@@ -132,10 +132,10 @@ module Forms
           # write begin group line and update group_tracker array
           if q.repeatable?
             questions.row(row_index).push("begin repeat")
-            group_tracker.push(2)
+            group_tracker.push(:repeat)
           else
             questions.row(row_index).push("begin group")
-            group_tracker.push(1)
+            group_tracker.push(:group)
           end
 
           # write translated label and hint columns
@@ -260,7 +260,7 @@ module Forms
           # do we still have unclosed groups in the tracker array?
           # if so, close those groups from last to first.
           while group_tracker.present?
-            if group_tracker.pop == 2
+            if group_tracker.pop == :repeat
               questions.row(row_index).push("end repeat")
             else
               # end the group
