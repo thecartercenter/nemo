@@ -84,7 +84,7 @@ module Forms
           "hint::#{language_name(locale)} (#{locale})")
       end
 
-      questions.row(0).push("name", "required", "appearance", "relevant", "choice_filter", "constraint")
+      questions.row(0).push("name", "required", "appearance", "relevant", "default", "choice_filter", "constraint")
 
       locales.each do |locale|
         questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
@@ -162,6 +162,9 @@ module Forms
           constraints_to_push = []
           constraint_msg_to_push = Array.new(locales.length, [])
 
+          # obtain default response values, or else an empty string
+          default_to_push = q.default || ""
+
           q.constraints.each_with_index do |c, c_index|
             constraints_to_push.push("(#{conditions_to_xls(c.conditions, c.accept_if)})")
 
@@ -216,7 +219,7 @@ module Forms
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
-                  q.required.to_s, appearance_to_push, conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+                  q.required.to_s, appearance_to_push, conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
@@ -237,7 +240,7 @@ module Forms
               end
 
               questions.row(row_index).push(q.code, q.required.to_s, appearance_to_push,
-                conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+                conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
             end
           else # no option set present
             # Write the question row as normal
@@ -249,7 +252,7 @@ module Forms
             end
 
             questions.row(row_index).push(q.code, q.required.to_s, appearance_to_push,
-              conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+              conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
           end
         end
 
