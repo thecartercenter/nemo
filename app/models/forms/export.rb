@@ -84,11 +84,14 @@ module Forms
           "hint::#{language_name(locale)} (#{locale})")
       end
 
-      questions.row(0).push("name", "required", "appearance", "relevant", "choice_filter", "constraint")
+      questions.row(0).push("name", "required", "repeat_count", "appearance", "relevant", "default", "choice_filter", "constraint")
 
       locales.each do |locale|
         questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
       end
+
+      # Media prompts
+      questions.row(0).push("image", "audio", "video")
 
       # array for tracking nested groups.
       # push :group when a regular group is encountered, :repeat if repeat group.
@@ -133,9 +136,18 @@ module Forms
           if q.repeatable?
             questions.row(row_index).push("begin repeat")
             group_tracker.push(:repeat)
+
+            # Check for repeat count limit
+            if q.repeat_count_qing_id.present?
+              repeat_count_qing = Questioning.find(q.repeat_count_qing_id)
+              repeat_count_to_push = "${#{repeat_count_qing.code}}"
+            end
           else
             questions.row(row_index).push("begin group")
             group_tracker.push(:group)
+
+            # In non-repeat groups, this field is unused
+            repeat_count_to_push = ""
           end
 
           # write translated label and hint columns
@@ -147,9 +159,10 @@ module Forms
           # write group name
           questions.row(row_index).push(vanillify(q.code))
 
-          # check and write "show on one screen" appearance (add an empty string to skip the unused "required" column)
+          # check and write repeat_count and "show on one screen" appearance
+          # (add an empty string to skip the unused "required" column)
           appearance_to_push = ODK::DecoratorFactory.decorate(q).one_screen_appropriate? ? "field-list" : ""
-          questions.row(row_index).push("", appearance_to_push)
+          questions.row(row_index).push("", repeat_count_to_push, appearance_to_push)
         else # is this a question?
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
@@ -161,6 +174,25 @@ module Forms
           # declare constraint arrays
           constraints_to_push = []
           constraint_msg_to_push = Array.new(locales.length, [])
+
+          # obtain default response values, or else an empty string
+          default_to_push = q.default || ""
+
+          # obtain media prompt content type and filename, if any
+          # column order = image, audio, video
+          # uploaded media will be one of these types; the other columns should be filled with an empty string
+          media_prompt_to_push = Array.new(3, "")
+          case q.media_prompt.content_type&.split("/")&.first || ""
+          when "image"
+            media_prompt_to_push[0] = q.media_prompt.filename.to_s
+          when "audio"
+            media_prompt_to_push[1] = q.media_prompt.filename.to_s
+          when "video"
+            media_prompt_to_push[2] = q.media_prompt.filename.to_s
+          end
+
+          # this is not a (repeat) group, so repeat_count is unused
+          repeat_count_to_push = ""
 
           q.constraints.each_with_index do |c, c_index|
             constraints_to_push.push("(#{conditions_to_xls(c.conditions, c.accept_if)})")
@@ -216,7 +248,7 @@ module Forms
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
-                  q.required.to_s, appearance_to_push, conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+                  q.required.to_s, repeat_count_to_push, appearance_to_push, conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
@@ -236,8 +268,8 @@ module Forms
                   q.question.hint_translations&.dig(locale.to_s))
               end
 
-              questions.row(row_index).push(q.code, q.required.to_s, appearance_to_push,
-                conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+              questions.row(row_index).push(q.code, q.required.to_s, repeat_count_to_push, appearance_to_push,
+                conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
             end
           else # no option set present
             # Write the question row as normal
@@ -248,8 +280,8 @@ module Forms
                 q.question.hint_translations&.dig(locale.to_s))
             end
 
-            questions.row(row_index).push(q.code, q.required.to_s, appearance_to_push,
-              conditions_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+            questions.row(row_index).push(q.code, q.required.to_s, repeat_count_to_push, appearance_to_push,
+              conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
           end
         end
 
