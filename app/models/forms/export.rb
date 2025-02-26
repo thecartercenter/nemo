@@ -90,6 +90,9 @@ module Forms
         questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
       end
 
+      # Media prompts
+      questions.row(0).push("image", "audio", "video")
+
       # array for tracking nested groups.
       # push :group when a regular group is encountered, :repeat if repeat group.
       # when a group ends, we check .last, write "end group" or "end repeat" ,and then pop the last item out.
@@ -175,6 +178,19 @@ module Forms
           # obtain default response values, or else an empty string
           default_to_push = q.default || ""
 
+          # obtain media prompt content type and filename, if any
+          # column order = image, audio, video
+          # uploaded media will be one of these types; the other columns should be filled with an empty string
+          media_prompt_to_push = Array.new(3, "")
+          case q.media_prompt.content_type&.split("/")&.first || ""
+          when "image"
+            media_prompt_to_push[0] = q.media_prompt.filename.to_s
+          when "audio"
+            media_prompt_to_push[1] = q.media_prompt.filename.to_s
+          when "video"
+            media_prompt_to_push[2] = q.media_prompt.filename.to_s
+          end
+
           # this is not a (repeat) group, so repeat_count is unused
           repeat_count_to_push = ""
 
@@ -232,7 +248,7 @@ module Forms
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
-                  q.required.to_s, repeat_count_to_push, appearance_to_push, conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+                  q.required.to_s, repeat_count_to_push, appearance_to_push, conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
@@ -253,7 +269,7 @@ module Forms
               end
 
               questions.row(row_index).push(q.code, q.required.to_s, repeat_count_to_push, appearance_to_push,
-                conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+                conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
             end
           else # no option set present
             # Write the question row as normal
@@ -265,7 +281,7 @@ module Forms
             end
 
             questions.row(row_index).push(q.code, q.required.to_s, repeat_count_to_push, appearance_to_push,
-              conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push)
+              conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
           end
         end
 
