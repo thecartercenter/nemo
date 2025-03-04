@@ -176,7 +176,11 @@ module Forms
           constraint_msg_to_push = Array.new(locales.length, [])
 
           # obtain default response values, or else an empty string
-          default_to_push = q.default || ""
+          if q.preload_last_saved
+            default_to_push = "${last-saved##{q.code}}"
+          else
+            default_to_push = q.default || ""
+          end
 
           # obtain media prompt content type and filename, if any
           # column order = image, audio, video
