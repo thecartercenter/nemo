@@ -176,6 +176,8 @@ module Forms
           constraint_msg_to_push = Array.new(locales.length, [])
 
           # obtain default response values, or else an empty string
+          # if preload last saved value is checked, indicate this using XLSForm format
+          # https://docs.getodk.org/form-logic/#values-from-the-last-saved-record
           if q.preload_last_saved
             default_to_push = "${last-saved##{q.code}}"
           else
