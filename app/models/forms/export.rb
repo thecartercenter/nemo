@@ -84,14 +84,11 @@ module Forms
           "hint::#{language_name(locale)} (#{locale})")
       end
 
-      questions.row(0).push("name", "required", "repeat_count", "appearance", "relevant", "default", "choice_filter", "constraint")
-
-      locales.each do |locale|
-        questions.row(0).push("constraint message::#{language_name(locale)} (#{locale})")
-      end
-
-      # Media prompts
-      questions.row(0).push("image", "audio", "video")
+      questions.row(0).push(
+        "name", "required", "repeat_count", "appearance", "relevant", "default", "choice_filter",
+        "constraint", *local_headers("constraint_message", locales),
+        *local_headers("image", locales), *local_headers("audio", locales), *local_headers("video", locales)
+      )
 
       # array for tracking nested groups.
       # push :group when a regular group is encountered, :repeat if repeat group.
@@ -187,14 +184,21 @@ module Forms
           # obtain media prompt content type and filename, if any
           # column order = image, audio, video
           # uploaded media will be one of these types; the other columns should be filled with an empty string
-          media_prompt_to_push = Array.new(3, "")
-          case q.media_prompt.content_type&.split("/")&.first || ""
+          # NEMO doesn't translate these attachments, so repeat the filename in each language
+          media_prompt_to_push = Array.new(3 * locales.count, "")
+          case q.media_prompt.content_type&.split("/")&.first
           when "image"
-            media_prompt_to_push[0] = q.media_prompt.filename.to_s
+            locales.count.times do |n|
+              media_prompt_to_push[(0 * locales.count) + n] = q.media_prompt.filename.to_s
+            end
           when "audio"
-            media_prompt_to_push[1] = q.media_prompt.filename.to_s
+            locales.count.times do |n|
+              media_prompt_to_push[(1 * locales.count) + n] = q.media_prompt.filename.to_s
+            end
           when "video"
-            media_prompt_to_push[2] = q.media_prompt.filename.to_s
+            locales.count.times do |n|
+              media_prompt_to_push[(2 * locales.count) + n] = q.media_prompt.filename.to_s
+            end
           end
 
           # this is not a (repeat) group, so repeat_count is unused
@@ -368,6 +372,13 @@ module Forms
         "Repeat Group"
       else
         "Group"
+      end
+    end
+
+    # Given a header like `"label"`, return an array of localized headers like `["label::English (en)"]`
+    def local_headers(header, locales)
+      locales.map do |locale|
+        "#{header}::#{language_name(locale)} (#{locale})"
       end
     end
 
