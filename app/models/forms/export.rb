@@ -77,14 +77,8 @@ module Forms
       locales = @form.mission.setting.preferred_locales
 
       # Write sheet headings at row index 0
-      questions.row(0).push("type")
-
-      locales.each do |locale|
-        questions.row(0).push("label::#{language_name(locale)} (#{locale})",
-          "hint::#{language_name(locale)} (#{locale})")
-      end
-
       questions.row(0).push(
+        "type", *local_headers("label", locales), *local_headers("hint", locales),
         "name", "required", "repeat_count", "appearance", "relevant", "default", "choice_filter",
         "constraint", *local_headers("constraint_message", locales),
         *local_headers("image", locales), *local_headers("audio", locales), *local_headers("video", locales)
@@ -147,10 +141,14 @@ module Forms
             repeat_count_to_push = ""
           end
 
-          # write translated label and hint columns
+          # write translated labels
           locales.each do |locale|
-            questions.row(row_index).push(q.group_name_translations&.dig(locale.to_s),
-              q.group_hint_translations&.dig(locale.to_s))
+            questions.row(row_index).push(q.group_name_translations&.dig(locale.to_s))
+          end
+
+          # write translated hints
+          locales.each do |locale| # rubocop:disable Style/CombinableLoops
+            questions.row(row_index).push(q.group_hint_translations&.dig(locale.to_s))
           end
 
           # write group name
@@ -251,10 +249,14 @@ module Forms
                 # push a row for each level
                 questions.row(row_index + l_index).push(type_to_push)
 
-                # write translated label and hint columns
+                # write translated labels
                 locales.each do |locale|
-                  questions.row(row_index + l_index).push(q.question.name_translations&.dig(locale.to_s),
-                    q.question.hint_translations&.dig(locale.to_s))
+                  questions.row(row_index + l_index).push(q.question.name_translations&.dig(locale.to_s))
+                end
+
+                # write translated hints
+                locales.each do |locale| # rubocop:disable Style/CombinableLoops
+                  questions.row(row_index + l_index).push(q.question.hint_translations&.dig(locale.to_s))
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
@@ -272,10 +274,15 @@ module Forms
 
               # Write the question row
               questions.row(row_index).push(type_to_push)
-              # write translated label and hint columns
+
+              # write translated labels
               locales.each do |locale|
-                questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s),
-                  q.question.hint_translations&.dig(locale.to_s))
+                questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s))
+              end
+
+              # write translated hints
+              locales.each do |locale| # rubocop:disable Style/CombinableLoops
+                questions.row(row_index).push(q.question.hint_translations&.dig(locale.to_s))
               end
 
               questions.row(row_index).push(q.code, q.required.to_s, repeat_count_to_push, appearance_to_push,
@@ -284,10 +291,15 @@ module Forms
           else # no option set present
             # Write the question row as normal
             questions.row(row_index).push(qtype_converted)
-            # write translated label and hint columns
+
+            # write translated labels
             locales.each do |locale|
-              questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s),
-                q.question.hint_translations&.dig(locale.to_s))
+              questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s))
+            end
+
+            # write translated hints
+            locales.each do |locale| # rubocop:disable Style/CombinableLoops
+              questions.row(row_index).push(q.question.hint_translations&.dig(locale.to_s))
             end
 
             questions.row(row_index).push(q.code, q.required.to_s, repeat_count_to_push, appearance_to_push,
