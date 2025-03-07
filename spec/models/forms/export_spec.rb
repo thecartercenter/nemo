@@ -23,6 +23,14 @@ describe Forms::Export do
         "3,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"
       )
     end
+
+    it "should produce the correct xls" do
+      exporter = Forms::Export.new(simpleform)
+      q1 = simpleform.questionings[0]
+      expect(exporter.to_xls).to match("label::English \\(en\\)")
+      expect(exporter.to_xls).to match(q1.name)
+      expect(exporter.to_xls).to match(q1.code)
+    end
   end
 
   context "repeat group form with question outside repeat group before" do
@@ -98,7 +106,7 @@ describe Forms::Export do
     end
   end
 
-  context "regular group at end of form preceded by a queston outside the group" do
+  context "regular group at end of form preceded by a question outside the group" do
     let(:groupform) do
       create(
         :form,
