@@ -125,8 +125,20 @@ module Forms
         if q.group? # is this a group?
           # write begin group line and update group_tracker array
           if q.repeatable?
-            questions.row(row_index).push("begin repeat")
-            group_tracker.push(:repeat)
+
+            # Check for repeat item name
+            if q.group_item_name.present?
+              # If so, create an inner group here, which should have the labels as defined in group_item_name_translations
+              questions.row(row_index).push("begin repeat")
+              questions.row(row_index + 1).push("begin group") # todo: have to increment index_mod for this
+
+              # push a new type of group to the group tracker that will push end group / end repeat when it ends
+              group_tracker.push(:repeat_with_item_name)
+            else
+              questions.row(row_index).push("begin repeat")
+              group_tracker.push(:repeat)
+            end
+
 
             # Check for repeat count limit
             if q.repeat_count_qing_id.present?
