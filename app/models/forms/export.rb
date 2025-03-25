@@ -110,8 +110,16 @@ module Forms
         # if so, the qing's ancestry_depth will be smaller than the length of
         # the group tracker array (plus 1, because base ancestry_depth is 1)
         while group_tracker.length + 1 > q.ancestry_depth
-          if group_tracker.pop == :repeat
+          ended_group_type = group_tracker.pop
+          if ended_group_type == :repeat
             questions.row(row_index).push("end repeat")
+          elsif ended_group_type == :repeat_with_item_name
+            # end both the repeat group and the inner group that carries the repeat_item_name
+            # we need an extra increment on the index_mod due to the extra end group line
+            questions.row(row_index).push("end group")
+            questions.row(row_index + 1).push("end repeat")
+            index_mod += 1
+            row_index += 1
           else
             # end the group
             questions.row(row_index).push("end group")
@@ -130,7 +138,19 @@ module Forms
             if q.group_item_name.present?
               # If so, create an inner group here, which should have the labels as defined in group_item_name_translations
               questions.row(row_index).push("begin repeat")
-              questions.row(row_index + 1).push("begin group") # todo: have to increment index_mod for this
+              questions.row(row_index + 1).push("begin group")
+
+              # write translated group item names on the inner group row
+              locales.each do |locale|
+                questions.row(row_index + 1).push(q.group_item_name_translations&.dig(locale.to_s))
+              end
+              # skip unused hint rows for inner group (length varies based on number of locales)
+              locales.length.times { questions.row(row_index + 1).push("") }
+              # push a name for the inner group (required for ODK)
+              questions.row(row_index + 1).push(vanillify(q.code) + "_item")
+
+              # increment index_mod to account for the extra "begin group" line
+              index_mod += 1
 
               # push a new type of group to the group tracker that will push end group / end repeat when it ends
               group_tracker.push(:repeat_with_item_name)
@@ -138,7 +158,6 @@ module Forms
               questions.row(row_index).push("begin repeat")
               group_tracker.push(:repeat)
             end
-
 
             # Check for repeat count limit
             if q.repeat_count_qing_id.present?
@@ -326,8 +345,16 @@ module Forms
           # do we still have unclosed groups in the tracker array?
           # if so, close those groups from last to first.
           while group_tracker.present?
-            if group_tracker.pop == :repeat
+            ended_group_type = group_tracker.pop
+            if ended_group_type == :repeat
               questions.row(row_index).push("end repeat")
+            elsif ended_group_type == :repeat_with_item_name
+              # end both the repeat group and the inner group that carries the repeat_item_name
+              # we need an extra increment on the index_mod due to the extra end group line
+              questions.row(row_index).push("end group")
+              questions.row(row_index + 1).push("end repeat")
+              index_mod += 1
+              row_index += 1
             else
               # end the group
               questions.row(row_index).push("end group")
