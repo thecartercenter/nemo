@@ -142,7 +142,12 @@ module Forms
 
               # write translated group item names on the inner group row
               locales.each do |locale|
-                questions.row(row_index + 1).push(q.group_item_name_translations&.dig(locale.to_s))
+                # Any instance of "$..." indicates that the user may be referring to another question.
+                # However, XLSForm requires a syntax of "${...}" to refer to questions.
+                # Use regex to make this syntax change.
+                item_name_string = q.group_item_name_translations&.dig(locale.to_s).gsub(/\$(#{Question::CODE_FORMAT})/, "${\\1}")
+
+                questions.row(row_index + 1).push(item_name_string)
               end
               # skip unused hint rows for inner group (length varies based on number of locales)
               locales.length.times { questions.row(row_index + 1).push("") }
