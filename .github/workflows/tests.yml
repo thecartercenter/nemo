@@ -69,10 +69,7 @@ jobs:
           bin/rails db:setup
           bin/rails db:test:prepare
       - name: Install Chromedriver
-        uses: nanasess/setup-chromedriver@v2
-        with:
-          # TODO: Testing via https://chromereleases.googleblog.com/search/label/Extended%20Stable%20updates?updated-max=2025-01-22T08:13:00-08:00&max-results=20&start=13&by-date=false
-          chromedriver-version: '130.0.6723.152'
+        uses: nanasess/setup-chromedriver@v2.3.0
       - name: Configure Chromedriver
         run: |
           export DISPLAY=:99
