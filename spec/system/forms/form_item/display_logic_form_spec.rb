@@ -93,7 +93,7 @@ describe "display logic form fields", js: true do
         ])
       end
 
-      scenario "edit and delete conditions on an existing question" do
+      scenario "edit and delete conditions on an existing question", flapping: true do
         all("a.action-link.action-link-edit")[4].click
 
         # Delete existing condition

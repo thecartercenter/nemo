@@ -27,7 +27,7 @@ describe "response form reviewer notes", js: true do
       expect(page).to have_content(notes)
     end
 
-    scenario "can submit notes" do
+    scenario "can submit notes", flapping: true do
       visit(response_path(response, params))
       fill_in("Notes", with: "testing")
       click_button("Save")
@@ -51,7 +51,7 @@ describe "response form reviewer notes", js: true do
       expect(page).to have_content(notes)
     end
 
-    scenario "can submit notes" do
+    scenario "can submit notes", flapping: true do
       visit(response_path(response, params))
       fill_in("Notes", with: "testing")
       click_button("Save")

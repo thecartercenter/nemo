@@ -106,6 +106,27 @@ RSpec.configure do |config|
     Rails::Debug.log("")
   end
 
+  # Add extra delay for flappers which seems to help for certain browser actions.
+  config.around(:each, flapping: true) do |example|
+    method_names = %i[visit click_on]
+    originals = method_names.map { |name| Capybara::Session.instance_method(name) }
+
+    method_names.each_with_index do |name, i|
+      Capybara::Session.define_method(name) do |*args, &block|
+        result = originals[i].bind(self).call(*args, &block)
+        sleep(0.1)
+        result
+      end
+    end
+
+    example.run
+  ensure
+    # Restore original method
+    method_names.each_with_index do |name, i|
+      Capybara::Session.define_method(name, originals[i])
+    end
+  end
+
   # Print browser logs to console if they are non-empty.
   # You MUST use console.warn or console.error for this to work.
   config.after(:each, type: :system, js: true) do

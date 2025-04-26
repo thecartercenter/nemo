@@ -23,7 +23,7 @@ describe "question tags" do
     login(user)
   end
 
-  scenario "question tag add/remove", js: true do
+  scenario "question tag add/remove", js: true, flapping: true do
     tag_add_remove_test(
       qtype: "question",
       edit_path: edit_question_path(question1, mode: "m", mission_name: mission.compact_name, locale: "en"),
@@ -35,7 +35,7 @@ describe "question tags" do
     )
   end
 
-  scenario "questioning tag add/remove", js: true do
+  scenario "questioning tag add/remove", js: true, flapping: true do
     tag_add_remove_test(
       qtype: "questioning",
       edit_path: edit_questioning_path(questioning1, mode: "m", mission_name: mission.compact_name,

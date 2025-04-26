@@ -73,7 +73,7 @@ describe "question form", js: true do
     expect(page).to have_select("Option Set", selected: "Flat")
   end
 
-  scenario "audio upload works" do
+  scenario "audio upload works", flapping: true do
     visit(new_question_path(locale: "en", mode: "m", mission_name: mission.compact_name))
     fill_in("Code", with: "AQuestion")
     fill_in("Title", with: "Jay's")
