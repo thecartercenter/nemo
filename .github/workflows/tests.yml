@@ -76,7 +76,7 @@ jobs:
           chromedriver --url-base=/wd/hub &
       - name: Install imagemagick
         uses: mfinelli/setup-imagemagick@v5
-      - name: Run all tests
+      - name: Run stable tests
         # Run both in the same shell and return whether both of them passed by adding return values together.
         # This way both run even if the first one fails, but if either fails, we still fail the build.
         env:
@@ -90,15 +90,26 @@ jobs:
           LINT_RESULT=$?
           yarn run test
           JEST_RESULT=$?
-          bundle exec rspec --tag flapping --format RSpec::Github::Formatter --format documentation
-          RSPEC_FLAPPING_RESULT=$?
           bundle exec rspec --tag ~flapping --format RSpec::Github::Formatter --format documentation
           RSPEC_RESULT=$?
           echo
           echo "Final results:"
           echo "LINT_RESULT: $LINT_RESULT"
           echo "JEST_RESULT: $JEST_RESULT"
-          echo "RSPEC_FLAPPING_RESULT (ignored): $RSPEC_FLAPPING_RESULT"
           echo "RSPEC_RESULT: $RSPEC_RESULT"
           # Square each result to make sure they're all positive (and don't cancel each other out).
           exit `expr $LINT_RESULT '*' $LINT_RESULT + $RSPEC_RESULT '*' $RSPEC_RESULT + $JEST_RESULT '*' $JEST_RESULT`
+      - name: Run flapping tests
+        # These tests are allowed to fail intermittently, but should be easy to find the output to monitor.
+        env:
+          # A real Google Maps key is needed for some specs. This is stored in the Github repo
+          # under Settings > Secrets.
+          NEMO_GOOGLE_MAPS_API_KEY: ${{ secrets.NEMO_GOOGLE_MAPS_API_KEY }}
+        shell: bash {0}
+        run: |
+          yarn run i18n:export
+          bundle exec rspec --tag flapping --format RSpec::Github::Formatter --format documentation
+          RSPEC_FLAPPING_RESULT=$?
+          echo
+          echo "RSPEC_FLAPPING_RESULT (ignored): $RSPEC_FLAPPING_RESULT"
+          exit 0
