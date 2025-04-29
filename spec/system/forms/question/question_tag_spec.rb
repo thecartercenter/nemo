@@ -138,7 +138,7 @@ describe "question tags" do
     expect(Tag.find_by(name: "food").mission_id).to be_nil
   end
 
-  scenario "clicking tag at top of question index page adds it to search", js: true do
+  scenario "clicking tag at top of question index page adds it to search", js: true, flapping: true do
     question1.tags = [tag1, tag2, tag3]
     visit "/en/m/#{mission.compact_name}/questions"
 

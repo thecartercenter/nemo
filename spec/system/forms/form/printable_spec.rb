@@ -8,8 +8,8 @@ describe "forms", js: true do
     create(:form, name: "Foo", question_types: %w[integer multilevel_select_one select_one integer])
   end
 
-  # Allow longer delays because specs were failing on CI.
-  let(:longer_wait_time) { 120 }
+  # Allow longer delays (default is 2s) because specs were failing on CI.
+  let(:longer_wait_time) { 5 }
 
   before do
     login(user)
@@ -25,7 +25,8 @@ describe "forms", js: true do
           expect(page).to have_css("h4", text: "Print Format Tips")
 
           click_button("OK")
-          wait_for_load
+          # Using wait_for_load may be more robust, but the loader seems to disappear too quickly to catch.
+          wait_for_load_stop
 
           # Should still be on same page.
           expect(current_url).to match(url)
@@ -40,7 +41,8 @@ describe "forms", js: true do
         page.execute_script("localStorage.setItem('form_print_format_tips_shown', '#{date}')")
         using_wait_time(longer_wait_time) do
           find("a.print-link").click
-          wait_for_load
+          # Using wait_for_load may be more robust, but the loader seems to disappear too quickly to catch.
+          wait_for_load_stop
           expect(page).not_to have_css("h4", text: "Print Format Tips")
         end
       end

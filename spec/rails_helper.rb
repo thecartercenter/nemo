@@ -108,12 +108,18 @@ RSpec.configure do |config|
 
   # Add extra delay for flappers which seems to help for certain browser actions.
   config.around(:each, flapping: true) do |example|
-    method_names = %i[visit click_on]
-    originals = method_names.map { |name| Capybara::Session.instance_method(name) }
+    method_names = {
+      visit: Capybara::Session,
+      click_on: Capybara::Session,
+      click_button: Capybara::Session,
+      click: Capybara::Node::Element
+    }
+    originals = method_names.map { |name, klass| klass.instance_method(name) }
 
-    method_names.each_with_index do |name, i|
-      Capybara::Session.define_method(name) do |*args, &block|
+    method_names.each_with_index do |(name, klass), i|
+      klass.define_method(name) do |*args, &block|
         result = originals[i].bind(self).call(*args, &block)
+        puts "Sleeping for `#{name}`"
         sleep(0.1)
         result
       end
@@ -122,8 +128,8 @@ RSpec.configure do |config|
     example.run
   ensure
     # Restore original method
-    method_names.each_with_index do |name, i|
-      Capybara::Session.define_method(name, originals[i])
+    method_names.each_with_index do |(name, klass), i|
+      klass.define_method(name, originals[i])
     end
   end
 
