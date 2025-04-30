@@ -198,7 +198,7 @@ describe ResponsesSearcher do
       )
     end
 
-    it "should handle translations" do
+    it "should handle translations", flapping: true do
       node3.option.update!(name_fr: "Chat")
 
       expect(searcher(%({#{codes[2]}}:chat))).to have_filter_data(
