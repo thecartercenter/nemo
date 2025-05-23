@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require "csv"
 
 describe Forms::Export do
   let(:headers) do
@@ -26,10 +27,20 @@ describe Forms::Export do
 
     it "should produce the correct xls" do
       exporter = Forms::Export.new(simpleform)
-      q1 = simpleform.questionings[0]
-      expect(exporter.to_xls).to match("label::English \\(en\\)")
-      expect(exporter.to_xls).to match(q1.name)
-      expect(exporter.to_xls).to match(q1.code)
+
+      # Write xls file using to_xls method
+      # need "wb" option to write a binary file
+      File.open("tmp/simpleform.xls", "wb") { |f| f.write exporter.to_xls }
+
+      fixture = Spreadsheet.open "spec/fixtures/export_xls/basic.xls"
+      actual = Spreadsheet.open "tmp/simpleform.xls"
+
+      actual.worksheet(0).each_with_index do |row, row_index|
+        expect(row).to match(fixture.worksheet(0).row(row_index))
+      end
+
+      #expect(exporter.to_xls).to match(q1.name)
+      #expect(exporter.to_xls).to match(q1.code)
     end
   end
 
