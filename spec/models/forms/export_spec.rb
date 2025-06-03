@@ -32,15 +32,19 @@ describe Forms::Export do
       # need "wb" option to write a binary file
       File.open("tmp/simpleform.xls", "wb") { |f| f.write exporter.to_xls }
 
-      fixture = Spreadsheet.open "spec/fixtures/export_xls/basic.xls"
       actual = Spreadsheet.open "tmp/simpleform.xls"
 
-      actual.worksheet(0).each_with_index do |row, row_index|
-        expect(row).to match(fixture.worksheet(0).row(row_index))
+      subs = { label: ["Text Question Title 12", "Integer Question Title 13", "Text Question Title 14"], hint: ["Question Hint 12", "Question Hint 13", "Question Hint 14"], name: ["TextQ12", "IntegerQ13", "TextQ14"] }
+
+      fixture = prepare_fixture("export_xls/basic_sheet1.csv", subs)
+
+      fixture_parsed = CSV.parse(fixture)
+
+      # write to csv
+      actual.worksheet(0).each_with_index do |xls_row, row_index|
+        expect(xls_row).to match(fixture_parsed[row_index])
       end
 
-      #expect(exporter.to_xls).to match(q1.name)
-      #expect(exporter.to_xls).to match(q1.code)
     end
   end
 
