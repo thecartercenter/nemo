@@ -2,7 +2,7 @@
 
 # rubocop:disable Metrics/MethodLength
 module Forms
-  # Exports a form to a human readable format for science!
+  # Exports a form to a human-readable format for science!
   class Export # rubocop:disable Metrics/ClassLength
     include LanguageHelper
 
@@ -48,7 +48,7 @@ module Forms
       "counter" => "counter",
       "sketch" => "draw",
       "signature" => "signature",
-      "location" => "placement-map",
+      "location" => "placement-map"
     }.freeze
 
     def initialize(form)
@@ -110,14 +110,22 @@ module Forms
         # if so, the qing's ancestry_depth will be smaller than the length of
         # the group tracker array (plus 1, because base ancestry_depth is 1)
         while group_tracker.length + 1 > q.ancestry_depth
-          if group_tracker.pop == :repeat
+          ended_group_type = group_tracker.pop
+          if ended_group_type == :repeat
             questions.row(row_index).push("end repeat")
+          elsif ended_group_type == :repeat_with_item_name
+            # end both the repeat group and the inner group that carries the repeat_item_name
+            # we need an extra increment on the index_mod due to the extra end group line
+            questions.row(row_index).push("end group")
+            questions.row(row_index + 1).push("end repeat")
+            index_mod += 1
+            row_index += 1
           else
             # end the group
             questions.row(row_index).push("end group")
           end
 
-          # update counters to accomodate additional "end group" lines
+          # update counters to accommodate additional "end group" lines
           index_mod += 1
           row_index += 1
         end
@@ -126,7 +134,34 @@ module Forms
           # write begin group line and update group_tracker array
           if q.repeatable?
             questions.row(row_index).push("begin repeat")
-            group_tracker.push(:repeat)
+
+            # Check for repeat item name
+            if q.group_item_name.present?
+              # If so, create an inner group here,
+              # which should have the labels as defined in group_item_name_translations
+              questions.row(row_index + 1).push("begin group")
+
+              # write translated group item names on the inner group row
+              locales.each do |locale|
+                # Any instance of "$..." indicates that the user may be referring to another question.
+                # However, XLSForm requires a syntax of "${...}" to refer to questions.
+                # Use regex to make this syntax change.
+                name = q.group_item_name_translations&.dig(locale.to_s)&.gsub(/\$(#{Question::CODE_FORMAT})/, "${\\1}")
+                questions.row(row_index + 1).push(name)
+              end
+              # skip unused hint rows for inner group (length varies based on number of locales)
+              locales.length.times { questions.row(row_index + 1).push("") }
+              # push a name for the inner group (required for ODK)
+              questions.row(row_index + 1).push("#{vanillify(q.code)}_item")
+
+              # increment index_mod to account for the extra "begin group" line
+              index_mod += 1
+
+              # push a new type of group to the group tracker that will push end group / end repeat when it ends
+              group_tracker.push(:repeat_with_item_name)
+            else
+              group_tracker.push(:repeat)
+            end
 
             # Check for repeat count limit
             if q.repeat_count_qing_id.present?
@@ -173,11 +208,11 @@ module Forms
           # obtain default response values, or else an empty string
           # if preload last saved value is checked, indicate this using XLSForm format
           # https://docs.getodk.org/form-logic/#values-from-the-last-saved-record
-          if q.preload_last_saved
-            default_to_push = "${last-saved##{q.code}}"
-          else
-            default_to_push = q.default || ""
-          end
+          default_to_push = if q.preload_last_saved
+                              "${last-saved##{q.code}}"
+                            else
+                              q.default || ""
+                            end
 
           # obtain media prompt content type and filename, if any
           # column order = image, audio, video
@@ -202,17 +237,20 @@ module Forms
           # this is not a (repeat) group, so repeat_count is unused
           repeat_count_to_push = ""
 
-          q.constraints.each_with_index do |c, c_index|
+          q.constraints.each do |c|
             constraints_to_push.push("(#{conditions_to_xls(c.conditions, c.accept_if)})")
 
             # Write translated constraint message columns ("rejection_msg" in NEMO)
             # https://xlsform.org/en/#constraint-message
+            #
             # NEMO allows multiple constraint messages for each rule, whereas XLSForm only supports one message per row.
-            # Thus, if there are multiple constraints or rules for this question, combine all provided messages into one string (per locale)
+            # Thus, if there are multiple constraints or rules for this question,
+            # combine all provided messages into one string (per locale)
             locales.each_with_index do |locale, locale_index|
-              # Attempt to get a message for that constraint for that language (may be nil if a translation is not provided)
+              # Attempt to get a message for that constraint for that language
+              # (may be nil if a translation is not provided)
               constraint_message = c.rejection_msg_translations&.dig(locale.to_s)
-              constraint_msg_to_push[locale_index] += [constraint_message] unless constraint_message.blank?
+              constraint_msg_to_push[locale_index] += [constraint_message] if constraint_message.present?
             end
           end
 
@@ -221,7 +259,7 @@ module Forms
           # constraint message will still be an array, but contain a string for each locale
           # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
           constraints_to_push = constraints_to_push.join(" and ")
-          constraint_msg_to_push.map! { |n| n.join("; ") }
+          constraint_msg_to_push = constraint_msg_to_push.map { |n| n.join("; ") }
 
           # if we have an option set, identify and save it so that we can add it to the choices sheet later.
           # then, write the question, splitting it into multiple questions if there are option set levels.
@@ -314,8 +352,16 @@ module Forms
           # do we still have unclosed groups in the tracker array?
           # if so, close those groups from last to first.
           while group_tracker.present?
-            if group_tracker.pop == :repeat
+            ended_group_type = group_tracker.pop
+            if ended_group_type == :repeat
               questions.row(row_index).push("end repeat")
+            elsif ended_group_type == :repeat_with_item_name
+              # end both the repeat group and the inner group that carries the repeat_item_name
+              # we need an extra increment on the index_mod due to the extra end group line
+              questions.row(row_index).push("end group")
+              questions.row(row_index + 1).push("end repeat")
+              index_mod += 1
+              row_index += 1
             else
               # end the group
               questions.row(row_index).push("end group")
@@ -466,7 +512,6 @@ module Forms
         # node = the current option node
         os.option_nodes.each do |node|
           level_to_push = [] # array to be filled with parent levels if needed
-          listname_to_push = "" # name of the option set
 
           if node.level.present?
             # per XLSform style, option sets with levels need to have the
@@ -475,7 +520,7 @@ module Forms
 
             # Only attempt to access node ancestors if they exist
             if node.ancestry_depth > 1
-              # Add a buffer of blank cells to accomodate columns used up by prior option sets
+              # Add a buffer of blank cells to accommodate columns used up by prior option sets
               column_counter.times { level_to_push.push("") }
 
               # Obtain array of all ancestor nodes (except for the root, which is nameless)
