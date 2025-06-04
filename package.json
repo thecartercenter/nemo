@@ -104,6 +104,6 @@
     "stylelint": "15.10.1",
     "stylelint-config-sass-guidelines": "7.0.0",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.0.0"
+    "webpack-dev-server": "^5.2.1"
   }
 }
