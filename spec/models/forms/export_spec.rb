@@ -32,12 +32,16 @@ describe Forms::Export do
       # need "wb" option to write a binary file
       File.open("tmp/simpleform.xls", "wb") { |f| f.write exporter.to_xls }
 
+      qings = simpleform.questionings
       actual = Spreadsheet.open "tmp/simpleform.xls"
 
-      subs = { label: ["Text Question Title 12", "Integer Question Title 13", "Text Question Title 14"], hint: ["Question Hint 12", "Question Hint 13", "Question Hint 14"], name: ["TextQ12", "IntegerQ13", "TextQ14"] }
+      # Prepend formatting character
+      actual.worksheet(0).row(0).first.prepend(UserFacingCSV::BOM)
 
+      # Dynamically generate substitutions based on the form
+      # Form question names and codes will vary based on test run order
+      subs = { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code) }
       fixture = prepare_fixture("export_xls/basic_sheet1.csv", subs)
-
       fixture_parsed = CSV.parse(fixture)
 
       # write to csv
