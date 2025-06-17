@@ -44,11 +44,90 @@ describe Forms::Export do
       fixture = prepare_fixture("export_xls/basic_sheet1.csv", subs)
       fixture_parsed = CSV.parse(fixture)
 
-      # write to csv
+      # compare generated XLS with CSV fixture
       actual.worksheet(0).each_with_index do |xls_row, row_index|
         expect(xls_row).to match(fixture_parsed[row_index])
       end
 
+    end
+  end
+
+  context "complex form" do
+    let!(:form) do
+      create(:form, :live, name: "Conditional Logic",
+                           question_types: %w[text long_text integer decimal location
+                                              select_one multilevel_select_one
+                                              select_multiple datetime integer integer])
+    end
+
+    before do
+      # Include multiple conditions on one question.
+      form.c[6].display_conditions.create!(left_qing: form.c[2], op: "gt", value: "5")
+      form.c[6].display_conditions.create!(left_qing: form.c[5],
+                                           op: "eq",
+                                           option_node: form.c[5].option_set.c[0])
+      form.c[6].update!(display_if: "all_met")
+      create(:skip_rule,
+        source_item: form.c[2],
+        destination: "item",
+        dest_item_id: form.c[7].id,
+        skip_if: "all_met",
+        conditions_attributes: [{left_qing_id: form.c[2].id, op: "eq", value: 0}])
+
+      # Add both old style constraints and new style so we can check for the right expression.
+      form.c[9].question.update!(minimum: 10, maximum: 100)
+      form.c[9].constraints.create!(
+        accept_if: "any_met",
+        conditions_attributes: [
+          {left_qing_id: form.c[3].id, op: "eq", value: 10},
+          {left_qing_id: form.c[9].id, op: "eq", right_side_type: "qing", right_qing_id: form.c[2].id}
+        ]
+      )
+      form.c[9].constraints.create!(
+        accept_if: "all_met",
+        conditions_attributes: [
+          {left_qing_id: form.c[9].id, op: "neq", value: 55}
+        ]
+      )
+
+      form.c[10].constraints.create!(
+        accept_if: "all_met",
+        conditions_attributes: [
+          {left_qing_id: form.c[10].id, op: "eq", value: 10}
+        ],
+        rejection_msg_translations: {en: "Custom rejection message."}
+      )
+    end
+
+    it "should produce the correct xls" do
+      exporter = Forms::Export.new(form)
+
+      # Write xls file using to_xls method
+      # need "wb" option to write a binary file
+      File.open("tmp/complexform1.xls", "wb") { |f| f.write exporter.to_xls }
+
+      qings = form.questionings
+      actual = Spreadsheet.open "tmp/complexform1.xls"
+
+      # Prepend formatting character
+      actual.worksheet(0).row(0).first.prepend(UserFacingCSV::BOM)
+
+      # Dynamically generate substitutions based on the form
+      # Form question names and codes will vary based on test run order
+      labels = qings.map(&:name)
+      # Option sets in the XLSForm are separated by underscores and will have the same name as the question label
+      # Not every qing has an associated option set, but this converts all question labels to have underscore separation
+      # so that they can be easily accessed and substituted by the prepare_fixture method
+      option_set_labels = labels.map { |n| n.tr(" ", "_") }
+
+      subs = { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code), os: option_set_labels }
+      fixture = prepare_fixture("export_xls/complexform1_sheet1.csv", subs)
+      fixture_parsed = CSV.parse(fixture)
+
+      # compare generated XLS with CSV fixture
+      actual.worksheet(0).each_with_index do |xls_row, row_index|
+        expect(xls_row).to match(fixture_parsed[row_index])
+      end
     end
   end
 
