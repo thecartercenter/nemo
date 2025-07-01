@@ -55,9 +55,11 @@ describe Forms::Export do
   context "complex form" do
     let!(:form) do
       create(:form, :live, name: "Conditional Logic",
-                           question_types: %w[text long_text integer decimal location
-                                              select_one multilevel_select_one
-                                              select_multiple datetime integer integer])
+                           question_types: ["text", "long_text", "integer", "decimal", "location",
+                                              "select_one", "multilevel_select_one",
+                                              "select_multiple", "datetime", "integer", "integer", {repeating: {items: ["text", ["text", "text"], "text"]}},
+                                            ]
+      )
     end
 
     before do
@@ -107,6 +109,7 @@ describe Forms::Export do
       File.open("tmp/complexform1.xls", "wb") { |f| f.write exporter.to_xls }
 
       qings = form.questionings
+      groups = form.descendants.sort_by(&:full_dotted_rank).select { |child| child.type == "QingGroup" }
       actual = Spreadsheet.open "tmp/complexform1.xls"
 
       # Prepend formatting character
@@ -115,12 +118,14 @@ describe Forms::Export do
       # Dynamically generate substitutions based on the form
       # Form question names and codes will vary based on test run order
       labels = qings.map(&:name)
+      group_names = groups.map(&:group_name)
       # Option sets in the XLSForm are separated by underscores and will have the same name as the question label
       # Not every qing has an associated option set, but this converts all question labels to have underscore separation
       # so that they can be easily accessed and substituted by the prepare_fixture method
       option_set_labels = labels.map { |n| n.tr(" ", "_") }
+      group_codes = group_names.map { |n| n.tr(" ", "_") }
 
-      subs = { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code), os: option_set_labels }
+      subs = { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code), os: option_set_labels, grouplabel: group_names, groupcode: group_codes, grouphint: groups.map(&:group_hint) }
       fixture = prepare_fixture("export_xls/complexform1_sheet1.csv", subs)
       fixture_parsed = CSV.parse(fixture)
 

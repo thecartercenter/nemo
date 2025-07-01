@@ -11,9 +11,11 @@ select_multiple en*os8*,*label8*,*hint8*,*name8*,false,,,,,,,,,,
 dateTime,*label9*,*hint9*,*name9*,false,,,,,,,,,,
 integer,*label10*,*hint10*,*name10*,false,,,,,,(${*name4*} = 10 or ${*name10*} = ${*name3*}) and (${*name10*} != 55),,,,
 integer,*label11*,*hint11*,*name11*,false,,,,,,(${*name11*} = 10),Custom rejection message.,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
- ,,,,,,,,,,,,,,
+begin repeat,*grouplabel1*,*grouphint1*,*groupcode1*,,,
+text,*label12*,*hint12*,*name12*,false,,,,,,,,,,
+begin group,*grouplabel2*,*grouphint2*,*groupcode2*,,,field-list
+text,*label13*,*hint13*,*name13*,false,,,,,,,,,,
+text,*label14*,*hint14*,*name14*,false,,,,,,,,,,
+end group
+text,*label15*,*hint15*,*name15*,false,,,,,,,,,,
+end repeat
