@@ -127,6 +127,13 @@ module GeneralSpecHelpers
     end
   end
 
+  # Similar to the above, except add extra things we need to do for XLSForm fixtures
+  def prepare_xlsform_fixture(filename, substitutions)
+    fixture = CSV.parse(prepare_fixture(filename, substitutions))
+    fixture[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
+    return fixture
+  end
+
   def in_timezone(tz)
     old_tz = Time.zone
     Time.zone = tz

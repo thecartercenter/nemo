@@ -34,18 +34,19 @@ describe Forms::Export do
       # Then, parse the resulting CSV, deleting the initial formatting character
 
       # Prepare sheet 1 (questions)
-      subs_sheet1 = { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code) }
-      fixture_sheet1 = CSV.parse(prepare_fixture("export_xls/basic_sheet1.csv", subs_sheet1))
-      fixture_sheet1[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
+      fixture_sheet1 = prepare_xlsform_fixture(
+        "export_xls/basic_sheet1.csv",
+        { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code) }
+      )
 
       # Prepare sheet 2 (option sets, should be mostly blank so no substitutions needed)
-      fixture_sheet2 = CSV.parse(prepare_fixture("export_xls/basic_sheet2.csv", {}))
-      fixture_sheet2[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
+      fixture_sheet2 = prepare_xlsform_fixture("export_xls/basic_sheet2.csv", {})
 
       # Prepare sheet 3 (form information)
-      subs_sheet3 = { title: [simpleform.name], id: [simpleform.id] }
-      fixture_sheet3 = CSV.parse(prepare_fixture("export_xls/basic_sheet3.csv", subs_sheet3))
-      fixture_sheet3[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
+      fixture_sheet3 = prepare_xlsform_fixture(
+        "export_xls/basic_sheet3.csv",
+        { title: [simpleform.name], id: [simpleform.id] }
+      )
 
       # compare generated XLS with CSV fixtures for each sheet
       actual.worksheet(0).each_with_index do |xls_row, row_index|
