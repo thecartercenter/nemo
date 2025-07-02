@@ -35,20 +35,34 @@ describe Forms::Export do
       qings = simpleform.questionings
       actual = Spreadsheet.open "tmp/simpleform.xls"
 
-      # Prepend formatting character
-      actual.worksheet(0).row(0).first.prepend(UserFacingCSV::BOM)
-
-      # Dynamically generate substitutions based on the form
+      # Dynamically generate substitutions based on the form fixture
       # Form question names and codes will vary based on test run order
-      subs = { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code) }
-      fixture = prepare_fixture("export_xls/basic_sheet1.csv", subs)
-      fixture_parsed = CSV.parse(fixture)
+      # Then, parse the resulting CSV, deleting the initial formatting character
 
-      # compare generated XLS with CSV fixture
+      # Prepare sheet 1 (questions)
+      subs_sheet1 = { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code) }
+      fixture_sheet1 = CSV.parse(prepare_fixture("export_xls/basic_sheet1.csv", subs_sheet1))
+      fixture_sheet1[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
+
+      # Prepare sheet 2 (option sets, should be mostly blank so no substitutions needed)
+      fixture_sheet2 = CSV.parse(prepare_fixture("export_xls/basic_sheet2.csv", {}))
+      fixture_sheet2[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
+
+      # Prepare sheet 3 (form information)
+      subs_sheet3 = { title: [simpleform.name], id: [simpleform.id] }
+      fixture_sheet3 = CSV.parse(prepare_fixture("export_xls/basic_sheet3.csv", subs_sheet3))
+      fixture_sheet3[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
+
+      # compare generated XLS with CSV fixtures for each sheet
       actual.worksheet(0).each_with_index do |xls_row, row_index|
-        expect(xls_row).to match(fixture_parsed[row_index])
+        expect(xls_row).to eq(fixture_sheet1[row_index])
       end
-
+      actual.worksheet(1).each_with_index do |xls_row, row_index|
+        expect(xls_row).to eq(fixture_sheet2[row_index])
+      end
+      actual.worksheet(2).each_with_index do |xls_row, row_index|
+        expect(xls_row).to eq(fixture_sheet3[row_index])
+      end
     end
   end
 
