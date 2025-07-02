@@ -26,14 +26,8 @@ describe Forms::Export do
     end
 
     it "should produce the correct xls" do
-      exporter = Forms::Export.new(simpleform)
-
-      # Write xls file using to_xls method
-      # need "wb" option to write a binary file
-      File.open("tmp/simpleform.xls", "wb") { |f| f.write exporter.to_xls }
-
       qings = simpleform.questionings
-      actual = Spreadsheet.open "tmp/simpleform.xls"
+      actual = write_and_open_xls(simpleform)
 
       # Dynamically generate substitutions based on the form fixture
       # Form question names and codes will vary based on test run order
@@ -116,15 +110,10 @@ describe Forms::Export do
     end
 
     it "should produce the correct xls" do
-      exporter = Forms::Export.new(form)
-
-      # Write xls file using to_xls method
-      # need "wb" option to write a binary file
-      File.open("tmp/complexform1.xls", "wb") { |f| f.write exporter.to_xls }
+      actual = write_and_open_xls(form)
 
       qings = form.questionings
       groups = form.descendants.sort_by(&:full_dotted_rank).select { |child| child.type == "QingGroup" }
-      actual = Spreadsheet.open "tmp/complexform1.xls"
 
       # Prepend formatting character
       actual.worksheet(0).row(0).first.prepend(UserFacingCSV::BOM)
