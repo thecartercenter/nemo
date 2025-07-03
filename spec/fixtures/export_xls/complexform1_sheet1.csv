@@ -1,0 +1,21 @@
+﻿type,label::English (en),hint::English (en),name,required,repeat_count,appearance,relevant,default,choice_filter,constraint,constraint_message::English (en),image::English (en),audio::English (en),video::English (en)
+text,*label1*,*hint1*,*name1*,false,,,,,,,,,,
+text,*label2*,*hint2*,*name2*,false,,multiline,,,,,,,,
+integer,*label3*,*hint3*,*name3*,false,,,,,,,,,,
+decimal,*label4*,*hint4*,*name4*,false,,,,,,,,,,
+geopoint,*label5*,*hint5*,*name5*,false,,placement-map,,,,,,,,
+select_one en*os6*,*label6*,*hint6*,*name6*,false,,,,,,,,,,
+select_one en*os7*_Kingdom,*label7*,*hint7*,*name7*_en*os7*_Kingdom,false,,,${*name3*} > 5 and ${*name6*} = 'Cat',,,,,,,
+select_one en*os7*_Species,*label7*,*hint7*,*name7*_en*os7*_Species,false,,,${*name3*} > 5 and ${*name6*} = 'Cat',,en*os7*_Kingdom=${*name7*_en*os7*_Kingdom},,,,,
+select_multiple en*os8*,*label8*,*hint8*,*name8*,false,,,,,,,,,,
+dateTime,*label9*,*hint9*,*name9*,false,,,,,,,,,,
+integer,*label10*,*hint10*,*name10*,false,,,,,,(${*name4*} = 10 or ${*name10*} = ${*name3*}) and (${*name10*} != 55),,,,
+integer,*label11*,*hint11*,*name11*,false,,,,,,(${*name11*} = 10),Custom rejection message.,,,
+begin repeat,*grouplabel1*,*grouphint1*,*groupcode1*,,,
+text,*label12*,*hint12*,*name12*,false,,,,,,,,,,
+begin group,*grouplabel2*,*grouphint2*,*groupcode2*,,,field-list
+text,*label13*,*hint13*,*name13*,false,,,,,,,,,,
+text,*label14*,*hint14*,*name14*,false,,,,,,,,,,
+end group
+text,*label15*,*hint15*,*name15*,false,,,,,,,,,,
+end repeat

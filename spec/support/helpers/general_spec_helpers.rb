@@ -103,6 +103,17 @@ module GeneralSpecHelpers
     klass.find(ids).index_by(&:id).slice(*ids).values
   end
 
+  # Takes a form object, exports it to XLSForm format, and then returns and Spreadsheet object
+  def write_and_open_xls(form)
+    exporter = Forms::Export.new(form)
+
+    # Write xls file using to_xls method
+    # need "wb" option to write a binary file
+    File.open("tmp/form.xls", "wb") { |f| f.write exporter.to_xls }
+
+    Spreadsheet.open "tmp/form.xls"
+  end
+
   # `substitutions` should be a hash of arrays.
   # For each hash pair, e.g. `grp: groups_ids`, the method substitutes
   # e.g. `*grp8*` in the file with `groups_ids[7]`.
@@ -114,6 +125,13 @@ module GeneralSpecHelpers
         end
       end
     end
+  end
+
+  # Similar to the above, except add extra things we need to do for XLSForm fixtures
+  def prepare_xlsform_fixture(filename, substitutions)
+    fixture = CSV.parse(prepare_fixture(filename, substitutions))
+    fixture[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
+    return fixture
   end
 
   def in_timezone(tz)
