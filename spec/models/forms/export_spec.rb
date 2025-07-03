@@ -49,15 +49,9 @@ describe Forms::Export do
       )
 
       # compare generated XLS with CSV fixtures for each sheet
-      actual.worksheet(0).each_with_index do |xls_row, row_index|
-        expect(xls_row).to eq(fixture_sheet1[row_index])
-      end
-      actual.worksheet(1).each_with_index do |xls_row, row_index|
-        expect(xls_row).to eq(fixture_sheet2[row_index])
-      end
-      actual.worksheet(2).each_with_index do |xls_row, row_index|
-        expect(xls_row).to eq(fixture_sheet3[row_index])
-      end
+      matches_csv_fixture(actual.worksheet(0), fixture_sheet1)
+      matches_csv_fixture(actual.worksheet(1), fixture_sheet2)
+      matches_csv_fixture(actual.worksheet(2), fixture_sheet3)
     end
   end
 
@@ -134,9 +128,7 @@ describe Forms::Export do
       fixture_parsed = CSV.parse(fixture)
 
       # compare generated XLS with CSV fixture
-      actual.worksheet(0).each_with_index do |xls_row, row_index|
-        expect(xls_row).to match(fixture_parsed[row_index])
-      end
+      matches_csv_fixture(actual.worksheet(0), fixture_parsed)
     end
   end
 
@@ -409,5 +401,12 @@ describe Forms::Export do
         "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
       )
     end
+  end
+end
+
+# Local helper method to check XLSForm output against a fixture row-by-row
+def matches_csv_fixture(actual, fixture)
+  actual.each_with_index do |xls_row, row_index|
+    expect(xls_row).to eq(fixture[row_index])
   end
 end

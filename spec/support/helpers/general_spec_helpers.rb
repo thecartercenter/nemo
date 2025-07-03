@@ -105,13 +105,13 @@ module GeneralSpecHelpers
 
   # Takes a form object, exports it to XLSForm format, and then returns and Spreadsheet object
   def write_and_open_xls(form)
-      exporter = Forms::Export.new(form)
+    exporter = Forms::Export.new(form)
 
-      # Write xls file using to_xls method
-      # need "wb" option to write a binary file
-      File.open("tmp/form.xls", "wb") { |f| f.write exporter.to_xls }
+    # Write xls file using to_xls method
+    # need "wb" option to write a binary file
+    File.open("tmp/form.xls", "wb") { |f| f.write exporter.to_xls }
 
-      Spreadsheet.open "tmp/form.xls"
+    Spreadsheet.open "tmp/form.xls"
   end
 
   # `substitutions` should be a hash of arrays.
