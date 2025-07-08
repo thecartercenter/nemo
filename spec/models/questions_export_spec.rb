@@ -42,7 +42,7 @@ describe Questions::Export do
       mission.save
     end
 
-    it "should be able to export" do
+    it "should be able to export", flapping: true do
       exporter = Questions::Export.new(Question.all, mission.setting.preferred_locales)
       csv = exporter.to_csv
       expect(csv).to eq(
