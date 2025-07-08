@@ -24,7 +24,7 @@ module GeneralSpecHelpers
 
   # reads a file from spec/fixtures
   def fixture_file(filename)
-    File.read(Rails.root.join("spec/fixtures", filename))
+    Rails.root.join("spec/fixtures", filename).read
   end
 
   def media_fixture(name)
@@ -91,7 +91,7 @@ module GeneralSpecHelpers
     path = dir.join("#{name}.xml")
     FileUtils.mkdir_p(dir)
     puts "Saving fixture to #{path}"
-    File.open(path, "w") { |f| f.write(xml) }
+    File.write(path, xml)
     path
   end
 
@@ -103,15 +103,15 @@ module GeneralSpecHelpers
     klass.find(ids).index_by(&:id).slice(*ids).values
   end
 
-  # Takes a form object, exports it to XLSForm format, and then returns and Spreadsheet object
+  # Takes a form object, exports it to XLSForm format, and returns a Spreadsheet object.
   def write_and_open_xls(form)
     exporter = Forms::Export.new(form)
 
     # Write xls file using to_xls method
     # need "wb" option to write a binary file
-    File.open("tmp/form.xls", "wb") { |f| f.write exporter.to_xls }
+    File.binwrite("tmp/form.xls", exporter.to_xls)
 
-    Spreadsheet.open "tmp/form.xls"
+    Spreadsheet.open("tmp/form.xls")
   end
 
   # `substitutions` should be a hash of arrays.
@@ -127,11 +127,11 @@ module GeneralSpecHelpers
     end
   end
 
-  # Similar to the above, except add extra things we need to do for XLSForm fixtures
+  # Similar to the above, except add extra things we need to do for XLSForm fixtures.
   def prepare_xlsform_fixture(filename, substitutions)
     fixture = CSV.parse(prepare_fixture(filename, substitutions))
     fixture[0].first.sub!(/\A#{UserFacingCSV::BOM}/, "")
-    return fixture
+    fixture
   end
 
   def in_timezone(tz)
@@ -154,7 +154,7 @@ module GeneralSpecHelpers
 
   # assigns ENV vars
   def with_env(vars)
-    old = vars.map { |k, _| [k, ENV[k]] }.to_h
+    old = vars.to_h { |k, _| [k, ENV.fetch(k, nil)] }
     vars.each_pair { |k, v| ENV[k] = v }
     yield
   ensure
