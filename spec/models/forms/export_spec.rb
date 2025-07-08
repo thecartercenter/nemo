@@ -5,8 +5,8 @@ require "csv"
 
 describe Forms::Export do
   let(:headers) do
-    "Level,Type,Code,Prompt,Required?,Repeatable?,SkipLogic,Constraints,DisplayLogic,"\
-    "DisplayConditions,Default,Hidden\n"
+    "Level,Type,Code,Prompt,Required?,Repeatable?,SkipLogic,Constraints,DisplayLogic," \
+      "DisplayConditions,Default,Hidden\n"
   end
 
   context "simple form" do
@@ -18,9 +18,9 @@ describe Forms::Export do
       q2 = simpleform.questionings[1]
       q3 = simpleform.questionings[2]
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2,integer,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "2,integer,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n" \
         "3,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"
       )
     end
@@ -29,26 +29,26 @@ describe Forms::Export do
       qings = simpleform.questionings
       actual = write_and_open_xls(simpleform)
 
-      # Dynamically generate substitutions based on the form fixture
-      # Form question names and codes will vary based on test run order
-      # Then, parse the resulting CSV, deleting the initial formatting character
+      # Dynamically generate substitutions based on the form fixture.
+      # Form question names and codes will vary based on test run order.
+      # Then, parse the resulting CSV, deleting the initial formatting character.
 
-      # Prepare sheet 1 (questions)
+      # Prepare sheet 1 (questions).
       fixture_sheet1 = prepare_xlsform_fixture(
         "export_xls/basic_sheet1.csv",
-        { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code) }
+        {label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code)}
       )
 
-      # Prepare sheet 2 (option sets, should be mostly blank so no substitutions needed)
+      # Prepare sheet 2 (option sets, should be mostly blank so no substitutions needed).
       fixture_sheet2 = prepare_xlsform_fixture("export_xls/basic_sheet2.csv", {})
 
-      # Prepare sheet 3 (form information)
+      # Prepare sheet 3 (form information).
       fixture_sheet3 = prepare_xlsform_fixture(
         "export_xls/basic_sheet3.csv",
-        { title: [simpleform.name], id: [simpleform.id] }
+        {title: [simpleform.name], id: [simpleform.id]}
       )
 
-      # compare generated XLS with CSV fixtures for each sheet
+      # compare generated XLS with CSV fixtures for each sheet.
       matches_csv_fixture(actual.worksheet(0), fixture_sheet1)
       matches_csv_fixture(actual.worksheet(1), fixture_sheet2)
       matches_csv_fixture(actual.worksheet(2), fixture_sheet3)
@@ -58,19 +58,21 @@ describe Forms::Export do
   context "complex form" do
     let!(:form) do
       create(:form, :live, name: "Conditional Logic",
-                           question_types: ["text", "long_text", "integer", "decimal", "location",
-                                              "select_one", "multilevel_select_one",
-                                              "select_multiple", "datetime", "integer", "integer", {repeating: {items: ["text", ["text", "text"], "text"]}},
-                                            ]
-      )
+        question_types: ["text", "long_text", "integer", "decimal", "location",
+                         "select_one", "multilevel_select_one",
+                         "select_multiple", "datetime", "integer", "integer", {repeating: {items: [
+                           "text",
+                           %w[text text],
+                           "text"
+                         ]}}])
     end
 
     before do
       # Include multiple conditions on one question.
       form.c[6].display_conditions.create!(left_qing: form.c[2], op: "gt", value: "5")
       form.c[6].display_conditions.create!(left_qing: form.c[5],
-                                           op: "eq",
-                                           option_node: form.c[5].option_set.c[0])
+        op: "eq",
+        option_node: form.c[5].option_set.c[0])
       form.c[6].update!(display_if: "all_met")
       create(:skip_rule,
         source_item: form.c[2],
@@ -110,24 +112,25 @@ describe Forms::Export do
       qings = form.questionings
       groups = form.descendants.sort_by(&:full_dotted_rank).select { |child| child.type == "QingGroup" }
 
-      # Prepend formatting character
+      # Prepend formatting character.
       actual.worksheet(0).row(0).first.prepend(UserFacingCSV::BOM)
 
-      # Dynamically generate substitutions based on the form
-      # Form question names and codes will vary based on test run order
+      # Dynamically generate substitutions based on the form.
+      # Form question names and codes will vary based on test run order.
       labels = qings.map(&:name)
       group_names = groups.map(&:group_name)
-      # Option sets in the XLSForm are separated by underscores and will have the same name as the question label
+      # Option sets in the XLSForm are separated by underscores and will have the same name as the question label.
       # Not every qing has an associated option set, but this converts all question labels to have underscore separation
-      # so that they can be easily accessed and substituted by the prepare_fixture method
+      # so that they can be easily accessed and substituted by the prepare_fixture method.
       option_set_labels = labels.map { |n| n.tr(" ", "_") }
       group_codes = group_names.map { |n| n.tr(" ", "_") }
 
-      subs = { label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code), os: option_set_labels, grouplabel: group_names, groupcode: group_codes, grouphint: groups.map(&:group_hint) }
+      subs = {label: qings.map(&:name), hint: qings.map(&:hint), name: qings.map(&:code), os: option_set_labels,
+              grouplabel: group_names, groupcode: group_codes, grouphint: groups.map(&:group_hint)}
       fixture = prepare_fixture("export_xls/complexform1_sheet1.csv", subs)
       fixture_parsed = CSV.parse(fixture)
 
-      # compare generated XLS with CSV fixture
+      # compare generated XLS with CSV fixture.
       matches_csv_fixture(actual.worksheet(0), fixture_parsed)
     end
   end
@@ -147,12 +150,12 @@ describe Forms::Export do
       q31 = repeatgroupform.questionings[2]
       q32 = repeatgroupform.questionings[3]
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2,integer,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "3,,#{q31.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "3.1,text,#{q31.code},#{q31.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        "3.2,text,#{q32.code},#{q32.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "2,integer,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "3,,#{q31.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n" \
+        "3.1,text,#{q31.code},#{q31.name},false,true,\"\",\"\",always,\"\",,false\n" \
+        "3.2,text,#{q32.code},#{q32.name},false,true,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -171,11 +174,11 @@ describe Forms::Export do
       q2 = repeatgroupform.questionings[1]
       q3 = repeatgroupform.questionings[2]
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,,#{q1.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        "2,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,,#{q1.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n" \
+        "2,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -196,11 +199,11 @@ describe Forms::Export do
       q3 = groupform.questionings[2]
 
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,,#{q1.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.2,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2,integer,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,,#{q1.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.2,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "2,integer,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -221,11 +224,11 @@ describe Forms::Export do
       q3 = groupform.questionings[2]
 
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,integer,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2,,#{q2.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
-        "2.1,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2.2,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,integer,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "2,,#{q2.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n" \
+        "2.1,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "2.2,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -247,13 +250,13 @@ describe Forms::Export do
       q4 = groupform.questionings[3]
 
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,,#{q1.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.2,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2,,#{q3.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
-        "2.1,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2.2,text,#{q4.code},#{q4.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,,#{q1.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.2,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "2,,#{q3.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n" \
+        "2.1,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "2.2,text,#{q4.code},#{q4.name},false,false,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -274,13 +277,13 @@ describe Forms::Export do
       q4 = groupform.questionings[3]
 
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,,#{q1.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        "2,,#{q3.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "2.1,text,#{q3.code},#{q3.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        "2.2,text,#{q4.code},#{q4.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,,#{q1.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n" \
+        "2,,#{q3.parent.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n" \
+        "2.1,text,#{q3.code},#{q3.name},false,true,\"\",\"\",always,\"\",,false\n" \
+        "2.2,text,#{q4.code},#{q4.name},false,true,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -300,12 +303,12 @@ describe Forms::Export do
       q3 = groupform.questionings[2]
 
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,,#{q1.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.2,,#{q2.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.2.1,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.2.2,integer,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,,#{q1.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.2,,#{q2.parent.code},Group,false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.2.1,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.2.2,integer,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -320,9 +323,9 @@ describe Forms::Export do
       q2 = form.questionings[1]
       q3 = form.questionings[2]
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "2,text,#{q2.code},#{q2.name},false,false,SKIP TO end of form,\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "2,text,#{q2.code},#{q2.name},false,false,SKIP TO end of form,\"\",always,\"\",,false\n" \
         "3,text,#{q3.code},#{q3.name},false,false,\"\",\"\",always,\"\",,false\n"
       )
     end
@@ -344,11 +347,11 @@ describe Forms::Export do
       q2 = groupform.preordered_items[3]
 
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,,#{g1.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1,,#{g2.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.1.2,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,,#{g1.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.1,,#{g2.code},Group,false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.1.1,text,#{q1.code},#{q1.name},false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.1.2,text,#{q2.code},#{q2.name},false,false,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -369,11 +372,11 @@ describe Forms::Export do
       q2 = groupform.preordered_items[3]
 
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,,#{g1.code},Group,false,false,\"\",\"\",always,\"\",,false\n"\
-        "1.1,,#{g2.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,,#{g1.code},Group,false,false,\"\",\"\",always,\"\",,false\n" \
+        "1.1,,#{g2.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
@@ -394,17 +397,17 @@ describe Forms::Export do
       q2 = groupform.preordered_items[3]
 
       expect(exporter.to_csv).to eq(
-        "#{headers}"\
-        "1,,#{g1.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1,,#{g2.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n"\
-        "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n"\
+        "#{headers}" \
+        "1,,#{g1.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.1,,#{g2.code},Repeat Group,false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.1.1,text,#{q1.code},#{q1.name},false,true,\"\",\"\",always,\"\",,false\n" \
+        "1.1.2,text,#{q2.code},#{q2.name},false,true,\"\",\"\",always,\"\",,false\n" \
       )
     end
   end
 end
 
-# Local helper method to check XLSForm output against a fixture row-by-row
+# Local helper method to check XLSForm output against a fixture row-by-row.
 def matches_csv_fixture(actual, fixture)
   actual.each_with_index do |xls_row, row_index|
     expect(xls_row).to eq(fixture[row_index])

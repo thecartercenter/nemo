@@ -48,8 +48,6 @@ class TabularImport
     sheet
   end
 
-
-
   def add_run_error(message, opts = {})
     if message.is_a?(Symbol)
       opts = opts.merge(default: :"tabular_import.errors.#{message}")
