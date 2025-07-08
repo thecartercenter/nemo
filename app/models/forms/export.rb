@@ -398,6 +398,15 @@ module Forms
                 end
       settings.row(1).push(@form.name, @form.id, version, lang, "yes")
 
+      ## Style
+      format = Spreadsheet::Format.new :color => :navy,
+                                 :weight => :bold,
+                                 :size => 15,
+                                 :bottom => :medium
+      questions.row(0).default_format = format
+      choices.row(0).default_format = format
+      settings.row(0).default_format = format
+
       ## Write
       file = StringIO.new
       book.write(file)
