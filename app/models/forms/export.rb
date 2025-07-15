@@ -399,18 +399,19 @@ module Forms
       settings.row(1).push(@form.name, @form.id, version, lang, "yes")
 
       ## Style
-      format = Spreadsheet::Format.new :color => :navy,
-                                 :weight => :bold,
-                                 :bottom => :medium,
-                                 :text_wrap => true
+      format = Spreadsheet::Format.new(
+        color: :navy,
+        weight: :bold,
+        text_wrap: true
+      )
       questions.row(0).default_format = format
       choices.row(0).default_format = format
       settings.row(0).default_format = format
 
       # Freeze header rows
-      questions.freeze!(1,0)
-      choices.freeze!(1,0)
-      settings.freeze!(1,0)
+      questions.freeze!(1, 0)
+      choices.freeze!(1, 0)
+      settings.freeze!(1, 0)
 
       ## Write
       file = StringIO.new
