@@ -57,6 +57,7 @@ class OptionSetsController < ApplicationController
   end
 
   def export
+    Sentry.capture_message("Exporting option set: CSV")
     send_data(generate_csv, filename: "#{@option_set.name}.csv")
   rescue MissingTranslationError
     flash[:error] = t("activerecord.errors.models.option.missing_level_translation", locale_name: I18n.locale)

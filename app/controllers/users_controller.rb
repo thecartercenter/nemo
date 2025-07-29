@@ -118,6 +118,7 @@ class UsersController < ApplicationController
   def export
     respond_to do |format|
       format.vcf do
+        Sentry.capture_message("Exporting users: All VCF")
         @users = restrict_scope_to_selected_objects(User.accessible_by(current_ability))
         render(plain: @users.collect(&:to_vcf).join("\n"))
       end

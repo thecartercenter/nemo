@@ -224,17 +224,20 @@ class FormsController < ApplicationController
 
   # Standard CSV export.
   def export
+    Sentry.capture_message("Exporting form: CSV")
     exporter = Forms::Export.new(@form)
     send_data(exporter.to_csv, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.csv")
   end
 
   # ODK XML export.
   def export_xml
+    Sentry.capture_message("Exporting form: XML")
     send_data(@form.odk_xml.download, filename: "form-#{@form.name.dasherize}-#{Time.zone.today}.xml")
   end
 
   # XLSForm export.
   def export_xls
+    Sentry.capture_message("Exporting form: XLSForm")
     exporter = Forms::Export.new(@form)
     send_data(exporter.to_xls.html_safe, filename: "xlsform-#{@form.name.dasherize}-#{Time.zone.today}.xls") # rubocop:disable Rails/OutputSafety
   end
@@ -242,6 +245,7 @@ class FormsController < ApplicationController
   # ODK XML export for all published forms.
   # Theoretically works for standard forms too, but they have no XML so can't be exported at this time.
   def export_all
+    Sentry.capture_message("Exporting forms: All XML")
     forms = Form.where(mission: current_mission) # Mission could be nil for standard forms.
     forms = forms.published if current_mission.present?
     forms_group = current_mission&.compact_name || "standard"

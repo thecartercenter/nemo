@@ -85,6 +85,7 @@ class QuestionsController < ApplicationController
   def export
     respond_to do |format|
       format.csv do
+        Sentry.capture_message("Exporting questions: All CSV")
         @questions = restrict_by_search_and_ability_and_selection(@questions)
         locales = admin_mode? ? Setting.root.preferred_locales : current_mission.setting.preferred_locales
         exporter = Questions::Export.new(@questions, locales)
