@@ -29,7 +29,7 @@ gem "rubyzip", "~> 2.3", require: "zip" # Explicitly specify name (https://stack
 gem "spreadsheet" # For XLSForm export
 gem "term-ansicolor", "~> 1.3"
 gem "terrapin", "~> 0.6.0"
-gem "thor", "~> 1.0"
+gem "thor", "~> 1.4"
 gem "twilio-ruby", "~> 7.2.0" # Does not use semver after v5, watch out!
 
 gem "bootstrap", "~> 4.3"
