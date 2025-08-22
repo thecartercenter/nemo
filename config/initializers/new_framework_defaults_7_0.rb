@@ -100,7 +100,8 @@ Rails.application.config.action_dispatch.default_headers = {
 # Only change this value after your application is fully deployed to Rails 7.0
 # and you have no plans to rollback.
 # When you're ready to change format, add this to `config/application.rb` (NOT this file):
-config.active_support.cache_format_version = 7.0
+# ALREADY DONE
+# config.active_support.cache_format_version = 7.0
 
 
 # Cookie serializer: 2 options
@@ -108,7 +109,7 @@ config.active_support.cache_format_version = 7.0
 # If you're upgrading and haven't set `cookies_serializer` previously, your cookie serializer
 # is `:marshal`. The default for new apps is `:json`.
 #
-Rails.application.config.action_dispatch.cookies_serializer = :json
+# Rails.application.config.action_dispatch.cookies_serializer = :json
 #
 #
 # To migrate an existing application to the `:json` serializer, use the `:hybrid` option.
@@ -140,4 +141,4 @@ Rails.application.config.active_storage.multiple_file_field_include_hidden = tru
 # ** Please read carefully, this must be configured in config/application.rb (NOT this file) **
 # Disables the deprecated #to_s override in some Ruby core classes
 # See https://guides.rubyonrails.org/configuring.html#config-active-support-disable-to-s-conversion for more information.
-config.active_support.disable_to_s_conversion = true
+# config.active_support.disable_to_s_conversion = true
