@@ -19,6 +19,10 @@ module ELMO
     config.load_defaults(6.0)
     config.active_support.cache_format_version = 7.0
 
+    # 7.0 framework default
+    # Disables the deprecated #to_s override in some Ruby core classes
+    config.active_support.disable_to_s_conversion = true
+
     config.secret_key_base = Cnfg.secret_key_base
 
     # Settings in config/environments/* take precedence over those specified here.
