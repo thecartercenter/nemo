@@ -68,7 +68,7 @@ Rails.application.config.action_controller.raise_on_open_redirects = true
 # generate variants to use image processing macros and ruby-vips
 # operations. See the upgrading guide for detail on the changes required.
 # The `:mini_magick` option is not deprecated; it's fine to keep using it.
-Rails.application.config.active_storage.variant_processor = :vips
+Rails.application.config.active_storage.variant_processor = :mini_magick # keep using mini_magick, do not migrate to vips; we don't use image variants
 
 # Enable parameter wrapping for JSON.
 # Previously this was set in an initializer. It's fine to keep using that initializer if you've customized it.
@@ -141,4 +141,4 @@ Rails.application.config.active_storage.multiple_file_field_include_hidden = tru
 # ** Please read carefully, this must be configured in config/application.rb (NOT this file) **
 # Disables the deprecated #to_s override in some Ruby core classes
 # See https://guides.rubyonrails.org/configuring.html#config-active-support-disable-to-s-conversion for more information.
-# config.active_support.disable_to_s_conversion = true
+# config.active_support.disable_to_s_conversion = true # Leave commented, deprecated in Rails 7.2
