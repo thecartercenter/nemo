@@ -114,7 +114,7 @@ module ELMO
     config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
 
     # Track Active Storage variants in the database.
-    Rails.application.config.active_storage.track_variants = false # Keep old default
+    # Rails.application.config.active_storage.track_variants = false # Keep old default
 
     # Change the variant processor for Active Storage.
     # Changing this default means updating all places in your code that
