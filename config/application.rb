@@ -16,7 +16,7 @@ module ELMO
   # Application-wide settings and setup.
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults(6.0)
+    config.load_defaults(7.1)
     config.active_support.cache_format_version = 7.1
 
     config.secret_key_base = Cnfg.secret_key_base
@@ -112,6 +112,16 @@ module ELMO
 
     # For security.
     config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
+
+    # Track Active Storage variants in the database.
+    Rails.application.config.active_storage.track_variants = false # Keep old default
+
+    # Change the variant processor for Active Storage.
+    # Changing this default means updating all places in your code that
+    # generate variants to use image processing macros and ruby-vips
+    # operations. See the upgrading guide for detail on the changes required.
+    # The `:mini_magick` option is not deprecated; it's fine to keep using it.
+    Rails.application.config.active_storage.variant_processor = :mini_magick # keep using mini_magick, do not migrate to vips; we don't use image variants
 
     # Restrict available locales to defined system locales.
     # Without this, it returns a whole bunch more defined by i18n-js.
