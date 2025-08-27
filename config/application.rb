@@ -102,6 +102,9 @@ module ELMO
     # Require `belongs_to` associations by default.
     config.active_record.belongs_to_required_by_default = false
 
+    # Support for inversing belongs_to -> has_many Active Record associations.
+    config.active_record.has_many_inversing = false # Unset 7.1 default ("true")
+
     # This should be enabled eventually when our code supports it. But for now, enabling this breaks
     # things because some code expects model cache keys to have updated timestamps, which go away
     # when cache versioning is enabled.
@@ -128,9 +131,6 @@ module ELMO
     # This is different from preferred_locales, which is part of the mission settings class and represents
     # locales that questions, options, etc. may be defined in.
     I18n.available_locales = %i[en fr es ar ko pt pt-BR]
-
-    ## 7.1 TESTING
-    config.active_record.has_many_inversing = false
 
     # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
