@@ -121,7 +121,7 @@ module ELMO
     # generate variants to use image processing macros and ruby-vips
     # operations. See the upgrading guide for detail on the changes required.
     # The `:mini_magick` option is not deprecated; it's fine to keep using it.
-    Rails.application.config.active_storage.variant_processor = :mini_magick # keep using mini_magick, do not migrate to vips; we don't use image variants
+    config.active_storage.variant_processor = :mini_magick # keep using mini_magick, do not migrate to vips; we don't use image variants
 
     # Restrict available locales to defined system locales.
     # Without this, it returns a whole bunch more defined by i18n-js.
