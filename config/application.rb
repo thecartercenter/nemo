@@ -129,6 +129,9 @@ module ELMO
     # locales that questions, options, etc. may be defined in.
     I18n.available_locales = %i[en fr es ar ko pt pt-BR]
 
+    ## 7.1 TESTING
+    config.active_record.has_many_inversing = false
+
     # This was initially added to allow overriding the odata_server engine.
     # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
     config.to_prepare do
