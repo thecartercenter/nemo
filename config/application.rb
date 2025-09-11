@@ -103,7 +103,7 @@ module ELMO
     config.active_record.belongs_to_required_by_default = false
 
     # Support for inversing belongs_to -> has_many Active Record associations.
-    config.active_record.has_many_inversing = false # Unset 7.1 default ("true")
+    config.active_record.has_many_inversing = false # Keep old default
 
     # This should be enabled eventually when our code supports it. But for now, enabling this breaks
     # things because some code expects model cache keys to have updated timestamps, which go away
@@ -124,7 +124,7 @@ module ELMO
     # generate variants to use image processing macros and ruby-vips
     # operations. See the upgrading guide for detail on the changes required.
     # The `:mini_magick` option is not deprecated; it's fine to keep using it.
-    config.active_storage.variant_processor = :mini_magick # keep using mini_magick, do not migrate to vips; we don't use image variants
+    config.active_storage.variant_processor = :mini_magick # Keep old default (do not migrate to vips; we don't use image variants).
 
     # Restrict available locales to defined system locales.
     # Without this, it returns a whole bunch more defined by i18n-js.
