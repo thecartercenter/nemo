@@ -83,6 +83,8 @@ jobs:
           # A real Google Maps key is needed for some specs. This is stored in the Github repo
           # under Settings > Secrets.
           NEMO_GOOGLE_MAPS_API_KEY: ${{ secrets.NEMO_GOOGLE_MAPS_API_KEY }}
+          # Rails expects this in test.rb
+          CI: 1
         shell: bash {0}
         run: |
           yarn run i18n:export
