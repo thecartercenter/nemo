@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 7.1.0"
+gem "rails", "~> 7.2.0"
 
 # Force some gems to older versions to prevent error in prod:
 # "You have already activated base64 0.1.1, but your Gemfile requires base64 0.2.0. Since base64 is a default gem, ..."
