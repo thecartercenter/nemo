@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative("boot")
+require_relative "boot"
 
 require "rails/all"
 require "coffee_script"
@@ -146,5 +146,10 @@ module ELMO
         config.private_key = Cnfg.recaptcha_private_key
       end
     end
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks enketo-transformer-service])
   end
 end
