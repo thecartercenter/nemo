@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+require 'openssl'
+require 'base64'
 # Imports users from a spreadsheet.
-class UserImport < TabularImport
   IMPORT_ERROR_CUTOFF = 50
   PERMITTED_ATTRIBS = %i[login name phone phone2 email birth_year gender
                          gender_custom nationality notes user_groups].freeze
@@ -27,6 +28,18 @@ class UserImport < TabularImport
   end
 
   private
+  # Encrypts sensitive information using AES-256-CBC.
+  def encrypt_sensitive(value)
+    return value if value.blank?
+    cipher = OpenSSL::Cipher.new('aes-256-cbc')
+    cipher.encrypt
+    cipher.key = ENV['USER_IMPORT_ENCRYPTION_KEY'] || raise("Missing encryption key")
+    iv = cipher.random_iv
+    encrypted = cipher.update(value.to_s) + cipher.final
+    # Store as base64: iv:encrypted
+    "#{Base64.strict_encode64(iv)}:#{Base64.strict_encode64(encrypted)}"
+  end
+
 
   def parse_headers(sheet)
     row = sheet[0]
@@ -59,7 +72,7 @@ class UserImport < TabularImport
       attributes = row_to_attr_map(row)
       phones_to_string(attributes)
       attributes[:gender], attributes[:gender_custom] = coerce_gender(attributes[:gender])
-      attributes[:nationality] = coerce_nationality(attributes[:nationality])
+      attributes[:nationality] = encrypt_sensitive(coerce_nationality(attributes[:nationality]))
       attributes[:user_groups] = coerce_user_groups(attributes[:user_groups])
       attributes[:pref_lang] = preferred_mission_system_locale
       attributes
