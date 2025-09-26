@@ -4,7 +4,7 @@ module ODK
   # Abstract parent class for classes that parse $-style patterns for ODK.
   class DynamicPatternParser
     # Basic regex for codes like $Question7 or $Question3:value with non-capturing group (?:)
-    CODE_REGEX = /[$]!?[A-z]\w*(?::value)?/.freeze
+    CODE_REGEX = /[$]!?[A-Za-z]\w*(?::value)?/.freeze
 
     # Same as above but anchored to string start and end for checking individual tokens.
     ANCHORED_CODE_REGEX = Regexp.new("\\A#{CODE_REGEX.source}\\z")
