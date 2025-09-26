@@ -15,7 +15,6 @@ class SmsController < ApplicationController
   skip_authorization_check only: :create
 
   # disable csrf protection for this stuff
-  protect_from_forgery except: :create
 
   helper_method :smses
 
