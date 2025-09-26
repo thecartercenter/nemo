@@ -9,6 +9,7 @@
  *         Website : alex-d.fr
  */
 
+// Assumes DOMPurify is loaded and available globally as window.DOMPurify, or adapt import as necessary.
 jQuery.trumbowyg = {
     langs: {
         en: {
@@ -1093,7 +1094,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 //scrub the html before loading into the doc
                 var safe = $('<div>').append(html);
                 $(t.o.tagsToRemove.join(','), safe).remove();
-                t.$ed.html(safe.contents().html());
+                var sanitized = DOMPurify.sanitize(safe.contents().html());
+                t.$ed.html(sanitized);
             }
 
             if (t.o.autogrow) {
