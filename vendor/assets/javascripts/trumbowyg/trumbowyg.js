@@ -231,7 +231,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 var scriptElements = document.getElementsByTagName('script');
                 for (var i = 0; i < scriptElements.length; i += 1) {
                     var source = scriptElements[i].src;
-                    var matches = source.match('trumbowyg(\.min)?\.js');
+                    var matches = source.match('trumbowyg(\\.min)?\\.js');
                     if (matches != null) {
                         svgPathOption = source.substring(0, source.indexOf(matches[0])) + 'ui/icons.svg';
                     }
