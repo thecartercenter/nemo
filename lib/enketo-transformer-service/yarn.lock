@@ -27,7 +27,7 @@ bindings@^1.3.0, bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
-body-parser@1.20.3, body-parser@^1.20.2:
+body-parser@1.20.3, body-parser@^1.20.3:
   version "1.20.3"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.20.3.tgz#1953431221c6fb5cd63c4b36d53fab0928e548c6"
   integrity sha512-7rAxByjUMqQ3/bHJy7D6OGXvx/MMc4IqBn/X0fcM1QUcAItpZrBEYhWGem+tzXH90c+G01ypMcYJBO9Y30203g==
@@ -190,14 +190,14 @@ encodeurl@~2.0.0:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-2.0.0.tgz#7b8ea898077d7e409d3ac45474ea38eaf0857a58"
   integrity sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==
 
-enketo-transformer@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/enketo-transformer/-/enketo-transformer-4.1.1.tgz#c93aad4ad6649bf2b5ac85a668c0c447cff20d82"
-  integrity sha512-6fH4EifjDQuBLjs62cVC1Tg0ytTXyoPSZryIYxsV62IfX6CvjcmQeOt8r+V4noXO5q8/dxssxqQD30ZKPDjZ7w==
+enketo-transformer@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/enketo-transformer/-/enketo-transformer-4.2.0.tgz#c1d55e5c00bf8543770f3c7a759eb51d197db021"
+  integrity sha512-50xAvkZpCwAfg30P4hrXbt3Qo3os0z3oNE4S6voosn2QrRxepVAtwNvYG+OYv3eH/DxqJxbxkZY7gjS87jvVqA==
   dependencies:
-    body-parser "^1.20.2"
+    body-parser "^1.20.3"
     css.escape "^1.5.1"
-    express "^4.19.2"
+    express "^4.21.2"
     language-tags "1.0.5"
     linkedom "^0.14.26"
     string-direction "0.1.x"
@@ -236,7 +236,7 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
 
-express@^4.19.2:
+express@^4.21.2:
   version "4.21.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.21.2.tgz#cf250e48362174ead6cea4a566abef0162c1ec32"
   integrity sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==
