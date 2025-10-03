@@ -10,12 +10,13 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/closure_tree.git
-  revision: 1000b5d9089c3a2e829bbde1371dbe3886ee28ff
-  tag: v7.4.0-noReorder-fastInsert
+  revision: 854f9292333ea0ae209376d69e4f4c18a192b22c
+  tag: v9.1.1-noReorder-fastInsert
   specs:
-    closure_tree (8.0.0)
-      activerecord (>= 6.0.0)
-      with_advisory_lock (>= 4.0.0)
+    closure_tree (9.1.1)
+      activerecord (>= 7.2.0)
+      with_advisory_lock (>= 7.0.0)
+      zeitwerk (~> 2.7)
 
 GIT
   remote: https://github.com/sassafrastech/odata_server.git
