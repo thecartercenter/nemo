@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "rails", "~> 7.1.0"
+gem "rails", "~> 7.2.0"
 
 # Force some gems to older versions to prevent error in prod:
 # "You have already activated base64 0.1.1, but your Gemfile requires base64 0.2.0. Since base64 is a default gem, ..."
@@ -87,7 +87,7 @@ gem "dotenv-rails", "~> 2.7"
 gem "ancestry", "~> 4.1"
 # Fork: Performance improvements.
 # https://github.com/sassafrastech/closure_tree/commits/master
-gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v7.4.0-noReorder-fastInsert"
+gem "closure_tree", github: "sassafrastech/closure_tree", tag: "v9.1.1-noReorder-fastInsert"
 
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"
