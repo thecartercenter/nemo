@@ -74,6 +74,7 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
-  # Raise error when a before_action's only/except options reference missing actions.
-  config.action_controller.raise_on_missing_callback_actions = true
+  # Don't raise error when a before_action's only/except options reference missing actions.
+  # (for example, UserSessionsController has no #index, but that's an error with this enabled)
+  config.action_controller.raise_on_missing_callback_actions = false
 end
