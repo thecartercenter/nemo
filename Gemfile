@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-gem "rails", "~> 7.1.0"
+gem "rails", "~> 8.0.0"
 
 # Force some gems to older versions to prevent error in prod:
 # "You have already activated base64 0.1.1, but your Gemfile requires base64 0.2.0. Since base64 is a default gem, ..."
@@ -15,7 +15,7 @@ gem "daemons", "~> 1.2"
 gem "descriptive_statistics", "~> 2.5", require: "descriptive_statistics/safe" # mean, median, etc.
 gem "draper", "~> 4.0"
 gem "eventmachine", "~> 1.2", platform: :ruby
-gem "exception_notification", "~> 4.2"
+gem "exception_notification", "~> 5.0", ">= 5.0.0"
 gem "friendly_id", "~> 5.1"
 gem "observer"
 gem "phony", "~> 2.15"
@@ -46,9 +46,9 @@ gem "popper_js", "~> 1.14"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 3.0"
 gem "select2-rails", "~> 4.0"
-gem "spinjs-rails", "~> 1.3.0" # Breaking changes in v1.4 (spin.js v2.0).
+gem "spinjs-rails", "~> 1.4.0" # Breaking changes in v1.4 (spin.js v2.0).
 gem "uglifier", "~> 4.2"
-gem "shakapacker", "~> 7.0"
+gem "shakapacker", "~> 8.0", ">= 8.0.0"
 
 # Authz and Authn
 gem "authlogic", "~> 6.1"
@@ -66,7 +66,7 @@ gem "rdiscount", "~> 2.1"
 gem "reverse_markdown", "~> 2.0"
 
 # Storage
-gem "active_storage_validations", "~> 0.9.3"
+gem "active_storage_validations", "~> 1.0.0"
 gem "aws-sdk-s3", "~> 1.86", require: false
 gem "azure-storage-blob", "~> 2.0", require: false
 gem "image_processing", "~> 1.12"
@@ -81,7 +81,7 @@ gem "versionist", "~> 2.0"
 gem "odata_server", github: "sassafrastech/odata_server", branch: "sassafras"
 
 # Configuration
-gem "dotenv-rails", "~> 2.7"
+gem "dotenv-rails", "~> 3.0", ">= 3.0.0"
 
 # Tree modelling
 gem "ancestry", "~> 4.1"
@@ -115,12 +115,12 @@ gem "whenever", "~> 1.0", require: false
 gem "i18n-country-translations", "~> 1.0"
 gem "i18n-js", "~> 3.0"
 gem "iso-639", "~> 0.3.5"
-gem "rails-i18n", "~> 7.0"
+gem "rails-i18n", "~> 8.0", ">= 8.0.0"
 
 # Analytics
 gem "scout_apm", "~> 5.0"
 gem "sentry-ruby", "~> 5.0"
-gem "sentry-rails", "~> 5.0" # rubocop:disable Bundler/OrderedGems
+gem "sentry-rails", "~> 5.27", ">= 5.27.0" # rubocop:disable Bundler/OrderedGems
 
 gem "sprockets"
 
@@ -154,17 +154,17 @@ group :development, :test do
   # Test framework
   gem "rails-controller-testing", "~> 1.0" # Deprecated: Use request or feature specs instead.
   gem "rspec-collection_matchers", "~> 1.1"
-  gem "rspec-rails", "~> 6.0"
+  gem "rspec-rails", "~> 7.0", ">= 7.0.0"
 
   # Mocking/stubbing/factories
-  gem "factory_bot_rails", "~> 4.11"
+  gem "factory_bot_rails", "~> 5.0", ">= 5.0.0"
   gem "mocha", "~> 1.1"
 
   # system specs
   gem "capybara", "~> 3.30"
   gem "launchy", "~> 2.5" # For auto-opening capybara html file
   gem "puma", "~> 6.4"
-  gem "selenium-webdriver", "~> 4.17"
+  gem "selenium-webdriver", "~> 4.36", ">= 4.36.0"
 
   # External request capture
   gem "vcr", "~> 6.0"
@@ -178,7 +178,7 @@ group :development, :test do
   gem "awesome_print", "~> 1.6"
   gem "db-query-matchers", "~> 0.10"
   gem "rubocop"
-  gem "rubocop-rails", "~> 2.8"
+  gem "rubocop-rails", "~> 2.33", ">= 2.33.4"
   gem "rubocop-rake", "~> 0.6.0"
   gem "rubocop-rspec", "~> 2.0"
   gem "timecop", "0.9.6" # Timecop 0.9.8 breaks selenium (Selenium::WebDriver::Error::NoSuchWindowError).
