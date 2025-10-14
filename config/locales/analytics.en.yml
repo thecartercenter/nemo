@@ -1,0 +1,21 @@
+en:
+  analytics:
+    dashboard:
+      title: "Analytics Dashboard"
+    refresh: "Refresh"
+    total_responses: "Total Responses"
+    completion_rate: "Completion Rate"
+    active_users: "Active Users"
+    total_forms: "Total Forms"
+    response_trends: "Response Trends"
+    response_sources: "Response Sources"
+    form_performance: "Form Performance"
+    user_activity: "User Activity"
+    geographic_distribution: "Geographic Distribution"
+    responses: "Responses"
+    response_count: "Response Count"
+    time_ranges:
+      7_days: "Last 7 Days"
+      30_days: "Last 30 Days"
+      90_days: "Last 90 Days"
+      1_year: "Last Year"

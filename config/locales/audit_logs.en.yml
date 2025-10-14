@@ -1,0 +1,22 @@
+en:
+  audit_logs:
+    title: "Audit Logs"
+    statistics: "Statistics"
+    export: "Export"
+    timestamp: "Timestamp"
+    user: "User"
+    action: "Action"
+    resource: "Resource"
+    resource_name: "Resource Name"
+    changes: "Changes"
+    ip_address: "IP Address"
+    no_logs: "No audit logs found"
+    no_logs_description: "There are no audit logs matching your current filters."
+    filters:
+      action: "Action"
+      resource: "Resource"
+      user: "User"
+      date_from: "From Date"
+      date_to: "To Date"
+      apply: "Apply Filters"
+      clear: "Clear Filters"

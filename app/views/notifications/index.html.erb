@@ -1,0 +1,231 @@
+<% content_for :title, t("notifications.title") %>
+
+<div class="notifications-page">
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1><%= t("notifications.title") %></h1>
+      <div class="page-header-actions">
+        <% if @unread_count > 0 %>
+          <%= link_to t("notifications.mark_all_as_read"), 
+                      mark_all_as_read_notifications_path, 
+                      method: :patch,
+                      class: "btn btn-secondary",
+                      data: { confirm: t("notifications.confirm_mark_all_as_read") } %>
+        <% end %>
+        <%= link_to t("notifications.clear_all"), 
+                    destroy_all_notifications_path, 
+                    method: :delete,
+                    class: "btn btn-danger",
+                    data: { confirm: t("notifications.confirm_clear_all") } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="notifications-content">
+    <% if @notifications.any? %>
+      <div class="notifications-list">
+        <% @notifications.each do |notification| %>
+          <div class="notification-item <%= 'unread' unless notification.read? %>" data-notification-id="<%= notification.id %>">
+            <div class="notification-header">
+              <h3 class="notification-title">
+                <%= notification.title %>
+                <% unless notification.read? %>
+                  <span class="unread-badge"><%= t("notifications.unread") %></span>
+                <% end %>
+              </h3>
+              <div class="notification-actions">
+                <% unless notification.read? %>
+                  <%= link_to t("notifications.mark_as_read"), 
+                              mark_as_read_notification_path(notification), 
+                              method: :patch,
+                              class: "btn btn-sm btn-outline-primary" %>
+                <% end %>
+                <%= link_to t("notifications.delete"), 
+                            notification_path(notification), 
+                            method: :delete,
+                            class: "btn btn-sm btn-outline-danger",
+                            data: { confirm: t("notifications.confirm_delete") } %>
+              </div>
+            </div>
+            
+            <% if notification.message.present? %>
+              <div class="notification-message">
+                <%= simple_format(notification.message) %>
+              </div>
+            <% end %>
+            
+            <div class="notification-meta">
+              <span class="notification-type">
+                <%= t("notifications.types.#{notification.type}") %>
+              </span>
+              <span class="notification-time">
+                <%= time_ago_in_words(notification.created_at) %> ago
+              </span>
+              <% if notification.mission.present? %>
+                <span class="notification-mission">
+                  <%= notification.mission.name %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="notifications-pagination">
+        <%= will_paginate @notifications %>
+      </div>
+    <% else %>
+      <div class="no-notifications">
+        <div class="no-notifications-content">
+          <i class="fa fa-bell-slash"></i>
+          <h3><%= t("notifications.no_notifications") %></h3>
+          <p><%= t("notifications.no_notifications_description") %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.notifications-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notification-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.notification-item.unread {
+  border-left: 4px solid #007bff;
+  background: #f8f9ff;
+}
+
+.notification-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 15px;
+}
+
+.notification-title {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+}
+
+.unread-badge {
+  background: #007bff;
+  color: white;
+  font-size: 0.7em;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.notification-message {
+  margin-bottom: 15px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.notification-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9em;
+  color: #888;
+  flex-wrap: wrap;
+}
+
+.notification-type {
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.no-notifications {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-notifications-content i {
+  font-size: 4em;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.no-notifications-content h3 {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.no-notifications-content p {
+  color: #888;
+}
+
+.notifications-pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .page-header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .page-header-actions {
+    justify-content: center;
+  }
+  
+  .notification-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .notification-actions {
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+</style>

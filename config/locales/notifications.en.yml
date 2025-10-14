@@ -1,0 +1,21 @@
+en:
+  notifications:
+    title: "Notifications"
+    unread: "Unread"
+    mark_as_read: "Mark as Read"
+    mark_all_as_read: "Mark All as Read"
+    delete: "Delete"
+    clear_all: "Clear All"
+    confirm_mark_all_as_read: "Are you sure you want to mark all notifications as read?"
+    confirm_clear_all: "Are you sure you want to clear all notifications? This action cannot be undone."
+    confirm_delete: "Are you sure you want to delete this notification?"
+    no_notifications: "No notifications"
+    no_notifications_description: "You don't have any notifications yet. When you receive notifications, they will appear here."
+    types:
+      form_submission: "Form Submission"
+      form_published: "Form Published"
+      response_reviewed: "Response Reviewed"
+      user_assigned: "User Assigned"
+      data_export_complete: "Data Export Complete"
+      system_alert: "System Alert"
+      mission_update: "Mission Update"

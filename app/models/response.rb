@@ -57,6 +57,7 @@ class Response < ApplicationRecord
   include MissionBased
   include Cacheable
   include Wisper.model
+  include Notifiable
 
   LOCK_OUT_TIME = 10.minutes
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
@@ -71,6 +72,8 @@ class Response < ApplicationRecord
 
   has_many :answers, -> { order(:new_rank) },
     autosave: true, dependent: :destroy, inverse_of: :response
+  has_many :comments, dependent: :destroy
+  has_many :annotations, dependent: :destroy
 
   # This association used only for cloning, hence it being private.
   has_many :response_nodes # rubocop:disable Rails/HasManyOrHasOneDependent
