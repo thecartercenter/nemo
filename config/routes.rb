@@ -22,6 +22,136 @@ Rails.application.routes.draw do
     delete "/logout", to: "user_sessions#destroy", as: :logout
     get("/route-tests", to: "route_tests#basic_mode") if Rails.env.development? || Rails.env.test?
     get "/unauthorized", to: "welcome#unauthorized", as: :unauthorized
+    
+    # Notifications
+    resources :notifications, only: %i[index show destroy] do
+      collection do
+        patch "mark_all_as_read"
+        delete "destroy_all"
+        get "unread_count"
+      end
+      member do
+        patch "mark_as_read"
+      end
+    end
+
+    # Analytics
+    resources :analytics, only: [] do
+      collection do
+        get "dashboard"
+        get "response_trends"
+        get "form_performance"
+        get "geographic_data"
+      end
+    end
+
+    # Data Exports
+    resources :exports, only: [:new, :create] do
+      collection do
+        get "status"
+      end
+      member do
+        get "download/:filename", action: "download", as: "download"
+      end
+    end
+
+    # Audit Logs
+    resources :audit_logs, only: [:index, :show] do
+      collection do
+        get "export"
+        get "statistics"
+      end
+    end
+
+    # Form Templates
+    resources :form_templates do
+      member do
+        get "use"
+        post "create_from_template"
+      end
+      collection do
+        post "create_from_form"
+      end
+    end
+
+    # Validation Rules
+    resources :validation_rules do
+      member do
+        patch "toggle"
+      end
+      collection do
+        get "test"
+        get "get_questions"
+      end
+    end
+
+    # Comments and Annotations
+    resources :responses do
+      resources :comments do
+        member do
+          patch "resolve"
+          patch "unresolve"
+        end
+      end
+      resources :annotations
+    end
+
+    # Mobile API
+    namespace :api do
+      namespace :v1 do
+        # Authentication
+        post "auth/login", to: "auth#login"
+        post "auth/logout", to: "auth#logout"
+        post "auth/register", to: "auth#register"
+        get "auth/profile", to: "auth#profile"
+        patch "auth/profile", to: "auth#update_profile"
+        patch "auth/change_password", to: "auth#change_password"
+        post "auth/forgot_password", to: "auth#forgot_password"
+        post "auth/reset_password", to: "auth#reset_password"
+        get "auth/missions", to: "auth#missions"
+        patch "auth/switch_mission", to: "auth#switch_mission"
+        
+        # Resources
+        resources :forms do
+          member do
+            patch "publish"
+            patch "unpublish"
+          end
+        end
+        
+        resources :responses do
+          member do
+            patch "submit"
+            patch "mark_incomplete"
+          end
+        end
+        
+        resources :notifications do
+          collection do
+            patch "mark_all_as_read"
+            get "unread_count"
+            delete "destroy_all"
+          end
+        end
+      end
+    end
+
+    # Data Backups
+    resources :backups do
+      member do
+        get "download"
+        post "restore"
+      end
+      collection do
+        post "cleanup_old"
+      end
+    end
+
+    # Advanced Search
+    get "search", to: "search#index"
+    get "search/suggestions", to: "search#suggestions"
+    get "search/advanced", to: "search#advanced"
+    get "search/results", to: "search#results"
 
     get "/confirm-login", to: "user_sessions#login_confirmation",
                           defaults: {confirm: true}, as: :new_login_confirmation

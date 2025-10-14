@@ -77,7 +77,19 @@ class User < ApplicationRecord
   has_many :sms_messages, class_name: "Sms::Message", inverse_of: :user, dependent: :restrict_with_exception
   has_many :user_group_assignments, dependent: :destroy
   has_many :user_groups, through: :user_group_assignments
+  has_many :notifications, dependent: :destroy
   belongs_to :last_mission, class_name: "Mission"
+
+  # API key for mobile app authentication
+  def api_key
+    read_attribute(:api_key) || regenerate_api_key
+  end
+
+  def regenerate_api_key
+    new_key = SecureRandom.hex(32)
+    update_column(:api_key, new_key)
+    new_key
+  end
 
   accepts_nested_attributes_for(:assignments, allow_destroy: true)
   accepts_nested_attributes_for(:user_groups)
