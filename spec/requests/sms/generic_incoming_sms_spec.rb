@@ -15,7 +15,7 @@ describe "generic incoming sms", :sms do
     let(:config) do
       {
         "params" => {"from" => "num", "body" => "msg"},
-        "response" => "%{reply}"
+        "response" => "%<reply>s"
       }
     end
 
@@ -37,7 +37,7 @@ describe "generic incoming sms", :sms do
     let(:config) do
       {
         "params" => {"from" => "num", "body" => "msg"},
-        "response" => "<msg>%{reply}</msg>",
+        "response" => "<msg>%<reply>s</msg>",
         "matchHeaders" => {"UserAgent" => "FooBar"}
       }
     end
@@ -61,7 +61,7 @@ describe "generic incoming sms", :sms do
       let(:config) do
         {
           "params" => {"from" => "num", "body" => "msg"},
-          "response" => "%{reply}"
+          "response" => "%<reply>s"
         }
       end
 
@@ -76,7 +76,7 @@ describe "generic incoming sms", :sms do
       let(:config) do
         {
           "params" => {"from" => "num", "body" => "msg"},
-          "response" => "<msg>%{reply}</msg>",
+          "response" => "<msg>%<reply>s</msg>",
           "responseType" => "text/xml"
         }
       end

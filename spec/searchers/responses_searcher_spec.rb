@@ -51,7 +51,7 @@ describe ResponsesSearcher do
       expect(searcher(%(reviewed:"NO"))).to have_filter_data(is_reviewed: false)
       expect(searcher(%(reviewed:("0")))).to have_filter_data(is_reviewed: false)
       expect(searcher(%(reviewed:(1 0)))).to have_filter_data(is_reviewed: nil,
-                                                              advanced_text: "reviewed:(1 0)")
+        advanced_text: "reviewed:(1 0)")
     end
   end
 
@@ -215,7 +215,7 @@ describe ResponsesSearcher do
     let!(:q_select_one) { create(:question, qtype_name: "select_one", code: "Pink", add_to_form: form) }
     let!(:q_select_multiple) do
       create(:question, qtype_name: "select_multiple", code: "Brown",
-                        option_names: %w[hammer wrench screwdriver], add_to_form: form)
+        option_names: %w[hammer wrench screwdriver], add_to_form: form)
     end
     let!(:r1) do
       create(:response, form: form, reviewed: false, answer_values:

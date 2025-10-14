@@ -50,7 +50,7 @@ class Report::TallyReport < Report::Report
   include Report::Gridable
 
   def as_json(options = {})
-    h = super(options)
+    h = super
     h[:data] = @data
     h[:headers] = @header_set ? @header_set.headers : {}
     h[:can_total] = can_total?

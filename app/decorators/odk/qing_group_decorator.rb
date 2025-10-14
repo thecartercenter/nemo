@@ -118,8 +118,6 @@ module ODK
           qing = Questioning.find_by(id: repeat_count_qing_id)
           return nil unless qing
           ODK::ResponsePatternParser.new("$#{qing.code}", src_item: self).to_odk
-        else
-          nil
         end
     end
 
@@ -154,10 +152,10 @@ module ODK
     # 2. It's a one_screen group, in which case we need to set appearance="field-list"
     #
     # Note both can be true at once.
-    def inner_group_tag(&block)
+    def inner_group_tag(&)
       do_inner_tag = one_screen_appropriate? || repeatable?
       appearance = one_screen_appropriate? ? "field-list" : nil
-      conditional_tag(:group, do_inner_tag, appearance: appearance, &block)
+      conditional_tag(:group, do_inner_tag, appearance: appearance, &)
     end
 
     def group_item_name_tag

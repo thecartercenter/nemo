@@ -26,9 +26,7 @@ class Ability
     self.mode = params[:mode]
     self.mode ||= "mission" if mission
 
-    if mode != "mission" && mission.present?
-      raise ArgumentError, "Mission should be nil if mode is not 'mission'"
-    end
+    raise ArgumentError, "Mission should be nil if mode is not 'mission'" if mode != "mission" && mission.present?
 
     user_dependent_permissions if user
     user_independent_permissions
@@ -245,7 +243,6 @@ class Ability
     can(:login_instructions, User, id: user.id)
 
     can(%i[show child_nodes], [OptionSet, OptionNode], mission_id: mission.id)
-
 
     # only need these abilities if not also a staffer
     unless user_has_this_or_higher_role_in_mission?(:staffer)

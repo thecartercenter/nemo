@@ -258,8 +258,8 @@ describe "summary collection with single subset" do
       responses = prepare_form("text", %w[foo bar baz])
 
       # change response dates
-      responses[1].root_node.c[0].update!(created_at: Time.zone.now + 1.hour)
-      responses[2].root_node.c[0].update!(created_at: Time.zone.now - 1.hour)
+      responses[1].root_node.c[0].update!(created_at: 1.hour.from_now)
+      responses[2].root_node.c[0].update!(created_at: 1.hour.ago)
       @form.reload
 
       prepare_collection

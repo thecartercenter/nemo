@@ -10,9 +10,7 @@ class OperationsController < ApplicationController
   decorates_assigned :operations
 
   def index
-    unless Utils::DelayedJobChecker.instance.ok?
-      flash.now[:error] = I18n.t("operation.errors.delayed_job_stopped")
-    end
+    flash.now[:error] = I18n.t("operation.errors.delayed_job_stopped") unless Utils::DelayedJobChecker.instance.ok?
 
     @operations = if current_mission.present?
                     @operations.for_mission(current_mission).order(created_at: :desc)

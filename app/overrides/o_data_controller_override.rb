@@ -15,13 +15,13 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
     namespace = OData::NAMESPACE
     schema = OData::ActiveRecordSchema::Base
       .new(namespace, skip_require: true,
-                      skip_add_entity_types: true,
-                      transformers: {
-                        root: ->(*args) { transform_json_for_root(*args) },
-                        metadata: ->(*args) { transform_schema_for_metadata(*args) },
-                        feed: ->(*args) { transform_json_for_collection(*args) },
-                        entry: ->(*args) { transform_json_for_entry(*args) }
-                      })
+        skip_add_entity_types: true,
+        transformers: {
+          root: ->(*args) { transform_json_for_root(*args) },
+          metadata: ->(*args) { transform_schema_for_metadata(*args) },
+          feed: ->(*args) { transform_json_for_collection(*args) },
+          entry: ->(*args) { transform_json_for_entry(*args) }
+        })
 
     add_entity_types(schema, distinct_forms)
 
@@ -93,8 +93,8 @@ ODataController.class_eval do # rubocop:disable Metrics/BlockLength
       .order(created_at: :desc)
       .select("*, replace(cached_json::text, '#{old}', '#{new}')::jsonb AS cached_json")
     entity = schema.add_entity_type(response, name: OData::FormDecorator.new(form).responses_name,
-                                              url_name: OData::FormDecorator.new(form).responses_url,
-                                              reflect_on_associations: false)
+      url_name: OData::FormDecorator.new(form).responses_url,
+      reflect_on_associations: false)
 
     # We don't want to double-pluralize since it already says "Responses",
     # so override this method.

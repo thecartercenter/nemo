@@ -18,6 +18,9 @@ FileUtils.chdir APP_ROOT do
   system("bundle check") || system!("bundle install")
 
   # Install JavaScript dependencies
+  system!("yarn install")
+
+  # Install JavaScript dependencies
   system! "bin/yarn"
 
   # puts "\n== Copying sample files =="

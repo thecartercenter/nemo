@@ -32,7 +32,7 @@ class FixPartiallyProcessedResponses < ActiveRecord::Migration[6.1]
       .where.not(id: normal_response_ids)
     puts "BLANK responses: #{blank_responses.count}"
     puts "(blank responses represent an estimated fraction of the total number of responses affected; " \
-      "additional responses may have only partially processed as well)"
+         "additional responses may have only partially processed as well)"
 
     responses_without_odk_xml = Response
       .includes(:odk_xml_attachment)

@@ -89,8 +89,8 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
         end
 
         if manual_conflicts
-          raise "There were manual conflicts that need to be resolved before this migration can"\
-            "complete. Please resolve them and run migrations again.\n\n"
+          raise "There were manual conflicts that need to be resolved before this migration can" \
+                "complete. Please resolve them and run migrations again.\n\n"
         end
       end
     end
@@ -101,8 +101,8 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
   def dupe_groups(index)
     null_where = index[:new_cols].map { |c| "#{c} IS NOT NULL" }.join(" AND ")
     wheres = [null_where, deleted_where(index)].compact.join(" AND ")
-    query = "SELECT array_agg(id) AS ids FROM #{index[:table]} "\
-      "WHERE #{wheres} GROUP BY #{index[:new_cols].join(', ')} HAVING COUNT(*) > 1"
+    query = "SELECT array_agg(id) AS ids FROM #{index[:table]} " \
+            "WHERE #{wheres} GROUP BY #{index[:new_cols].join(', ')} HAVING COUNT(*) > 1"
     execute(query).to_a
   end
 
@@ -152,9 +152,7 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
       suffix = 2
 
       ids[1..-1].each do |id|
-        while execute("SELECT id FROM #{index[:table]} WHERE #{col} = '#{value}#{suffix}'").to_a.any?
-          suffix += 1
-        end
+        suffix += 1 while execute("SELECT id FROM #{index[:table]} WHERE #{col} = '#{value}#{suffix}'").to_a.any?
         puts("  Updating #{id} to #{value}#{suffix}")
         execute("UPDATE #{index[:table]} SET #{col} = '#{value}#{suffix}' WHERE id = '#{id}'")
         suffix += 1

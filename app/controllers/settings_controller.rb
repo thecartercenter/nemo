@@ -32,7 +32,7 @@ class SettingsController < ApplicationController
   def using_incoming_sms_token_message
     url = if params[:missionless].present? && Cnfg.allow_missionless_sms?
             missionless_sms_submission_url(Cnfg.universal_sms_token, locale: nil,
-                                                                     mission_name: nil, mode: nil)
+              mission_name: nil, mode: nil)
           else
             mission_sms_submission_url(@setting.incoming_sms_token, locale: nil)
           end

@@ -21,7 +21,7 @@ module OData
     def initialize(distinct_forms)
       # To be inherited from.
       response_base = SimpleEntity.new("Response", key_name: "ResponseID",
-                                                   property_types: RESPONSE_BASE_PROPERTIES)
+        property_types: RESPONSE_BASE_PROPERTIES)
       # Generic type for lat/lng data.
       geographic = SimpleEntity.new("Geographic", property_types: GEOGRAPHIC_PROPERTIES)
       # Empty type that can be extended for any type of data, e.g. cascading select_one.
@@ -35,9 +35,9 @@ module OData
     def response_entities(distinct_forms)
       distinct_forms.map do |form|
         build_nested_children(parent: form,
-                              parent_name: OData::FormDecorator.new(form).responses_name,
-                              base_type: "#{OData::NAMESPACE}.Response",
-                              root_name: form.name)
+          parent_name: OData::FormDecorator.new(form).responses_name,
+          base_type: "#{OData::NAMESPACE}.Response",
+          root_name: form.name)
       end.flatten
     end
 
@@ -48,14 +48,14 @@ module OData
         if child.is_a?(QingGroup)
           group_number += 1
           child_qing_group(child, group_number: group_number, parent_name: parent_name,
-                                  root_name: root_name, children: children)
+            root_name: root_name, children: children)
         else
           child_qing(child)
         end
       end.to_h
 
       children.push(SimpleEntity.new(parent_name, extra_tags: base_type ? {BaseType: base_type} : {},
-                                                  property_types: property_types))
+        property_types: property_types))
     end
 
     def child_qing_group(child, group_number:, parent_name:, root_name:, children:)

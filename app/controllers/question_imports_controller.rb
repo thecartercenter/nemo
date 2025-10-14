@@ -9,7 +9,7 @@ class QuestionImportsController < TabularImportsController
 
   def template
     authorize!(:create, Questions::Import)
-    headers = %i(Code QType Option\ Set\ Name Title[en] Hint[en] Title[fr] Hint[fr])
+    headers = [:Code, :QType, :"Option Set Name", :"Title[en]", :"Hint[en]", :"Title[fr]", :"Hint[fr]"]
     respond_to do |format|
       format.csv do
         render(csv: UserFacingCSV.generate { |csv| csv << headers })

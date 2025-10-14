@@ -1,19 +1,6 @@
-const { globalMutableWebpackConfig: webpackConfig, merge } = require('shakapacker')
+// See the shakacode/shakapacker README and docs directory for advice on customizing your webpackConfig.
+const { generateWebpackConfig } = require('shakapacker')
 
-module.exports = merge(
-  webpackConfig,
-  {
-    rules: [
-      {
-        test: /\.test\.js$/,
-        use: ['ignore-loader']
-      },
-      {
-        test: /node_modules\/(enketo-core|openrosa-xpath-evaluator)\//,
-        use: ['babel-loader']
-      }
-    ]
-  }
-)
+const webpackConfig = generateWebpackConfig()
 
 module.exports = webpackConfig

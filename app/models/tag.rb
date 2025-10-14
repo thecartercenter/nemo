@@ -71,8 +71,8 @@ class Tag < ApplicationRecord
   end
 
   # Sorting
-  def <=>(other_tag)
-    name <=> other_tag.name
+  def <=>(other)
+    name <=> other.name
   end
 
   def as_json(_options = {})

@@ -54,7 +54,7 @@ class Form < ApplicationRecord
 
   has_many :responses, inverse_of: :form, dependent: :destroy
   has_many :versions, -> { order(:number) }, class_name: "FormVersion", inverse_of: :form,
-                                             dependent: :destroy
+    dependent: :destroy
   has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
   # For some reason dependent: :destroy doesn't work with this assoc. See destroy_items for workaround.
@@ -108,8 +108,8 @@ class Form < ApplicationRecord
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-             dont_copy: %i[status published_changed_at downloads
-                           smsable allow_incomplete access_level]
+    dont_copy: %i[status published_changed_at downloads
+                  smsable allow_incomplete access_level]
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
@@ -159,7 +159,6 @@ class Form < ApplicationRecord
     "odk-form/#{id}-#{published_changed_at}"
   end
 
-
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899_999_999) + 100_000_000}"
   end
@@ -208,7 +207,8 @@ class Form < ApplicationRecord
   # Uses FormItem.preordered_descendants which eager loads questions and option sets.
   def questionings
     root_group&.preordered_descendants(
-      eager_load: {question: {option_set: :root_node}}, type: "Questioning") || []
+      eager_load: {question: {option_set: :root_node}}, type: "Questioning"
+    ) || []
   end
 
   def enabled_questionings

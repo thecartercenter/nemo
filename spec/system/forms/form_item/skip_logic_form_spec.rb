@@ -15,15 +15,15 @@ describe "skip logic form fields", js: true do
   before do
     login(user)
     form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "any_met",
-                                 conditions_attributes: [
-                                   {left_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                   {left_qing_id: form.c[1].id, op: "eq", value: "10"}
-                                 ])
+      conditions_attributes: [
+        {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+        {left_qing_id: form.c[1].id, op: "eq", value: "10"}
+      ])
     form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "all_met",
-                                 conditions_attributes: [
-                                   {left_qing_id: form.c[0].id, op: "eq", value: "25"},
-                                   {left_qing_id: form.c[1].id, op: "neq", value: "20"}
-                                 ])
+      conditions_attributes: [
+        {left_qing_id: form.c[0].id, op: "eq", value: "25"},
+        {left_qing_id: form.c[1].id, op: "neq", value: "20"}
+      ])
   end
 
   shared_examples_for "correct behavior" do
@@ -33,9 +33,9 @@ describe "skip logic form fields", js: true do
       let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} [#{form.c[1].code}] is equal to 10" }
 
       scenario "read-only mode" do
-        expected = "Skip to #{dest_qing_str} if any of these conditions are met\n"\
-          "#{first_cond_str}\n"\
-          "#{second_cond_str}"
+        expected = "Skip to #{dest_qing_str} if any of these conditions are met\n" \
+                   "#{first_cond_str}\n" \
+                   "#{second_cond_str}"
         visit("#{url_prefix}/questionings/#{form.c[2].id}")
         expect(page).to have_content(expected)
       end
@@ -125,9 +125,9 @@ describe "skip logic form fields", js: true do
 
         click_on "Save"
 
-        rule2 = "Skip to #{dest_qing_str} if all of these conditions are met\n"\
-          "#{first_cond_str}\n"\
-          "#{second_cond_str}"
+        rule2 = "Skip to #{dest_qing_str} if all of these conditions are met\n" \
+                "#{first_cond_str}\n" \
+                "#{second_cond_str}"
 
         visit("#{url_prefix}/questionings/#{form.c[2].id}")
         expect(page).to have_content(rule2)

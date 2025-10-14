@@ -30,7 +30,7 @@ shared_context "odata" do
     get(path, headers: auth_header)
     expect(response).to have_http_status(:ok)
     expect(response.body).to eq(prepare_fixture("odata/#{filename}", form: form_names,
-                                                                     q_code: form_q_codes,
+      q_code: form_q_codes,
                                                                      **substitutions))
   end
 end
@@ -95,7 +95,7 @@ shared_context "odata with nested groups" do
     [
       Timecop.freeze(Time.now.utc - 10.days) do
         create(:response, mission: mission, form: form,
-                          answer_values: [%w[A B], ["C", 10], ["D", [21, "E1"]]])
+          answer_values: [%w[A B], ["C", 10], ["D", [21, "E1"]]])
       end,
       Timecop.freeze(Time.now.utc - 5.days) do
         create(:response, mission: mission, form: form, answer_values: [])

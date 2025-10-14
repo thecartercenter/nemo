@@ -3,7 +3,6 @@ class SetOptionRanksAndRemoveOrderingAndValueColumns < ActiveRecord::Migration[4
     rank_assignment_succeeded = false
 
     transaction do
-
       if defined?(Optioning)
         # for each option set, get the optionings in the old sorted order and set the new rank parameter according to that order
         OptionSet.all.each do |os|
@@ -18,7 +17,7 @@ class SetOptionRanksAndRemoveOrderingAndValueColumns < ActiveRecord::Migration[4
           end
 
           # sort the option settings
-          optionings = os.optionings.sort do |a,b|
+          optionings = os.optionings.sort do |a, b|
             (a.option.value.to_i <=> b.option.value.to_i) * (os.ordering && os.ordering.match(/desc/) ? -1 : 1)
           end
 
@@ -31,7 +30,7 @@ class SetOptionRanksAndRemoveOrderingAndValueColumns < ActiveRecord::Migration[4
         end
 
         # purge any option settings with no ranks
-        count = Optioning.where(:rank => nil).delete_all
+        count = Optioning.where(rank: nil).delete_all
         puts "purged #{count} option settings with no rank"
 
         rank_assignment_succeeded = true
@@ -39,10 +38,9 @@ class SetOptionRanksAndRemoveOrderingAndValueColumns < ActiveRecord::Migration[4
     end
 
     # now we can remove the old ordering and value columns
-    if rank_assignment_succeeded
-      remove_column :option_sets, :ordering
-      remove_column :options, :value
-    end
+    return unless rank_assignment_succeeded
+    remove_column :option_sets, :ordering
+    remove_column :options, :value
   end
 
   def down

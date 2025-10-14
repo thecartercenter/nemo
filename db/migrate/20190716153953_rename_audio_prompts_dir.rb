@@ -7,10 +7,10 @@ class RenameAudioPromptsDir < ActiveRecord::Migration[5.2]
   NEW = "uploads/questions/media_prompts"
 
   def up
-    FileUtils.mv(OLD, NEW) if File.exists?(OLD)
+    FileUtils.mv(OLD, NEW) if File.exist?(OLD)
   end
 
   def down
-    FileUtils.mv(NEW, OLD) if File.exists?(NEW)
+    FileUtils.mv(NEW, OLD) if File.exist?(NEW)
   end
 end

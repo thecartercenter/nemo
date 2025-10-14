@@ -26,7 +26,7 @@ class DedupeJob < ApplicationJob
 
     matching_attachments = ActiveStorage::Attachment.where(blob_id: matching_blobs.pluck(:id))
     matching_responses = Response.where(id: matching_attachments.pluck(:record_id),
-                                        mission_id: response.mission_id, user_id: response.user_id)
+      mission_id: response.mission_id, user_id: response.user_id)
     matching_responses.present?
   end
 
@@ -49,9 +49,7 @@ class DedupeJob < ApplicationJob
       dupe_json["qing#{qing_id}"] = m.item.blob_id
     end
 
-    File.open("#{TMP_DUPE_BACKUPS_PATH}/#{response.id}.json", "w") do |file|
-      file.write(dupe_json.to_json)
-    end
+    File.write("#{TMP_DUPE_BACKUPS_PATH}/#{response.id}.json", dupe_json.to_json)
   end
 
   def destroy_duplicate!(dupe)

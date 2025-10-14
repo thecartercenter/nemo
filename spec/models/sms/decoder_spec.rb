@@ -184,7 +184,7 @@ describe Sms::Decoder, :sms do
           form = create_form(questions: %w[integer])
           # Deliberately use a 4 letter word to start message because it looks like an auth code.
           expect_decoding_fail(form, body: "good deal 4 u", from: "VODACOM",
-                                     mission: nil, error: "automated_sender")
+            mission: nil, error: "automated_sender")
         end
       end
     end
@@ -199,7 +199,7 @@ describe Sms::Decoder, :sms do
     it "form with text question should work" do
       form = create_form(questions: %w[text integer])
       expect_decoding(form, data: "1.weather is very cold 2.234",
-                            answers: ["weather is very cold", 234])
+        answers: ["weather is very cold", 234])
     end
 
     it "form with long_text question should work" do
@@ -271,12 +271,12 @@ describe Sms::Decoder, :sms do
     it "select_one question treated as text should not work if no match" do
       form = create_form(questions: %w[integer select_one_as_text_for_sms])
       expect_decoding_fail(form, data: "1.15 2.Peach", error: "answer_not_valid_option",
-                                 rank: 2, value: "Peach")
+        rank: 2, value: "Peach")
     end
 
     it "select_one question treated as text should work for multilevel option set" do
       form = create_form(questions: %w[integer multilevel_select_one_as_text_for_sms],
-                         default_option_names: true)
+        default_option_names: true)
       response = create_response(form, data: "1.15 2.tulip")
 
       expect_children(
@@ -295,7 +295,7 @@ describe Sms::Decoder, :sms do
 
     it "select_one question treated as text should work for multilevel option set for non-leaf option" do
       form = create_form(questions: %w[integer multilevel_select_one_as_text_for_sms],
-                         default_option_names: true)
+        default_option_names: true)
       response = create_response(form, data: "1.15 2.Plant")
 
       expect_children(
@@ -441,7 +441,7 @@ describe Sms::Decoder, :sms do
     it "long_text question at beginning of message should work" do
       form = create_form(questions: %w[long_text integer])
       expect_decoding(form, data: "1.foo bar that is very long 2.15",
-                            answers: ["foo bar that is very long", 15])
+        answers: ["foo bar that is very long", 15])
     end
 
     it "text question in middle of message should work" do
@@ -503,7 +503,7 @@ describe Sms::Decoder, :sms do
     it "date question with junk should error" do
       form = create_form(questions: %w[integer date])
       expect_decoding_fail(form, data: "1.4 2.foobarbaz",
-                                 error: "answer_not_date", value: "foobarbaz")
+        error: "answer_not_date", value: "foobarbaz")
     end
 
     it "time question should work" do
@@ -552,21 +552,21 @@ describe Sms::Decoder, :sms do
 
       # check other formats
       expect_decoding(form, data: "1.4 2.20120229 230",
-                            answers: [4, Time.zone.parse("2012-02-29 2:30")])
+        answers: [4, Time.zone.parse("2012-02-29 2:30")])
       expect_decoding(form, data: "1.4 2.20120229 12:30pm",
-                            answers: [4, Time.zone.parse("2012-02-29 12:30")])
+        answers: [4, Time.zone.parse("2012-02-29 12:30")])
       expect_decoding(form, data: "1.4 2.20120229 1:30",
-                            answers: [4, Time.zone.parse("2012-02-29 1:30")])
+        answers: [4, Time.zone.parse("2012-02-29 1:30")])
       expect_decoding(form, data: "1.4 2.2012/02/29 12:30pm",
-                            answers: [4, Time.zone.parse("2012-02-29 12:30")])
+        answers: [4, Time.zone.parse("2012-02-29 12:30")])
       expect_decoding(form, data: "1.4 2.2012-02-29 12:30pm",
-                            answers: [4, Time.zone.parse("2012-02-29 12:30")])
+        answers: [4, Time.zone.parse("2012-02-29 12:30")])
       expect_decoding(form, data: "1.4 2.2012-11-1 12:30pm",
-                            answers: [4, Time.zone.parse("2012-11-01 12:30")])
+        answers: [4, Time.zone.parse("2012-11-01 12:30")])
       expect_decoding(form, data: "1.4 2.201211011230",
-                            answers: [4, Time.zone.parse("2012-11-01 12:30")])
+        answers: [4, Time.zone.parse("2012-11-01 12:30")])
       expect_decoding(form, data: "1.4 2.201211010230",
-                            answers: [4, Time.zone.parse("2012-11-01 2:30")])
+        answers: [4, Time.zone.parse("2012-11-01 2:30")])
     end
 
     it "invalid datetimes should error" do
@@ -720,7 +720,7 @@ describe Sms::Decoder, :sms do
     option_names = options[:default_option_names] ? nil : %w[Apple Banana Cherry Durian] + ["Elder Berry"]
     authenticate_sms = options[:authenticate_sms] || false
     form = create(:form, smsable: options[:smsable], question_types: options[:questions],
-                         option_names: option_names, authenticate_sms: authenticate_sms)
+      option_names: option_names, authenticate_sms: authenticate_sms)
 
     # Update status to live so we get a version. Then optionall update again to requested status.
     form.update_status(:live)

@@ -39,7 +39,7 @@ describe "question tags" do
     tag_add_remove_test(
       qtype: "questioning",
       edit_path: edit_questioning_path(questioning1, mode: "m", mission_name: mission.compact_name,
-                                                     locale: "en"),
+        locale: "en"),
       show_path: questioning_path(questioning1, mode: "m", mission_name: mission.compact_name, locale: "en"),
       admin_edit_path: edit_questioning_path(questioning3, mode: "admin", mission_name: nil, locale: "en"),
       admin_show_path: questioning_path(questioning3, mode: "admin", mission_name: nil, locale: "en"),

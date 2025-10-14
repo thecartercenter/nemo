@@ -1,4 +1,5 @@
 {
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "i18n:export": "bundle exec rake i18n:js:export",
     "test": "jest",
@@ -30,7 +31,7 @@
     }
   },
   "resolutions": {
-    "@xmldom/xmldom": "0.7.6"
+    "@xmldom/xmldom": "0.7.7"
   },
   "babel": {
     "presets": [
@@ -39,7 +40,7 @@
     ]
   },
   "dependencies": {
-    "@babel/core": "^7.24.9",
+    "@babel/core": "7",
     "@babel/helper-string-parser": "7.27.1",
     "@babel/plugin-proposal-class-properties": "7.18.6",
     "@babel/plugin-proposal-decorators": "7.28.0",
@@ -47,14 +48,17 @@
     "@babel/plugin-proposal-object-rest-spread": "7.18.9",
     "@babel/plugin-proposal-optional-chaining": "7.18.9",
     "@babel/plugin-syntax-dynamic-import": "7.8.3",
-    "@babel/plugin-transform-runtime": "^7.24.7",
-    "@babel/preset-env": "^7.24.8",
+    "@babel/plugin-transform-runtime": "7",
+    "@babel/preset-env": "7",
     "@babel/preset-react": "7.27.1",
-    "@babel/runtime": "^7.26.10",
+    "@babel/runtime": "7",
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
-    "babel-loader": "^8.2.2",
-    "compression-webpack-plugin": "^9.0.0",
+    "@types/babel__core": "7",
+    "@types/webpack": "5",
+    "babel-loader": "10",
+    "cheerio": "^1.0.0-rc.3",
+    "compression-webpack-plugin": "11",
     "core-js": "3.45.1",
     "css-loader": "4.2.2",
     "enketo-core": "sassafrastech/enketo#enketo-core-8.3.1-fixGetters2",
@@ -74,12 +78,13 @@
     "react-with-direction": "^1.3.1",
     "react_ujs": "2.6.1",
     "regenerator-runtime": "0.13.9",
-    "shakapacker": "^ 7.0.0",
+    "shakapacker": "8.4.0",
     "style-loader": "1.2.1",
-    "terser-webpack-plugin": "^5.3.10",
-    "webpack": "^5.94.0",
-    "webpack-assets-manifest": "^5.0.6",
-    "webpack-merge": "^5.8.0"
+    "terser-webpack-plugin": "5",
+    "webpack": "5",
+    "webpack-assets-manifest": "6",
+    "webpack-merge": "6",
+    "webpack-subresource-integrity": "5"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.18.9",
@@ -103,7 +108,13 @@
     "react-refresh": "0.14.0",
     "stylelint": "15.10.1",
     "stylelint-config-sass-guidelines": "7.0.0",
-    "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^5.2.1"
-  }
+    "webpack-cli": "6",
+    "webpack-dev-server": "5"
+  },
+  "name": "app",
+  "private": true,
+  "version": "0.1.0",
+  "browserslist": [
+    "defaults"
+  ]
 }

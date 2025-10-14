@@ -111,9 +111,9 @@ describe Report::ListReport, :reports do
     before do
       create(:response, form: form, user: user, source: "odk", answer_values: %w[10 ga Yes])
       create(:response, :is_reviewed, form: form, user: user, source: "web", reviewer_name: "Reviewer",
-                                      answer_values: ["3", "ga", "No", %w[Blue Green]])
+        answer_values: ["3", "ga", "No", %w[Blue Green]])
       create(:response, :is_reviewed, form: form, user: user, source: "web", reviewer_name: "Michelle",
-                                      answer_values: ["5", "al", "No", %w[Blue Red]])
+        answer_values: ["5", "al", "No", %w[Blue Red]])
     end
 
     context "with option names preferred" do
@@ -222,7 +222,7 @@ describe Report::ListReport, :reports do
     end
     let(:report) do
       create(:list_report, filter: %{exact-form:("SampleForm")}, _calculations: ["form"] + questions,
-                           question_labels: "code", run: true)
+        question_labels: "code", run: true)
     end
 
     it "only includes the exact matching form" do

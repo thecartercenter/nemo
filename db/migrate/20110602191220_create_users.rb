@@ -1,4 +1,4 @@
-require 'digest/sha2'
+require "digest/sha2"
 
 class CreateUsers < ActiveRecord::Migration[4.2]
   def self.up
@@ -22,7 +22,7 @@ class CreateUsers < ActiveRecord::Migration[4.2]
       t.timestamps
     end
 
-    add_index(:users, [:login], :unique => true)
+    add_index(:users, [:login], unique: true)
   end
 
   def self.down

@@ -33,6 +33,11 @@ class OptionSetsController < ApplicationController
     load_importable_objs
   end
 
+  def show
+    prep_form_vars
+    render(:form)
+  end
+
   def new
     prep_form_vars
     # we only need the partial if it's an ajax request
@@ -47,11 +52,6 @@ class OptionSetsController < ApplicationController
   end
 
   def edit
-    prep_form_vars
-    render(:form)
-  end
-
-  def show
     prep_form_vars
     render(:form)
   end

@@ -82,7 +82,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     rescue Twilio::REST::RestError => e
       errors << e.to_s
       # Check if creating the first 3 messages, or ALL the messages, all failed
-      if errors.size == numbers.size || errors.size == 3 && index == 2
+      if errors.size == numbers.size || (errors.size == 3 && index == 2)
         raise Sms::Adapters::FatalSendError, errors.join("\n")
       end
     end

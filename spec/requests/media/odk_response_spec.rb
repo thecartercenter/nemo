@@ -33,7 +33,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
       post submission_path, params: {xml_submission_file: submission_file, "the_swing.jpg" => image},
-                            headers: auth_header
+        headers: auth_header
       expect(response).to have_http_status(:created)
 
       form_response = Response.last
@@ -225,7 +225,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         post(submission_path, params: submission_params, headers: auth_header)
         expect(response).to have_http_status(:created)
         expect(Response.all.count).to eq(1)
-        expect(::Media::Object.all.count).to eq(2)
+        expect(Media::Object.all.count).to eq(2)
 
         submission_params = {
           xml_submission_file: submission_file2,
@@ -237,7 +237,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         post(submission_path, params: submission_params, headers: auth_header)
         expect(response).to have_http_status(:created)
         expect(Response.all.count).to eq(1)
-        expect(::Media::Object.all.count).to eq(3)
+        expect(Media::Object.all.count).to eq(3)
       end
     end
   end

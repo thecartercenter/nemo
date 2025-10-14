@@ -100,11 +100,11 @@ module Questions
       translation_json
     end
 
-    def transaction
+    def transaction(&)
       if Rails.env.test? && ENV["NO_TRANSACTION_IN_IMPORT"]
         yield
       else
-        Question.transaction { yield }
+        Question.transaction(&)
       end
     end
   end

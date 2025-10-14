@@ -1,8 +1,8 @@
 class GenerateUuidForModels < ActiveRecord::Migration[4.2]
   MODELS_WITH_UUIDS = [Answer, Assignment, BroadcastAddressing, Broadcast, Choice, Condition,
-    FormForwarding, FormItem, FormVersion, Form, Media::Object, Mission, Operation, OptionNode, OptionSet, Option,
-    Question, Report::Calculation, Report::OptionSetChoice, Report::Report, Response, Setting, Sms::Message,
-    Tag, Tagging, UserGroupAssignment, UserGroup, User, Whitelisting]
+                       FormForwarding, FormItem, FormVersion, Form, Media::Object, Mission, Operation, OptionNode, OptionSet, Option,
+                       Question, Report::Calculation, Report::OptionSetChoice, Report::Report, Response, Setting, Sms::Message,
+                       Tag, Tagging, UserGroupAssignment, UserGroup, User, Whitelisting]
 
   def up
     MODELS_WITH_UUIDS.each do |model|

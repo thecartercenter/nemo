@@ -49,7 +49,7 @@ describe "authorization" do
     user = create(:user, role_name: :enumerator, name: "foo")
     login(user)
     put(user_path(user), params: {user: {name: "bar"}})
-    assert_response(302) # redirected
+    assert_response(:found) # redirected
     expect(user.reload.name).to eq("bar")
   end
 
@@ -104,7 +104,7 @@ describe "authorization" do
         put(user_path(admin), params: {user: {name: admin_new_name,
                                               assignments_attributes: [empty_assignment_attributes]}})
 
-        assert_response(302) # redirected
+        assert_response(:found) # redirected
         expect(admin.reload.name).to eq(admin_new_name)
       end
     end

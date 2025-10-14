@@ -52,16 +52,6 @@ class FormsController < ApplicationController
     end
   end
 
-  def new
-    setup_condition_computer
-    prepare_and_render_form
-  end
-
-  def edit
-    setup_condition_computer
-    prepare_and_render_form
-  end
-
   def show
     setup_condition_computer
     respond_to do |format|
@@ -80,6 +70,16 @@ class FormsController < ApplicationController
         response.stream.close
       end
     end
+  end
+
+  def new
+    setup_condition_computer
+    prepare_and_render_form
+  end
+
+  def edit
+    setup_condition_computer
+    prepare_and_render_form
   end
 
   def sms_guide
@@ -149,7 +149,7 @@ class FormsController < ApplicationController
   end
 
   def re_cache
-    Rails.logger.debug("OData dirty_json cause: manual re-cache of #{@form.id}")
+    Rails.logger.debug { "OData dirty_json cause: manual re-cache of #{@form.id}" }
     Response.where(form_id: @form.id).update_all(dirty_json: true)
     flash[:success] = t("operation.details.cache_odata")
     redirect_after_status_change

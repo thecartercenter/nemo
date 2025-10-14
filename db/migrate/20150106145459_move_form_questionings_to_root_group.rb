@@ -1,5 +1,6 @@
 class FormItem < ActiveRecord::Base; end
 class QingGroup < FormItem; end
+
 class Questioning < FormItem
   belongs_to(:form, inverse_of: :questionings)
 end

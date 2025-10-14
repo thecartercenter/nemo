@@ -35,10 +35,10 @@ class CacheODataJob < ApplicationJob
   end
 
   def self.debug_msg(error, response)
-    "Failed to update Response #{response.shortcode}\n" \
-      "  Mission: #{response.mission.name}\n" \
-      "  Form:    #{response.form.name}\n" \
-      "  #{error.message}"
+    "Failed to update Response #{response.shortcode}\n  " \
+      "Mission: #{response.mission.name}\n  " \
+      "Form:    #{response.form.name}\n  " \
+      "#{error.message}"
   end
 
   def perform

@@ -6,8 +6,8 @@ class CreatePlaces < ActiveRecord::Migration[4.2]
       t.string :full_name
       t.integer :place_type_id
       t.integer :container_id
-      t.decimal :latitude, :precision => 20, :scale => 15
-      t.decimal :longitude, :precision => 20, :scale => 15
+      t.decimal :latitude, precision: 20, scale: 15
+      t.decimal :longitude, precision: 20, scale: 15
 
       t.timestamps
     end

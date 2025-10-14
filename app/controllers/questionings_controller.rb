@@ -11,11 +11,11 @@ class QuestioningsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource except: :condition_form
 
-  def edit
+  def show
     prepare_and_render_form
   end
 
-  def show
+  def edit
     prepare_and_render_form
   end
 
@@ -54,7 +54,7 @@ class QuestioningsController < ApplicationController
   # Only called via AJAX
   def destroy
     @questioning.destroy
-    head(204)
+    head(:no_content)
   end
 
   private

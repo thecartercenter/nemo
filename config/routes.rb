@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
     # Routes requiring user.
     delete "/logout", to: "user_sessions#destroy", as: :logout
-    get("/route-tests", to: "route_tests#basic_mode") if Rails.env.development? || Rails.env.test?
+    get("/route-tests", to: "route_tests#basic_mode") if Rails.env.local?
     get "/unauthorized", to: "welcome#unauthorized", as: :unauthorized
     
     # Notifications
@@ -154,9 +154,9 @@ Rails.application.routes.draw do
     get "search/results", to: "search#results"
 
     get "/confirm-login", to: "user_sessions#login_confirmation",
-                          defaults: {confirm: true}, as: :new_login_confirmation
+      defaults: {confirm: true}, as: :new_login_confirmation
     post "/confirm-login", to: "user_sessions#process_login_confirmation",
-                           defaults: {confirm: true}, as: :login_confirmation
+      defaults: {confirm: true}, as: :login_confirmation
 
     # Routes with user or no user.
     root to: "welcome#index", as: :basic_root
@@ -167,7 +167,7 @@ Rails.application.routes.draw do
   scope ":locale/admin", locale: /[a-z]{2}/, defaults: {mode: "admin", mission_name: nil} do
     resources :missions
 
-    get("/route-tests", to: "route_tests#admin_mode") if Rails.env.development? || Rails.env.test?
+    get("/route-tests", to: "route_tests#admin_mode") if Rails.env.local?
 
     # for /en/admin
     root to: "welcome#index", as: :admin_root
@@ -176,7 +176,7 @@ Rails.application.routes.draw do
   #####################################
   # Mission-mode-only routes
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/,
-                                   defaults: {mode: "m"} do
+    defaults: {mode: "m"} do
     mount(OData::Engine, at: OData::BASE_PATH, defaults: {direct_auth: "basic"})
 
     # OData debugging endpoints to allow serving static text.
@@ -243,7 +243,7 @@ Rails.application.routes.draw do
     # special dashboard routes
     get "/dashboard/report", to: "dashboard#report", as: :dashboard_report
     get "/dashboard/info-window", to: "dashboard#info_window", as: :dashboard_info_window
-    get "/route-tests", to: "route_tests#mission_mode" if Rails.env.development? || Rails.env.test?
+    get "/route-tests", to: "route_tests#mission_mode" if Rails.env.local?
 
     # for /en/m/mission123
     root to: "dashboard#index", as: :mission_root
@@ -252,7 +252,7 @@ Rails.application.routes.draw do
   #####################################
   # Admin mode OR mission mode routes
   scope ":locale/:mode(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/,
-                                         mission_name: /[a-z][a-z0-9]*/ do
+    mission_name: /[a-z][a-z0-9]*/ do
     # the rest of these routes can have admin mode or not
     resources :forms, constraints: ->(req) { req.format == :html } do
       collection do
@@ -356,7 +356,7 @@ Rails.application.routes.draw do
   #####################################
   # Any mode routes
   scope ":locale(/:mode)(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/,
-                                           mission_name: /[a-z][a-z0-9]*/ do
+    mission_name: /[a-z][a-z0-9]*/ do
     resources :users do
       member do
         get "login-instructions", as: "login_instructions", action: "login_instructions"
@@ -386,8 +386,8 @@ Rails.application.routes.draw do
   # `direct_auth: true` are also matched by the direct_auth? method in
   # config/initializers/rack-attack.rb
   scope "(/:locale)/m/:mission_name", mission_name: /[a-z][a-z0-9]*/,
-                                      defaults: {mode: "m", direct_auth: "basic"},
-                                      constraints: ->(r) { %w[xml csv].include?(r.format) } do
+    defaults: {mode: "m", direct_auth: "basic"},
+    constraints: ->(r) { %w[xml csv].include?(r.format) } do
     get "/formList", to: "forms#index", as: :odk_form_list, defaults: {format: "xml"}
     get "/forms/:id", to: "forms#show", as: :odk_form, defaults: {format: "xml"}
     get "/forms/:id/manifest", to: "forms#odk_manifest", as: :odk_form_manifest, defaults: {format: "xml"}

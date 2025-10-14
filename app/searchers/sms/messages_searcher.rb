@@ -15,15 +15,15 @@ module Sms
         Search::Qualifier.new(name: "content", col: "sms_messages.body", type: :text, default: true),
         Search::Qualifier.new(name: "type", col: "sms_messages.type", type: :text),
         Search::Qualifier.new(name: "date", type: :date,
-                              col: "CAST((sms_messages.created_at AT TIME ZONE 'UTC')
+          col: "CAST((sms_messages.created_at AT TIME ZONE 'UTC')
                                 AT TIME ZONE '#{Time.zone.tzinfo.name}' AS DATE)"),
         Search::Qualifier.new(name: "datetime", col: "sms_messages.created_at", type: :date),
         Search::Qualifier.new(name: "username", col: "users.login", type: :text, assoc: user_assoc,
-                              default: true),
+          default: true),
         Search::Qualifier.new(name: "name", col: "users.name", type: :text, assoc: user_assoc,
-                              default: true),
+          default: true),
         Search::Qualifier.new(name: "number", col: %w[sms_messages.to sms_messages.from], type: :text,
-                              default: true)
+          default: true)
       ]
     end
 

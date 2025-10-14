@@ -55,7 +55,7 @@ class StubbedODataController < ApplicationController
   end
 
   def print_request
-    Rails.logger.debug("GET #{request.url}")
+    Rails.logger.debug { "GET #{request.url}" }
     Rails.logger.debug(params.inspect)
   end
 end

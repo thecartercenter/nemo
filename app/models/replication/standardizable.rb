@@ -53,13 +53,12 @@ module Replication::Standardizable
   end
 
   def scrub_original_link_if_becoming_incompatible
-    if restricted_attribs = replicable_opts[:compatibility]
-      restricted_attribs.each do |attrib|
-        next unless send("#{attrib}_changed?")
-        self.original_id = nil
-        self.standard_copy = false
-        break
-      end
+    return unless restricted_attribs = replicable_opts[:compatibility]
+    restricted_attribs.each do |attrib|
+      next unless send("#{attrib}_changed?")
+      self.original_id = nil
+      self.standard_copy = false
+      break
     end
   end
 

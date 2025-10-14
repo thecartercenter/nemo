@@ -5,8 +5,8 @@ class ResponsesSearcher < Searcher
   # Parsed search values
   attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups, :start_date, :end_date
 
-  def initialize(**options)
-    super(**options)
+  def initialize(**)
+    super
     self.form_ids = []
     self.qings = []
     self.submitters = []
@@ -28,11 +28,11 @@ class ResponsesSearcher < Searcher
       Search::Qualifier.new(name: "submitter", col: "users.name", assoc: :users, type: :text),
       Search::Qualifier.new(name: "submitter_id", col: "users.id", assoc: :users),
       Search::Qualifier.new(name: "group", col: "user_groups.name",
-                            assoc: :user_groups, type: :text),
+        assoc: :user_groups, type: :text),
       Search::Qualifier.new(name: "group_id", col: "user_groups.id", assoc: :user_groups),
       Search::Qualifier.new(name: "source", col: "responses.source"),
       Search::Qualifier.new(name: "submit_date", type: :date,
-                            col: "CAST((responses.created_at AT TIME ZONE 'UTC') AT
+        col: "CAST((responses.created_at AT TIME ZONE 'UTC') AT
                             TIME ZONE '#{Time.zone.tzinfo.name}' AS DATE)"),
 
       # match responses that have answers to questions with the given option set

@@ -6,7 +6,7 @@ module Sms
     class Decoder
       # window in which identical message is considered duplicate and discarded
       DUPLICATE_WINDOW = 12.hours
-      AUTH_CODE_FORMAT = /[a-z0-9]{4}/i.freeze
+      AUTH_CODE_FORMAT = /[a-z0-9]{4}/i
 
       attr_accessor :response, :decoding_succeeded
 

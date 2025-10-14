@@ -58,7 +58,7 @@ describe Question do
   describe "#min_max_error_msg" do
     let(:question) do
       build(:question, qtype_name: "integer",
-                       minimum: 10, maximum: 20, minstrictly: false, maxstrictly: true)
+        minimum: 10, maximum: 20, minstrictly: false, maxstrictly: true)
     end
 
     it "is correct" do

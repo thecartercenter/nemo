@@ -36,7 +36,7 @@ describe Broadcast do
   describe "#deliver" do
     let(:broadcast) do
       create(:broadcast, medium: "both", subject: "Foo", body: "Bar",
-                         which_phone: "main_only", recipient_users: [user1])
+        which_phone: "main_only", recipient_users: [user1])
     end
     let(:broadcaster) { double }
 
@@ -79,8 +79,8 @@ describe Broadcast do
           .and_raise(Net::SMTPAuthenticationError.new("Auth failed"))
         expect(broadcaster).to receive(:deliver).and_raise(Sms::Error.new("Failure 1\nFailure 2"))
         expect { broadcast.deliver }.to raise_error(Net::SMTPAuthenticationError)
-        expect(broadcast.send_errors).to eq("Email Error: Net::SMTPAuthenticationError\n"\
-          "SMS Error: Failure 1\nSMS Error: Failure 2")
+        expect(broadcast.send_errors).to eq("Email Error: Net::SMTPAuthenticationError\n" \
+                                            "SMS Error: Failure 1\nSMS Error: Failure 2")
       end
     end
   end

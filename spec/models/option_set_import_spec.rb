@@ -97,9 +97,7 @@ describe OptionSets::Import do
 
       # make sure that the non-leaf options have no coordinates
       option_set.preordered_option_nodes.each do |node|
-        if node.child_options.present?
-          expect(node).to have_attributes(option: have_attributes(coordinates?: false))
-        end
+        expect(node).to have_attributes(option: have_attributes(coordinates?: false)) if node.child_options.present?
       end
 
       # verify the latitude and longitude of one of the options

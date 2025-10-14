@@ -10,7 +10,8 @@ module SmsGuideHelper
       when "select_one"
         if qing.sms_formatting_as_text? then 8
         elsif qing.sms_formatting_as_appendix? then 4
-        else 1
+        else
+          1
         end
       when "decimal" then 3
       when "time", "select_multiple" then 4

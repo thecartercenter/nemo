@@ -89,7 +89,7 @@ class SmsController < ApplicationController
     if reply
       if incoming_adapter.reply_style == :via_adapter
         begin
-          raise Sms::Error, ENV["STUB_REPLY_ERROR"] if Rails.env.test? && ENV["STUB_REPLY_ERROR"].present?
+          raise Sms::Error, ENV.fetch("STUB_REPLY_ERROR", nil) if Rails.env.test? && ENV["STUB_REPLY_ERROR"].present?
           outgoing_adapter.deliver(reply)
         rescue Sms::Error => e
           reply.adapter_name = "None"
@@ -100,7 +100,7 @@ class SmsController < ApplicationController
         incoming_adapter.prepare_message_for_delivery(reply)
       end
       render(plain: incoming_adapter.response_body(reply),
-             content_type: incoming_adapter.response_content_type)
+        content_type: incoming_adapter.response_content_type)
     else
       render(plain: "", status: :no_content) # No Content
     end

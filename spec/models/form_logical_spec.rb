@@ -47,7 +47,7 @@ describe FormLogical do
     describe "condition validation passthrough" do
       let(:rule) do
         build(:skip_rule, source_item: form.c[1],
-                          conditions_attributes: [{left_qing_id: form.c[0].id, op: "eq", value: ""}])
+          conditions_attributes: [{left_qing_id: form.c[0].id, op: "eq", value: ""}])
       end
 
       it "should set validation error if incomplete condition" do

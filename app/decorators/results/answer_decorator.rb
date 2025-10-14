@@ -9,7 +9,7 @@ module Results
     def hint
       question_hint = questioning.hint&.chomp(".")&.concat(".")
       drop_hint = h.t("response.drop_hint.#{qtype.name}", default: "",
-                                                          max_size_mib: Cnfg.max_upload_size_mib).presence
+        max_size_mib: Cnfg.max_upload_size_mib).presence
       [question_hint, drop_hint].join(" ")
     end
 

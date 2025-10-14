@@ -14,9 +14,7 @@ class Search::Search
   end
 
   # returns the generated sql
-  def sql
-    @parser.sql
-  end
+  delegate :sql, to: :@parser
 
   def associations
     @associations ||= expressions.map { |e| e.qualifier.assoc }.flatten.compact.uniq

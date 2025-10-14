@@ -4,8 +4,8 @@ class CreateGoogleGeolocations < ActiveRecord::Migration[4.2]
       t.string :full_name
       t.text :json
       t.integer :place_type_id
-      t.decimal :latitude, :precision => 20, :scale => 15
-      t.decimal :longitude, :precision => 20, :scale => 15
+      t.decimal :latitude, precision: 20, scale: 15
+      t.decimal :longitude, precision: 20, scale: 15
       t.string :formatted_addr
 
       t.timestamps

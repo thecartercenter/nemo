@@ -65,7 +65,7 @@ class Question < ApplicationRecord
   has_many :response_nodes, through: :questionings
   has_many :forms, through: :questionings
   has_many :calculations, class_name: "Report::Calculation", # see below for dependent: :destroy alternative
-                          foreign_key: "question1_id", inverse_of: :question1
+    foreign_key: "question1_id", inverse_of: :question1
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
 
@@ -137,8 +137,8 @@ class Question < ApplicationRecord
     to: :option_set, allow_nil: true
 
   replicable child_assocs: %i[option_set taggings], backwards_assocs: :questioning, sync: :code,
-             uniqueness: {field: :code, style: :camel_case}, dont_copy: %i[key access_level],
-             compatibility: %i[qtype_name option_set_id]
+    uniqueness: {field: :code, style: :camel_case}, dont_copy: %i[key access_level],
+    compatibility: %i[qtype_name option_set_id]
 
   clone_options follow: %i[option_set taggings]
 
@@ -170,7 +170,7 @@ class Question < ApplicationRecord
   end
 
   def geographic?
-    location_type? || qtype_name == "select_one" && option_set.geographic?
+    location_type? || (qtype_name == "select_one" && option_set.geographic?)
   end
 
   # gets the number of forms which with this question is directly associated
@@ -234,10 +234,10 @@ class Question < ApplicationRecord
     clauses = []
     or_eq = I18n.t("question.maxmin.or_eq") + " "
     if minimum
-      clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : or_eq) + casted_minimum.to_s
+      clauses << (I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : or_eq) + casted_minimum.to_s)
     end
     if maximum
-      clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : or_eq) + casted_maximum.to_s
+      clauses << (I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : or_eq) + casted_maximum.to_s)
     end
     I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end

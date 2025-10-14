@@ -19,7 +19,7 @@ class AddRedundantLinksToPlaces < ActiveRecord::Migration[4.2]
   end
 
   def self.down
-    #remove_column(:places, :point_id)
+    # remove_column(:places, :point_id)
     remove_column(:places, :address_id)
     remove_column(:places, :locality_id)
     remove_column(:places, :state_id)

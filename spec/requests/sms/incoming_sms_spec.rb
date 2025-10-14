@@ -28,7 +28,7 @@ describe "incoming sms", :sms do
 
     it "can accept text answers" do
       assert_sms_response(incoming: "#{form_code} 1.this is a text answer",
-                          outgoing: /#{form_code}.+thank you/i)
+        outgoing: /#{form_code}.+thank you/i)
       # Ensure objects are persisted
       expect(Sms::Incoming.count).to eq(1)
       expect(Sms::Reply.count).to eq(1)
@@ -88,12 +88,11 @@ describe "incoming sms", :sms do
     it "should use a minimum number of queries" do
       # we need to make sure the form is generated before testing query counts
       # this is silly but i don't know of a better way
-      expect(form_code).to eq(form.code) 
+      expect(form_code).to eq(form.code)
 
       expect do
         assert_sms_response(incoming: "#{form_code} 1.a 2.a 3.a 4.a 5.a 6.a 7.a 8.a 9.a 10.a",
-                            outgoing: /#{form_code}.+thank you/i
-        )
+          outgoing: /#{form_code}.+thank you/i)
       end.to make_database_queries(count: 0..175)
     end
   end
@@ -157,7 +156,7 @@ describe "incoming sms", :sms do
 
   it "GET submissions should be possible" do
     assert_sms_response(method: :get, incoming: "#{form_code} 1.15 2.20",
-                        outgoing: /#{form_code}.+thank you/i)
+      outgoing: /#{form_code}.+thank you/i)
   end
 
   it "message from automated sender should get no response" do
@@ -168,7 +167,7 @@ describe "incoming sms", :sms do
   context "from unrecognized normal number" do
     it "should get error reply" do
       assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x",
-                          outgoing: /couldn't find you/)
+        outgoing: /couldn't find you/)
     end
 
     context "with missionless url" do
@@ -176,7 +175,7 @@ describe "incoming sms", :sms do
 
       it "should get error reply" do
         assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x",
-                            outgoing: /couldn't find you/)
+          outgoing: /couldn't find you/)
       end
     end
   end
@@ -202,12 +201,12 @@ describe "incoming sms", :sms do
 
   it "message missing one answer should get error" do
     assert_sms_response(incoming: "#{form_code} 2.20",
-                        outgoing: /answer.+required question 1 was.+#{form_code}/)
+      outgoing: /answer.+required question 1 was.+#{form_code}/)
   end
 
   it "message missing multiple answers should get error" do
     assert_sms_response(incoming: form_code.to_s,
-                        outgoing: /answers.+required questions 1,2 were.+#{form_code}/)
+      outgoing: /answers.+required questions 1,2 were.+#{form_code}/)
   end
 
   it "too high numeric answer should get error" do
@@ -257,7 +256,7 @@ describe "incoming sms", :sms do
     end
 
     do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{token}",
-                        incoming: {body: "#{form_code} 1.15 2.20", adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+      incoming: {body: "#{form_code} 1.15 2.20", adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
     expect(response.status).to eq(401)
   end
 
@@ -274,7 +273,7 @@ describe "incoming sms", :sms do
     it "should raise error" do
       expect do
         do_incoming_request(url: "/m/#{mission.compact_name}/sms/submit/#{token}", from: user.phone,
-                            incoming: {body: "#{form_code} 1.15 2.20", adapter: "Twilio"})
+          incoming: {body: "#{form_code} 1.15 2.20", adapter: "Twilio"})
       end.to raise_error(Sms::Error)
     end
   end
@@ -333,7 +332,7 @@ describe "incoming sms", :sms do
       context "with invalid token" do
         it "raises error and doesn't persist broacast or forward" do
           do_incoming_request(url: "/sms/submit/#{bad_incoming_token}", from: user.phone,
-                              incoming: {body: "#{form_code} 1.15 2.something"})
+            incoming: {body: "#{form_code} 1.15 2.something"})
           expect(response.status).to eq(401)
           expect(Broadcast.count).to eq(0)
           expect(Sms::Forward.count).to eq(0)
@@ -357,7 +356,7 @@ describe "incoming sms", :sms do
 
     it "should send reply if form not found" do
       assert_sms_response(incoming: "#{wrong_code} 1.15 2.20",
-                          outgoing: /there is no form with code/, mission: nil)
+        outgoing: /there is no form with code/, mission: nil)
     end
 
     context "with multiple missions" do
@@ -398,7 +397,7 @@ describe "incoming sms", :sms do
 
         it "should send reply via default adapter if form not found" do
           assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
-                              outgoing: {body: /there is no form with code/, adapter: "Twilio"}, mission: nil)
+            outgoing: {body: /there is no form with code/, adapter: "Twilio"}, mission: nil)
         end
       end
 
@@ -407,7 +406,7 @@ describe "incoming sms", :sms do
 
         it "should save error on reply message" do
           assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
-                              outgoing: {body: /there is no form with code/}, mission: nil)
+            outgoing: {body: /there is no form with code/}, mission: nil)
           expect(Sms::Reply.first.reply_error_message).to match(/No adapter configured for outgoing response/)
         end
       end

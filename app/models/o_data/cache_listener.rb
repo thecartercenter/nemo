@@ -8,33 +8,33 @@ module OData
     def update_response_successful(response)
       # TODO: Eventually update the metadata ONLY.
       return unless attribs_changed?(response, %w[shortcode form_id user_id reviewed])
-      Rails.logger.debug("OData dirty_json cause: updated response #{response.id}")
+      Rails.logger.debug { "OData dirty_json cause: updated response #{response.id}" }
       response.update!(dirty_json: true)
     end
 
     def update_answer_successful(answer)
       return unless attribs_changed?(answer, %w[value date_value time_value datetime_value
                                                 option_node_id accuracy altitude latitude longitude])
-      Rails.logger.debug("OData dirty_json cause: updated answer #{answer.id}")
+      Rails.logger.debug { "OData dirty_json cause: updated answer #{answer.id}" }
       answer.response.update!(dirty_json: true)
     end
 
     def update_form_successful(form)
       return unless attribs_changed?(form, %w[name])
-      Rails.logger.debug("OData dirty_json cause: updated form #{form.id}")
+      Rails.logger.debug { "OData dirty_json cause: updated form #{form.id}" }
       Response.where(form_id: form.id).update_all(dirty_json: true)
     end
 
     def update_user_successful(user)
       return unless attribs_changed?(user, %w[name])
-      Rails.logger.debug("OData dirty_json cause: updated user #{user.id}")
+      Rails.logger.debug { "OData dirty_json cause: updated user #{user.id}" }
       Response.where(user_id: user.id).update_all(dirty_json: true)
     end
 
     def update_question_successful(question)
       return unless attribs_changed?(question, %w[code])
       form_ids = question.forms.pluck(:id)
-      Rails.logger.debug("OData dirty_json cause: updated question #{question.id}")
+      Rails.logger.debug { "OData dirty_json cause: updated question #{question.id}" }
       Response.where(form_id: form_ids).update_all(dirty_json: true)
     end
 
@@ -43,13 +43,13 @@ module OData
       # more performant if we listen specifically for *parent* changes
       # instead (though Wisper may not easily handle this attrib).
       return unless attribs_changed?(questioning, %w[rank])
-      Rails.logger.debug("OData dirty_json cause: updated questioning #{questioning.id}")
+      Rails.logger.debug { "OData dirty_json cause: updated questioning #{questioning.id}" }
       Response.where(form_id: questioning.form_id).update_all(dirty_json: true)
     end
 
     def update_qing_group_successful(qing_group)
       return unless attribs_changed?(qing_group, %w[rank repeatable group_name_translations])
-      Rails.logger.debug("OData dirty_json cause: updated qing_group #{qing_group.id}")
+      Rails.logger.debug { "OData dirty_json cause: updated qing_group #{qing_group.id}" }
       Response.where(form_id: qing_group.form.id).update_all(dirty_json: true)
     end
 

@@ -46,9 +46,9 @@ gem "popper_js", "~> 1.14"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 3.0"
 gem "select2-rails", "~> 4.0"
+gem "shakapacker", "~> 8.0", ">= 8.0.0"
 gem "spinjs-rails", "~> 1.4.0" # Breaking changes in v1.4 (spin.js v2.0).
 gem "uglifier", "~> 4.2"
-gem "shakapacker", "~> 8.0", ">= 8.0.0"
 
 # Authz and Authn
 gem "authlogic", "~> 6.1"
@@ -138,7 +138,7 @@ group :development do
   gem "rails-erd", "~> 1.6"
 
   # N+1 detection. Config is in environments/development.rb
-  gem "bullet", "~> 7.1"
+  # gem "bullet", "~> 7.1" # Temporarily disabled - not compatible with Rails 8.0
 
   # Great for debugging i18n paths (uncomment temporarily when needed).
   # gem "i18n-debug", "~> 1.1"
@@ -173,7 +173,7 @@ group :development, :test do
   # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
 
   # Misc
-  gem "annotate", "~> 3.1"
+  # gem "annotate", "~> 3.2" # Temporarily disabled - not compatible with Rails 8.0
   gem "assert_difference", "~> 1.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6"
   gem "db-query-matchers", "~> 0.10"

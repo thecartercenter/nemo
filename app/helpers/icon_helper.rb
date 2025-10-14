@@ -58,7 +58,7 @@ module IconHelper
 
   # Returns icon tag for standard icon if obj is standard (or boolean == true), '' otherwise.
   def std_icon(obj_or_bool)
-    if obj_or_bool.respond_to?(:standardized?) && obj_or_bool.standardized? || obj_or_bool == true
+    if (obj_or_bool.respond_to?(:standardized?) && obj_or_bool.standardized?) || obj_or_bool == true
       icon_tag(:standard)
     else
       ""

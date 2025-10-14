@@ -36,12 +36,10 @@ module Sms
       answer_groups[qing_group.id] ||=
         if qing_group.root?
           response.build_root_node(response: response, type: "AnswerGroup",
-                                   form_item: qing_group, new_rank: 0)
+            form_item: qing_group, new_rank: 0)
         else
           parent_node = build_or_find_parent_node_for_qing_group(parent_for(qing_group))
-          if qing_group.repeatable?
-            parent_node = build_child(parent_node, "AnswerGroupSet", form_item: qing_group)
-          end
+          parent_node = build_child(parent_node, "AnswerGroupSet", form_item: qing_group) if qing_group.repeatable?
           build_child(parent_node, "AnswerGroup", form_item: qing_group)
         end
     end

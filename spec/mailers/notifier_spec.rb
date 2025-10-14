@@ -61,7 +61,7 @@ describe Notifier do
       expect(mail.to).to eq([user.email])
       expect(mail.subject).to eq("Password Reset Instructions")
       expect(mail.body).to match(/A request to reset your NEMO password has been made/)
-      expect(mail.body).to match(/http:\/\/www\.example\.com\/en\/password-resets/)
+      expect(mail.body).to match(%r{http://www\.example\.com/en/password-resets})
     end
   end
 

@@ -38,7 +38,7 @@ describe ODK::ItemsetsFormAttachment, :odk do
   describe "priv_path" do
     it "should be correct" do
       allow(itemsets_attachment).to receive(:path).and_return("foo")
-      expect(itemsets_attachment.priv_path).to eq(Rails.root.join("public/foo"))
+      expect(itemsets_attachment.priv_path).to eq(Rails.public_path.join("foo"))
     end
   end
 

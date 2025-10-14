@@ -32,7 +32,7 @@ NEMO_ATTACHMENTS = [
 def copy_all_s3
   NEMO_ATTACHMENTS.each do |pair|
     relation, title = pair
-    relation = relation.where.not("#{title}_file_size".to_sym => nil)
+    relation = relation.where.not("#{title}_file_size": nil)
     total = relation.count
 
     puts "Copying #{total} #{relation.name} #{title.pluralize}..."
@@ -67,7 +67,7 @@ def copy_s3_item(record, title, index, total)
   puts "Copying #{filename}... (#{index + 1} / #{total})"
   puts "  at #{url}" if ENV["VERBOSE"]
   record.send(title).attach(io: URI.parse(url).open, filename: filename,
-                            content_type: record.send("#{title}_content_type"))
+    content_type: record.send("#{title}_content_type"))
 rescue StandardError => e
   raise e unless e.message == "403 Forbidden"
   puts "  => File no longer exists (or server does not have access) for #{filename} (id #{record.id})."

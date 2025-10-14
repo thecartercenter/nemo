@@ -1,11 +1,11 @@
 class ConvertTranslationsToJsonb < ActiveRecord::Migration[4.2]
   def up
     [
-      %w(questions name),
-      %w(questions hint),
-      %w(form_items group_name),
-      %w(form_items group_hint),
-      %w(options name)
+      %w[questions name],
+      %w[questions hint],
+      %w[form_items group_name],
+      %w[form_items group_hint],
+      %w[options name]
     ].each do |col|
       table = col.first
       col_name = "#{col.last}_translations"

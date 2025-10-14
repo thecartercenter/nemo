@@ -17,14 +17,14 @@ end
 
 # Limit ODK Collect requests by IP address to N requests per minute
 Rack::Attack.throttle("direct-auth-req/ip", limit: proc { Rails.env.test? ? 5 : 30 },
-                                            period: 1.minute) do |req|
+  period: 1.minute) do |req|
   req.ip if req.direct_auth?
 end
 
 # Track rate of attempted logins by IP address per minute to allow reCAPTCHA display
 # 60 = 30 login attempts * 2 requests per attempt
 Rack::Attack.track("login-attempts/ip", limit: proc { 60 },
-                                        period: 1.minute) do |req|
+  period: 1.minute) do |req|
   req.ip if req.login_related?
 end
 

@@ -51,7 +51,7 @@ class Mission < ApplicationRecord
 
   validates :name, presence: true
   validates :name, format: {with: /\A[a-z][a-z0-9 ]*\z/i, message: :let_num_spc_only},
-                   length: {minimum: 3, maximum: 32}, if: proc { |m| m.name.present? }
+    length: {minimum: 3, maximum: 32}, if: proc { |m| m.name.present? }
   validate :compact_name_unique
 
   scope :sorted_by_name, -> { order(Arel.sql("LOWER(name)")) }

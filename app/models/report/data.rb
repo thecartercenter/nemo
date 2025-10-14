@@ -32,9 +32,7 @@ class Report::Data
       end
   end
 
-  def empty?
-    @rows.empty?
-  end
+  delegate :empty?, to: :@rows
 
   def empty_row?(i)
     @rows[i].all?(&:blank?)

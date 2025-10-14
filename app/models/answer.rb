@@ -189,7 +189,7 @@ class Answer < ResponseNode
 
     # Manually mark as dirty since the creation of media objects
     # is difficult to listen for otherwise.
-    Rails.logger.debug("OData dirty_json cause: media_object_id=#{id}")
+    Rails.logger.debug { "OData dirty_json cause: media_object_id=#{id}" }
     response&.update!(dirty_json: true)
   end
 
@@ -302,8 +302,8 @@ class Answer < ResponseNode
 
   def validate_min_max
     val_f = value.to_f
-    if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
-        question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+    if (question.maximum && (val_f > question.maximum || (question.maxstrictly && val_f == question.maximum))) ||
+        (question.minimum && (val_f < question.minimum || (question.minstrictly && val_f == question.minimum)))
       errors.add(:value, question.min_max_error_msg)
     end
   end
@@ -311,17 +311,15 @@ class Answer < ResponseNode
   def validate_location
     # Doesn't make sense to validate lat/lng if copied from options because the user
     # can't do anything about that.
-    if location_type_with_value?
-      errors.add(:value, :invalid_latitude) if latitude.nil? || latitude < -90 || latitude > 90
-      errors.add(:value, :invalid_longitude) if longitude.nil? || longitude < -180 || longitude > 180
-      errors.add(:value, :invalid_altitude) if altitude.present? && (altitude >= 1e6 || altitude <= -1e6)
-      if accuracy.present?
-        if accuracy.negative?
-          errors.add(:value, :accuracy_negative)
-        elsif accuracy >= 1e6
-          errors.add(:value, :invalid_accuracy)
-        end
-      end
+    return unless location_type_with_value?
+    errors.add(:value, :invalid_latitude) if latitude.nil? || latitude < -90 || latitude > 90
+    errors.add(:value, :invalid_longitude) if longitude.nil? || longitude < -180 || longitude > 180
+    errors.add(:value, :invalid_altitude) if altitude.present? && (altitude >= 1e6 || altitude <= -1e6)
+    return unless accuracy.present?
+    if accuracy.negative?
+      errors.add(:value, :accuracy_negative)
+    elsif accuracy >= 1e6
+      errors.add(:value, :invalid_accuracy)
     end
   end
 

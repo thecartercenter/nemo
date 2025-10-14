@@ -31,7 +31,7 @@ describe "report CSV output", :csv do
     get("/en/m/#{form.mission.compact_name}/reports/#{report.id}.csv")
     expect(response).to be_successful
     expect(response.body).to match_user_facing_csv(
-      %(#{qs[0].name},#{qs[1].name}\r\nFoo,\"Some **long**\r\n\r\n1. text\r\n2. stuff&stuff\"\r\n)
+      %(#{qs[0].name},#{qs[1].name}\r\nFoo,"Some **long**\r\n\r\n1. text\r\n2. stuff&stuff"\r\n)
     )
   end
 

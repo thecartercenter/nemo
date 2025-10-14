@@ -45,7 +45,7 @@ class Choice < ApplicationRecord
   alias checked? checked
 
   def checked=(value)
-    @checked = (value == true || value == "1")
+    @checked = [true, "1"].include?(value)
   end
 
   # We need to override this because of the transient `checked` attribute.

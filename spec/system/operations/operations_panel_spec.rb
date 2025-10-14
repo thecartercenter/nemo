@@ -32,7 +32,7 @@ describe "operations panel" do
     let(:error_message) { "Operations are currently not running. Please contact administrator" }
 
     before do
-      stub = double("ok?": result)
+      stub = double(ok?: result)
       allow(Utils::DelayedJobChecker).to(receive(:instance).and_return(stub))
     end
 

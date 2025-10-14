@@ -5,6 +5,7 @@ require "rails_helper"
 class Basic
   include ActiveModel::Model
   include Translatable
+
   translates :name, :hint
   attr_accessor :mission_id, :canonical_name, :canonical_hint
 end
@@ -12,6 +13,7 @@ end
 class NoCanonical
   include ActiveModel::Model
   include Translatable
+
   translates :name
   attr_accessor :mission_id
 end

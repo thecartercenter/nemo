@@ -22,16 +22,6 @@ class UserGroupsController < ApplicationController
     render(partial: "edit_name")
   end
 
-  def update
-    @user_group.name = params[:name]
-    if @user_group.save
-      render(json: {name: @user_group.name})
-    else
-      flash[:error] = @user_group.errors.full_messages.join(", ")
-      head(422)
-    end
-  end
-
   def create
     @add_mode = params[:add].present?
     @user_group.name = params[:name]
@@ -39,7 +29,17 @@ class UserGroupsController < ApplicationController
       render(partial: "index_table") if request.xhr?
     else
       flash[:error] = @user_group.errors.full_messages.join(", ")
-      head(422)
+      head(:unprocessable_content)
+    end
+  end
+
+  def update
+    @user_group.name = params[:name]
+    if @user_group.save
+      render(json: {name: @user_group.name})
+    else
+      flash[:error] = @user_group.errors.full_messages.join(", ")
+      head(:unprocessable_content)
     end
   end
 

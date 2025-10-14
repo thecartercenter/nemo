@@ -26,7 +26,7 @@ class Search::LexToken
     @kind = defn[:name]
     @content = content
     @fragment = fragment
-    @sql = (defn[:sql] || @content || "")
+    @sql = defn[:sql] || @content || ""
   end
 
   def is?(kind)

@@ -84,25 +84,17 @@ module Replication::Replicable
   # obj.replicate(mode: :promote)
   def replicate(options = nil)
     raise "replication mode is required" unless options[:mode]
-    if options[:mode] == :to_mission && !options[:dest_mission]
-      raise "dest_mission must be given for to_mission mode"
-    end
-    if options[:mode] != :to_mission && options[:dest_mission]
-      raise "dest_mission only valid for to_mission mode"
-    end
+    raise "dest_mission must be given for to_mission mode" if options[:mode] == :to_mission && !options[:dest_mission]
+    raise "dest_mission only valid for to_mission mode" if options[:mode] != :to_mission && options[:dest_mission]
 
     Replication::Replicator.new(options.merge(source: self)).replicate
   end
 
   # convenience method for replication options
-  def replicable_opts
-    self.class.replicable_opts
-  end
+  delegate :replicable_opts, to: :class
 
   # Not all replicable objects are standardizable.
-  def standardizable?
-    self.class.standardizable?
-  end
+  delegate :standardizable?, to: :class
 
   private
 
@@ -130,8 +122,8 @@ module Replication::Replicable
     uniqueness = replicable_opts[:uniqueness] || {}
     val = if uniqueness[:field] == attrib_name
             Replication::UniqueFieldGenerator.new(klass: self.class, orig_id: id, exclude_id: copy.id,
-                                                  mission_id: copy.mission_id, field: attrib_name,
-                                                  style: uniqueness[:style]).generate
+              mission_id: copy.mission_id, field: attrib_name,
+              style: uniqueness[:style]).generate
           else
             send(attrib_name)
           end

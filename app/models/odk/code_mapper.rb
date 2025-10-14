@@ -7,7 +7,7 @@ module ODK
   class CodeMapper
     include Singleton
 
-    ITEM_CODE_REGEX = /\A(grp|qing|os|on)([a-f0-9\-]+)/.freeze
+    ITEM_CODE_REGEX = /\A(grp|qing|os|on)([a-f0-9\-]+)/
 
     def code_for_item(item, options: {})
       return "/data" if item.is_a?(FormItem) && item.is_root?

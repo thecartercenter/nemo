@@ -38,12 +38,12 @@ class SkipRule < ApplicationRecord
   validate :require_dest_item
 
   replicable child_assocs: [:conditions],
-             backward_assocs: [
-               :source_item,
-               # This is a second pass association because the
-               # dest_item won't have been copied yet on the 1st pass.
-               {name: :dest_item, second_pass: true}
-             ]
+    backward_assocs: [
+      :source_item,
+      # This is a second pass association because the
+      # dest_item won't have been copied yet on the 1st pass.
+      {name: :dest_item, second_pass: true}
+    ]
 
   clone_options follow: %i[conditions]
 

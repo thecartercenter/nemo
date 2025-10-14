@@ -66,8 +66,8 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
   end
 
   def execute_partitioned(query, table, parts = 100)
-    per_part = 16**32 / parts
-    max = 16**32 - 1
+    per_part = (16**32) / parts
+    max = (16**32) - 1
     (0...parts).to_a.each do |num|
       puts "Part #{num + 1}/#{parts}"
       lower = (num * per_part).to_s(16).rjust(32, "0")
@@ -117,7 +117,7 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
 
       if (existing_opt_id = opt_ids[names.hash])
         puts "  Merging match for #{names} " \
-          "(missing pair option #{pair_opt_id}, existing option #{existing_opt_id})"
+             "(missing pair option #{pair_opt_id}, existing option #{existing_opt_id})"
         node = OptionNode.find_by(option_id: existing_opt_id)
         Answer.where(option_id: pair_opt_id).update_all(option_node_id: node.id, option_id: existing_opt_id)
         Choice.where(option_id: pair_opt_id).update_all(option_node_id: node.id, option_id: existing_opt_id)
@@ -167,7 +167,7 @@ class PopulateNewOptionNodeIdColumns < ActiveRecord::Migration[5.2]
       sequence = (OptionNode.where(option_set_id: pair[0]).maximum(:sequence) || 0) + 1
       mission_id = Option.find(pair[1]).mission_id
       OptionNode.create!(option_set_id: pair[0], option_id: pair[1], mission_id: mission_id,
-                         rank: rank, sequence: sequence)
+        rank: rank, sequence: sequence)
     end
   end
 

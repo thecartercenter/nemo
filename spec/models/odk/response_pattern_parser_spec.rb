@@ -100,8 +100,8 @@ describe ODK::ResponsePatternParser do
         let(:src_item) { q1 }
         let(:pattern) { "hai-$Q21-x" }
         it do
-          is_expected.to eq("concat('hai-',"\
-            "jr:itext(coalesce(indexed-repeat(#{q21path},#{g2path},1),'BLANK')),'-x')")
+          is_expected.to eq("concat('hai-'," \
+                            "jr:itext(coalesce(indexed-repeat(#{q21path},#{g2path},1),'BLANK')),'-x')")
         end
       end
 
@@ -110,8 +110,8 @@ describe ODK::ResponsePatternParser do
         let(:pattern) { "hai-$Q31-x" }
 
         it "uses the lowest subquestion" do
-          is_expected.to eq("concat('hai-',"\
-            "jr:itext(coalesce(indexed-repeat(#{q31bpath},#{g3path},1),'BLANK')),'-x')")
+          is_expected.to eq("concat('hai-'," \
+                            "jr:itext(coalesce(indexed-repeat(#{q31bpath},#{g3path},1),'BLANK')),'-x')")
         end
       end
 

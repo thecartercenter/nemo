@@ -26,7 +26,7 @@ module ApplicationController::Authentication
 
     # If stubbed user from testing, look them up.
     if Rails.env.test? && ENV["TEST_LOGGED_IN_USER_ID"].present?
-      @current_user = User.includes(:assignments).find(ENV["TEST_LOGGED_IN_USER_ID"])
+      @current_user = User.includes(:assignments).find(ENV.fetch("TEST_LOGGED_IN_USER_ID", nil))
       @current_user.update_column(:current_login_at, Time.current)
 
     # If user already logged in via Authlogic, we are done.
@@ -44,7 +44,7 @@ module ApplicationController::Authentication
       end
 
       return request_http_basic_authentication unless @current_user
-      return render(plain: "USER_INACTIVE", status: :unauthorized) unless @current_user.active?
+      render(plain: "USER_INACTIVE", status: :unauthorized) unless @current_user.active?
     end
   end
 

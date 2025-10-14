@@ -150,7 +150,7 @@ describe Condition do
       context "with question given" do
         subject do
           build(:condition, left_qing: form.c[2], right_side_type: "qing", option_node: nil,
-                            right_qing: form.c[1], value: nil)
+            right_qing: form.c[1], value: nil)
         end
         it { is_expected.to be_valid }
       end

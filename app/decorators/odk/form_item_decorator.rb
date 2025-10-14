@@ -25,7 +25,16 @@ module ODK
       ancestor_to_self = object.path_from_ancestor(common_ancestor, include_ancestor: true)
       ancestor_to_dest = decorate_collection(dest.path_from_ancestor(common_ancestor))
 
-      if !ancestor_to_dest.empty?
+      if ancestor_to_dest.empty?
+        # use ../ to get to the common ancestor
+        xpath_self_to_ancestor = ancestor_to_self.map { ".." }.join("/")
+
+        # use odk_codes to get to the other qing
+        ancestor_to_dest += [dest]
+        xpath_ancestor_to_dest = ancestor_to_dest.map(&:odk_code).join("/")
+
+        current_prefix << [xpath_self_to_ancestor, xpath_ancestor_to_dest].join("/")
+      else
         args = [dest.absolute_xpath]
         unless common_ancestor.root?
           root_to_ancestor = common_ancestor.path_from_ancestor(ancestors.first, include_self: true)
@@ -41,15 +50,6 @@ module ODK
         end
 
         "indexed-repeat(#{args.join(',')})"
-      else
-        # use ../ to get to the common ancestor
-        xpath_self_to_ancestor = ancestor_to_self.map { ".." }.join("/")
-
-        # use odk_codes to get to the other qing
-        ancestor_to_dest += [dest]
-        xpath_ancestor_to_dest = ancestor_to_dest.map(&:odk_code).join("/")
-
-        current_prefix << [xpath_self_to_ancestor, xpath_ancestor_to_dest].join("/")
       end
     end
 

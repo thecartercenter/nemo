@@ -77,8 +77,8 @@ module ODK
         object.save!
         object
       rescue ActiveRecord::RecordInvalid => e
-        Rails.logger.info("Media object failed validation on ODK upload, skipping (message: '#{e}', "\
-          "filename: '#{pending_file_name}')")
+        Rails.logger.info("Media object failed validation on ODK upload, skipping (message: '#{e}', " \
+                          "filename: '#{pending_file_name}')")
         nil
       end
     end

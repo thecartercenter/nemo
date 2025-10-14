@@ -39,10 +39,10 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
 
     let(:response) do
       create(:response, form: form,
-                        answer_values: ["foo✓", %w[Canada Calgary],
-                                        "alpha", 100, -123.50,
-                                        "15.937378 44.36453", "Cat", %w[Dog Cat], %w[Dog Cat],
-                                        "2015-10-12 18:15:12 UTC", "2014-11-09", "23:15", image])
+        answer_values: ["foo✓", %w[Canada Calgary],
+                        "alpha", 100, -123.50,
+                        "15.937378 44.36453", "Cat", %w[Dog Cat], %w[Dog Cat],
+                        "2015-10-12 18:15:12 UTC", "2014-11-09", "23:15", image])
     end
 
     it "produces correct json" do
@@ -50,7 +50,7 @@ describe Results::ResponseJsonGenerator, :reset_factory_sequences do
       # so a callback is able to change the filename from "the_swing.jpg" to "elmo-shortcode-id.jpg".
       json = object
       path = Rails.application.routes.url_helpers.rails_blob_url(image.item, disposition: "attachment",
-                                                                             only_path: true)
+        only_path: true)
       expect(json).to match_json(prepare_response_json_expectation("basic.json", path: [path]))
     end
   end

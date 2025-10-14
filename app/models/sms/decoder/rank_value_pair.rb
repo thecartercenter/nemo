@@ -37,7 +37,7 @@ module Sms
           end
 
           if question.minimum &&
-              (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+              (val_f < question.minimum || (question.minstrictly && val_f == question.minimum))
             if question.minstrictly && val_f <= question.minimum
               raise_parse_error("answer_too_small_strict", minumum: question.minimum)
             elsif val_f < question.minimum
@@ -134,15 +134,15 @@ module Sms
           # try to parse datetime
           begin
             # if we have a string of 12 straight digits, leave it alone
-            if value =~ /\A\d{12}\z/
-              to_parse = value
-            else
-              # otherwise add a colon before the last two digits of the time (if needed) to help with parsing
-              # also replace any .'s or ,'s or ;'s as they don't work so well
-              to_parse = value.gsub(/(\d{1,2})[.,;]?(\d{2})[a-z\s]*$/) do
-                "#{Regexp.last_match(1)}:#{Regexp.last_match(2)}"
-              end
-            end
+            to_parse = if value =~ /\A\d{12}\z/
+                         value
+                       else
+                         # otherwise add a colon before the last two digits of the time (if needed) to help with parsing
+                         # also replace any .'s or ,'s or ;'s as they don't work so well
+                         value.gsub(/(\d{1,2})[.,;]?(\d{2})[a-z\s]*$/) do
+                           "#{Regexp.last_match(1)}:#{Regexp.last_match(2)}"
+                         end
+                       end
             self.value = Time.zone.parse(to_parse)
           rescue ArgumentError
             raise_parse_error("answer_not_datetime", value: value)

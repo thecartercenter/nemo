@@ -9,6 +9,6 @@ Rails.application.config.after_initialize do
   Question.subscribe(OData::CacheListener.instance)
   Questioning.subscribe(OData::CacheListener.instance)
   QingGroup.subscribe(OData::CacheListener.instance)
-rescue ActiveRecord::NoDatabaseError => e
+rescue ActiveRecord::NoDatabaseError
   # No database is okay, but this should allow the app to avoid crashing so one can be created.
 end

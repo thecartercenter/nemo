@@ -12,6 +12,11 @@ class QingGroupsController < ApplicationController
   before_action :prepare_qing_group, only: [:create]
   before_action :validate_destroy, only: [:destroy]
 
+  def show
+    @qing_group = QingGroup.find(params[:id]).decorate
+    render(partial: "modal")
+  end
+
   def new
     @form = Form.find(params[:form_id])
     # Adding group requires same permissions as removing questions.
@@ -46,11 +51,6 @@ class QingGroupsController < ApplicationController
     end
   end
 
-  def show
-    @qing_group = QingGroup.find(params[:id]).decorate
-    render(partial: "modal")
-  end
-
   def update
     if @qing_group.update(qing_group_params)
       render(partial: "group_inner", locals: {qing_group: @qing_group.decorate})
@@ -75,15 +75,14 @@ class QingGroupsController < ApplicationController
     #
     # Currently, only group_name has validations.
     @qing_group.errors.details[:group_name].map do |_, error|
-      @qing_group.errors.add(:base, 
-        "#{t('attributes.name')}: #{t("activerecord.errors.messages.#{error}")}"
-      )
+      @qing_group.errors.add(:base,
+        "#{t('attributes.name')}: #{t("activerecord.errors.messages.#{error}")}")
     end
     render(partial: "modal_body", locals: {qing_group: @qing_group.decorate}, status: :unprocessable_entity)
   end
 
   def validate_destroy
-    return render(json: [], status: :not_found) unless @qing_group.children.empty?
+    render(json: [], status: :not_found) unless @qing_group.children.empty?
   end
 
   # prepares qing_group

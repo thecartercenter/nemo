@@ -38,7 +38,7 @@ describe "SMS Guide", js: true do
   context "with Multilingual fields" do
     let!(:form) do
       create(:form, :live, name: "SMS Form", smsable: true,
-                           question_types: %w[multilingual_text multilingual_text_with_user_locale])
+        question_types: %w[multilingual_text multilingual_text_with_user_locale])
     end
 
     around do |example|

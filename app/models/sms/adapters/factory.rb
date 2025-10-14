@@ -20,9 +20,7 @@ class Sms::Adapters::Factory
   def create(name_or_class, config:)
     return nil if name_or_class.nil?
     if name_or_class.is_a?(String)
-      unless self.class.name_is_valid?(name_or_class)
-        raise ArgumentError, "invalid adapter name '#{name_or_class}'"
-      end
+      raise ArgumentError, "invalid adapter name '#{name_or_class}'" unless self.class.name_is_valid?(name_or_class)
       klass = Sms::Adapters.const_get("#{name_or_class}Adapter")
     else
       klass = name_or_class

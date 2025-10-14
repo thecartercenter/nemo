@@ -7,6 +7,7 @@ module ODK
   # Models the itemsets CSV file that is used by ODK to store option sets.
   class ItemsetsFormAttachment
     include LanguageHelper
+
     attr_accessor :form
 
     delegate :mission_config, to: :form
@@ -41,7 +42,7 @@ module ODK
 
     # The full path to the file.
     def priv_path
-      @priv_path ||= Rails.root.join("public", path)
+      @priv_path ||= Rails.public_path.join(path)
     end
 
     private
@@ -57,7 +58,7 @@ module ODK
 
     # The full path to the directory.
     def priv_dir
-      @priv_dir ||= Rails.root.join("public", dir)
+      @priv_dir ||= Rails.public_path.join(dir)
     end
 
     def file_contents

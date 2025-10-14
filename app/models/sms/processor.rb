@@ -26,15 +26,14 @@ class Sms::Processor
   private
 
   def handle_reply
-    if reply_body.present?
-      self.reply = Sms::Reply.new(
-        body: reply_body,
-        reply_to: incoming_msg,
-        to: incoming_msg.from,
-        mission: incoming_msg.mission,
-        user: incoming_msg.user
-      )
-    end
+    return unless reply_body.present?
+    self.reply = Sms::Reply.new(
+      body: reply_body,
+      reply_to: incoming_msg,
+      to: incoming_msg.from,
+      mission: incoming_msg.mission,
+      user: incoming_msg.user
+    )
   end
 
   def reply_body
@@ -116,7 +115,7 @@ class Sms::Processor
     lang = options[:user]&.pref_lang ? options[:user].pref_lang.to_sym : I18n.default_locale
 
     # do the translation, raising error on failure
-    I18n.t(key, **options.merge(locale: lang, raise: true))
+    I18n.t(key, **options, locale: lang, raise: true)
   end
 
   def strip_auth_code(message, form)

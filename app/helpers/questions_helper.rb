@@ -8,18 +8,16 @@ module QuestionsHelper
     if params[:controller] == "forms"
       unless @questions.empty?
         links << batch_op_link(name: t("action_links.models.question.add_to_form"),
-                               path: add_questions_form_path(@form))
+          path: add_questions_form_path(@form))
       end
       links << link_divider
       links << create_link(Question, js: true) if can?(:create, Question)
     # Otherwise, we're in regular questions mode
     else
       links << batch_op_link(name: t("action_links.destroy"), path: bulk_destroy_questions_path,
-                             confirm: "question.bulk_destroy_confirm")
+        confirm: "question.bulk_destroy_confirm")
 
-      if can?(:export, Question)
-        links << batch_op_link(name: t("action_links.export_csv"), path: export_questions_path)
-      end
+      links << batch_op_link(name: t("action_links.export_csv"), path: export_questions_path) if can?(:export, Question)
 
       links << link_divider
       links << create_link(Question) if can?(:create, Question)
@@ -56,7 +54,7 @@ module QuestionsHelper
   def option_set_select_option_tags(sets, selected_id)
     sets.map do |s|
       content_tag(:option, s.name, value: s.id, selected: s.id == selected_id ? "selected" : nil,
-                                   "data-multilevel": s.multilevel?)
+        "data-multilevel": s.multilevel?)
     end.reduce(:<<) || ""
   end
 

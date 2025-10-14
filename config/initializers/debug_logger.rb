@@ -1,12 +1,12 @@
 class Rails::Debug
   attr_accessor :logger
 
-  def self.logger
-    @logger
+  class << self
+    attr_reader :logger
   end
 
-  def self.logger=(logger)
-    @logger = logger
+  class << self
+    attr_writer :logger
   end
 
   def self.log(message)
@@ -14,4 +14,4 @@ class Rails::Debug
   end
 end
 
-Rails::Debug.logger = ActiveSupport::Logger.new Rails.root.join("log", "debug_#{Rails.env}.log")
+Rails::Debug.logger = ActiveSupport::Logger.new(Rails.root.join("log", "debug_#{Rails.env}.log"))

@@ -109,12 +109,10 @@ class Search::Token
 
     if qual.type == :indexed
       "(#{qual.col} IN (####{@search.expressions.size - 1}###))"
+    elsif op.kind == :noteq
+      "NOT(#{sql})"
     else
-      if op.kind == :noteq
-        "NOT(#{sql})"
-      else
-        sql
-      end
+      sql
     end
   end
 
@@ -189,8 +187,8 @@ class Search::Token
     end
   end
 
-  def sanitize(*args)
-    SqlRunner.instance.sanitize(*args)
+  def sanitize(*)
+    SqlRunner.instance.sanitize(*)
   end
 
   # expands the current token into its component lextokens (leaf nodes)
@@ -199,6 +197,6 @@ class Search::Token
   end
 
   def raise_error_with_qualifier(err_name, qual, params = {})
-    raise Search::ParseError, I18n.t("search.#{err_name}", **params.merge(qualifier: qual))
+    raise Search::ParseError, I18n.t("search.#{err_name}", **params, qualifier: qual)
   end
 end

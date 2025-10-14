@@ -61,7 +61,7 @@ class RemovePlaces < ActiveRecord::Migration[4.2]
     drop_table(:places)
     drop_table(:place_types)
     drop_table(:place_creators)
-    #remove_column(:responses, :place_id)
+    # remove_column(:responses, :place_id)
   end
 
   def down

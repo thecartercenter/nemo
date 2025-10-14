@@ -17,7 +17,7 @@ class Replication::Replicator
     source.class.transaction do
       # Create wrapper
       obj = Replication::ObjProxy.new(klass: source.class, id: source.id,
-                                      replicator: self, replication_root: true)
+        replicator: self, replication_root: true)
       do_replicate(orig: obj)
       self.pass_num = 2
       do_replicate(orig: obj).full_object
@@ -37,7 +37,7 @@ class Replication::Replicator
   end
 
   def log(msg)
-    Rails.logger.debug("REPLICATION [PASS #{pass_num}]: #{msg}") if Rails.env.development? || Rails.env.test?
+    Rails.logger.debug { "REPLICATION [PASS #{pass_num}]: #{msg}" } if Rails.env.local?
   end
 
   def first_pass?

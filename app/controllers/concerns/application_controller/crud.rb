@@ -12,7 +12,7 @@ module ApplicationController::Crud
   rescue DeletionError # Deprecated
     flash[:error] =
       t($ERROR_INFO.to_s, scope: [:activerecord, :errors, :models, obj.class.model_name.i18n_key],
-                          default: t("errors.messages.generic_delete_error"))
+        default: t("errors.messages.generic_delete_error"))
   rescue ActiveRecord::DeleteRestrictionError => e # Preferred method
     assn_name = e.to_s.split(" ")[-1]
     model = obj.class.model_name.i18n_key

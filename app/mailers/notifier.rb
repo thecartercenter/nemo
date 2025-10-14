@@ -7,7 +7,7 @@ class Notifier < ApplicationMailer
     @reset_url = reset_url(user)
     @site_name = site_name
     mail(to: user.email, reply_to: coordinator_emails(mission),
-         subject: t("notifier.password_reset_instructions"))
+      subject: t("notifier.password_reset_instructions"))
   end
 
   def intro(user, mission: nil)
@@ -16,7 +16,7 @@ class Notifier < ApplicationMailer
     @reset_url = reset_url(user)
     @site_name = site_name
     mail(to: user.email, reply_to: coordinator_emails(mission),
-         subject: t("notifier.welcome", site: @site_name))
+      subject: t("notifier.welcome", site: @site_name))
   end
 
   def sms_token_change_alert(mission)
@@ -25,7 +25,7 @@ class Notifier < ApplicationMailer
     @site_name = site_name
     all_emails = (coordinator_emails(mission) + admin_emails).uniq
     mail(to: all_emails, reply_to: all_emails,
-         subject: t("notifier.sms_token_change.subject", mission_name: mission.name))
+      subject: t("notifier.sms_token_change.subject", mission_name: mission.name))
   end
 
   def bug_tracker_warning(error)

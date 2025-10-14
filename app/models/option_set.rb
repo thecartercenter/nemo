@@ -61,7 +61,7 @@ class OptionSet < ApplicationRecord
   has_many :questionings, through: :questions
   has_many :option_nodes, -> { order(:rank) }, dependent: :destroy, inverse_of: :option_set
   has_many :report_option_set_choices, class_name: "Report::OptionSetChoice", inverse_of: :option_set,
-                                       dependent: :destroy
+    dependent: :destroy
   belongs_to :root_node, class_name: "OptionNode", dependent: :destroy
 
   scope :by_name, -> { order("option_sets.name") }
@@ -70,7 +70,7 @@ class OptionSet < ApplicationRecord
   validates :name, uniqueness: {scope: :mission_id}
 
   replicable child_assocs: :root_node, backwards_assocs: :questions,
-             uniqueness: {field: :name, style: :sep_words}
+    uniqueness: {field: :name, style: :sep_words}
 
   clone_options follow: %i[option_nodes]
 
@@ -278,7 +278,7 @@ class OptionSet < ApplicationRecord
         levels: levels.as_json(for_option_set_form: true)
       }
     else
-      super(options)
+      super
     end
   end
 

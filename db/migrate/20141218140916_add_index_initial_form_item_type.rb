@@ -4,6 +4,6 @@ class AddIndexInitialFormItemType < ActiveRecord::Migration[4.2]
     FormItem.update_all(type: "Questioning")
   end
 
-  def down 
+  def down
   end
 end

@@ -20,9 +20,9 @@ module ODK
       if default_response_name.present?
         calculate = ODK::ResponsePatternParser.new(default_response_name, src_item: root_group).to_odk
         tag(:bind, nodeset: "/data/meta/instanceName",
-                   calculate: calculate,
-                   readonly: "true()",
-                   type: "string")
+          calculate: calculate,
+          readonly: "true()",
+          type: "string")
       else
         ""
       end
@@ -70,9 +70,7 @@ module ODK
     # returns array of option sets needed for dynamic calculations
     def option_sets_for_instances
       opt_sets = enabled_questionings.map do |qing|
-        if qing.default.present? && qing.default =~ ODK::DynamicPatternParser::VALUE_REGEX
-          referenced_option_sets(qing)
-        end
+        referenced_option_sets(qing) if qing.default.present? && qing.default =~ ODK::DynamicPatternParser::VALUE_REGEX
       end
       opt_sets.flatten.compact.uniq
     end

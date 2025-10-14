@@ -4,6 +4,6 @@ class AddCheckedOutToResponses < ActiveRecord::Migration[4.2]
     add_index  :responses, :checked_out_at
 
     add_column :responses, :checked_out_by_id, :integer
-    add_foreign_key :responses, :users, :column => 'checked_out_by_id'
+    add_foreign_key :responses, :users, column: "checked_out_by_id"
   end
 end

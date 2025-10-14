@@ -41,10 +41,10 @@ describe Forms::ConditionComputer do
     describe "rewrites the conditionable reference on all skip rule conditions" do
       let!(:rule) do
         form.c[1].skip_rules.create!(destination: "item", dest_item: form.c[6], skip_if: "any_met",
-                                     conditions_attributes: [
-                                       {left_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                       {left_qing_id: form.c[1].id, op: "eq", value: "10"}
-                                     ])
+          conditions_attributes: [
+            {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+            {left_qing_id: form.c[1].id, op: "eq", value: "10"}
+          ])
       end
 
       it do

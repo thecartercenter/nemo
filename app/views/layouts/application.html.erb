@@ -38,6 +38,7 @@
   <% end %>
 
   <%= yield(:per_page_js) %>
+    <%= javascript_pack_tag "application" %>
 </head>
 <body class="<%= controller_name %>">
   <header class="<%= 'admin' if admin_mode? %>">

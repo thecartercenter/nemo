@@ -70,28 +70,28 @@ module ODK
           end
 
           it "uses indexed-repeat when going down into a subgroup" do
-            expect(q5.xpath_to(q6)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}"\
-            "/qing#{q6.id},/data/grp#{grp3.id},position(../..),"\
-            "/data/grp#{grp3.id}/grp#{grp8.id},position(..),"\
-            "/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)")
+            expect(q5.xpath_to(q6)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}" \
+                                          "/qing#{q6.id},/data/grp#{grp3.id},position(../..)," \
+                                          "/data/grp#{grp3.id}/grp#{grp8.id},position(..)," \
+                                          "/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)")
           end
 
           it "uses indexed-repeat when going from group to group" do
-            expect(q4.xpath_to(q6)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}"\
-            "/grp#{grp10.id}/qing#{q6.id},"\
-            "/data/grp#{grp3.id},position(../..),"\
-            "/data/grp#{grp3.id}/grp#{grp8.id},1,/data/grp#{grp3.id}"\
-            "/grp#{grp8.id}/grp#{grp10.id},1)")
+            expect(q4.xpath_to(q6)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}" \
+                                          "/grp#{grp10.id}/qing#{q6.id}," \
+                                          "/data/grp#{grp3.id},position(../..)," \
+                                          "/data/grp#{grp3.id}/grp#{grp8.id},1,/data/grp#{grp3.id}" \
+                                          "/grp#{grp8.id}/grp#{grp10.id},1)")
           end
 
           it "uses indexed-repeat when going from top-level to group" do
-            expect(q1.xpath_to(q4)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp6.id}/qing#{q4.id},"\
-              "/data/grp#{grp3.id},1,/data/grp#{grp3.id}/grp#{grp6.id},1)")
+            expect(q1.xpath_to(q4)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp6.id}/qing#{q4.id}," \
+                                          "/data/grp#{grp3.id},1,/data/grp#{grp3.id}/grp#{grp6.id},1)")
           end
 
           it "handles root to subitem properly" do
-            expect(root.xpath_to(q2)).to eq("indexed-repeat(/data/grp#{grp3.id}/qing#{q2.id},"\
-            "/data/grp#{grp3.id},1)")
+            expect(root.xpath_to(q2)).to eq("indexed-repeat(/data/grp#{grp3.id}/qing#{q2.id}," \
+                                            "/data/grp#{grp3.id},1)")
           end
 
           it "handles root to top-level item properly" do
@@ -114,19 +114,19 @@ module ODK
 
           it "uses indexed-repeat when going down into a subgroup" do
             expect(q5.xpath_to(q6, prepend_current: true))
-              .to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}"\
-                "/qing#{q6.id},/data/grp#{grp3.id},position(current()/../..),"\
-                "/data/grp#{grp3.id}/grp#{grp8.id},position(current()/..),"\
-                "/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)")
+              .to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}" \
+                     "/qing#{q6.id},/data/grp#{grp3.id},position(current()/../..)," \
+                     "/data/grp#{grp3.id}/grp#{grp8.id},position(current()/..)," \
+                     "/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)")
           end
 
           it "uses indexed-repeat when going from group to group" do
             expect(q4.xpath_to(q6, prepend_current: true))
-              .to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}"\
-                "/grp#{grp10.id}/qing#{q6.id},"\
-                "/data/grp#{grp3.id},position(current()/../..),"\
-                "/data/grp#{grp3.id}/grp#{grp8.id},1,/data/grp#{grp3.id}"\
-                "/grp#{grp8.id}/grp#{grp10.id},1)")
+              .to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}" \
+                     "/grp#{grp10.id}/qing#{q6.id}," \
+                     "/data/grp#{grp3.id},position(current()/../..)," \
+                     "/data/grp#{grp3.id}/grp#{grp8.id},1,/data/grp#{grp3.id}" \
+                     "/grp#{grp8.id}/grp#{grp10.id},1)")
           end
         end
       end

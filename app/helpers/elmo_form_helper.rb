@@ -3,7 +3,7 @@
 # makes a standard looking form
 module ElmoFormHelper
   # renders a form using the ElmoFormBuilder
-  def elmo_form_for(obj, *args, &block)
+  def elmo_form_for(obj, *args, &)
     options = args.extract_options!
     general_class = options[:override_class] || "elmo-form"
     specific_class = "#{obj.class.model_name.singular}_form"
@@ -20,11 +20,11 @@ module ElmoFormHelper
     # Init code for the generic view that manages the form hints.
     hint_view = javascript_tag("$(function() { new ELMO.Views.FormHintView() })")
 
-    form_for(obj, *args, &block) << hint_view
+    form_for(obj, *args, &) << hint_view
   end
 
   # renders a set of form fields using the ElmoFormBuilder
-  def elmo_fields_for(field_name, obj, *args, &block)
+  def elmo_fields_for(field_name, obj, *args, &)
     defaults = {
       builder: ElmoFormBuilder
     }
@@ -32,7 +32,7 @@ module ElmoFormHelper
     # deep merge the user-provided options with the defaults;
     args << merge_options(defaults, args.extract_options!)
 
-    fields_for(field_name, obj, *args, &block)
+    fields_for(field_name, obj, *args, &)
   end
 
   # gets the mode a form should be displayed in: one of new, edit, or show
@@ -63,8 +63,8 @@ module ElmoFormHelper
       else
         link ||= content_tag(:i, "", class: "hint fa fa-2x fa-info-circle")
         content_tag(:a, link, tabindex: -1, role: "button", class: "hint",
-                              "data-trigger": "manual", "data-toggle": "popover",
-                              "data-content": content)
+          "data-trigger": "manual", "data-toggle": "popover",
+          "data-content": content)
       end
     end
   end

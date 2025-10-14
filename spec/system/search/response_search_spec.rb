@@ -121,7 +121,5 @@ describe "response search", js: true do
         expect(page).to have_content("Displaying all 3 Responses")
       end
     end
-
-
   end
 end

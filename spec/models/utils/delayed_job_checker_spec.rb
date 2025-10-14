@@ -17,7 +17,7 @@ describe Utils::DelayedJobChecker do
       Timecop.travel(-3.minutes) { Delayed::Job.create!(handler: "") }
     end
     let(:handled) do
-      Timecop.travel(-3.seconds) { Delayed::Job.create!(handler: "", locked_at: Time.current + 2.seconds) }
+      Timecop.travel(-3.seconds) { Delayed::Job.create!(handler: "", locked_at: 2.seconds.from_now) }
     end
 
     context "with at least one handled job" do

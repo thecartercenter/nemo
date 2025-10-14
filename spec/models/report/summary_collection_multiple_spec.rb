@@ -26,7 +26,7 @@ describe "summary collection with multiple subsets" do
 
   it "collections with select_one questions should have correct summaries" do
     prepare_form_and_collection("select_one", "select_one", "a" => %w[red red blue],
-                                                            "b" => %w[blue red blue blue])
+      "b" => %w[blue red blue blue])
     expect(header_names_for_disagg_value("a")).to eq(%w[red blue green])
     expect(header_names_for_disagg_value("b")).to eq(%w[red blue green])
     expect(items_for_disagg_value("a", :count)).to eq([2, 1, 0])

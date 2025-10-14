@@ -49,11 +49,11 @@ class Report::Report < ApplicationRecord
   include MissionBased
 
   has_many :option_set_choices, class_name: "Report::OptionSetChoice", foreign_key: "report_report_id",
-                                inverse_of: :report, dependent: :destroy, autosave: true
+    inverse_of: :report, dependent: :destroy, autosave: true
   has_many :option_sets, through: :option_set_choices
   has_many :calculations, -> { order("rank") }, class_name: "Report::Calculation",
-                                                foreign_key: "report_report_id", inverse_of: :report,
-                                                dependent: :destroy, autosave: true
+    foreign_key: "report_report_id", inverse_of: :report,
+    dependent: :destroy, autosave: true
   belongs_to :creator, class_name: "User"
 
   accepts_nested_attributes_for :calculations, allow_destroy: true
@@ -81,13 +81,13 @@ class Report::Report < ApplicationRecord
 
   # HACK: TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
   class << self
-    def new_with_cast(*a, &b)
+    def new_with_cast(*a, &)
       if (h = a.first).is_a?(Hash) && (type = h[:type] || h["type"]) && ((klass = type.constantize) != self)
         raise "wtF hax!!" unless klass < self # klass should be a descendant of us
-        return klass.new(*a, &b)
+        return klass.new(*a, &)
       end
 
-      new_without_cast(*a, &b)
+      new_without_cast(*a, &)
     end
   end
 
@@ -139,7 +139,7 @@ class Report::Report < ApplicationRecord
   end
 
   def as_json(options = {})
-    h = super(options)
+    h = super
     h[:new_record] = new_record?
     h[:just_created] = just_created
     h[:type] = type
