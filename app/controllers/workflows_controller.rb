@@ -95,12 +95,16 @@ class WorkflowsController < ApplicationController
     
     trigger_object_type = params[:trigger_object_type]
     trigger_object_id = params[:trigger_object_id]
-    allowed_types = ['User', 'Document', 'Task'] # <-- Replace with actual permitted class names
-    unless allowed_types.include?(trigger_object_type)
+    allowed_type_map = {
+      'User' => User,
+      'Document' => Document,
+      'Task' => Task
+    } # <-- Replace with actual permitted class names and models if needed
+    klass = allowed_type_map[trigger_object_type]
+    unless klass
       render json: { success: false, error: 'Invalid trigger_object_type' }, status: :bad_request and return
     end
-    trigger_object = trigger_object_type.constantize.find(trigger_object_id)
-    
+    trigger_object = klass.find(trigger_object_id)
     instance = @workflow.create_instance(trigger_object, current_user)
     
     render json: {
