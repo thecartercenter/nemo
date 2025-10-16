@@ -96,6 +96,16 @@ class Response < ApplicationRecord
   after_update { root_node.save if root_node.present? }
   before_create :generate_shortcode
   before_destroy { root_node.destroy if root_node.present? }
+  
+  # Webhook triggers
+  after_create :trigger_response_created_webhook
+  after_update :trigger_response_updated_webhook
+  after_update :trigger_response_submitted_webhook, if: :saved_change_to_incomplete?
+  after_update :trigger_response_reviewed_webhook, if: :saved_change_to_reviewed?
+  
+  # AI Validation triggers
+  after_create :trigger_ai_validation
+  after_update :trigger_ai_validation, if: :should_trigger_ai_validation?
 
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
@@ -237,5 +247,37 @@ class Response < ApplicationRecord
 
   def form_in_mission
     errors.add(:form, :form_unavailable) unless mission.forms.include?(form)
+  end
+
+  private
+
+  def trigger_response_created_webhook
+    WebhookService.trigger_response_created(self)
+  end
+
+  def trigger_response_updated_webhook
+    WebhookService.trigger_response_updated(self)
+  end
+
+  def trigger_response_submitted_webhook
+    return if incomplete? # Only trigger if response is now complete
+    
+    WebhookService.trigger_response_submitted(self)
+  end
+
+  def trigger_response_reviewed_webhook
+    return unless reviewed? # Only trigger if response is now reviewed
+    
+    WebhookService.trigger_response_reviewed(self)
+  end
+
+  def trigger_ai_validation
+    # Run AI validation in background to avoid blocking response creation
+    AiValidationJob.perform_later(self.id)
+  end
+
+  def should_trigger_ai_validation?
+    # Trigger AI validation when response is updated and marked as complete
+    saved_change_to_incomplete? && !incomplete?
   end
 end

@@ -76,6 +76,11 @@ class Form < ApplicationRecord
   attr_writer :minimum_version_id
 
   after_save :update_minimum
+  
+  # Webhook triggers
+  after_create :trigger_form_created_webhook
+  after_update :trigger_form_updated_webhook
+  after_update :trigger_form_published_webhook, if: :saved_change_to_status?
 
   # Disallow specific characters or symbol-only names such as `***` which all break Power BI
   # (documented at https://github.com/thecartercenter/nemo/pull/895).
@@ -350,5 +355,21 @@ class Form < ApplicationRecord
     self.name = name.strip
     self.default_response_name = default_response_name.try(:strip).presence
     true
+  end
+
+  private
+
+  def trigger_form_created_webhook
+    WebhookService.trigger_form_created(self)
+  end
+
+  def trigger_form_updated_webhook
+    WebhookService.trigger_form_updated(self)
+  end
+
+  def trigger_form_published_webhook
+    return unless status == 'live' && saved_change_to_status?
+    
+    WebhookService.trigger_form_published(self)
   end
 end

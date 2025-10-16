@@ -147,6 +147,67 @@ Rails.application.routes.draw do
       end
     end
 
+    # Webhooks
+    resources :webhooks do
+      member do
+        post "test"
+        get "deliveries"
+      end
+    end
+
+    # Custom Dashboards
+    resources :custom_dashboards do
+      member do
+        post "duplicate"
+        get "export"
+        get "widgets"
+        post "add_widget"
+        delete "remove_widget"
+        patch "reorder_widgets"
+      end
+      collection do
+        post "import"
+      end
+    end
+
+    # AI Validation
+    resources :ai_validation_rules, path: "ai-validation-rules" do
+      member do
+        patch "toggle_active"
+        post "test_rule"
+      end
+      collection do
+        post "validate_response"
+        post "validate_batch"
+        get "report"
+        get "suggestions"
+        post "create_from_suggestion"
+      end
+    end
+
+    # Workflows
+    resources :workflows do
+      member do
+        patch "activate"
+        patch "deactivate"
+        post "create_instance"
+      end
+      collection do
+        get "my_approvals"
+        get "my_workflows"
+      end
+    end
+
+    # Workflow Instances
+    resources :workflow_instances, only: [] do
+      member do
+        post "approve"
+        post "reject"
+        post "cancel"
+        get "details"
+      end
+    end
+
     # Advanced Search
     get "search", to: "search#index"
     get "search/suggestions", to: "search#suggestions"
