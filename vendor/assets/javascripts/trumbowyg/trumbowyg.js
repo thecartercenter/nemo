@@ -1091,11 +1091,11 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             } else {
                 // Sanitize the textarea content directly to defend against XSS
                 var raw = t.$ta.val();
-                // Remove any tags-per-settings BEFORE sanitizing, if needed
-                var tempDiv = $('<div>').html(raw);
+                // First sanitize, then parse as HTML to remove tags
+                var sanitized = DOMPurify.sanitize(raw);
+                var tempDiv = $('<div>').html(sanitized);
                 $(t.o.tagsToRemove.join(','), tempDiv).remove();
-                var sanitized = DOMPurify.sanitize(tempDiv.html());
-                t.$ed.html(sanitized);
+                t.$ed.html(tempDiv.html());
             }
 
             if (t.o.autogrow) {
