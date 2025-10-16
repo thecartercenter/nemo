@@ -180,7 +180,7 @@ class CustomDashboardsController < ApplicationController
   def dashboard_params
     params.require(:custom_dashboard).permit(
       :name, :description, :is_public,
-      layout: {}, settings: {}
+      layout: [:columns, :theme], settings: [:refresh_interval, :show_legend]
     )
   end
 end
