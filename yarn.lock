@@ -6906,14 +6906,7 @@ react@16.x.x:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
 
-react_ujs@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/react_ujs/-/react_ujs-2.6.1.tgz#a202a33c95c9e2bb18ab56926b7e79f3325ec855"
-  integrity sha512-9M33/A8cubStkZ2cpJSimcTD0RlCWiqXF6e90IQmMw/Caf/W0dtAzOtHtiQE3JjLbt/nhRR7NLPxMfnlm141ig==
-  dependencies:
-    react_ujs "^2.6.0"
-
-react_ujs@^2.6.0:
+react_ujs@2.7.1:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/react_ujs/-/react_ujs-2.7.1.tgz#d87cbcb82593fe59d30fc5dbc51800d1571001a8"
   integrity sha512-nQ/y/Vn2hZQXjNxFKY4pV5hAQbG3o/8yaRzq3nJAAdk7tMgey/EsMKoDOWlEQxZ+D3J4BtwquW1oCESMiHSHnQ==
