@@ -4,7 +4,7 @@ module Api
   module V1
     class BaseController < ApplicationController
       # Skip CSRF protection for API
-      skip_before_action :verify_authenticity_token
+
       
       # Use JSON for all responses
       respond_to :json
