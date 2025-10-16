@@ -124,7 +124,8 @@ class ValidationRulesController < ApplicationController
     params.require(:validation_rule).permit(
       :name, :description, :rule_type, :message, :is_active,
       :form_id, :question_id,
-      conditions: {}
+      # Explicitly permitted keys in 'conditions'
+      conditions: [:operator, :field, :value] # Update these keys as appropriate to your application
     )
   end
 end
