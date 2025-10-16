@@ -20,7 +20,7 @@ describe Notifier do
         expect(mail.subject).to eq("Welcome to NEMO!")
         expect(mail.body.encoded).to match("Welcome to NEMO!")
         expect(mail.body.encoded).to match("Your login name is")
-        expect(mail.body.encoded).to match("http://www.example.com/en/password-resets/")
+        expect(mail.body.encoded).to match("http://www\.example\.com/en/password-resets/")
       end
     end
 
