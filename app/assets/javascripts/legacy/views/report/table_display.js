@@ -60,7 +60,7 @@
       // rest of header cells
       if (headers.col) {
         $(headers.col.cells).each((idx, ch) => {
-          $('<th>').addClass('col').html(ch.name || `[${I18n.t('report/report.blank')}]`).appendTo(trow);
+          $('<th>').addClass('col').text(ch.name || `[${I18n.t('report/report.blank')}]`).appendTo(trow);
         });
       }
 
