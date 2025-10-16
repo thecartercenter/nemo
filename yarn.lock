@@ -6536,6 +6536,7 @@ postcss@^7.0.17, postcss@^7.0.31:
     picocolors "^0.2.1"
     source-map "^0.6.1"
 
+postcss@^8.4.24, postcss@^8.4.31, postcss@^8.4.33:
 postcss@^8.4.24, postcss@^8.4.33:
   version "8.5.6"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.6.tgz#2825006615a619b4f62a9e7426cc120b349a8f3c"
