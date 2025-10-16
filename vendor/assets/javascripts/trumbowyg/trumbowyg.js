@@ -1089,12 +1089,12 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             if (!force && t.$ed.is(':visible')) {
                 t.syncTextarea();
             } else {
-                // wrap the content in a div it's easier to get the innerhtml
-                var html = $('<div>').html(t.$ta.val());
-                //scrub the html before loading into the doc
-                var safe = $('<div>').append(html);
-                $(t.o.tagsToRemove.join(','), safe).remove();
-                var sanitized = DOMPurify.sanitize(safe.contents().html());
+                // Sanitize the textarea content directly to defend against XSS
+                var raw = t.$ta.val();
+                // Remove any tags-per-settings BEFORE sanitizing, if needed
+                var tempDiv = $('<div>').html(raw);
+                $(t.o.tagsToRemove.join(','), tempDiv).remove();
+                var sanitized = DOMPurify.sanitize(tempDiv.html());
                 t.$ed.html(sanitized);
             }
 
