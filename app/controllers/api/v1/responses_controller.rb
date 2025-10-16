@@ -5,6 +5,10 @@ module Api
     class ResponsesController < BaseController
       before_action :set_response, only: [:show, :update, :destroy]
 
+      # Whitelists for allowed order columns and directions
+      ORDER_COLUMNS = %w[created_at form_id user_id reviewed incomplete source].freeze
+      ORDER_DIRECTIONS = %w[asc desc].freeze
+
       def index
         authorize!(:read, Response)
         
@@ -28,9 +32,9 @@ module Api
         end
         
         # Ordering
-        order = params[:order] || 'created_at'
-        direction = params[:direction] || 'desc'
-        responses = responses.order("#{order} #{direction}")
+        order = ORDER_COLUMNS.include?(params[:order]) ? params[:order] : 'created_at'
+        direction = ORDER_DIRECTIONS.include?(params[:direction]) ? params[:direction] : 'desc'
+        responses = responses.order(order => direction)
         
         # Pagination
         responses = responses.paginate(paginate_params)
