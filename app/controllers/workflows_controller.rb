@@ -229,7 +229,7 @@ class WorkflowsController < ApplicationController
   def workflow_params
     params.require(:workflow).permit(
       :name, :description, :workflow_type, :active,
-      config: {}
+      config: [:setting_a, :setting_b] # TODO: replace with actual valid config keys
     )
   end
 end
