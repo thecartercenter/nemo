@@ -542,7 +542,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     contenteditable: true,
                     dir: t.lang._dir || 'ltr'
                 })
-                .html(html)
+                .html(window.DOMPurify.sanitize(html))
             ;
 
             if (t.o.tabindex) {
