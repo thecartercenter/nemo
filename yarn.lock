@@ -6013,12 +6013,7 @@ mobx@5.15.6:
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.6.tgz#24750af56f87bcf9c3cf82ece4c79eb91bb71968"
   integrity sha512-U5nnx3UNdRkUjntpwzO060VWifGVx/JZeu/aMw4y28dTjDNjoY3vNKs6tFNm7z1qIfcPInsd9L9HIm8H0zTDqg==
 
-moment@2.29.4:
-  version "2.29.4"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
-  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
-
-moment@>=1.6.0:
+moment@2.30.1, moment@>=1.6.0:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
@@ -6536,7 +6531,6 @@ postcss@^7.0.17, postcss@^7.0.31:
     picocolors "^0.2.1"
     source-map "^0.6.1"
 
-postcss@^8.4.24, postcss@^8.4.31, postcss@^8.4.33:
 postcss@^8.4.24, postcss@^8.4.33:
   version "8.5.6"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.6.tgz#2825006615a619b4f62a9e7426cc120b349a8f3c"
