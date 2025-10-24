@@ -77,6 +77,16 @@ jQuery.trumbowyg = {
     hideButtonTexts: null
 };
 
+// Helper function: Escape HTML for XSS protection if DOMPurify is not present
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // Makes default options read-only
 Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
     value: {
@@ -981,7 +991,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                         .removeClass(prefix + 'editor')
                         .removeAttr('contenteditable')
                         .removeAttr('dir')
-                        [window.DOMPurify ? 'html' : 'text'](window.DOMPurify ? window.DOMPurify.sanitize(t.html()) : t.html())
+                        .html(window.DOMPurify ? window.DOMPurify.sanitize(t.html()) : escapeHTML(t.html()))
                         .show()
                 );
             }
