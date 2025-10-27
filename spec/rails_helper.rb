@@ -106,6 +106,17 @@ RSpec.configure do |config|
     Rails::Debug.log("")
   end
 
+  # Allow defining specs that run jobs inline
+  # (since Capybara requests are now real HTTP calls as of Rails 7.2 which are harder to wrap in perform_enqueued_jobs)
+  config.around(:each, :inline_jobs) do |example|
+    original_adapter = ActiveJob::Base.queue_adapter
+    ActiveJob::Base.queue_adapter = :inline
+
+    example.run
+  ensure
+    ActiveJob::Base.queue_adapter = original_adapter
+  end
+
   # Add extra delay for flappers which seems to help for certain browser actions.
   config.around(:each, flapping: true) do |example|
     method_names = {

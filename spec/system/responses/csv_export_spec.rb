@@ -21,7 +21,7 @@ describe "responses csv export" do
   before { login(user) }
 
   # This spec intentionally does not use :js, so that we can verify the download with rspec.
-  scenario "exporting csv happy path" do
+  scenario "exporting csv happy path", :inline_jobs do
     visit(responses_path(params))
 
     click_link("Download")
