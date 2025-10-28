@@ -127,7 +127,6 @@ Rails.application.configure do
   # Disable automatic flushing of the log to improve performance.
   config.autoflush_log = false
 
-
   # Raises error for missing translations
   config.i18n.raise_on_missing_translations = false
 

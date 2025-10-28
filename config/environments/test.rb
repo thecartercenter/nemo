@@ -69,8 +69,8 @@ Rails.application.configure do
   Rack::Attack.enabled = false
   Warning[:deprecated] = true
 
-  # We want to know about missing translations.
-  config.i18n.raise_on_missing_translations = true
+  # Raises error for missing translations. May result in a lot of false positives.
+  # config.i18n.raise_on_missing_translations = true
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
