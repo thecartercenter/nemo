@@ -1,6 +1,7 @@
 {
   "packageManager": "yarn@1.22.22",
   "scripts": {
+    "build": "NODE_ENV=production bin/shakapacker"
     "i18n:export": "bundle exec rake i18n:js:export",
     "test": "jest",
     "lint:js": "eslint --ext .js,.jsx",

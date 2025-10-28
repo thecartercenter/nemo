@@ -31,8 +31,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
-      - run: npm run build
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
       - name: Jscrambler Code Integrity
         id: jscrambler
         # the complete list of inputs can be found here: https://github.com/marketplace/actions/jscrambler#inputs
@@ -43,5 +44,5 @@ jobs:
           access-key: ${{ secrets.JSCRAMBLER_ACCESS_KEY }}          # This value can be found in your Jscrambler account
           jscrambler-config-path: jscrambler.json                   # Download from your Jscrambler account
           files-src: |                                              # List of Files to be protected
-            dist/**/*
+            public/packs/**/*
           files-dest: .
