@@ -69,10 +69,9 @@ describe "odk submissions", :odk, type: :request do
   context "with non-existent mission" do
     let(:submission_path) { "/m/foo/submission" }
 
-    it "should raise error" do
-      expect do
-        post(submission_path, params: request_params, headers: auth_header)
-      end.to raise_error(ActiveRecord::RecordNotFound)
+    it "should fail with 404" do
+      post(submission_path, params: request_params, headers: auth_header)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
