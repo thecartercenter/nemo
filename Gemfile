@@ -32,10 +32,9 @@ gem "terrapin", "~> 0.6.0"
 gem "thor", "~> 1.4"
 gem "twilio-ruby", "~> 7.2.0" # Does not use semver after v5, watch out!
 
+# JS/CSS
 gem "bootstrap", "~> 4.3"
 gem "sassc-rails", "~> 2.1"
-
-# JS/CSS
 gem "clipboard-rails", "~> 1.7"
 gem "dropzonejs-rails", "~> 0.8.5"
 gem "flatpickr"
