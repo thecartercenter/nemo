@@ -49,8 +49,57 @@ window.I18n = I18n;
 try {
   require('../assets/javascripts/i18n/translations');
 } catch (error) {
-  // eslint-disable-next-line no-console
-  console.error('Failed to find translations. Did you run `rails i18n:js:export` yet?');
+  // Provide minimal English translations for Jest runs without Rails export.
+  I18n.locale = 'en';
+  I18n.translations = I18n.translations || {};
+  I18n.translations.en = {
+    common: {
+      search: 'Search',
+      apply: 'Apply',
+      _yes: 'Yes',
+      _no: 'No',
+      either: 'Either',
+      startDatePlaceholder: 'Start Date',
+      endDatePlaceholder: 'End Date',
+      startDate: 'Start Date',
+      endDate: 'End Date',
+    },
+    filter: {
+      date: 'Date',
+      form: 'Form',
+      question: 'Question',
+      reviewed: 'Reviewed',
+      is_reviewed: "Is marked 'reviewed'",
+      submitter: 'Submitter',
+      choose_form: 'Choose a form',
+      choose_submitter: {
+        submitter: 'Choose a user',
+        group: 'Choose a group',
+      },
+      search_box_placeholder: 'Search',
+      showing_questions_from: 'Showing questions from %{form_list} only.',
+    },
+    condition: {
+      left_qing_prompt: 'Choose question ...',
+      right_side_type: {
+        literal: 'A specific value ...',
+        qing: 'Another question ...',
+      },
+    },
+    // Intentionally omit search.help_title so snapshots still show missing translation
+    skip_rule: {
+      dest_prompt: 'Choose destination ...',
+      skip_if_options: {},
+    },
+    form_item: {
+      display_if_options: {},
+      skip_logic_options: {
+        end_of_form: 'End of form',
+      },
+      delete_rule: 'Delete rule',
+      add_rule: 'Add rule',
+    },
+  };
 }
 
 // Initialize Enzyme.

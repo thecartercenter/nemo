@@ -12,6 +12,9 @@
     "sentry:tag": "if [[ ! -f ~/.sentryclirc ]]; then echo \"Please run sentry:setup first.\"; exit; fi; echo \"Setting v`cat VERSION` on Sentry to current HEAD...\"; sentry-cli releases set-commits \"nemo@`cat VERSION`\" --auto"
   },
   "jest": {
+    "setupFiles": [
+      "<rootDir>/app/javascript/jest.setup.js"
+    ],
     "testEnvironment": "jsdom",
     "roots": [
       "<rootDir>/app/javascript"
@@ -27,7 +30,8 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "moduleNameMapper": {
-      "\\.css$": "<rootDir>/app/javascript/__mocks__/style-mock.js"
+      "\\.css$": "<rootDir>/app/javascript/__mocks__/style-mock.js",
+      "^cheerio/lib/utils$": "cheerio/dist/commonjs/utils"
     }
   },
   "resolutions": {
