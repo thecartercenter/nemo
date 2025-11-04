@@ -1,0 +1,45 @@
+[0;32m[2025-11-04 16:04:01] Starting NEMO deployment...[0m
+[0;34m[2025-11-04 16:04:01] INFO: Running as user: root[0m
+[0;34m[2025-11-04 16:04:01] INFO: Working directory: /workspace/nemo[0m
+[0;32m[2025-11-04 16:04:01] Checking database backup...[0m
+[1;33m[2025-11-04 16:04:01] WARNING: pg_dump not available, skipping database backup[0m
+[0;32m[2025-11-04 16:04:01] Checking for code updates...[0m
+[0;32m[2025-11-04 16:04:04] Current branch: main[0m
+[0;32m[2025-11-04 16:04:05] Installing Ruby dependencies...[0m
+[1;33m[2025-11-04 16:04:05] WARNING: bundle command not found, skipping Ruby dependencies[0m
+[0;32m[2025-11-04 16:04:05] Installing Node.js dependencies...[0m
+yarn install v1.22.22
+warning package.json: "dependencies" has dependency "webpack-cli" with range "4.10.0" that collides with a dependency in "devDependencies" of the same name with version "6"
+warning app@0.1.0: "dependencies" has dependency "webpack-cli" with range "4.10.0" that collides with a dependency in "devDependencies" of the same name with version "6"
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+warning " > stylelint-config-sass-guidelines@7.0.0" has incorrect peer dependency "stylelint@^13.0.0".
+warning "stylelint-config-sass-guidelines > stylelint-order@4.1.0" has incorrect peer dependency "stylelint@^10.0.1 || ^11.0.0 || ^12.0.0 || ^13.0.0".
+warning "stylelint-config-sass-guidelines > stylelint-scss@3.21.0" has incorrect peer dependency "stylelint@^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0".
+[4/4] Building fresh packages...
+Done in 10.11s.
+[0;32m[2025-11-04 16:04:16] Node.js dependencies installed successfully[0m
+[0;32m[2025-11-04 16:04:16] Running database migrations...[0m
+[1;33m[2025-11-04 16:04:16] WARNING: Rails not available or database not configured, skipping migrations[0m
+[0;32m[2025-11-04 16:04:16] Building production assets...[0m
+yarn run v1.22.22
+warning package.json: "dependencies" has dependency "webpack-cli" with range "4.10.0" that collides with a dependency in "devDependencies" of the same name with version "6"
+$ NODE_ENV=production bin/shakapacker
+/usr/bin/env: ‘ruby’: No such file or directory
+error Command failed with exit code 127.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+[0;32m[2025-11-04 16:04:17] Assets built successfully[0m
+[0;32m[2025-11-04 16:04:17] Updating cron jobs...[0m
+[1;33m[2025-11-04 16:04:17] WARNING: Cron job update skipped (whenever gem may not be available)[0m
+[0;32m[2025-11-04 16:04:17] Checking services...[0m
+[1;33m[2025-11-04 16:04:17] WARNING: delayed-job service not running or not found[0m
+[1;33m[2025-11-04 16:04:17] WARNING: Nginx not running or not found[0m
+[0;32m[2025-11-04 16:04:17] Verifying deployment...[0m
+[1;33m[2025-11-04 16:04:17] WARNING: Deployment verification failed - application may not be running[0m
+[0;34m[2025-11-04 16:04:17] INFO: This is normal if the application server is not started[0m
+[0;32m[2025-11-04 16:04:17] Cleaning up old backups...[0m
+[0;32m[2025-11-04 16:04:17] Old backups cleaned up[0m
+[0;32m[2025-11-04 16:04:17] Deployment process completed![0m
+[0;34m[2025-11-04 16:04:17] INFO: Application artifacts are ready in: /workspace/nemo/public/packs/[0m
+[0;34m[2025-11-04 16:04:17] INFO: Log file: /workspace/nemo/deploy.log[0m
