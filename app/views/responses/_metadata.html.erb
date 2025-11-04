@@ -34,4 +34,13 @@
       </div>
     <% end %>
   </div>
+  
+  <%# AI Validation Status %>
+  <% if @response.persisted? && defined?(AiValidationResult) %>
+    <div class="row">
+      <div class="col-md-12">
+        <%= render "responses/validation_status", response: @response %>
+      </div>
+    </div>
+  <% end %>
 </div>

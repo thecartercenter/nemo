@@ -1,0 +1,221 @@
+<%= form_with model: @rule, local: true, html: { class: "ai-validation-form" } do |form| %>
+  <% if @rule.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(@rule.errors.count, "error") %> prohibited this rule from being saved:</h4>
+      <ul>
+        <% @rule.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :name, t("ai_validation.name"), class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true, maxlength: 255 %>
+    <small class="form-text text-muted"><%= t("ai_validation.name_help") %></small>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description, t("ai_validation.description"), class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", rows: 3 %>
+    <small class="form-text text-muted"><%= t("ai_validation.description_help") %></small>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <%= form.label :rule_type, t("ai_validation.rule_type"), class: "form-label" %>
+      <%= form.select :rule_type,
+                      options_for_select(
+                        @rule_types.map { |type| [t("ai_validation.rule_types.#{type}"), type] },
+                        @rule.rule_type
+                      ),
+                      {},
+                      { class: "form-control", required: true } %>
+      <small class="form-text text-muted"><%= t("ai_validation.rule_type_help") %></small>
+    </div>
+
+    <div class="form-group col-md-6">
+      <%= form.label :ai_model, t("ai_validation.ai_model"), class: "form-label" %>
+      <%= form.select :ai_model,
+                      options_for_select(
+                        @ai_models.map { |model| [model.humanize, model] },
+                        @rule.ai_model || 'gpt-3.5-turbo'
+                      ),
+                      {},
+                      { class: "form-control", required: true } %>
+      <small class="form-text text-muted"><%= t("ai_validation.ai_model_help") %></small>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <%= form.label :threshold, t("ai_validation.threshold"), class: "form-label" %>
+      <div class="input-group">
+        <%= form.number_field :threshold,
+                             in: 0.0..1.0,
+                             step: 0.01,
+                             class: "form-control",
+                             required: true,
+                             value: @rule.threshold || 0.8 %>
+        <div class="input-group-append">
+          <span class="input-group-text">0.0 - 1.0</span>
+        </div>
+      </div>
+      <small class="form-text text-muted"><%= t("ai_validation.threshold_help") %></small>
+    </div>
+
+    <div class="form-group col-md-6">
+      <div class="form-check mt-4">
+        <%= form.check_box :active, class: "form-check-input" %>
+        <%= form.label :active, t("ai_validation.active"), class: "form-check-label" %>
+        <small class="form-text text-muted d-block"><%= t("ai_validation.active_help") %></small>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit t("common.save"), class: "btn btn-primary" %>
+    <%= link_to t("common.cancel"), ai_validation_rules_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
+
+<style>
+.ai-validation-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.form-text {
+  font-size: 0.875em;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-check {
+  padding-top: 10px;
+}
+
+.form-check-input {
+  margin-right: 8px;
+}
+
+.input-group {
+  display: flex;
+}
+
+.input-group .form-control {
+  flex: 1;
+}
+
+.input-group-append {
+  display: flex;
+}
+
+.input-group-text {
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  color: #6c757d;
+  font-size: 0.875em;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.alert-danger {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.alert-danger ul {
+  margin: 10px 0 0 20px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #dee2e6;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+</style>

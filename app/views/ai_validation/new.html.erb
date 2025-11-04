@@ -1,0 +1,10 @@
+<% content_for :title, t("ai_validation.new_rule") %>
+
+<div class="ai-validation-form-page">
+  <div class="page-header">
+    <h1><%= t("ai_validation.new_rule") %></h1>
+    <%= link_to t("common.back"), ai_validation_rules_path, class: "btn btn-secondary" %>
+  </div>
+
+  <%= render "form" %>
+</div>

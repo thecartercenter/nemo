@@ -1,0 +1,331 @@
+<% content_for :title, t("ai_validation.report") %>
+
+<div class="ai-validation-report-page">
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1><%= t("ai_validation.report") %></h1>
+      <div class="page-header-actions">
+        <%= link_to t("common.back"), ai_validation_rules_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="report-filters">
+    <%= form_with url: report_ai_validation_rules_path, method: :get, local: true, class: "filters-form" do |form| %>
+      <div class="filters-row">
+        <div class="filter-group">
+          <%= form.label :date_from, t("ai_validation.date_from") %>
+          <%= form.date_field :date_from, value: params[:date_from], class: "form-control" %>
+        </div>
+        <div class="filter-group">
+          <%= form.label :date_to, t("ai_validation.date_to") %>
+          <%= form.date_field :date_to, value: params[:date_to], class: "form-control" %>
+        </div>
+        <div class="filter-group">
+          <%= form.submit t("ai_validation.filter"), class: "btn btn-primary" %>
+          <%= link_to t("ai_validation.clear"), report_ai_validation_rules_path, class: "btn btn-secondary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="report-content">
+    <% if @report.present? %>
+      <div class="report-summary">
+        <h2><%= t("ai_validation.summary") %></h2>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-value"><%= @report[:total_validations] || 0 %></div>
+            <div class="summary-label"><%= t("ai_validation.total_validations") %></div>
+          </div>
+          <div class="summary-card summary-success">
+            <div class="summary-value"><%= @report[:passed_count] || 0 %></div>
+            <div class="summary-label"><%= t("ai_validation.passed") %></div>
+          </div>
+          <div class="summary-card summary-danger">
+            <div class="summary-value"><%= @report[:failed_count] || 0 %></div>
+            <div class="summary-label"><%= t("ai_validation.failed") %></div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-value"><%= @report[:average_confidence] ? (@report[:average_confidence] * 100).round(1) : 0 %>%</div>
+            <div class="summary-label"><%= t("ai_validation.average_confidence") %></div>
+          </div>
+        </div>
+      </div>
+
+      <% if @report[:by_rule_type].present? %>
+        <div class="report-section">
+          <h2><%= t("ai_validation.by_rule_type") %></h2>
+          <div class="table-responsive">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th><%= t("ai_validation.rule_type") %></th>
+                  <th><%= t("ai_validation.total") %></th>
+                  <th><%= t("ai_validation.passed") %></th>
+                  <th><%= t("ai_validation.failed") %></th>
+                  <th><%= t("ai_validation.pass_rate") %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @report[:by_rule_type].each do |rule_type, stats| %>
+                  <tr>
+                    <td><%= rule_type.humanize %></td>
+                    <td><%= stats[:total] || 0 %></td>
+                    <td><%= stats[:passed] || 0 %></td>
+                    <td><%= stats[:failed] || 0 %></td>
+                    <td>
+                      <% pass_rate = stats[:total] && stats[:total] > 0 ? (stats[:passed].to_f / stats[:total] * 100).round(1) : 0 %>
+                      <%= pass_rate %>%
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @report[:recent_results].present? %>
+        <div class="report-section">
+          <h2><%= t("ai_validation.recent_results") %></h2>
+          <div class="table-responsive">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th><%= t("ai_validation.rule") %></th>
+                  <th><%= t("ai_validation.response") %></th>
+                  <th><%= t("ai_validation.confidence") %></th>
+                  <th><%= t("ai_validation.status") %></th>
+                  <th><%= t("ai_validation.date") %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @report[:recent_results].first(10).each do |result| %>
+                  <tr>
+                    <td><%= result[:rule_name] %></td>
+                    <td><%= result[:response_code] %></td>
+                    <td><%= (result[:confidence] * 100).round(0) %>%</td>
+                    <td>
+                      <% if result[:passed] %>
+                        <span class="status-badge status-success"><%= t("ai_validation.passed") %></span>
+                      <% else %>
+                        <span class="status-badge status-danger"><%= t("ai_validation.failed") %></span>
+                      <% end %>
+                    </td>
+                    <td><%= result[:date] %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="no-report">
+        <i class="fa fa-chart-bar"></i>
+        <p><%= t("ai_validation.no_report_data") %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.ai-validation-report-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.report-filters {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.filters-row {
+  display: flex;
+  gap: 15px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.form-control {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.report-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.report-summary {
+  margin-bottom: 30px;
+}
+
+.report-summary h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.summary-card {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.summary-card.summary-success {
+  background: #d4edda;
+}
+
+.summary-card.summary-danger {
+  background: #f8d7da;
+}
+
+.summary-value {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.summary-label {
+  font-size: 0.9em;
+  color: #6c757d;
+}
+
+.report-section {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid #dee2e6;
+}
+
+.report-section h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th {
+  background: #f8f9fa;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.report-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.report-table tr:hover {
+  background: #f8f9fa;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.status-success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-danger {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.no-report {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.no-report i {
+  font-size: 4em;
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .filters-row {
+    flex-direction: column;
+  }
+  
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

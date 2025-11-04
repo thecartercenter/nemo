@@ -1,0 +1,305 @@
+<%# AI Validation Status Partial for Responses %>
+<% if local_assigns[:response] && defined?(AiValidationResult) %>
+  <% validation_results = response.ai_validation_results.includes(:ai_validation_rule).order(created_at: :desc).limit(5) %>
+  
+  <% if validation_results.any? %>
+    <div class="response-validation-status" data-response-id="<%= response.id %>">
+      <div class="validation-status-header">
+        <span class="validation-icon">
+          <i class="fa fa-robot"></i>
+        </span>
+        <span class="validation-label"><%= t("ai_validation.validation_status") %></span>
+      </div>
+      
+      <div class="validation-results-summary">
+        <% passed_count = validation_results.count { |r| r.passed? } %>
+        <% failed_count = validation_results.count { |r| !r.passed? } %>
+        <% total = validation_results.count %>
+        
+        <% if passed_count == total %>
+          <span class="validation-badge validation-all-passed">
+            <i class="fa fa-check-circle"></i>
+            <%= t("ai_validation.all_passed", count: total) %>
+          </span>
+        <% elsif failed_count > 0 %>
+          <span class="validation-badge validation-has-failures">
+            <i class="fa fa-exclamation-triangle"></i>
+            <%= t("ai_validation.some_failed", passed: passed_count, failed: failed_count) %>
+          </span>
+        <% end %>
+        
+        <button class="btn btn-sm btn-link view-validation-details" 
+                data-toggle="modal" 
+                data-target="#validation-modal-<%= response.id %>">
+          <%= t("ai_validation.view_details") %>
+        </button>
+      </div>
+      
+      <!-- Validation Details Modal -->
+      <div class="modal fade" id="validation-modal-<%= response.id %>" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <%= t("ai_validation.validation_details") %> - <%= response.shortcode %>
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="validation-results-list">
+                <% validation_results.each do |result| %>
+                  <div class="validation-result-item <%= result.passed? ? 'passed' : 'failed' %>">
+                    <div class="result-header">
+                      <div class="result-info">
+                        <span class="rule-name"><strong><%= result.ai_validation_rule.name %></strong></span>
+                        <span class="rule-type">
+                          <%= result.validation_type.humanize %>
+                        </span>
+                        <span class="confidence-score">
+                          <%= (result.confidence_score * 100).round(0) %>%
+                        </span>
+                        <span class="status-badge <%= result.passed? ? 'status-success' : 'status-danger' %>">
+                          <%= result.passed? ? t("ai_validation.passed") : t("ai_validation.failed") %>
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <% if result.explanation.present? %>
+                      <div class="result-explanation">
+                        <%= result.explanation %>
+                      </div>
+                    <% end %>
+                    
+                    <% if result.issues.any? %>
+                      <div class="result-issues">
+                        <strong><%= t("ai_validation.issues") %>:</strong>
+                        <ul>
+                          <% result.issues.each do |issue| %>
+                            <li><%= issue %></li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    <% end %>
+                    
+                    <% if result.suggestions.any? %>
+                      <div class="result-suggestions">
+                        <strong><%= t("ai_validation.suggestions") %>:</strong>
+                        <ul>
+                          <% result.suggestions.each do |suggestion| %>
+                            <li><%= suggestion %></li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    <% end %>
+                    
+                    <div class="result-meta">
+                      <small class="text-muted">
+                        <%= t("ai_validation.validated_at") %>: <%= result.created_at.strftime("%Y-%m-%d %H:%M") %>
+                      </small>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              
+              <div class="validation-actions">
+                <%= link_to t("ai_validation.validate_now"), 
+                    validate_response_ai_validation_rules_path(response_id: response.id),
+                    method: :post,
+                    remote: true,
+                    class: "btn btn-primary btn-sm",
+                    data: { response_id: response.id } %>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                <%= t("common.close") %>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="response-validation-status no-validation" data-response-id="<%= response.id %>">
+      <div class="validation-status-header">
+        <span class="validation-icon">
+          <i class="fa fa-robot"></i>
+        </span>
+        <span class="validation-label"><%= t("ai_validation.not_validated") %></span>
+      </div>
+      <div class="validation-actions">
+        <%= link_to t("ai_validation.validate_now"), 
+            validate_response_ai_validation_rules_path(response_id: response.id),
+            method: :post,
+            remote: true,
+            class: "btn btn-sm btn-outline-primary",
+            data: { response_id: response.id } %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<style>
+.response-validation-status {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: #f8f9fa;
+}
+
+.validation-status-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.validation-icon {
+  color: #007bff;
+}
+
+.validation-label {
+  font-weight: 500;
+}
+
+.validation-results-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.validation-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.validation-all-passed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.validation-has-failures {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.validation-results-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.validation-result-item {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border-left: 4px solid;
+}
+
+.validation-result-item.passed {
+  background: #f8f9fa;
+  border-left-color: #28a745;
+}
+
+.validation-result-item.failed {
+  background: #fff5f5;
+  border-left-color: #dc3545;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.result-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.rule-name {
+  font-weight: 600;
+}
+
+.rule-type {
+  font-size: 0.9em;
+  color: #6c757d;
+}
+
+.confidence-score {
+  font-weight: 500;
+  color: #007bff;
+}
+
+.status-badge {
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 0.8em;
+}
+
+.status-success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-danger {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.result-explanation {
+  margin: 10px 0;
+  color: #495057;
+}
+
+.result-issues,
+.result-suggestions {
+  margin: 10px 0;
+}
+
+.result-issues ul,
+.result-suggestions ul {
+  margin: 5px 0 0 20px;
+  padding: 0;
+}
+
+.result-meta {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #dee2e6;
+}
+
+.validation-actions {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #dee2e6;
+}
+
+.no-validation {
+  text-align: center;
+  padding: 15px;
+}
+</style>
+
+<%= javascript_doc_ready do %>
+  // Handle validation trigger
+  $('.response-validation-status').on('ajax:success', 'a[data-response-id]', function(e, data) {
+    if (data.success) {
+      // Reload the validation status section
+      var responseId = $(this).data('response-id');
+      $.get('/<%= I18n.locale %>/m/<%= current_mission.compact_name %>/responses/' + responseId + '/validation_status', function(html) {
+        $('.response-validation-status[data-response-id="' + responseId + '"]').replaceWith(html);
+      });
+    }
+  });
+<% end %>
