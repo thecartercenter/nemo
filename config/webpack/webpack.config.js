@@ -3,4 +3,13 @@ const { generateWebpackConfig } = require('shakapacker')
 
 const webpackConfig = generateWebpackConfig()
 
+// Exclude test files from production builds
+if (process.env.NODE_ENV === 'production') {
+  webpackConfig.module.rules.push({
+    test: /\.(test|spec)\.(js|jsx)$/,
+    exclude: /node_modules/,
+    use: 'ignore-loader'
+  })
+}
+
 module.exports = webpackConfig
