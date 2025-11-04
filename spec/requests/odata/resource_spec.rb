@@ -15,9 +15,9 @@ describe "OData resource" do
 
     it "renders as expected" do
       expect_json(
-        "error": {
-          "code": "",
-          "message": "Resource not found for the segment 'Responses-invalid'."
+        error: {
+          code: "",
+          message: "Resource not found for the segment 'Responses-invalid'."
         }
       )
     end
@@ -31,17 +31,17 @@ describe "OData resource" do
     it "renders as expected" do
       expect_json(
         "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
-          "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
+                          "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
         value: [
-          json_for(form, responses[2], "IntegerQ1": 3,
-                                       "SelectOneQ2": "Dog",
-                                       "TextQ3": "Baz"),
-          json_for(form, responses[1], "IntegerQ1": 2,
-                                       "SelectOneQ2": "Cat",
-                                       "TextQ3": "Bar"),
-          json_for(form, responses[0], "IntegerQ1": 1,
-                                       "SelectOneQ2": "Dog",
-                                       "TextQ3": "Foo")
+          json_for(form, responses[2], IntegerQ1: 3,
+            SelectOneQ2: "Dog",
+            TextQ3: "Baz"),
+          json_for(form, responses[1], IntegerQ1: 2,
+            SelectOneQ2: "Cat",
+            TextQ3: "Bar"),
+          json_for(form, responses[0], IntegerQ1: 1,
+            SelectOneQ2: "Dog",
+            TextQ3: "Foo")
         ]
       )
     end
@@ -51,11 +51,11 @@ describe "OData resource" do
 
       it "renders as expected" do
         expect_json(
-          json_for(form, responses[0], "IntegerQ1": 1,
-                                       "SelectOneQ2": "Dog",
-                                       "TextQ3": "Foo")
+          json_for(form, responses[0], IntegerQ1: 1,
+            SelectOneQ2: "Dog",
+            TextQ3: "Foo")
             .merge("@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
-              "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}/$entity")
+                                     "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}/$entity")
         )
       end
     end
@@ -69,9 +69,9 @@ describe "OData resource" do
     it "renders as expected" do
       expect_json(
         "@odata.context": "http://www.example.com/en/m/#{mission.compact_name}" \
-          "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
+                          "#{OData::BASE_PATH}/$metadata#Responses: #{form.name}",
         value: [
-          json_for(form, responses[0], "Groupe Un": {"SelectOneQ1": "Chat"})
+          json_for(form, responses[0], "Groupe Un": {SelectOneQ1: "Chat"})
         ]
       )
     end
@@ -80,12 +80,12 @@ end
 
 def json_for(form, response, **answers)
   {
-    "ResponseID": response.id,
-    "ResponseShortcode": response.shortcode,
-    "FormName": form.name,
-    "ResponseSubmitterName": response.user.name,
-    "ResponseSubmitDate": response.created_at.iso8601,
-    "ResponseReviewed": false,
-    "LastCached": Time.zone.now.iso8601
+    ResponseID: response.id,
+    ResponseShortcode: response.shortcode,
+    FormName: form.name,
+    ResponseSubmitterName: response.user.name,
+    ResponseSubmitDate: response.created_at.iso8601,
+    ResponseReviewed: false,
+    LastCached: Time.zone.now.iso8601
   }.merge(answers)
 end

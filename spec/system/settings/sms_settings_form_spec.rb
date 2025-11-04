@@ -14,7 +14,7 @@ describe "sms settings form", :sms do
     context "with no prior twilio settings" do
       before do
         mission.setting.update!(default_outgoing_sms_adapter: nil, twilio_phone_number: nil,
-                                twilio_account_sid: nil, twilio_auth_token: nil)
+          twilio_account_sid: nil, twilio_auth_token: nil)
       end
 
       scenario "filling in account sid only should error" do

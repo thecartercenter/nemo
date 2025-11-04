@@ -7,11 +7,10 @@ module ApplicationController::LoginLogistics
   # might be called /after/ get_user_and_mission due to filter order
   # so should undo that method's changes
   def ensure_logged_out
-    if user_session = UserSession.find
-      user_session.destroy
-      @current_user = nil
-      @current_mission = nil
-    end
+    return unless user_session = UserSession.find
+    user_session.destroy
+    @current_user = nil
+    @current_mission = nil
   end
 
   # Tasks that should be run after the user successfully logs in OR successfully resets their password

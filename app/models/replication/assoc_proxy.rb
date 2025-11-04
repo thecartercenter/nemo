@@ -44,8 +44,8 @@ class Replication::AssocProxy
   end
 
   def inspect
-    "<AssocProxy name=#{name} klass=#{klass} foreign_key=#{foreign_key} target_class=#{target_class.name} "\
-      " type=#{type} skip=#{skip_obj_if_missing} second_pass=#{second_pass} temp_id=#{temp_id}>"
+    "<AssocProxy name=#{name} klass=#{klass} foreign_key=#{foreign_key} target_class=#{target_class.name}  " \
+      "type=#{type} skip=#{skip_obj_if_missing} second_pass=#{second_pass} temp_id=#{temp_id}>"
   end
 
   def belongs_to?

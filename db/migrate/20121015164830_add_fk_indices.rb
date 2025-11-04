@@ -7,7 +7,7 @@ class AddFkIndices < ActiveRecord::Migration[4.2]
     add_index :questions, :option_set_id
     add_index :questions, :question_type_id
     add_index :responses, :user_id
-    add_index :translations, [:fld, :class_name, :obj_id, :language]
+    add_index :translations, %i[fld class_name obj_id language]
   end
 
   def down

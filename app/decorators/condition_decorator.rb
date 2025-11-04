@@ -6,13 +6,13 @@ class ConditionDecorator < ApplicationDecorator
   # Generates a human readable representation of condition.
   # codes - Includes the question code in the string.
   #   May not always be desireable e.g. with printable forms.
-  def human_readable(**opts)
+  def human_readable(**)
     if left_qing_id.blank?
       "" # need to return something here to avoid nil errors
     else
       bits = []
-      bits.concat(qing_name_and_code(left_qing, **opts))
-      bits.concat(right_side_is_literal? ? right_side_literal_bits(**opts) : right_side_qing_bits(**opts))
+      bits.concat(qing_name_and_code(left_qing, **))
+      bits.concat(right_side_is_literal? ? right_side_literal_bits(**) : right_side_qing_bits(**))
       bits.join(" ")
     end
   end
@@ -32,10 +32,10 @@ class ConditionDecorator < ApplicationDecorator
     bits
   end
 
-  def right_side_qing_bits(**opts)
+  def right_side_qing_bits(**)
     bits = []
     bits << I18n.t("condition.operators.human_readable.#{op}")
-    bits.concat(qing_name_and_code(right_qing, **opts.merge(sentence_start: false)))
+    bits.concat(qing_name_and_code(right_qing, **, sentence_start: false))
     bits
   end
 

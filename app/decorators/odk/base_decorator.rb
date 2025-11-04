@@ -21,8 +21,8 @@ module ODK
       h.tag(name, fixed_attribs).sub(/_(#{to_fix.join('|')})=/, '\1=').html_safe
     end
 
-    def content_tag(*args, &block)
-      h.content_tag(*args, &block)
+    def content_tag(*, &)
+      h.content_tag(*, &)
     end
 
     def decorate(obj, context: {})

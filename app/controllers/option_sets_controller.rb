@@ -33,6 +33,11 @@ class OptionSetsController < ApplicationController
     load_importable_objs
   end
 
+  def show
+    prep_form_vars
+    render(:form)
+  end
+
   def new
     prep_form_vars
     # we only need the partial if it's an ajax request
@@ -51,12 +56,8 @@ class OptionSetsController < ApplicationController
     render(:form)
   end
 
-  def show
-    prep_form_vars
-    render(:form)
-  end
-
   def export
+    Sentry.capture_message("Exporting option set: CSV")
     send_data(generate_csv, filename: "#{@option_set.name}.csv")
   rescue MissingTranslationError
     flash[:error] = t("activerecord.errors.models.option.missing_level_translation", locale_name: I18n.locale)

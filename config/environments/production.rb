@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ELMO::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -100,7 +100,7 @@ ELMO::Application.configure do
   config.active_support.deprecation = :notify
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter = Logger::Formatter.new
 
   # Disable automatic flushing of the log to improve performance.
   config.autoflush_log = false

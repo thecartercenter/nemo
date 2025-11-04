@@ -43,6 +43,7 @@ class Form < ApplicationRecord
   include Replication::Standardizable
   include MissionBased
   include Wisper.model
+  include Notifiable
 
   def self.receivable_association
     {name: :form_forwardings, fk: :recipient}
@@ -53,7 +54,7 @@ class Form < ApplicationRecord
 
   has_many :responses, inverse_of: :form, dependent: :destroy
   has_many :versions, -> { order(:number) }, class_name: "FormVersion", inverse_of: :form,
-                                             dependent: :destroy
+    dependent: :destroy
   has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
   # For some reason dependent: :destroy doesn't work with this assoc. See destroy_items for workaround.
@@ -75,6 +76,11 @@ class Form < ApplicationRecord
   attr_writer :minimum_version_id
 
   after_save :update_minimum
+  
+  # Webhook triggers
+  after_create :trigger_form_created_webhook
+  after_update :trigger_form_updated_webhook
+  after_update :trigger_form_published_webhook, if: :saved_change_to_status?
 
   # Disallow specific characters or symbol-only names such as `***` which all break Power BI
   # (documented at https://github.com/thecartercenter/nemo/pull/895).
@@ -107,8 +113,8 @@ class Form < ApplicationRecord
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-             dont_copy: %i[status published_changed_at downloads
-                           smsable allow_incomplete access_level]
+    dont_copy: %i[status published_changed_at downloads
+                  smsable allow_incomplete access_level]
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
@@ -158,7 +164,6 @@ class Form < ApplicationRecord
     "odk-form/#{id}-#{published_changed_at}"
   end
 
-
   def temp_response_id
     "#{name}_#{ActiveSupport::SecureRandom.random_number(899_999_999) + 100_000_000}"
   end
@@ -207,7 +212,8 @@ class Form < ApplicationRecord
   # Uses FormItem.preordered_descendants which eager loads questions and option sets.
   def questionings
     root_group&.preordered_descendants(
-      eager_load: {question: {option_set: :root_node}}, type: "Questioning") || []
+      eager_load: {question: {option_set: :root_node}}, type: "Questioning"
+    ) || []
   end
 
   def enabled_questionings
@@ -349,5 +355,21 @@ class Form < ApplicationRecord
     self.name = name.strip
     self.default_response_name = default_response_name.try(:strip).presence
     true
+  end
+
+  private
+
+  def trigger_form_created_webhook
+    WebhookService.trigger_form_created(self)
+  end
+
+  def trigger_form_updated_webhook
+    WebhookService.trigger_form_updated(self)
+  end
+
+  def trigger_form_published_webhook
+    return unless status == 'live' && saved_change_to_status?
+    
+    WebhookService.trigger_form_published(self)
   end
 end

@@ -11,7 +11,11 @@
   <%= main_stylesheet_tag(params) %>
   <%= stylesheet_link_tag("disable_bootstrap_modal_transitions") if Rails.env.test? %>
   <%= javascript_include_tag("application") %>
-  <%= javascript_pack_tag("application") %>
+  <% if content_for?(:per_page_packs) %>
+    <%= javascript_pack_tag("application", yield(:per_page_packs)) %>
+  <% else %>
+    <%= javascript_pack_tag("application") %>
+  <% end %>
   <%= csrf_meta_tags %>
 
   <%= javascript_doc_ready do %>
@@ -34,6 +38,7 @@
   <% end %>
 
   <%= yield(:per_page_js) %>
+    <%= javascript_pack_tag "application" %>
 </head>
 <body class="<%= controller_name %>">
   <header class="<%= 'admin' if admin_mode? %>">

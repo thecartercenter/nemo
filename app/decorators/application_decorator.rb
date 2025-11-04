@@ -4,8 +4,8 @@
 class ApplicationDecorator < Draper::Decorator
   delegate :t, :can?, :safe_str, to: :h
 
-  def conditional_tag(name, condition, options = {}, &block)
-    condition ? content_tag(name, options, &block) : yield
+  def conditional_tag(name, condition, options = {}, &)
+    condition ? content_tag(name, options, &) : yield
   end
 
   def nbsp

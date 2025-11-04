@@ -1,12 +1,12 @@
 class Rails::Warning
   attr_accessor :logger
 
-  def self.logger
-    @logger
+  class << self
+    attr_reader :logger
   end
 
-  def self.logger=(logger)
-    @logger = logger
+  class << self
+    attr_writer :logger
   end
 
   def self.log(message)
@@ -14,14 +14,12 @@ class Rails::Warning
   end
 end
 
-Rails::Warning.logger = ActiveSupport::Logger.new Rails.root.join("log", "warnings_#{Rails.env}.log")
+Rails::Warning.logger = ActiveSupport::Logger.new(Rails.root.join("log", "warnings_#{Rails.env}.log"))
 
 if Rails.env.test?
   Warning.process do |warning|
     Rails::Warning.log(warning)
-    if ENV["RAISE_WARNINGS"]
-      :raise
-    end
+    :raise if ENV["RAISE_WARNINGS"]
   end
 
   if ENV["IGNORE_GEM_WARNINGS"]
@@ -29,7 +27,7 @@ if Rails.env.test?
       Warning.ignore(//, path)
     end
   end
-  
+
   # Ignored warnings
   Warning.ignore(/Warning: no type cast defined for type "uuid"/) # not a deprecation
 end

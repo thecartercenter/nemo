@@ -78,7 +78,7 @@ describe Form do
       let!(:std_conditions) do
         # Two conditions on the last questioning, one referencing the multilevel Q, and one the text Q.
         [std.c[2].display_conditions.create!(left_qing: std.c[0], op: "eq",
-                                             option_node_id: std.c[0].option_set.c[1].c[0].id),
+          option_node_id: std.c[0].option_set.c[1].c[0].id),
          std.c[2].display_conditions.create!(left_qing: std.c[1], op: "eq", value: "foo")]
       end
 
@@ -133,7 +133,7 @@ describe Form do
 
       before do
         std.c[1].display_conditions.create!(left_qing: std.c[0], op: "eq",
-                                            option_node: std.c[0].option_set.c[0])
+          option_node: std.c[0].option_set.c[0])
         std.replicate(mode: :to_mission, dest_mission: mission1)
       end
 
@@ -158,7 +158,7 @@ describe Form do
       before do
         # Create condition. Standard form gets created here.
         std.c[1].display_conditions.create!(left_qing: std.c[0], op: "eq",
-                                            option_node_id: std.c[0].option_set.c[1].id)
+          option_node_id: std.c[0].option_set.c[1].id)
 
         # Render the first question copy incompatible.
         # First copy happens here.
@@ -190,10 +190,10 @@ describe Form do
 
       before do
         std.c[1].skip_rules.create!(destination: "item", dest_item: std.c[3], skip_if: "all_met",
-                                    conditions_attributes: [
-                                      {left_qing_id: std.c[0].id, op: "eq", value: "4"},
-                                      {left_qing_id: std.c[1].id, op: "eq", value: "8"}
-                                    ])
+          conditions_attributes: [
+            {left_qing_id: std.c[0].id, op: "eq", value: "4"},
+            {left_qing_id: std.c[1].id, op: "eq", value: "8"}
+          ])
       end
 
       context "if all goes well" do
@@ -221,10 +221,10 @@ describe Form do
 
       before do
         std.c[1].constraints.create!(accept_if: "any_met", rejection_msg_translations: {en: "Foo", fr: "Bar"},
-                                     conditions_attributes: [
-                                       {left_qing_id: std.c[0].id, op: "lt", value: "4"},
-                                       {left_qing_id: std.c[1].id, op: "eq", right_qing_id: std.c[0].id}
-                                     ])
+          conditions_attributes: [
+            {left_qing_id: std.c[0].id, op: "lt", value: "4"},
+            {left_qing_id: std.c[1].id, op: "eq", right_qing_id: std.c[0].id}
+          ])
       end
 
       context "if all goes well" do

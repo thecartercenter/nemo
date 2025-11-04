@@ -122,8 +122,9 @@ class Broadcast < ApplicationRecord
 
   def deilver_emails_and_return_any_errors
     return unless email_possible? && recipient_emails.present?
-    BroadcastMailer.broadcast(to: recipient_emails, subject: subject, body: body, mission: mission)
-      .deliver_now
+    recipient_emails.each do |email|
+      BroadcastMailer.broadcast(to: email, subject: subject, body: body, mission: mission).deliver_now
+    end
     nil
   rescue StandardError => e
     add_send_error(I18n.t("broadcast.email_error") + ": #{e}")

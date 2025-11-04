@@ -71,7 +71,7 @@ module Report::Gridable
 
   # checks if this report returned no data
   def empty?
-    data.nil? ? true : data.rows.empty?
+    data.nil? || data.rows.empty?
   end
 
   # builds a search object for the search string stored in the filter attrib

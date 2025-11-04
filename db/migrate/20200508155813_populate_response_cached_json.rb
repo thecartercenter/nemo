@@ -8,10 +8,8 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
   # rubocop:disable Style/MultilineTernaryOperator
   def up
     responses = Response.where(filters).order(created_at: :desc)
-    responses = ENV["FORCE_REDO"] ? responses : responses.where(cached_json: nil)
-    responses = ENV["IGNORE_MIN_AGO"] ?
-      responses.where("updated_at < ?", ENV["IGNORE_MIN_AGO"].to_i.minutes.ago) :
-      responses
+    responses = responses.where(cached_json: nil) unless ENV["FORCE_REDO"]
+    responses = responses.where("updated_at < ?", ENV["IGNORE_MIN_AGO"].to_i.minutes.ago) if ENV["IGNORE_MIN_AGO"]
     cache_responses(responses)
   end
   # rubocop:enable
@@ -54,9 +52,9 @@ class PopulateResponseCachedJson < ActiveRecord::Migration[5.2]
     # Disable validation for a ~25% performance gain.
     response.update_without_validate!(cached_json: json)
   rescue StandardError => e
-    Rails.logger.debug("Failed to update Response #{response.shortcode}")
-    Rails.logger.debug("  Mission: #{response.mission.name}")
-    Rails.logger.debug("  Form:    #{response.form.name}")
-    Rails.logger.debug("  #{e.message}")
+    Rails.logger.debug { "Failed to update Response #{response.shortcode}" }
+    Rails.logger.debug { "  Mission: #{response.mission.name}" }
+    Rails.logger.debug { "  Form:    #{response.form.name}" }
+    Rails.logger.debug { "  #{e.message}" }
   end
 end

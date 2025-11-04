@@ -2,7 +2,7 @@
 
 # For details on the DSL available within this file,
 # see https://guides.rubyonrails.org/routing.html
-ELMO::Application.routes.draw do
+Rails.application.routes.draw do
   # Special shortcut for simulating login in feature specs.
   get("test-login", to: "user_sessions#test_login") if Rails.env.test?
 
@@ -20,13 +20,204 @@ ELMO::Application.routes.draw do
 
     # Routes requiring user.
     delete "/logout", to: "user_sessions#destroy", as: :logout
-    get("/route-tests", to: "route_tests#basic_mode") if Rails.env.development? || Rails.env.test?
+    get("/route-tests", to: "route_tests#basic_mode") if Rails.env.local?
     get "/unauthorized", to: "welcome#unauthorized", as: :unauthorized
+    
+    # Notifications
+    resources :notifications, only: %i[index show destroy] do
+      collection do
+        patch "mark_all_as_read"
+        delete "destroy_all"
+        get "unread_count"
+      end
+      member do
+        patch "mark_as_read"
+      end
+    end
+
+    # Analytics
+    resources :analytics, only: [] do
+      collection do
+        get "dashboard"
+        get "response_trends"
+        get "form_performance"
+        get "geographic_data"
+      end
+    end
+
+    # Data Exports
+    resources :exports, only: [:new, :create] do
+      collection do
+        get "status"
+      end
+      member do
+        get "download/:filename", action: "download", as: "download"
+      end
+    end
+
+    # Audit Logs
+    resources :audit_logs, only: [:index, :show] do
+      collection do
+        get "export"
+        get "statistics"
+      end
+    end
+
+    # Form Templates
+    resources :form_templates do
+      member do
+        get "use"
+        post "create_from_template"
+      end
+      collection do
+        post "create_from_form"
+      end
+    end
+
+    # Validation Rules
+    resources :validation_rules do
+      member do
+        patch "toggle"
+      end
+      collection do
+        get "test"
+        get "get_questions"
+      end
+    end
+
+    # Comments and Annotations
+    resources :responses do
+      resources :comments do
+        member do
+          patch "resolve"
+          patch "unresolve"
+        end
+      end
+      resources :annotations
+    end
+
+    # Mobile API
+    namespace :api do
+      namespace :v1 do
+        # Authentication
+        post "auth/login", to: "auth#login"
+        post "auth/logout", to: "auth#logout"
+        post "auth/register", to: "auth#register"
+        get "auth/profile", to: "auth#profile"
+        patch "auth/profile", to: "auth#update_profile"
+        patch "auth/change_password", to: "auth#change_password"
+        post "auth/forgot_password", to: "auth#forgot_password"
+        post "auth/reset_password", to: "auth#reset_password"
+        get "auth/missions", to: "auth#missions"
+        patch "auth/switch_mission", to: "auth#switch_mission"
+        
+        # Resources
+        resources :forms do
+          member do
+            patch "publish"
+            patch "unpublish"
+          end
+        end
+        
+        resources :responses do
+          member do
+            patch "submit"
+            patch "mark_incomplete"
+          end
+        end
+        
+        resources :notifications do
+          collection do
+            patch "mark_all_as_read"
+            get "unread_count"
+            delete "destroy_all"
+          end
+        end
+      end
+    end
+
+    # Data Backups
+    resources :backups do
+      member do
+        get "download"
+        post "restore"
+      end
+      collection do
+        post "cleanup_old"
+      end
+    end
+
+    # Webhooks
+    resources :webhooks do
+      member do
+        post "test"
+        get "deliveries"
+      end
+    end
+
+    # Custom Dashboards
+    resources :custom_dashboards do
+      member do
+        post "duplicate"
+        get "export"
+        get "widgets"
+        post "add_widget"
+        delete "remove_widget"
+        patch "reorder_widgets"
+      end
+      collection do
+        post "import"
+      end
+    end
+
+    # AI Validation
+    resources :ai_validation_rules, path: "ai-validation-rules" do
+      member do
+        patch "toggle_active"
+        post "test_rule"
+      end
+      collection do
+        post "validate_response"
+        post "validate_batch"
+        get "report"
+        get "suggestions"
+        post "create_from_suggestion"
+      end
+    end
+
+    # Workflows
+    resources :workflows do
+      member do
+        patch "activate"
+        patch "deactivate"
+        post "create_instance"
+      end
+      collection do
+        get "my_approvals"
+        get "my_workflows"
+      end
+    end
+
+    # Workflow Instances
+    resources :workflow_instances, only: [] do
+      member do
+        post "approve"
+        post "reject"
+        post "cancel"
+        get "details"
+      end
+    end
+
+    # Advanced Search
+    get "search", to: "search#index"
+    get "search/suggestions", to: "search#suggestions"
+    get "search/advanced", to: "search#advanced"
+    get "search/results", to: "search#results"
 
     get "/confirm-login", to: "user_sessions#login_confirmation",
-                          defaults: {confirm: true}, as: :new_login_confirmation
+      defaults: {confirm: true}, as: :new_login_confirmation
     post "/confirm-login", to: "user_sessions#process_login_confirmation",
-                           defaults: {confirm: true}, as: :login_confirmation
+      defaults: {confirm: true}, as: :login_confirmation
 
     # Routes with user or no user.
     root to: "welcome#index", as: :basic_root
@@ -37,7 +228,7 @@ ELMO::Application.routes.draw do
   scope ":locale/admin", locale: /[a-z]{2}/, defaults: {mode: "admin", mission_name: nil} do
     resources :missions
 
-    get("/route-tests", to: "route_tests#admin_mode") if Rails.env.development? || Rails.env.test?
+    get("/route-tests", to: "route_tests#admin_mode") if Rails.env.local?
 
     # for /en/admin
     root to: "welcome#index", as: :admin_root
@@ -46,7 +237,7 @@ ELMO::Application.routes.draw do
   #####################################
   # Mission-mode-only routes
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/,
-                                   defaults: {mode: "m"} do
+    defaults: {mode: "m"} do
     mount(OData::Engine, at: OData::BASE_PATH, defaults: {direct_auth: "basic"})
 
     # OData debugging endpoints to allow serving static text.
@@ -113,7 +304,7 @@ ELMO::Application.routes.draw do
     # special dashboard routes
     get "/dashboard/report", to: "dashboard#report", as: :dashboard_report
     get "/dashboard/info-window", to: "dashboard#info_window", as: :dashboard_info_window
-    get "/route-tests", to: "route_tests#mission_mode" if Rails.env.development? || Rails.env.test?
+    get "/route-tests", to: "route_tests#mission_mode" if Rails.env.local?
 
     # for /en/m/mission123
     root to: "dashboard#index", as: :mission_root
@@ -122,7 +313,7 @@ ELMO::Application.routes.draw do
   #####################################
   # Admin mode OR mission mode routes
   scope ":locale/:mode(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/,
-                                         mission_name: /[a-z][a-z0-9]*/ do
+    mission_name: /[a-z][a-z0-9]*/ do
     # the rest of these routes can have admin mode or not
     resources :forms, constraints: ->(req) { req.format == :html } do
       collection do
@@ -226,7 +417,7 @@ ELMO::Application.routes.draw do
   #####################################
   # Any mode routes
   scope ":locale(/:mode)(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/,
-                                           mission_name: /[a-z][a-z0-9]*/ do
+    mission_name: /[a-z][a-z0-9]*/ do
     resources :users do
       member do
         get "login-instructions", as: "login_instructions", action: "login_instructions"
@@ -256,8 +447,8 @@ ELMO::Application.routes.draw do
   # `direct_auth: true` are also matched by the direct_auth? method in
   # config/initializers/rack-attack.rb
   scope "(/:locale)/m/:mission_name", mission_name: /[a-z][a-z0-9]*/,
-                                      defaults: {mode: "m", direct_auth: "basic"},
-                                      constraints: ->(r) { %w[xml csv].include?(r.format) } do
+    defaults: {mode: "m", direct_auth: "basic"},
+    constraints: ->(r) { %w[xml csv].include?(r.format) } do
     get "/formList", to: "forms#index", as: :odk_form_list, defaults: {format: "xml"}
     get "/forms/:id", to: "forms#show", as: :odk_form, defaults: {format: "xml"}
     get "/forms/:id/manifest", to: "forms#odk_manifest", as: :odk_form_manifest, defaults: {format: "xml"}

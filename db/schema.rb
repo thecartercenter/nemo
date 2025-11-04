@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_29_192037) do
+ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
-  enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "name", null: false
     t.uuid "record_id", null: false
     t.string "record_type", null: false
@@ -28,9 +28,9 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
 
   create_table "active_storage_blobs", force: :cascade do |t|
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
+    t.string "checksum"
     t.string "content_type"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "filename", null: false
     t.string "key", null: false
     t.text "metadata"
@@ -55,9 +55,9 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   create_table "answers", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.decimal "accuracy", precision: 9, scale: 3
     t.decimal "altitude", precision: 9, scale: 3
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.date "date_value"
-    t.datetime "datetime_value"
+    t.datetime "datetime_value", precision: nil
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.uuid "mission_id", null: false
@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.time "time_value"
     t.tsvector "tsv"
     t.string "type", default: "Answer", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "value"
     t.index ["mission_id"], name: "index_answers_on_mission_id"
     t.index ["new_rank"], name: "index_answers_on_new_rank"
@@ -84,10 +84,10 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   end
 
   create_table "assignments", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "mission_id", null: false
     t.string "role", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.uuid "user_id", null: false
     t.index ["mission_id", "user_id"], name: "index_assignments_on_mission_id_and_user_id", unique: true
     t.index ["mission_id"], name: "index_assignments_on_mission_id"
@@ -98,34 +98,34 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.uuid "addressee_id", null: false
     t.string "addressee_type", limit: 255, null: false
     t.uuid "broadcast_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["addressee_id"], name: "index_broadcast_addressings_on_addressee_id"
     t.index ["broadcast_id"], name: "index_broadcast_addressings_on_broadcast_id"
   end
 
   create_table "broadcasts", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.text "body", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "medium", limit: 255, null: false
     t.uuid "mission_id", null: false
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors"
-    t.datetime "sent_at"
+    t.datetime "sent_at", precision: nil
     t.string "source", limit: 255, default: "manual", null: false
     t.string "subject", limit: 255
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "which_phone", limit: 255
     t.index ["mission_id"], name: "index_broadcasts_on_mission_id"
   end
 
   create_table "choices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "answer_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.uuid "option_node_id"
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["answer_id"], name: "index_choices_on_answer_id"
     t.index ["option_node_id"], name: "index_choices_on_option_node_id"
   end
@@ -133,14 +133,14 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   create_table "conditions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "conditionable_id", null: false
     t.string "conditionable_type", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "left_qing_id", null: false
     t.uuid "mission_id"
     t.string "op", limit: 255, null: false
     t.uuid "option_node_id"
     t.integer "rank", null: false
     t.uuid "right_qing_id"
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "value", limit: 255
     t.index ["conditionable_id"], name: "index_conditions_on_conditionable_id"
     t.index ["conditionable_type", "conditionable_id"], name: "index_conditions_on_conditionable_type_and_conditionable_id"
@@ -149,14 +149,14 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.index ["option_node_id"], name: "index_conditions_on_option_node_id"
   end
 
-  create_table "constraints", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "constraints", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "accept_if", limit: 16, default: "all_met", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "mission_id"
     t.integer "rank", null: false
     t.jsonb "rejection_msg_translations", default: {}
     t.uuid "source_item_id", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["mission_id"], name: "index_constraints_on_mission_id"
     t.index ["source_item_id", "rank"], name: "index_constraints_on_source_item_id_and_rank", unique: true
     t.index ["source_item_id"], name: "index_constraints_on_source_item_id"
@@ -164,25 +164,25 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "attempts", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "failed_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "failed_at", precision: nil
     t.text "handler", null: false
     t.text "last_error"
-    t.datetime "locked_at"
+    t.datetime "locked_at", precision: nil
     t.string "locked_by", limit: 255
     t.integer "priority", default: 0, null: false
     t.string "queue", limit: 255
-    t.datetime "run_at"
-    t.datetime "updated_at", null: false
+    t.datetime "run_at", precision: nil
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "form_forwardings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "form_id", null: false
     t.uuid "recipient_id", null: false
     t.string "recipient_type", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["form_id", "recipient_id", "recipient_type"], name: "form_forwardings_full", unique: true
     t.index ["form_id"], name: "index_form_forwardings_on_form_id"
     t.index ["recipient_id"], name: "index_form_forwardings_on_recipient_id"
@@ -192,7 +192,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.boolean "all_levels_required", default: false, null: false
     t.text "ancestry"
     t.integer "ancestry_depth", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "default"
     t.boolean "disabled", default: false, null: false
     t.string "display_if", default: "always", null: false
@@ -214,7 +214,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.boolean "repeatable"
     t.boolean "required", default: false, null: false
     t.string "type", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["ancestry"], name: "index_form_items_on_ancestry"
     t.index ["form_id", "question_id"], name: "index_form_items_on_form_id_and_question_id", unique: true
     t.index ["form_id"], name: "index_form_items_on_form_id"
@@ -224,12 +224,12 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
 
   create_table "form_versions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "code", limit: 255, null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.boolean "current", default: true, null: false
     t.uuid "form_id", null: false
     t.boolean "minimum", default: true, null: false
     t.string "number", limit: 10, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["code"], name: "index_form_versions_on_code", unique: true
     t.index ["form_id", "number"], name: "index_form_versions_on_form_id_and_number", unique: true
     t.index ["form_id"], name: "index_form_versions_on_form_id"
@@ -239,19 +239,19 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.string "access_level", limit: 255, default: "private", null: false
     t.boolean "allow_incomplete", default: false, null: false
     t.boolean "authenticate_sms", default: true, null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "default_response_name"
     t.integer "downloads"
     t.uuid "mission_id"
     t.string "name", limit: 255, null: false
     t.uuid "original_id"
-    t.datetime "published_changed_at"
+    t.datetime "published_changed_at", precision: nil
     t.uuid "root_id"
     t.boolean "sms_relay", default: false, null: false
     t.boolean "smsable", default: false, null: false
     t.boolean "standard_copy", default: false, null: false
     t.string "status", default: "draft", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["mission_id"], name: "index_forms_on_mission_id"
     t.index ["original_id"], name: "index_forms_on_original_id"
     t.index ["root_id"], name: "index_forms_on_root_id", unique: true
@@ -260,38 +260,38 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
 
   create_table "media_objects", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "answer_id"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "type", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["answer_id"], name: "index_media_objects_on_answer_id"
   end
 
   create_table "missions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "compact_name", limit: 255, null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.boolean "locked", default: false, null: false
     t.string "name", limit: 255, null: false
     t.string "shortcode", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["compact_name"], name: "index_missions_on_compact_name", unique: true
     t.index ["shortcode"], name: "index_missions_on_shortcode", unique: true
   end
 
   create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "creator_id"
     t.string "details", limit: 255, null: false
     t.string "job_class", limit: 255, null: false
-    t.datetime "job_completed_at"
+    t.datetime "job_completed_at", precision: nil
     t.text "job_error_report"
-    t.datetime "job_failed_at"
+    t.datetime "job_failed_at", precision: nil
     t.string "job_id", limit: 255
-    t.datetime "job_started_at"
+    t.datetime "job_started_at", precision: nil
     t.uuid "mission_id", comment: "Operations are possible in admin mode"
     t.string "notes", limit: 255
     t.string "provider_job_id", limit: 255
     t.boolean "unread", default: true, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "url"
     t.index ["created_at"], name: "index_operations_on_created_at"
     t.index ["creator_id"], name: "index_operations_on_creator_id"
@@ -301,7 +301,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   create_table "option_nodes", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.text "ancestry"
     t.integer "ancestry_depth", default: 0, null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "mission_id"
     t.integer "old_id"
     t.uuid "option_id"
@@ -310,7 +310,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.integer "rank", default: 1, null: false
     t.integer "sequence", default: 0, null: false
     t.boolean "standard_copy", default: false, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["ancestry"], name: "index_option_nodes_on_ancestry"
     t.index ["mission_id"], name: "index_option_nodes_on_mission_id"
     t.index ["option_id"], name: "index_option_nodes_on_option_id"
@@ -321,7 +321,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
 
   create_table "option_sets", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.boolean "allow_coordinates", default: false, null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.boolean "geographic", default: false, null: false
     t.jsonb "level_names"
     t.uuid "mission_id"
@@ -330,7 +330,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.uuid "root_node_id"
     t.string "sms_guide_formatting", limit: 255, default: "auto", null: false
     t.boolean "standard_copy", default: false, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["geographic"], name: "index_option_sets_on_geographic"
     t.index ["mission_id"], name: "index_option_sets_on_mission_id"
     t.index ["name", "mission_id"], name: "index_option_sets_on_name_and_mission_id", unique: true
@@ -340,12 +340,12 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
 
   create_table "options", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "canonical_name", limit: 255, null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.uuid "mission_id"
     t.jsonb "name_translations", default: {}, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "value"
     t.index ["canonical_name"], name: "index_options_on_canonical_name"
     t.index ["mission_id"], name: "index_options_on_mission_id"
@@ -357,7 +357,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.boolean "auto_increment", default: false, null: false
     t.text "canonical_name", null: false
     t.string "code", limit: 255, null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.jsonb "hint_translations", default: {}
     t.boolean "key", default: false, null: false
     t.decimal "maximum", precision: 15, scale: 8
@@ -373,7 +373,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.string "reference"
     t.boolean "standard_copy", default: false, null: false
     t.boolean "text_type_for_sms", default: false, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["mission_id", "code"], name: "index_questions_on_mission_id_and_code", unique: true
     t.index ["mission_id"], name: "index_questions_on_mission_id"
     t.index ["option_set_id"], name: "index_questions_on_option_set_id"
@@ -383,12 +383,12 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
 
   create_table "report_calculations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "attrib1_name", limit: 255
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "question1_id"
     t.integer "rank", default: 1, null: false
     t.uuid "report_report_id", null: false
     t.string "type", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["question1_id"], name: "index_report_calculations_on_question1_id"
     t.index ["report_report_id"], name: "index_report_calculations_on_report_report_id"
   end
@@ -404,7 +404,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   create_table "report_reports", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "aggregation_name", limit: 255
     t.string "bar_style", limit: 255, default: "side_by_side"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "creator_id"
     t.uuid "disagg_qing_id"
     t.string "display_type", limit: 255, default: "table"
@@ -420,9 +420,9 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.string "type", limit: 255, null: false
     t.boolean "unique_rows", default: false
     t.boolean "unreviewed", default: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "view_count", default: 0, null: false
-    t.datetime "viewed_at"
+    t.datetime "viewed_at", precision: nil
     t.index ["creator_id"], name: "index_report_reports_on_creator_id"
     t.index ["disagg_qing_id"], name: "index_report_reports_on_disagg_qing_id"
     t.index ["form_id"], name: "index_report_reports_on_form_id"
@@ -432,9 +432,9 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
 
   create_table "responses", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.jsonb "cached_json"
-    t.datetime "checked_out_at"
+    t.datetime "checked_out_at", precision: nil
     t.uuid "checked_out_by_id"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "device_id"
     t.boolean "dirty_dupe", default: true, null: false
     t.boolean "dirty_json", default: true, null: false
@@ -449,7 +449,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.text "reviewer_notes"
     t.string "shortcode", limit: 255, null: false
     t.string "source", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.uuid "user_id", null: false
     t.index ["checked_out_at"], name: "index_responses_on_checked_out_at"
     t.index ["checked_out_by_id"], name: "index_responses_on_checked_out_by_id"
@@ -466,12 +466,12 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   end
 
   create_table "saved_uploads", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "settings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "default_outgoing_sms_adapter", limit: 255
     t.string "frontlinecloud_api_key", limit: 255
     t.jsonb "generic_sms_config"
@@ -485,20 +485,20 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.string "twilio_account_sid", limit: 255
     t.string "twilio_auth_token", limit: 255
     t.string "twilio_phone_number", limit: 255
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index "((mission_id IS NULL))", name: "index_settings_on_mission_id_IS_NULL", unique: true, where: "(mission_id IS NULL)", comment: "Ensures only one root setting"
     t.index ["mission_id"], name: "index_settings_on_mission_id", unique: true
   end
 
   create_table "skip_rules", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "dest_item_id"
     t.string "destination", null: false
     t.uuid "mission_id"
     t.integer "rank", null: false
     t.string "skip_if", null: false
     t.uuid "source_item_id", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["dest_item_id"], name: "index_skip_rules_on_dest_item_id"
     t.index ["source_item_id"], name: "index_skip_rules_on_source_item_id"
   end
@@ -508,15 +508,15 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.boolean "auth_failed", default: false, null: false
     t.text "body", null: false
     t.uuid "broadcast_id"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "from", limit: 255
     t.uuid "mission_id", comment: "Can't set null false due to missionless SMS receive flow"
     t.string "reply_error_message"
     t.uuid "reply_to_id"
-    t.datetime "sent_at", null: false
+    t.datetime "sent_at", precision: nil, null: false
     t.string "to", limit: 255
     t.string "type", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.uuid "user_id"
     t.index ["body"], name: "index_sms_messages_on_body"
     t.index ["broadcast_id"], name: "index_sms_messages_on_broadcast_id"
@@ -530,26 +530,26 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   end
 
   create_table "taggings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "question_id", null: false
     t.uuid "tag_id", comment: "Can't set null false due to replication process"
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["question_id"], name: "index_taggings_on_question_id"
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
   end
 
   create_table "tags", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "mission_id"
     t.string "name", limit: 64, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["mission_id"], name: "index_tags_on_mission_id"
     t.index ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", unique: true
   end
 
   create_table "user_group_assignments", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.uuid "user_group_id", null: false
     t.uuid "user_id", null: false
     t.index ["user_group_id"], name: "index_user_group_assignments_on_user_group_id"
@@ -558,10 +558,10 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
   end
 
   create_table "user_groups", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.uuid "mission_id", null: false
     t.string "name", limit: 255, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["mission_id"], name: "index_user_groups_on_mission_id"
     t.index ["name", "mission_id"], name: "index_user_groups_on_name_and_mission_id", unique: true
   end
@@ -570,9 +570,9 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.boolean "active", default: true, null: false
     t.boolean "admin", default: false, null: false
     t.integer "birth_year"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "crypted_password", limit: 255, null: false
-    t.datetime "current_login_at"
+    t.datetime "current_login_at", precision: nil
     t.string "editor_preference"
     t.string "email", limit: 255
     t.text "experience"
@@ -580,7 +580,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.string "gender_custom", limit: 255
     t.integer "import_num"
     t.uuid "last_mission_id"
-    t.datetime "last_request_at"
+    t.datetime "last_request_at", precision: nil
     t.string "login", limit: 255, null: false
     t.integer "login_count", default: 0, null: false
     t.string "name", limit: 255, null: false
@@ -593,7 +593,7 @@ ActiveRecord::Schema.define(version: 2023_11_29_192037) do
     t.string "phone2", limit: 255
     t.string "pref_lang", limit: 255, default: "en", null: false
     t.string "sms_auth_code", limit: 255
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["email"], name: "index_users_on_email"
     t.index ["last_mission_id"], name: "index_users_on_last_mission_id"
     t.index ["login"], name: "index_users_on_login", unique: true

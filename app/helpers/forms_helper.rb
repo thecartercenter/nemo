@@ -52,9 +52,7 @@ module FormsHelper
       if can?(:print, form) # rubocop:disable Style/IfUnlessModifier
         links << action_link(:print, "#", class: "print-link", data: {form_id: form.id})
       end
-      if form.smsable? && !admin_mode?
-        links << action_link(:sms_guide, sms_guide_form_path(form))
-      end
+      links << action_link(:sms_guide, sms_guide_form_path(form)) if form.smsable? && !admin_mode?
       links
     else form.send(field)
     end
@@ -64,9 +62,7 @@ module FormsHelper
     "status-#{form.status}" unless admin_mode?
   end
 
-  def allow_incomplete?
-    @form.allow_incomplete?
-  end
+  delegate :allow_incomplete?, to: :@form
 
   # Question types not listed here use PNGs instead of FA icons.
   FORM_ITEM_ICON_CLASSES = {

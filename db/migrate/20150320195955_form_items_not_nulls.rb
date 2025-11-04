@@ -1,6 +1,6 @@
 class FormItemsNotNulls < ActiveRecord::Migration[4.2]
   def up
-    execute('UPDATE form_items SET rank = 1 WHERE rank IS NULL')
+    execute("UPDATE form_items SET rank = 1 WHERE rank IS NULL")
     change_column :form_items, :form_id, :integer, null: false
     change_column :form_items, :rank, :integer, null: false
     change_column :form_items, :required, :boolean, null: false, default: false

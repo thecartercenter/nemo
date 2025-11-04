@@ -32,12 +32,12 @@ class UsersController < ApplicationController
     @users = @users.paginate(page: params[:page], per_page: PER_PAGE)
   end
 
-  def new
-    # set the default pref_lang based on the mission settings
+  def show
     prepare_and_render_form
   end
 
-  def show
+  def new
+    # set the default pref_lang based on the mission settings
     prepare_and_render_form
   end
 
@@ -108,7 +108,7 @@ class UsersController < ApplicationController
 
   # shows printable login instructions for the user
   def login_instructions
-    @password = flash[:password] || Rails.env.test? && ENV["STUB_PASSWORD"]
+    @password = flash[:password] || (Rails.env.test? && ENV.fetch("STUB_PASSWORD", nil))
     @site_url = admin_mode? ? basic_root_url : mission_root_url
     encoded_config = ODK::UserConfigEncoder.new(@user.login, flash[:password], @site_url).encode_config
     @config_qr = RQRCode::QRCode.new(encoded_config)
@@ -118,6 +118,7 @@ class UsersController < ApplicationController
   def export
     respond_to do |format|
       format.vcf do
+        Sentry.capture_message("Exporting users: All VCF")
         @users = restrict_scope_to_selected_objects(User.accessible_by(current_ability))
         render(plain: @users.collect(&:to_vcf).join("\n"))
       end
@@ -136,7 +137,7 @@ class UsersController < ApplicationController
     options = []
     options << :dont unless user.new_record?
     options << :email unless offline_mode?
-    options << :print if admin_mode? && offline_mode? || mission_mode?
+    options << :print if (admin_mode? && offline_mode?) || mission_mode?
     options << (mission_mode? ? :enter_and_show : :enter)
     options
   end

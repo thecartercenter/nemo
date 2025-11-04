@@ -31,8 +31,8 @@ class DenormalizeGeographicAnswerData < ActiveRecord::Migration[4.2]
 
       # Regular location question
       if answer.value
-        lat, long = answer.value.split(' ')
-        setLatLongValueOnNewColumns(answer, BigDecimal.new(lat), BigDecimal.new(long))
+        lat, long = answer.value.split(" ")
+        setLatLongValueOnNewColumns(answer, BigDecimal(lat), BigDecimal(long))
       # Select one location question
       elsif answer.option
         setLatLongValueOnNewColumns(answer, answer.option.latitude, answer.option.longitude)

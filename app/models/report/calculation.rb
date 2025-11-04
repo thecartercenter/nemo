@@ -33,7 +33,7 @@ module Report
     attr_writer :table_prefix
 
     belongs_to :report, class_name: "Report", foreign_key: "report_report_id",
-                        inverse_of: :calculations
+      inverse_of: :calculations
     belongs_to :question1, class_name: "Question", inverse_of: :calculations
 
     before_save :normalize_values
@@ -42,13 +42,13 @@ module Report
 
     # HACK: TO GET STI TO WORK WITH ACCEPTS_NESTED_ATTRIBUTES_FOR
     class << self
-      def new_with_cast(*a, &b)
+      def new_with_cast(*a, &)
         if (h = a.first).is_a?(Hash) && (type = h[:type] || h["type"]) && ((klass = type.constantize) != self)
           raise "wtF hax!!" unless klass < self # klass should be a descendant of us
-          return klass.new(*a, &b)
+          return klass.new(*a, &)
         end
 
-        new_without_cast(*a, &b)
+        new_without_cast(*a, &)
       end
       alias new_without_cast new
       alias new new_with_cast

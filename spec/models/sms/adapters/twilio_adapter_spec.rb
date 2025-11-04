@@ -10,7 +10,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
   let(:client) { double(:twilio_client, messages: messages) }
   let(:mission_config) do
     double(twilio_phone_number: "+1234567890", twilio_account_sid: "AC00000000000000000000000000000000",
-           twilio_auth_token: "12121212121212121212121212121212", incoming_sms_numbers: [])
+      twilio_auth_token: "12121212121212121212121212121212", incoming_sms_numbers: [])
   end
   let(:adapter) { Sms::Adapters::Factory.instance.create("Twilio", config: mission_config) }
   let(:fake_response) { {} }
@@ -128,11 +128,11 @@ describe Sms::Adapters::TwilioAdapter, :sms do
       validator.build_signature_for(url, params)
     end
 
-    headers = {'X-Twilio-Signature': signature}.with_indifferent_access
+    headers = {"X-Twilio-Signature": signature}.with_indifferent_access
     headers.merge!(options[:headers]) if options[:headers]
 
     double(headers: headers, params: params, original_url: url,
-           request_parameters: params, query_parameters: {}.freeze)
+      request_parameters: params, query_parameters: {}.freeze)
   end
 
   # Return the error message N times joined with "\n".

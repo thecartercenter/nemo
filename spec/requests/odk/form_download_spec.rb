@@ -15,7 +15,7 @@ describe FormsController, :odk, type: :request do
   end
   let(:form_both_multi) do
     create(:form, :live, mission: mission,
-                         question_types: %w[integer multilevel_select_one super_multilevel_select_one])
+      question_types: %w[integer multilevel_select_one super_multilevel_select_one])
   end
 
   before do

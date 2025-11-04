@@ -7,10 +7,9 @@ module ApplicationController::Authorization
 
   # makes sure admin_mode is not true if user is not admin
   def protect_admin_mode
-    if admin_mode? && cannot?(:view, :admin_mode)
-      params[:mode] = nil
-      raise CanCan::AccessDenied.new("not authorized for admin mode", :view, :admin_mode)
-    end
+    return unless admin_mode? && cannot?(:view, :admin_mode)
+    params[:mode] = nil
+    raise CanCan::AccessDenied.new("not authorized for admin mode", :view, :admin_mode)
   end
 
   def handle_access_denied(exception)
@@ -18,13 +17,13 @@ module ApplicationController::Authorization
     @access_denied = true
 
     # log to debug log
-    Rails.logger.debug(
+    Rails.logger.debug do
       "ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message} " \
-      "(Mission: #{current_mission.try(:name)}; " \
-      "User: #{current_user.try(:login)}; " \
-      "Role: #{current_user.try(:role, current_mission)}; " \
-      "Admin?: #{current_user.try(:admin?) ? 'Yes' : 'No'}"
-    )
+        "(Mission: #{current_mission.try(:name)}; " \
+        "User: #{current_user.try(:login)}; " \
+        "Role: #{current_user.try(:role, current_mission)}; " \
+        "Admin?: #{current_user.try(:admin?) ? 'Yes' : 'No'}"
+    end
 
     # if not logged in, offer a login page
     if !current_user

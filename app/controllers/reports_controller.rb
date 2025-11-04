@@ -16,19 +16,6 @@ class ReportsController < ApplicationController
     @reports = @reports.by_popularity
   end
 
-  def new
-    @report.generate_default_name
-    prepare_frontend_data
-    render(:show)
-  end
-
-  def edit
-    # set flash and redirect to show
-    # we do it this way because staying in the edit action produces a somewhat inaccurate url
-    flash[:edit_mode] = true
-    redirect_to(report_path(@report))
-  end
-
   def show
     respond_to do |format|
       format.html do
@@ -47,9 +34,17 @@ class ReportsController < ApplicationController
     end
   end
 
-  def destroy
-    destroy_and_handle_errors(@report)
-    redirect_to(action: :index)
+  def new
+    @report.generate_default_name
+    prepare_frontend_data
+    render(:show)
+  end
+
+  def edit
+    # set flash and redirect to show
+    # we do it this way because staying in the edit action produces a somewhat inaccurate url
+    flash[:edit_mode] = true
+    redirect_to(report_path(@report))
   end
 
   # Always reached through ajax
@@ -67,6 +62,11 @@ class ReportsController < ApplicationController
     run_or_fetch_and_handle_errors
     prepare_frontend_data
     render(partial: "reports/output_and_modal")
+  end
+
+  def destroy
+    destroy_and_handle_errors(@report)
+    redirect_to(action: :index)
   end
 
   # specify the class the this controller controls, since it's not easily guessed

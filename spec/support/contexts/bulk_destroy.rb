@@ -59,8 +59,8 @@ shared_context "bulk destroy" do
       end
 
       click_on(delete_link_name)
-      expect(accept_alert).to eq("Are you sure you want to delete these "\
-        "#{options[:expect_to_delete]} #{plural_name}?")
+      expect(accept_alert).to eq("Are you sure you want to delete these " \
+                                 "#{options[:expect_to_delete]} #{plural_name}?")
 
       # For Users, you can't delete yourself, so result should be one less
       options[:expect_to_delete] -= 1 if options[:query].nil? && klass == User

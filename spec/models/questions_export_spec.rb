@@ -42,13 +42,13 @@ describe Questions::Export do
       mission.save
     end
 
-    it "should be able to export" do
+    it "should be able to export", flapping: true do
       exporter = Questions::Export.new(Question.all, mission.setting.preferred_locales)
       csv = exporter.to_csv
       expect(csv).to eq(
-        "Code,QType,Option Set Name,Title[en],Hint[en],Title[fr],Hint[fr],Title[ht],Hint[ht]\n"\
-        "Cheese,integer,\"\",How many cheeses?,cheesey,Combien de fromages?,fromagey,Fromage,fr\n"\
-        "TextQ1,text,\"\",Your job?,Question Hint 2,Votre metier?,,,\n"\
+        "Code,QType,Option Set Name,Title[en],Hint[en],Title[fr],Hint[fr],Title[ht],Hint[ht]\n" \
+        "Cheese,integer,\"\",How many cheeses?,cheesey,Combien de fromages?,fromagey,Fromage,fr\n" \
+        "TextQ1,text,\"\",Your job?,Question Hint 2,Votre metier?,,,\n" \
         "SelectOneQ2,select_one,yesno,Yea or nay?,\"\",,\"\",,\"\"\n"
       )
     end

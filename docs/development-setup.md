@@ -11,7 +11,7 @@ Note to install the software below we recommend the following package managers:
 
 1. Ruby
     - Use of [rbenv](https://github.com/rbenv/rbenv) is recommended.
-    - Running `rbenv install` in the project root will install the version you need. Note: on Mac M1 and later, this may require `arch -x86_64 rbenv install`.
+    - Running `rbenv install` in the project root will install the version you need.
     - If not using `rbenv`, see the `.ruby-version` file in the project root to get the required version number.
     - Bundler is expected to be available. Run `gem install bundler` to install it.
 1. Node
@@ -28,7 +28,6 @@ Note to install the software below we recommend the following package managers:
     - In this case, be sure to increase the default slab page size. This is done by passing `-I 16m` to the `memcached` command.
     - When using Homebrew via `brew install memcached; brew services start memcached`, slab size can be configured at `/usr/local/Cellar/memcached/1.x.x/homebrew.mxcl.memcached.plist`
 1. PostgreSQL 10+
-    - Create empty databases for use by the app: `createdb nemo_development && createdb nemo_test`
 1. ImageMagick 6.7+
     - ImageMagick is used to resize uploaded images.
     - It should be available through any of the package managers listed above. If not it can be built from source.
@@ -115,11 +114,7 @@ git checkout develop
     1. TODO: Make this happen automatically during the previous step, maybe with Yarn workspaces.
 1. Run `cp config/database.yml.example config/database.yml`.
 1. (Optional) Create a `.env.development.local` file and override any settings from `.env` as you see fit. Note that a valid Google Maps API key must be present for certain tests to pass.
-1. Setup the UUID postgres extension:
-    1. On Linux: `sudo -u postgres psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
-    1. On Mac with Homebrew: `psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
-1. Load the database schema: `bundle exec rake db:schema:load`.
-1. Seed the database: `bundle exec rake db:seed`.
+1. Load the database schema and seed the database: `bundle exec rake db:setup`.
 1. Pre-process the theme SCSS files: `bundle exec rake theme:preprocess`
 1. Create an admin account: `bundle exec rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it and use on your first login).
 1. Optionally, you can create some fake data to get things rolling by running `bundle exec rake db:create_fake_data`.
@@ -149,7 +144,7 @@ You may want to run `bundle exec rake db:create_fake_data` to create a sample mi
 
 After initial configuration using the development steps above:
 
-1. Re-process the SCSS files as well as webpacker assets: `RAILS_ENV=production bundle exec rake assets:precompile`
+1. Re-process the SCSS files as well as shakapacker assets: `RAILS_ENV=production bundle exec rake assets:precompile`
 1. Run in production mode, and allow Rails to serve static files instead of nginx: `RAILS_ENV=production RAILS_SERVE_STATIC_FILES=1 bundle exec rails s`
 
 In production mode, logs won't show up in the console like usual; they can be found in `logs/production.log`.

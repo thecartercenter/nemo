@@ -243,8 +243,8 @@ describe "response form rendering and submission", js: true do
     context "with conditional logic" do
       before do
         form.c[2].update!(display_if: "all_met",
-                          display_conditions_attributes: [{left_qing_id: form.c[0].c[0].id, op: "eq",
-                                                           value: "123"}])
+          display_conditions_attributes: [{left_qing_id: form.c[0].c[0].id, op: "eq",
+                                           value: "123"}])
       end
 
       scenario "submitting response with irrelevant answers", flapping: true do

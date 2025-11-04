@@ -56,6 +56,7 @@ routes.txt
 # Bundle installs
 vendor/bundle/
 
+# shakapacker & node
 /public/packs
 /public/packs-test
 node_modules/
@@ -66,3 +67,10 @@ yarn-*.log*
 # the recommendation of the gem. We also don't ignore .env since that's where default values for
 # configurations will go.
 .env*.local
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

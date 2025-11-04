@@ -8,8 +8,16 @@ class Array
     hashfunc ||= proc { |x| x }
 
     # create hashes from a and b. can have multiple elements per key
-    ah = {}; each { |x| key = hashfunc.call(x); (ah[key] ||= []) << x }
-    bh = {}; arr.each { |x| key = hashfunc.call(x); (bh[key] ||= []) << x }
+    ah = {}
+    each do |x|
+      key = hashfunc.call(x)
+      (ah[key] ||= []) << x
+    end
+    bh = {}
+    arr.each do |x|
+      key = hashfunc.call(x)
+      (bh[key] ||= []) << x
+    end
 
     # matches: loop over a's elements, find them in b, yield, remove from both hashes
     each do |x|

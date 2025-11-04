@@ -42,7 +42,7 @@ FactoryBot.define do
     after(:build) do |constraint, evaluator|
       if !evaluator.no_conditions && constraint.conditions.none?
         constraint.conditions << build(:condition, conditionable: constraint,
-                                                   left_qing: constraint.source_item)
+          left_qing: constraint.source_item)
       end
     end
   end

@@ -104,9 +104,9 @@ class DashboardController < ApplicationController
 
   # Yields to a block and caches the result and stores in an ivar with the given `name`.
   # Computes a cache key based on given dependencies (looked up in `cache_keys`) and on `name`.
-  def instance_variable_cache(name, dependencies: %i[responses enumerator_id], **options, &block)
+  def instance_variable_cache(name, dependencies: %i[responses enumerator_id], **, &)
     key = dependencies.map { |d| cache_keys.fetch(d) } << name
-    instance_variable_set(name, Rails.cache.fetch(key, **options, &block))
+    instance_variable_set(name, Rails.cache.fetch(key, **, &))
   end
 
   def cache_keys

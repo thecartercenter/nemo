@@ -6,7 +6,7 @@ module TagsHelper
   def render_tags(objects, options = {})
     return "" if objects.blank?
     title = options[:clickable] ? I18n.t("tag.click_to_filter") : nil
-    classes = "badge badge-custom#{options[:clickable] ? ' clickable' : ''}"
+    classes = "badge badge-custom#{' clickable' if options[:clickable]}"
     content_tag(:div, class: "tags") do
       spans = objects.map do |obj|
         if options[:clickable] && options[:link_method]

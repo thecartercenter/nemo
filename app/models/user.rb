@@ -55,7 +55,7 @@ class User < ApplicationRecord
   ROLES = %w[enumerator reviewer staffer coordinator].freeze
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
   GENDER_OPTIONS = %w[man woman no_answer specify].freeze
-  PASSWORD_FORMAT = /\A.*(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*\z/.freeze
+  PASSWORD_FORMAT = /\A.*(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*\z/
   DEFAULT_RECENT_LOGIN_MAX_AGE = 60.minutes
 
   attr_writer(:reset_password_method)
@@ -63,21 +63,33 @@ class User < ApplicationRecord
 
   has_many :responses, inverse_of: :user, dependent: :restrict_with_exception
   has_many :reviewed_responses, class_name: "Response", foreign_key: :reviewer_id,
-                                inverse_of: :reviewer, dependent: :restrict_with_exception
+    inverse_of: :reviewer, dependent: :restrict_with_exception
   has_many :checked_out_responses, class_name: "Response", foreign_key: :checked_out_by_id,
-                                   inverse_of: :checked_out_by, dependent: :nullify
+    inverse_of: :checked_out_by, dependent: :nullify
   has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
   has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
   has_many :assignments, -> { includes(:mission) }, autosave: true, dependent: :destroy,
-                                                    validate: true, inverse_of: :user
+    validate: true, inverse_of: :user
   has_many :missions, -> { order("missions.created_at DESC") }, through: :assignments
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
   has_many :reports, inverse_of: :creator, foreign_key: :creator_id,
-                     dependent: :nullify, class_name: "Report::Report"
+    dependent: :nullify, class_name: "Report::Report"
   has_many :sms_messages, class_name: "Sms::Message", inverse_of: :user, dependent: :restrict_with_exception
   has_many :user_group_assignments, dependent: :destroy
   has_many :user_groups, through: :user_group_assignments
+  has_many :notifications, dependent: :destroy
   belongs_to :last_mission, class_name: "Mission"
+
+  # API key for mobile app authentication
+  def api_key
+    read_attribute(:api_key) || regenerate_api_key
+  end
+
+  def regenerate_api_key
+    new_key = SecureRandom.hex(32)
+    update_column(:api_key, new_key)
+    new_key
+  end
 
   accepts_nested_attributes_for(:assignments, allow_destroy: true)
   accepts_nested_attributes_for(:user_groups)
@@ -107,10 +119,10 @@ class User < ApplicationRecord
   validate :password_reset_cant_be_email_if_no_email
   validate :no_duplicate_assignments
   validates :login, format: {with: /\A[[:word:].]+\z/},
-                    uniqueness: {case_sensitive: true}
+    uniqueness: {case_sensitive: true}
   validates :email, format: {with: /\A\S+@\S+\.\S+\z/},
-                    length: {maximum: 100},
-                    allow_blank: true
+    length: {maximum: 100},
+    allow_blank: true
 
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
@@ -386,15 +398,13 @@ class User < ApplicationRecord
   end
 
   def no_duplicate_assignments
-    if Assignment.duplicates?(assignments.reject(&:marked_for_destruction?))
-      errors.add(:assignments, :duplicate_assignments)
-    end
+    return unless Assignment.duplicates?(assignments.reject(&:marked_for_destruction?))
+    errors.add(:assignments, :duplicate_assignments)
   end
 
   def must_have_assignments_if_not_admin
-    if !admin? && assignments.reject(&:marked_for_destruction?).empty?
-      errors.add(:assignments, :cant_be_empty_if_not_admin)
-    end
+    return unless !admin? && assignments.reject(&:marked_for_destruction?).empty?
+    errors.add(:assignments, :cant_be_empty_if_not_admin)
   end
 
   def clear_assignments_without_roles

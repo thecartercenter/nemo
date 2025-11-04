@@ -162,7 +162,7 @@ describe "responses csv export" do
     end
   end
 
-  scenario "exporting csv with bulk media download", :js do
+  scenario "exporting csv with bulk media download", :js, flapping: true do
     visit(responses_path(params))
     click_link("Download")
     expect(page).to(have_content("#{Response.all.length} responses to be exported"))

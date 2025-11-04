@@ -108,7 +108,7 @@ class Report::StandardFormReport < Report::Report
 
   def as_json(options = {})
     # add the required methods to the methods option
-    h = super(options)
+    h = super
     h[:response_count] = response_count
     h[:mission] = form.mission.as_json(only: %i[id name])
     h[:form] = form.as_json(only: %i[id name])
@@ -129,9 +129,7 @@ class Report::StandardFormReport < Report::Report
     end
 
     # make sure disagg_qing is disaggable
-    unless can_disaggregate_with?(disagg_qing)
-      raise Report::ReportError, "disaggregation question is incorrect type"
-    end
+    raise Report::ReportError, "disaggregation question is incorrect type" unless can_disaggregate_with?(disagg_qing)
 
     # pre-calculate response count, accounting for user ability
     @response_count = form.responses.accessible_by(current_ability).count
@@ -183,8 +181,8 @@ class Report::StandardFormReport < Report::Report
     @questionings_to_include ||= (form || self.form).questionings.reject do |qing|
       qing.disabled? ||
         Report::StandardFormReport::EXCLUDED_TYPES[qing.qtype.name] ||
-        text_responses == "short_only" && qing.qtype.name == "long_text" ||
-        text_responses == "none" && qing.qtype.textual?
+        (text_responses == "short_only" && qing.qtype.name == "long_text") ||
+        (text_responses == "none" && qing.qtype.textual?)
     end
   end
 

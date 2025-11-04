@@ -42,8 +42,8 @@ describe "user search", js: true do
 
     # Search error.
     search_for("creepy:")
-    expect(page).to have_content("Error: Your search query could not be understood "\
-      "due to unexpected text near the end.")
+    expect(page).to have_content("Error: Your search query could not be understood " \
+                                 "due to unexpected text near the end.")
   end
 
   scenario "role search in admin mode context" do

@@ -31,9 +31,7 @@ class Sms::Adapters::Adapter
     @config = params[:config]
   end
 
-  def service_name
-    self.class.service_name
-  end
+  delegate :service_name, to: :class
 
   # Saves the message to the DB. Raises an error if no recipients or message empty. Adds adapter name.
   def prepare_message_for_delivery(message)
@@ -109,11 +107,10 @@ class Sms::Adapters::Adapter
     end
 
     # return body if it's a clean success, else error
-    if response.is_a?(Net::HTTPSuccess)
-      response.body
-    else
+    unless response.is_a?(Net::HTTPSuccess)
       raise Sms::Error, "error contacting #{service_name} (#{response.class.name})"
     end
+    response.body
   end
 
   # For testing purposes

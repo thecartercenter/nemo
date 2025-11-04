@@ -172,12 +172,12 @@ describe Search::Search do
 
   it "AND should be allowed for scale qualifiers" do
     assert_search(str: "submit-date > (2020-1-5 2020-1-6)",
-                  sql: "((t.subdate > '2020-01-05 00:00:00') AND (t.subdate > '2020-01-06 00:00:00'))")
+      sql: "((t.subdate > '2020-01-05 00:00:00') AND (t.subdate > '2020-01-06 00:00:00'))")
   end
 
   it "scale qualifier should work with regular qualifier" do
     assert_search(str: "submit-date <= 2020-1-5 source: bar",
-                  sql: "((t.subdate <= '2020-01-05 00:00:00')) AND ((t.source = 'bar'))")
+      sql: "((t.subdate <= '2020-01-05 00:00:00')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier should work" do
@@ -243,7 +243,7 @@ describe Search::Search do
 
   it "translated qualifier with and should work" do
     assert_search(str: "name: (foo bar)",
-                  sql: %{((t.name ->> 'en' ILIKE '%foo%') AND (t.name ->> 'en' ILIKE '%bar%'))})
+      sql: %{((t.name ->> 'en' ILIKE '%foo%') AND (t.name ->> 'en' ILIKE '%bar%'))})
   end
 
   it "translated qualifier with equals operator should work" do

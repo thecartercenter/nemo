@@ -11,9 +11,7 @@ class Report::AttribField < Report::Field
 
   # builds a new object from the templates at the bottom of the file
   def initialize(attrib_name)
-    unless @@ATTRIBS[attrib_name.to_sym]
-      raise "attrib_name #{attrib_name} not found when creating AttribField object"
-    end
+    raise "attrib_name #{attrib_name} not found when creating AttribField object" unless @@ATTRIBS[attrib_name.to_sym]
     @@ATTRIBS[attrib_name.to_sym].each { |k, v| send("#{k}=", v) }
   end
 

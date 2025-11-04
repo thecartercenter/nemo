@@ -18,7 +18,7 @@ class CreateOperations < ActiveRecord::Migration[4.2]
       t.index :created_at
 
       # index for normal users
-      t.index [:creator_id, :created_at]
+      t.index %i[creator_id created_at]
     end
 
     add_foreign_key :operations, :users, column: :creator_id

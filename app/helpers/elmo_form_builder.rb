@@ -49,8 +49,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       text = I18n.t("layout.copy_to_clipboard")
       options[:id] ||= "copy-value-#{field_name}"
       options[:append] = @template.content_tag(:div, text, class: "btn btn-link btn-a",
-                                                           id: "copy-btn-#{field_name}",
-                                                           "data-clipboard-target": "##{options[:id]}")
+        id: "copy-btn-#{field_name}",
+        "data-clipboard-target": "##{options[:id]}")
     end
 
     # get key chunks and render partial
@@ -79,7 +79,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # if label is a symbol, translate it
     label = I18n.t("common.#{label}") if label.is_a?(Symbol)
 
-    super(label, options)
+    super
   end
 
   def regenerable_field(field_name, options = {})
@@ -188,7 +188,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         human_val = "[#{@template.t('common.none')}]" if human_val.blank?
 
         # render a div with the human val, and embed the real val in a data attrib if it differs
-        @template.content_tag(:div, human_val, class: "ro-val", 'data-val': val != human_val ? val : nil)
+        @template.content_tag(:div, human_val, class: "ro-val", "data-val": val == human_val ? nil : val)
 
       else
         # TODO: Ideally, any additional options would pass through to all items
@@ -227,7 +227,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           password_field(field_name, tag_options)
 
         when :select
-          prompt = options[:prompt].nil? ? true : options[:prompt]
+          prompt = options[:prompt].nil? || options[:prompt]
           tag_options.merge!(options.slice(:multiple))
           select(field_name, options[:options], {include_blank: prompt}, tag_options)
 
@@ -295,12 +295,12 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # if all fail then we return ''
   def hint_text(field_name, options)
     keys_to_try = [
-      :"#{field_name}.#{options[:read_only] ? "read_only" : "editable"}",
+      :"#{field_name}.#{options[:read_only] ? 'read_only' : 'editable'}",
       field_name.to_sym,
       ""
     ]
     @template.t_markdown(keys_to_try.first, scope: [:activerecord, :hints, @object.class.model_name.i18n_key],
-                                            default: keys_to_try.drop(1))
+      default: keys_to_try.drop(1))
   end
 
   # run the hint text through simple format,

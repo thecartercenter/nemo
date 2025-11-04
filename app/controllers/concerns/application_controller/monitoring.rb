@@ -7,7 +7,7 @@ module ApplicationController::Monitoring
   def set_scout_context
     ScoutApm::Context.add_user(username: current_user&.login)
     ScoutApm::Context.add(locale: I18n.locale,
-                          mode: params[:mode],
-                          mission_name: current_mission&.compact_name)
+      mode: params[:mode],
+      mission_name: current_mission&.compact_name)
   end
 end

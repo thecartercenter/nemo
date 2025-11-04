@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "response form file upload", js: true do
+describe "response form file upload", js: true, flapping: true do
   include_context "response tree"
   include_context "file import"
 

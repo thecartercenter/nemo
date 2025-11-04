@@ -1,7 +1,7 @@
 class ChangeTranslationLanguageIdToLanguageAndFixIndex < ActiveRecord::Migration[4.2]
   def up
     # remove old index
-    remove_index(:translations, :name => "translation_master")
+    remove_index(:translations, name: "translation_master")
 
     # add the language column and populate it
     add_column(:translations, :language, :string)
@@ -11,7 +11,8 @@ class ChangeTranslationLanguageIdToLanguageAndFixIndex < ActiveRecord::Migration
     remove_column(:translations, :language_id)
 
     # create a new index
-    add_index(:translations, ["language", "class_name", "fld", "obj_id"], :name => "translation_master", :unique => true)
+    add_index(:translations, %w[language class_name fld obj_id], name: "translation_master",
+      unique: true)
   end
 
   def down

@@ -450,6 +450,14 @@ The underlying Ruby version has changed to a minor new version.
 1. Check out the current version
 1. `rbenv install`
 
+#### Upgrading to v12.21
+
+The underlying Node version has changed to major v20. After pulling the latest code:
+
+1. Ensure you're using a recent version of yarn (such as v1.22 or higher), found via `yarn -v`
+1. Run `nvm install` to upgrade
+1. Run `rm -rf node_modules && yarn install` to install fresh
+
 #### Upgrading to latest
 
 1. Follow the 'General Upgrade Instructions' below.

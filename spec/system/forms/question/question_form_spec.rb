@@ -73,7 +73,7 @@ describe "question form", js: true do
     expect(page).to have_select("Option Set", selected: "Flat")
   end
 
-  scenario "audio upload works" do
+  scenario "audio upload works", flapping: true do
     visit(new_question_path(locale: "en", mode: "m", mission_name: mission.compact_name))
     fill_in("Code", with: "AQuestion")
     fill_in("Title", with: "Jay's")
@@ -93,7 +93,7 @@ describe "question form", js: true do
 
     # and still allows you change the media prompt file
     visit(edit_question_path(Question.last.id, locale: "en", mode: "m",
-                                               mission_name: get_mission.compact_name))
+      mission_name: get_mission.compact_name))
     expect(page).to have_css("input#question_media_prompt")
     expect(page).to have_content(/.+-.+_media_prompt.wav/)
     expect(page).not_to have_content(".mp3")

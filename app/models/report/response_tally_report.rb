@@ -47,7 +47,7 @@
 
 class Report::ResponseTallyReport < Report::TallyReport
   def as_json(options = {})
-    h = super(options)
+    h = super
     h[:calculations_attributes] = calculations
     h
   end

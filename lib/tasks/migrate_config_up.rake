@@ -8,7 +8,7 @@ namespace :config do
     env_path = Rails.root.join(".env.#{Rails.env}.local")
     lines = File.readlines(env_path)
     lines.reject! { |l| l =~ /(CONFIG ###|PAPERCLIP_STORAGE_TYPE)/ }
-    File.open(env_path, "w") { |f| f.write(lines.join) }
+    File.write(env_path, lines.join)
     puts ".env file tidied"
   end
 end

@@ -352,19 +352,20 @@ class ResponsesController < ApplicationController
 
   # Renders an Enketo form instead of a NEMO form.
   def enketo
-    # Fail fast if we're on the wrong node version (this happens most often in development).
-    raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v16")
+    # Fail fast if we're on the wrong node version
+    # (this happens most often in development and can lead to inscrutable errors).
+    raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v20")
 
     # Enketo can't render anything if we haven't rendered it to XML (e.g. unpublished draft).
     if @response.form.odk_xml.blank?
       flash[:error] = t("activerecord.errors.models.response.no_form_xml")
-      return redirect_to(params.permit!.merge("enketo": ""))
+      return redirect_to(params.permit!.merge(enketo: ""))
     end
 
     # This check is here until we have a way to encode legacy editor responses as ODK XML.
     if action_name == "edit" && !@response.odk_xml.attached?
       flash[:error] = t("activerecord.errors.models.response.no_response_xml")
-      return redirect_to(params.permit!.merge("enketo": ""))
+      return redirect_to(params.permit!.merge(enketo: ""))
     end
 
     @enketo_form_obj = enketo_form_obj
@@ -460,20 +461,18 @@ class ResponsesController < ApplicationController
   end
 
   def response_params
-    if params[:response]
-      to_permit = %i[form_id user_id incomplete]
+    return unless params[:response]
+    to_permit = %i[form_id user_id incomplete]
 
-      to_permit << %i[reviewed reviewer_notes reviewer_id] if @response.present? && can?(:review, @response)
+    to_permit << %i[reviewed reviewer_notes reviewer_id] if @response.present? && can?(:review, @response)
 
-      params.require(:response).permit(to_permit)
-    end
+    params.require(:response).permit(to_permit)
   end
 
   def check_form_exists_in_mission
-    if @response.form.mission_id != current_mission.id
-      @error = CanCan::AccessDenied.new("Form does not exist in this mission.", :create, :response)
-      raise @error
-    end
+    return unless @response.form.mission_id != current_mission.id
+    @error = CanCan::AccessDenied.new("Form does not exist in this mission.", :create, :response)
+    raise @error
   end
 
   # Rails seems to have a bug wherein if a time_select field is left blank,
@@ -481,11 +480,10 @@ class ResponsesController < ApplicationController
   # This seems to be because the date is passed in as 0001-01-01 so it doesn't look like a nil.
   # So here we correct it by setting the incoming parameters in such a situation to all blanks.
   def fix_nil_time_values
-    if params[:response] && params[:response][:answers_attributes]
-      params[:response][:answers_attributes].each do |key, attribs|
-        if attribs["time_value(4i)"].blank? && attribs["time_value(5i)"].blank?
-          %w[1 2 3].each { |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = "" }
-        end
+    return unless params[:response] && params[:response][:answers_attributes]
+    params[:response][:answers_attributes].each do |key, attribs|
+      if attribs["time_value(4i)"].blank? && attribs["time_value(5i)"].blank?
+        %w[1 2 3].each { |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = "" }
       end
     end
   end

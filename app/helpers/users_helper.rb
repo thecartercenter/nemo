@@ -6,15 +6,15 @@ module UsersHelper
     links = []
     if can?(:create, Broadcast) && !offline_mode?
       links << batch_op_link(name: t("action_links.models.user.send_broadcast"),
-                             path: new_with_users_broadcasts_path(search: @search_params))
+        path: new_with_users_broadcasts_path(search: @search_params))
     end
     if can?(:export, User)
       links << batch_op_link(name: t("action_links.models.user.export_to_vcard"),
-                             path: export_users_path(format: :vcf))
+        path: export_users_path(format: :vcf))
     end
     if can?(:bulk_destroy, User)
       links << batch_op_link(name: t("action_links.destroy"), path: bulk_destroy_users_path,
-                             confirm: "user.bulk_destroy_confirm")
+        confirm: "user.bulk_destroy_confirm")
     end
     if can?(:view, UserGroup)
       links << link_to(t("action_links.models.user.add_to_group"), "#user-group-modal",
@@ -54,10 +54,10 @@ module UsersHelper
 
   def assignment_errors
     errors = []
-    unless (msg = @user.errors[:'assignments.role']&.first).nil?
+    unless (msg = @user.errors[:"assignments.role"]&.first).nil?
       errors << "#{User.human_attribute_name(:role)} #{msg}"
     end
-    unless (msg = @user.errors[:'assignments.mission']&.first).nil?
+    unless (msg = @user.errors[:"assignments.mission"]&.first).nil?
       errors << "#{User.human_attribute_name(:mission_id)} #{msg}"
     end
     errors

@@ -100,6 +100,6 @@ class Search::Parser
   end
 
   def next2_is?(*options)
-    options.include?(nil) || @lexer.tokens[1] && options.include?(@lexer.tokens[1].kind)
+    options.include?(nil) || (@lexer.tokens[1] && options.include?(@lexer.tokens[1].kind))
   end
 end

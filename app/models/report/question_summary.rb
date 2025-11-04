@@ -36,7 +36,7 @@ class Report::QuestionSummary
   end
 
   def as_json(options = {})
-    h = super(options)
+    h = super
     h[:questioning] = questioning.as_json(
       only: %i[id rank],
       methods: %i[code name]

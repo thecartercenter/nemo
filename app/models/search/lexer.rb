@@ -26,13 +26,11 @@ class Search::Lexer
           else
             match = nil
           end
+        elsif md = @str.match(/^#{pattern}/)
+          match = md[defn[:sub_idx] || 0]
+          chop = md[0].size
         else
-          if md = @str.match(/^#{pattern}/)
-            match = md[defn[:sub_idx] || 0]
-            chop = md[0].size
-          else
-            match = nil
-          end
+          match = nil
         end
 
         # if we found a match, create the LexToken and break
@@ -42,14 +40,14 @@ class Search::Lexer
         break
       end
       # if no token found, raise error
-      if token.nil?
-        raise Search::ParseError, I18n.t("search.unexpected", str: @str)
+      raise Search::ParseError, I18n.t("search.unexpected", str: @str) if token.nil?
+
       # otherwise, add to token list and delete from the front
-      else
-        @tokens << token
-        @str = @str[chop..-1]
-        @str = @str.strip
-      end
+
+      @tokens << token
+      @str = @str[chop..-1]
+      @str = @str.strip
+
     end
     # add the end-of-text token to the end
     @tokens << Search::LexToken.new(name: :eot)

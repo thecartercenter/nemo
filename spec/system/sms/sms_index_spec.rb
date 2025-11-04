@@ -8,7 +8,7 @@ describe "sms index", js: true do
   let(:user) { create(:user) }
   let!(:smses) do
     [
-      create(:sms_incoming, body: "alpha bravo charlie", sent_at: Time.current - 70.seconds),
+      create(:sms_incoming, body: "alpha bravo charlie", sent_at: 70.seconds.ago),
       create(:sms_reply, body: "delta charlie foxtrot", reply_error_message: "foo"),
       create(:sms_broadcast, body: "golf hotel india")
     ]
@@ -48,7 +48,7 @@ describe "sms index", js: true do
 
     # Search error.
     search_for("fail:")
-    expect(page).to have_content("Error: Your search query could not be understood "\
-      "due to unexpected text near the end.")
+    expect(page).to have_content("Error: Your search query could not be understood " \
+                                 "due to unexpected text near the end.")
   end
 end

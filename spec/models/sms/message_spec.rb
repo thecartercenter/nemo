@@ -68,9 +68,9 @@ describe Sms::Message, :sms do
 
   context "with long body and slight difference at end" do
     let(:body) do
-      "laksdjf alsdkjf lasdfkjaf laskdsf aslkfsjflsakfda lsakl fakjsdlkfaj lskjf alksj "\
-      "dfalkj sdlfaks asdaksjdafa alaskdfal alkajdasfa alsjd alasksdjf alks"\
-      "alfdsafdslf l lajslfdjfalsdkf dslads"
+      "laksdjf alsdkjf lasdfkjaf laskdsf aslkfsjflsakfda lsakl fakjsdlkfaj lskjf alksj " \
+        "dfalkj sdlfaks asdaksjdafa alaskdfal alkajdasfa alsjd alasksdjf alks" \
+        "alfdsafdslf l lajslfdjfalsdkf dslads"
     end
 
     it "should not be returned as equal" do

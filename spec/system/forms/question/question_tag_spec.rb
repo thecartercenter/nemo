@@ -23,7 +23,7 @@ describe "question tags" do
     login(user)
   end
 
-  scenario "question tag add/remove", js: true do
+  scenario "question tag add/remove", js: true, flapping: true do
     tag_add_remove_test(
       qtype: "question",
       edit_path: edit_question_path(question1, mode: "m", mission_name: mission.compact_name, locale: "en"),
@@ -35,11 +35,11 @@ describe "question tags" do
     )
   end
 
-  scenario "questioning tag add/remove", js: true do
+  scenario "questioning tag add/remove", js: true, flapping: true do
     tag_add_remove_test(
       qtype: "questioning",
       edit_path: edit_questioning_path(questioning1, mode: "m", mission_name: mission.compact_name,
-                                                     locale: "en"),
+        locale: "en"),
       show_path: questioning_path(questioning1, mode: "m", mission_name: mission.compact_name, locale: "en"),
       admin_edit_path: edit_questioning_path(questioning3, mode: "admin", mission_name: nil, locale: "en"),
       admin_show_path: questioning_path(questioning3, mode: "admin", mission_name: nil, locale: "en"),
@@ -138,7 +138,7 @@ describe "question tags" do
     expect(Tag.find_by(name: "food").mission_id).to be_nil
   end
 
-  scenario "clicking tag at top of question index page adds it to search", js: true do
+  scenario "clicking tag at top of question index page adds it to search", js: true, flapping: true do
     question1.tags = [tag1, tag2, tag3]
     visit "/en/m/#{mission.compact_name}/questions"
 

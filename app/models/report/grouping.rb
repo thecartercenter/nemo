@@ -42,7 +42,5 @@ class Report::Grouping
     rel.where("#{prefix}_ans_opt_nodes.ancestry_depth IS NULL OR #{prefix}_ans_opt_nodes.ancestry_depth <= 1")
   end
 
-  def header_title
-    @calculation.header_title
-  end
+  delegate :header_title, to: :@calculation
 end

@@ -9,6 +9,7 @@
  *         Website : alex-d.fr
  */
 
+// Assumes DOMPurify is loaded and available globally as window.DOMPurify, or adapt import as necessary.
 jQuery.trumbowyg = {
     langs: {
         en: {
@@ -75,6 +76,16 @@ jQuery.trumbowyg = {
 
     hideButtonTexts: null
 };
+
+// Helper function: Escape HTML for XSS protection if DOMPurify is not present
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
 
 // Makes default options read-only
 Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
@@ -231,7 +242,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 var scriptElements = document.getElementsByTagName('script');
                 for (var i = 0; i < scriptElements.length; i += 1) {
                     var source = scriptElements[i].src;
-                    var matches = source.match('trumbowyg(\.min)?\.js');
+                    var matches = source.match('trumbowyg(\\.min)?\\.js');
                     if (matches != null) {
                         svgPathOption = source.substring(0, source.indexOf(matches[0])) + 'ui/icons.svg';
                     }
@@ -541,7 +552,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     contenteditable: true,
                     dir: t.lang._dir || 'ltr'
                 })
-                .html(html)
+                .html(window.DOMPurify.sanitize(html))
             ;
 
             if (t.o.tabindex) {
@@ -980,7 +991,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                         .removeClass(prefix + 'editor')
                         .removeAttr('contenteditable')
                         .removeAttr('dir')
-                        .html(t.html())
+                        .html(window.DOMPurify ? window.DOMPurify.sanitize(t.html()) : escapeHTML(t.html()))
                         .show()
                 );
             }
@@ -1088,12 +1099,13 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             if (!force && t.$ed.is(':visible')) {
                 t.syncTextarea();
             } else {
-                // wrap the content in a div it's easier to get the innerhtml
-                var html = $('<div>').html(t.$ta.val());
-                //scrub the html before loading into the doc
-                var safe = $('<div>').append(html);
-                $(t.o.tagsToRemove.join(','), safe).remove();
-                t.$ed.html(safe.contents().html());
+                // Sanitize the textarea content directly to defend against XSS
+                var raw = t.$ta.val();
+                // First sanitize, then parse as HTML to remove tags
+                var sanitized = DOMPurify.sanitize(raw);
+                var tempDiv = $('<div>').html(sanitized);
+                $(t.o.tagsToRemove.join(','), tempDiv).remove();
+                t.$ed.html(tempDiv.html());
             }
 
             if (t.o.autogrow) {

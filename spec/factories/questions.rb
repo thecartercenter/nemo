@@ -63,9 +63,7 @@ FactoryBot.define do
     media_prompt { nil }
 
     after(:build) do |obj, evaluator|
-      if evaluator.fixture
-        obj.media_prompt.attach(io: evaluator.fixture, filename: File.basename(evaluator.fixture))
-      end
+      obj.media_prompt.attach(io: evaluator.fixture, filename: File.basename(evaluator.fixture)) if evaluator.fixture
     end
 
     qtype_name { "integer" }

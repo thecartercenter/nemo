@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'benchmark'
+require "benchmark"
 
 # Major migration to create hierarchy of answer objects.
 class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
@@ -76,7 +76,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     end
 
     # If given row is an AnswerGroup that references a repeatable QingGroup, find/create AnswerGroupSet.
-    if row["type"] == "AnswerGroup" && (form_item["repeatable"] == "t" || form_item["repeatable"] == true)
+    if row["type"] == "AnswerGroup" && ["t", true].include?(form_item["repeatable"])
       parent_row = row.slice("questioning_id", "response_id")
         .merge("type" => "AnswerGroupSet", "inst_num" => 1)
       row["new_rank"] = inst_num
@@ -143,8 +143,8 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
   end
 
   def insert_answer_parent(id, hash)
-    @inserts << "('#{id}','#{hash['questioning_id']}','#{hash['response_id']}','#{hash['type']}',"\
-      "'#{hash['inst_num']}','#{hash['new_rank']}',#{id_str(hash['parent_id'])},NOW(),NOW())"
+    @inserts << "('#{id}','#{hash['questioning_id']}','#{hash['response_id']}','#{hash['type']}'," \
+                "'#{hash['inst_num']}','#{hash['new_rank']}',#{id_str(hash['parent_id'])},NOW(),NOW())"
   end
 
   def id_str(val)
@@ -205,12 +205,12 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
   end
 
   def non_leaf_node_count
-    @non_leaf_node_count ||= execute("SELECT COUNT(*) FROM answers WHERE type != "\
-      "'Answer' AND deleted_at IS NULL").to_a.first["count"].to_i
+    @non_leaf_node_count ||= execute("SELECT COUNT(*) FROM answers WHERE type != " \
+                                     "'Answer' AND deleted_at IS NULL").to_a.first["count"].to_i
   end
 
-  def run_and_print_time(indent, &block)
-    t = Benchmark.realtime(&block)
+  def run_and_print_time(indent, &)
+    t = Benchmark.realtime(&)
     puts("#{' ' * indent}Took #{format('%.3f', t)}s")
   end
 

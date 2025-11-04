@@ -26,9 +26,7 @@ class Ability
     self.mode = params[:mode]
     self.mode ||= "mission" if mission
 
-    if mode != "mission" && mission.present?
-      raise ArgumentError, "Mission should be nil if mode is not 'mission'"
-    end
+    raise ArgumentError, "Mission should be nil if mode is not 'mission'" if mode != "mission" && mission.present?
 
     user_dependent_permissions if user
     user_independent_permissions
@@ -176,6 +174,17 @@ class Ability
 
     # Can manage these classes for the current mission even if locked
     [Setting, Sms::Message].each { |klass| can(:manage, klass, mission_id: mission.id) }
+    
+    # Analytics permissions
+    can(:view, :analytics)
+    can(:export, :data)
+    can(:view, :audit_logs)
+    can(:export, :audit_logs)
+    can(:manage, :form_templates)
+    can(:manage, :validation_rules)
+    can(:manage, :comment)
+    can(:manage, :annotation)
+    can(:manage, :backups)
   end
 
   def staffer_permissions
@@ -205,6 +214,17 @@ class Ability
 
     can(:regenerate_sms_auth_code, User)
     can(:view, :dashboard)
+    can(:view, :analytics)
+    can(:export, :data)
+    can(:view, :form_templates)
+    can(:use, :form_templates)
+    can(:view, :validation_rules)
+    can(:create, :comment)
+    can(:create, :annotation)
+    can(:view, :backups)
+    can(:create, :backups)
+    can(:download, :backups)
+    can(:search, :data)
   end
 
   def reviewer_permissions
@@ -223,7 +243,6 @@ class Ability
     can(:login_instructions, User, id: user.id)
 
     can(%i[show child_nodes], [OptionSet, OptionNode], mission_id: mission.id)
-
 
     # only need these abilities if not also a staffer
     unless user_has_this_or_higher_role_in_mission?(:staffer)

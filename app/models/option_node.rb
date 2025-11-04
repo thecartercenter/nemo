@@ -81,9 +81,9 @@ class OptionNode < ApplicationRecord
   scope :by_canonical_name, ->(name) { joins(:option).where("LOWER(canonical_name) = ?", name.downcase) }
 
   replicable child_assocs: %i[children option], backward_assocs: :option_set,
-             # If the source of the clone is an option set, we need to replicate all nodes.
-             # Otherwise they are reusable just like the OptionSet itself.
-             dont_reuse: ->(replicator) { replicator.source.is_a?(OptionSet) }
+    # If the source of the clone is an option set, we need to replicate all nodes.
+    # Otherwise they are reusable just like the OptionSet itself.
+    dont_reuse: ->(replicator) { replicator.source.is_a?(OptionSet) }
 
   clone_options follow: %i[option]
 
@@ -283,8 +283,8 @@ class OptionNode < ApplicationRecord
   def to_s
     "Option Node: ID #{id}  Option ID: " +
       (is_root? ? "[ROOT]" : option_id || "[No option]").to_s +
-      " Option: #{option.try(:name)}" \
-      "  System ID: #{object_id}"
+      " Option: #{option.try(:name)}  " \
+      "System ID: #{object_id}"
   end
 
   # returns a string representation of this node and its children, indented by the given amount

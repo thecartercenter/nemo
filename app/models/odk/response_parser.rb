@@ -154,9 +154,7 @@ module ODK
     def form_item(name)
       form_item_id = form_item_id_from_tag(name)
       form_item = FormItem.where(mission: response.mission).find_by(id: form_item_id)
-      if form_item.nil?
-        raise SubmissionError, "Submission contains unidentifiable group or question '#{name}'."
-      end
+      raise SubmissionError, "Submission contains unidentifiable group or question '#{name}'." if form_item.nil?
       unless form_item.form_id == response.form.id
         raise SubmissionError, "Submission contains group or question '#{name}' not found in form."
       end

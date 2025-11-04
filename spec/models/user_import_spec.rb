@@ -177,8 +177,8 @@ describe UserImport do
 
     it "reports unrecognized headers and handles numeric type" do
       expect(import).not_to be_succeeded
-      expect(run_errors).to eq(["The following column headers were not recognized: 'leonobs1', "\
-        "'DAVID JOHNSON', 'dj3349883@gmail.com', 'CAPE MOUNT DISTRICT 1', '21655555555'."])
+      expect(run_errors).to eq(["The following column headers were not recognized: 'leonobs1', " \
+                                "'DAVID JOHNSON', 'dj3349883@gmail.com', 'CAPE MOUNT DISTRICT 1', '21655555555'."])
     end
   end
 

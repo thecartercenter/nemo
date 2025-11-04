@@ -68,7 +68,7 @@ def parsing_expectations(msg, request)
   expect(msg.from).to eq("+2348036801489")
   expect(msg.body).to eq("foo")
   expect(msg.adapter_name).to eq("FrontlineCloud")
-  expect(msg.sent_at).to eq(Time.zone.at((request.params["sent_at"].to_i / 1000)))
+  expect(msg.sent_at).to eq(Time.zone.at(request.params["sent_at"].to_i / 1000))
   expect(msg.sent_at.zone).not_to eq("UTC")
   expect(msg.mission).to be_nil # This gets set in controller.
 end

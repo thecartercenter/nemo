@@ -6,7 +6,7 @@ describe Results::SqlGenerator do
   let(:mission) { create(:mission) }
   let(:form) do
     create(:form, mission: mission,
-                  question_types: ["integer", "select_one", %w[integer integer], "select_multiple"])
+      question_types: ["integer", "select_one", %w[integer integer], "select_multiple"])
   end
   let!(:response) do
     create(:response, mission: mission, form: form, answer_values: [3, "Cat", [5, 6], %w[Cat Dog]])

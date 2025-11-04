@@ -8,9 +8,7 @@ shared_context "odk submissions" do
 
   def prepare_and_upload_submission_file(template)
     tmp_path = Rails.root.join("tmp/submission.xml")
-    File.open(tmp_path, "w") do |f|
-      f.write(prepare_odk_media_upload_fixture(template, form))
-    end
+    File.write(tmp_path, prepare_odk_media_upload_fixture(template, form))
     Rack::Test::UploadedFile.new(tmp_path, "text/xml")
   end
 

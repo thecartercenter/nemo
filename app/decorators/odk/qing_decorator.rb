@@ -7,15 +7,15 @@ module ODK
 
     def bind_tag(form, subq, xpath_prefix: "/data")
       tag(:bind, nodeset: nodeset(subq, xpath_prefix),
-                 type: binding_type_attrib(subq),
-                 required: subq.required? ? required_value(form) : nil,
-                 readonly: default_answer? && read_only? ? "true()" : nil,
-                 relevant: relevance,
-                 constraint: constraint,
-                 "jr:constraintMsg": constraints? ? jr_constraint_msg : nil,
-                 calculate: calculate,
-                 "jr:preload": jr_preload,
-                 "jr:preloadParams": jr_preload_params)
+        type: binding_type_attrib(subq),
+        required: subq.required? ? required_value(form) : nil,
+        readonly: default_answer? && read_only? ? "true()" : nil,
+        relevant: relevance,
+        constraint: constraint,
+        "jr:constraintMsg": constraints? ? jr_constraint_msg : nil,
+        calculate: calculate,
+        "jr:preload": jr_preload,
+        "jr:preloadParams": jr_preload_params)
     end
 
     def last_saved_setvalue_tag(subq, xpath_prefix: "/data")

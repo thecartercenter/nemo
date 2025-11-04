@@ -30,7 +30,7 @@ module ThemeHelper
   end
 
   # Returns an image tag for the logo for the requested style and the current theme.
-  def logo_image(style: :light, **options)
-    image_tag("logos/#{current_mission_config.theme}/#{style}.png", **options)
+  def logo_image(style: :light, **)
+    image_tag("logos/#{current_mission_config.theme}/#{style}.png", **)
   end
 end

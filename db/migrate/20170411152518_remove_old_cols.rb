@@ -20,14 +20,12 @@ class RemoveOldCols < ActiveRecord::Migration[4.2]
   end
 
   def remove_foreign_key_if_exists(table, column)
-    if fk = foreign_keys(table).detect { |k| k.options[:column] == column.to_s }
-      remove_foreign_key(table, column: column)
-    end
+    return unless foreign_keys(table).detect { |k| k.options[:column] == column.to_s }
+    remove_foreign_key(table, column: column)
   end
 
-  def remove_column_if_exists(*args)
-    if column_exists?(*args)
-      remove_column(*args)
-    end
+  def remove_column_if_exists(*)
+    return unless column_exists?(*)
+    remove_column(*)
   end
 end

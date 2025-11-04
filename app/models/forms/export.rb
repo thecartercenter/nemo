@@ -2,7 +2,7 @@
 
 # rubocop:disable Metrics/MethodLength
 module Forms
-  # Exports a form to a human readable format for science!
+  # Exports a form to a human-readable format for science!
   class Export # rubocop:disable Metrics/ClassLength
     include LanguageHelper
 
@@ -12,12 +12,17 @@ module Forms
     ].freeze
 
     QTYPE_TO_XLS = {
-      # conversions
-      "location" => "geopoint",
-      "long_text" => "text",
+      # direct conversions
       "datetime" => "dateTime",
-      "annotated_image" => "image",
-      "counter" => "integer",
+
+      # conversions with added "appearance" column
+      # https://xlsform.org/en/#appearance
+      "long_text" => "text", # "multiline"
+      "annotated_image" => "image", # "annotate"
+      "counter" => "integer", # "counter"
+      "sketch" => "image", # "draw"
+      "signature" => "image", # "signature"
+      "location" => "geopoint", # "placement-map"
 
       # no change
       "text" => "text",
@@ -30,15 +35,20 @@ module Forms
       "barcode" => "barcode",
       "audio" => "audio",
       "video" => "video",
-      "integer" => "integer",
-
-      # TODO: Not yet supported in our XLSForm exporter
-      "sketch" => "sketch (WARNING: not yet supported)",
-      "signature" => "signature (WARNING: not yet supported)"
+      "integer" => "integer"
 
       # Note: XLSForm qtypes not supported in NEMO:
       #   range, geotrace, geoshape, note, file, select_one_from_file, select_multiple_from_file,
       #   background-audio, calculate, acknowledge, hidden, xml-external
+    }.freeze
+
+    QTYPE_TO_APPEARANCE = {
+      "long_text" => "multiline",
+      "annotated_image" => "annotate",
+      "counter" => "counter",
+      "sketch" => "draw",
+      "signature" => "signature",
+      "location" => "placement-map"
     }.freeze
 
     def initialize(form)
@@ -67,19 +77,21 @@ module Forms
       locales = @form.mission.setting.preferred_locales
 
       # Write sheet headings at row index 0
-      questions.row(0).push("type")
+      questions.row(0).push(
+        "type", *local_headers("label", locales), *local_headers("hint", locales),
+        "name", "required", "repeat_count", "appearance", "relevant", "default", "choice_filter",
+        "constraint", *local_headers("constraint_message", locales),
+        *local_headers("image", locales), *local_headers("audio", locales), *local_headers("video", locales)
+      )
 
-      # translation columns
-      locales.each do |locale|
-        questions.row(0).push("label::#{language_name(locale)} (#{locale})",
-          "hint::#{language_name(locale)} (#{locale})")
-      end
+      # array for tracking nested groups.
+      # push :group when a regular group is encountered, :repeat if repeat group.
+      # when a group ends, we check .last, write "end group" or "end repeat" ,and then pop the last item out.
+      # length of this array = current group depth
+      group_tracker = []
 
-      questions.row(0).push("name", "required", "relevant", "constraint", "choice_filter")
-      settings.row(0).push("form_title", "form_id", "version", "default_language")
-
-      group_depth = 1 # assume base level
-      repeat_depth = 1
+      # array for tracking the option sets used by a form.
+      # is later used by the method "options_to_xls" below to write the "choices" tab of the XLSForm.
       option_sets_used = []
 
       # Define the below "index modifiers" which keep track of the line of the spreadsheet we are writing to.
@@ -95,70 +107,165 @@ module Forms
         row_index = i + index_mod
 
         # did one or more groups just end?
-        # if so, the qing's depth will be smaller than the depth counter
-        while group_depth > q.ancestry_depth
-          # are we in a repeat group?
-          # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
-          if repeat_depth > 1 && repeat_depth >= group_depth
+        # if so, the qing's ancestry_depth will be smaller than the length of
+        # the group tracker array (plus 1, because base ancestry_depth is 1)
+        while group_tracker.length + 1 > q.ancestry_depth
+          ended_group_type = group_tracker.pop
+          if ended_group_type == :repeat
             questions.row(row_index).push("end repeat")
-            repeat_depth -= 1
+          elsif ended_group_type == :repeat_with_item_name
+            # end both the repeat group and the inner group that carries the repeat_item_name
+            # we need an extra increment on the index_mod due to the extra end group line
+            questions.row(row_index).push("end group")
+            questions.row(row_index + 1).push("end repeat")
+            index_mod += 1
+            row_index += 1
           else
             # end the group
             questions.row(row_index).push("end group")
           end
 
-          # update counters to accomodate additional "end group" lines
-          group_depth -= 1
+          # update counters to accommodate additional "end group" lines
           index_mod += 1
           row_index += 1
         end
 
         if q.group? # is this a group?
-          # write begin group line
+          # write begin group line and update group_tracker array
           if q.repeatable?
             questions.row(row_index).push("begin repeat")
-            repeat_depth += 1
+
+            # Check for repeat item name
+            if q.group_item_name.present?
+              # If so, create an inner group here,
+              # which should have the labels as defined in group_item_name_translations
+              questions.row(row_index + 1).push("begin group")
+
+              # write translated group item names on the inner group row
+              locales.each do |locale|
+                # Any instance of "$..." indicates that the user may be referring to another question.
+                # However, XLSForm requires a syntax of "${...}" to refer to questions.
+                # Use regex to make this syntax change.
+                name = q.group_item_name_translations&.dig(locale.to_s)&.gsub(/\$(#{Question::CODE_FORMAT})/, "${\\1}")
+                questions.row(row_index + 1).push(name)
+              end
+              # skip unused hint rows for inner group (length varies based on number of locales)
+              locales.length.times { questions.row(row_index + 1).push("") }
+              # push a name for the inner group (required for ODK)
+              questions.row(row_index + 1).push("#{vanillify(q.code)}_item")
+
+              # increment index_mod to account for the extra "begin group" line
+              index_mod += 1
+
+              # push a new type of group to the group tracker that will push end group / end repeat when it ends
+              group_tracker.push(:repeat_with_item_name)
+            else
+              group_tracker.push(:repeat)
+            end
+
+            # Check for repeat count limit
+            if q.repeat_count_qing_id.present?
+              repeat_count_qing = Questioning.find(q.repeat_count_qing_id)
+              repeat_count_to_push = "${#{repeat_count_qing.code}}"
+            end
           else
             questions.row(row_index).push("begin group")
+            group_tracker.push(:group)
+
+            # In non-repeat groups, this field is unused
+            repeat_count_to_push = ""
           end
 
-          # write translated label and hint columns
+          # write translated labels
           locales.each do |locale|
-            questions.row(row_index).push(q.group_name_translations&.dig(locale.to_s),
-              q.group_hint_translations&.dig(locale.to_s))
+            questions.row(row_index).push(q.group_name_translations&.dig(locale.to_s))
+          end
+
+          # write translated hints
+          locales.each do |locale| # rubocop:disable Style/CombinableLoops
+            questions.row(row_index).push(q.group_hint_translations&.dig(locale.to_s))
           end
 
           # write group name
           questions.row(row_index).push(vanillify(q.code))
 
-          # update counters
-          group_depth += 1
+          # check and write repeat_count and "show on one screen" appearance
+          # (add an empty string to skip the unused "required" column)
+          appearance_to_push = ODK::DecoratorFactory.decorate(q).one_screen_appropriate? ? "field-list" : ""
+          questions.row(row_index).push("", repeat_count_to_push, appearance_to_push)
         else # is this a question?
           # convert question types to ODK style
           qtype_converted = QTYPE_TO_XLS[q.qtype_name]
+          appearance_to_push = QTYPE_TO_APPEARANCE[q.qtype_name] || ""
 
           # if we have any relevant conditions or constraints, save them now
           conditions_to_push = conditions_to_xls(q.display_conditions, q.display_if)
 
-          constraints_to_push = ""
-          q.constraints.each_with_index do |c, c_index|
-            # constraint rules should be placed in parentheses and separated by "and"
-            # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
-            constraints_to_push += "(#{conditions_to_xls(c.conditions, c.accept_if)})"
+          # declare constraint arrays
+          constraints_to_push = []
+          constraint_msg_to_push = Array.new(locales.length, [])
 
-            # add "and" unless we're at the end
-            constraints_to_push += " and " unless c_index + 1 == q.constraints.length
+          # obtain default response values, or else an empty string
+          # if preload last saved value is checked, indicate this using XLSForm format
+          # https://docs.getodk.org/form-logic/#values-from-the-last-saved-record
+          default_to_push = if q.preload_last_saved
+                              "${last-saved##{q.code}}"
+                            else
+                              q.default || ""
+                            end
 
-            # TODO: add support for constraint messages ("rejection_msg" in NEMO)
-            # https://xlsform.org/en/#constraint-message
+          # obtain media prompt content type and filename, if any
+          # column order = image, audio, video
+          # uploaded media will be one of these types; the other columns should be filled with an empty string
+          # NEMO doesn't translate these attachments, so repeat the filename in each language
+          media_prompt_to_push = Array.new(3 * locales.count, "")
+          case q.media_prompt.content_type&.split("/")&.first
+          when "image"
+            locales.count.times do |n|
+              media_prompt_to_push[(0 * locales.count) + n] = q.media_prompt.filename.to_s
+            end
+          when "audio"
+            locales.count.times do |n|
+              media_prompt_to_push[(1 * locales.count) + n] = q.media_prompt.filename.to_s
+            end
+          when "video"
+            locales.count.times do |n|
+              media_prompt_to_push[(2 * locales.count) + n] = q.media_prompt.filename.to_s
+            end
           end
+
+          # this is not a (repeat) group, so repeat_count is unused
+          repeat_count_to_push = ""
+
+          q.constraints.each do |c|
+            constraints_to_push.push("(#{conditions_to_xls(c.conditions, c.accept_if)})")
+
+            # Write translated constraint message columns ("rejection_msg" in NEMO)
+            # https://xlsform.org/en/#constraint-message
+            #
+            # NEMO allows multiple constraint messages for each rule, whereas XLSForm only supports one message per row.
+            # Thus, if there are multiple constraints or rules for this question,
+            # combine all provided messages into one string (per locale)
+            locales.each_with_index do |locale, locale_index|
+              # Attempt to get a message for that constraint for that language
+              # (may be nil if a translation is not provided)
+              constraint_message = c.rejection_msg_translations&.dig(locale.to_s)
+              constraint_msg_to_push[locale_index] += [constraint_message] if constraint_message.present?
+            end
+          end
+
+          # convert arrays into concatenated strings in XLSForm format
+          # constraint rules should be placed in parentheses and separated by "and"
+          # constraint message will still be an array, but contain a string for each locale
+          # https://docs.getodk.org/form-logic/#validating-and-restricting-responses
+          constraints_to_push = constraints_to_push.join(" and ")
+          constraint_msg_to_push = constraint_msg_to_push.map { |n| n.join("; ") }
 
           # if we have an option set, identify and save it so that we can add it to the choices sheet later.
           # then, write the question, splitting it into multiple questions if there are option set levels.
-          os_name = ""
           choice_filter = ""
           if q.option_set_id.present?
-            os = OptionSet.find(q.option_set_id)
+            os = q.option_set
             option_sets_used.push(q.option_set_id)
 
             # include leading space to respect XLSForm format
@@ -169,7 +276,7 @@ module Forms
             # is the option set multilevel?
             if os.level_names.present?
               os.level_names.each_with_index do |level, l_index|
-                level_name = vanillify(level.values[0])
+                level_name = unique_level_name(os_name, level.values[0])
 
                 # Append level name to qtype
                 type_to_push = "#{qtype_converted} #{level_name}"
@@ -180,14 +287,18 @@ module Forms
                 # push a row for each level
                 questions.row(row_index + l_index).push(type_to_push)
 
-                # write translated label and hint columns
+                # write translated labels
                 locales.each do |locale|
-                  questions.row(row_index + l_index).push(q.question.name_translations&.dig(locale.to_s),
-                    q.question.hint_translations&.dig(locale.to_s))
+                  questions.row(row_index + l_index).push(q.question.name_translations&.dig(locale.to_s))
+                end
+
+                # write translated hints
+                locales.each do |locale| # rubocop:disable Style/CombinableLoops
+                  questions.row(row_index + l_index).push(q.question.hint_translations&.dig(locale.to_s))
                 end
 
                 questions.row(row_index + l_index).push(name_to_push,
-                  q.required.to_s, conditions_to_push, constraints_to_push, choice_filter)
+                  q.required.to_s, repeat_count_to_push, appearance_to_push, conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
 
                 # define the choice_filter cell for the following row, e.g, "state=${selected_state}"
                 choice_filter = "#{level_name}=${#{name_to_push}}"
@@ -201,24 +312,36 @@ module Forms
 
               # Write the question row
               questions.row(row_index).push(type_to_push)
-              # write translated label and hint columns
+
+              # write translated labels
               locales.each do |locale|
-                questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s),
-                  q.question.hint_translations&.dig(locale.to_s))
+                questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s))
               end
-              questions.row(row_index).push(q.code, q.required.to_s,
-                conditions_to_push, constraints_to_push, choice_filter)
+
+              # write translated hints
+              locales.each do |locale| # rubocop:disable Style/CombinableLoops
+                questions.row(row_index).push(q.question.hint_translations&.dig(locale.to_s))
+              end
+
+              questions.row(row_index).push(q.code, q.required.to_s, repeat_count_to_push, appearance_to_push,
+                conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
             end
           else # no option set present
             # Write the question row as normal
             questions.row(row_index).push(qtype_converted)
-            # write translated label and hint columns
+
+            # write translated labels
             locales.each do |locale|
-              questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s),
-                q.question.hint_translations&.dig(locale.to_s))
+              questions.row(row_index).push(q.question.name_translations&.dig(locale.to_s))
             end
-            questions.row(row_index).push(q.code, q.required.to_s,
-              conditions_to_push, constraints_to_push, choice_filter)
+
+            # write translated hints
+            locales.each do |locale| # rubocop:disable Style/CombinableLoops
+              questions.row(row_index).push(q.question.hint_translations&.dig(locale.to_s))
+            end
+
+            questions.row(row_index).push(q.code, q.required.to_s, repeat_count_to_push, appearance_to_push,
+              conditions_to_push, default_to_push, choice_filter, constraints_to_push, *constraint_msg_to_push, *media_prompt_to_push)
           end
         end
 
@@ -226,21 +349,25 @@ module Forms
         if i == @form.preordered_items.size - 1
           row_index += 1
 
-          # did one or more groups just end?
-          # if so, the qing's depth will be smaller than the depth counter
-          while group_depth > 1
-            # are we in a repeat group?
-            # we don't want to end the repeat if we are ending a nested non-repeat group within a repeat
-            if repeat_depth > 1 && repeat_depth >= group_depth
+          # do we still have unclosed groups in the tracker array?
+          # if so, close those groups from last to first.
+          while group_tracker.present?
+            ended_group_type = group_tracker.pop
+            if ended_group_type == :repeat
               questions.row(row_index).push("end repeat")
-              repeat_depth -= 1
+            elsif ended_group_type == :repeat_with_item_name
+              # end both the repeat group and the inner group that carries the repeat_item_name
+              # we need an extra increment on the index_mod due to the extra end group line
+              questions.row(row_index).push("end group")
+              questions.row(row_index + 1).push("end repeat")
+              index_mod += 1
+              row_index += 1
             else
               # end the group
               questions.row(row_index).push("end group")
             end
 
             # update counters to accomodate additional "end group" lines
-            group_depth -= 1
             index_mod += 1
             row_index += 1
           end
@@ -261,13 +388,30 @@ module Forms
       end
 
       ## Settings
+      settings.row(0).push("form_title", "form_id", "version", "default_language", "allow_choice_duplicates")
+
       lang = @form.mission.setting.preferred_locales[0].to_s
       version = if @form.current_version.present?
                   @form.current_version.decorate.name
                 else
                   "1"
                 end
-      settings.row(1).push(@form.name, @form.id, version, lang)
+      settings.row(1).push(@form.name, @form.id, version, lang, "yes")
+
+      ## Style
+      format = Spreadsheet::Format.new(
+        color: :navy,
+        weight: :bold,
+        text_wrap: true
+      )
+      questions.row(0).default_format = format
+      choices.row(0).default_format = format
+      settings.row(0).default_format = format
+
+      # Freeze header rows
+      questions.freeze!(1, 0)
+      choices.freeze!(1, 0)
+      settings.freeze!(1, 0)
 
       ## Write
       file = StringIO.new
@@ -301,6 +445,13 @@ module Forms
         "Repeat Group"
       else
         "Group"
+      end
+    end
+
+    # Given a header like `"label"`, return an array of localized headers like `["label::English (en)"]`
+    def local_headers(header, locales)
+      locales.map do |locale|
+        "#{header}::#{language_name(locale)} (#{locale})"
       end
     end
 
@@ -376,16 +527,15 @@ module Forms
         # node = the current option node
         os.option_nodes.each do |node|
           level_to_push = [] # array to be filled with parent levels if needed
-          listname_to_push = "" # name of the option set
 
           if node.level.present?
             # per XLSform style, option sets with levels need to have the
             # list_name replaced with the level name to distinguish each row.
-            listname_to_push = node.level_name
+            listname_to_push = unique_level_name(os.name, node.level_name)
 
             # Only attempt to access node ancestors if they exist
             if node.ancestry_depth > 1
-              # Add a buffer of blank cells to accomodate columns used up by prior option sets
+              # Add a buffer of blank cells to accommodate columns used up by prior option sets
               column_counter.times { level_to_push.push("") }
 
               # Obtain array of all ancestor nodes (except for the root, which is nameless)
@@ -418,7 +568,7 @@ module Forms
         # omit last entry (lowest level)
         if os.level_names.present?
           os.level_names[0..-2].each do |level|
-            header_row.push(vanillify(level.values[0]))
+            header_row.push(unique_level_name(os.name, level.values[0]))
 
             # increment column counter
             column_counter += 1
@@ -431,6 +581,12 @@ module Forms
 
       # return os_matrix with prepended header_row
       os_matrix.insert(0, header_row)
+    end
+
+    # prepend option set name so that level names are unique
+    # this avoids duplicate header errors
+    def unique_level_name(os_name, level_name)
+      "#{vanillify(os_name)}_#{vanillify(level_name)}"
     end
 
     # recursively remove pesky characters and replace spaces with underscores

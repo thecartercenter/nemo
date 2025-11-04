@@ -56,11 +56,9 @@ class Report::ZeroNonzeroCalculation < Report::Calculation
   end
 
   def where_expr
-    if question1.nil?
-      @where_expr ||= raise Report::ReportError, "A zero/non-zero calculation must specify question1."
-    end
+    @where_expr ||= raise Report::ReportError, "A zero/non-zero calculation must specify question1." if question1.nil?
     Report::Expression.new(sql_tplt: "__TBL_PFX__questions.id = '#{question1.id}'",
-                           name: "where", clause: :where, chunks: {tbl_pfx: table_prefix})
+      name: "where", clause: :where, chunks: {tbl_pfx: table_prefix})
   end
 
   def joins

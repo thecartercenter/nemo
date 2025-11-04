@@ -1,0 +1,4 @@
+﻿type,label::English (en),hint::English (en),name,required,repeat_count,appearance,relevant,default,choice_filter,constraint,constraint_message::English (en),image::English (en),audio::English (en),video::English (en)
+text,*label1*,*hint1*,*name1*,false,,,,,,,,,,
+integer,*label2*,*hint2*,*name2*,false,,,,,,,,,,
+text,*label3*,*hint3*,*name3*,false,,,,,,,,,,

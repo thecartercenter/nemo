@@ -1,0 +1,381 @@
+<% content_for :title, t("audit_logs.title") %>
+
+<div class="audit-logs-page">
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1><%= t("audit_logs.title") %></h1>
+      <div class="page-header-actions">
+        <%= link_to t("audit_logs.statistics"), statistics_audit_logs_path, class: "btn btn-info" %>
+        <%= link_to t("audit_logs.export"), export_audit_logs_path(params), class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <%= form_with url: audit_logs_path, method: :get, local: true, class: "filters-form" do |form| %>
+      <div class="filters-row">
+        <div class="filter-group">
+          <%= form.label :action, t("audit_logs.filters.action") %>
+          <%= form.select :action, 
+                         options_for_select([["All Actions", ""]] + @actions.map { |a| [a.humanize, a] }, params[:action]),
+                         {}, class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.label :resource, t("audit_logs.filters.resource") %>
+          <%= form.select :resource, 
+                         options_for_select([["All Resources", ""]] + @resources.map { |r| [r, r] }, params[:resource]),
+                         {}, class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.label :user_id, t("audit_logs.filters.user") %>
+          <%= form.select :user_id, 
+                         options_for_select([["All Users", ""]] + @users.map { |u| [u.name, u.id] }, params[:user_id]),
+                         {}, class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.label :date_from, t("audit_logs.filters.date_from") %>
+          <%= form.date_field :date_from, params[:date_from], class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.label :date_to, t("audit_logs.filters.date_to") %>
+          <%= form.date_field :date_to, params[:date_to], class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.submit t("audit_logs.filters.apply"), class: "btn btn-primary" %>
+          <%= link_to t("audit_logs.filters.clear"), audit_logs_path, class: "btn btn-secondary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Audit Logs Table -->
+  <div class="audit-logs-content">
+    <% if @audit_logs.any? %>
+      <div class="table-responsive">
+        <table class="audit-logs-table">
+          <thead>
+            <tr>
+              <th><%= t("audit_logs.timestamp") %></th>
+              <th><%= t("audit_logs.user") %></th>
+              <th><%= t("audit_logs.action") %></th>
+              <th><%= t("audit_logs.resource") %></th>
+              <th><%= t("audit_logs.resource_name") %></th>
+              <th><%= t("audit_logs.changes") %></th>
+              <th><%= t("audit_logs.ip_address") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @audit_logs.each do |log| %>
+              <tr>
+                <td class="timestamp">
+                  <%= log.created_at.strftime('%Y-%m-%d %H:%M:%S') %>
+                </td>
+                <td class="user">
+                  <%= log.user.name %>
+                </td>
+                <td class="action">
+                  <span class="action-badge action-<%= log.action %>">
+                    <%= log.human_readable_action %>
+                  </span>
+                </td>
+                <td class="resource">
+                  <%= log.resource %>
+                </td>
+                <td class="resource-name">
+                  <%= link_to log.resource_name, audit_log_path(log) if log.resource_id.present? %>
+                </td>
+                <td class="changes">
+                  <% if log.formatted_changes.present? %>
+                    <span class="changes-text" title="<%= log.formatted_changes %>">
+                      <%= truncate(log.formatted_changes, length: 50) %>
+                    </span>
+                  <% else %>
+                    <span class="no-changes">-</span>
+                  <% end %>
+                </td>
+                <td class="ip-address">
+                  <%= log.ip_address %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-container">
+        <%= will_paginate @audit_logs %>
+      </div>
+    <% else %>
+      <div class="no-logs">
+        <div class="no-logs-content">
+          <i class="fa fa-history"></i>
+          <h3><%= t("audit_logs.no_logs") %></h3>
+          <p><%= t("audit_logs.no_logs_description") %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.audit-logs-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.filters-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.filters-form {
+  width: 100%;
+}
+
+.filters-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  align-items: end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-info {
+  background: #17a2b8;
+  color: white;
+}
+
+.audit-logs-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.audit-logs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.audit-logs-table th {
+  background: #f8f9fa;
+  padding: 15px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.audit-logs-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: top;
+}
+
+.audit-logs-table tr:hover {
+  background: #f8f9fa;
+}
+
+.timestamp {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #666;
+  white-space: nowrap;
+}
+
+.user {
+  font-weight: 500;
+}
+
+.action-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.action-create {
+  background: #d4edda;
+  color: #155724;
+}
+
+.action-update {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.action-destroy {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.action-login {
+  background: #d4edda;
+  color: #155724;
+}
+
+.action-logout {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+.action-export {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.resource {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.resource-name a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.resource-name a:hover {
+  text-decoration: underline;
+}
+
+.changes-text {
+  font-size: 0.9em;
+  color: #666;
+  cursor: help;
+}
+
+.no-changes {
+  color: #999;
+  font-style: italic;
+}
+
+.ip-address {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.no-logs {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-logs-content i {
+  font-size: 4em;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.no-logs-content h3 {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.no-logs-content p {
+  color: #888;
+}
+
+.pagination-container {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #dee2e6;
+}
+
+@media (max-width: 768px) {
+  .page-header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .page-header-actions {
+    justify-content: center;
+  }
+  
+  .filters-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .audit-logs-table {
+    font-size: 0.9em;
+  }
+  
+  .audit-logs-table th,
+  .audit-logs-table td {
+    padding: 8px 6px;
+  }
+}
+</style>

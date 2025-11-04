@@ -133,7 +133,7 @@ module OptionSets
       parent = col_idx.zero? ? option_set.root_node : cur_nodes[col_idx - 1]
 
       node = parent.children.create(mission: mission, rank: cur_ranks[col_idx], option_set: option_set,
-                                    option: option, sequence: row_idx + 1)
+        option: option, sequence: row_idx + 1)
 
       if node.invalid?
         copy_validation_errors_for_row(metadata[:orig_row_num], node.errors)
@@ -166,11 +166,11 @@ module OptionSets
       row[col_idx + 1...level_count].all?(&:blank?)
     end
 
-    def transaction
+    def transaction(&)
       if Rails.env.test? && ENV["NO_TRANSACTION_IN_IMPORT"]
         yield
       else
-        OptionSet.transaction { yield }
+        OptionSet.transaction(&)
       end
     end
   end

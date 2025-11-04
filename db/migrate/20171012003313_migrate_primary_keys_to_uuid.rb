@@ -60,9 +60,7 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration[4.2]
         table_class.find_each do |instance|
           default = {pk_uuid: Digest::UUID.uuid_v5(table_namespace, instance.id.to_s)}
           instance_params = default.merge(populate_foreign_key_fields(instance, table_name, table_data))
-          if table_data["ancestry"]
-            instance_params[:ancestry] = rewrite_ancestry_field(instance, table_namespace)
-          end
+          instance_params[:ancestry] = rewrite_ancestry_field(instance, table_namespace) if table_data["ancestry"]
           instance.update_columns(instance_params)
         end
 

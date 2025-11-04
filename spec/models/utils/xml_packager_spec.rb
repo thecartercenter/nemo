@@ -7,6 +7,7 @@ require "zip"
 describe Utils::XmlPackager do
   include_context "odk submissions"
   include ActionDispatch::TestProcess
+
   let(:save_fixtures) { true }
   let(:user) { create(:user, role_name: "coordinator") }
   let(:operation) { create(:operation, creator: user) }

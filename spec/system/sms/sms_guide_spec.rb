@@ -38,16 +38,16 @@ describe "SMS Guide", js: true do
   context "with Multilingual fields" do
     let!(:form) do
       create(:form, :live, name: "SMS Form", smsable: true,
-                           question_types: %w[multilingual_text multilingual_text_with_user_locale])
+        question_types: %w[multilingual_text multilingual_text_with_user_locale])
     end
 
     around do |example|
       bool = Rails.configuration.i18n.raise_on_missing_translations
-      ELMO::Application.configure do
+      Rails.application.configure do
         config.i18n.raise_on_missing_translations = false
       end
       example.run
-      ELMO::Application.configure do
+      Rails.application.configure do
         config.i18n.raise_on_missing_translations = bool
       end
     end

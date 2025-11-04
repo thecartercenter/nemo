@@ -10,9 +10,7 @@ class Report::HeaderSet
   end
 
   # pass the [] operator on to the @headers array
-  def [](which)
-    @headers[which]
-  end
+  delegate :[], to: :@headers
 
   # looks up the row and column indices for the given row and col header keys
   # raises an error if no match is found (this shouldn't happen)

@@ -6,7 +6,7 @@ describe "adding and editing qing group on form", js: true do
   let!(:user) { create(:user) }
   let!(:form) do
     create(:form, name: "Foo",
-                  question_types: %w[integer multilevel_select_one select_one integer])
+      question_types: %w[integer multilevel_select_one select_one integer])
   end
 
   before do

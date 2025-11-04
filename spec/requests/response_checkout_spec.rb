@@ -16,7 +16,7 @@ describe "response checkout" do
     get("/en/m/#{get_mission.compact_name}/responses/#{resp.shortcode}/edit")
 
     # check for warning that response was checked out by another user
-    expect(flash[:notice].gsub(/#{I18n.t("response.checked_out")} /, "")).to eq(user_b.name)
+    expect(flash[:notice].gsub(/#{I18n.t('response.checked_out')} /, "")).to eq(user_b.name)
   end
 
   it "user should not get a notice when a checked out response is no longer valid" do

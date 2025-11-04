@@ -13,7 +13,7 @@ module Report
         blank = report.header_set[:row] ? [""] : []
 
         # add header row
-        csv << blank + report.header_set[:col].collect { |c| c.name || "NULL" } if report.header_set[:col]
+        csv << (blank + report.header_set[:col].collect { |c| c.name || "NULL" }) if report.header_set[:col]
 
         # add data rows
         report.data.rows.each_with_index do |row, idx|
@@ -46,7 +46,7 @@ module Report
 
       # Add the data. All report data has the potential to be paragraph style text so we run it through
       # the formatter.
-      csv << row_header + row.map { |c| format_csv_para_text(c) }
+      csv << (row_header + row.map { |c| format_csv_para_text(c) })
     end
   end
 end

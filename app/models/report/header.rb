@@ -14,13 +14,11 @@ class Report::Header
     @cells.index { |c| c.key == key }
   end
 
-  def collect(&block)
-    @cells.collect(&block)
+  def collect(&)
+    @cells.collect(&)
   end
 
-  def size
-    @cells.size
-  end
+  delegate :size, to: :@cells
 
   def as_json(_options = {})
     {title: title, cells: cells}

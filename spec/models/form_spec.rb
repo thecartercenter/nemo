@@ -440,8 +440,8 @@ describe Form do
   def go_live_and_reset_published_changed_at(options = {})
     f = options[:form] || form
     f.update_status(:live)
-    f.published_changed_at -= (options[:diff] || 1.hour)
-    f.updated_at -= (options[:diff] || 1.hour)
+    f.published_changed_at -= options[:diff] || 1.hour
+    f.updated_at -= options[:diff] || 1.hour
     f.save! if options[:save]
   end
 end

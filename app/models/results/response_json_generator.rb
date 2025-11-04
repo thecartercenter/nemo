@@ -141,7 +141,7 @@ module Results
       item = media_object.item
       return nil unless item.attached?
       path = Rails.application.routes.url_helpers.rails_blob_url(item, disposition: "attachment",
-                                                                       only_path: true)
+        only_path: true)
       "#{BASE_URL_PLACEHOLDER}#{path}"
     end
 

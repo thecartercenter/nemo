@@ -7,7 +7,7 @@ describe "search qualifiers" do
   let(:qualifier_sets) do
     {
       response: ResponsesSearcher.new(relation: Response.all, query: "test",
-                                      scope: {mission: mission}).search_qualifiers,
+        scope: {mission: mission}).search_qualifiers,
       user: UsersSearcher.new(relation: User.all, query: "test").search_qualifiers,
       question: QuestionsSearcher.new(relation: Question.all, query: "test").search_qualifiers,
       sms: Sms::MessagesSearcher.new(relation: Sms::Message.all, query: "test").search_qualifiers

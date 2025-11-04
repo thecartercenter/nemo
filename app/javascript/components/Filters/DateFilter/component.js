@@ -4,7 +4,9 @@ import { inject, observer } from 'mobx-react';
 import { DateRangePicker } from 'react-dates';
 
 import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
+// TODO: shakapacker isn't including this, so it's been copied manually
+//  to app/assets/stylesheets/global/component_overrides/datepicker_0_original.scss
+// import 'react-dates/lib/css/_datepicker.css';
 
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 

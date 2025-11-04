@@ -47,14 +47,14 @@ class PasswordResetsController < ApplicationController
 
     # Don't log in automatically. This can create hard-to-find bugs if automatic login isn't working.
     if @user.save_without_session_maintenance
-      if !@user.active?
-        flash[:error] = t("password_reset.success_but_inactive")
-        redirect_to(login_url)
-      else
+      if @user.active?
         # Log in the user explicitly
         UserSession.create!(login: @user.login, password: @user.password)
         post_login_housekeeping
         flash[:success] = t("password_reset.success")
+      else
+        flash[:error] = t("password_reset.success_but_inactive")
+        redirect_to(login_url)
       end
     else
       @user.password = nil
@@ -70,10 +70,9 @@ class PasswordResetsController < ApplicationController
   # Loads a user using a perishable token stored in params[:id]
   def load_user_using_perishable_token
     @user = User.find_using_perishable_token(params[:id])
-    unless @user
-      flash[:error] = t("password_reset.token_not_found")
-      redirect_to(login_url)
-    end
+    return if @user
+    flash[:error] = t("password_reset.token_not_found")
+    redirect_to(login_url)
   end
 
   def password_reset_params

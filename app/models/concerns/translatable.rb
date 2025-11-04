@@ -26,7 +26,7 @@ module Translatable
           def #{field}_translations=(val)
             translatable_set_hash('#{field}', val)
           end
-        }
+        }, __FILE__, __LINE__ - 4
       end
     end
 
@@ -41,7 +41,7 @@ module Translatable
 
     def validates_translated_length_of(*attr_names)
       attr_names = attr_names.map do |attr_name|
-        attr_name.is_a?(Symbol) ? "#{attr_name}_translations".to_sym : attr_name
+        attr_name.is_a?(Symbol) ? :"#{attr_name}_translations" : attr_name
       end
       validates_with(Translatable::TranslatableLengthValidator, _merge_attributes(attr_names))
     end
@@ -75,11 +75,11 @@ module Translatable
   end
 
   def respond_to?(symbol, *)
-    !self.class.translated_fields.nil? && translatable_parse_method(symbol) || super
+    (!self.class.translated_fields.nil? && translatable_parse_method(symbol)) || super
   end
 
   def respond_to_missing?(symbol, include_private)
-    !self.class.translated_fields.nil? && translatable_parse_method(symbol) || super
+    (!self.class.translated_fields.nil? && translatable_parse_method(symbol)) || super
   end
 
   # Sets field_translations value internally.
@@ -219,6 +219,7 @@ module Translatable
     locales
   end
 end
+
 module Translatable
   class TranslatableLengthValidator < ActiveModel::Validations::LengthValidator
     # The tokenizer determines how to split up an attribute value

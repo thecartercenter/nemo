@@ -117,14 +117,14 @@ class Report::SummaryCollectionBuilder
 
         # build summary and store in hash
         Report::QuestionSummary.new(questioning: qing, display_type: :structured,
-                                    headers: headers, items: items, null_count: null_count)
+          headers: headers, items: items, null_count: null_count)
       end
 
       # build blank summaries for missing qings
       already_summarized = summaries.map(&:questioning)
       summaries += (stat_qs - already_summarized).map do |qing|
         Report::QuestionSummary.new(questioning: qing, display_type: :structured,
-                                    headers: headers, items: [], null_count: 0)
+          headers: headers, items: [], null_count: 0)
       end
 
       # make a subset for the current disagg_value for this set of summaries
@@ -170,8 +170,8 @@ class Report::SummaryCollectionBuilder
     SQL
 
     time_extracts = "EXTRACT(hour from a.time_value)*60*60 + " \
-      "EXTRACT(minutes FROM a.time_value)*60 + " \
-      "EXTRACT(seconds FROM a.time_value)"
+                    "EXTRACT(minutes FROM a.time_value)*60 + " \
+                    "EXTRACT(seconds FROM a.time_value)"
     queries << <<-SQL.squish
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.time_value IS NULL THEN 1 ELSE 0 END) AS null_count,
@@ -248,9 +248,7 @@ class Report::SummaryCollectionBuilder
         # the total number of non_null choices, not answers
         # but to compute percentages, we are interested in the non-null answer value,
         # so get it from the hash we built above
-        if qing.qtype_name == "select_multiple"
-          non_null_count = sel_mult_non_null_tallies[[disagg_value, qing.id]] || 0
-        end
+        non_null_count = sel_mult_non_null_tallies[[disagg_value, qing.id]] || 0 if qing.qtype_name == "select_multiple"
 
         # compute percentages
         items.each do |item|
@@ -262,8 +260,8 @@ class Report::SummaryCollectionBuilder
 
         # build summary
         Report::QuestionSummary.new(questioning: qing, display_type: :structured,
-                                    overall_header: qing.option_set.name,
-                                    headers: headers, items: items, null_count: null_count)
+          overall_header: qing.option_set.name,
+          headers: headers, items: items, null_count: null_count)
       end
 
       # make a subset for the current disagg_value for this set of summaries
@@ -402,8 +400,8 @@ class Report::SummaryCollectionBuilder
         # build summary
         klass = Report::QuestionSummary
         klass.new(questioning: qing, display_type: :structured,
-                  overall_header: I18n.t("report/report.standard_form_report.overall_headers.dates"),
-                  headers: headers, items: items, null_count: null_count)
+          overall_header: I18n.t("report/report.standard_form_report.overall_headers.dates"),
+          headers: headers, items: items, null_count: null_count)
       end
 
       # make a subset for the current disagg_value for this set of summaries
@@ -504,8 +502,8 @@ class Report::SummaryCollectionBuilder
         # so header is always the same ('responses'))
         klass = Report::QuestionSummary
         klass.new(questioning: qing, display_type: display_type,
-                  overall_header: I18n.t("report/report.standard_form_report.overall_headers.responses"),
-                  headers: [], items: items, null_count: null_count)
+          overall_header: I18n.t("report/report.standard_form_report.overall_headers.responses"),
+          headers: [], items: items, null_count: null_count)
       end
 
       # make a subset for the current disagg_value for this set of summaries

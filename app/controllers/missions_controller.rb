@@ -10,11 +10,11 @@ class MissionsController < ApplicationController
   def index
   end
 
-  def new
+  def show
     render(:form)
   end
 
-  def show
+  def new
     render(:form)
   end
 

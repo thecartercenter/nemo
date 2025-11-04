@@ -47,11 +47,8 @@ unless defined?(ActiveModel::AttributeAssignment)
       end
 
       def _assign_attribute(k, v)
-        if respond_to?("#{k}=")
-          public_send("#{k}=", v)
-        else
-          raise UnknownAttributeError.new(self, k)
-        end
+        raise UnknownAttributeError.new(self, k) unless respond_to?("#{k}=")
+        public_send("#{k}=", v)
       end
     end
   end

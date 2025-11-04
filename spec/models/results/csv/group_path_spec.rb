@@ -17,8 +17,8 @@ describe Results::CSV::GroupPath do
     # Start with a nested answer.
     path.process_row(
       "response_id" => "1",
-      "ancestry" => "{AnswerGroup:0:#{fi0},AnswerGroupSet:0:#{fi1},AnswerGroup:0:#{fi1},"\
-        "AnswerGroupSet:0:#{fi2},AnswerGroup:0:#{fi2},Answer:0:#{fi3}}"
+      "ancestry" => "{AnswerGroup:0:#{fi0},AnswerGroupSet:0:#{fi1},AnswerGroup:0:#{fi1}," \
+                    "AnswerGroupSet:0:#{fi2},AnswerGroup:0:#{fi2},Answer:0:#{fi3}}"
     )
 
     # Response and both group levels have changed, hence the 3.
@@ -73,8 +73,8 @@ describe Results::CSV::GroupPath do
     # Into second level nested group.
     path.process_row(
       "response_id" => "2",
-      "ancestry" => "{AnswerGroup:0:#{fi0},AnswerGroupSet:0:#{fi1},AnswerGroup:1:#{fi1},"\
-        "AnswerGroupSet:1:#{fi2},AnswerGroup:0:#{fi2},Answer:0:#{fi3}}"
+      "ancestry" => "{AnswerGroup:0:#{fi0},AnswerGroupSet:0:#{fi1},AnswerGroup:1:#{fi1}," \
+                    "AnswerGroupSet:1:#{fi2},AnswerGroup:0:#{fi2},Answer:0:#{fi3}}"
     )
     expect(path.changes).to eq([0, 1])
     expect(path.parent_repeat_group_id).to eq(fi2)

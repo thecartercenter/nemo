@@ -6,6 +6,7 @@ describe ODK::ResponseParser do
   include_context "response tree"
   include_context "odk submissions"
   include ActionDispatch::TestProcess
+
   let(:save_fixtures) { true }
   let(:user) { create(:user) }
   let(:response) { Response.new(form: form, mission: form.mission, user: user) }
@@ -464,7 +465,7 @@ describe ODK::ResponseParser do
       it "creates response tree with media object for media answer" do
         ODK::ResponseParser.new(response: response, files: files).populate_response
         # Allow garbage mixed in, e.g. "the_swing.jpg" => "the_swing20210111-21428-16ox2q0.jpg"
-        regex = /#{File.basename(media_file_name, ".*")}.*#{File.extname(media_file_name)}/
+        regex = /#{File.basename(media_file_name, '.*')}.*#{File.extname(media_file_name)}/
         expect(response.root_node.c[3].media_object.item.filename.to_s).to match(regex)
       end
     end
@@ -495,7 +496,7 @@ describe ODK::ResponseParser do
       it "creates response tree with media object for media answer and discards file with invalid type" do
         # First request
         populated = ODK::ResponseParser.new(response: response, files: request1_files,
-                                            awaiting_media: true).populate_response
+          awaiting_media: true).populate_response
         populated.save!
         expect(Response.count).to eq(1)
         expect(populated.root_node.c.count).to eq(4)
@@ -509,7 +510,7 @@ describe ODK::ResponseParser do
         # in the controller in a separate request.
         # Note that in this case ResponseParser returns a different response object than what it receives.
         populated = ODK::ResponseParser.new(response: response2, files: request2_files,
-                                            awaiting_media: false).populate_response
+          awaiting_media: false).populate_response
         populated.save!
         expect(Response.count).to eq(1)
         populated.reload

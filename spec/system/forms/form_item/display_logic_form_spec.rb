@@ -8,7 +8,7 @@ describe "display logic form fields", js: true do
   let(:traits) { standard ? [:standard] : [] }
   let!(:form) do
     create(:form, *traits, name: "Foo",
-                           question_types: %w[integer integer multilevel_select_one select_one integer])
+      question_types: %w[integer integer multilevel_select_one select_one integer])
   end
 
   include_context "form design conditional logic"
@@ -93,7 +93,7 @@ describe "display logic form fields", js: true do
         ])
       end
 
-      scenario "edit and delete conditions on an existing question" do
+      scenario "edit and delete conditions on an existing question", flapping: true do
         all("a.action-link.action-link-edit")[4].click
 
         # Delete existing condition

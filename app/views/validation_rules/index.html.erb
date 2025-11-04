@@ -1,0 +1,436 @@
+<% content_for :title, t("validation_rules.title") %>
+
+<div class="validation-rules-page">
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1><%= t("validation_rules.title") %></h1>
+      <div class="page-header-actions">
+        <%= link_to t("validation_rules.new_rule"), new_validation_rule_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <%= form_with url: validation_rules_path, method: :get, local: true, class: "filters-form" do |form| %>
+      <div class="filters-row">
+        <div class="filter-group">
+          <%= form.label :search, t("validation_rules.search") %>
+          <%= form.text_field :search, params[:search], placeholder: t("validation_rules.search_placeholder"), class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.label :rule_type, t("validation_rules.rule_type") %>
+          <%= form.select :rule_type, 
+                         options_for_select([["All Types", ""]] + @rule_types.map { |t| [t.humanize, t] }, params[:rule_type]),
+                         {}, class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.label :form_id, t("validation_rules.form") %>
+          <%= form.select :form_id, 
+                         options_for_select([["All Forms", ""]] + @forms.map { |f| [f.name, f.id] }, params[:form_id]),
+                         {}, class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.label :is_active, t("validation_rules.status") %>
+          <%= form.select :is_active, 
+                         options_for_select([
+                           ["All", ""],
+                           [t("validation_rules.active"), "true"],
+                           [t("validation_rules.inactive"), "false"]
+                         ], params[:is_active]),
+                         {}, class: "form-control" %>
+        </div>
+
+        <div class="filter-group">
+          <%= form.submit t("validation_rules.filter"), class: "btn btn-primary" %>
+          <%= link_to t("validation_rules.clear"), validation_rules_path, class: "btn btn-secondary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Validation Rules Table -->
+  <div class="validation-rules-content">
+    <% if @validation_rules.any? %>
+      <div class="table-responsive">
+        <table class="validation-rules-table">
+          <thead>
+            <tr>
+              <th><%= t("validation_rules.name") %></th>
+              <th><%= t("validation_rules.rule_type") %></th>
+              <th><%= t("validation_rules.form") %></th>
+              <th><%= t("validation_rules.question") %></th>
+              <th><%= t("validation_rules.status") %></th>
+              <th><%= t("validation_rules.actions") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @validation_rules.each do |rule| %>
+              <tr>
+                <td class="rule-name">
+                  <strong><%= rule.name %></strong>
+                  <% if rule.description.present? %>
+                    <br><small class="text-muted"><%= truncate(rule.description, length: 60) %></small>
+                  <% end %>
+                </td>
+                <td class="rule-type">
+                  <span class="rule-type-badge rule-type-<%= rule.rule_type %>">
+                    <%= rule.rule_type.humanize %>
+                  </span>
+                </td>
+                <td class="form-name">
+                  <%= rule.form&.name || t("validation_rules.global") %>
+                </td>
+                <td class="question-name">
+                  <%= rule.question&.name || "-" %>
+                </td>
+                <td class="status">
+                  <% if rule.is_active? %>
+                    <span class="status-badge status-active">
+                      <i class="fa fa-check-circle"></i>
+                      <%= t("validation_rules.active") %>
+                    </span>
+                  <% else %>
+                    <span class="status-badge status-inactive">
+                      <i class="fa fa-times-circle"></i>
+                      <%= t("validation_rules.inactive") %>
+                    </span>
+                  <% end %>
+                </td>
+                <td class="actions">
+                  <div class="action-buttons">
+                    <%= link_to t("validation_rules.view"), validation_rule_path(rule), class: "btn btn-sm btn-outline-primary" %>
+                    <% if can?(:update, rule) %>
+                      <%= link_to t("validation_rules.edit"), edit_validation_rule_path(rule), class: "btn btn-sm btn-outline-secondary" %>
+                    <% end %>
+                    <% if can?(:update, rule) %>
+                      <%= link_to rule.is_active? ? t("validation_rules.deactivate") : t("validation_rules.activate"),
+                                  toggle_validation_rule_path(rule),
+                                  method: :patch,
+                                  class: "btn btn-sm btn-outline-warning" %>
+                    <% end %>
+                    <% if can?(:destroy, rule) %>
+                      <%= link_to t("validation_rules.delete"),
+                                  validation_rule_path(rule),
+                                  method: :delete,
+                                  class: "btn btn-sm btn-outline-danger",
+                                  data: { confirm: t("validation_rules.confirm_delete") } %>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-container">
+        <%= will_paginate @validation_rules %>
+      </div>
+    <% else %>
+      <div class="no-rules">
+        <div class="no-rules-content">
+          <i class="fa fa-shield-alt"></i>
+          <h3><%= t("validation_rules.no_rules") %></h3>
+          <p><%= t("validation_rules.no_rules_description") %></p>
+          <%= link_to t("validation_rules.create_first"), new_validation_rule_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.validation-rules-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.filters-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.filters-form {
+  width: 100%;
+}
+
+.filters-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  align-items: end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-outline-primary {
+  background: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+}
+
+.btn-outline-secondary {
+  background: transparent;
+  color: #6c757d;
+  border: 1px solid #6c757d;
+}
+
+.btn-outline-warning {
+  background: transparent;
+  color: #ffc107;
+  border: 1px solid #ffc107;
+}
+
+.btn-outline-danger {
+  background: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.validation-rules-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.validation-rules-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.validation-rules-table th {
+  background: #f8f9fa;
+  padding: 15px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.validation-rules-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: top;
+}
+
+.validation-rules-table tr:hover {
+  background: #f8f9fa;
+}
+
+.rule-name {
+  min-width: 200px;
+}
+
+.rule-type-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.rule-type-required {
+  background: #d4edda;
+  color: #155724;
+}
+
+.rule-type-min_length {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.rule-type-max_length {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.rule-type-min_value {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.rule-type-max_value {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.rule-type-pattern {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.rule-type-custom {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+.rule-type-cross_field {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.rule-type-conditional {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.status-active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-inactive {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+.no-rules {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-rules-content i {
+  font-size: 4em;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.no-rules-content h3 {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.no-rules-content p {
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.pagination-container {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #dee2e6;
+}
+
+@media (max-width: 768px) {
+  .page-header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .page-header-actions {
+    justify-content: center;
+  }
+  
+  .filters-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .validation-rules-table {
+    font-size: 0.9em;
+  }
+  
+  .validation-rules-table th,
+  .validation-rules-table td {
+    padding: 8px 6px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+</style>

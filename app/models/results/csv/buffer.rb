@@ -72,7 +72,7 @@ module Results
           applicable_rows_stack.push([])
           # The new row we just added carries information from all levels currently represented
           # in the stack. So we write the row index to each frame in the stack.
-          applicable_rows_stack.each { |r| r << output_rows.size - 1 }
+          applicable_rows_stack.each { |r| r << (output_rows.size - 1) }
           # If we just added the first row, we should write the common columns to get it started.
           # Subsequent output_rows will be cloned from this one so we only need to do it once.
           write_common_columns(input_row) if output_rows.size == 1
@@ -131,7 +131,7 @@ module Results
       def current_group_name
         group_id = group_path.parent_repeat_group_id
         return nil if group_id.nil?
-        group_names[group_id] ||= (QingGroup.find_by(id: group_id)&.group_name || "?")
+        group_names[group_id] ||= QingGroup.find_by(id: group_id)&.group_name || "?"
       end
     end
   end

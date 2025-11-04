@@ -19,8 +19,8 @@ describe Results::CSV::Generator, :reset_factory_sequences do
 
   context "with no data" do
     it "produces correct csv" do
-      is_expected.to match_user_facing_csv("ResponseID,Shortcode,Form,Submitter,DateSubmitted,"\
-        "Reviewed,GroupName,GroupLevel\r\n")
+      is_expected.to match_user_facing_csv("ResponseID,Shortcode,Form,Submitter,DateSubmitted," \
+                                           "Reviewed,GroupName,GroupLevel\r\n")
     end
   end
 
@@ -92,7 +92,7 @@ describe Results::CSV::Generator, :reset_factory_sequences do
         Timecop.freeze(20.minutes) do
           # Response from second form
           create_response(form: form2,
-                          answer_values: ["foo", "bar", "Funton", %w[Ghana Accra]])
+            answer_values: ["foo", "bar", "Funton", %w[Ghana Accra]])
         end
       end
     end

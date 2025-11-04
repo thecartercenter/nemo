@@ -28,7 +28,7 @@ module Cloning
         end
       end
       FileUtils.mkdir_p(export_dir)
-      File.open(zipfile_path, "wb") { |f| f.write(buffer.string) }
+      File.binwrite(zipfile_path, buffer.string)
     end
 
     private

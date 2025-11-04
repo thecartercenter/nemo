@@ -23,7 +23,7 @@ class ConvertToActiveStorage < ActiveRecord::Migration[6.0]
     transaction do
       NEMO_ATTACHMENTS.each do |pair|
         relation, attachment_key = pair
-        relation = relation.where.not("#{attachment_key}_file_size".to_sym => nil)
+        relation = relation.where.not("#{attachment_key}_file_size": nil)
 
         total = relation.all.count
         puts "Converting #{total} #{relation.name.pluralize}..."

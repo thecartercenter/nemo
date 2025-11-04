@@ -1,9 +1,4 @@
-// See also Ruby config/webpack/environment.js
-//
 // See docs at https://babeljs.io/docs/en/options
-//
-// Initialized based on default config from webpacker at
-// https://github.com/rails/webpacker/blob/master/package/babel/preset.js
 module.exports = function config(api) {
   const validEnv = ['development', 'test', 'production']
   const currentEnv = api.env()
@@ -21,20 +16,9 @@ module.exports = function config(api) {
 
   return {
     presets: [
-      isTestEnv && ['@babel/preset-env', { targets: { node: 'current' } }],
-      (isProductionEnv || isDevelopmentEnv) && [
-        '@babel/preset-env',
-        {
-          useBuiltIns: 'entry',
-          corejs: '3.8',
-          modules: 'auto',
-          bugfixes: true,
-          loose: true,
-          exclude: ['transform-typeof-symbol']
-        }
-      ],
-      '@babel/preset-react',
-    ].filter(Boolean),
+      './node_modules/shakapacker/package/babel/preset.js',
+      '@babel/preset-react'
+    ],
     plugins: [
       ['@babel/plugin-transform-runtime', { helpers: false }],
       '@babel/syntax-dynamic-import',

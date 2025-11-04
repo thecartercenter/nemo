@@ -13,9 +13,7 @@ class FixFormRanks < ActiveRecord::Migration[4.2]
         # now check if they changed
         after = f.questionings.map(&:rank)
 
-        if after != before
-          puts "form '#{f.name}' changed from #{before.join(',')} to #{after.join(',')}"
-        end
+        puts "form '#{f.name}' changed from #{before.join(',')} to #{after.join(',')}" if after != before
       else
         puts "form does not have fix_ranks method"
         break

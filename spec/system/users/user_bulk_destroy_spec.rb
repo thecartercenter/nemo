@@ -75,7 +75,7 @@ describe "user bulk destroy", js: true do
       let!(:preserved_obj) { nil }
       it_behaves_like "select all that exist", expect_to_delete: 5, query: "role:enumerator"
       it_behaves_like "select all that exist", uncheck_one: true, expect_to_delete: 2,
-                                               query: "role:enumerator"
+        query: "role:enumerator"
     end
   end
 end

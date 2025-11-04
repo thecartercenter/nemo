@@ -32,6 +32,12 @@ class TabularImport
     run_errors.any?
   end
 
+  # The "bom|utf-8" encoding could handle this automatically,
+  # but that only works for files, not strings which are used in some cases.
+  def delete_bom_prefix(str)
+    str.sub!(/\A#{UserFacingCSV::BOM}/, "")
+  end
+
   protected
 
   # Assumes file is an open File object.
@@ -40,12 +46,6 @@ class TabularImport
     self.sheet = CSV.open(file.path).read
     delete_bom_prefix(sheet[0][0])
     sheet
-  end
-
-  # The "bom|utf-8" encoding could handle this automatically,
-  # but that only works for files, not strings which are used in some cases.
-  def delete_bom_prefix(str)
-    str.sub!(/\A#{UserFacingCSV::BOM}/, "")
   end
 
   def add_run_error(message, opts = {})

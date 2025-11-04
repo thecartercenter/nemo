@@ -68,12 +68,12 @@ class ResponseNode < ApplicationRecord
   # Used only for Answer, but included here for eager loading.
   belongs_to :option_node, inverse_of: :answers
   has_many :choices, -> { order(:created_at) }, foreign_key: :answer_id, dependent: :destroy,
-                                                inverse_of: :answer, autosave: true
+    inverse_of: :answer, autosave: true
 
   # We don't use the advisory lock for now because it slows down concurrent inserts a lot and doesn't
   # seem necessary since we don't do a lot of concurrent edits.
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true,
-                   with_advisory_lock: false, dependent: :destroy
+    with_advisory_lock: false, dependent: :destroy
 
   scope :with_coordinates, -> { where.not(latitude: nil) }
   scope :newest_first, -> { order(created_at: :desc) }
@@ -94,7 +94,7 @@ class ResponseNode < ApplicationRecord
   def debug_tree(indent: 0)
     child_tree = children.map { |c| c.debug_tree(indent: indent + 1) }.join
     chunks = []
-    chunks << " " * (indent * 2)
+    chunks << (" " * (indent * 2))
     chunks << new_rank.to_s.rjust(2)
     chunks << " "
     chunks << self.class.name.ljust(15)
@@ -117,7 +117,7 @@ class ResponseNode < ApplicationRecord
 
   # relevant defaults to true until set otherwise
   def relevant?
-    relevant.nil? ? true : relevant
+    relevant.nil? || relevant
   end
 
   # Answer.rb implements casted_value for answers.Duck type method for non-Answer response nodes.

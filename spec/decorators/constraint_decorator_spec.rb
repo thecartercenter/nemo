@@ -15,10 +15,10 @@ describe ConstraintDecorator do
 
     it "should use OR for any_met" do
       form.c[2].constraints.create!(accept_if: "any_met",
-                                    conditions_attributes: [
-                                      {left_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                      {left_qing_id: form.c[1].id, op: "eq", value: "10"}
-                                    ])
+        conditions_attributes: [
+          {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+          {left_qing_id: form.c[1].id, op: "eq", value: "10"}
+        ])
       constraint = form.c[2].constraints[0]
       actual = ConstraintDecorator.new(constraint).human_readable
       expected = "VALID ONLY IF #{first_cond_str} OR #{second_cond_str}"
@@ -27,10 +27,10 @@ describe ConstraintDecorator do
 
     it "should use AND for all_met" do
       form.c[3].constraints.create!(accept_if: "all_met",
-                                    conditions_attributes: [
-                                      {left_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                      {left_qing_id: form.c[1].id, op: "eq", value: "10"}
-                                    ])
+        conditions_attributes: [
+          {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+          {left_qing_id: form.c[1].id, op: "eq", value: "10"}
+        ])
       constraint = form.c[3].constraints[0]
       actual = ConstraintDecorator.new(constraint).human_readable
       expected = "VALID ONLY IF #{first_cond_str} AND #{second_cond_str}"

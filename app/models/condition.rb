@@ -46,9 +46,9 @@ class Condition < ApplicationRecord
 
   belongs_to :conditionable, polymorphic: true, touch: true
   belongs_to :left_qing, class_name: "Questioning",
-                         inverse_of: :referring_conditions_via_left
+    inverse_of: :referring_conditions_via_left
   belongs_to :right_qing, class_name: "Questioning",
-                          inverse_of: :referring_conditions_via_right
+    inverse_of: :referring_conditions_via_right
   belongs_to :option_node, inverse_of: :conditions
 
   before_validation :normalize
@@ -171,8 +171,8 @@ class Condition < ApplicationRecord
 
   def all_fields_required
     return unless left_qing.blank? || op.blank? ||
-      right_side_is_qing? && right_qing_id.blank? ||
-      right_side_is_literal? && (left_qing.has_options? ? option_node_id.blank? : value.blank?)
+      (right_side_is_qing? && right_qing_id.blank?) ||
+      (right_side_is_literal? && (left_qing.has_options? ? option_node_id.blank? : value.blank?))
     errors.add(:base, :all_required)
   end
 

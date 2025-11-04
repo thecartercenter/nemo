@@ -8,8 +8,8 @@
 
 set(:output, {error: "log/cron-error.log", standard: "log/cron.log"})
 
-env(:PATH, ENV["PATH"])
-env(:GEM_HOME, ENV["GEM_HOME"])
+env(:PATH, ENV.fetch("PATH", nil))
+env(:GEM_HOME, ENV.fetch("GEM_HOME", nil))
 
 # Every 6 hours, at half past
 every "30 */6 * * *" do

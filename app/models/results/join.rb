@@ -32,7 +32,7 @@ class Results::Join
   # returns the appropriate sql for the given join, adding the optional prefix to all table names
   def to_sql(prefix = "")
     prefix += "_" if prefix.present?
-    Array.wrap(sql).join(" ").gsub(/__/, prefix)
+    Array.wrap(sql).join(" ").gsub("__", prefix)
   end
 
   @@joins = {
@@ -40,7 +40,7 @@ class Results::Join
     answers: new(
       name: :answers,
       sql: "LEFT JOIN answers __answers ON __answers.response_id = responses.id " \
-        "AND __answers.type = 'Answer'"
+           "AND __answers.type = 'Answer'"
     ),
     questionings: new(
       dependencies: :answers,
@@ -86,9 +86,9 @@ class Results::Join
       dependencies: [:users],
       name: :user_groups,
       sql: "LEFT JOIN user_group_assignments __user_group_assignments ON " \
-             "__user_group_assignments.user_id = __users.id " \
+           "__user_group_assignments.user_id = __users.id " \
            "LEFT JOIN user_groups __user_groups ON " \
-             "__user_group_assignments.user_group_id = __user_groups.id"
+           "__user_group_assignments.user_group_id = __user_groups.id"
     ),
     reviewers: new(
       name: :reviewers,

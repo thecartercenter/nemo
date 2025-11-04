@@ -1,0 +1,436 @@
+<% content_for :title, t("analytics.dashboard.title") %>
+
+<div class="analytics-dashboard">
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1><%= t("analytics.dashboard.title") %></h1>
+      <div class="page-header-actions">
+        <div class="time-range-selector">
+          <%= select_tag :time_range, 
+                         options_for_select([
+                           [t("analytics.time_ranges.7_days"), "7_days"],
+                           [t("analytics.time_ranges.30_days"), "30_days"],
+                           [t("analytics.time_ranges.90_days"), "90_days"],
+                           [t("analytics.time_ranges.1_year"), "1_year"]
+                         ], @time_range),
+                         class: "form-control",
+                         id: "time-range-selector" %>
+        </div>
+        <button class="btn btn-primary" id="refresh-data">
+          <i class="fa fa-refresh"></i> <%= t("analytics.refresh") %>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="analytics-content">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="summary-card-icon">
+          <i class="fa fa-chart-line"></i>
+        </div>
+        <div class="summary-card-content">
+          <h3 id="total-responses">-</h3>
+          <p><%= t("analytics.total_responses") %></p>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="summary-card-icon">
+          <i class="fa fa-check-circle"></i>
+        </div>
+        <div class="summary-card-content">
+          <h3 id="completion-rate">-</h3>
+          <p><%= t("analytics.completion_rate") %></p>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="summary-card-icon">
+          <i class="fa fa-users"></i>
+        </div>
+        <div class="summary-card-content">
+          <h3 id="active-users">-</h3>
+          <p><%= t("analytics.active_users") %></p>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="summary-card-icon">
+          <i class="fa fa-file-alt"></i>
+        </div>
+        <div class="summary-card-content">
+          <h3 id="total-forms">-</h3>
+          <p><%= t("analytics.total_forms") %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-row">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3><%= t("analytics.response_trends") %></h3>
+        </div>
+        <div class="chart-content">
+          <canvas id="response-trends-chart"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3><%= t("analytics.response_sources") %></h3>
+        </div>
+        <div class="chart-content">
+          <canvas id="response-sources-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-row">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3><%= t("analytics.form_performance") %></h3>
+        </div>
+        <div class="chart-content">
+          <canvas id="form-performance-chart"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3><%= t("analytics.user_activity") %></h3>
+        </div>
+        <div class="chart-content">
+          <canvas id="user-activity-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Geographic Distribution -->
+    <div class="charts-row">
+      <div class="chart-container full-width">
+        <div class="chart-header">
+          <h3><%= t("analytics.geographic_distribution") %></h3>
+        </div>
+        <div class="chart-content">
+          <div id="map-container" style="height: 400px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Leaflet for maps -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let responseTrendsChart, responseSourcesChart, formPerformanceChart, userActivityChart, map;
+  
+  // Initialize dashboard
+  loadAnalyticsData();
+  
+  // Time range selector
+  document.getElementById('time-range-selector').addEventListener('change', function() {
+    loadAnalyticsData();
+  });
+  
+  // Refresh button
+  document.getElementById('refresh-data').addEventListener('click', function() {
+    loadAnalyticsData();
+  });
+  
+  function loadAnalyticsData() {
+    const timeRange = document.getElementById('time-range-selector').value;
+    
+    fetch(`/analytics/dashboard.json?time_range=${timeRange}`)
+      .then(response => response.json())
+      .then(data => {
+        updateSummaryCards(data);
+        updateCharts(data);
+        updateMap(data);
+      })
+      .catch(error => {
+        console.error('Error loading analytics data:', error);
+      });
+  }
+  
+  function updateSummaryCards(data) {
+    document.getElementById('total-responses').textContent = data.completion_rates.total;
+    document.getElementById('completion-rate').textContent = data.completion_rates.completion_rate + '%';
+    document.getElementById('active-users').textContent = data.user_activity.length;
+    document.getElementById('total-forms').textContent = data.form_performance.length;
+  }
+  
+  function updateCharts(data) {
+    updateResponseTrendsChart(data.response_trends);
+    updateResponseSourcesChart(data.response_sources);
+    updateFormPerformanceChart(data.form_performance);
+    updateUserActivityChart(data.user_activity);
+  }
+  
+  function updateResponseTrendsChart(data) {
+    const ctx = document.getElementById('response-trends-chart').getContext('2d');
+    
+    if (responseTrendsChart) {
+      responseTrendsChart.destroy();
+    }
+    
+    responseTrendsChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.map(item => item.date),
+        datasets: [{
+          label: '<%= t("analytics.responses") %>',
+          data: data.map(item => item.count),
+          borderColor: '#007bff',
+          backgroundColor: 'rgba(0, 123, 255, 0.1)',
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+  
+  function updateResponseSourcesChart(data) {
+    const ctx = document.getElementById('response-sources-chart').getContext('2d');
+    
+    if (responseSourcesChart) {
+      responseSourcesChart.destroy();
+    }
+    
+    responseSourcesChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: data.map(item => item.source),
+        datasets: [{
+          data: data.map(item => item.count),
+          backgroundColor: [
+            '#007bff',
+            '#28a745',
+            '#ffc107',
+            '#dc3545',
+            '#6f42c1'
+          ]
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  }
+  
+  function updateFormPerformanceChart(data) {
+    const ctx = document.getElementById('form-performance-chart').getContext('2d');
+    
+    if (formPerformanceChart) {
+      formPerformanceChart.destroy();
+    }
+    
+    const topForms = data.slice(0, 10); // Show top 10 forms
+    
+    formPerformanceChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: topForms.map(item => item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name),
+        datasets: [{
+          label: '<%= t("analytics.response_count") %>',
+          data: topForms.map(item => item.response_count),
+          backgroundColor: '#28a745'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+  
+  function updateUserActivityChart(data) {
+    const ctx = document.getElementById('user-activity-chart').getContext('2d');
+    
+    if (userActivityChart) {
+      userActivityChart.destroy();
+    }
+    
+    const topUsers = data.slice(0, 10); // Show top 10 users
+    
+    userActivityChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: topUsers.map(item => item.name),
+        datasets: [{
+          label: '<%= t("analytics.response_count") %>',
+          data: topUsers.map(item => item.response_count),
+          backgroundColor: '#ffc107'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+  
+  function updateMap(data) {
+    if (map) {
+      map.remove();
+    }
+    
+    map = L.map('map-container').setView([0, 0], 2);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    if (data.geographic_distribution.length > 0) {
+      const markers = data.geographic_distribution.map(point => {
+        return L.marker([point.lat, point.lng]).addTo(map);
+      });
+      
+      // Fit map to show all markers
+      const group = new L.featureGroup(markers);
+      map.fitBounds(group.getBounds().pad(0.1));
+    }
+  }
+});
+</script>
+
+<style>
+.analytics-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.time-range-selector {
+  min-width: 150px;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.summary-card-icon {
+  font-size: 2em;
+  color: #007bff;
+}
+
+.summary-card-content h3 {
+  margin: 0;
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+}
+
+.summary-card-content p {
+  margin: 5px 0 0 0;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.chart-container.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart-header {
+  padding: 20px 20px 0 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.chart-header h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.chart-content {
+  padding: 20px;
+  height: 300px;
+}
+
+#map-container {
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .page-header-actions {
+    justify-content: center;
+  }
+}
+</style>

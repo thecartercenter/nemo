@@ -27,7 +27,7 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
       # Include multiple conditions on one question.
       form.c[6].display_conditions.create!(left_qing: form.c[2], op: "gt", value: "5")
       form.c[6].display_conditions.create!(left_qing: form.c[5], op: "eq",
-                                           option_node: form.c[5].option_set.c[0])
+        option_node: form.c[5].option_set.c[0])
       form.c[6].update!(display_if: "all_met")
     end
 
@@ -66,17 +66,17 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
   context "display conditions, skip rules, constraints" do
     let!(:form) do
       create(:form, :live, name: "Conditional Logic",
-                           question_types: %w[text long_text integer decimal location
-                                              select_one multilevel_select_one
-                                              select_multiple datetime integer integer])
+        question_types: %w[text long_text integer decimal location
+                           select_one multilevel_select_one
+                           select_multiple datetime integer integer])
     end
 
     before do
       # Include multiple conditions on one question.
       form.c[6].display_conditions.create!(left_qing: form.c[2], op: "gt", value: "5")
       form.c[6].display_conditions.create!(left_qing: form.c[5],
-                                           op: "eq",
-                                           option_node: form.c[5].option_set.c[0])
+        op: "eq",
+        option_node: form.c[5].option_set.c[0])
       form.c[6].update!(display_if: "all_met")
       create(:skip_rule,
         source_item: form.c[2],
@@ -448,7 +448,7 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
       let(:likert_options2) { create(:option_set, option_names: %w[D E F], option_values: [4, 5, 6]) }
       let(:form) do
         create(:form, :live, name: "Dynamic answers for option sets",
-                             question_types: ["select_one", {repeating: {items: %w[select_one text]}}])
+          question_types: ["select_one", {repeating: {items: %w[select_one text]}}])
       end
 
       before do
@@ -553,44 +553,44 @@ describe ODK::FormRenderer, :odk, :reset_factory_sequences do
       end
     end
 
-  context "repeat group form with dynamic item names and count limit with ref question in a group" do
-    let!(:form) do
-      create(:form, :live,
-        name: "Repeat Group",
-        question_types: [
-          ["integer"],
+    context "repeat group form with dynamic item names and count limit with ref question in a group" do
+      let!(:form) do
+        create(:form, :live,
+          name: "Repeat Group",
+          question_types: [
+            ["integer"],
 
-          {repeating: {
-            name: "Grp1",
-            item_name: %(Hi' "$Name"),
-            items: %w[text text text],
-            repeat_count_code: "$IntegerQ1"
-          }},
+            {repeating: {
+              name: "Grp1",
+              item_name: %(Hi' "$Name"),
+              items: %w[text text text],
+              repeat_count_code: "$IntegerQ1"
+            }},
 
-          # Include a normal group to ensure differentiated properly.
-          %w[text text],
+            # Include a normal group to ensure differentiated properly.
+            %w[text text],
 
-          # Second repeat group, one_screen false. Item name includes escapable chars (>).
-          {repeating: {
-            name: "Grp2",
-            item_name: %{calc(if($Age > 18, 'A’"yeah"', 'C'))},
-            items: %w[integer text],
-            repeat_count_code: nil
-          }}
-        ])
-    end
+            # Second repeat group, one_screen false. Item name includes escapable chars (>).
+            {repeating: {
+              name: "Grp2",
+              item_name: %{calc(if($Age > 18, 'A’"yeah"', 'C'))},
+              items: %w[integer text],
+              repeat_count_code: nil
+            }}
+          ])
+      end
 
-    before do
-      form.c[1].c[0].question.update!(code: "Name")
-      form.c[3].update!(one_screen: false)
-      form.c[3].c[0].question.update!(code: "Age")
-    end
+      before do
+        form.c[1].c[0].question.update!(code: "Name")
+        form.c[3].update!(one_screen: false)
+        form.c[3].c[0].question.update!(code: "Age")
+      end
 
-    it "should render proper xml" do
-      expect_xml(renderer, "repeat_group_count_nested")
+      it "should render proper xml" do
+        expect_xml(renderer, "repeat_group_count_nested")
+      end
     end
   end
-end
 
   describe "preload_last_saved" do
     let(:form) do

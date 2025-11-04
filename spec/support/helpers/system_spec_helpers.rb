@@ -51,26 +51,25 @@ module SystemSpecHelpers
     expect(page).to have_selector(result_list_selector, visible: true)
 
     # Pick the result
-    unless options[:dont_pick]
-      if options[:pick]
-        textual_numbers = %i[first second third fourth fifth]
-        index = textual_numbers.index(options[:pick])
-        if index
-          selector = ":nth-child(#{index + 1})"
-        elsif options[:pick].class == String
-          selector = ":contains(\"#{options[:pick]}\")"
-        elsif options[:pick].class == Integer
-          selector = ":nth-child(#{options[:pick]})"
-        end
-      else
-        selector = ":first-child"
+    return if options[:dont_pick]
+    if options[:pick]
+      textual_numbers = %i[first second third fourth fifth]
+      index = textual_numbers.index(options[:pick])
+      if index
+        selector = ":nth-child(#{index + 1})"
+      elsif options[:pick].class == String
+        selector = ":contains(\"#{options[:pick]}\")"
+      elsif options[:pick].class == Integer
+        selector = ":nth-child(#{options[:pick]})"
       end
-
-      page.driver.execute_script("$('#{result_list_selector}#{selector}').trigger('mousedown');")
-
-      # A missing result_list_selector signifies that the selection has been made
-      page.has_css?(result_list_selector)
+    else
+      selector = ":first-child"
     end
+
+    page.driver.execute_script("$('#{result_list_selector}#{selector}').trigger('mousedown');")
+
+    # A missing result_list_selector signifies that the selection has been made
+    page.has_css?(result_list_selector)
   end
 
   # Focus on a tokenInput

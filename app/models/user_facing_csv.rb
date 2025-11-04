@@ -4,18 +4,18 @@
 class UserFacingCSV
   BOM = "\xEF\xBB\xBF"
 
-  def self.generate(**options, &block)
-    CSV.generate(BOM.dup, **defaults.merge(options), &block)
+  def self.generate(**options, &)
+    CSV.generate(BOM.dup, **defaults.merge(options), &)
   end
 
-  def self.open(filename, mode = "rb", **options, &block)
+  def self.open(filename, mode = "rb", **options, &)
     # Prepend BOM.
     unless mode.include?("r")
       File.open(filename, mode) do |f|
         f << BOM
       end
     end
-    CSV.open(filename, "ab", **defaults.merge(options), &block)
+    CSV.open(filename, "ab", **defaults.merge(options), &)
   end
 
   def self.defaults

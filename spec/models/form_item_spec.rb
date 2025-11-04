@@ -280,7 +280,7 @@ describe FormItem do
     it "returns all questionings of refable type on form if host item not persisted" do
       # Expect everything except groups and location question.
       expect(FormItem.new(form: form).refable_qings).to eq(
-        (form.preordered_items - [form.c[1], form.c[3], form.c[3].c[1]])
+        form.preordered_items - [form.c[1], form.c[3], form.c[3].c[1]]
       )
     end
   end
@@ -340,7 +340,7 @@ describe FormItem do
       end
       let!(:right_condition) do
         form.c[2].display_conditions.create!(left_qing: form.c[1], op: "eq", right_side_type: "qing",
-                                             right_qing: form.c[0])
+          right_qing: form.c[0])
       end
 
       it "should destroy cleanly" do

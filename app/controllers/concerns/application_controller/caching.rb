@@ -8,7 +8,7 @@ module ApplicationController::Caching
     # response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-store"
   end
 
-  def enable_settings_caching(&block)
-    Setting.with_cache(&block)
+  def enable_settings_caching(&)
+    Setting.with_cache(&)
   end
 end

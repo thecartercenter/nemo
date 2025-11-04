@@ -6,7 +6,7 @@ class RemoveRolesTable < ActiveRecord::Migration[4.2]
     # populate the new column, taking care to not use the Role class ORM methods, as they're going away
     execute("UPDATE assignments SET role = LOWER((SELECT name FROM roles WHERE id=role_id))")
 
-    #drop_table :roles
+    # drop_table :roles
     remove_column :assignments, :role_id
   end
 

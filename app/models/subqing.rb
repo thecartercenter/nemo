@@ -9,8 +9,8 @@ class Subqing
 
   delegate :qtype, :multilevel?, to: :questioning
 
-  def name(*args)
-    base = questioning.send(:name, *args)
+  def name(*)
+    base = questioning.send(:name, *)
     multilevel? ? "#{base} - #{level.name}" : base
   end
 

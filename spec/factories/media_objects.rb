@@ -86,7 +86,7 @@ FactoryBot.define do
     factory :media_video, class: "Media::Video" do
       mp4
 
-      trait :'3gp' do
+      trait :"3gp" do
         filename { "video/jupiter.3gp" }
       end
 

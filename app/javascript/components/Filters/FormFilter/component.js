@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
-import 'react-select2-wrapper/css/select2.css';
+// TODO: shakapacker isn't including this, so it's been copied manually
+// import 'react-select2-wrapper/css/select2.css';
 import { getItemNameFromId, parseListForSelect2 } from '../utils';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 

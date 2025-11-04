@@ -65,8 +65,8 @@ describe Questions::Import do
     it "should not be able to import" do
       expect(import).to_not(be_succeeded)
       expect(run_errors).to eq([
-        "Row 2: Code: Should start with a letter, use only letters and numbers, "\
-          "and be a maximum of 20 characters.",
+        "Row 2: Code: Should start with a letter, use only letters and numbers, " \
+        "and be a maximum of 20 characters.",
         "Row 3: Question type unrecognized."
       ])
     end

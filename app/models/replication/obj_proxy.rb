@@ -41,7 +41,7 @@ class Replication::ObjProxy
     elsif assoc.ancestry?
       child_ancestry = [ancestry, id].compact.join("/")
       build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class,
-                                                       order: "ORDER BY rank")
+        order: "ORDER BY rank")
     else # has_one or has_many
       build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
     end
@@ -103,13 +103,12 @@ class Replication::ObjProxy
 
   # Some backward associations may be unknowable during first pass. So we fix them on the second pass.
   def fix_backward_assocs_on_copy(context)
-    if klass.second_pass_backward_assocs.any?
-      mappings = backward_assoc_col_mappings(replicator, context, second_pass: true)
-      replicator.log("Fixing backward associations on #{context[:copy].id}")
-      assignments = mappings.map { |m| "#{m[0]} = #{m[1]}" }.join(",")
-      sql = "UPDATE #{klass.table_name} SET #{assignments} WHERE id = '#{context[:copy].id}'"
-      db.execute(sql)
-    end
+    return unless klass.second_pass_backward_assocs.any?
+    mappings = backward_assoc_col_mappings(replicator, context, second_pass: true)
+    replicator.log("Fixing backward associations on #{context[:copy].id}")
+    assignments = mappings.map { |m| "#{m[0]} = #{m[1]}" }.join(",")
+    sql = "UPDATE #{klass.table_name} SET #{assignments} WHERE id = '#{context[:copy].id}'"
+    db.execute(sql)
   end
 
   private

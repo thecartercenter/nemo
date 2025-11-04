@@ -4,9 +4,7 @@ namespace :rank do
   # be rails rank:audit
   desc "Audits form rank data globally."
   task :audit, [:this_is_required_to_load_sql_for_some_reason] => :environment do
-    puts rank_gaps.any? ?
-           "Uh oh, there are rank gaps before each of these FormItems:" :
-           "Good, there are no rank gaps."
+    puts rank_gaps.any? ? "Uh oh, there are rank gaps before each of these FormItems:" : "Good, there are no rank gaps."
     rank_gaps.map do |row|
       id = row["id"]
       form_item = FormItem.includes(:mission, :form).find(id)
@@ -14,9 +12,7 @@ namespace :rank do
     end
     puts
 
-    puts duplicate_ranks.any? ?
-           "Uh oh, there are duplicate ranks for each of these FormItems:" :
-           "Good, there are no duplicate ranks."
+    puts duplicate_ranks.any? ? "Uh oh, there are duplicate ranks for each of these FormItems:" : "Good, there are no duplicate ranks."
     duplicate_ranks.map do |row|
       ancestry = row["ancestry"]
       form_item = FormItem.includes(:mission, :form).find_by(ancestry: ancestry)

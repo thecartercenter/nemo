@@ -10,7 +10,7 @@ class SkipRuleDecorator < ApplicationDecorator
       I18n.t("skip_rule.instructions.without_conditions", destination: display_dest)
     else
       I18n.t("skip_rule.instructions.with_conditions", destination: display_dest,
-                                                       conditions: human_readable_conditions)
+        conditions: human_readable_conditions)
     end
   end
 

@@ -6,7 +6,7 @@
 
 # TODO: The 'constant already defined' warnings seem to be happening on POROs that are not in the root folder.
 # Need to look into this more.
-if Rails.env.development?
+if Rails.env.development? && false # Disabled - annotate gem not compatible with Rails 8.0
   require "annotate"
   task set_annotation_options: :environment do # rubocop:disable Metrics/BlockLength
     # You can override any of these by setting an environment variable of the

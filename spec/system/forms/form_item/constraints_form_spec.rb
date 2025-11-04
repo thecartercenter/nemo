@@ -15,18 +15,18 @@ describe "constraints form fields", js: true do
   before do
     login(user)
     form.c[2].constraints.create!(accept_if: "any_met",
-                                  conditions_attributes: [
-                                    {left_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                    {left_qing_id: form.c[1].id, op: "eq", value: "10"}
-                                  ],
-                                  rejection_msg_translations: {
-                                    en: "Custom rejection message"
-                                  })
+      conditions_attributes: [
+        {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+        {left_qing_id: form.c[1].id, op: "eq", value: "10"}
+      ],
+      rejection_msg_translations: {
+        en: "Custom rejection message"
+      })
     form.c[2].constraints.create!(accept_if: "all_met",
-                                  conditions_attributes: [
-                                    {left_qing_id: form.c[0].id, op: "eq", value: "25"},
-                                    {left_qing_id: form.c[1].id, op: "neq", value: "20"}
-                                  ])
+      conditions_attributes: [
+        {left_qing_id: form.c[0].id, op: "eq", value: "25"},
+        {left_qing_id: form.c[1].id, op: "neq", value: "20"}
+      ])
   end
 
   shared_examples_for "correct behavior" do

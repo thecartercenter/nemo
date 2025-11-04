@@ -21,8 +21,8 @@ module ApplicationController::ErrorHandling
 
   def prepare_exception_notifier
     Sentry.set_tags(locale: I18n.locale,
-                    mode: params[:mode],
-                    mission: current_mission&.compact_name)
+      mode: params[:mode],
+      mission: current_mission&.compact_name)
 
     return unless current_user
 
@@ -38,7 +38,7 @@ module ApplicationController::ErrorHandling
 
   def render_not_found
     respond_to do |format|
-      format.html { render(file: Rails.root.join("public/404"), layout: false, status: :not_found) }
+      format.html { render(file: Rails.public_path.join("404"), layout: false, status: :not_found) }
       format.any { head(:not_found) }
     end
   end

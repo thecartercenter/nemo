@@ -24,6 +24,12 @@ class BroadcastsController < ApplicationController
       .order(created_at: :desc)
   end
 
+  def show
+    # We need to include all medium options in case this is an old broadcast and the options have changed.
+    @medium_options = Broadcast::MEDIUM_OPTIONS
+    render(:form)
+  end
+
   def new
     @broadcast = Broadcast.accessible_by(current_ability).new
     authorize!(:create, @broadcast)
@@ -50,12 +56,6 @@ class BroadcastsController < ApplicationController
 
     authorize!(:create, @broadcast)
     prep_form_vars
-    render(:form)
-  end
-
-  def show
-    # We need to include all medium options in case this is an old broadcast and the options have changed.
-    @medium_options = Broadcast::MEDIUM_OPTIONS
     render(:form)
   end
 
@@ -96,7 +96,7 @@ class BroadcastsController < ApplicationController
 
     render(json: {
       results: RecipientSerializer.render_as_json(@recipients),
-      more: (users_fetched || groups_fetched)
+      more: users_fetched || groups_fetched
     })
   end
 

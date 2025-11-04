@@ -21,8 +21,8 @@ module Utils
 
     def download_and_zip_xml
       FileUtils.mkdir_p(Rails.root.join(TMP_DIR))
-      filename = "#{@operation.mission.compact_name}-xml-responses-"\
-        "#{Time.current.to_fs(:filename_datetime)}.zip"
+      filename = "#{@operation.mission.compact_name}-xml-responses-" \
+                 "#{Time.current.to_fs(:filename_datetime)}.zip"
       zipfile_name = Rails.root.join(TMP_DIR, filename)
       zip(zipfile_name, download_scope)
     end

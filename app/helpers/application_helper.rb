@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   ERROR_MESSAGE_KEYS_TO_HIDE = {
-    'condition.base': true
+    "condition.base": true
   }.freeze
 
   # Builds a URL with the exact given path based on the system's host, protocol, and port.
@@ -53,7 +53,7 @@ module ApplicationHelper
   # renders a loading indicator image wrapped in a wrapper
   def inline_load_ind(options = {})
     content_tag("div", class: "inline-load-ind", id: options[:id]) do
-      body = image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif",
+      body = image_tag("load-ind-small#{'-header' if options[:header]}.gif",
         style: "display: none",
         id: "inline_load_ind" + (options[:id] ? "_#{options[:id]}" : ""))
 
@@ -89,8 +89,8 @@ module ApplicationHelper
   end
 
   # wraps the given content in a js tag and a jquery ready handler
-  def javascript_doc_ready(&block)
-    content = capture(&block)
+  def javascript_doc_ready(&)
+    content = capture(&)
     javascript_tag("$(document).ready(function(){#{content}});")
   end
 
@@ -147,9 +147,7 @@ module ApplicationHelper
       result << std_icon(standardized) unless text_only
 
       # Add object type icon where appropriate
-      if !text_only && IconHelper::FONT_AWESOME_ICON_MAPPINGS.include?(model_name.to_sym)
-        result << icon_tag(model_name)
-      end
+      result << icon_tag(model_name) if !text_only && IconHelper::FONT_AWESOME_ICON_MAPPINGS.include?(model_name.to_sym)
 
       result << if name_only
                   name
@@ -227,8 +225,8 @@ module ApplicationHelper
     links.reduce(:<<)
   end
 
-  def conditional_tag(name, condition, options = {}, &block)
-    condition ? content_tag(name, options, &block) : capture(&block)
+  def conditional_tag(name, condition, options = {}, &)
+    condition ? content_tag(name, options, &) : capture(&)
   end
 
   # We use this string to concatenate other strings onto to build larger safe strings
