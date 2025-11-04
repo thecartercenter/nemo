@@ -2,7 +2,9 @@
 
 require 'openssl'
 require 'base64'
+
 # Imports users from a spreadsheet.
+class UserImport < TabularImport
   IMPORT_ERROR_CUTOFF = 50
   PERMITTED_ATTRIBS = %i[login name phone phone2 email birth_year gender
                          gender_custom nationality notes user_groups].freeze
@@ -28,6 +30,7 @@ require 'base64'
   end
 
   private
+
   # Encrypts sensitive information using AES-256-CBC.
   def encrypt_sensitive(value)
     return value if value.blank?
@@ -39,7 +42,6 @@ require 'base64'
     # Store as base64: iv:encrypted
     "#{Base64.strict_encode64(iv)}:#{Base64.strict_encode64(encrypted)}"
   end
-
 
   def parse_headers(sheet)
     row = sheet[0]

@@ -46,9 +46,9 @@ describe Broadcast do
 
     context "happy path" do
       it "should call appropriate methods" do
-        expect(BroadcastMailer).to receive(:broadcast)
-            .with(to: "a@b.com", subject: "Foo", body: "Bar", mission: get_mission)
-            .and_return(double(deliver_now: nil))
+          expect(BroadcastMailer).to receive(:broadcast)
+              .with(to: "a@b.com", subject: "Foo", body: "Bar", mission: get_mission)
+              .and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: nil))
         expect(broadcaster).to receive(:deliver).with(broadcast)
         broadcast.deliver
       end
@@ -67,9 +67,9 @@ describe Broadcast do
 
     context "with sms errors" do
       it "should save and re-raise" do
-          expect(BroadcastMailer).to receive(:broadcast)
-            .with(to: "a@b.com", subject: "Foo", body: "Bar", mission: get_mission)
-            .and_return(double(deliver_now: nil))
+            expect(BroadcastMailer).to receive(:broadcast)
+              .with(to: "a@b.com", subject: "Foo", body: "Bar", mission: get_mission)
+              .and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: nil))
         expect(broadcaster).to receive(:deliver).and_raise(Sms::Error.new("Failure 1\nFailure 2"))
         expect { broadcast.deliver }.to raise_error(Sms::Error)
         expect(broadcast.send_errors).to eq("SMS Error: Failure 1\nSMS Error: Failure 2")
@@ -96,12 +96,12 @@ describe Broadcast do
         end
 
         it "sends separate emails" do
-          expect(BroadcastMailer).to receive(:broadcast)
-            .with(to: "a@b.com", subject: "Foo", body: "Bar", mission: get_mission)
-            .and_return(double(deliver_now: nil))
-          expect(BroadcastMailer).to receive(:broadcast)
-            .with(to: "c@d.com", subject: "Foo", body: "Bar", mission: get_mission)
-            .and_return(double(deliver_now: nil))
+            expect(BroadcastMailer).to receive(:broadcast)
+              .with(to: "a@b.com", subject: "Foo", body: "Bar", mission: get_mission)
+              .and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: nil))
+            expect(BroadcastMailer).to receive(:broadcast)
+              .with(to: "c@d.com", subject: "Foo", body: "Bar", mission: get_mission)
+              .and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: nil))
           expect(broadcaster).to receive(:deliver).with(broadcast)
           broadcast.deliver
         end
