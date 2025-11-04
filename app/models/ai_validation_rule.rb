@@ -137,14 +137,77 @@ class AiValidationRule < ApplicationRecord
   private
 
   def call_ai_model(prompt)
-    # This would integrate with an actual AI service like OpenAI or Anthropic
-    # For now, we'll simulate the response
+    service = ai_service_provider
+    
+    if service&.available?
+      begin
+        service.call_ai_model(prompt, {
+          temperature: config&.dig('temperature') || 0.3,
+          max_tokens: config&.dig('max_tokens') || 1000
+        })
+      rescue => e
+        Rails.logger.error "AI service error for rule #{id}: #{e.message}"
+        fallback_response(e)
+      end
+    else
+      # Fallback to mock for development/testing when no API key is configured
+      Rails.logger.warn "AI service not available for rule #{id}, using mock response"
+      mock_response
+    end
+  end
+
+  def ai_service_provider
+    return nil unless ai_model.present?
+
+    # Check for API key in environment or mission settings
+    api_key = find_api_key
+    
+    case ai_model
+    when /^gpt-/
+      # Use OpenAI service if available
+      if defined?(AiProviders::OpenaiService) && api_key.present?
+        AiProviders::OpenaiService.new(api_key: api_key, model: ai_model)
+      else
+        nil
+      end
+    when /^claude-/
+      # Use Anthropic service if available (to be implemented)
+      # if defined?(AiProviders::AnthropicService) && api_key.present?
+      #   AiProviders::AnthropicService.new(api_key: api_key, model: ai_model)
+      # else
+        nil
+      # end
+    else
+      nil
+    end
+  end
+
+  def find_api_key
+    # Check environment variables first
+    if ai_model.start_with?('gpt')
+      ENV['OPENAI_API_KEY'] || ENV['NEMO_OPENAI_API_KEY']
+    elsif ai_model.start_with?('claude')
+      ENV['ANTHROPIC_API_KEY'] || ENV['NEMO_ANTHROPIC_API_KEY']
+    end
+  end
+
+  def mock_response
     {
       confidence: rand(0.5..1.0),
       is_valid: rand > 0.3,
       issues: generate_sample_issues,
       suggestions: generate_sample_suggestions,
-      explanation: "AI analysis completed for #{rule_type}"
+      explanation: "AI analysis completed for #{rule_type} (mock response - configure API key for real validation)"
+    }
+  end
+
+  def fallback_response(error)
+    {
+      confidence: 0.0,
+      is_valid: false,
+      issues: ["AI validation error: #{error.message}"],
+      suggestions: ["Please check AI service configuration"],
+      explanation: "AI validation failed: #{error.class.name}"
     }
   end
 

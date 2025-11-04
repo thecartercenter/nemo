@@ -85,6 +85,21 @@ Rails.application.routes.draw do
       end
     end
 
+    # AI Validation Rules
+    resources :ai_validation_rules, path: "ai-validation-rules", controller: "ai_validation" do
+      member do
+        patch "toggle_active"
+        post "test_rule"
+      end
+      collection do
+        post "validate_response"
+        post "validate_batch"
+        get "report"
+        get "suggestions"
+        post "create_from_suggestion"
+      end
+    end
+
     # Comments and Annotations
     resources :responses do
       resources :comments do
