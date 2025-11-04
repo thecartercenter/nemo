@@ -101,11 +101,10 @@
     "regenerator-runtime": "0.14.0",
     "shakapacker": "8.4.0",
     "style-loader": "1.2.1",
-    "webpack": "5.94.0",
-    "webpack-cli": "4.10.0"
     "terser-webpack-plugin": "5",
     "webpack": "5",
     "webpack-assets-manifest": "6",
+    "webpack-cli": "4.10.0",
     "webpack-merge": "6",
     "webpack-subresource-integrity": "5"
   },
