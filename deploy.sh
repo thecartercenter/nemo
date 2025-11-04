@@ -75,12 +75,18 @@ yarn install --production
 log "Running database migrations..."
 RAILS_ENV=production bundle exec rake db:migrate
 
-# 5. Precompile assets (with error handling)
-log "Precompiling assets..."
-if ALLOW_MISSING_CONFIG=1 RAILS_ENV=production bundle exec rake assets:precompile; then
-    log "Assets precompiled successfully"
+# 5. Build assets (with error handling)
+log "Building production assets..."
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm use 20 2>/dev/null || true
+
+if NODE_ENV=production yarn build; then
+    log "Assets built successfully"
+elif ALLOW_MISSING_CONFIG=1 RAILS_ENV=production bundle exec rake assets:precompile; then
+    log "Assets precompiled successfully (fallback method)"
 else
-    warn "Asset precompilation failed, but continuing with deployment"
+    warn "Asset build failed, but continuing with deployment"
     warn "You may need to manually fix webpack configuration issues"
 fi
 
