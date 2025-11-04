@@ -12,6 +12,7 @@
     "nan": "2.22.0"
   },
   "dependencies": {
+    "enketo-transformer": "3.0.0"
     "enketo-transformer": "4.2.0",
     "libxslt": "0.10.2"
   }
