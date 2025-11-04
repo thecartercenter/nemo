@@ -1,0 +1,79 @@
+version: '3.8'
+
+# Production Docker Compose Configuration
+# Usage: docker-compose -f docker-compose.prod.yml up
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: nemo_db_prod
+    environment:
+      POSTGRES_USER: ${DB_USER:-nemo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me}
+      POSTGRES_DB: ${DB_NAME:-nemo_production}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-nemo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  memcached:
+    image: memcached:1.6-alpine
+    container_name: nemo_memcached_prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "11211"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nemo_web_prod
+    command: >
+      bash -c "
+        bundle exec rake db:migrate &&
+        RAILS_ENV=production RAILS_SERVE_STATIC_FILES=1 bundle exec rails s -b 0.0.0.0 -p 8443
+      "
+    ports:
+      - "8443:8443"
+    env_file:
+      - .env.production.local
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-nemo}:${DB_PASSWORD:-change_me}@db:5432/${DB_NAME:-nemo_production}
+      - RAILS_ENV=production
+    volumes:
+      - bundle_cache_prod:/usr/local/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+      memcached:
+        condition: service_healthy
+    restart: unless-stopped
+
+  delayed_job:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nemo_delayed_job_prod
+    command: bundle exec rake jobs:work
+    env_file:
+      - .env.production.local
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-nemo}:${DB_PASSWORD:-change_me}@db:5432/${DB_NAME:-nemo_production}
+      - RAILS_ENV=production
+    volumes:
+      - bundle_cache_prod:/usr/local/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data_prod:
+  bundle_cache_prod:

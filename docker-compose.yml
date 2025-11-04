@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: nemo_db
+    environment:
+      POSTGRES_USER: nemo
+      POSTGRES_PASSWORD: nemo_password
+      POSTGRES_DB: nemo_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nemo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  memcached:
+    image: memcached:1.6-alpine
+    container_name: nemo_memcached
+    ports:
+      - "11211:11211"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "11211"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nemo_web
+    command: >
+      bash -c "
+        bundle exec rake db:create db:migrate || true &&
+        bundle exec rake db:create_admin || true &&
+        bundle exec rails s -b 0.0.0.0 -p 8443
+      "
+    ports:
+      - "8443:8443"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://nemo:nemo_password@db:5432/nemo_development
+      - RAILS_ENV=development
+      - NEMO_URL_HOST=localhost
+      - NEMO_URL_PORT=8443
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+      memcached:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+
+  delayed_job:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nemo_delayed_job
+    command: bundle exec rake jobs:work
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://nemo:nemo_password@db:5432/nemo_development
+      - RAILS_ENV=development
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  bundle_cache:
+  node_modules:

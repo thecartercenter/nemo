@@ -1,0 +1,73 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+README*
+
+# Environment files
+.env.local
+.env.*.local
+.env.production.local
+.env.development.local
+
+# Logs
+log/*
+*.log
+!log/.keep
+
+# Temporary files
+tmp/*
+!tmp/.keep
+!tmp/pids
+!tmp/cache
+
+# Node modules (will be installed in container)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts (will be generated)
+public/packs/*
+!public/packs/.keep
+
+# Rails
+*.sqlite3
+*.sqlite3-journal
+db/*.sqlite3
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Deployment
+deploy*.sh
+*.log
+backups/
+
+# Testing
+coverage/
+.rspec
+spec/examples.txt
+
+# Misc
+*.gem
+*.rbc
+.bundle/
+vendor/bundle/

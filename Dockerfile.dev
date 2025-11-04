@@ -1,0 +1,59 @@
+# NEMO Development Dockerfile
+# Optimized for development with hot-reload support
+
+FROM ruby:3.3.4-slim
+
+# Set environment variables
+ENV RAILS_ENV=development
+ENV NODE_VERSION=20
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    libssl-dev \
+    libreadline-dev \
+    zlib1g-dev \
+    curl \
+    git \
+    imagemagick \
+    graphviz \
+    memcached \
+    postgresql-client \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20.x
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Yarn
+RUN npm install -g yarn@1.22.22
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependency files
+COPY Gemfile Gemfile.lock ./
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN bundle install && \
+    yarn install
+
+# Copy application code
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p tmp/pids tmp/cache log public/packs
+
+# Precompile assets (optional for development)
+# RUN yarn build
+
+# Expose port
+EXPOSE 8443
+
+# Default command
+CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0", "-p", "8443"]
