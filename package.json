@@ -100,7 +100,7 @@
     "react_ujs": "2.7.1",
     "regenerator-runtime": "0.14.0",
     "shakapacker": "8.4.0",
-    "style-loader": "1.2.1",
+    "style-loader": "^3.3.4",
     "terser-webpack-plugin": "5",
     "webpack": "5",
     "webpack-assets-manifest": "6",
