@@ -1,5 +1,8 @@
 # NEMO
 
+[![Build and Deploy](https://github.com/Wbaker7702/nemo/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/Wbaker7702/nemo/actions/workflows/build-deploy.yml)
+[![Tests](https://github.com/Wbaker7702/nemo/actions/workflows/tests.yml/badge.svg)](https://github.com/Wbaker7702/nemo/actions/workflows/tests.yml)
+
 NEMO is a mobile data collection and analysis web application. Originally designed for the [Carter Center](https://www.cartercenter.org), it can be used in many different contexts for data collection.
 
 Consider NEMO if you need:
@@ -17,6 +20,14 @@ To learn more about the history and goals of the project, [visit the project sit
 You can also learn more about The Carter Center [here](https://cartercenter.org).
 
 ## Documentation
+
+### Build and Deployment
+
+NEMO uses GitHub Actions for continuous integration and deployment. The CI/CD pipeline automatically builds, tests, and deploys the application.
+
+- **Build Status:** Automated builds run on every push
+- **Deployment:** Automated deployment to staging (develop branch) and production (main branch)
+- **CI/CD Guide:** See the [CI/CD Pipeline Documentation](docs/ci-cd-pipeline.md) for details
 
 ### Usage
 
