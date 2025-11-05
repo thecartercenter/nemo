@@ -86,7 +86,7 @@
     "mobx": "^5.15.7",
     "mobx-react": "5.4.4",
     "moment": "2.30.1",
-    "prop-types": "15.8.0",
+    "prop-types": "15.8.1",
     "query-string": "6.13.1",
     "react": "16.13.0",
     "react-bootstrap": "^2.10.2",
