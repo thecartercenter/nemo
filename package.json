@@ -84,7 +84,7 @@
     "lodash": "4.17.21",
     "mini-css-extract-plugin": "^2.9.0",
     "mobx": "^5.15.7",
-    "mobx-react": "5.4.3",
+    "mobx-react": "5.4.4",
     "moment": "2.30.1",
     "prop-types": "15.8.0",
     "query-string": "6.13.1",
