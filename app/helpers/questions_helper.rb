@@ -44,7 +44,7 @@ module QuestionsHelper
           link_to(question.name_or_none, question.default_path)
         end
       end
-      text << render_tags(question.sorted_tags, clickable: !question_picker)
+      text << render_tag_badges(question.sorted_tags, clickable: !question_picker)
     else question.send(field)
     end
   end

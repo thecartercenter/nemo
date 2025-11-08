@@ -31,6 +31,10 @@
 class Notification < ApplicationRecord
   include MissionBased
 
+  # Disable Rails Single Table Inheritance (STI) because the `type` column is used for notification types,
+  # not for polymorphic behavior. See: https://api.rubyonrails.org/classes/ActiveRecord/Inheritance.html
+  self.inheritance_column = :_type_disabled
+
   belongs_to :user
   belongs_to :mission, optional: true
 

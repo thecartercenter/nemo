@@ -1,5 +1,5 @@
 <%= render("searches/form", search: @search) %>
-<div class="all-tags"><%= render_tags(@groups, clickable: true, link_method: :group_filter_link) %></div>
+<div class="all-tags"><%= render_tag_badges(@groups, clickable: true, link_method: :group_filter_link) %></div>
 <%= index_table(users) %>
 
 <%= render("user_groups_modal") %>

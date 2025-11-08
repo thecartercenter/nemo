@@ -16,9 +16,6 @@ class CreateValidationRules < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :validation_rules, :form_id
-    add_index :validation_rules, :question_id
-    add_index :validation_rules, :mission_id
     add_index :validation_rules, :rule_type
     add_index :validation_rules, :is_active
     add_index :validation_rules, :conditions, using: 'gin'

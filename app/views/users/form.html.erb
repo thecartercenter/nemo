@@ -27,7 +27,7 @@
   <% if can?(:manage, UserGroup.new(mission: current_mission)) %>
     <%= f.field(:user_group_ids, type: :select, multiple: true,
       options: sel_opts_from_objs(@user.user_groups),
-      read_only_content: render_tags(@user.user_groups)) %>
+      read_only_content: render_tag_badges(@user.user_groups)) %>
   <% end %>
 
   <%= f.field(:pref_lang, type: :select, options: I18n.available_locales.map{|l| [language_name(l), l]}) %>

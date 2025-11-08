@@ -17,9 +17,6 @@ class CreateAnnotations < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :annotations, :author_id
-    add_index :annotations, :response_id
-    add_index :annotations, :answer_id
     add_index :annotations, :annotation_type
     add_index :annotations, :is_public
   end

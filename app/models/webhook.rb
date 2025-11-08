@@ -35,7 +35,7 @@ class Webhook < ApplicationRecord
   validates :secret, length: { maximum: 255 }, allow_blank: true
 
   scope :active, -> { where(active: true) }
-  scope :for_event, ->(event) { where('events @> ?', [event].to_json) }
+  scope :for_event, ->(event) { where('? = ANY(events)', event) }
 
   WEBHOOK_EVENTS = %w[
     form.created

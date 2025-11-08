@@ -14,7 +14,7 @@ require "vcr"
 
 Capybara.register_driver(:selenium_chrome_headless) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
-    args: %w[disable-gpu no-sandbox mute-audio] + (ENV["HEADED"] ? [] : ["headless"]),
+    args: %w[disable-gpu no-sandbox mute-audio disable-dev-shm-usage] + (ENV["HEADED"] ? [] : ["headless"]),
     "goog:loggingPrefs" => {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
   )
 
@@ -99,11 +99,16 @@ RSpec.configure do |config|
     ENV.delete("TEST_LOGGED_IN_USER_ID")
 
     Rails::Debug.log("<----- #{example.description} (#{example.location}) ----->")
-    @_setting = create(:setting, mission: nil)
-    example.run
-    @_setting.destroy!
-    Rails::Debug.log("<----- #{example.description} ----->")
-    Rails::Debug.log("")
+
+    begin
+      Setting.where(mission: nil).destroy_all
+      @_setting = create(:setting, mission: nil)
+      example.run
+    ensure
+      @_setting&.destroy! if @_setting&.persisted?
+      Rails::Debug.log("<----- #{example.description} ----->")
+      Rails::Debug.log("")
+    end
   end
 
   # Add extra delay for flappers which seems to help for certain browser actions.

@@ -3,7 +3,7 @@
 # DEPRECATED: Should move to a decorator.
 module TagsHelper
   # options[:clickable] (bool) - make tags clickable to filter by clicked tag
-  def render_tags(objects, options = {})
+  def render_tag_badges(objects, options = {})
     return "" if objects.blank?
     title = options[:clickable] ? I18n.t("tag.click_to_filter") : nil
     classes = "badge badge-custom#{' clickable' if options[:clickable]}"

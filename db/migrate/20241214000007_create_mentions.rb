@@ -9,8 +9,6 @@ class CreateMentions < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :mentions, :comment_id
-    add_index :mentions, :user_id
     add_index :mentions, [:comment_id, :user_id], unique: true
   end
 end

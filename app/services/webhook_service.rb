@@ -12,35 +12,39 @@ class WebhookService
   end
 
   def self.trigger_form_created(form)
-    trigger_event('form.created', {
+    payload = {
       form: {
         id: form.id,
         name: form.name,
         status: form.status,
         created_at: form.created_at.iso8601,
         updated_at: form.updated_at.iso8601
-      },
-      creator: {
-        id: form.creator&.id,
-        name: form.creator&.name
       }
-    }, form.mission)
+    }
+
+    if (creator = user_payload(form.try(:creator)))
+      payload[:creator] = creator
+    end
+
+    trigger_event('form.created', payload, form.mission)
   end
 
   def self.trigger_form_updated(form)
-    trigger_event('form.updated', {
+    payload = {
       form: {
         id: form.id,
         name: form.name,
         status: form.status,
         created_at: form.created_at.iso8601,
         updated_at: form.updated_at.iso8601
-      },
-      updater: {
-        id: form.updater&.id,
-        name: form.updater&.name
       }
-    }, form.mission)
+    }
+
+    if (updater = user_payload(form.try(:updater)))
+      payload[:updater] = updater
+    end
+
+    trigger_event('form.updated', payload, form.mission)
   end
 
   def self.trigger_form_published(form)
@@ -87,10 +91,7 @@ class WebhookService
         id: response.form.id,
         name: response.form.name
       },
-      updater: {
-        id: response.user.id,
-        name: response.user.name
-      }
+      updater: user_payload(response.user)
     }, response.mission)
   end
 
@@ -125,10 +126,7 @@ class WebhookService
         id: response.form.id,
         name: response.form.name
       },
-      reviewer: {
-        id: response.reviewer&.id,
-        name: response.reviewer&.name
-      }
+      reviewer: user_payload(response.reviewer)
     }, response.mission)
   end
 
@@ -183,10 +181,7 @@ class WebhookService
         title: notification.title,
         sent_at: notification.created_at.iso8601
       },
-      user: {
-        id: notification.user.id,
-        name: notification.user.name
-      }
+      user: user_payload(notification.user)
     }, notification.mission)
   end
 
@@ -196,4 +191,15 @@ class WebhookService
     expected_signature = "sha256=#{OpenSSL::HMAC.hexdigest('SHA256', secret, payload)}"
     ActiveSupport::SecurityUtils.secure_compare(signature, expected_signature)
   end
+
+  def self.user_payload(user)
+    return if user.blank?
+
+    {
+      id: user.id,
+      name: user.name
+    }
+  end
+
+  private_class_method :user_payload
 end

@@ -13,9 +13,6 @@ class CreateComments < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :comments, :author_id
-    add_index :comments, :response_id
-    add_index :comments, :parent_id
     add_index :comments, :comment_type
     add_index :comments, :is_resolved
   end

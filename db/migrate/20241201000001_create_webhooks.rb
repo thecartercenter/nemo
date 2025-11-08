@@ -15,7 +15,7 @@ class CreateWebhooks < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :webhooks, :mission_id
+    # `t.references` already adds an index in modern Rails; avoid duplicate index creation.
     add_index :webhooks, :active
     add_index :webhooks, :events, using: :gin
 
@@ -33,7 +33,6 @@ class CreateWebhooks < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :webhook_deliveries, :webhook_id
     add_index :webhook_deliveries, :status
     add_index :webhook_deliveries, :event
     add_index :webhook_deliveries, :created_at

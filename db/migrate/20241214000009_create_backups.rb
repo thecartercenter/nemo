@@ -17,8 +17,6 @@ class CreateBackups < ActiveRecord::Migration[8.0]
     end
 
     add_index :backups, :backup_id, unique: true
-    add_index :backups, :mission_id
-    add_index :backups, :user_id
     add_index :backups, :status
     add_index :backups, :created_at
   end

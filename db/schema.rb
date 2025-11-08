@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_14_000009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -42,6 +42,63 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "ai_validation_results", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "ai_validation_rule_id", null: false
+    t.uuid "response_id", null: false
+    t.string "validation_type", limit: 255, null: false
+    t.decimal "confidence_score", precision: 5, scale: 2, null: false
+    t.boolean "is_valid", null: false
+    t.text "issues", default: [], array: true
+    t.text "suggestions", default: [], array: true
+    t.text "explanation"
+    t.boolean "passed", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ai_validation_rule_id"], name: "index_ai_validation_results_on_ai_validation_rule_id"
+    t.index ["confidence_score"], name: "index_ai_validation_results_on_confidence_score"
+    t.index ["passed"], name: "index_ai_validation_results_on_passed"
+    t.index ["response_id"], name: "index_ai_validation_results_on_response_id"
+    t.index ["validation_type"], name: "index_ai_validation_results_on_validation_type"
+  end
+
+  create_table "ai_validation_rules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.text "description"
+    t.string "rule_type", limit: 255, null: false
+    t.jsonb "config", default: {}, null: false
+    t.string "ai_model", limit: 255, default: "gpt-3.5-turbo"
+    t.decimal "threshold", precision: 5, scale: 2, default: "0.8"
+    t.boolean "active", default: true, null: false
+    t.uuid "mission_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_ai_validation_rules_on_active"
+    t.index ["mission_id"], name: "index_ai_validation_rules_on_mission_id"
+    t.index ["rule_type"], name: "index_ai_validation_rules_on_rule_type"
+    t.index ["user_id"], name: "index_ai_validation_rules_on_user_id"
+  end
+
+  create_table "annotations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "content", null: false
+    t.string "annotation_type", default: "note", null: false
+    t.decimal "position_x", precision: 10, scale: 2
+    t.decimal "position_y", precision: 10, scale: 2
+    t.decimal "width", precision: 10, scale: 2
+    t.decimal "height", precision: 10, scale: 2
+    t.boolean "is_public", default: true, null: false
+    t.uuid "author_id", null: false
+    t.uuid "response_id", null: false
+    t.uuid "answer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["annotation_type"], name: "index_annotations_on_annotation_type"
+    t.index ["answer_id"], name: "index_annotations_on_answer_id"
+    t.index ["author_id"], name: "index_annotations_on_author_id"
+    t.index ["is_public"], name: "index_annotations_on_is_public"
+    t.index ["response_id"], name: "index_annotations_on_response_id"
   end
 
   create_table "answer_hierarchies", id: false, force: :cascade do |t|
@@ -83,6 +140,23 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.index ["type"], name: "index_answers_on_type"
   end
 
+  create_table "approval_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "workflow_instance_id", null: false
+    t.uuid "workflow_step_id", null: false
+    t.uuid "approver_id", null: false
+    t.string "status", limit: 255, default: "pending", null: false
+    t.datetime "due_date"
+    t.text "comments"
+    t.datetime "approved_at"
+    t.datetime "rejected_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approver_id"], name: "index_approval_requests_on_approver_id"
+    t.index ["status"], name: "index_approval_requests_on_status"
+    t.index ["workflow_instance_id"], name: "index_approval_requests_on_workflow_instance_id"
+    t.index ["workflow_step_id"], name: "index_approval_requests_on_workflow_step_id"
+  end
+
   create_table "assignments", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.uuid "mission_id", null: false
@@ -92,6 +166,48 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.index ["mission_id", "user_id"], name: "index_assignments_on_mission_id_and_user_id", unique: true
     t.index ["mission_id"], name: "index_assignments_on_mission_id"
     t.index ["user_id"], name: "index_assignments_on_user_id"
+  end
+
+  create_table "audit_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "action", null: false
+    t.string "resource", null: false
+    t.uuid "resource_id"
+    t.jsonb "changes"
+    t.jsonb "metadata"
+    t.string "ip_address"
+    t.text "user_agent"
+    t.uuid "user_id", null: false
+    t.uuid "mission_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["action"], name: "index_audit_logs_on_action"
+    t.index ["created_at"], name: "index_audit_logs_on_created_at"
+    t.index ["mission_id", "created_at"], name: "index_audit_logs_on_mission_id_and_created_at"
+    t.index ["mission_id"], name: "index_audit_logs_on_mission_id"
+    t.index ["resource", "resource_id"], name: "index_audit_logs_on_resource_and_resource_id"
+    t.index ["resource"], name: "index_audit_logs_on_resource"
+    t.index ["resource_id"], name: "index_audit_logs_on_resource_id"
+    t.index ["user_id", "created_at"], name: "index_audit_logs_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_audit_logs_on_user_id"
+  end
+
+  create_table "backups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "backup_id", null: false
+    t.string "backup_type", null: false
+    t.string "file_path", null: false
+    t.bigint "file_size", null: false
+    t.boolean "include_media", default: false, null: false
+    t.boolean "include_audit_logs", default: false, null: false
+    t.string "status", default: "completed", null: false
+    t.uuid "mission_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["backup_id"], name: "index_backups_on_backup_id", unique: true
+    t.index ["created_at"], name: "index_backups_on_created_at"
+    t.index ["mission_id"], name: "index_backups_on_mission_id"
+    t.index ["status"], name: "index_backups_on_status"
+    t.index ["user_id"], name: "index_backups_on_user_id"
   end
 
   create_table "broadcast_addressings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -130,6 +246,22 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.index ["option_node_id"], name: "index_choices_on_option_node_id"
   end
 
+  create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "content", null: false
+    t.string "comment_type", default: "general", null: false
+    t.boolean "is_resolved", default: false, null: false
+    t.uuid "author_id", null: false
+    t.uuid "response_id", null: false
+    t.uuid "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_comments_on_author_id"
+    t.index ["comment_type"], name: "index_comments_on_comment_type"
+    t.index ["is_resolved"], name: "index_comments_on_is_resolved"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["response_id"], name: "index_comments_on_response_id"
+  end
+
   create_table "conditions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "conditionable_id", null: false
     t.string "conditionable_type", null: false
@@ -160,6 +292,33 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.index ["mission_id"], name: "index_constraints_on_mission_id"
     t.index ["source_item_id", "rank"], name: "index_constraints_on_source_item_id_and_rank", unique: true
     t.index ["source_item_id"], name: "index_constraints_on_source_item_id"
+  end
+
+  create_table "custom_dashboards", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.text "description"
+    t.jsonb "layout", null: false
+    t.jsonb "settings", null: false
+    t.boolean "is_public", default: false, null: false
+    t.uuid "mission_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["is_public"], name: "index_custom_dashboards_on_is_public"
+    t.index ["mission_id"], name: "index_custom_dashboards_on_mission_id"
+    t.index ["user_id"], name: "index_custom_dashboards_on_user_id"
+  end
+
+  create_table "dashboard_widgets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "custom_dashboard_id", null: false
+    t.string "widget_type", limit: 255, null: false
+    t.jsonb "config", null: false
+    t.integer "position", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["custom_dashboard_id"], name: "index_dashboard_widgets_on_custom_dashboard_id"
+    t.index ["position"], name: "index_dashboard_widgets_on_position"
+    t.index ["widget_type"], name: "index_dashboard_widgets_on_widget_type"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -222,6 +381,27 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.index ["question_id"], name: "index_form_items_on_question_id"
   end
 
+  create_table "form_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "category"
+    t.string "tags", default: [], array: true
+    t.jsonb "template_data", null: false
+    t.boolean "is_public", default: false, null: false
+    t.integer "usage_count", default: 0, null: false
+    t.uuid "creator_id", null: false
+    t.uuid "mission_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_form_templates_on_category"
+    t.index ["creator_id"], name: "index_form_templates_on_creator_id"
+    t.index ["is_public"], name: "index_form_templates_on_is_public"
+    t.index ["mission_id"], name: "index_form_templates_on_mission_id"
+    t.index ["tags"], name: "index_form_templates_on_tags", using: :gin
+    t.index ["template_data"], name: "index_form_templates_on_template_data", using: :gin
+    t.index ["usage_count"], name: "index_form_templates_on_usage_count"
+  end
+
   create_table "form_versions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "code", limit: 255, null: false
     t.datetime "created_at", precision: nil, null: false
@@ -266,6 +446,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.index ["answer_id"], name: "index_media_objects_on_answer_id"
   end
 
+  create_table "mentions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "comment_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id", "user_id"], name: "index_mentions_on_comment_id_and_user_id", unique: true
+    t.index ["comment_id"], name: "index_mentions_on_comment_id"
+    t.index ["user_id"], name: "index_mentions_on_user_id"
+  end
+
   create_table "missions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "compact_name", limit: 255, null: false
     t.datetime "created_at", precision: nil, null: false
@@ -275,6 +465,23 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["compact_name"], name: "index_missions_on_compact_name", unique: true
     t.index ["shortcode"], name: "index_missions_on_shortcode", unique: true
+  end
+
+  create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.text "message"
+    t.string "type", null: false
+    t.boolean "read", default: false, null: false
+    t.jsonb "data"
+    t.uuid "user_id", null: false
+    t.uuid "mission_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_notifications_on_created_at"
+    t.index ["mission_id"], name: "index_notifications_on_mission_id"
+    t.index ["read"], name: "index_notifications_on_read"
+    t.index ["type"], name: "index_notifications_on_type"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -594,6 +801,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.string "pref_lang", limit: 255, default: "en", null: false
     t.string "sms_auth_code", limit: 255
     t.datetime "updated_at", precision: nil, null: false
+    t.string "api_key"
+    t.index ["api_key"], name: "index_users_on_api_key", unique: true
     t.index ["email"], name: "index_users_on_email"
     t.index ["last_mission_id"], name: "index_users_on_last_mission_id"
     t.index ["login"], name: "index_users_on_login", unique: true
@@ -601,34 +810,177 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
     t.index ["sms_auth_code"], name: "index_users_on_sms_auth_code", unique: true
   end
 
+  create_table "validation_rules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "rule_type", null: false
+    t.jsonb "conditions", null: false
+    t.string "message"
+    t.boolean "is_active", default: true, null: false
+    t.uuid "form_id"
+    t.uuid "question_id"
+    t.uuid "mission_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conditions"], name: "index_validation_rules_on_conditions", using: :gin
+    t.index ["form_id"], name: "index_validation_rules_on_form_id"
+    t.index ["is_active"], name: "index_validation_rules_on_is_active"
+    t.index ["mission_id"], name: "index_validation_rules_on_mission_id"
+    t.index ["question_id"], name: "index_validation_rules_on_question_id"
+    t.index ["rule_type"], name: "index_validation_rules_on_rule_type"
+  end
+
+  create_table "webhook_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "webhook_id", null: false
+    t.string "event", limit: 255, null: false
+    t.jsonb "payload"
+    t.string "status", limit: 255, default: "pending", null: false
+    t.integer "response_code"
+    t.text "response_body"
+    t.text "error_message"
+    t.integer "retry_count", default: 0, null: false
+    t.datetime "delivered_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_webhook_deliveries_on_created_at"
+    t.index ["event"], name: "index_webhook_deliveries_on_event"
+    t.index ["status"], name: "index_webhook_deliveries_on_status"
+    t.index ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id"
+  end
+
+  create_table "webhooks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.string "url", limit: 500, null: false
+    t.text "events", default: [], array: true
+    t.string "secret", limit: 255
+    t.boolean "active", default: true, null: false
+    t.integer "retry_count", default: 0, null: false
+    t.datetime "last_triggered_at"
+    t.uuid "mission_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_webhooks_on_active"
+    t.index ["events"], name: "index_webhooks_on_events", using: :gin
+    t.index ["mission_id"], name: "index_webhooks_on_mission_id"
+  end
+
+  create_table "workflow_instances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "workflow_id", null: false
+    t.string "trigger_object_type", limit: 255, null: false
+    t.uuid "trigger_object_id", null: false
+    t.uuid "trigger_user_id"
+    t.string "status", limit: 255, default: "pending", null: false
+    t.integer "current_step", default: 0, null: false
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "cancelled_at"
+    t.text "cancellation_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status"], name: "index_workflow_instances_on_status"
+    t.index ["trigger_object_type", "trigger_object_id"], name: "idx_on_trigger_object_type_trigger_object_id_a577010316"
+    t.index ["trigger_user_id"], name: "index_workflow_instances_on_trigger_user_id"
+    t.index ["workflow_id"], name: "index_workflow_instances_on_workflow_id"
+  end
+
+  create_table "workflow_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "workflow_instance_id", null: false
+    t.string "event_type", limit: 255, null: false
+    t.text "message", null: false
+    t.uuid "user_id"
+    t.jsonb "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_type"], name: "index_workflow_logs_on_event_type"
+    t.index ["user_id"], name: "index_workflow_logs_on_user_id"
+    t.index ["workflow_instance_id"], name: "index_workflow_logs_on_workflow_instance_id"
+  end
+
+  create_table "workflow_steps", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "workflow_id", null: false
+    t.integer "step_number", null: false
+    t.string "step_type", limit: 255, null: false
+    t.string "name", limit: 255, null: false
+    t.text "description"
+    t.jsonb "config", default: {}, null: false
+    t.string "status", limit: 255, default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["step_number"], name: "index_workflow_steps_on_step_number"
+    t.index ["step_type"], name: "index_workflow_steps_on_step_type"
+    t.index ["workflow_id"], name: "index_workflow_steps_on_workflow_id"
+  end
+
+  create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.text "description"
+    t.string "workflow_type", limit: 255, null: false
+    t.jsonb "config", default: {}, null: false
+    t.boolean "active", default: true, null: false
+    t.uuid "mission_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_workflows_on_active"
+    t.index ["mission_id"], name: "index_workflows_on_mission_id"
+    t.index ["user_id"], name: "index_workflows_on_user_id"
+    t.index ["workflow_type"], name: "index_workflows_on_workflow_type"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "ai_validation_results", "ai_validation_rules"
+  add_foreign_key "ai_validation_results", "responses"
+  add_foreign_key "ai_validation_rules", "missions"
+  add_foreign_key "ai_validation_rules", "users"
+  add_foreign_key "annotations", "answers"
+  add_foreign_key "annotations", "responses"
+  add_foreign_key "annotations", "users", column: "author_id"
   add_foreign_key "answer_hierarchies", "answers", column: "ancestor_id"
   add_foreign_key "answer_hierarchies", "answers", column: "descendant_id"
   add_foreign_key "answers", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "answers", "missions"
   add_foreign_key "answers", "option_nodes"
   add_foreign_key "answers", "responses", name: "answers_response_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "approval_requests", "users", column: "approver_id"
+  add_foreign_key "approval_requests", "workflow_instances"
+  add_foreign_key "approval_requests", "workflow_steps"
   add_foreign_key "assignments", "missions", name: "assignments_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "assignments", "users", name: "assignments_user_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "audit_logs", "missions"
+  add_foreign_key "audit_logs", "users"
+  add_foreign_key "backups", "missions"
+  add_foreign_key "backups", "users"
   add_foreign_key "broadcast_addressings", "broadcasts", name: "broadcast_addressings_broadcast_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "answers", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "option_nodes"
+  add_foreign_key "comments", "comments", column: "parent_id"
+  add_foreign_key "comments", "responses"
+  add_foreign_key "comments", "users", column: "author_id"
   add_foreign_key "conditions", "form_items", column: "left_qing_id"
   add_foreign_key "conditions", "form_items", column: "right_qing_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "constraints", "form_items", column: "source_item_id"
   add_foreign_key "constraints", "missions"
+  add_foreign_key "custom_dashboards", "missions"
+  add_foreign_key "custom_dashboards", "users"
+  add_foreign_key "dashboard_widgets", "custom_dashboards"
   add_foreign_key "form_forwardings", "forms", name: "form_forwardings_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_items", "forms", name: "form_items_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_items", "missions", name: "form_items_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_items", "questions", name: "form_items_question_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "form_templates", "missions"
+  add_foreign_key "form_templates", "users", column: "creator_id"
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "forms", "form_items", column: "root_id", name: "forms_root_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "forms", "missions", name: "forms_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "media_objects", "answers", name: "media_objects_answer_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "mentions", "comments"
+  add_foreign_key "mentions", "users"
+  add_foreign_key "notifications", "missions"
+  add_foreign_key "notifications", "users"
   add_foreign_key "operations", "missions"
   add_foreign_key "operations", "users", column: "creator_id", name: "operations_creator_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fkey", on_update: :restrict, on_delete: :restrict
@@ -666,9 +1018,22 @@ ActiveRecord::Schema[8.0].define(version: 2024_07_19_145026) do
   add_foreign_key "user_group_assignments", "users", name: "user_group_assignments_user_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "user_groups", "missions", name: "user_groups_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "users", "missions", column: "last_mission_id", name: "users_last_mission_id_fkey", on_update: :restrict, on_delete: :nullify
-  create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
-    .on("answers")
-    .before(:insert, :update) do
+  add_foreign_key "validation_rules", "forms"
+  add_foreign_key "validation_rules", "missions"
+  add_foreign_key "validation_rules", "questions"
+  add_foreign_key "webhook_deliveries", "webhooks"
+  add_foreign_key "webhooks", "missions"
+  add_foreign_key "workflow_instances", "users", column: "trigger_user_id"
+  add_foreign_key "workflow_instances", "workflows"
+  add_foreign_key "workflow_logs", "users"
+  add_foreign_key "workflow_logs", "workflow_instances"
+  add_foreign_key "workflow_steps", "workflows"
+  add_foreign_key "workflows", "missions"
+  add_foreign_key "workflows", "users"
+  create_trigger("answers_before_insert_update_row_tr", :generated => true, :compatibility => 1).
+      on("answers").
+      before(:insert, :update) do
     "new.tsv := TO_TSVECTOR('simple', COALESCE( new.value, to_char(new.date_value, 'YYYY-MM-DD'), to_char(new.time_value, 'HH24hMImSSs'), to_char(new.datetime_value, 'YYYY-MM-DD HH24hMImSSs'), (SELECT STRING_AGG(opt_name_translation.value, ' ') FROM options, option_nodes, JSONB_EACH_TEXT(options.name_translations) opt_name_translation WHERE options.id = option_nodes.option_id AND (option_nodes.id = new.option_node_id OR option_nodes.id IN (SELECT option_node_id FROM choices WHERE answer_id = new.id))), '' ));"
   end
+
 end

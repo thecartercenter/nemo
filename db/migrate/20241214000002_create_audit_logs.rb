@@ -16,8 +16,6 @@ class CreateAuditLogs < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :audit_logs, :user_id
-    add_index :audit_logs, :mission_id
     add_index :audit_logs, :resource
     add_index :audit_logs, :resource_id
     add_index :audit_logs, :action

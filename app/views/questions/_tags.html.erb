@@ -1,5 +1,5 @@
 <% if read_only %>
-  <%= render_tags(form.object.tags.order(:name)) %>
+  <%= render_tag_badges(form.object.tags.order(:name)) %>
 <% else %>
   <%= form.text_field(:tag_ids, class: 'text form-control') %>
 <% end %>

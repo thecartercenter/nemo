@@ -16,8 +16,6 @@ class CreateFormTemplates < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :form_templates, :creator_id
-    add_index :form_templates, :mission_id
     add_index :form_templates, :category
     add_index :form_templates, :is_public
     add_index :form_templates, :usage_count

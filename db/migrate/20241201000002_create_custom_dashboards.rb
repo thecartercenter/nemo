@@ -14,8 +14,7 @@ class CreateCustomDashboards < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :custom_dashboards, :mission_id
-    add_index :custom_dashboards, :user_id
+    # Reference columns already add indexes by default in Rails 8.
     add_index :custom_dashboards, :is_public
 
     create_table :dashboard_widgets, id: :uuid do |t|
@@ -27,7 +26,6 @@ class CreateCustomDashboards < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :dashboard_widgets, :custom_dashboard_id
     add_index :dashboard_widgets, :position
     add_index :dashboard_widgets, :widget_type
   end

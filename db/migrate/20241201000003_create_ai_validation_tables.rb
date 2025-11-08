@@ -16,8 +16,6 @@ class CreateAiValidationTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :ai_validation_rules, :mission_id
-    add_index :ai_validation_rules, :user_id
     add_index :ai_validation_rules, :rule_type
     add_index :ai_validation_rules, :active
 
@@ -35,8 +33,6 @@ class CreateAiValidationTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :ai_validation_results, :ai_validation_rule_id
-    add_index :ai_validation_results, :response_id
     add_index :ai_validation_results, :validation_type
     add_index :ai_validation_results, :passed
     add_index :ai_validation_results, :confidence_score

@@ -1,6 +1,6 @@
 <%= render("searches/form", search: @search) %>
 
-<div class="all-tags"><%= render_tags(@tags, clickable: true) %></div>
+<div class="all-tags"><%= render_tag_badges(@tags, clickable: true) %></div>
 
 <%= index_table(questions) %>
 <%= standard_import_form %>

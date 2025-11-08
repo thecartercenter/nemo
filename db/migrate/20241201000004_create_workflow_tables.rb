@@ -14,8 +14,6 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :workflows, :mission_id
-    add_index :workflows, :user_id
     add_index :workflows, :workflow_type
     add_index :workflows, :active
 
@@ -34,9 +32,7 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :workflow_instances, :workflow_id
     add_index :workflow_instances, [:trigger_object_type, :trigger_object_id]
-    add_index :workflow_instances, :trigger_user_id
     add_index :workflow_instances, :status
 
     create_table :workflow_steps, id: :uuid do |t|
@@ -51,7 +47,6 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :workflow_steps, :workflow_id
     add_index :workflow_steps, :step_number
     add_index :workflow_steps, :step_type
 
@@ -68,9 +63,6 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :approval_requests, :workflow_instance_id
-    add_index :approval_requests, :workflow_step_id
-    add_index :approval_requests, :approver_id
     add_index :approval_requests, :status
 
     create_table :workflow_logs, id: :uuid do |t|
@@ -83,8 +75,6 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :workflow_logs, :workflow_instance_id
     add_index :workflow_logs, :event_type
-    add_index :workflow_logs, :user_id
   end
 end
