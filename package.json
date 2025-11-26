@@ -30,7 +30,8 @@
     }
   },
   "resolutions": {
-    "@xmldom/xmldom": "0.7.6"
+    "@xmldom/xmldom": "0.7.6",
+    "js-yaml@^4": "4.1.1"
   },
   "babel": {
     "presets": [
