@@ -8,11 +8,8 @@
   "scripts": {
     "start": "node index.js"
   },
-  "resolutions": {
-    "nan": "2.22.0"
-  },
   "dependencies": {
-    "enketo-transformer": "4.1.1",
+    "enketo-transformer": "4.2.0",
     "libxslt": "0.10.2"
   }
 }

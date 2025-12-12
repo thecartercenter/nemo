@@ -3574,9 +3574,10 @@ enhanced-resolve@^5.17.1:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
 
-enketo-core@sassafrastech/enketo#enketo-core-8.3.1-fixGetters2:
-  version "8.3.1"
-  resolved "https://codeload.github.com/sassafrastech/enketo/tar.gz/545dacfa11cb4975eb48ab6911ef939e30dce8f7"
+enketo-core@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/enketo-core/-/enketo-core-9.0.1.tgz#1e8bcf957e18807800276b52451c2d711644dc33"
+  integrity sha512-TjN3cEPbr9JLiG7GPgUN2mrI/x0GQr7NGqtMry2tBPqoiVtyVX808yyusICLkdh2GaGEfrPyA3d5dwzTKqjpoQ==
   dependencies:
     bootstrap-datepicker "^1.10.0"
     drag-drop-touch "^1.3.1"
@@ -3588,8 +3589,8 @@ enketo-core@sassafrastech/enketo#enketo-core-8.3.1-fixGetters2:
     leaflet.gridlayer.googlemutant "^0.13.5"
     mergexml "1.2.3"
     node-forge "^1.3.1"
-    openrosa-xpath-evaluator "3.1.0"
-    signature_pad "2.3.x"
+    openrosa-xpath-evaluator "3.2.0"
+    signature_pad "^5.0.2"
 
 entities@^4.2.0, entities@^4.4.0, entities@^4.5.0:
   version "4.5.0"
@@ -6555,10 +6556,10 @@ open@^10.0.3:
     is-inside-container "^1.0.0"
     is-wsl "^3.1.0"
 
-openrosa-xpath-evaluator@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/openrosa-xpath-evaluator/-/openrosa-xpath-evaluator-3.1.0.tgz#e81aff243d2ffd9ba0faaac76382a2a2eb59c681"
-  integrity sha512-FK83cFV8pjuY8fNA8Fi/zzjsm1Y5U516+rutmw3Yal9X9ozVYYZjlooM+PTbh9kcyHocPwXLDnQ+PmldBqviUg==
+openrosa-xpath-evaluator@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/openrosa-xpath-evaluator/-/openrosa-xpath-evaluator-3.2.0.tgz#0014d3f8c174b504be47c89ca38fb24aeb0f3e1c"
+  integrity sha512-NdzC+Ch3FsNBRnPXGGabnDmxeIBYOsx0XR7hazodeMOpePT2Jm+qblmW6aWM26YPwvUBfiYbbc0PSgeTbhHRyg==
 
 optionator@^0.9.3:
   version "0.9.4"
@@ -7769,10 +7770,10 @@ signal-exit@^4.0.1:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-4.1.0.tgz#952188c1cbd546070e2dd20d0f41c0ae0530cb04"
   integrity sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==
 
-signature_pad@2.3.x:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/signature_pad/-/signature_pad-2.3.2.tgz#ca7230021c89cedeead27b33d8d16ff254e5f04a"
-  integrity sha512-peYXLxOsIY6MES2TrRLDiNg2T++8gGbpP2yaC+6Ohtxr+a2dzoaqWosWDY9sWqTAAk6E/TyQO+LJw9zQwyu5kA==
+signature_pad@^5.0.2:
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/signature_pad/-/signature_pad-5.1.3.tgz#b89e39732567b4e54df3c2e96274606abe7d3d66"
+  integrity sha512-zyxW5vuJVnQdGcU+kAj9FYl7WaAunY3kA5S7mPg0xJiujL9+sPAWfSQHS5tXaJXDUa4FuZeKhfdCDQ6K3wfkpQ==
 
 sisteransi@^1.0.5:
   version "1.0.5"
