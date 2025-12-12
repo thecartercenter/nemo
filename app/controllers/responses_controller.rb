@@ -354,7 +354,9 @@ class ResponsesController < ApplicationController
   def enketo
     # Fail fast if we're on the wrong node version
     # (this happens most often in development and can lead to inscrutable errors).
-    raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v20")
+    required_node_version = File.read(Rails.root.join(".nvmrc")).strip
+    Rails.logger.info("Expecting node v#{required_node_version}...")
+    raise "Error: Unexpected Node version #{`node -v`}" unless `node -v`.match?("v#{required_node_version}")
 
     # Enketo can't render anything if we haven't rendered it to XML (e.g. unpublished draft).
     if @response.form.odk_xml.blank?
