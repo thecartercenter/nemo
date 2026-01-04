@@ -23,7 +23,7 @@ class CreateWebhooks < ActiveRecord::Migration[8.0]
       t.references :webhook, null: false, foreign_key: true, type: :uuid
       t.string :event, null: false, limit: 255
       t.jsonb :payload
-      t.string :status, default: 'pending', null: false, limit: 255
+      t.string :status, default: "pending", null: false, limit: 255
       t.integer :response_code
       t.text :response_body
       t.text :error_message

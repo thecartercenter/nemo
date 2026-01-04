@@ -40,18 +40,18 @@ class Backup < ApplicationRecord
   validates :backup_id, presence: true, uniqueness: true
   validates :backup_type, presence: true
   validates :file_path, presence: true
-  validates :file_size, presence: true, numericality: { greater_than: 0 }
+  validates :file_size, presence: true, numericality: {greater_than: 0}
 
-  scope :completed, -> { where(status: 'completed') }
-  scope :failed, -> { where(status: 'failed') }
-  scope :in_progress, -> { where(status: 'in_progress') }
+  scope :completed, -> { where(status: "completed") }
+  scope :failed, -> { where(status: "failed") }
+  scope :in_progress, -> { where(status: "in_progress") }
   scope :recent, -> { order(created_at: :desc) }
 
   BACKUP_TYPES = %w[full mission_data forms_only responses_only].freeze
   STATUSES = %w[in_progress completed failed].freeze
 
-  validates :backup_type, inclusion: { in: BACKUP_TYPES }
-  validates :status, inclusion: { in: STATUSES }
+  validates :backup_type, inclusion: {in: BACKUP_TYPES}
+  validates :status, inclusion: {in: STATUSES}
 
   def file_exists?
     File.exist?(file_path)
@@ -69,12 +69,12 @@ class Backup < ApplicationRecord
   def can_be_restored_by?(user)
     return false unless completed?
     return false unless file_exists?
-    
+
     user.admin? || user.missions.include?(mission)
   end
 
   def can_be_deleted_by?(user)
-    user.admin? || user == self.user || user.role(mission) == 'coordinator'
+    user.admin? || user == self.user || user.role(mission) == "coordinator"
   end
 
   def cleanup!
@@ -83,6 +83,6 @@ class Backup < ApplicationRecord
   end
 
   def self.cleanup_old_backups(days = 30)
-    where('created_at < ?', days.days.ago).find_each(&:cleanup!)
+    where("created_at < ?", days.days.ago).find_each(&:cleanup!)
   end
 end

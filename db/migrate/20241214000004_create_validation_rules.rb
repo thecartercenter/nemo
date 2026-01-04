@@ -18,6 +18,6 @@ class CreateValidationRules < ActiveRecord::Migration[8.0]
 
     add_index :validation_rules, :rule_type
     add_index :validation_rules, :is_active
-    add_index :validation_rules, :conditions, using: 'gin'
+    add_index :validation_rules, :conditions, using: "gin"
   end
 end

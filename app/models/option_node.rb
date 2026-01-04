@@ -93,9 +93,8 @@ class OptionNode < ApplicationRecord
 
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
-    ancestries = roots.map { |r| "'#{r.id}'" }.join(",")
     nodes_by_root_id = OptionNode.includes(:option)
-      .where("ancestry IN (#{ancestries})")
+      .where(ancestry: roots.map(&:id))
       .order("rank")
       .group_by(&:ancestry)
     roots.each { |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }

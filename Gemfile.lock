@@ -170,7 +170,12 @@ GEM
       msgpack (~> 1.2)
     bootstrap (5.3.5)
       popper_js (>= 2.11.8, < 3)
+    brakeman (7.1.2)
+      racc
     builder (3.3.0)
+    bundler-audit (0.9.3)
+      bundler (>= 1.2.0)
+      thor (~> 1.0)
     cancancan (3.6.1)
     capybara (3.40.0)
       addressable
@@ -700,6 +705,8 @@ DEPENDENCIES
   blueprinter (~> 0.25.1)
   bootsnap (~> 1.4)
   bootstrap (~> 5.0)
+  brakeman
+  bundler-audit
   cancancan (~> 3.1)
   capybara (~> 3.30)
   clipboard-rails (~> 1.7)

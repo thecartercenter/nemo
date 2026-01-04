@@ -4,14 +4,14 @@ class NotificationService
   def self.notify_form_submission(response)
     form = response.form
     mission = response.mission
-    
+
     # Notify mission coordinators and staffers
     mission.users.joins(:assignments)
-           .where(assignments: { role: %w[coordinator staffer] })
-           .find_each do |user|
+      .where(assignments: {role: %w[coordinator staffer]})
+      .find_each do |user|
       Notification.create_for_user(
         user,
-        'form_submission',
+        "form_submission",
         "New form submission: #{form.name}",
         message: "A new response was submitted for form '#{form.name}' by #{response.user.name}",
         data: {
@@ -28,11 +28,11 @@ class NotificationService
 
   def self.notify_form_published(form)
     mission = form.mission
-    
+
     # Notify all mission users
     Notification.create_for_mission_users(
       mission,
-      'form_published',
+      "form_published",
       "Form published: #{form.name}",
       message: "The form '#{form.name}' has been published and is now available for data collection",
       data: {
@@ -46,11 +46,11 @@ class NotificationService
   def self.notify_response_reviewed(response)
     form = response.form
     mission = response.mission
-    
+
     # Notify the submitter
     Notification.create_for_user(
       response.user,
-      'response_reviewed',
+      "response_reviewed",
       "Response reviewed: #{form.name}",
       message: "Your response for form '#{form.name}' has been reviewed",
       data: {
@@ -67,7 +67,7 @@ class NotificationService
   def self.notify_user_assigned(user, mission, role)
     Notification.create_for_user(
       user,
-      'user_assigned',
+      "user_assigned",
       "Assigned to mission: #{mission.name}",
       message: "You have been assigned to the mission '#{mission.name}' as a #{role}",
       data: {
@@ -83,7 +83,7 @@ class NotificationService
   def self.notify_data_export_complete(user, export_type, filename)
     Notification.create_for_user(
       user,
-      'data_export_complete',
+      "data_export_complete",
       "Data export complete: #{export_type}",
       message: "Your #{export_type} export has been completed. File: #{filename}",
       data: {
@@ -97,7 +97,7 @@ class NotificationService
   def self.notify_system_alert(mission, title, message, data = {})
     Notification.create_for_mission_users(
       mission,
-      'system_alert',
+      "system_alert",
       title,
       message: message,
       data: data.merge(alert_at: Time.current)
@@ -107,7 +107,7 @@ class NotificationService
   def self.notify_mission_update(mission, title, message, data = {})
     Notification.create_for_mission_users(
       mission,
-      'mission_update',
+      "mission_update",
       title,
       message: message,
       data: data.merge(updated_at: Time.current)

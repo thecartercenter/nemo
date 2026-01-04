@@ -7,7 +7,7 @@ class WebhookDeliveryJob < ApplicationJob
 
   def perform(webhook_delivery_id, delay: 0)
     sleep(delay) if delay > 0
-    
+
     delivery = WebhookDelivery.find(webhook_delivery_id)
     delivery.deliver!
   rescue ActiveRecord::RecordNotFound

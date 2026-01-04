@@ -5,7 +5,7 @@
 class AiProviders::BaseService
   attr_reader :api_key, :model, :timeout
 
-  def initialize(api_key:, model: 'gpt-3.5-turbo', timeout: 30)
+  def initialize(api_key:, model: "gpt-3.5-turbo", timeout: 30)
     @api_key = api_key
     @model = model
     @timeout = timeout
@@ -48,8 +48,8 @@ class AiProviders::BaseService
       suggestions: extract_suggestions(raw_response),
       explanation: extract_explanation(raw_response)
     }
-  rescue => e
-    Rails.logger.error "Error parsing AI response: #{e.message}"
+  rescue StandardError => e
+    Rails.logger.error("Error parsing AI response: #{e.message}")
     default_error_response
   end
 
@@ -84,7 +84,6 @@ class AiProviders::BaseService
       explanation: "An error occurred during AI validation"
     }
   end
-
 end
 
 # Custom exceptions for AI provider errors

@@ -45,7 +45,7 @@ FactoryBot.define do
     trait :business_logic do
       rule_type { "business_logic" }
       name { "Business Logic Rule" }
-      config { { business_rules: "Age must be between 18 and 100" } }
+      config { {business_rules: "Age must be between 18 and 100"} }
     end
 
     trait :duplicate_detection do

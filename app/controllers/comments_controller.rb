@@ -3,16 +3,16 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_response
-  before_action :set_comment, only: [:show, :edit, :update, :destroy, :resolve, :unresolve]
+  before_action :set_comment, only: %i[show edit update destroy resolve unresolve]
 
   def index
     authorize!(:view, @response)
-    
+
     @comments = @response.comments.includes(:author, :replies, :mentioned_users)
-                        .top_level
-                        .recent
-                        .paginate(page: params[:page], per_page: 20)
-    
+      .top_level
+      .recent
+      .paginate(page: params[:page], per_page: 20)
+
     @comment_types = Comment::COMMENT_TYPES
   end
 
@@ -26,75 +26,75 @@ class CommentsController < ApplicationController
     @comment_types = Comment::COMMENT_TYPES
   end
 
-  def create
-    authorize!(:create, :comment)
-    
-    @comment = @response.comments.build(comment_params.merge(author: current_user))
-    
-    if @comment.save
-      # Notify response owner and other commenters
-      notify_comment_created
-      
-      respond_to do |format|
-        format.html { redirect_to response_path(@response), notice: 'Comment added successfully.' }
-        format.json { render json: @comment, status: :created }
-      end
-    else
-      @comment_types = Comment::COMMENT_TYPES
-      respond_to do |format|
-        format.html { render :new }
-        format.json { render json: { errors: @comment.errors }, status: :unprocessable_entity }
-      end
-    end
-  end
-
   def edit
     authorize!(:update, @comment)
   end
 
+  def create
+    authorize!(:create, :comment)
+
+    @comment = @response.comments.build(comment_params.merge(author: current_user))
+
+    if @comment.save
+      # Notify response owner and other commenters
+      notify_comment_created
+
+      respond_to do |format|
+        format.html { redirect_to(response_path(@response), notice: "Comment added successfully.") }
+        format.json { render(json: @comment, status: :created) }
+      end
+    else
+      @comment_types = Comment::COMMENT_TYPES
+      respond_to do |format|
+        format.html { render(:new) }
+        format.json { render(json: {errors: @comment.errors}, status: :unprocessable_entity) }
+      end
+    end
+  end
+
   def update
     authorize!(:update, @comment)
-    
+
     if @comment.update(comment_params)
       respond_to do |format|
-        format.html { redirect_to response_path(@response), notice: 'Comment updated successfully.' }
-        format.json { render json: @comment }
+        format.html { redirect_to(response_path(@response), notice: "Comment updated successfully.") }
+        format.json { render(json: @comment) }
       end
     else
       respond_to do |format|
-        format.html { render :edit }
-        format.json { render json: { errors: @comment.errors }, status: :unprocessable_entity }
+        format.html { render(:edit) }
+        format.json { render(json: {errors: @comment.errors}, status: :unprocessable_entity) }
       end
     end
   end
 
   def destroy
     authorize!(:destroy, @comment)
-    
+
     @comment.destroy
     respond_to do |format|
-      format.html { redirect_to response_path(@response), notice: 'Comment deleted successfully.' }
-      format.json { head :no_content }
+      format.html { redirect_to(response_path(@response), notice: "Comment deleted successfully.") }
+      format.json { head(:no_content) }
     end
   end
 
   def resolve
     authorize!(:update, @comment)
-    
+
     @comment.resolve!
     respond_to do |format|
-      format.html { redirect_to response_path(@response), notice: 'Comment resolved.' }
-      format.json { render json: @comment }
+      format.html { redirect_to(response_path(@response), notice: "Comment resolved.") }
+      format.json { render(json: @comment) }
     end
   end
 
   def unresolve
     authorize!(:update, @comment)
-    
+
     @comment.unresolve!
     respond_to do |format|
-      format.html { redirect_to response_path(@response), notice: 'Comment unresolved.' }
-      format.json { render json: @comment }
+      format.html { redirect_to(response_path(@response), notice: "Comment unresolved.") }
+      format.json { render(json: @comment) }
     end
   end
 
@@ -117,7 +117,7 @@ class CommentsController < ApplicationController
     if @response.user != current_user
       NotificationService.create_for_user(
         @response.user,
-        'comment_created',
+        "comment_created",
         "New comment on your response",
         message: "#{current_user.name} commented on your response #{@response.shortcode}",
         data: {
@@ -132,15 +132,15 @@ class CommentsController < ApplicationController
 
     # Notify other commenters (excluding the author and response owner)
     other_commenters = @response.comments.joins(:author)
-                               .where.not(author: [current_user, @response.user])
-                               .distinct
-                               .pluck(:author_id)
+      .where.not(author: [current_user, @response.user])
+      .distinct
+      .pluck(:author_id)
 
     other_commenters.each do |user_id|
       user = User.find(user_id)
       NotificationService.create_for_user(
         user,
-        'comment_created',
+        "comment_created",
         "New comment on response",
         message: "#{current_user.name} commented on response #{@response.shortcode}",
         data: {

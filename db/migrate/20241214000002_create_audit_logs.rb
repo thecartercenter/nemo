@@ -20,8 +20,8 @@ class CreateAuditLogs < ActiveRecord::Migration[8.0]
     add_index :audit_logs, :resource_id
     add_index :audit_logs, :action
     add_index :audit_logs, :created_at
-    add_index :audit_logs, [:user_id, :created_at]
-    add_index :audit_logs, [:mission_id, :created_at]
-    add_index :audit_logs, [:resource, :resource_id]
+    add_index :audit_logs, %i[user_id created_at]
+    add_index :audit_logs, %i[mission_id created_at]
+    add_index :audit_logs, %i[resource resource_id]
   end
 end

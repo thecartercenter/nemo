@@ -30,26 +30,26 @@ class AiValidationResult < ApplicationRecord
   belongs_to :response
 
   validates :validation_type, presence: true
-  validates :confidence_score, presence: true, numericality: { in: 0.0..1.0 }
-  validates :is_valid, inclusion: { in: [true, false] }
-  validates :passed, inclusion: { in: [true, false] }
+  validates :confidence_score, presence: true, numericality: {in: 0.0..1.0}
+  validates :is_valid, inclusion: {in: [true, false]}
+  validates :passed, inclusion: {in: [true, false]}
 
   scope :passed, -> { where(passed: true) }
   scope :failed, -> { where(passed: false) }
   scope :by_type, ->(type) { where(validation_type: type) }
-  scope :high_confidence, -> { where('confidence_score >= ?', 0.8) }
-  scope :low_confidence, -> { where('confidence_score < ?', 0.5) }
+  scope :high_confidence, -> { where("confidence_score >= ?", 0.8) }
+  scope :low_confidence, -> { where("confidence_score < ?", 0.5) }
 
   def severity
-    return 'low' if confidence_score < 0.5
-    return 'medium' if confidence_score < 0.8
-    'high'
+    return "low" if confidence_score < 0.5
+    return "medium" if confidence_score < 0.8
+    "high"
   end
 
   def status
-    return 'passed' if passed?
-    return 'warning' if confidence_score >= 0.5
-    'failed'
+    return "passed" if passed?
+    return "warning" if confidence_score >= 0.5
+    "failed"
   end
 
   def formatted_issues

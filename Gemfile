@@ -35,7 +35,6 @@ gem "twilio-ruby", "~> 7.2.0" # Does not use semver after v5, watch out!
 # JS/CSS
 gem "bootstrap", "~> 5.0"
 # gem "bootstrap", "~> 4.3"  # Commented out - using Bootstrap 5.0
-gem "sassc-rails", "~> 2.1"
 gem "clipboard-rails", "~> 1.7"
 gem "dropzonejs-rails", "~> 0.8.5"
 gem "flatpickr"
@@ -45,6 +44,7 @@ gem "jquery-rails", "~> 4.3"
 gem "popper_js", "~> 2.11"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 3.0"
+gem "sassc-rails", "~> 2.1"
 gem "select2-rails", "~> 4.0"
 gem "shakapacker", "~> 8.0", ">= 8.0.0"
 gem "spinjs-rails", "~> 1.4.0" # Breaking changes in v1.4 (spin.js v2.0).
@@ -176,8 +176,11 @@ group :development, :test do
   # gem "annotate", "~> 3.2" # Temporarily disabled - not compatible with Rails 8.0
   gem "assert_difference", "~> 1.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6"
+  gem "brakeman"
+  gem "bundler-audit"
   gem "db-query-matchers", "~> 0.10"
   gem "rubocop"
+
   gem "rubocop-rails", "~> 2.33", ">= 2.33.4"
   gem "rubocop-rake", "~> 0.6.0"
   gem "rubocop-rspec", "~> 2.0"

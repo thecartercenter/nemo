@@ -14,28 +14,28 @@ describe AiProviders::OpenaiService do
     end
 
     it "raises error for invalid model" do
-      expect {
+      expect do
         AiProviders::OpenaiService.new(api_key: api_key, model: "invalid-model")
-      }.to raise_error(ArgumentError)
+      end.to raise_error(ArgumentError)
     end
 
     it "accepts valid models" do
       %w[gpt-3.5-turbo gpt-4 gpt-4-turbo gpt-4o].each do |valid_model|
-        expect {
+        expect do
           AiProviders::OpenaiService.new(api_key: api_key, model: valid_model)
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
   end
 
   describe "#available?" do
     it "returns true when API key is present" do
-      expect(service.available?).to be true
+      expect(service.available?).to be(true)
     end
 
     it "returns false when API key is blank" do
       service_no_key = AiProviders::OpenaiService.new(api_key: "", model: model)
-      expect(service_no_key.available?).to be false
+      expect(service_no_key.available?).to be(false)
     end
   end
 
@@ -67,7 +67,7 @@ describe AiProviders::OpenaiService do
           .to_return(
             status: 200,
             body: mock_response.to_json,
-            headers: { "Content-Type" => "application/json" }
+            headers: {"Content-Type" => "application/json"}
           )
       end
 
@@ -75,7 +75,7 @@ describe AiProviders::OpenaiService do
         result = service.call_ai_model(prompt)
         expect(result).to be_a(Hash)
         expect(result[:confidence]).to eq(0.9)
-        expect(result[:is_valid]).to be true
+        expect(result[:is_valid]).to be(true)
       end
 
       it "includes usage information" do
@@ -89,15 +89,15 @@ describe AiProviders::OpenaiService do
         stub_request(:post, "https://api.openai.com/v1/chat/completions")
           .to_return(
             status: 401,
-            body: { error: { message: "Invalid API key" } }.to_json,
-            headers: { "Content-Type" => "application/json" }
+            body: {error: {message: "Invalid API key"}}.to_json,
+            headers: {"Content-Type" => "application/json"}
           )
       end
 
       it "raises ServiceError" do
-        expect {
+        expect do
           service.call_ai_model(prompt)
-        }.to raise_error(AiProviders::ServiceError)
+        end.to raise_error(AiProviders::ServiceError)
       end
     end
 
@@ -108,9 +108,9 @@ describe AiProviders::OpenaiService do
       end
 
       it "raises TimeoutError" do
-        expect {
+        expect do
           service.call_ai_model(prompt)
-        }.to raise_error(AiProviders::TimeoutError)
+        end.to raise_error(AiProviders::TimeoutError)
       end
     end
 
@@ -121,9 +121,9 @@ describe AiProviders::OpenaiService do
       end
 
       it "raises ConnectionError" do
-        expect {
+        expect do
           service.call_ai_model(prompt)
-        }.to raise_error(AiProviders::ConnectionError)
+        end.to raise_error(AiProviders::ConnectionError)
       end
     end
   end
@@ -160,7 +160,7 @@ describe AiProviders::OpenaiService do
               }
             }]
           }.to_json,
-          headers: { "Content-Type" => "application/json" }
+          headers: {"Content-Type" => "application/json"}
         )
 
       result = service.call_ai_model("test")

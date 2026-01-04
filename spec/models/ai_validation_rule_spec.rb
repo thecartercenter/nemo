@@ -142,9 +142,9 @@ describe AiValidationRule do
       end
 
       it "creates a validation result" do
-        expect {
+        expect do
           rule.validate_response(response)
-        }.to change(AiValidationResult, :count).by(1)
+        end.to change(AiValidationResult, :count).by(1)
       end
     end
   end
@@ -156,7 +156,7 @@ describe AiValidationRule do
     AiValidationRule::RULE_TYPES.each do |rule_type|
       it "responds to validate_#{rule_type.underscore}" do
         rule = create(:ai_validation_rule, rule_type: rule_type, mission: mission, user: user)
-        expect(rule).to respond_to("validate_#{rule_type.underscore}".to_sym)
+        expect(rule).to respond_to(:"validate_#{rule_type.underscore}")
       end
     end
   end
@@ -164,12 +164,12 @@ describe AiValidationRule do
   describe "#active?" do
     it "returns true when active is true" do
       rule.active = true
-      expect(rule.active?).to be true
+      expect(rule.active?).to be(true)
     end
 
     it "returns false when active is false" do
       rule.active = false
-      expect(rule.active?).to be false
+      expect(rule.active?).to be(false)
     end
   end
 end

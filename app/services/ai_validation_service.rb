@@ -6,29 +6,27 @@ class AiValidationService
 
     # Get active AI validation rules for this mission
     rules = AiValidationRule.active
-                            .where(mission: response.mission)
-                            .where(rule_type: determine_applicable_rules(response))
+      .where(mission: response.mission)
+      .where(rule_type: determine_applicable_rules(response))
 
     results = []
-    
+
     rules.find_each do |rule|
-      begin
-        result = rule.validate_response(response)
-        results << result if result
-      rescue => e
-        Rails.logger.error "AI validation failed for rule #{rule.id}: #{e.message}"
-        # Create a failed result for tracking
-        results << rule.ai_validation_results.create!(
-          response: response,
-          validation_type: rule.rule_type,
-          confidence_score: 0.0,
-          is_valid: false,
-          issues: ["Validation error: #{e.message}"],
-          suggestions: ["Please check the validation rule configuration"],
-          explanation: "AI validation failed due to an error",
-          passed: false
-        )
-      end
+      result = rule.validate_response(response)
+      results << result if result
+    rescue StandardError => e
+      Rails.logger.error("AI validation failed for rule #{rule.id}: #{e.message}")
+      # Create a failed result for tracking
+      results << rule.ai_validation_results.create!(
+        response: response,
+        validation_type: rule.rule_type,
+        confidence_score: 0.0,
+        is_valid: false,
+        issues: ["Validation error: #{e.message}"],
+        suggestions: ["Please check the validation rule configuration"],
+        explanation: "AI validation failed due to an error",
+        passed: false
+      )
     end
 
     # Trigger notifications for failed validations
@@ -39,7 +37,7 @@ class AiValidationService
 
   def self.validate_batch(responses)
     results = []
-    
+
     responses.find_each do |response|
       results.concat(validate_response(response))
     end
@@ -49,10 +47,10 @@ class AiValidationService
 
   def self.generate_validation_report(mission, date_range = nil)
     query = AiValidationResult.joins(:response)
-                              .where(responses: { mission: mission })
-    
-    query = query.where('ai_validation_results.created_at >= ?', date_range.begin) if date_range&.begin
-    query = query.where('ai_validation_results.created_at <= ?', date_range.end) if date_range&.end
+      .where(responses: {mission: mission})
+
+    query = query.where("ai_validation_results.created_at >= ?", date_range.begin) if date_range&.begin
+    query = query.where("ai_validation_results.created_at <= ?", date_range.end) if date_range&.end
 
     results = query.includes(:ai_validation_rule, :response)
 
@@ -74,12 +72,12 @@ class AiValidationService
 
     # Analyze form responses for patterns
     forms = Form.where(mission: mission).includes(:responses, :questions)
-    
+
     forms.each do |form|
       # Suggest data quality rules
       if has_text_fields?(form)
         suggestions << {
-          type: 'data_quality',
+          type: "data_quality",
           name: "Data Quality Check - #{form.name}",
           description: "Check for spelling errors and formatting issues in text fields",
           confidence: 0.8
@@ -89,7 +87,7 @@ class AiValidationService
       # Suggest completeness rules
       if has_required_fields?(form)
         suggestions << {
-          type: 'completeness_check',
+          type: "completeness_check",
           name: "Completeness Check - #{form.name}",
           description: "Ensure all required fields are completed",
           confidence: 0.9
@@ -99,7 +97,7 @@ class AiValidationService
       # Suggest format validation
       if has_date_fields?(form)
         suggestions << {
-          type: 'format_validation',
+          type: "format_validation",
           name: "Date Format Validation - #{form.name}",
           description: "Validate date formats and ranges",
           confidence: 0.7
@@ -107,38 +105,31 @@ class AiValidationService
       end
 
       # Suggest anomaly detection
-      if has_numeric_fields?(form)
-        suggestions << {
-          type: 'anomaly_detection',
-          name: "Anomaly Detection - #{form.name}",
-          description: "Detect unusual values in numeric fields",
-          confidence: 0.6
-        }
-      end
+      next unless has_numeric_fields?(form)
+      suggestions << {
+        type: "anomaly_detection",
+        name: "Anomaly Detection - #{form.name}",
+        description: "Detect unusual values in numeric fields",
+        confidence: 0.6
+      }
     end
 
     suggestions.sort_by { |s| -s[:confidence] }
   end
 
-  private
-
   def self.determine_applicable_rules(response)
     # Determine which validation rules are applicable based on response characteristics
-    applicable_rules = ['data_quality', 'consistency_check']
+    applicable_rules = %w[data_quality consistency_check]
 
     # Add specific rules based on form characteristics
-    if response.form.questions.any? { |q| q.qtype_name == 'text' }
-      applicable_rules << 'format_validation'
-    end
+    applicable_rules << "format_validation" if response.form.questions.any? { |q| q.qtype_name == "text" }
 
     if response.form.questions.any? { |q| %w[integer decimal].include?(q.qtype_name) }
-      applicable_rules << 'anomaly_detection'
-      applicable_rules << 'outlier_detection'
+      applicable_rules << "anomaly_detection"
+      applicable_rules << "outlier_detection"
     end
 
-    if response.form.questions.any? { |q| q.required? }
-      applicable_rules << 'completeness_check'
-    end
+    applicable_rules << "completeness_check" if response.form.questions.any? { |q| q.required? }
 
     applicable_rules
   end
@@ -149,12 +140,12 @@ class AiValidationService
     # Notify form coordinators about validation failures
     mission = response.mission
     coordinators = mission.users.joins(:assignments)
-                          .where(assignments: { role: 'coordinator' })
+      .where(assignments: {role: "coordinator"})
 
     coordinators.find_each do |coordinator|
       Notification.create_for_user(
         coordinator,
-        'ai_validation_failed',
+        "ai_validation_failed",
         "AI Validation Failed: #{response.form.name}",
         message: "Response #{response.shortcode} failed AI validation checks",
         data: {
@@ -170,7 +161,7 @@ class AiValidationService
 
   def self.calculate_pass_rate(results)
     return 0 if results.empty?
-    
+
     (results.passed.count.to_f / results.count * 100).round(2)
   end
 
@@ -200,15 +191,13 @@ class AiValidationService
     end
 
     common_issues = find_common_issues(results)
-    if common_issues.any?
-      recommendations << "Most common issues: #{common_issues.first(3).map(&:first).join(', ')}"
-    end
+    recommendations << "Most common issues: #{common_issues.first(3).map(&:first).join(', ')}" if common_issues.any?
 
     recommendations
   end
 
   def self.has_text_fields?(form)
-    form.questions.any? { |q| q.qtype_name == 'text' }
+    form.questions.any? { |q| q.qtype_name == "text" }
   end
 
   def self.has_required_fields?(form)
@@ -216,7 +205,7 @@ class AiValidationService
   end
 
   def self.has_date_fields?(form)
-    form.questions.any? { |q| q.qtype_name == 'date' }
+    form.questions.any? { |q| q.qtype_name == "date" }
   end
 
   def self.has_numeric_fields?(form)

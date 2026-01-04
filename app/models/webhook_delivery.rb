@@ -28,27 +28,27 @@ class WebhookDelivery < ApplicationRecord
   belongs_to :webhook
 
   validates :event, presence: true
-  validates :status, inclusion: { in: %w[pending success failed retrying] }
-  validates :retry_count, numericality: { greater_than_or_equal_to: 0 }
+  validates :status, inclusion: {in: %w[pending success failed retrying]}
+  validates :retry_count, numericality: {greater_than_or_equal_to: 0}
 
-  scope :pending, -> { where(status: 'pending') }
-  scope :successful, -> { where(status: 'success') }
-  scope :failed, -> { where(status: 'failed') }
-  scope :retrying, -> { where(status: 'retrying') }
+  scope :pending, -> { where(status: "pending") }
+  scope :successful, -> { where(status: "success") }
+  scope :failed, -> { where(status: "failed") }
+  scope :retrying, -> { where(status: "retrying") }
   scope :recent, -> { order(created_at: :desc) }
 
   MAX_RETRIES = 3
   RETRY_DELAYS = [1.minute, 5.minutes, 15.minutes].freeze
 
   def deliver!
-    return if status == 'success'
+    return if status == "success"
 
     begin
       response = make_request
-      
+
       if response.success?
         update!(
-          status: 'success',
+          status: "success",
           response_code: response.code,
           response_body: response.body,
           delivered_at: Time.current
@@ -56,13 +56,13 @@ class WebhookDelivery < ApplicationRecord
       else
         handle_failure(response)
       end
-    rescue => e
+    rescue StandardError => e
       handle_error(e)
     end
   end
 
   def can_retry?
-    retry_count < MAX_RETRIES && status != 'success'
+    retry_count < MAX_RETRIES && status != "success"
   end
 
   def next_retry_at
@@ -76,7 +76,7 @@ class WebhookDelivery < ApplicationRecord
     return unless can_retry?
 
     update!(
-      status: 'retrying',
+      status: "retrying",
       retry_count: retry_count + 1
     )
 
@@ -87,18 +87,18 @@ class WebhookDelivery < ApplicationRecord
 
   def make_request
     uri = URI(webhook.url)
-    
+
     request = Net::HTTP::Post.new(uri)
-    request['Content-Type'] = 'application/json'
-    request['User-Agent'] = 'NEMO-Webhook/1.0'
-    request['X-NEMO-Event'] = event
-    request['X-NEMO-Delivery'] = id
-    request['X-NEMO-Signature'] = generate_signature if webhook.secret.present?
-    
+    request["Content-Type"] = "application/json"
+    request["User-Agent"] = "NEMO-Webhook/1.0"
+    request["X-NEMO-Event"] = event
+    request["X-NEMO-Delivery"] = id
+    request["X-NEMO-Signature"] = generate_signature if webhook.secret.present?
+
     request.body = build_payload.to_json
 
     http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = uri.scheme == 'https'
+    http.use_ssl = uri.scheme == "https"
     http.read_timeout = 30
     http.open_timeout = 10
 
@@ -125,23 +125,23 @@ class WebhookDelivery < ApplicationRecord
 
   def generate_signature
     payload = build_payload.to_json
-    signature = OpenSSL::HMAC.hexdigest('SHA256', webhook.secret, payload)
+    signature = OpenSSL::HMAC.hexdigest("SHA256", webhook.secret, payload)
     "sha256=#{signature}"
   end
 
   def handle_failure(response)
     if can_retry?
       update!(
-        status: 'retrying',
+        status: "retrying",
         response_code: response.code,
         response_body: response.body,
         retry_count: retry_count + 1
       )
-      
+
       WebhookDeliveryJob.perform_later(id, delay: next_retry_at - Time.current)
     else
       update!(
-        status: 'failed',
+        status: "failed",
         response_code: response.code,
         response_body: response.body,
         error_message: "HTTP #{response.code}: #{response.message}"
@@ -152,15 +152,15 @@ class WebhookDelivery < ApplicationRecord
   def handle_error(error)
     if can_retry?
       update!(
-        status: 'retrying',
+        status: "retrying",
         error_message: error.message,
         retry_count: retry_count + 1
       )
-      
+
       WebhookDeliveryJob.perform_later(id, delay: next_retry_at - Time.current)
     else
       update!(
-        status: 'failed',
+        status: "failed",
         error_message: error.message
       )
     end

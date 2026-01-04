@@ -174,7 +174,7 @@ class Ability
 
     # Can manage these classes for the current mission even if locked
     [Setting, Sms::Message].each { |klass| can(:manage, klass, mission_id: mission.id) }
-    
+
     # Analytics permissions
     can(:view, :analytics)
     can(:export, :data)

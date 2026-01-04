@@ -30,10 +30,10 @@
 #
 
 class Comment < ApplicationRecord
-  belongs_to :author, class_name: 'User'
+  belongs_to :author, class_name: "User"
   belongs_to :response
-  belongs_to :parent, class_name: 'Comment', optional: true
-  has_many :replies, class_name: 'Comment', foreign_key: 'parent_id', dependent: :destroy
+  belongs_to :parent, class_name: "Comment", optional: true
+  has_many :replies, class_name: "Comment", foreign_key: "parent_id", dependent: :destroy
   has_many :mentions, dependent: :destroy
   has_many :mentioned_users, through: :mentions, source: :user
 
@@ -56,7 +56,7 @@ class Comment < ApplicationRecord
     annotation
   ].freeze
 
-  validates :comment_type, inclusion: { in: COMMENT_TYPES }
+  validates :comment_type, inclusion: {in: COMMENT_TYPES}
 
   after_create :extract_mentions
   after_create :notify_mentioned_users
@@ -78,11 +78,11 @@ class Comment < ApplicationRecord
   end
 
   def can_be_edited_by?(user)
-    author == user || user.admin? || user.role(response.mission) == 'coordinator'
+    author == user || user.admin? || user.role(response.mission) == "coordinator"
   end
 
   def can_be_deleted_by?(user)
-    author == user || user.admin? || user.role(response.mission) == 'coordinator'
+    author == user || user.admin? || user.role(response.mission) == "coordinator"
   end
 
   private
@@ -90,12 +90,10 @@ class Comment < ApplicationRecord
   def extract_mentions
     # Extract @username mentions from content
     mentioned_usernames = content.scan(/@(\w+)/).flatten
-    
+
     mentioned_usernames.each do |username|
       user = User.find_by(login: username)
-      if user && user.missions.include?(response.mission)
-        mentions.create!(user: user)
-      end
+      mentions.create!(user: user) if user && user.missions.include?(response.mission)
     end
   end
 
@@ -103,7 +101,7 @@ class Comment < ApplicationRecord
     mentioned_users.each do |user|
       NotificationService.create_for_user(
         user,
-        'comment_mention',
+        "comment_mention",
         "You were mentioned in a comment",
         message: "#{author.name} mentioned you in a comment on response #{response.shortcode}",
         data: {

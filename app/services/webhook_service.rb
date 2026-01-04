@@ -5,7 +5,7 @@ class WebhookService
     return unless mission
 
     webhooks = Webhook.active.for_event(event).where(mission: mission)
-    
+
     webhooks.find_each do |webhook|
       webhook.trigger(event, data)
     end
@@ -26,7 +26,7 @@ class WebhookService
       payload[:creator] = creator
     end
 
-    trigger_event('form.created', payload, form.mission)
+    trigger_event("form.created", payload, form.mission)
   end
 
   def self.trigger_form_updated(form)
@@ -44,11 +44,11 @@ class WebhookService
       payload[:updater] = updater
     end
 
-    trigger_event('form.updated', payload, form.mission)
+    trigger_event("form.updated", payload, form.mission)
   end
 
   def self.trigger_form_published(form)
-    trigger_event('form.published', {
+    trigger_event("form.published", {
       form: {
         id: form.id,
         name: form.name,
@@ -59,7 +59,7 @@ class WebhookService
   end
 
   def self.trigger_response_created(response)
-    trigger_event('response.created', {
+    trigger_event("response.created", {
       response: {
         id: response.id,
         shortcode: response.shortcode,
@@ -79,7 +79,7 @@ class WebhookService
   end
 
   def self.trigger_response_updated(response)
-    trigger_event('response.updated', {
+    trigger_event("response.updated", {
       response: {
         id: response.id,
         shortcode: response.shortcode,
@@ -96,7 +96,7 @@ class WebhookService
   end
 
   def self.trigger_response_submitted(response)
-    trigger_event('response.submitted', {
+    trigger_event("response.submitted", {
       response: {
         id: response.id,
         shortcode: response.shortcode,
@@ -115,7 +115,7 @@ class WebhookService
   end
 
   def self.trigger_response_reviewed(response)
-    trigger_event('response.reviewed', {
+    trigger_event("response.reviewed", {
       response: {
         id: response.id,
         shortcode: response.shortcode,
@@ -131,7 +131,7 @@ class WebhookService
   end
 
   def self.trigger_user_created(user, mission)
-    trigger_event('user.created', {
+    trigger_event("user.created", {
       user: {
         id: user.id,
         name: user.name,
@@ -143,7 +143,7 @@ class WebhookService
   end
 
   def self.trigger_user_assigned(user, mission, role)
-    trigger_event('user.assigned', {
+    trigger_event("user.assigned", {
       user: {
         id: user.id,
         name: user.name,
@@ -160,7 +160,7 @@ class WebhookService
   end
 
   def self.trigger_data_export_completed(export_type, filename, user, mission)
-    trigger_event('data_export.completed', {
+    trigger_event("data_export.completed", {
       export: {
         type: export_type,
         filename: filename,
@@ -174,7 +174,7 @@ class WebhookService
   end
 
   def self.trigger_notification_sent(notification)
-    trigger_event('notification.sent', {
+    trigger_event("notification.sent", {
       notification: {
         id: notification.id,
         type: notification.type,

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'openssl'
-require 'base64'
+require "openssl"
+require "base64"
 
 # Imports users from a spreadsheet.
 class UserImport < TabularImport
@@ -34,9 +34,9 @@ class UserImport < TabularImport
   # Encrypts sensitive information using AES-256-CBC.
   def encrypt_sensitive(value)
     return value if value.blank?
-    cipher = OpenSSL::Cipher.new('aes-256-cbc')
+    cipher = OpenSSL::Cipher.new("aes-256-cbc")
     cipher.encrypt
-    cipher.key = ENV['USER_IMPORT_ENCRYPTION_KEY'] || raise("Missing encryption key")
+    cipher.key = ENV["USER_IMPORT_ENCRYPTION_KEY"] || raise("Missing encryption key")
     iv = cipher.random_iv
     encrypted = cipher.update(value.to_s) + cipher.final
     # Store as base64: iv:encrypted
@@ -128,7 +128,7 @@ class UserImport < TabularImport
 
   def add_header_error(invalid_headers)
     add_run_error(:invalid_headers, headers: invalid_headers.map { |h| "'#{h}'" }.join(", "),
-                                    count: invalid_headers.size)
+      count: invalid_headers.size)
   end
 
   def add_too_many_errors(row_number)

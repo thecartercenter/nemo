@@ -34,7 +34,7 @@
 #
 
 class Annotation < ApplicationRecord
-  belongs_to :author, class_name: 'User'
+  belongs_to :author, class_name: "User"
   belongs_to :response
   belongs_to :answer, optional: true
 
@@ -54,14 +54,14 @@ class Annotation < ApplicationRecord
     question
   ].freeze
 
-  validates :annotation_type, inclusion: { in: ANNOTATION_TYPES }
+  validates :annotation_type, inclusion: {in: ANNOTATION_TYPES}
 
   def can_be_edited_by?(user)
-    author == user || user.admin? || user.role(response.mission) == 'coordinator'
+    author == user || user.admin? || user.role(response.mission) == "coordinator"
   end
 
   def can_be_deleted_by?(user)
-    author == user || user.admin? || user.role(response.mission) == 'coordinator'
+    author == user || user.admin? || user.role(response.mission) == "coordinator"
   end
 
   def position

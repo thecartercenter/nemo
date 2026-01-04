@@ -44,11 +44,11 @@ class WorkflowLog < ApplicationRecord
   ].freeze
 
   def formatted_timestamp
-    created_at.strftime('%Y-%m-%d %H:%M:%S')
+    created_at.strftime("%Y-%m-%d %H:%M:%S")
   end
 
   def user_name
-    user&.name || 'System'
+    user&.name || "System"
   end
 
   def summary

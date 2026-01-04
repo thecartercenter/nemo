@@ -60,45 +60,45 @@ class ValidationRule < ApplicationRecord
     conditional
   ].freeze
 
-  validates :rule_type, inclusion: { in: RULE_TYPES }
+  validates :rule_type, inclusion: {in: RULE_TYPES}
 
   def self.validate_response(response)
     errors = []
-    
+
     # Get all applicable validation rules
     rules = ValidationRule.active
-                         .where(mission: response.mission)
-                         .where("form_id IS NULL OR form_id = ?", response.form_id)
-    
+      .where(mission: response.mission)
+      .where("form_id IS NULL OR form_id = ?", response.form_id)
+
     rules.each do |rule|
       rule_errors = rule.validate_response(response)
       errors.concat(rule_errors) if rule_errors.any?
     end
-    
+
     errors
   end
 
   def validate_response(response)
     return [] unless applicable_to_response?(response)
-    
+
     case rule_type
-    when 'required'
+    when "required"
       validate_required(response)
-    when 'min_length'
+    when "min_length"
       validate_min_length(response)
-    when 'max_length'
+    when "max_length"
       validate_max_length(response)
-    when 'min_value'
+    when "min_value"
       validate_min_value(response)
-    when 'max_value'
+    when "max_value"
       validate_max_value(response)
-    when 'pattern'
+    when "pattern"
       validate_pattern(response)
-    when 'custom'
+    when "custom"
       validate_custom(response)
-    when 'cross_field'
+    when "cross_field"
       validate_cross_field(response)
-    when 'conditional'
+    when "conditional"
       validate_conditional(response)
     else
       []
@@ -108,15 +108,13 @@ class ValidationRule < ApplicationRecord
   def applicable_to_response?(response)
     return false unless is_active?
     return false unless response.mission == mission
-    
-    if form_id.present?
-      return false unless response.form_id == form_id
+
+    return false if form_id.present? && !(response.form_id == form_id)
+
+    if question_id.present? && !response.answers.joins(:questioning).where(questionings: {question_id: question_id}).exists?
+      return false
     end
-    
-    if question_id.present?
-      return false unless response.answers.joins(:questioning).where(questionings: { question_id: question_id }).exists?
-    end
-    
+
     true
   end
 
@@ -124,9 +122,9 @@ class ValidationRule < ApplicationRecord
 
   def validate_required(response)
     errors = []
-    
+
     if question_id.present?
-      answer = response.answers.joins(:questioning).find_by(questionings: { question_id: question_id })
+      answer = response.answers.joins(:questioning).find_by(questionings: {question_id: question_id})
       if answer.blank? || answer.value.blank?
         errors << {
           question_id: question_id,
@@ -135,16 +133,16 @@ class ValidationRule < ApplicationRecord
         }
       end
     end
-    
+
     errors
   end
 
   def validate_min_length(response)
     errors = []
-    min_length = conditions['min_length'].to_i
-    
+    min_length = conditions["min_length"].to_i
+
     if question_id.present?
-      answer = response.answers.joins(:questioning).find_by(questionings: { question_id: question_id })
+      answer = response.answers.joins(:questioning).find_by(questionings: {question_id: question_id})
       if answer.present? && answer.value.present? && answer.value.length < min_length
         errors << {
           question_id: question_id,
@@ -153,16 +151,16 @@ class ValidationRule < ApplicationRecord
         }
       end
     end
-    
+
     errors
   end
 
   def validate_max_length(response)
     errors = []
-    max_length = conditions['max_length'].to_i
-    
+    max_length = conditions["max_length"].to_i
+
     if question_id.present?
-      answer = response.answers.joins(:questioning).find_by(questionings: { question_id: question_id })
+      answer = response.answers.joins(:questioning).find_by(questionings: {question_id: question_id})
       if answer.present? && answer.value.present? && answer.value.length > max_length
         errors << {
           question_id: question_id,
@@ -171,16 +169,16 @@ class ValidationRule < ApplicationRecord
         }
       end
     end
-    
+
     errors
   end
 
   def validate_min_value(response)
     errors = []
-    min_value = conditions['min_value'].to_f
-    
+    min_value = conditions["min_value"].to_f
+
     if question_id.present?
-      answer = response.answers.joins(:questioning).find_by(questionings: { question_id: question_id })
+      answer = response.answers.joins(:questioning).find_by(questionings: {question_id: question_id})
       if answer.present? && answer.value.present?
         value = answer.value.to_f
         if value < min_value
@@ -192,16 +190,16 @@ class ValidationRule < ApplicationRecord
         end
       end
     end
-    
+
     errors
   end
 
   def validate_max_value(response)
     errors = []
-    max_value = conditions['max_value'].to_f
-    
+    max_value = conditions["max_value"].to_f
+
     if question_id.present?
-      answer = response.answers.joins(:questioning).find_by(questionings: { question_id: question_id })
+      answer = response.answers.joins(:questioning).find_by(questionings: {question_id: question_id})
       if answer.present? && answer.value.present?
         value = answer.value.to_f
         if value > max_value
@@ -213,16 +211,16 @@ class ValidationRule < ApplicationRecord
         end
       end
     end
-    
+
     errors
   end
 
   def validate_pattern(response)
     errors = []
-    pattern = conditions['pattern']
-    
+    pattern = conditions["pattern"]
+
     if question_id.present? && pattern.present?
-      answer = response.answers.joins(:questioning).find_by(questionings: { question_id: question_id })
+      answer = response.answers.joins(:questioning).find_by(questionings: {question_id: question_id})
       if answer.present? && answer.value.present?
         regex = Regexp.new(pattern)
         unless regex.match?(answer.value)
@@ -234,20 +232,20 @@ class ValidationRule < ApplicationRecord
         end
       end
     end
-    
+
     errors
   end
 
   def validate_custom(response)
     errors = []
-    
+
     # Custom validation logic would be implemented here
     # This could involve calling external services or complex business logic
-    if conditions['custom_logic'].present?
+    if conditions["custom_logic"].present?
       begin
         # In a real implementation, this would be more sophisticated
         # For now, we'll just check if the custom logic returns false
-        result = evaluate_custom_logic(conditions['custom_logic'], response)
+        result = evaluate_custom_logic(conditions["custom_logic"], response)
         unless result
           errors << {
             question_id: question_id,
@@ -255,7 +253,7 @@ class ValidationRule < ApplicationRecord
             rule_id: id
           }
         end
-      rescue => e
+      rescue StandardError => e
         errors << {
           question_id: question_id,
           message: "Validation error: #{e.message}",
@@ -263,19 +261,19 @@ class ValidationRule < ApplicationRecord
         }
       end
     end
-    
+
     errors
   end
 
   def validate_cross_field(response)
     errors = []
-    
+
     # Cross-field validation logic
-    if conditions['field_1'].present? && conditions['field_2'].present?
-      field1_value = get_field_value(response, conditions['field_1'])
-      field2_value = get_field_value(response, conditions['field_2'])
-      operator = conditions['operator'] || '=='
-      
+    if conditions["field_1"].present? && conditions["field_2"].present?
+      field1_value = get_field_value(response, conditions["field_1"])
+      field2_value = get_field_value(response, conditions["field_2"])
+      operator = conditions["operator"] || "=="
+
       unless evaluate_cross_field_condition(field1_value, field2_value, operator)
         errors << {
           question_id: question_id,
@@ -284,38 +282,38 @@ class ValidationRule < ApplicationRecord
         }
       end
     end
-    
+
     errors
   end
 
   def validate_conditional(response)
     errors = []
-    
+
     # Conditional validation based on other field values
-    if conditions['condition_field'].present? && conditions['condition_value'].present?
-      condition_field_value = get_field_value(response, conditions['condition_field'])
-      condition_value = conditions['condition_value']
-      condition_operator = conditions['condition_operator'] || '=='
-      
+    if conditions["condition_field"].present? && conditions["condition_value"].present?
+      condition_field_value = get_field_value(response, conditions["condition_field"])
+      condition_value = conditions["condition_value"]
+      condition_operator = conditions["condition_operator"] || "=="
+
       if evaluate_condition(condition_field_value, condition_value, condition_operator)
         # Apply the validation rule
-        case conditions['validation_type']
-        when 'required'
+        case conditions["validation_type"]
+        when "required"
           errors.concat(validate_required(response))
-        when 'min_length'
+        when "min_length"
           errors.concat(validate_min_length(response))
-        when 'max_length'
+        when "max_length"
           errors.concat(validate_max_length(response))
-        when 'min_value'
+        when "min_value"
           errors.concat(validate_min_value(response))
-        when 'max_value'
+        when "max_value"
           errors.concat(validate_max_value(response))
-        when 'pattern'
+        when "pattern"
           errors.concat(validate_pattern(response))
         end
       end
     end
-    
+
     errors
   end
 
@@ -324,29 +322,29 @@ class ValidationRule < ApplicationRecord
     # Could be by question code, question ID, or other identifier
     if field_identifier.is_a?(String) && field_identifier.match?(/^\d+$/)
       # Assume it's a question ID
-      answer = response.answers.joins(:questioning).find_by(questionings: { question_id: field_identifier })
+      answer = response.answers.joins(:questioning).find_by(questionings: {question_id: field_identifier})
       answer&.value
     else
       # Assume it's a question code
       answer = response.answers.joins(:questioning).joins(:question)
-                      .find_by(questions: { code: field_identifier })
+        .find_by(questions: {code: field_identifier})
       answer&.value
     end
   end
 
   def evaluate_cross_field_condition(value1, value2, operator)
     case operator
-    when '=='
+    when "=="
       value1 == value2
-    when '!='
+    when "!="
       value1 != value2
-    when '>'
+    when ">"
       value1.to_f > value2.to_f
-    when '<'
+    when "<"
       value1.to_f < value2.to_f
-    when '>='
+    when ">="
       value1.to_f >= value2.to_f
-    when '<='
+    when "<="
       value1.to_f <= value2.to_f
     else
       false
@@ -362,14 +360,14 @@ class ValidationRule < ApplicationRecord
     # In a real implementation, this would be much more sophisticated
     # and would likely use a safe evaluation mechanism
     case logic
-    when 'email_format'
+    when "email_format"
       response.answers.joins(:questioning).joins(:question)
-              .where(questions: { code: 'email' })
-              .first&.value&.match?(/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
-    when 'phone_format'
+        .where(questions: {code: "email"})
+        .first&.value&.match?(/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
+    when "phone_format"
       response.answers.joins(:questioning).joins(:question)
-              .where(questions: { code: 'phone' })
-              .first&.value&.match?(/\A\+?[\d\s\-\(\)]+\z/)
+        .where(questions: {code: "phone"})
+        .first&.value&.match?(/\A\+?[\d\s\-\(\)]+\z/)
     else
       true
     end

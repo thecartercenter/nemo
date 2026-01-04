@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     delete "/logout", to: "user_sessions#destroy", as: :logout
     get("/route-tests", to: "route_tests#basic_mode") if Rails.env.local?
     get "/unauthorized", to: "welcome#unauthorized", as: :unauthorized
-    
+
     # Notifications
     resources :notifications, only: %i[index show destroy] do
       collection do
@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     end
 
     # Data Exports
-    resources :exports, only: [:new, :create] do
+    resources :exports, only: %i[new create] do
       collection do
         get "status"
       end
@@ -56,7 +56,7 @@ Rails.application.routes.draw do
     end
 
     # Audit Logs
-    resources :audit_logs, only: [:index, :show] do
+    resources :audit_logs, only: %i[index show] do
       collection do
         get "export"
         get "statistics"
@@ -125,7 +125,7 @@ Rails.application.routes.draw do
         post "auth/reset_password", to: "auth#reset_password"
         get "auth/missions", to: "auth#missions"
         patch "auth/switch_mission", to: "auth#switch_mission"
-        
+
         # Resources
         resources :forms do
           member do
@@ -133,14 +133,14 @@ Rails.application.routes.draw do
             patch "unpublish"
           end
         end
-        
+
         resources :responses do
           member do
             patch "submit"
             patch "mark_incomplete"
           end
         end
-        
+
         resources :notifications do
           collection do
             patch "mark_all_as_read"

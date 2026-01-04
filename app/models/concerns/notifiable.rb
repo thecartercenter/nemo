@@ -22,9 +22,7 @@ module Notifiable
   def notify_update
     case self
     when Response
-      if reviewed_changed? && reviewed?
-        NotificationService.notify_response_reviewed(self)
-      end
+      NotificationService.notify_response_reviewed(self) if reviewed_changed? && reviewed?
     end
   end
 

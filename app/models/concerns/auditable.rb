@@ -13,7 +13,7 @@ module Auditable
 
   def log_create
     return unless should_log_activity?
-    
+
     AuditLog.log_action(
       current_user,
       :create,
@@ -27,7 +27,7 @@ module Auditable
   def log_update
     return unless should_log_activity?
     return unless saved_changes.any?
-    
+
     AuditLog.log_action(
       current_user,
       :update,
@@ -40,7 +40,7 @@ module Auditable
 
   def log_destroy
     return unless should_log_activity?
-    
+
     AuditLog.log_action(
       current_user,
       :destroy,
@@ -65,7 +65,7 @@ module Auditable
     # Filter out sensitive fields and system fields
     sensitive_fields = %w[password password_confirmation password_salt crypted_password]
     system_fields = %w[created_at updated_at id]
-    
+
     changes = saved_changes || {}
     changes.reject do |field, _|
       sensitive_fields.include?(field) || system_fields.include?(field)
@@ -79,8 +79,8 @@ module Auditable
 
   def current_user
     # Try to get current user from various sources
-    Thread.current[:current_user] || 
-    RequestStore.store[:current_user] ||
-    (respond_to?(:user) ? user : nil)
+    Thread.current[:current_user] ||
+      RequestStore.store[:current_user] ||
+      (respond_to?(:user) ? user : nil)
   end
 end

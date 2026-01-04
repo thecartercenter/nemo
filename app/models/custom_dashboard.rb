@@ -28,15 +28,15 @@ class CustomDashboard < ApplicationRecord
   belongs_to :mission
   has_many :dashboard_widgets, dependent: :destroy
 
-  validates :name, presence: true, length: { maximum: 255 }
+  validates :name, presence: true, length: {maximum: 255}
   validates :layout, presence: true
   validates :settings, presence: true
 
   scope :public_dashboards, -> { where(is_public: true) }
   scope :user_dashboards, ->(user) { where(user: user) }
-  scope :accessible_by, ->(ability) { 
+  scope :accessible_by, lambda { |ability|
     where(
-      "is_public = true OR user_id = ?", 
+      "is_public = true OR user_id = ?",
       ability.user&.id
     )
   }
@@ -60,7 +60,7 @@ class CustomDashboard < ApplicationRecord
 
   def add_widget(widget_type, config = {})
     position = dashboard_widgets.maximum(:position).to_i + 1
-    
+
     dashboard_widgets.create!(
       widget_type: widget_type,
       config: config,
@@ -71,10 +71,10 @@ class CustomDashboard < ApplicationRecord
   def remove_widget(widget_id)
     widget = dashboard_widgets.find(widget_id)
     widget.destroy
-    
+
     # Reorder remaining widgets
-    dashboard_widgets.where('position > ?', widget.position)
-                    .update_all('position = position - 1')
+    dashboard_widgets.where("position > ?", widget.position)
+      .update_all("position = position - 1")
   end
 
   def reorder_widgets(widget_ids)

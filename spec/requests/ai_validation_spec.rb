@@ -61,9 +61,9 @@ describe "AI Validation", type: :request do
     end
 
     it "creates a new AI validation rule" do
-      expect {
-        post "/en/m/#{mission.compact_name}/ai-validation-rules", params: valid_params
-      }.to change(AiValidationRule, :count).by(1)
+      expect do
+        post("/en/m/#{mission.compact_name}/ai-validation-rules", params: valid_params)
+      end.to change(AiValidationRule, :count).by(1)
 
       expect(response).to redirect_to(ai_validation_rule_path(AiValidationRule.last))
     end
@@ -89,7 +89,7 @@ describe "AI Validation", type: :request do
 
     it "updates the rule" do
       patch "/en/m/#{mission.compact_name}/ai-validation-rules/#{rule.id}",
-            params: { ai_validation_rule: { name: "Updated Name" } }
+        params: {ai_validation_rule: {name: "Updated Name"}}
       expect(response).to redirect_to(ai_validation_rule_path(rule))
       expect(rule.reload.name).to eq("Updated Name")
     end
@@ -99,9 +99,9 @@ describe "AI Validation", type: :request do
     let!(:rule) { create(:ai_validation_rule, mission: mission, user: user) }
 
     it "deletes the rule" do
-      expect {
-        delete "/en/m/#{mission.compact_name}/ai-validation-rules/#{rule.id}"
-      }.to change(AiValidationRule, :count).by(-1)
+      expect do
+        delete("/en/m/#{mission.compact_name}/ai-validation-rules/#{rule.id}")
+      end.to change(AiValidationRule, :count).by(-1)
 
       expect(response).to redirect_to(ai_validation_rules_path)
     end
@@ -111,14 +111,14 @@ describe "AI Validation", type: :request do
     let(:rule) { create(:ai_validation_rule, mission: mission, user: user, active: true) }
 
     it "toggles active status" do
-      expect {
-        patch "/en/m/#{mission.compact_name}/ai-validation-rules/#{rule.id}/toggle_active",
-              headers: { "Accept" => "application/json" }
-      }.to change { rule.reload.active }.from(true).to(false)
+      expect do
+        patch("/en/m/#{mission.compact_name}/ai-validation-rules/#{rule.id}/toggle_active",
+          headers: {"Accept" => "application/json"})
+      end.to change { rule.reload.active }.from(true).to(false)
 
       json_response = JSON.parse(response.body)
-      expect(json_response["success"]).to be true
-      expect(json_response["active"]).to be false
+      expect(json_response["success"]).to be(true)
+      expect(json_response["active"]).to be(false)
     end
   end
 
@@ -131,12 +131,12 @@ describe "AI Validation", type: :request do
 
     it "tests the rule against a response" do
       post "/en/m/#{mission.compact_name}/ai-validation-rules/#{rule.id}/test_rule",
-           params: { response_id: response.id },
-           headers: { "Accept" => "application/json" }
+        params: {response_id: response.id},
+        headers: {"Accept" => "application/json"}
 
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
-      expect(json_response["success"]).to be true
+      expect(json_response["success"]).to be(true)
       expect(json_response["result"]).to be_present
     end
   end
@@ -150,12 +150,12 @@ describe "AI Validation", type: :request do
 
     it "validates a response against all active rules" do
       post "/en/m/#{mission.compact_name}/ai-validation-rules/validate_response",
-           params: { response_id: response.id },
-           headers: { "Accept" => "application/json" }
+        params: {response_id: response.id},
+        headers: {"Accept" => "application/json"}
 
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
-      expect(json_response["success"]).to be true
+      expect(json_response["success"]).to be(true)
       expect(json_response["results"]).to be_an(Array)
     end
   end
@@ -170,12 +170,12 @@ describe "AI Validation", type: :request do
 
     it "validates multiple responses" do
       post "/en/m/#{mission.compact_name}/ai-validation-rules/validate_batch",
-           params: { form_ids: [form.id] },
-           headers: { "Accept" => "application/json" }
+        params: {form_ids: [form.id]},
+        headers: {"Accept" => "application/json"}
 
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
-      expect(json_response["success"]).to be true
+      expect(json_response["success"]).to be(true)
       expect(json_response["results_count"]).to be >= 0
     end
   end
@@ -191,7 +191,7 @@ describe "AI Validation", type: :request do
 
     it "filters by date range" do
       get "/en/m/#{mission.compact_name}/ai-validation-rules/report",
-          params: { date_from: 1.month.ago.to_date, date_to: Date.current }
+        params: {date_from: 1.month.ago.to_date, date_to: Date.current}
       expect(response).to have_http_status(:success)
     end
   end
@@ -199,11 +199,11 @@ describe "AI Validation", type: :request do
   describe "GET /ai-validation-rules/suggestions" do
     it "returns rule suggestions" do
       get "/en/m/#{mission.compact_name}/ai-validation-rules/suggestions",
-          headers: { "Accept" => "application/json" }
+        headers: {"Accept" => "application/json"}
 
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
-      expect(json_response["success"]).to be true
+      expect(json_response["success"]).to be(true)
       expect(json_response["suggestions"]).to be_an(Array)
     end
   end

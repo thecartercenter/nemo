@@ -30,8 +30,8 @@ class Workflow < ApplicationRecord
   has_many :workflow_instances, dependent: :destroy
   has_many :workflow_steps, dependent: :destroy
 
-  validates :name, presence: true, length: { maximum: 255 }
-  validates :workflow_type, presence: true, inclusion: { in: WORKFLOW_TYPES }
+  validates :name, presence: true, length: {maximum: 255}
+  validates :workflow_type, presence: true, inclusion: {in: WORKFLOW_TYPES}
   validates :config, presence: true
 
   scope :active, -> { where(active: true) }
@@ -52,13 +52,13 @@ class Workflow < ApplicationRecord
     instance = workflow_instances.create!(
       trigger_object: trigger_object,
       trigger_user: trigger_user || user,
-      status: 'pending',
+      status: "pending",
       current_step: 0
     )
 
     # Initialize the first step
     initialize_first_step(instance)
-    
+
     instance
   end
 
@@ -87,7 +87,7 @@ class Workflow < ApplicationRecord
 
   def complete_workflow(instance)
     instance.update!(
-      status: 'completed',
+      status: "completed",
       completed_at: Time.current
     )
 
@@ -97,7 +97,7 @@ class Workflow < ApplicationRecord
 
   def cancel_workflow(instance, reason = nil)
     instance.update!(
-      status: 'cancelled',
+      status: "cancelled",
       cancelled_at: Time.current,
       cancellation_reason: reason
     )
@@ -114,26 +114,26 @@ class Workflow < ApplicationRecord
 
   def initialize_step(instance, step)
     case step.step_type
-    when 'approval'
+    when "approval"
       initialize_approval_step(instance, step)
-    when 'notification'
+    when "notification"
       initialize_notification_step(instance, step)
-    when 'validation'
+    when "validation"
       initialize_validation_step(instance, step)
-    when 'action'
+    when "action"
       initialize_action_step(instance, step)
     end
   end
 
   def process_step(instance, step)
     case step.step_type
-    when 'approval'
+    when "approval"
       process_approval_step(instance, step)
-    when 'notification'
+    when "notification"
       process_notification_step(instance, step)
-    when 'validation'
+    when "validation"
       process_validation_step(instance, step)
-    when 'action'
+    when "action"
       process_action_step(instance, step)
     end
   end
@@ -141,14 +141,14 @@ class Workflow < ApplicationRecord
   def initialize_approval_step(instance, step)
     # Create approval request
     approvers = determine_approvers(step)
-    
+
     approvers.each do |approver|
       ApprovalRequest.create!(
         workflow_instance: instance,
         workflow_step: step,
         approver: approver,
-        status: 'pending',
-        due_date: step.config['due_date']&.to_time || 7.days.from_now
+        status: "pending",
+        due_date: step.config["due_date"]&.to_time || 7.days.from_now
       )
     end
   end
@@ -156,25 +156,25 @@ class Workflow < ApplicationRecord
   def process_approval_step(instance, step)
     # Check if all approvals are received
     approvals = instance.approval_requests.where(workflow_step: step)
-    
+
     if approvals.all? { |a| a.approved? }
-      step.update!(status: 'completed')
+      step.update!(status: "completed")
     elsif approvals.any? { |a| a.rejected? }
-      step.update!(status: 'rejected')
-      instance.update!(status: 'rejected')
+      step.update!(status: "rejected")
+      instance.update!(status: "rejected")
     end
   end
 
   def initialize_notification_step(instance, step)
     # Send notifications
     recipients = determine_notification_recipients(step)
-    
+
     recipients.each do |recipient|
       Notification.create_for_user(
         recipient,
-        'workflow_notification',
-        step.config['title'] || "Workflow Notification",
-        message: step.config['message'] || "You have a workflow notification",
+        "workflow_notification",
+        step.config["title"] || "Workflow Notification",
+        message: step.config["message"] || "You have a workflow notification",
         data: {
           workflow_id: id,
           workflow_instance_id: instance.id,
@@ -184,23 +184,23 @@ class Workflow < ApplicationRecord
       )
     end
 
-    step.update!(status: 'completed')
+    step.update!(status: "completed")
   end
 
-  def process_notification_step(instance, step)
+  def process_notification_step(_instance, step)
     # Notifications are typically completed immediately
-    step.update!(status: 'completed')
+    step.update!(status: "completed")
   end
 
   def initialize_validation_step(instance, step)
     # Run validation
     validation_result = run_validation(instance, step)
-    
+
     if validation_result[:passed]
-      step.update!(status: 'completed')
+      step.update!(status: "completed")
     else
-      step.update!(status: 'failed')
-      instance.update!(status: 'failed')
+      step.update!(status: "failed")
+      instance.update!(status: "failed")
     end
   end
 
@@ -212,12 +212,12 @@ class Workflow < ApplicationRecord
   def initialize_action_step(instance, step)
     # Execute action
     action_result = execute_action(instance, step)
-    
+
     if action_result[:success]
-      step.update!(status: 'completed')
+      step.update!(status: "completed")
     else
-      step.update!(status: 'failed')
-      instance.update!(status: 'failed')
+      step.update!(status: "failed")
+      instance.update!(status: "failed")
     end
   end
 
@@ -227,122 +227,122 @@ class Workflow < ApplicationRecord
   end
 
   def determine_approvers(step)
-    approver_config = step.config['approvers'] || {}
-    
-    case approver_config['type']
-    when 'role'
+    approver_config = step.config["approvers"] || {}
+
+    case approver_config["type"]
+    when "role"
       mission.users.joins(:assignments)
-             .where(assignments: { role: approver_config['roles'] })
-    when 'user'
-      User.where(id: approver_config['user_ids'])
-    when 'group'
-      UserGroup.find(approver_config['group_id']).users
+        .where(assignments: {role: approver_config["roles"]})
+    when "user"
+      User.where(id: approver_config["user_ids"])
+    when "group"
+      UserGroup.find(approver_config["group_id"]).users
     else
       [user] # Default to workflow creator
     end
   end
 
   def determine_notification_recipients(step)
-    notification_config = step.config['recipients'] || {}
-    
-    case notification_config['type']
-    when 'role'
+    notification_config = step.config["recipients"] || {}
+
+    case notification_config["type"]
+    when "role"
       mission.users.joins(:assignments)
-             .where(assignments: { role: notification_config['roles'] })
-    when 'user'
-      User.where(id: notification_config['user_ids'])
-    when 'group'
-      UserGroup.find(notification_config['group_id']).users
+        .where(assignments: {role: notification_config["roles"]})
+    when "user"
+      User.where(id: notification_config["user_ids"])
+    when "group"
+      UserGroup.find(notification_config["group_id"]).users
     else
       [user] # Default to workflow creator
     end
   end
 
   def run_validation(instance, step)
-    validation_type = step.config['validation_type']
-    
+    validation_type = step.config["validation_type"]
+
     case validation_type
-    when 'ai_validation'
+    when "ai_validation"
       AiValidationService.validate_response(instance.trigger_object)
-    when 'custom_validation'
+    when "custom_validation"
       # Execute custom validation logic
-      { passed: true, message: 'Custom validation passed' }
+      {passed: true, message: "Custom validation passed"}
     else
-      { passed: true, message: 'No validation specified' }
+      {passed: true, message: "No validation specified"}
     end
   end
 
   def execute_action(instance, step)
-    action_type = step.config['action_type']
-    
+    action_type = step.config["action_type"]
+
     case action_type
-    when 'send_email'
+    when "send_email"
       send_email_action(instance, step)
-    when 'update_status'
+    when "update_status"
       update_status_action(instance, step)
-    when 'create_notification'
+    when "create_notification"
       create_notification_action(instance, step)
     else
-      { success: true, message: 'Action completed' }
+      {success: true, message: "Action completed"}
     end
   end
 
-  def send_email_action(instance, step)
+  def send_email_action(_instance, _step)
     # Implementation for sending emails
-    { success: true, message: 'Email sent' }
+    {success: true, message: "Email sent"}
   end
 
   def update_status_action(instance, step)
     object = instance.trigger_object
-    status_field = step.config['status_field'] || 'status'
-    new_status = step.config['new_status']
-    
+    status_field = step.config["status_field"] || "status"
+    new_status = step.config["new_status"]
+
     if object.respond_to?("#{status_field}=")
       object.update!(status_field => new_status)
-      { success: true, message: "Status updated to #{new_status}" }
+      {success: true, message: "Status updated to #{new_status}"}
     else
-      { success: false, message: 'Status field not found' }
+      {success: false, message: "Status field not found"}
     end
   end
 
-  def create_notification_action(instance, step)
+  def create_notification_action(_instance, _step)
     # Implementation for creating notifications
-    { success: true, message: 'Notification created' }
+    {success: true, message: "Notification created"}
   end
 
   def trigger_completion_actions(instance)
-    completion_actions = config['completion_actions'] || []
-    
+    completion_actions = config["completion_actions"] || []
+
     completion_actions.each do |action|
-      case action['type']
-      when 'webhook'
+      case action["type"]
+      when "webhook"
         trigger_webhook(action, instance)
-      when 'notification'
+      when "notification"
         send_completion_notification(action, instance)
-      when 'update_object'
+      when "update_object"
         update_trigger_object(action, instance)
       end
     end
   end
 
   def trigger_webhook(action, instance)
-    webhook_url = action['url']
+    webhook_url = action["url"]
     payload = build_webhook_payload(instance)
-    
+
     # Send webhook (simplified implementation)
     # In a real implementation, you'd use a proper HTTP client
-    Rails.logger.info "Webhook triggered: #{webhook_url} with payload: #{payload}"
+    Rails.logger.info("Webhook triggered: #{webhook_url} with payload: #{payload}")
   end
 
   def send_completion_notification(action, instance)
     recipients = determine_notification_recipients_for_action(action)
-    
+
     recipients.each do |recipient|
       Notification.create_for_user(
         recipient,
-        'workflow_completed',
-        action['title'] || "Workflow Completed",
-        message: action['message'] || "Workflow '#{name}' has been completed",
+        "workflow_completed",
+        action["title"] || "Workflow Completed",
+        message: action["message"] || "Workflow '#{name}' has been completed",
         data: {
           workflow_id: id,
           workflow_instance_id: instance.id
@@ -354,8 +354,8 @@ class Workflow < ApplicationRecord
 
   def update_trigger_object(action, instance)
     object = instance.trigger_object
-    updates = action['updates'] || {}
-    
+    updates = action["updates"] || {}
+
     object.update!(updates)
   end
 
@@ -371,7 +371,7 @@ class Workflow < ApplicationRecord
     }
   end
 
-  def determine_notification_recipients_for_action(action)
+  def determine_notification_recipients_for_action(_action)
     # Similar to determine_notification_recipients but for completion actions
     [user]
   end

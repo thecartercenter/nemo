@@ -28,14 +28,14 @@ class Webhook < ApplicationRecord
   belongs_to :mission
   has_many :webhook_deliveries, dependent: :destroy
 
-  validates :name, presence: true, length: { maximum: 255 }
-  validates :url, presence: true, length: { maximum: 500 }
-  validates :url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]) }
+  validates :name, presence: true, length: {maximum: 255}
+  validates :url, presence: true, length: {maximum: 500}
+  validates :url, format: {with: URI::DEFAULT_PARSER.make_regexp(%w[http https])}
   validates :events, presence: true
-  validates :secret, length: { maximum: 255 }, allow_blank: true
+  validates :secret, length: {maximum: 255}, allow_blank: true
 
   scope :active, -> { where(active: true) }
-  scope :for_event, ->(event) { where('? = ANY(events)', event) }
+  scope :for_event, ->(event) { where("? = ANY(events)", event) }
 
   WEBHOOK_EVENTS = %w[
     form.created
@@ -55,10 +55,10 @@ class Webhook < ApplicationRecord
     notification.sent
   ].freeze
 
-  validates :events, inclusion: { in: WEBHOOK_EVENTS }
+  validates :events, inclusion: {in: WEBHOOK_EVENTS}
 
-  before_create :generate_secret
   before_save :normalize_events
+  before_create :generate_secret
 
   def trigger(event, payload)
     return unless active? && events.include?(event)
@@ -66,17 +66,17 @@ class Webhook < ApplicationRecord
     delivery = webhook_deliveries.create!(
       event: event,
       payload: payload,
-      status: 'pending'
+      status: "pending"
     )
 
     WebhookDeliveryJob.perform_later(delivery.id)
-    
+
     update!(last_triggered_at: Time.current)
   end
 
   def test_webhook
     test_payload = {
-      event: 'webhook.test',
+      event: "webhook.test",
       data: {
         webhook_id: id,
         webhook_name: name,
@@ -89,13 +89,13 @@ class Webhook < ApplicationRecord
       }
     }
 
-    trigger('webhook.test', test_payload)
+    trigger("webhook.test", test_payload)
   end
 
   def success_rate
     return 0 if webhook_deliveries.count.zero?
 
-    successful_deliveries = webhook_deliveries.where(status: 'success').count
+    successful_deliveries = webhook_deliveries.where(status: "success").count
     (successful_deliveries.to_f / webhook_deliveries.count * 100).round(2)
   end
 

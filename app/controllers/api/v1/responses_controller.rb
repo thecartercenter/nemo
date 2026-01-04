@@ -3,7 +3,7 @@
 module Api
   module V1
     class ResponsesController < BaseController
-      before_action :set_response, only: [:show, :update, :destroy]
+      before_action :set_response, only: %i[show update destroy]
 
       # Whitelists for allowed order columns and directions
       ORDER_COLUMNS = %w[created_at form_id user_id reviewed incomplete source].freeze
@@ -11,35 +11,35 @@ module Api
 
       def index
         authorize!(:read, Response)
-        
+
         responses = Response.accessible_by(current_ability)
-                           .where(mission: current_mission)
-                           .includes(:form, :user, :answers)
-        
+          .where(mission: current_mission)
+          .includes(:form, :user, :answers)
+
         # Apply filters
         responses = responses.where(form_id: params[:form_id]) if params[:form_id].present?
         responses = responses.where(user_id: params[:user_id]) if params[:user_id].present?
         responses = responses.where(source: params[:source]) if params[:source].present?
         responses = responses.where(incomplete: params[:incomplete]) if params[:incomplete].present?
         responses = responses.where(reviewed: params[:reviewed]) if params[:reviewed].present?
-        
+
         # Date filters
         if params[:date_from].present?
-          responses = responses.where('created_at >= ?', Date.parse(params[:date_from]).beginning_of_day)
+          responses = responses.where("created_at >= ?", Date.parse(params[:date_from]).beginning_of_day)
         end
         if params[:date_to].present?
-          responses = responses.where('created_at <= ?', Date.parse(params[:date_to]).end_of_day)
+          responses = responses.where("created_at <= ?", Date.parse(params[:date_to]).end_of_day)
         end
-        
+
         # Ordering
-        order = ORDER_COLUMNS.include?(params[:order]) ? params[:order] : 'created_at'
-        direction = ORDER_DIRECTIONS.include?(params[:direction]) ? params[:direction] : 'desc'
+        order = ORDER_COLUMNS.include?(params[:order]) ? params[:order] : "created_at"
+        direction = ORDER_DIRECTIONS.include?(params[:direction]) ? params[:direction] : "desc"
         responses = responses.order(order => direction)
-        
+
         # Pagination
         responses = responses.paginate(paginate_params)
-        
-        render json: success_response({
+
+        render(json: success_response({
           responses: responses.map { |response| response_json(response) },
           pagination: {
             current_page: responses.current_page,
@@ -47,80 +47,76 @@ module Api
             total_count: responses.total_entries,
             per_page: responses.per_page
           }
-        })
+        }))
       end
 
       def show
         authorize!(:read, @response)
-        
-        render json: success_response(response_json(@response, include_answers: true))
+
+        render(json: success_response(response_json(@response, include_answers: true)))
       end
 
       def create
         authorize!(:create, Response)
-        
+
         response = Response.new(response_params.merge(
           mission: current_mission,
           user: current_user,
-          source: 'api'
+          source: "api"
         ))
-        
+
         if response.save
           # Process answers if provided
-          if params[:answers].present?
-            process_answers(response, params[:answers])
-          end
-          
-          render json: success_response(response_json(response), 'Response created successfully'), status: :created
+          process_answers(response, params[:answers]) if params[:answers].present?
+
+          render(json: success_response(response_json(response), "Response created successfully"), status: :created)
         else
-          render json: error_response('Failed to create response', response.errors), status: :unprocessable_entity
+          render(json: error_response("Failed to create response", response.errors), status: :unprocessable_entity)
         end
       end
 
       def update
         authorize!(:update, @response)
-        
+
         if @response.update(response_params)
           # Process answers if provided
-          if params[:answers].present?
-            process_answers(@response, params[:answers])
-          end
-          
-          render json: success_response(response_json(@response), 'Response updated successfully')
+          process_answers(@response, params[:answers]) if params[:answers].present?
+
+          render(json: success_response(response_json(@response), "Response updated successfully"))
         else
-          render json: error_response('Failed to update response', @response.errors), status: :unprocessable_entity
+          render(json: error_response("Failed to update response", @response.errors), status: :unprocessable_entity)
         end
       end
 
       def destroy
         authorize!(:destroy, @response)
-        
+
         @response.destroy
-        render json: success_response({}, 'Response deleted successfully')
+        render(json: success_response({}, "Response deleted successfully"))
       end
 
       def submit
         authorize!(:update, @response)
-        
+
         @response.update!(incomplete: false)
-        
-        render json: success_response(response_json(@response), 'Response submitted successfully')
+
+        render(json: success_response(response_json(@response), "Response submitted successfully"))
       end
 
       def mark_incomplete
         authorize!(:update, @response)
-        
+
         @response.update!(incomplete: true)
-        
-        render json: success_response(response_json(@response), 'Response marked as incomplete')
+
+        render(json: success_response(response_json(@response), "Response marked as incomplete"))
       end
 
       private
 
       def set_response
         @response = Response.accessible_by(current_ability)
-                           .where(mission: current_mission)
-                           .find(params[:id])
+          .where(mission: current_mission)
+          .find(params[:id])
       end
 
       def response_params
@@ -133,9 +129,9 @@ module Api
         answers_data.each do |answer_data|
           question = Question.find(answer_data[:question_id])
           questioning = Questioning.find_by(form: response.form, question: question)
-          
+
           next unless questioning
-          
+
           answer = response.answers.find_or_initialize_by(questioning: questioning)
           answer.value = answer_data[:value]
           answer.save!
@@ -162,7 +158,7 @@ module Api
           created_at: response.created_at.iso8601,
           updated_at: response.updated_at.iso8601
         }
-        
+
         if include_answers
           data[:answers] = response.answers.map do |answer|
             {
@@ -179,7 +175,7 @@ module Api
             }
           end
         end
-        
+
         data
       end
     end

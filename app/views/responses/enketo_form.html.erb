@@ -3,7 +3,7 @@
 
 <% nemo_link = link_to(
   t(%(new edit).include?(params[:action]) ? "response.edit_with_nemo" : "response.view_with_nemo"),
-  params.permit!.merge("enketo": "")) %>
+  request.query_parameters.merge("enketo": "")) %>
 <% action_links = @response.new_record? ? [nemo_link] : %i[show edit destroy].concat([link_divider, nemo_link]) %>
 
 <%= ActionLinks::LinkBuilder.new(@response, action_links, show_on_new: true) %>

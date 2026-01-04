@@ -9,7 +9,7 @@ class CreateBackups < ActiveRecord::Migration[8.0]
       t.bigint :file_size, null: false
       t.boolean :include_media, default: false, null: false
       t.boolean :include_audit_logs, default: false, null: false
-      t.string :status, default: 'completed', null: false
+      t.string :status, default: "completed", null: false
       t.references :mission, null: false, foreign_key: true, type: :uuid
       t.references :user, null: false, foreign_key: true, type: :uuid
 

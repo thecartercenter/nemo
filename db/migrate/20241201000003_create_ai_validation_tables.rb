@@ -7,7 +7,7 @@ class CreateAiValidationTables < ActiveRecord::Migration[8.0]
       t.text :description
       t.string :rule_type, null: false, limit: 255
       t.jsonb :config, null: false, default: {}
-      t.string :ai_model, default: 'gpt-3.5-turbo', limit: 255
+      t.string :ai_model, default: "gpt-3.5-turbo", limit: 255
       t.decimal :threshold, precision: 5, scale: 2, default: 0.8
       t.boolean :active, default: true, null: false
       t.references :mission, null: false, foreign_key: true, type: :uuid

@@ -21,8 +21,8 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
       t.references :workflow, null: false, foreign_key: true, type: :uuid
       t.string :trigger_object_type, null: false, limit: 255
       t.uuid :trigger_object_id, null: false
-      t.references :trigger_user, foreign_key: { to_table: :users }, type: :uuid
-      t.string :status, default: 'pending', null: false, limit: 255
+      t.references :trigger_user, foreign_key: {to_table: :users}, type: :uuid
+      t.string :status, default: "pending", null: false, limit: 255
       t.integer :current_step, default: 0, null: false
       t.datetime :started_at
       t.datetime :completed_at
@@ -32,7 +32,7 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :workflow_instances, [:trigger_object_type, :trigger_object_id]
+    add_index :workflow_instances, %i[trigger_object_type trigger_object_id]
     add_index :workflow_instances, :status
 
     create_table :workflow_steps, id: :uuid do |t|
@@ -42,7 +42,7 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
       t.string :name, null: false, limit: 255
       t.text :description
       t.jsonb :config, null: false, default: {}
-      t.string :status, default: 'pending', limit: 255
+      t.string :status, default: "pending", limit: 255
 
       t.timestamps
     end
@@ -53,8 +53,8 @@ class CreateWorkflowTables < ActiveRecord::Migration[8.0]
     create_table :approval_requests, id: :uuid do |t|
       t.references :workflow_instance, null: false, foreign_key: true, type: :uuid
       t.references :workflow_step, null: false, foreign_key: true, type: :uuid
-      t.references :approver, null: false, foreign_key: { to_table: :users }, type: :uuid
-      t.string :status, default: 'pending', null: false, limit: 255
+      t.references :approver, null: false, foreign_key: {to_table: :users}, type: :uuid
+      t.string :status, default: "pending", null: false, limit: 255
       t.datetime :due_date
       t.text :comments
       t.datetime :approved_at

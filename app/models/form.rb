@@ -71,16 +71,15 @@ class Form < ApplicationRecord
   before_validation :normalize
   before_create :init_downloads
   after_create :create_root_group
+  # Webhook triggers
+  after_create :trigger_form_created_webhook
+  after_update :trigger_form_updated_webhook
+  after_update :trigger_form_published_webhook, if: :saved_change_to_status?
   before_destroy :destroy_items
 
   attr_writer :minimum_version_id
 
   after_save :update_minimum
-  
-  # Webhook triggers
-  after_create :trigger_form_created_webhook
-  after_update :trigger_form_updated_webhook
-  after_update :trigger_form_published_webhook, if: :saved_change_to_status?
 
   # Disallow specific characters or symbol-only names such as `***` which all break Power BI
   # (documented at https://github.com/thecartercenter/nemo/pull/895).
@@ -357,8 +356,6 @@ class Form < ApplicationRecord
     true
   end
 
-  private
-
   def trigger_form_created_webhook
     WebhookService.trigger_form_created(self)
   end
@@ -368,8 +365,8 @@ class Form < ApplicationRecord
   end
 
   def trigger_form_published_webhook
-    return unless status == 'live' && saved_change_to_status?
-    
+    return unless status == "live" && saved_change_to_status?
+
     WebhookService.trigger_form_published(self)
   end
 end

@@ -55,7 +55,7 @@ class Notification < ApplicationRecord
     mission_update
   ].freeze
 
-  validates :type, inclusion: { in: NOTIFICATION_TYPES }
+  validates :type, inclusion: {in: NOTIFICATION_TYPES}
 
   def mark_as_read!
     update!(read: true)
@@ -79,7 +79,7 @@ class Notification < ApplicationRecord
   end
 
   def self.create_for_role(mission, role, type, title, message: nil, data: {})
-    mission.users.where(assignments: { role: role }).find_each do |user|
+    mission.users.where(assignments: {role: role}).find_each do |user|
       create_for_user(user, type, title, message: message, data: data, mission: mission)
     end
   end

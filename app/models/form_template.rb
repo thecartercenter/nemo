@@ -34,7 +34,7 @@
 class FormTemplate < ApplicationRecord
   include MissionBased
 
-  belongs_to :creator, class_name: 'User'
+  belongs_to :creator, class_name: "User"
   belongs_to :mission, optional: true
 
   validates :name, presence: true
@@ -58,7 +58,7 @@ class FormTemplate < ApplicationRecord
     other
   ].freeze
 
-  validates :category, inclusion: { in: CATEGORIES }, allow_blank: true
+  validates :category, inclusion: {in: CATEGORIES}, allow_blank: true
 
   def self.create_from_form(form, creator, name: nil, description: nil, category: nil, tags: [], is_public: false)
     template_data = {
@@ -70,7 +70,7 @@ class FormTemplate < ApplicationRecord
           name: question.name,
           type: question.qtype_name,
           required: question.required?,
-          options: question.option_set&.options&.map { |opt| { id: opt.id, name: opt.name } },
+          options: question.option_set&.options&.map { |opt| {id: opt.id, name: opt.name} },
           conditions: question.conditions.map do |condition|
             {
               id: condition.id,
@@ -101,36 +101,36 @@ class FormTemplate < ApplicationRecord
     )
   end
 
-  def create_form_from_template(mission, creator, form_name: nil)
+  def create_form_from_template(mission, _creator, form_name: nil)
     form = Form.create!(
       name: form_name || name,
       mission: mission,
-      allow_incomplete: template_data.dig('form_settings', 'allow_incomplete') || false,
-      authenticate_sms: template_data.dig('form_settings', 'authenticate_sms') || true,
-      smsable: template_data.dig('form_settings', 'smsable') || false,
-      sms_relay: template_data.dig('form_settings', 'sms_relay') || false
+      allow_incomplete: template_data.dig("form_settings", "allow_incomplete") || false,
+      authenticate_sms: template_data.dig("form_settings", "authenticate_sms") || true,
+      smsable: template_data.dig("form_settings", "smsable") || false,
+      sms_relay: template_data.dig("form_settings", "sms_relay") || false
     )
 
     # Create questions from template
-    template_data['questions']&.each do |question_data|
+    template_data["questions"]&.each do |question_data|
       question = Question.create!(
-        code: question_data['code'],
-        name: question_data['name'],
-        qtype_name: question_data['type'],
-        required: question_data['required'] || false,
+        code: question_data["code"],
+        name: question_data["name"],
+        qtype_name: question_data["type"],
+        required: question_data["required"] || false,
         mission: mission
       )
 
       # Create option set if needed
-      if question_data['options'].present?
+      if question_data["options"].present?
         option_set = OptionSet.create!(
           name: "#{question.name} Options",
           mission: mission
         )
 
-        question_data['options'].each do |option_data|
+        question_data["options"].each do |option_data|
           Option.create!(
-            name: option_data['name'],
+            name: option_data["name"],
             option_set: option_set,
             mission: mission
           )
@@ -159,7 +159,7 @@ class FormTemplate < ApplicationRecord
       description: description,
       category: category,
       tags: tags,
-      question_count: template_data.dig('questions')&.length || 0,
+      question_count: template_data.dig("questions")&.length || 0,
       created_at: created_at,
       creator: creator.name,
       usage_count: usage_count

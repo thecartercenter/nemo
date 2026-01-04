@@ -83,8 +83,8 @@ class AuditLog < ApplicationRecord
     Notification
   ].freeze
 
-  validates :action, inclusion: { in: ACTIONS }
-  validates :resource, inclusion: { in: RESOURCES }
+  validates :action, inclusion: {in: ACTIONS}
+  validates :resource, inclusion: {in: RESOURCES}
 
   def self.log_action(user, action, resource, resource_id: nil, changes: nil, metadata: nil, request: nil)
     create!(
@@ -110,10 +110,10 @@ class AuditLog < ApplicationRecord
 
   def self.log_export(user, export_type, format, request)
     log_action(
-      user, 
-      :export, 
-      :Data, 
-      metadata: { export_type: export_type, format: format },
+      user,
+      :export,
+      :Data,
+      metadata: {export_type: export_type, format: format},
       request: request
     )
   end
@@ -140,83 +140,83 @@ class AuditLog < ApplicationRecord
 
   def formatted_changes
     return nil unless changes.present?
-    
+
     changes.map do |field, change|
       if change.is_a?(Array) && change.length == 2
         "Changed #{field} from '#{change[0]}' to '#{change[1]}'"
       else
         "Updated #{field}: #{change}"
       end
-    end.join(', ')
+    end.join(", ")
   end
 
   def human_readable_action
     case action
-    when 'create'
-      'Created'
-    when 'update'
-      'Updated'
-    when 'destroy'
-      'Deleted'
-    when 'login'
-      'Logged in'
-    when 'logout'
-      'Logged out'
-    when 'export'
-      'Exported'
-    when 'import'
-      'Imported'
-    when 'view'
-      'Viewed'
-    when 'download'
-      'Downloaded'
-    when 'print'
-      'Printed'
-    when 'publish'
-      'Published'
-    when 'unpublish'
-      'Unpublished'
-    when 'review'
-      'Reviewed'
-    when 'approve'
-      'Approved'
-    when 'reject'
-      'Rejected'
-    when 'assign'
-      'Assigned'
-    when 'unassign'
-      'Unassigned'
-    when 'activate'
-      'Activated'
-    when 'deactivate'
-      'Deactivated'
+    when "create"
+      "Created"
+    when "update"
+      "Updated"
+    when "destroy"
+      "Deleted"
+    when "login"
+      "Logged in"
+    when "logout"
+      "Logged out"
+    when "export"
+      "Exported"
+    when "import"
+      "Imported"
+    when "view"
+      "Viewed"
+    when "download"
+      "Downloaded"
+    when "print"
+      "Printed"
+    when "publish"
+      "Published"
+    when "unpublish"
+      "Unpublished"
+    when "review"
+      "Reviewed"
+    when "approve"
+      "Approved"
+    when "reject"
+      "Rejected"
+    when "assign"
+      "Assigned"
+    when "unassign"
+      "Unassigned"
+    when "activate"
+      "Activated"
+    when "deactivate"
+      "Deactivated"
     else
       action.humanize
     end
   end
 
   def resource_name
-    return 'System' if resource == 'System'
-    return 'Unknown' unless resource_id.present?
-    
+    return "System" if resource == "System"
+    return "Unknown" unless resource_id.present?
+
     begin
       resource_class = resource.constantize
       resource_object = resource_class.find(resource_id)
-      
+
       case resource
-      when 'User'
+      when "User"
         resource_object.name
-      when 'Form'
+      when "Form"
         resource_object.name
-      when 'Response'
+      when "Response"
         "Response #{resource_object.shortcode}"
-      when 'Question'
+      when "Question"
         resource_object.name
-      when 'OptionSet'
+      when "OptionSet"
         resource_object.name
-      when 'Report'
+      when "Report"
         resource_object.name
-      when 'Mission'
+      when "Mission"
         resource_object.name
       else
         "#{resource} ##{resource_id}"

@@ -8,7 +8,7 @@
 
 <% enketo_link = link_to(
   t(%(new edit).include?(params[:action]) ? "response.edit_with_enketo" : "response.view_with_enketo"),
-  params.permit!.merge("enketo": "1")) %>
+  request.query_parameters.merge("enketo": "1")) %>
 <% action_links = @response.new_record? ? [enketo_link] : %i[show edit destroy].concat([link_divider, enketo_link]) %>
 
 <div id="response-form-wrapper">
