@@ -55,6 +55,7 @@
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
     "babel-loader": "^8.2.2",
+    "buffer": "6.0.3",
     "compression-webpack-plugin": "^9.0.0",
     "core-js": "3.25.1",
     "css-loader": "4.2.2",
