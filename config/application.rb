@@ -111,7 +111,12 @@ module ELMO
     config.active_storage.service_urls_expire_in = 1.hour
 
     # For security.
-    config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
+    config.action_dispatch.default_headers = {
+      "X-Frame-Options" => "DENY",
+      "X-XSS-Protection" => "1; mode=block",
+      "X-Content-Type-Options" => "nosniff",
+      "Referrer-Policy" => "strict-origin-when-cross-origin"
+    }
 
     # Restrict available locales to defined system locales.
     # Without this, it returns a whole bunch more defined by i18n-js.

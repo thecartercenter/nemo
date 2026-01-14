@@ -1,12 +1,15 @@
 <%= elmo_form_for(@user_session, url: user_session_path, html: {class: :minimal}) do |f| %>
-  <%= f.field(:login) %>
-  <%= f.field(:password, type: :password) %>
+  <%= f.field(:login, placeholder: t("user.email_or_username")) %>
+  <%= f.field(:password, type: :password, placeholder: t("user.password")) %>
   <%= f.field(:verify, content: recaptcha_tags) if captcha_required? %>
   <div class="submit-buttons">
-    <%= f.submit(:login, class: "btn btn-primary") %><br/><br/>
+    <%= f.submit(:login, class: "btn btn-primary w-100") %><br/><br/>
   </div>
-  <div class="d-flex justify-content-end mt-3">
-    <%= link_to(t("user.forgot_password"), new_password_reset_path) unless offline_mode? %>
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="security-badge text-muted small">
+      <i class="fa fa-lock"></i> <%= t("common.secure_login") %>
+    </div>
+    <%= link_to(t("user.forgot_password"), new_password_reset_path, class: "small text-decoration-none") unless offline_mode? %>
   </div>
 <% end %>
 

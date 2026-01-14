@@ -68,6 +68,9 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
+  
+  # Set HSTS header for one year, include subdomains and preload
+  config.ssl_options = { hsts: { expires: 1.year, subdomains: true, preload: true } }
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
