@@ -46,7 +46,7 @@ gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 3.0"
 gem "sassc-rails", "~> 2.1"
 gem "select2-rails", "~> 4.0"
-gem "shakapacker", "~> 8.0", ">= 8.0.0"
+gem "shakapacker", "~> 9.5", ">= 9.5.0"
 gem "spinjs-rails", "~> 1.4.0" # Breaking changes in v1.4 (spin.js v2.0).
 gem "uglifier", "~> 4.2"
 
