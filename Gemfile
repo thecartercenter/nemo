@@ -8,6 +8,9 @@ gem "rails", "~> 7.2.0"
 # "You have already activated base64 0.1.1, but your Gemfile requires base64 0.2.0. Since base64 is a default gem, ..."
 gem "stringio", "3.1.1"
 
+# Don't upgrade to v3 which is incompatible with react-rails v3.
+gem "connection_pool", "~> 2.5"
+
 # Misc
 gem "attribute_normalizer", "~> 1.2"
 gem "csv"
