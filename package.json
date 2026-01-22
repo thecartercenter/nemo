@@ -66,7 +66,7 @@
     "babel-loader": "10",
     "cheerio": "1.1.2",
     "compression-webpack-plugin": "11",
-    "core-js": "3.45.1",
+    "core-js": "3.47.0",
     "css-loader": "^6.11.0",
     "enketo-core": "sassafrastech/enketo#enketo-core-8.3.1-fixGetters2",
     "ignore-loader": "0.1.2",
