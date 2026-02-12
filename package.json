@@ -62,7 +62,7 @@
     "enketo-core": "9.0.1",
     "ignore-loader": "0.1.2",
     "jquery": "3.6.0",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "mini-css-extract-plugin": "^2.9.0",
     "mobx": "5.15.6",
     "mobx-react": "5.4.3",
