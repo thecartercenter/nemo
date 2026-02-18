@@ -75,9 +75,9 @@ describe "forms", js: true do
 
   context "with groups and questions" do
     let(:question_types) { ["integer", %w[integer]] }
-    let(:q0_name) { form.c[0].code }
-    let(:g1_name) { form.c[1].group_name }
-    let(:q10_name) { form.c[1].c[0].code }
+    let!(:q0_name) { form.c[0].code }
+    let!(:g1_name) { form.c[1].group_name }
+    let!(:q10_name) { form.c[1].c[0].code }
 
     scenario "deleting elements" do
       visit(edit_url)
