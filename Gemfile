@@ -183,7 +183,7 @@ group :development, :test do
   gem "rubocop"
   gem "rubocop-rails", "~> 2.8"
   gem "rubocop-rake", "~> 0.6.0"
-  gem "rubocop-rspec", "~> 2.0"
+  gem "rubocop-rspec", "~> 3.9"
   gem "timecop", "0.9.6" # Timecop 0.9.8 breaks selenium (Selenium::WebDriver::Error::NoSuchWindowError).
 end
 
