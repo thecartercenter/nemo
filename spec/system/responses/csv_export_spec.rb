@@ -162,17 +162,18 @@ describe "responses csv export" do
     end
   end
 
-  scenario "exporting csv with bulk media download", :js, flapping: true do
+  scenario "exporting csv with bulk media download", :js do
     visit(responses_path(params))
     click_link("Download")
     expect(page).to(have_content("#{Response.all.length} responses to be exported"))
 
-    perform_enqueued_jobs do
-      check("response_csv_export_options[download_media]")
-      click_button("Export")
-    end
-
+    check("response_csv_export_options[download_media]")
+    click_button("Export")
     expect(page).to(have_content("Response CSV export queued"))
+
+    # perform_enqueued_jobs no longer works as of Shakapacker v8.
+    Delayed::Worker.new.work_off
+
     click_link("operations panel")
     expect(page).to(have_content("Bulk Media export"))
     expect(page).to(have_content("Response CSV export"))
