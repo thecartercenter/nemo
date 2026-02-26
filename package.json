@@ -16,6 +16,9 @@
     "roots": [
       "<rootDir>/app/javascript"
     ],
+    "setupFiles": [
+      "<rootDir>/app/javascript/setupTestsBeforeEnv.js"
+    ],
     "setupFilesAfterEnv": [
       "<rootDir>/app/javascript/setupTests.js"
     ],
@@ -27,12 +30,13 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "moduleNameMapper": {
-      "\\.css$": "<rootDir>/app/javascript/__mocks__/style-mock.js"
+      "\\.css$": "<rootDir>/app/javascript/__mocks__/style-mock.js",
+      "^cheerio$": "<rootDir>/node_modules/cheerio/dist/commonjs/index.js",
+      "^cheerio/lib/utils$": "<rootDir>/node_modules/cheerio/dist/commonjs/utils.js"
     }
   },
   "resolutions": {
-    "@xmldom/xmldom": "0.7.6",
-    "cheerio": "0.22.0"
+    "@xmldom/xmldom": "0.7.6"
   },
   "babel": {
     "presets": [
