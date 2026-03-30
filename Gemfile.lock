@@ -9,6 +9,15 @@ GIT
       railties
 
 GIT
+  remote: https://github.com/sassafrastech/azure-storage-blob.git
+  revision: 99cd6f7876c3814fb62716b37f5124bef2690bd3
+  tag: v2.0.3-withTags
+  specs:
+    azure-storage-blob (2.0.3)
+      azure-storage-common (~> 2.0)
+      nokogiri (~> 1, >= 1.10.8)
+
+GIT
   remote: https://github.com/sassafrastech/closure_tree.git
   revision: 854f9292333ea0ae209376d69e4f4c18a192b22c
   tag: v9.1.1-noReorder-fastInsert
@@ -155,9 +164,6 @@ GEM
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
-    azure-storage-blob (2.0.3)
-      azure-storage-common (~> 2.0)
-      nokogiri (~> 1, >= 1.10.8)
     azure-storage-common (2.0.4)
       faraday (~> 1.0)
       faraday_middleware (~> 1.0, >= 1.0.0.rc1)
@@ -706,7 +712,7 @@ DEPENDENCIES
   authlogic (~> 6.1)
   awesome_print (~> 1.6)
   aws-sdk-s3 (~> 1.208)
-  azure-storage-blob (~> 2.0)
+  azure-storage-blob!
   binding_of_caller (~> 1.0.0)
   bluecloth (~> 2.2)
   blueprinter (~> 0.25.1)

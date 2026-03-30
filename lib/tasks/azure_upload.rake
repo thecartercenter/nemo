@@ -3,13 +3,15 @@
 require "azure/storage/blob"
 
 CONTAINER_NAME = "local-test"
+AZURE_NAME = ENV.fetch("NEMO_AZURE_STORAGE_ACCOUNT_NAME", nil)
+AZURE_KEY = ENV.fetch("NEMO_AZURE_STORAGE_ACCESS_KEY", nil)
 
 task :azure_upload do
   directory = Rails.root.join("tmp/archives/upload")
 
   client = Azure::Storage::Blob::BlobService.create(
-    storage_account_name: ENV.fetch("NEMO_AZURE_STORAGE_ACCOUNT_NAME", nil),
-    storage_access_key: ENV.fetch("NEMO_AZURE_STORAGE_ACCESS_KEY", nil)
+    storage_account_name: AZURE_NAME,
+    storage_access_key: AZURE_KEY
   )
 
   # Add retry filter to the service object
@@ -25,14 +27,14 @@ task :azure_upload do
     classname, id = filename.split(".csv").first.split
 
     # Read each CSV and upload it with tag metadata.
+    # Each CSV should only have 1 row.
     CSV.foreach(file, headers: true) do |row|
-      # login = row['login']
+      # login = row["login"]
       puts "Uploading #{classname} #{id}..."
 
-      # az storage blob upload --account-name testnemo2026 --container-name local-test --tags entityType="mission" missionId="123" --overwrite --file mission-123.csv
-      # exec("az storage blob upload --account-name testnemo2026 --container-name local-test --tags login=\"#{login}\" --overwrite --file \"#{file}\"")
       File.open(file, "rb") do |f|
-        client.create_block_blob(CONTAINER_NAME, filename, f)
+        result = client.create_block_blob(CONTAINER_NAME, filename, f, {tags: "foo=1"})
+        puts result.properties[:last_modified]
       end
     end
   end
