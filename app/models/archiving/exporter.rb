@@ -20,10 +20,12 @@ module Archiving
       buffer = Zip::OutputStream.write_buffer do |out|
         expander.expanded.each do |klass, relations|
           col_names = klass.column_names - %w[standard_copy last_mission_id]
-          relations.each_with_index do |relation, idx|
+          relations.each do |relation|
             relation = relation.select(col_names.join(", ")) unless col_names == klass.column_names
             relation.each do |entry|
-              out.put_next_entry("#{klass.name.tr(':', '_')}-#{idx}-#{entry.id}.csv")
+              out.put_next_entry("#{klass.name.tr(':', '_')}-#{entry.id}.csv")
+              # Pick out this single entry (but keep the ActiveRecord relation to be able to use `copy_to`)
+              # and save each to disk.
               relation.where(id: entry.id).copy_to { |line| out.write(line) }
             end
           end
