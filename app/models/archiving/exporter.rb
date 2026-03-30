@@ -10,19 +10,22 @@ module Archiving
 
     def initialize(relations, **options)
       self.relations = relations
+      self.relations = [User.assigned_to(Mission.first)] if options[:debug]
       self.options = options
+      self.options = {dont_implicitly_expand: [Assignment, UserGroup, UserGroupAssignment]} if options[:debug]
     end
 
     def export
       expander = RelationExpander.new(relations, dont_implicitly_expand: options[:dont_implicitly_expand])
       buffer = Zip::OutputStream.write_buffer do |out|
         expander.expanded.each do |klass, relations|
-          # TODO: Improve this logic a bit, make it more structured and check table name
           col_names = klass.column_names - %w[standard_copy last_mission_id]
           relations.each_with_index do |relation, idx|
-            out.put_next_entry("#{klass.name.tr(':', '_')}-#{idx}.csv")
             relation = relation.select(col_names.join(", ")) unless col_names == klass.column_names
-            relation.copy_to { |line| out.write(line) }
+            relation.each do |entry|
+              out.put_next_entry("#{klass.name.tr(':', '_')}-#{idx}-#{entry.id}.csv")
+              relation.where(id: entry.id).copy_to { |line| out.write(line) }
+            end
           end
         end
       end

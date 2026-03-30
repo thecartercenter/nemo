@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Rails runner: CacheODataJob" type="RubyRunConfigurationType" factoryName="Ruby">
+  <configuration default="false" name="Rails runner: Archive users" type="RubyRunConfigurationType" factoryName="Ruby">
     <module name="nemo" />
     <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="" />
     <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$" />
@@ -15,7 +15,7 @@
     </EXTENSION>
     <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
     <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/vendor/bundle/ruby/3.3.0/bin/rails" />
-    <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="runner -e production CacheODataJob.perform_now" />
+    <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="runner &quot;Archiving::Exporter.new(nil, debug: true).export&quot;" />
     <method v="2" />
   </configuration>
 </component>
