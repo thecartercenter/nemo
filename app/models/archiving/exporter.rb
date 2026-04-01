@@ -2,20 +2,38 @@
 
 require "fileutils"
 
-# Note: Documented in "Server Archiving" wiki page.
+# TODO: Document in "Server Archiving" wiki page.
 module Archiving
   # Outputs data to CSV ZIP bundle.
   class Exporter
     attr_accessor :relations, :options
 
-    def initialize(relations, **options)
-      self.relations = relations
+    # Hard-coded defaults generally shouldn't need to be overridden.
+    def initialize(relations = nil, **options)
+      self.relations = relations || [
+        Mission.all,
+        User.all,
+        Assignment.all
+      ]
+
+      # Optional smaller set for debugging.
       m = Mission.first
-      self.relations = [Mission.where(id: m.id), User.assigned_to(m)] if options[:debug]
-      self.options = options
-      self.options = {dont_implicitly_expand: [Setting, UserGroup, UserGroupAssignment]} if options[:debug]
+      self.relations = relations || [
+        Mission.where(id: m.id),
+        User.assigned_to(m),
+        Assignment.where(mission: m),
+      ]
+
+      self.options = {
+        dont_implicitly_expand: [Setting, UserGroup, UserGroupAssignment]
+      }.merge(options)
     end
 
+    # TODO: export separately:
+    #   forms (XLS)
+    #   responses (OData JSON and/or XML)
+    #   formAttachments - hint/media prompt (file)
+    #   responseAttachments - submission data (file)
     def export
       expander = RelationExpander.new(relations, dont_implicitly_expand: options[:dont_implicitly_expand])
       buffer = Zip::OutputStream.write_buffer do |out|

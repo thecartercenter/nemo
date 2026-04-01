@@ -75,6 +75,7 @@ task azure_upload: :environment do
 
       File.open(file, "rb") do |f|
         metadata = metadata_for(classname, id)
+        # TODO: Submit PR for fork
         result = client.create_block_blob(CONTAINER_NAME, filename, f, {tags: metadata.to_query})
         puts result.properties[:last_modified]
       end
