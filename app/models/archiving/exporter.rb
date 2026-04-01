@@ -10,9 +10,10 @@ module Archiving
 
     def initialize(relations, **options)
       self.relations = relations
-      self.relations = [User.assigned_to(Mission.first)] if options[:debug]
+      m = Mission.first
+      self.relations = [Mission.where(id: m.id), User.assigned_to(m)] if options[:debug]
       self.options = options
-      self.options = {dont_implicitly_expand: [Assignment, UserGroup, UserGroupAssignment]} if options[:debug]
+      self.options = {dont_implicitly_expand: [Setting, UserGroup, UserGroupAssignment]} if options[:debug]
     end
 
     def export
