@@ -21,8 +21,13 @@ METADATA = {
     entityType: "user",
     userId: :id,
     login: :login,
-    # missionId: ->(item) { item.mission_id }, # TODO: export dupe users across missions
-    # role: ->(item) { item.role(item.mission_id) }, # TODO: allow this
+  }.merge(GENERIC_METADATA),
+  Assignment: {
+    entityType: "mission-user assignment",
+    assignmentId: :id,
+    missionId: :mission_id,
+    userId: :user_id,
+    role: :role,
   }.merge(GENERIC_METADATA),
 }.freeze
 
