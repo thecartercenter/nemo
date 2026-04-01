@@ -74,7 +74,7 @@ module Forms
       settings = book.create_worksheet(name: "settings")
 
       # Get languages
-      locales = @form.mission.setting.preferred_locales
+      locales = Setting.for_mission(@form.mission).preferred_locales
 
       # Write sheet headings at row index 0
       questions.row(0).push(
@@ -390,7 +390,7 @@ module Forms
       ## Settings
       settings.row(0).push("form_title", "form_id", "version", "default_language", "allow_choice_duplicates")
 
-      lang = @form.mission.setting.preferred_locales[0].to_s
+      lang = Setting.for_mission(@form.mission).preferred_locales[0].to_s
       version = if @form.current_version.present?
                   @form.current_version.decorate.name
                 else

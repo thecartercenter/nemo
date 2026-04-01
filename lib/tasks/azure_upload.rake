@@ -29,6 +29,11 @@ METADATA = {
     userId: :user_id,
     role: :role,
   }.merge(GENERIC_METADATA),
+  Form: {
+    entityType: "form",
+    formId: :id,
+    missionId: :mission_id,
+  }.merge(GENERIC_METADATA),
 }.freeze
 
 def metadata_for(klass, id)
@@ -36,14 +41,15 @@ def metadata_for(klass, id)
   metadata = METADATA[klass.to_sym] || {}
 
   metadata.transform_values do |v|
-    case v
-    when Symbol
-      item.public_send(v)
-    when Proc
-      v.call(item)
-    else
-      v
-    end
+    value = case v
+            when Symbol
+              item.public_send(v)
+            when Proc
+              v.call(item)
+            else
+              v
+            end
+    value || "nil"
   end
 end
 
@@ -62,23 +68,21 @@ task azure_upload: :environment do
   # container = client.list_containers.first # local-test
   # puts "Container found: " + container.name
 
-  Dir.glob("#{directory}/*.csv") do |file|
+  Dir.glob("#{directory}/*.{csv,xlsx}") do |file|
     # Extract tokens from space-separated filename.
     filename = File.basename(file)
-    classname, id = filename.split(".csv").first.split
+    classname, id = filename.split(".").first.split
 
-    # Read each CSV and upload it with tag metadata.
-    # Each CSV should only have 1 row.
-    CSV.foreach(file, headers: true) do |row|
-      # login = row["login"]
-      puts "Uploading #{classname} #{id}..."
+    # Upload each file with tag metadata.
+    puts "Uploading #{classname} #{id}..."
 
-      File.open(file, "rb") do |f|
-        metadata = metadata_for(classname, id)
-        # TODO: Submit PR for fork
-        result = client.create_block_blob(CONTAINER_NAME, filename, f, {tags: metadata.to_query})
-        puts result.properties[:last_modified]
-      end
+    File.open(file, "rb") do |f|
+      metadata = metadata_for(classname, id)
+      # TODO: Submit PR for fork
+      result = client.create_block_blob(CONTAINER_NAME, filename, f, {tags: metadata.to_query})
+      puts result.properties[:last_modified]
+
+      # TODO: set uploaded date in DB? for reprocessing
     end
   end
 end

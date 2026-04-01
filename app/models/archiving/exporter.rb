@@ -30,10 +30,11 @@ module Archiving
     end
 
     # TODO: export separately:
-    #   forms (XLS)
     #   responses (OData JSON and/or XML)
     #   formAttachments - hint/media prompt (file)
     #   responseAttachments - submission data (file)
+    #   PLUS
+    #   ability to interrupt & resume (or at least for uploading)
     def export
       expander = RelationExpander.new(relations, dont_implicitly_expand: options[:dont_implicitly_expand])
       buffer = Zip::OutputStream.write_buffer do |out|
@@ -50,6 +51,11 @@ module Archiving
               relation.where(id: entry.id).copy_to { |line| out.write(line) }
             end
           end
+        end
+
+        Form.all.each do |form|
+          out.put_next_entry("Form #{form.id}.xlsx")
+          out.write(Forms::Export.new(form).to_xls)
         end
       end
       FileUtils.mkdir_p(export_dir)
