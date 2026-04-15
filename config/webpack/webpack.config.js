@@ -1,3 +1,4 @@
+const path = require('path');
 const { generateWebpackConfig, merge } = require('shakapacker')
 
 module.exports = merge(
@@ -16,6 +17,9 @@ module.exports = merge(
             ],
         },
         resolve: {
+            alias: {
+                'react-dom/client$': path.resolve(__dirname, '../../app/javascript/lib/reactDomClientCompat.js')
+            },
             fallback: {
                 buffer: require.resolve("buffer/")
             }
