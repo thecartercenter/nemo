@@ -6879,6 +6879,11 @@ react-moment-proptypes@^1.6.0:
   dependencies:
     moment ">=1.6.0"
 
+react-on-rails@16.6.0:
+  version "16.6.0"
+  resolved "https://registry.npmjs.org/react-on-rails/-/react-on-rails-16.6.0.tgz#da7f117fec14f420f7f6ffe6bdb34b7fc2e01b3a"
+  integrity sha512-LqLi7A0n0Tv5c3yMYlwS9s6rE82gvXNMj3sscmK2LOgIJ+mLQlOX65n0Jq5ZJ4Nsl9SRgxEOOQmcrfvDeB9F1g==
+
 react-outside-click-handler@^1.2.4:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/react-outside-click-handler/-/react-outside-click-handler-1.3.0.tgz#3831d541ac059deecd38ec5423f81e80ad60e115"
