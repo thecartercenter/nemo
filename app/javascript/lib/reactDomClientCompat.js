@@ -2,7 +2,7 @@ const ReactDOM = require('react-dom');
 
 const createRoot = (domNode) => ({
   render(reactElement) {
-    return ReactDOM.render(reactElement, domNode);
+    ReactDOM.render(reactElement, domNode);
   },
   unmount() {
     return ReactDOM.unmountComponentAtNode(domNode);
