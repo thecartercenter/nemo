@@ -34,6 +34,13 @@ METADATA = {
     formId: :id,
     missionId: :mission_id,
   }.merge(GENERIC_METADATA),
+  Response: {
+    entityType: "response",
+    responseId: :id,
+    formId: :form_id,
+    userId: :user_id,
+    missionId: :mission_id,
+  }.merge(GENERIC_METADATA),
 }.freeze
 
 def metadata_for(klass, id)

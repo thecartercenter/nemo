@@ -57,9 +57,17 @@ module Archiving
           out.put_next_entry("Form #{form.id}.xlsx")
           out.write(Forms::Export.new(form).to_xls)
         end
+
+        Response.all.each do |response|
+          out.put_next_entry("Response #{response.id}.json")
+          out.write(response.cached_json.to_json) # This will be the string "null" if it's not yet cached.
+          # TODO: track errors if dirty.
+        end
       end
       FileUtils.mkdir_p(export_dir)
       File.open(zipfile_path, "wb") { |f| f.write(buffer.string) }
+
+      Rails.logger.info("Exported #{zipfile_path}")
     end
 
     private
