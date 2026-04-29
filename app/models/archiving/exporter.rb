@@ -55,8 +55,13 @@ module Archiving
         end
 
         Form.find_each do |form|
+          # XLSX version of the form
           out.put_next_entry("Form #{form.id}.xlsx")
           out.write(Forms::Export.new(form).to_xls)
+
+          # Equivalent ODK XML version of the form
+          out.put_next_entry("Form #{form.id}.xml")
+          out.write(form.odk_xml.download)
         end
 
         Response.find_each do |response|

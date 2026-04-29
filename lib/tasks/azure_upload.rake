@@ -47,13 +47,18 @@ def metadata_for(klass, id)
   item = klass.constantize.find(id)
   metadata = METADATA[klass.to_sym] || {}
 
+  # Transform each placeholder value in the metadata (such as :form_id)
+  # into the actual value from the item (such as "123-456").
   metadata.transform_values do |v|
     value = case v
             when Symbol
+              # Call the method named :v
               item.public_send(v)
             when Proc
+              # Call the procedure we were provided
               v.call(item)
             else
+              # Return a literal value
               v
             end
     value || "nil"
@@ -75,7 +80,7 @@ task azure_upload: :environment do
   # container = client.list_containers.first # local-test
   # puts "Container found: " + container.name
 
-  Dir.glob("#{directory}/*.{csv,xlsx}") do |file|
+  Dir.glob("#{directory}/*.{csv,xlsx,xml}") do |file|
     # Extract tokens from space-separated filename.
     filename = File.basename(file)
     classname, id = filename.split(".").first.split
