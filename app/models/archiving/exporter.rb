@@ -64,6 +64,13 @@ module Archiving
           out.write(form.odk_xml.download)
         end
 
+        Question.all.select(&:media_prompt?).find_all do |question|
+          mp = question.media_prompt
+          # Convert the filename from e.g. "123_media_prompt.jpg" to "MediaPrompt 123.jpg"
+          out.put_next_entry("MediaPrompt #{question.id}.#{mp.filename.to_s.split(".")[-1]}")
+          out.write(mp.download)
+        end
+
         Response.find_each do |response|
           out.put_next_entry("Response #{response.id}.json")
           out.write(response.cached_json.to_json) # This will be the string "null" if it's not yet cached.

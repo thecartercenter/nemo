@@ -14,42 +14,66 @@ GENERIC_METADATA = {
 
 METADATA = {
   Mission: {
-    entityType: "mission",
-    missionId: :id,
+    fields: {
+      entityType: "mission",
+      missionId: :id,
+    }
   }.merge(GENERIC_METADATA),
   User: {
-    entityType: "user",
-    userId: :id,
-    login: :login,
+    fields: {
+      entityType: "user",
+      userId: :id,
+      login: :login,
+    }
   }.merge(GENERIC_METADATA),
   Assignment: {
-    entityType: "mission-user assignment",
-    assignmentId: :id,
-    missionId: :mission_id,
-    userId: :user_id,
-    role: :role,
+    fields: {
+      entityType: "mission-user assignment",
+      assignmentId: :id,
+      missionId: :mission_id,
+      userId: :user_id,
+      role: :role,
+    }
   }.merge(GENERIC_METADATA),
   Form: {
-    entityType: "form",
-    formId: :id,
-    missionId: :mission_id,
+    fields: {
+      entityType: "form",
+      formId: :id,
+      missionId: :mission_id,
+    }
+  }.merge(GENERIC_METADATA),
+  MediaPrompt: {
+    resolver: ->(id) { Question.find(id) },
+    fields: {
+      entityType: "media prompt hint",
+      mediaPromptId: ->(question) { "#{question.id}_media_prompt" },
+      questionCode: :code,
+      # This can cause the tags field to be far too long.
+      # formIds: ->(question) { question.form_ids.join(",") },
+      missionId: :mission_id,
+    }
   }.merge(GENERIC_METADATA),
   Response: {
-    entityType: "response",
-    responseId: :id,
-    formId: :form_id,
-    userId: :user_id,
-    missionId: :mission_id,
+    fields: {
+      entityType: "response",
+      responseId: :id,
+      formId: :form_id,
+      userId: :user_id,
+      missionId: :mission_id,
+    }
   }.merge(GENERIC_METADATA),
 }.freeze
 
 def metadata_for(klass, id)
-  item = klass.constantize.find(id)
   metadata = METADATA[klass.to_sym] || {}
+
+  # Given "Form, 123" find the Form with ID 123
+  resolver = metadata[:resolver]
+  item = resolver.present? ? resolver.call(id) : klass.constantize.find(id)
 
   # Transform each placeholder value in the metadata (such as :form_id)
   # into the actual value from the item (such as "123-456").
-  metadata.transform_values do |v|
+  metadata[:fields].transform_values do |v|
     value = case v
             when Symbol
               # Call the method named :v
@@ -61,7 +85,7 @@ def metadata_for(klass, id)
               # Return a literal value
               v
             end
-    value || "nil"
+    value.nil? ? "null" : value.to_s
   end
 end
 
@@ -80,7 +104,8 @@ task azure_upload: :environment do
   # container = client.list_containers.first # local-test
   # puts "Container found: " + container.name
 
-  Dir.glob("#{directory}/*.{csv,xlsx,xml}") do |file|
+  puts "Directory: #{directory}"
+  Dir.glob("#{directory}/*.*") do |file|
     # Extract tokens from space-separated filename.
     filename = File.basename(file)
     classname, id = filename.split(".").first.split
