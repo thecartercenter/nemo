@@ -64,7 +64,7 @@ module Archiving
           out.write(form.odk_xml.download)
         end
 
-        Question.all.select(&:media_prompt?).find_all do |question|
+        Question.joins(:media_prompt_attachment).with_attached_media_prompt.find_each do |question|
           mp = question.media_prompt
           # Convert the filename from e.g. "123_media_prompt.jpg" to "MediaPrompt 123.jpg"
           out.put_next_entry("MediaPrompt #{question.id}.#{mp.filename.to_s.split(".")[-1]}")
