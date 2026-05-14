@@ -30,12 +30,13 @@ module Archiving
     end
 
     # TODO: export separately:
-    #   responses (OData JSON and/or XML)
     #   formAttachments - hint/media prompt (file)
     #   responseAttachments - submission data (file)
     #   PLUS
     #   ability to interrupt & resume (or at least for uploading)
     def export
+      warnings = []
+
       expander = RelationExpander.new(relations, dont_implicitly_expand: options[:dont_implicitly_expand])
       buffer = Zip::OutputStream.write_buffer do |out|
         expander.expanded.each do |klass, relations|
@@ -53,21 +54,23 @@ module Archiving
           end
         end
 
-        Form.all.each do |form|
+        Form.find_each do |form|
           out.put_next_entry("Form #{form.id}.xlsx")
           out.write(Forms::Export.new(form).to_xls)
         end
 
-        Response.all.each do |response|
+        Response.find_each do |response|
           out.put_next_entry("Response #{response.id}.json")
           out.write(response.cached_json.to_json) # This will be the string "null" if it's not yet cached.
-          # TODO: track errors if dirty.
+          warnings.push("Response #{response.id} was dirty") if response.dirty_json
         end
       end
       FileUtils.mkdir_p(export_dir)
       File.open(zipfile_path, "wb") { |f| f.write(buffer.string) }
 
+      Rails.logger.warn("Warnings:\n#{warnings.join("\n")}\n")
       Rails.logger.info("Exported #{zipfile_path}")
+      Rails.logger.info("Encountered #{warnings.count} warnings.")
     end
 
     private
