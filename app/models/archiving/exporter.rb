@@ -16,24 +16,11 @@ module Archiving
         Assignment.all,
       ]
 
-      # TODO: Temporary smaller set for debugging.
-      m = Mission.first
-      self.relations = relations || [
-        Mission.where(id: m.id),
-        User.assigned_to(m),
-        Assignment.where(mission: m),
-      ]
-
       self.options = {
         dont_implicitly_expand: [Setting, UserGroup, UserGroupAssignment]
       }.merge(options)
     end
 
-    # TODO: export separately:
-    #   formAttachments - hint/media prompt (file)
-    #   responseAttachments - submission data (file)
-    #   PLUS
-    #   ability to interrupt & resume (or at least for uploading)
     def export
       warnings = []
 
@@ -67,7 +54,7 @@ module Archiving
         Question.joins(:media_prompt_attachment).with_attached_media_prompt.find_each do |question|
           mp = question.media_prompt
           # Convert the filename from e.g. "123_media_prompt.jpg" to "MediaPrompt 123.jpg"
-          out.put_next_entry("MediaPrompt #{question.id}.#{mp.filename.to_s.split(".")[-1]}")
+          out.put_next_entry("MediaPrompt #{question.id}.#{mp.filename.extension}")
           out.write(mp.download)
         end
 
@@ -75,6 +62,16 @@ module Archiving
           out.put_next_entry("Response #{response.id}.json")
           out.write(response.cached_json.to_json) # This will be the string "null" if it's not yet cached.
           warnings.push("Response #{response.id} was dirty") if response.dirty_json
+        end
+
+        Media::Object.joins(:item_attachment).with_attached_item.find_each do |obj|
+          attachment = obj.item
+          response_id = obj.answer.response_id
+          code = attachment.filename.base.split("-").last
+          # Convert the filename from e.g. "nemo-foo-bar-baz-ImageQ1.jpg" to "ResponseAttachment 123 ImageQ1.jpg"
+          # Where foo-bar-baz represents [mission_code]-[form_code]-[response_code] and 123 is the response ID.
+          out.put_next_entry("ResponseAttachment #{response_id} #{code}.#{attachment.filename.extension}")
+          out.write(attachment.download)
         end
       end
       FileUtils.mkdir_p(export_dir)
