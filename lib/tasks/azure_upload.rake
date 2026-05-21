@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "azure/storage/blob"
+require "json"
+require "set"
 
 CONTAINER_NAME = "local-test"
 AZURE_NAME = ENV.fetch("NEMO_AZURE_STORAGE_ACCOUNT_NAME", nil)
@@ -113,10 +115,25 @@ task azure_upload: :environment do
   # container = client.list_containers.first # local-test
   # puts "Container found: " + container.name
 
+  # Track which files have been uploaded already in case we need to re-run.
+  manifest_path = File.join(directory, ".upload_manifest.json")
+  processed = if File.exist?(manifest_path)
+                JSON.parse(File.read(manifest_path)).to_set
+              else
+                Set.new
+              end
+
   puts "Directory: #{directory}"
-  Dir.glob("#{directory}/*.*") do |file|
-    # Extract tokens from space-separated filename.
+  Dir.glob("#{directory}/*.*").sort.each do |file|
     filename = File.basename(file)
+    next if filename == File.basename(manifest_path) # Don't upload the manifest itself.
+
+    if processed.include?(filename)
+      puts "Skipping #{filename}..."
+      next
+    end
+
+    # Extract tokens from space-separated filename.
     classname, id = filename.split(".").first.split
 
     # Upload each file with tag metadata.
@@ -127,8 +144,10 @@ task azure_upload: :environment do
       # TODO: Submit PR for fork
       result = client.create_block_blob(CONTAINER_NAME, filename, f, {tags: metadata.to_query})
       puts result.properties[:last_modified]
-
-      # TODO: set uploaded date in DB? for reprocessing
     end
+
+    # Mark as processed after successful upload.
+    processed << filename
+    File.write(manifest_path, JSON.pretty_generate(processed.to_a.sort))
   end
 end
