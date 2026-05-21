@@ -13,10 +13,10 @@ module Archiving
       self.relations = relations || [
         Mission.all,
         User.all,
-        Assignment.all
+        Assignment.all,
       ]
 
-      # Optional smaller set for debugging.
+      # TODO: Temporary smaller set for debugging.
       m = Mission.first
       self.relations = relations || [
         Mission.where(id: m.id),
