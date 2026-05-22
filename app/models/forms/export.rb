@@ -58,7 +58,7 @@ module Forms
     def to_csv
       CSV.generate do |csv|
         csv << COLUMNS
-        @form.preordered_items.each do |q|
+        preordered_items.each do |q|
           csv << row(q)
         end
       end
@@ -102,7 +102,9 @@ module Forms
       # Hence, we push to the row (i + index_mod)
       index_mod = 1 # start at row index 1
 
-      @form.preordered_items.each_with_index do |q, i|
+      items = preordered_items
+
+      items.each_with_index do |q, i|
         # this variable keeps track of the spreadsheet row to be written during this loop iteration
         row_index = i + index_mod
 
@@ -346,7 +348,7 @@ module Forms
         end
 
         # are we at the end of the form?
-        if i == @form.preordered_items.size - 1
+        if i == items.size - 1
           row_index += 1
 
           # do we still have unclosed groups in the tracker array?
@@ -446,6 +448,12 @@ module Forms
       else
         "Group"
       end
+    end
+
+    # Memoize slow method
+    def preordered_items
+      # TODO: This can be further improved with eager_load: ...
+      @preordered_items ||= @form.preordered_items
     end
 
     # Given a header like `"label"`, return an array of localized headers like `["label::English (en)"]`
