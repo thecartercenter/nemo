@@ -103,6 +103,8 @@ end
 
 task azure_upload: :environment do
   directory = Rails.root.join("tmp/archives/upload")
+  puts "Local directory: #{directory}"
+  puts "Upload bucket: #{AZURE_NAME}/#{CONTAINER_NAME}"
 
   client = Azure::Storage::Blob::BlobService.create(
     storage_account_name: AZURE_NAME,
@@ -119,13 +121,18 @@ task azure_upload: :environment do
   # Track which files have been uploaded already in case we need to re-run.
   manifest_path = File.join(directory, ".upload_manifest.json")
   processed = if File.exist?(manifest_path)
+                puts "Manifest found: #{manifest_path}"
                 JSON.parse(File.read(manifest_path)).to_set
               else
+                puts "No manifest found, starting from scratch."
                 Set.new
               end
+  original_processed_count = processed.size
 
-  puts "Directory: #{directory}"
-  Dir.glob("#{directory}/*.*").sort.each do |file|
+  files = Dir.glob("#{directory}/*.*").sort
+  puts "Found #{files.size} files (#{original_processed_count} already in manifest)."
+  uploaded_count = 0
+  files.each do |file|
     filename = File.basename(file)
     next if filename == File.basename(manifest_path) # Don't upload the manifest itself.
 
@@ -148,7 +155,10 @@ task azure_upload: :environment do
     end
 
     # Mark as processed after successful upload.
+    uploaded_count += 1
     processed << filename
     File.write(manifest_path, JSON.pretty_generate(processed.to_a.sort))
   end
+
+  puts "Done (#{uploaded_count} files uploaded, #{original_processed_count} skipped)."
 end
