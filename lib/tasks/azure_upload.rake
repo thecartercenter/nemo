@@ -65,6 +65,7 @@ METADATA = {
     }
   }.merge(GENERIC_METADATA),
   ResponseAttachment: {
+    resolver: ->(id) { Response.find(id) },
     fields: {
       entityType: "response attachment",
       responseId: :id,
