@@ -24,8 +24,9 @@ module Archiving
     def export
       warnings = []
 
-      expander = RelationExpander.new(relations, dont_implicitly_expand: options[:dont_implicitly_expand])
-      buffer = Zip::OutputStream.write_buffer do |out|
+      FileUtils.mkdir_p(export_dir)
+      Zip::OutputStream.open(zipfile_path) do |out|
+        expander = RelationExpander.new(relations, dont_implicitly_expand: options[:dont_implicitly_expand])
         expander.expanded.each do |klass, relations|
           col_names = klass.column_names - %w[standard_copy last_mission_id]
           relations.each do |relation|
@@ -74,8 +75,6 @@ module Archiving
           out.write(attachment.download)
         end
       end
-      FileUtils.mkdir_p(export_dir)
-      File.open(zipfile_path, "wb") { |f| f.write(buffer.string) }
 
       Rails.logger.warn("Warnings:\n#{warnings.join("\n")}\n")
       Rails.logger.info("Exported #{zipfile_path}")
