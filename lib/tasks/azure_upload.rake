@@ -102,6 +102,13 @@ def metadata_for(klass, id)
 end
 
 task azure_upload: :environment do
+  elapsed = Benchmark.realtime do
+    perform_upload
+  end
+  puts "Upload took #{elapsed.round(2)}s"
+end
+
+def perform_upload
   directory = Rails.root.join("tmp/archives/upload")
   puts "Local directory: #{directory}"
   puts "Upload bucket: #{AZURE_NAME}/#{CONTAINER_NAME}"
@@ -160,5 +167,6 @@ task azure_upload: :environment do
     File.write(manifest_path, JSON.pretty_generate(processed.to_a.sort))
   end
 
+  puts
   puts "Done (#{uploaded_count} files uploaded, #{original_processed_count} skipped)."
 end
