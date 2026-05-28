@@ -600,12 +600,13 @@ module Forms
     # recursively remove pesky characters and replace spaces with underscores
     # for XLSForm compatibility
     def vanillify(input)
-      return "" if input.nil?
-
-      if input.instance_of?(String)
+      case input
+      when String
         input.vanilla.tr(" ", "_")
-      elsif input.instance_of?(Array)
-        input.map { |n| n.vanilla.tr(" ", "_") }
+      when Array
+        input.map { |n| vanillify(n) }
+      when nil
+        ""
       else
         raise "Unallowed type passed to vanillify: #{input.class}"
       end
