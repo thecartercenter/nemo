@@ -2,7 +2,6 @@
 
 require "azure/storage/blob"
 require "json"
-require "set"
 
 CONTAINER_NAME = "local-test"
 AZURE_NAME = ENV.fetch("NEMO_AZURE_STORAGE_ACCOUNT_NAME", nil)
@@ -113,7 +112,7 @@ def perform_upload
   puts "Local directory: #{directory}"
   puts "Upload bucket: #{AZURE_NAME}/#{CONTAINER_NAME}"
 
-  client = Azure::Storage::Blob::BlobService.create(
+  client = Azure::Storage::Blob::BlobService.create( # rubocop:disable Rails/SaveBang
     storage_account_name: AZURE_NAME,
     storage_access_key: AZURE_KEY
   )
@@ -136,7 +135,7 @@ def perform_upload
               end
   original_processed_count = processed.size
 
-  files = Dir.glob("#{directory}/*.*").sort
+  files = Dir.glob("#{directory}/*.*")
   puts "Found #{files.size} files (#{original_processed_count} already in manifest)."
   uploaded_count = 0
   files.each do |file|
