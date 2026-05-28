@@ -45,7 +45,7 @@ module Archiving
         puts "Exporting relations: #{relations.map(&:klass).join(', ')}..."
         expander = RelationExpander.new(relations, dont_implicitly_expand: dont_implicitly_expand)
         expander.expanded.each do |klass, relations|
-          puts "  Exporting #{klass}..."
+          puts "  Exporting #{klass.count} #{klass.name.pluralize}..."
           col_names = klass.column_names - %w[standard_copy last_mission_id]
           relations.each do |relation|
             relation = relation.select(col_names.join(", ")) unless col_names == klass.column_names
@@ -60,8 +60,11 @@ module Archiving
           end
         end
 
-        Form.with_attached_odk_xml.find_each do |form|
-          puts "Exporting form: #{form.name}..."
+        items = Form.with_attached_odk_xml
+        total_count = items.count
+        curr_count = 0
+        items.find_each do |form|
+          puts "Exporting form #{curr_count += 1}/#{total_count}: #{form.name}..."
 
           # XLSX version of the form
           out.put_next_entry("Form #{form.id}.xlsx")
@@ -72,24 +75,33 @@ module Archiving
           out.write(form.odk_xml.download)
         end
 
-        Question.joins(:media_prompt_attachment).with_attached_media_prompt.find_each do |question|
-          puts "Exporting media_prompt: #{question.code}..."
+        items = Question.joins(:media_prompt_attachment).with_attached_media_prompt
+        total_count = items.count
+        curr_count = 0
+        items.find_each do |question|
+          puts "Exporting media_prompt #{curr_count += 1}/#{total_count}: #{question.code}..."
           mp = question.media_prompt
           # Convert the filename from e.g. "123_media_prompt.jpg" to "MediaPrompt 123.jpg"
           out.put_next_entry("MediaPrompt #{question.id}.#{mp.filename.extension}")
           out.write(mp.download)
         end
 
-        Response.find_each do |response|
-          puts "Exporting response: #{response.shortcode}..."
+        items = Response
+        total_count = items.count
+        curr_count = 0
+        items.find_each do |response|
+          puts "Exporting response #{curr_count += 1}/#{total_count}: #{response.shortcode}..."
           out.put_next_entry("Response #{response.id}.json")
           out.write(response.cached_json.to_json) # This will be the string "null" if it's not yet cached.
           warn(warnings, "Response #{response.id} was dirty") if response.dirty_json
         end
 
-        Media::Object.joins(:item_attachment).with_attached_item.find_each do |obj|
+        items = Media::Object.joins(:item_attachment).with_attached_item
+        total_count = items.count
+        curr_count = 0
+        items.find_each do |obj|
           attachment = obj.item
-          puts "Exporting response attachment: #{attachment.filename}..."
+          puts "Exporting response attachment #{curr_count += 1}/#{total_count}: #{attachment.filename}..."
           response_id = obj.answer.response_id
           code = attachment.filename.base.split("-").last
           # Convert the filename from e.g. "nemo-foo-bar-baz-ImageQ1.jpg" to "ResponseAttachment 123 ImageQ1.jpg"
