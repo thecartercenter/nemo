@@ -27,11 +27,14 @@ module Archiving
 
     # Verbose will log SQL queries.
     def export(verbose: false)
-      if verbose
-        perform_export
-      else
-        silence_verbose_logs { perform_export }
+      elapsed = Benchmark.realtime do
+        if verbose
+          perform_export
+        else
+          silence_verbose_logs { perform_export }
+        end
       end
+      puts "Export took #{elapsed.round(2)}s"
     end
 
     def perform_export
@@ -39,8 +42,10 @@ module Archiving
 
       FileUtils.mkdir_p(export_dir)
       Zip::OutputStream.open(zipfile_path) do |out|
+        puts "Exporting relations: #{relations.map(&:klass).join(', ')}..."
         expander = RelationExpander.new(relations, dont_implicitly_expand: dont_implicitly_expand)
         expander.expanded.each do |klass, relations|
+          puts "  Exporting #{klass}..."
           col_names = klass.column_names - %w[standard_copy last_mission_id]
           relations.each do |relation|
             relation = relation.select(col_names.join(", ")) unless col_names == klass.column_names
@@ -56,6 +61,8 @@ module Archiving
         end
 
         Form.with_attached_odk_xml.find_each do |form|
+          puts "Exporting form: #{form.name}..."
+
           # XLSX version of the form
           out.put_next_entry("Form #{form.id}.xlsx")
           out.write(Forms::Export.new(form).to_xls)
@@ -66,6 +73,7 @@ module Archiving
         end
 
         Question.joins(:media_prompt_attachment).with_attached_media_prompt.find_each do |question|
+          puts "Exporting media_prompt: #{question.code}..."
           mp = question.media_prompt
           # Convert the filename from e.g. "123_media_prompt.jpg" to "MediaPrompt 123.jpg"
           out.put_next_entry("MediaPrompt #{question.id}.#{mp.filename.extension}")
@@ -73,13 +81,15 @@ module Archiving
         end
 
         Response.find_each do |response|
+          puts "Exporting response: #{response.shortcode}..."
           out.put_next_entry("Response #{response.id}.json")
           out.write(response.cached_json.to_json) # This will be the string "null" if it's not yet cached.
-          warnings.push("Response #{response.id} was dirty") if response.dirty_json
+          warn(warnings, "Response #{response.id} was dirty") if response.dirty_json
         end
 
         Media::Object.joins(:item_attachment).with_attached_item.find_each do |obj|
           attachment = obj.item
+          puts "Exporting response attachment: #{attachment.filename}..."
           response_id = obj.answer.response_id
           code = attachment.filename.base.split("-").last
           # Convert the filename from e.g. "nemo-foo-bar-baz-ImageQ1.jpg" to "ResponseAttachment 123 ImageQ1.jpg"
@@ -89,12 +99,19 @@ module Archiving
         end
       end
 
+      puts
       Rails.logger.warn("Warnings:\n#{warnings.join("\n")}\n")
       puts "Exported #{zipfile_path}"
       puts "Encountered #{warnings.count} warnings."
     end
 
     private
+
+    # Log now, but also save them all for the end since it will likely get lost.
+    def warn(warnings, msg)
+      warnings.push(msg)
+      Rails.logger.warn(msg)
+    end
 
     def export_dir
       @export_dir ||= Rails.root.join("tmp/archives")
