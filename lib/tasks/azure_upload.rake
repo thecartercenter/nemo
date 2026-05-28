@@ -3,7 +3,7 @@
 require "azure/storage/blob"
 require "json"
 
-CONTAINER_NAME = "local-test"
+CONTAINER_NAME = ENV.fetch("NEMO_AZURE_CONTAINER", nil)
 AZURE_NAME = ENV.fetch("NEMO_AZURE_STORAGE_ACCOUNT_NAME", nil)
 AZURE_KEY = ENV.fetch("NEMO_AZURE_STORAGE_ACCESS_KEY", nil)
 
