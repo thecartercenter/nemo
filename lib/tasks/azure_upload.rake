@@ -117,6 +117,9 @@ def perform_upload
     storage_access_key: AZURE_KEY
   )
 
+  # Show header info for each request
+  client.with_filter(Azure::Core::Http::DebugFilter.new) if ENV["VERBOSE"]
+
   # Add retry filter to the service object
   # require "azure/storage/common"
   # client.with_filter(Azure::Storage::Common::Core::Filter::ExponentialRetryPolicyFilter.new)
@@ -151,6 +154,7 @@ def perform_upload
     classname, id = filename.split(".").first.split
 
     # Upload each file with tag metadata.
+    puts if ENV["VERBOSE"]
     puts "Uploading #{classname} #{id}..."
 
     File.open(file, "rb") do |f|
