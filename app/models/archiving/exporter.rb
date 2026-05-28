@@ -3,30 +3,43 @@
 require "fileutils"
 
 # TODO: Document in "Server Archiving" wiki page.
+# rubocop:disable Rails/Output
 module Archiving
   # Outputs data to CSV ZIP bundle.
   class Exporter
-    attr_accessor :relations, :options
+    attr_accessor :relations, :dont_implicitly_expand
 
-    # Hard-coded defaults generally shouldn't need to be overridden.
-    def initialize(relations = nil, **options)
+    # Optionally accepts a list of relations to export and ignore.
+    # Hard-coded defaults generally shouldn't need to be overridden for archival.
+    def initialize(relations: nil, dont_implicitly_expand: [])
       self.relations = relations || [
         Mission.all,
         User.all,
         Assignment.all,
       ]
 
-      self.options = {
-        dont_implicitly_expand: [Setting, UserGroup, UserGroupAssignment]
-      }.merge(options)
+      self.dont_implicitly_expand = dont_implicitly_expand || [
+        Setting,
+        UserGroup,
+        UserGroupAssignment,
+      ]
     end
 
-    def export
+    # Verbose will log SQL queries.
+    def export(verbose: false)
+      if verbose
+        perform_export
+      else
+        silence_verbose_logs { perform_export }
+      end
+    end
+
+    def perform_export
       warnings = []
 
       FileUtils.mkdir_p(export_dir)
       Zip::OutputStream.open(zipfile_path) do |out|
-        expander = RelationExpander.new(relations, dont_implicitly_expand: options[:dont_implicitly_expand])
+        expander = RelationExpander.new(relations, dont_implicitly_expand: dont_implicitly_expand)
         expander.expanded.each do |klass, relations|
           col_names = klass.column_names - %w[standard_copy last_mission_id]
           relations.each do |relation|
@@ -77,8 +90,8 @@ module Archiving
       end
 
       Rails.logger.warn("Warnings:\n#{warnings.join("\n")}\n")
-      Rails.logger.info("Exported #{zipfile_path}")
-      Rails.logger.info("Encountered #{warnings.count} warnings.")
+      puts "Exported #{zipfile_path}"
+      puts "Encountered #{warnings.count} warnings."
     end
 
     private
@@ -90,5 +103,20 @@ module Archiving
     def zipfile_path
       @zipfile_path ||= export_dir.join("#{Time.zone.now.to_fs(:filename_datetime)}.zip")
     end
+
+    def silence_verbose_logs
+      # We could simply `Rails.logger.silence` but that would hide warnings too.
+      loggers = [
+        ActiveRecord::Base.logger,
+      ].compact.uniq
+
+      old_levels = loggers.index_with(&:level)
+      loggers.each { |logger| logger.level = Logger::WARN }
+
+      yield
+    ensure
+      old_levels.each { |logger, level| logger.level = level }
+    end
   end
 end
+# rubocop:enable Rails/Output
