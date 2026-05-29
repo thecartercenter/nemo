@@ -102,12 +102,19 @@ module Archiving
         items.find_each do |obj|
           attachment = obj.item
           puts "Exporting response attachment #{curr_count += 1}/#{total_count}: #{attachment.filename}..."
+
           response_id = obj.answer.response_id
           code = attachment.filename.base.split("-").last
-          # Convert the filename from e.g. "nemo-foo-bar-baz-ImageQ1.jpg" to "ResponseAttachment 123 ImageQ1.jpg"
-          # Where foo-bar-baz represents [mission_code]-[form_code]-[response_code] and 123 is the response ID.
-          out.put_next_entry("ResponseAttachment #{response_id} #{code}.#{attachment.filename.extension}")
-          out.write(attachment.download)
+
+          begin
+            data = attachment.download
+            # Convert the filename from e.g. "nemo-foo-bar-baz-ImageQ1.jpg" to "ResponseAttachment 123 ImageQ1.jpg"
+            # Where foo-bar-baz represents [mission_code]-[form_code]-[response_code] and 123 is the response ID.
+            out.put_next_entry("ResponseAttachment #{response_id} #{code}.#{attachment.filename.extension}")
+            out.write(data)
+          rescue ActiveStorage::FileNotFoundError => e
+            warn(warnings, "ResponseAttachment #{response_id} #{code} not found: #{e.message}")
+          end
         end
       end
 
