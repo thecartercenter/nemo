@@ -26,22 +26,25 @@ module Archiving
     end
 
     # Verbose will log SQL queries.
-    def export(verbose: false)
+    # Skip is an array of steps to skip ("relations", "forms", "hints", "responses", "attachments").
+    def export(verbose: false, skip: [])
+      skip = skip.map(&:to_s)
       elapsed = Benchmark.realtime do
         if verbose
-          perform_export
+          perform_export(skip: skip)
         else
-          silence_verbose_logs { perform_export }
+          silence_verbose_logs { perform_export(skip: skip) }
         end
       end
       puts "Export took #{elapsed.round(2)}s"
     end
 
-    def perform_export
+    def perform_export(skip: [])
       warnings = []
 
       FileUtils.mkdir_p(export_dir)
       Zip::OutputStream.open(zipfile_path) do |out|
+        self.relations = [] if skip.include?("relations")
         puts "Exporting relations: #{relations.map(&:klass).join(', ')}..."
         expander = RelationExpander.new(relations, dont_implicitly_expand: dont_implicitly_expand)
         expander.expanded.each do |klass, relations|
@@ -60,7 +63,7 @@ module Archiving
           end
         end
 
-        items = Form.with_attached_odk_xml
+        items = skip.include?("forms") ? Form.none : Form.with_attached_odk_xml
         total_count = items.count
         curr_count = 0
         items.find_each do |form|
@@ -75,7 +78,7 @@ module Archiving
           out.write(form.odk_xml.download)
         end
 
-        items = Question.joins(:media_prompt_attachment).with_attached_media_prompt
+        items = skip.include?("hints") ? Question.none : Question.joins(:media_prompt_attachment).with_attached_media_prompt
         total_count = items.count
         curr_count = 0
         items.find_each do |question|
@@ -86,7 +89,7 @@ module Archiving
           out.write(mp.download)
         end
 
-        items = Response
+        items = skip.include?("responses") ? Response.none : Response.all
         total_count = items.count
         curr_count = 0
         items.find_each do |response|
@@ -96,7 +99,7 @@ module Archiving
           warn(warnings, "Response #{response.id} was dirty") if response.dirty_json
         end
 
-        items = Media::Object.joins(:item_attachment).with_attached_item
+        items = skip.include?("attachments") ? Media::Object.none : Media::Object.joins(:item_attachment).with_attached_item
         total_count = items.count
         curr_count = 0
         items.find_each do |obj|
@@ -119,7 +122,7 @@ module Archiving
       end
 
       puts
-      Rails.logger.warn("Warnings:\n#{warnings.join("\n")}\n")
+      Rails.logger.warn("Warnings:\n#{warnings.join("\n")}\n") unless warnings.empty?
       puts "Exported #{zipfile_path}"
       puts "Encountered #{warnings.count} warnings."
     end
