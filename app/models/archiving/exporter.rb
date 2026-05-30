@@ -97,6 +97,12 @@ module Archiving
         total_count = items.count
         curr_count = 0
         items.find_each do |response|
+          # Responses to unpublished forms are generally not cached, and/or server jobs may be behind.
+          if response.dirty_json?
+            puts "Caching response #{response.shortcode}..."
+            CacheODataJob.cache_response(response)
+          end
+
           puts "Exporting response #{curr_count += 1}/#{total_count}: #{response.shortcode}..."
           out.put_next_entry("Response #{response.id}.json")
           out.write(response.cached_json.to_json) # This will be the string "null" if it's not yet cached.
