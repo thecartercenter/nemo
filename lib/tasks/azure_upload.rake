@@ -139,14 +139,15 @@ def perform_upload
   original_processed_count = processed.size
 
   files = Dir.glob("#{directory}/*.*")
-  puts "Found #{files.size} files (#{original_processed_count} already in manifest)."
+  total_count = files.size
+  puts "Found #{total_count} files (#{original_processed_count} already in manifest)."
   uploaded_count = 0
-  files.each do |file|
+  files.each_with_index do |file, i|
     filename = File.basename(file)
     next if filename == File.basename(manifest_path) # Don't upload the manifest itself.
 
     if processed.include?(filename)
-      puts "Skipping #{filename}..."
+      puts "Skipping #{filename} (#{i + 1}/#{total_count})..."
       next
     end
 
@@ -155,7 +156,7 @@ def perform_upload
 
     # Upload each file with tag metadata.
     puts if ENV["VERBOSE"]
-    puts "Uploading #{classname} #{id}..."
+    puts "Uploading #{classname} #{id} (#{i + 1}/#{total_count})..."
 
     File.open(file, "rb") do |f|
       metadata = metadata_for(classname, id)
