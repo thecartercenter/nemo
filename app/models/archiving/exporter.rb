@@ -11,7 +11,7 @@ module Archiving
 
     # Optionally accepts a list of relations to export and ignore.
     # Hard-coded defaults generally shouldn't need to be overridden for archival.
-    def initialize(relations: nil, dont_implicitly_expand: [])
+    def initialize(relations: nil, dont_implicitly_expand: nil)
       self.relations = relations || [
         Mission.all,
         User.all,
@@ -29,14 +29,18 @@ module Archiving
     # Skip is an array of steps to skip ("relations", "forms", "hints", "responses", "attachments").
     def export(verbose: false, skip: [])
       skip = skip.map(&:to_s)
-      elapsed = Benchmark.realtime do
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+      begin
         if verbose
           perform_export(skip: skip)
         else
           silence_verbose_logs { perform_export(skip: skip) }
         end
+      ensure
+        elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+        puts "Export took #{elapsed.round(2)}s"
       end
-      puts "Export took #{elapsed.round(2)}s"
     end
 
     def perform_export(skip: [])

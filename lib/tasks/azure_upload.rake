@@ -101,10 +101,14 @@ def metadata_for(klass, id)
 end
 
 task azure_upload: :environment do
-  elapsed = Benchmark.realtime do
+  start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+  begin
     perform_upload
+  ensure
+    elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+    puts "Upload took #{elapsed.round(2)}s"
   end
-  puts "Upload took #{elapsed.round(2)}s"
 end
 
 def perform_upload
