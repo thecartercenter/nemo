@@ -80,8 +80,13 @@ module Archiving
           out.write(Forms::Export.new(form).to_xls)
 
           # Equivalent ODK XML version of the form
-          out.put_next_entry("Form #{form.id}.xml")
-          out.write(form.odk_xml.download)
+          begin
+            data = form.odk_xml.download
+            out.put_next_entry("Form #{form.id}.xml")
+            out.write(data)
+          rescue ActiveStorage::FileNotFoundError => e
+            warn(warnings, "Form #{form.id} XML not found (it was likely never published): #{e.message}")
+          end
         end
 
         items = skip.include?("hints") ? Question.none : Question.joins(:media_prompt_attachment).with_attached_media_prompt
@@ -90,9 +95,15 @@ module Archiving
         items.find_each do |question|
           puts "Exporting media_prompt #{curr_count += 1}/#{total_count}: #{question.code}..."
           mp = question.media_prompt
-          # Convert the filename from e.g. "123_media_prompt.jpg" to "MediaPrompt 123.jpg"
-          out.put_next_entry("MediaPrompt #{question.id}.#{mp.filename.extension}")
-          out.write(mp.download)
+
+          begin
+            data = mp.download
+            # Convert the filename from e.g. "123_media_prompt.jpg" to "MediaPrompt 123.jpg"
+            out.put_next_entry("MediaPrompt #{question.id}.#{mp.filename.extension}")
+            out.write(data)
+          rescue ActiveStorage::FileNotFoundError => e
+            warn(warnings, "MediaPrompt #{question.code} not found: #{e.message}")
+          end
         end
 
         items = skip.include?("responses") ? Response.none : Response.all
