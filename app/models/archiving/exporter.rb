@@ -53,7 +53,9 @@ module Archiving
         expander = RelationExpander.new(relations, dont_implicitly_expand: dont_implicitly_expand)
         expander.expanded.each do |klass, relations|
           puts "  Exporting #{klass.count} #{klass.name.pluralize}..."
-          col_names = klass.column_names - %w[standard_copy last_mission_id]
+          col_names = klass.column_names - %w[standard_copy last_mission_id
+                                              birth_year crypted_password gender gender_custom
+                                              password_salt perishable_token persistence_token]
           relations.each do |relation|
             relation = relation.select(col_names.join(", ")) unless col_names == klass.column_names
             relation.each do |entry|
