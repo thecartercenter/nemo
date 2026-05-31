@@ -10,7 +10,7 @@ AZURE_KEY = ENV.fetch("NEMO_AZURE_STORAGE_ACCESS_KEY", nil)
 GENERIC_METADATA = {
   createdAt: :created_at,
   updatedAt: :updated_at,
-  schemaVersion: "1"
+  schemaVersion: "1" # Unused but may be useful for future versioning.
 }.freeze
 
 METADATA = {
@@ -84,17 +84,17 @@ def metadata_for(klass, id)
 
   # Transform each placeholder value in the metadata (such as :form_id)
   # into the actual value from the item (such as "123-456").
-  metadata[:fields].transform_values do |v|
-    value = case v
+  metadata[:fields].transform_values do |value|
+    value = case value
             when Symbol
-              # Call the method named :v
-              item.public_send(v)
+              # Call the method named :value
+              item.public_send(value)
             when Proc
               # Call the procedure we were provided
-              v.call(item)
+              value.call(item)
             else
               # Return a literal value
-              v
+              value
             end
     value.nil? ? "null" : value.to_s
   end
