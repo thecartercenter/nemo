@@ -48,7 +48,7 @@ gem "jquery-rails", "~> 4.3"
 gem "popper_js", "~> 1.14"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 3.0"
-gem "react_on_rails", "17.0.0.rc.0"
+gem "react_on_rails", "17.0.0.rc.1"
 gem "select2-rails", "~> 4.0"
 gem "spinjs-rails", "~> 1.3.0" # Breaking changes in v1.4 (spin.js v2.0).
 gem "uglifier", "~> 4.2"

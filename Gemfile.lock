@@ -488,7 +488,7 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
-    react_on_rails (17.0.0.rc.0)
+    react_on_rails (17.0.0.rc.1)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -774,7 +774,7 @@ DEPENDENCIES
   random_data (~> 1.6)
   rdiscount (~> 2.1)
   react-rails (~> 3.0)
-  react_on_rails (= 17.0.0.rc.0)
+  react_on_rails (= 17.0.0.rc.1)
   recaptcha (~> 3.4)
   responders (~> 3.0)
   reverse_markdown (~> 2.0)

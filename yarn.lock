@@ -7052,10 +7052,10 @@ react-moment-proptypes@^1.6.0:
   dependencies:
     moment ">=1.6.0"
 
-react-on-rails@17.0.0-rc.0:
-  version "17.0.0-rc.0"
-  resolved "https://registry.npmjs.org/react-on-rails/-/react-on-rails-17.0.0-rc.0.tgz#87389c06522cc263770be5451431b899f03084ee"
-  integrity sha512-zjAf7E3TjTQXSmg7UY+C6P3eqExYf6IxQeEjNe5Eo/LTgEIbNYpbYRZFfYhr520hdFj0V50E+CWkq9h1lZWl/Q==
+react-on-rails@17.0.0-rc.1:
+  version "17.0.0-rc.1"
+  resolved "https://registry.npmjs.org/react-on-rails/-/react-on-rails-17.0.0-rc.1.tgz#5c13081957612e3cb176674217efbc6785ecb362"
+  integrity sha512-TLR+LdpdefizXIDR7PUnXL3bUa38hex24AiuMxrrdY2w2ju8GGAKFNZM/6mTc+FatO1Y1MEoPnsRuabtXt8nVQ==
 
 react-outside-click-handler@^1.2.4:
   version "1.3.0"
