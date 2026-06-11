@@ -2,7 +2,8 @@
 
 require "fileutils"
 
-# TODO: Document in "Server Archiving" wiki page.
+# This script outputs a zip file archive of all useful NEMO data in human-readable format.
+#
 # rubocop:disable Rails/Output
 module Archiving
   # Outputs data to CSV ZIP bundle.
