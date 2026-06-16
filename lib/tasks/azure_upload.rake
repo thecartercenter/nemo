@@ -18,15 +18,15 @@ METADATA = {
     fields: {
       entityType: "mission",
       missionId: :id,
-    }
-  }.merge(GENERIC_METADATA),
+    }.merge(GENERIC_METADATA),
+  },
   User: {
     fields: {
       entityType: "user",
       userId: :id,
       login: :login,
-    }
-  }.merge(GENERIC_METADATA),
+    }.merge(GENERIC_METADATA),
+  },
   Assignment: {
     fields: {
       entityType: "mission-user assignment",
@@ -34,15 +34,15 @@ METADATA = {
       missionId: :mission_id,
       userId: :user_id,
       role: :role,
-    }
-  }.merge(GENERIC_METADATA),
+    }.merge(GENERIC_METADATA),
+  },
   Form: {
     fields: {
       entityType: "form",
       formId: :id,
       missionId: :mission_id,
-    }
-  }.merge(GENERIC_METADATA),
+    }.merge(GENERIC_METADATA),
+  },
   MediaPrompt: {
     resolver: ->(id) { Question.find(id) },
     fields: {
@@ -52,8 +52,8 @@ METADATA = {
       # This can cause the tags field to be far too long.
       # formIds: ->(question) { question.form_ids.join(",") },
       missionId: :mission_id,
-    }
-  }.merge(GENERIC_METADATA),
+    }.merge(GENERIC_METADATA),
+  },
   Response: {
     fields: {
       entityType: "response",
@@ -61,8 +61,8 @@ METADATA = {
       formId: :form_id,
       userId: :user_id,
       missionId: :mission_id,
-    }
-  }.merge(GENERIC_METADATA),
+    }.merge(GENERIC_METADATA),
+  },
   ResponseAttachment: {
     resolver: ->(id) { Response.find(id) },
     fields: {
@@ -71,8 +71,8 @@ METADATA = {
       formId: :form_id,
       userId: :user_id,
       missionId: :mission_id,
-    }
-  }.merge(GENERIC_METADATA),
+    }.merge(GENERIC_METADATA),
+  },
 }.freeze
 
 # Given an object, create meatadata for it (to be uploaded as Azure "index tags").
