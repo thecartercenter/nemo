@@ -58,7 +58,7 @@ module Forms
     def to_csv
       CSV.generate do |csv|
         csv << COLUMNS
-        @form.preordered_items.each do |q|
+        preordered_items.each do |q|
           csv << row(q)
         end
       end
@@ -74,7 +74,7 @@ module Forms
       settings = book.create_worksheet(name: "settings")
 
       # Get languages
-      locales = @form.mission.setting.preferred_locales
+      locales = Setting.for_mission(@form.mission).preferred_locales
 
       # Write sheet headings at row index 0
       questions.row(0).push(
@@ -102,7 +102,9 @@ module Forms
       # Hence, we push to the row (i + index_mod)
       index_mod = 1 # start at row index 1
 
-      @form.preordered_items.each_with_index do |q, i|
+      items = preordered_items
+
+      items.each_with_index do |q, i|
         # this variable keeps track of the spreadsheet row to be written during this loop iteration
         row_index = i + index_mod
 
@@ -346,7 +348,7 @@ module Forms
         end
 
         # are we at the end of the form?
-        if i == @form.preordered_items.size - 1
+        if i == items.size - 1
           row_index += 1
 
           # do we still have unclosed groups in the tracker array?
@@ -390,7 +392,7 @@ module Forms
       ## Settings
       settings.row(0).push("form_title", "form_id", "version", "default_language", "allow_choice_duplicates")
 
-      lang = @form.mission.setting.preferred_locales[0].to_s
+      lang = Setting.for_mission(@form.mission).preferred_locales[0].to_s
       version = if @form.current_version.present?
                   @form.current_version.decorate.name
                 else
@@ -446,6 +448,12 @@ module Forms
       else
         "Group"
       end
+    end
+
+    # Memoize slow method
+    def preordered_items
+      # TODO: This can be further improved with eager_load: ...
+      @preordered_items ||= @form.preordered_items
     end
 
     # Given a header like `"label"`, return an array of localized headers like `["label::English (en)"]`
@@ -592,12 +600,13 @@ module Forms
     # recursively remove pesky characters and replace spaces with underscores
     # for XLSForm compatibility
     def vanillify(input)
-      return "" if input.nil?
-
-      if input.instance_of?(String)
+      case input
+      when String
         input.vanilla.tr(" ", "_")
-      elsif input.instance_of?(Array)
-        input.map { |n| n.vanilla.tr(" ", "_") }
+      when Array
+        input.map { |n| vanillify(n) }
+      when nil
+        ""
       else
         raise "Unallowed type passed to vanillify: #{input.class}"
       end

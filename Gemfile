@@ -71,7 +71,7 @@ gem "reverse_markdown", "~> 2.0"
 # Storage
 gem "active_storage_validations", "~> 0.9.3"
 gem "aws-sdk-s3", "~> 1.208", require: false
-gem "azure-storage-blob", "~> 2.0", require: false
+gem "azure-storage-blob", github: "sassafrastech/azure-storage-blob", tag: "v2.0.3-withTags"
 gem "image_processing", "~> 1.12"
 gem "sys-filesystem", "~> 1.4"
 
