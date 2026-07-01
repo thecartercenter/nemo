@@ -86,7 +86,9 @@ module Archiving
             out.put_next_entry("Form #{form.id}.xml")
             out.write(data)
           rescue ActiveStorage::FileNotFoundError => e
-            warn(warnings, "Form #{form.id} XML not found (it was likely never published): #{e.message}")
+            warn(warnings, "Form #{form.id} optional ODK XML not found (it was likely never published): #{e.message}")
+          rescue Aws::S3::Errors::InvalidAccessKeyId => e
+            warn(warnings, "Form #{form.id} optional ODK XML not found: #{e.message}")
           end
         end
 

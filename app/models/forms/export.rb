@@ -476,16 +476,16 @@ module Forms
 
       conditions.each_with_index do |dc, i|
         # prep left side of expression
-        left_qing = Questioning.find(dc.left_qing_id)
-        left_to_push = "${#{left_qing.code}}"
+        left_to_push = "${#{dc.left_qing.code}}"
 
         # prep right side of expression
         # operation will vary based on what we are comparing to
         if dc.right_side_is_qing? # it's another question's value
-          right_qing = Questioning.find(dc.right_qing_id)
-          right_to_push = "${#{right_qing.code}}"
-        elsif dc.option_node_id.present? # it's an option set choice
-          right_node_value = OptionNode.find(dc.option_node_id).option.canonical_name
+          right_to_push = "${#{dc.right_qing.code}}"
+        elsif dc.option_node_id.present? && (option = dc.option_node.option) # it's an option set choice
+          # note in rare instances, old conditions may have an option_node set but no associated option
+          # because they use `value` instead, so let those fall through to below.
+          right_node_value = option.canonical_name
           right_to_push = "'#{right_node_value}'"
         elsif Float(dc.value, exception: false).nil? # it's not a number
           # to respect XLSform rules, surround with single quotes unless it's a number
