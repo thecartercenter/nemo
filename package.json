@@ -91,7 +91,7 @@
     "shakapacker": "9.5.0",
     "style-loader": "^3.3.4",
     "terser-webpack-plugin": "5",
-    "webpack": "5",
+    "webpack": "5.108.0",
     "webpack-assets-manifest": "6",
     "webpack-cli": "4.10.0",
     "webpack-merge": "6",
