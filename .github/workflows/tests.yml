@@ -1,5 +1,7 @@
 name: RSpec & JS Tests
 on: [push]
+permissions:
+  contents: read
 jobs:
   tests:
     name: Tests
