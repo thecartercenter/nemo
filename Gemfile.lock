@@ -819,4 +819,4 @@ DEPENDENCIES
   wisper-activerecord (~> 1.0)
 
 BUNDLED WITH
-   2.5.22
+   4.0.16
