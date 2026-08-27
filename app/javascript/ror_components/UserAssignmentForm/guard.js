@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ErrorBoundary from '../ErrorBoundary/component';
+import ErrorBoundary from '../../components/ErrorBoundary/component';
 import Component from './component';
 
 /**

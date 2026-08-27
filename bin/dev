@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "react_on_rails/dev"
+
+DEFAULT_ROUTE = "login"
+AUTO_OPEN_BROWSER_ONCE = false
+
+argv_with_defaults = ARGV.dup
+argv_with_defaults.push("--route=#{DEFAULT_ROUTE}") unless argv_with_defaults.any? { |arg| arg.start_with?("--route") }
+browser_flags = %w[--open-browser --open-browser-once --no-open-browser]
+if AUTO_OPEN_BROWSER_ONCE && browser_flags.none? { |flag| argv_with_defaults.include?(flag) }
+  argv_with_defaults.push("--open-browser-once")
+end
+
+ReactOnRails::Dev::ServerManager.run_from_command_line(argv_with_defaults)

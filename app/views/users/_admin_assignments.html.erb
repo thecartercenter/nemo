@@ -13,5 +13,6 @@
     </div>
   <% end %>
 <% else %>
-  <%= react_component("UserAssignmentForm", @assignment_data) %>
+  <%= content_for(:per_page_packs, "user_assignment_form") %>
+  <%= react_on_rails_component("UserAssignmentForm", props: @assignment_data) %>
 <% end %>

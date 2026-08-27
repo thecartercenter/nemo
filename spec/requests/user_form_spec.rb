@@ -35,6 +35,17 @@ describe "user form" do
           assert_select("div.user_role", true)
         end
       end
+
+      context "in admin mode" do
+        before do
+          get("/en/admin/users/#{@self.id}/edit")
+        end
+
+        it "renders the React on Rails admin assignments mount" do
+          assert_select("script[src*='user_assignment_form']", true)
+          assert_select("[data-component-name='UserAssignmentForm']", true)
+        end
+      end
     end
   end
 end
