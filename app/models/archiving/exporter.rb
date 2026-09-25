@@ -48,6 +48,7 @@ module Archiving
       warnings = []
 
       FileUtils.mkdir_p(export_dir)
+      Zip.write_zip64_support = true
       Zip::OutputStream.open(zipfile_path) do |out|
         self.relations = [] if skip.include?("relations")
         puts "Exporting relations: #{relations.map(&:klass).join(', ')}..."
