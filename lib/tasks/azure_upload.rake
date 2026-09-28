@@ -153,15 +153,15 @@ def perform_upload
   # puts "Container found: " + container.name
 
   # Track which files have been uploaded already in case we need to re-run.
-  manifest_path = File.join(directory, ".upload_manifest.json")
-  processed = if File.exist?(manifest_path)
-                puts "Manifest found: #{manifest_path}"
-                JSON.parse(File.read(manifest_path)).to_set
-              else
-                puts "No manifest found, starting from scratch."
-                Set.new
-              end
+  manifest_path = File.join(directory, ".upload_manifest.txt")
+  legacy_manifest_path = File.join(directory, ".upload_manifest.json")
+  processed = Set.new
+  processed.merge(JSON.parse(File.read(legacy_manifest_path))) if File.exist?(legacy_manifest_path)
+  processed.merge(File.readlines(manifest_path, chomp: true)) if File.exist?(manifest_path)
+  puts processed.empty? ? "No manifest found, starting from scratch." : "Manifest found near #{manifest_path}"
   original_processed_count = processed.size
+  manifest = File.open(manifest_path, "a")
+  manifest.sync = true
 
   files = Dir.glob("#{directory}/*.*")
   total_count = files.size
@@ -194,8 +194,9 @@ def perform_upload
     # Mark as processed after successful upload.
     uploaded_count += 1
     processed << filename
-    File.write(manifest_path, JSON.pretty_generate(processed.to_a.sort))
+    manifest.puts(filename)
   end
+  manifest.close
 
   puts
   puts "Done (#{uploaded_count} files uploaded, #{original_processed_count} skipped)."
