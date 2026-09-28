@@ -3,10 +3,15 @@
 # DEPRECATED: Should move to a decorator.
 module TagsHelper
   # options[:clickable] (bool) - make tags clickable to filter by clicked tag
-  def render_tags(objects, options = {})
+  def render_tags(objects, options = {}, shakapacker_options = nil)
+    if shakapacker_options
+      return Shakapacker::Helper.instance_method(:render_tags).bind_call(self, objects, options, shakapacker_options)
+    end
+
     return "" if objects.blank?
     title = options[:clickable] ? I18n.t("tag.click_to_filter") : nil
-    classes = "badge badge-custom#{options[:clickable] ? ' clickable' : ''}"
+    classes = "badge badge-custom"
+    classes += " clickable" if options[:clickable]
     content_tag(:div, class: "tags") do
       spans = objects.map do |obj|
         if options[:clickable] && options[:link_method]

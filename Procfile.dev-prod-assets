@@ -1,0 +1,2 @@
+rails: bundle exec rails s -p ${PORT:-3001}
+js: RAILS_ENV=development NODE_ENV=production bin/shakapacker-watch --watch
